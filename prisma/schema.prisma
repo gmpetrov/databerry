@@ -1,0 +1,175 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+
+  image    String?
+  accounts Account[]
+  sessions Session[]
+
+  picture       String?
+  hasOptInEmail Boolean? @default(false) @map("has_opt_in_email")
+
+  projects    Project[]
+  datastores  Datastore[]
+  datasources AppDatasource[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Project {
+  id        String @id @default(cuid())
+  subdomain String @unique
+  ownerId   String @map("user_id")
+  owner     User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  name      String
+
+  disabled Boolean? @default(false)
+
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("projects")
+}
+
+model Datastore {
+  id String @id @default(cuid())
+
+  name        String
+  description String
+  type        DatastoreType
+  datasources AppDatasource[]
+  visibility  DatastoreVisibility @default(private)
+  apiKeys     DatastoreApiKey[]
+
+  config Json?
+
+  ownerId String? @map("owner_id")
+  owner   User?   @relation(fields: [ownerId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("data_stores")
+}
+
+// Naming the model Datasource conflicts with prisma
+// https://github.com/prisma/prisma/issues/12332
+model AppDatasource {
+  id     String           @id @default(cuid())
+  type   DatasourceType
+  name   String
+  status DatasourceStatus @default(unsynched)
+
+  config Json?
+
+  datastoreId String?    @map("datastore_id")
+  datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+
+  ownerId String? @map("owner_id")
+  owner   User?   @relation(fields: [ownerId], references: [id])
+
+  nbChunks Int? @default(0) @map("nb_chunks")
+  textSize Int? @default(0) @map("text_size")
+
+  hash String?
+
+  nbSynch   Int?      @default(0) @map("nb_synch")
+  lastSynch DateTime? @map("last_synch")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@map("data_sources")
+}
+
+model DatastoreApiKey {
+  id  String @id @default(cuid())
+  key String @unique()
+
+  datastoreId String?    @map("datastore_id")
+  datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("datastore_api_keys")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum DatastoreVisibility {
+  public
+  private
+}
+
+enum DatasourceStatus {
+  unsynched
+  pending
+  running
+  synched
+  error
+}
+
+enum DatasourceType {
+  web_page
+  text
+  // html
+  // pdf
+  // notion
+}
+
+enum DatastoreType {
+  pinecone
+  qdrant
+}
