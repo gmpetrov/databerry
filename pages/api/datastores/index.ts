@@ -6,7 +6,10 @@ import { CreateDatastoreRequestSchema } from '@app/types/dtos';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';
-import prisma from '@app/utils/prisma-client';
+import prisma, {
+  datasourceSelect,
+  datastoreSelect,
+} from '@app/utils/prisma-client';
 import uuidv4 from '@app/utils/uuid';
 import validate from '@app/utils/validate';
 
@@ -22,13 +25,15 @@ export const getDatastores = async (
     where: {
       ownerId: session?.user?.id,
     },
-    include: {
+    select: {
+      ...datastoreSelect,
       _count: {
         select: {
           datasources: true,
         },
       },
     },
+
     orderBy: {
       createdAt: 'desc',
     },
@@ -52,6 +57,7 @@ export const createDatastore = async (
       where: {
         id: data.id,
       },
+      select: datasourceSelect,
     });
 
     if (existingDatastore?.ownerId !== session?.user?.id) {
@@ -97,6 +103,7 @@ export const createDatastore = async (
         : DatastoreVisibility.private,
       // config: data.config,
     },
+    select: datastoreSelect,
   });
 
   return datastore;

@@ -1,4 +1,4 @@
-import { DatasourceStatus } from '@prisma/client';
+import { DatasourceStatus, Prisma } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { UpsertDatasourceSchema } from '@app/components/DatasourceForms/Base';
@@ -6,7 +6,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';
-import prisma from '@app/utils/prisma-client';
+import prisma, { datasourceSelect } from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
 
@@ -25,6 +25,7 @@ export const getDatasources = async (
     orderBy: {
       updatedAt: 'desc',
     },
+    select: datasourceSelect,
   });
 
   return datasources;
@@ -55,6 +56,7 @@ export const upsertDatasource = async (
       where: {
         id: data.id,
       },
+      select: datasourceSelect,
     });
 
     if ((existingDatasource as any)?.ownerId !== session?.user?.id) {
@@ -89,6 +91,7 @@ export const upsertDatasource = async (
       name: data.name,
       config: data.config,
     },
+    select: datasourceSelect,
   });
 
   triggerTaskLoadDatasource(id, data.datasourceText);
