@@ -2,13 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/datastores',
-        permanent: false,
-      },
-    ];
+    return [];
   },
   async rewrites() {
     return [

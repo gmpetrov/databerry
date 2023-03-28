@@ -8,7 +8,7 @@ import type { Document } from '@app/utils/datastores/base';
 export * from './dtos';
 
 export enum RouteNames {
-  HOME = '/',
+  HOME = '/datastores',
   SIGN_IN = '/signin',
   SIGN_UP = '/signup',
   DATASTORES = '/datastores',
