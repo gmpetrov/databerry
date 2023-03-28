@@ -2,10 +2,7 @@ import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma, {
-  datasourceSelect,
-  datastoreSelect,
-} from '@app/utils/prisma-client';
+import prisma from '@app/utils/prisma-client';
 import triggerTaskRemoveDatasource from '@app/utils/trigger-task-remove-datasource';
 
 const handler = createAuthApiHandler();
@@ -21,10 +18,11 @@ export const getDatasource = async (
     where: {
       id,
     },
-    select: {
-      ...datasourceSelect,
+    include: {
       datastore: {
-        select: datastoreSelect,
+        select: {
+          name: true,
+        },
       },
     },
   });
@@ -49,12 +47,8 @@ export const deleteDatasource = async (
     where: {
       id,
     },
-    select: {
-      ...datasourceSelect,
+    include: {
       owner: true,
-      datastore: {
-        select: datastoreSelect,
-      },
     },
   });
 
@@ -66,11 +60,8 @@ export const deleteDatasource = async (
     where: {
       id,
     },
-    select: {
-      ...datasourceSelect,
-      datastore: {
-        select: datastoreSelect,
-      },
+    include: {
+      datastore: true,
     },
   });
 

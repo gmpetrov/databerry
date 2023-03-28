@@ -1,4 +1,4 @@
-import { AppDatasource, DatasourceStatus, Datastore } from '@prisma/client';
+import { DatasourceStatus } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
@@ -9,10 +9,7 @@ import { DatastoreManager } from '@app/utils/datastores';
 import { Document } from '@app/utils/datastores/base';
 import { DatasourceLoader } from '@app/utils/loaders';
 import logger from '@app/utils/logger';
-import prisma, {
-  datasourceSelect,
-  datastoreSelect,
-} from '@app/utils/prisma-client';
+import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
@@ -31,11 +28,8 @@ export const loadDatasource = async (
     data: {
       status: DatasourceStatus.running,
     },
-    select: {
-      ...datasourceSelect,
-      datastore: {
-        select: datastoreSelect,
-      },
+    include: {
+      datastore: true,
     },
   });
 
@@ -56,13 +50,13 @@ export const loadDatasource = async (
   //     })
   //   : await new DatasourceLoader(datasource).load(data.datasourceText);
 
-  const document = await new DatasourceLoader(datasource as AppDatasource).load(
+  const document = await new DatasourceLoader(datasource).load(
     data.datasourceText
   );
 
-  const chunks = await new DatastoreManager(
-    datasource.datastore as Datastore
-  ).upload(document);
+  const chunks = await new DatastoreManager(datasource.datastore!).upload(
+    document
+  );
 
   const hash = chunks?.[0]?.metadata?.datasource_hash as string;
 
@@ -80,11 +74,8 @@ export const loadDatasource = async (
       nbSynch: datasource?.nbSynch! + 1,
       hash,
     },
-    select: {
-      ...datasourceSelect,
-      datastore: {
-        select: datastoreSelect,
-      },
+    include: {
+      datastore: true,
     },
   });
 

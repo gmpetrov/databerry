@@ -26,7 +26,7 @@ import {
   Tabs,
   Typography,
 } from '@mui/joy';
-import { AppDatasource, DatastoreVisibility, Prisma } from '@prisma/client';
+import { DatastoreVisibility, Prisma } from '@prisma/client';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -278,7 +278,7 @@ export default function DatastorePage() {
         {router.query.tab === 'datasources' &&
           getDatastoreQuery?.data?.datasources && (
             <DatasourceTable
-              items={getDatastoreQuery?.data?.datasources as AppDatasource[]}
+              items={getDatastoreQuery?.data?.datasources}
               handleSynch={handleSynchDatasource}
             />
           )}

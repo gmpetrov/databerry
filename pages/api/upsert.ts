@@ -1,4 +1,4 @@
-import { Datastore, DatastoreVisibility } from '@prisma/client';
+import { DatastoreVisibility } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { SearchRequestSchema, UpsertRequestSchema } from '@app/types/dtos';
@@ -8,7 +8,7 @@ import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import { Document } from '@app/utils/datastores/base';
 import getSubdomain from '@app/utils/get-subdomain';
-import prisma, { datastoreSelect } from '@app/utils/prisma-client';
+import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
@@ -33,8 +33,7 @@ export const generateAiPluginJson = async (
     where: {
       id: subdomain,
     },
-    select: {
-      ...datastoreSelect,
+    include: {
       apiKeys: true,
     },
   });
@@ -52,7 +51,7 @@ export const generateAiPluginJson = async (
     throw new Error('Unauthorized');
   }
 
-  const store = new DatastoreManager(datastore as Datastore);
+  const store = new DatastoreManager(datastore);
 
   const chunks = await Promise.all(
     data.documents.map((each) => {

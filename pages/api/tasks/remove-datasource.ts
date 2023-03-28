@@ -1,4 +1,3 @@
-import { Datastore } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { TaskRemoveDatasourceRequestSchema } from '@app/types/dtos';
@@ -6,7 +5,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import { s3 } from '@app/utils/aws';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
-import prisma, { datastoreSelect } from '@app/utils/prisma-client';
+import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
@@ -22,14 +21,13 @@ export const removeDatasource = async (
     where: {
       id: data.datastoreId,
     },
-    select: datastoreSelect,
   });
 
   if (!datastore) {
     return res.status(404).json({ message: 'Not found' });
   }
 
-  await new DatastoreManager(datastore as Datastore).remove(data.datasourceId);
+  await new DatastoreManager(datastore).remove(data.datasourceId);
 
   s3.deleteObjects({
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,

@@ -3,10 +3,7 @@ import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma, {
-  datasourceSelect,
-  datastoreSelect,
-} from '@app/utils/prisma-client';
+import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 
 const handler = createAuthApiHandler();
@@ -22,8 +19,7 @@ export const synchDatasource = async (
     where: {
       id,
     },
-    select: {
-      ...datasourceSelect,
+    include: {
       owner: true,
     },
   });
@@ -39,15 +35,12 @@ export const synchDatasource = async (
     data: {
       status: DatasourceStatus.pending,
     },
-    select: {
-      ...datasourceSelect,
-      datastore: {
-        select: datastoreSelect,
-      },
+    include: {
+      datastore: true,
     },
   });
 
-  triggerTaskLoadDatasource(datasource?.id!);
+  triggerTaskLoadDatasource(datasource.id);
 
   return updated;
 };

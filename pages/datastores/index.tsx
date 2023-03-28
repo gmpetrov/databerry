@@ -8,7 +8,7 @@ import {
   Link as JoyLink,
   Typography,
 } from '@mui/joy';
-import { Datastore, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -136,7 +136,7 @@ export default function DatasourcesPage() {
       </Box>
 
       {getDatastoresQuery?.data && (
-        <DatastoreTable items={getDatastoresQuery.data as Datastore[]} />
+        <DatastoreTable items={getDatastoresQuery.data} />
       )}
 
       <CreateDatastoreModal
