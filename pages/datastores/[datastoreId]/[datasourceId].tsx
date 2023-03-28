@@ -20,7 +20,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import * as React from 'react';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import { DatasourceFormsMap } from '@app/components/DatasourceForms';
 import Layout from '@app/components/Layout';
@@ -32,6 +32,7 @@ import { withAuth } from '@app/utils/withAuth';
 
 export default function DatasourcePage() {
   const router = useRouter();
+  const { mutate } = useSWRConfig();
   const [state, setState] = useStateReducer({
     isCreateDatasourceModalOpen: false,
     currentDatastoreId: undefined as string | undefined,
@@ -48,6 +49,8 @@ export default function DatasourcePage() {
       )
     ) {
       await axios.delete(`/api/datasources/${id}`);
+
+      mutate(`/api/datastores/${router.query?.datastoreId}`);
 
       router.push(`${RouteNames.DATASTORES}/${router.query?.datastoreId}`);
     }
