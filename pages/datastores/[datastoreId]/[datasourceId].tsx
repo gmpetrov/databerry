@@ -49,7 +49,7 @@ export default function DatasourcePage() {
     ) {
       await axios.delete(`/api/datasources/${id}`);
 
-      router.push(`${RouteNames.DATASTORES}/${router.query?.datasourceId}`);
+      router.push(`${RouteNames.DATASTORES}/${router.query?.datastoreId}`);
     }
   };
 
