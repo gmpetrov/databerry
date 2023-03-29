@@ -13,6 +13,7 @@ export enum RouteNames {
   SIGN_UP = '/signup',
   DATASTORES = '/datastores',
   CHAT = '/chat',
+  MAINTENANCE = '/maintenance',
 }
 
 export type AppNextApiRequest = NextApiRequest & {

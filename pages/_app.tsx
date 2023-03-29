@@ -8,9 +8,11 @@ import { CssBaseline } from '@mui/joy';
 import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
+import router from 'next/router';
 import { SessionProvider } from 'next-auth/react';
+import { useEffect } from 'react';
 
-import { NextPageWithLayout } from '@app/types';
+import { NextPageWithLayout, RouteNames } from '@app/types';
 import createEmotionCache from '@app/utils/create-emotion-cache';
 import theme from '@app/utils/theme';
 
@@ -34,16 +36,17 @@ export default function App({
 }: AppPropsWithLayout) {
   const { emotionCache = clientSideEmotionCache } = otherProps as any;
 
-  // const { data: session, status } = useSession();
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   if (status === 'unauthenticated') {
-  //     router.push(RouteNames.SIGN_IN);
-  //   }
-  // }, [status]);
-
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  useEffect(() => {
+    if (
+      process.env.NEXT_PUBLIC_MAINTENANCE === 'true' &&
+      router.route !== RouteNames.MAINTENANCE &&
+      router.route !== '/'
+    ) {
+      router.push(RouteNames.MAINTENANCE);
+    }
+  }, []);
 
   return (
     <StyledEngineProvider injectFirst>
