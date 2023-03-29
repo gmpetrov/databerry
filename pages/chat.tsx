@@ -199,7 +199,7 @@ export default function DatasourcesPage() {
             sx={{
               height: '100%',
               maxHeight: '100%',
-              overflow: 'scroll',
+              overflowY: 'auto',
               display: 'flex',
               pb: 18,
               pt: 2,
