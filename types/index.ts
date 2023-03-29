@@ -12,6 +12,7 @@ export enum RouteNames {
   SIGN_IN = '/signin',
   SIGN_UP = '/signup',
   DATASTORES = '/datastores',
+  CHAT = '/chat',
 }
 
 export type AppNextApiRequest = NextApiRequest & {
@@ -21,6 +22,12 @@ export type AppNextApiRequest = NextApiRequest & {
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
+
+export enum AppStatus {
+  OK = 'OK',
+  WARNING = 'WARNING',
+  KO = 'KO',
+}
 
 export enum MetadataFields {
   datasource_id = 'datasource_id',

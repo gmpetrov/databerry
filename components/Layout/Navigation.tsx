@@ -6,7 +6,7 @@ import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownR
 import OutboxRoundedIcon from '@mui/icons-material/OutboxRounded';
 // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import { Stack } from '@mui/joy';
+import { Card, Chip, Stack, Typography } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
 import List from '@mui/joy/List';
@@ -15,14 +15,30 @@ import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import ListSubheader from '@mui/joy/ListSubheader';
+import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+import useSWR from 'swr';
 
-import { RouteNames } from '@app/types';
+import { getStatus } from '@app/pages/api/status';
+import { AppStatus, RouteNames } from '@app/types';
+import { fetcher } from '@app/utils/swr-fetcher';
 
 export default function Navigation() {
   const router = useRouter();
+
+  const getDatastoresQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
+    '/api/status',
+    fetcher,
+    {
+      refreshInterval: 60000,
+    }
+  );
+
+  console.log('STATUS', getDatastoresQuery.data);
+
+  const isStatusOK = getDatastoresQuery?.data?.status === AppStatus.OK;
 
   const items = React.useMemo(() => {
     return [
@@ -42,7 +58,7 @@ export default function Navigation() {
   }, [router.route]);
 
   return (
-    <Stack>
+    <Stack sx={{ height: '100%' }}>
       <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
         <ListItem nested>
           {/* <ListSubheader>
@@ -164,6 +180,38 @@ export default function Navigation() {
         </List>
       </ListItem> */}
       </List>
+
+      <Card
+        sx={{
+          mt: 'auto',
+          mx: 'auto',
+          py: 1,
+          px: 2,
+        }}
+        variant="soft"
+        color={`${isStatusOK ? 'success' : 'danger'}`}
+      >
+        <Stack
+          direction={'row'}
+          gap={1}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '99px',
+              bgcolor: isStatusOK ? 'success.300' : 'danger.500',
+            }}
+          />
+
+          <Typography>status: {isStatusOK ? 'ok' : 'ko'}</Typography>
+        </Stack>
+      </Card>
     </Stack>
   );
 }
