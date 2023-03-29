@@ -24,7 +24,7 @@ Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-ret
   - Notion
   - ... (more coming soon)
 - Auto sync data sources (coming soon)
-- Securized Api endpoint for querying and upserting data to your datastores
+- Securized API endpoint for querying and upserting data to your datastores
 - **Auto generates ChatGPT Plugin config files**
 
 ### Semantic Search Specs

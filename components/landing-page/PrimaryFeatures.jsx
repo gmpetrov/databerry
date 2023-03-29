@@ -1,14 +1,14 @@
-import { ArrowPathIcon, ChatBubbleOvalLeftIcon,CloudArrowUpIcon, ComputerDesktopIcon, LockClosedIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, ChatBubbleOvalLeftIcon, ComputerDesktopIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 
 const features = [
   {
     name: 'Cute interface',
     description:
-      'User-friendly interface to mangage your datastores',
+      'User-friendly interface to manage your datastores',
     icon: ComputerDesktopIcon,
   },
   {
-    name: 'Securized Api Endpoints',
+    name: 'Securized API Endpoints',
     description:
       'We provide you with secured api endpoints to access your data.',
     icon: LockClosedIcon,

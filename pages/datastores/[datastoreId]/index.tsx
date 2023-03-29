@@ -314,7 +314,7 @@ export default function DatastorePage() {
 
             <Divider sx={{ my: 4 }} />
             <FormControl sx={{ gap: 1 }}>
-              <FormLabel>Api Keys</FormLabel>
+              <FormLabel>API Keys</FormLabel>
               <Typography level="body3">
                 Use the api key to access the datastore when private
               </Typography>
@@ -345,14 +345,14 @@ export default function DatastorePage() {
                 variant="outlined"
                 onClick={handleCreatApiKey}
               >
-                Create Api Key
+                Create API Key
               </Button>
             </FormControl>
 
             <Divider sx={{ my: 4 }} />
 
             <FormControl sx={{ gap: 1 }}>
-              <FormLabel>Api Endpoints</FormLabel>
+              <FormLabel>API Endpoints</FormLabel>
               <Typography level="body3">
                 Here are the endpoints to interact with the datastore
               </Typography>
