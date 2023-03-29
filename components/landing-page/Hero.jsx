@@ -38,7 +38,7 @@ export function Hero() {
 
 
       <p className="max-w-2xl mx-auto mt-6 text-lg tracking-tight text-gray-200">
-        We help you quickly setup a semantic search system over your personal data without any technical knowledge.
+        We make your data ready for large language models
       </p>
       <div className="flex justify-center mt-10 gap-x-6">
         <Button target="_blank" href="https://app.databerry.ai/signin">Start Building</Button>
