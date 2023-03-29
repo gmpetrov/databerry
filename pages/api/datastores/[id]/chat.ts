@@ -9,7 +9,9 @@ import {
   SearchResponseSchema,
 } from '@app/types';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import getRootDomain from '@app/utils/get-root-domain';
+import getRootDomain, {
+  generateDatastoreUrl,
+} from '@app/utils/get-root-domain';
 import prisma from '@app/utils/prisma-client';
 
 const handler = createAuthApiHandler();
@@ -25,9 +27,10 @@ class DataberryRetriever {
     const apiKey = (this.datastore as any).apiKeys?.[0]?.key as string;
 
     const results = await axios.post(
-      `http://${this.datastore.id}.${getRootDomain(
-        process.env.NEXT_PUBLIC_DASHBOARD_URL!
-      )}/query`,
+      `${generateDatastoreUrl({
+        appUrl: process.env.NEXT_PUBLIC_DASHBOARD_URL!,
+        datastoreId: this.datastore.id,
+      })}/query`,
       {
         queries: [
           {
