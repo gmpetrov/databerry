@@ -27,13 +27,6 @@ export const authOptions = {
         },
       };
     },
-    // session: async (session, user) => {
-    //   session.id = user.id;
-    //   return {
-    //     ...session,
-    //     user,
-    //   };
-    // },
   },
 } as AuthOptions;
 export default NextAuth(authOptions);

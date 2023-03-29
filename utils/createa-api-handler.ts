@@ -35,7 +35,7 @@ export function respond<T>(f: Handle<T>) {
       console.log(err);
 
       res.statusCode = 500;
-      res.json({ message: err });
+      res.json({ error: JSON.stringify(err) });
     }
   };
 }

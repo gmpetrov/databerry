@@ -1,10 +1,12 @@
 import AssistantPhotoRoundedIcon from '@mui/icons-material/AssistantPhotoRounded';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import DraftsRoundedIcon from '@mui/icons-material/DraftsRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import OutboxRoundedIcon from '@mui/icons-material/OutboxRounded';
 // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
+import { Card, Chip, Stack, Typography } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import IconButton from '@mui/joy/IconButton';
 import List from '@mui/joy/List';
@@ -13,13 +15,53 @@ import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import ListSubheader from '@mui/joy/ListSubheader';
+import { Prisma } from '@prisma/client';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import * as React from 'react';
+import useSWR from 'swr';
+
+import { getStatus } from '@app/pages/api/status';
+import { AppStatus, RouteNames } from '@app/types';
+import { fetcher } from '@app/utils/swr-fetcher';
 
 export default function Navigation() {
+  const router = useRouter();
+
+  const getDatastoresQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
+    '/api/status',
+    fetcher,
+    {
+      refreshInterval: 60000,
+    }
+  );
+
+  console.log('STATUS', getDatastoresQuery.data);
+
+  const isStatusOK = getDatastoresQuery?.data?.status === AppStatus.OK;
+
+  const items = React.useMemo(() => {
+    return [
+      {
+        label: 'Datastores',
+        route: RouteNames.DATASTORES,
+        icon: <StorageRoundedIcon fontSize="small" />,
+        active: router.route === RouteNames.DATASTORES,
+      },
+      {
+        label: 'Chat',
+        route: RouteNames.CHAT,
+        icon: <ChatBubbleIcon fontSize="small" />,
+        active: router.route === RouteNames.CHAT,
+      },
+    ];
+  }, [router.route]);
+
   return (
-    <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
-      <ListItem nested>
-        {/* <ListSubheader>
+    <Stack sx={{ height: '100%' }}>
+      <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
+        <ListItem nested>
+          {/* <ListSubheader>
           Browse
           <IconButton
             size="sm"
@@ -30,65 +72,32 @@ export default function Navigation() {
             <KeyboardArrowDownRoundedIcon fontSize="small" color="primary" />
           </IconButton>
         </ListSubheader> */}
-        <List
-          aria-labelledby="nav-list-browse"
-          sx={{
-            '& .JoyListItemButton-root': { p: '8px' },
-          }}
-        >
-          {/* <ListItem>
-            <ListItemButton>
-              <ListItemDecorator sx={{ color: 'neutral.500' }}>
-                <DraftsRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent>Community</ListItemContent>
-            </ListItemButton>
-          </ListItem> */}
-
-          <ListItem>
-            <ListItemButton variant="soft" color="primary">
-              <ListItemDecorator sx={{ color: 'inherit' }}>
-                <StorageRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent>Datastores</ListItemContent>
-            </ListItemButton>
-          </ListItem>
-
-          {/* <ListItem>
-            <ListItemButton>
-              <ListItemDecorator sx={{ color: 'neutral.500' }}>
-                <OutboxRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent>Sent</ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton>
-              <ListItemDecorator sx={{ color: 'neutral.500' }}>
-                <DraftsRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent>Draft</ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton>
-              <ListItemDecorator sx={{ color: 'neutral.500' }}>
-                <AssistantPhotoRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent>Flagged</ListItemContent>
-            </ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton>
-              <ListItemDecorator sx={{ color: 'neutral.500' }}>
-                <DeleteRoundedIcon fontSize="small" />
-              </ListItemDecorator>
-              <ListItemContent>Trash</ListItemContent>
-            </ListItemButton>
-          </ListItem> */}
-        </List>
-      </ListItem>
-      {/* <ListItem nested sx={{ mt: 2 }}>
+          <List
+            aria-labelledby="nav-list-browse"
+            sx={{
+              '& .JoyListItemButton-root': { p: '8px' },
+            }}
+          >
+            {items.map((each) => (
+              <Link key={each.route} href={each.route}>
+                <ListItem>
+                  <ListItemButton
+                    variant={each.active ? 'soft' : 'plain'}
+                    color={each.active ? 'primary' : 'neutral'}
+                  >
+                    <ListItemDecorator
+                      sx={{ color: each.active ? 'inherit' : 'neutral.500' }}
+                    >
+                      {each.icon}
+                    </ListItemDecorator>
+                    <ListItemContent>{each.label}</ListItemContent>
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </ListItem>
+        {/* <ListItem nested sx={{ mt: 2 }}>
         <ListSubheader>
           Tags
           <IconButton
@@ -170,6 +179,39 @@ export default function Navigation() {
           </ListItem>
         </List>
       </ListItem> */}
-    </List>
+      </List>
+
+      <Card
+        sx={{
+          mt: 'auto',
+          mx: 'auto',
+          py: 1,
+          px: 2,
+        }}
+        variant="soft"
+        color={`${isStatusOK ? 'success' : 'danger'}`}
+      >
+        <Stack
+          direction={'row'}
+          gap={1}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '99px',
+              bgcolor: isStatusOK ? 'success.300' : 'danger.500',
+            }}
+          />
+
+          <Typography>status: {isStatusOK ? 'ok' : 'ko'}</Typography>
+        </Stack>
+      </Card>
+    </Stack>
   );
 }
