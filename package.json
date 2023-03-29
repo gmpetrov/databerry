@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "dotenv -e .env.local -- prisma migrate dev",
-    "prisma:migrate:prod": "dotenv -e .env.local -- prisma migrate deploy"
+    "prisma:migrate:prod": "dotenv -e .env.local -- prisma migrate deploy",
+    "dotenv": "dotenv -e .env.local"
   },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.2",
@@ -28,6 +29,7 @@
     "@pinecone-database/pinecone": "^0.0.11",
     "@prisma/client": "^4.12.0",
     "@types/node": "18.15.10",
+    "@types/nodemailer": "^6.4.7",
     "@types/react": "18.0.29",
     "@types/react-dom": "18.0.11",
     "aws-sdk": "^2.1343.0",
@@ -38,7 +40,7 @@
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "hash-wasm": "^4.9.0",
-    "langchain": "^0.0.41",
+    "langchain": "^0.0.43",
     "nanoid": "^4.0.2",
     "next": "13.2.4",
     "next-auth": "^4.20.1",

@@ -79,3 +79,15 @@ export const UpsertResponseSchema = z.object({
 });
 
 export type UpsertResponseSchema = z.infer<typeof UpsertResponseSchema>;
+
+export const ChatRequest = z.object({
+  query: z.string(),
+});
+
+export type ChatRequest = z.infer<typeof ChatRequest>;
+
+export const ChatResponse = z.object({
+  answer: z.string(),
+});
+
+export type ChatResponse = z.infer<typeof ChatResponse>;

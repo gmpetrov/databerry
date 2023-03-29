@@ -3,16 +3,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Avatar, IconButton, Menu, MenuItem } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
-import { signOut,useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import React from 'react';
-
-import Navigation from '@app/components/Navigation';
 
 import Logo from '../Logo';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
 import Header from './Header';
 import Main from './Main';
+import Navigation from './Navigation';
 import Root from './Root';
 import SideDrawer from './SideDrawer';
 import SideNav from './SideNav';
@@ -51,6 +50,7 @@ export default function Layout(props: Props) {
             height: '100vh',
             overflow: 'hidden',
           }),
+          maxHeight: '100vh',
         }}
       >
         <Header>
@@ -192,7 +192,15 @@ export default function Layout(props: Props) {
           <Navigation />
         </SideNav>
 
-        <Main>{props.children}</Main>
+        <Main
+          sx={{
+            height: '100%',
+            maxHeight: '100%',
+            overflowY: 'scroll',
+          }}
+        >
+          {props.children}
+        </Main>
       </Root>
     </>
   );
