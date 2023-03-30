@@ -39,14 +39,15 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     });
   }
 
-  private async createCollection() {
-    await this.client.put(`/collections/${this.datastore.id}`, {
-      name: this.datastore.id,
+  private async initAppCollection() {
+    await this.client.put(`/collections/text-embedding-ada-002`, {
+      name: 'text-embedding-ada-002',
       hnsw_config: {
-        m: 16,
+        payload_m: 16,
+        m: 0,
       },
       optimizers_config: {
-        memmap_threshold: 1024,
+        memmap_threshold: 10000,
       },
       vectors: {
         size: 1536,
@@ -55,22 +56,19 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       on_disk_payload: true,
     });
 
-    await this.client.put(`/collections/${this.datastore.id}/index`, {
+    await this.client.put(`/collections/text-embedding-ada-002/index`, {
+      field_name: MetadataFields.datastore_id,
+      field_schema: 'keyword',
+    });
+
+    await this.client.put(`/collections/text-embedding-ada-002/index`, {
       field_name: MetadataFields.datasource_id,
       field_schema: 'keyword',
     });
 
-    await this.client.put(`/collections/${this.datastore.id}/index`, {
+    await this.client.put(`/collections/text-embedding-ada-002/index`, {
       field_name: MetadataFields.tags,
       field_schema: 'keyword',
-    });
-
-    await this.client.put(`/collections/${this.datastore.id}/index`, {
-      field_name: MetadataFields.text,
-      field_schema: {
-        type: 'text',
-        tokenizer: 'word',
-      },
     });
   }
 
@@ -97,6 +95,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
         ({
           id: documentIds[idx],
           payload: {
+            datastore_id: this.datastore.id,
             text: documents[idx].pageContent,
             source: documents[idx].metadata.source,
             tags: documents[idx].metadata.tags,
@@ -109,33 +108,49 @@ export class QdrantManager extends ClientManager<DatastoreType> {
         } as Point)
     );
 
-    // Pinecone recommends a limit of 100 vectors per upsert request
     const chunkSize = 50;
     for (let i = 0; i < qdrantVectors.length; i += chunkSize) {
       const chunk = qdrantVectors.slice(i, i + chunkSize);
-      await this.client.put(`/collections/${this.datastore.id}/points`, {
+      await this.client.put(`/collections/text-embedding-ada-002/points`, {
         points: chunk,
       });
     }
   }
 
+  //  Delete points related to a Datastore
   async delete() {
-    return this.client.delete(`/collections/${this.datastore.id}`);
+    return this.client.post(
+      `/collections/text-embedding-ada-002/points/delete`,
+      {
+        filter: {
+          must: [
+            {
+              key: MetadataFields.datastore_id,
+              match: { value: this.datastore.id },
+            },
+          ],
+        },
+      }
+    );
   }
 
+  //  Delete points related to a Datasource
   async remove(datasourceId: string) {
-    return this.client.post(`/collections/${this.datastore.id}/points/delete`, {
-      filter: {
-        must: [
-          {
-            key: 'datasource_id',
-            match: {
-              value: datasourceId,
+    return this.client.post(
+      `/collections/text-embedding-ada-002/points/delete`,
+      {
+        filter: {
+          must: [
+            {
+              key: MetadataFields.datasource_id,
+              match: {
+                value: datasourceId,
+              },
             },
-          },
-        ],
-      },
-    });
+          ],
+        },
+      }
+    );
   }
 
   async upload(documents: Chunk[]) {
@@ -149,7 +164,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       if (axios.isAxiosError(error)) {
         if ((error as AxiosError).response?.status === 404) {
           // Collection does not exist, create it
-          await this.createCollection();
+          await this.initAppCollection();
           await this.addDocuments(documents, ids);
         }
       } else {
@@ -165,12 +180,20 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     const vectors = await this.embeddings.embedDocuments([props.query]);
 
     const results = await this.client.post(
-      `/collections/${this.datastore.id}/points/search`,
+      `/collections/text-embedding-ada-002/points/search`,
       {
         vector: vectors[0],
         limit: props.topK,
         with_payload: true,
         with_vectors: false,
+        filter: {
+          must: [
+            {
+              key: MetadataFields.datastore_id,
+              match: { value: this.datastore.id },
+            },
+          ],
+        },
       }
     );
 

@@ -24,7 +24,7 @@ export const removeDatasource = async (
   });
 
   if (!datastore) {
-    return res.status(404).json({ message: 'Not found' });
+    throw new Error('Datasource not found');
   }
 
   await new DatastoreManager(datastore).remove(data.datasourceId);

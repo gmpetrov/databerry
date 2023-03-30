@@ -74,6 +74,7 @@ export class DatastoreManager {
         ...each,
         metadata: {
           ...each?.metadata,
+          datastore_id: this.datastore.id,
           chunk_id: uuidv4(),
           chunk_hash,
           datasource_hash,

@@ -31,6 +31,7 @@ export enum AppStatus {
 }
 
 export enum MetadataFields {
+  datastore_id = 'datastore_id',
   datasource_id = 'datasource_id',
   tags = 'tags',
   text = 'text',
@@ -49,6 +50,7 @@ export type DocumentMetadata = {
 
 export interface Chunk extends Document {
   metadata: DocumentMetadata & {
+    datastore_id: string;
     chunk_id: string;
     chunk_hash: string;
     datasource_hash: string;
