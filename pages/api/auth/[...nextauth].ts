@@ -24,6 +24,7 @@ export const authOptions = {
         user: {
           ...session.user,
           id: user.id,
+          plan: (user as any).plan,
         },
       };
     },

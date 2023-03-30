@@ -8,10 +8,11 @@ import {
   Link as JoyLink,
   Typography,
 } from '@mui/joy';
-import { Prisma } from '@prisma/client';
+import { Prisma, SubscriptionPlan } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
@@ -28,6 +29,7 @@ import { getDatastores } from '../api/datastores';
 
 export default function DatasourcesPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const [state, setState] = useStateReducer({
     isCreateDatastoreModalOpen: false,
@@ -40,7 +42,16 @@ export default function DatasourcesPage() {
   >('/api/datastores', fetcher);
 
   const handleClickNewDatastore = () => {
-    setState({ isCreateDatastoreModalOpen: true });
+    if (
+      session?.user?.plan === SubscriptionPlan.free &&
+      (getDatastoresQuery?.data?.length || 0) >= 1
+    ) {
+      alert(
+        `You're limited to 1 datastore on the free plan. Contact support@databerry.ai to upgrade your account.`
+      );
+    } else {
+      setState({ isCreateDatastoreModalOpen: true });
+    }
   };
 
   return (

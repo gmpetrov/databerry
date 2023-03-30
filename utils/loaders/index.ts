@@ -22,4 +22,8 @@ export class DatasourceLoader {
   load(file?: any) {
     return this.manager.load(file);
   }
+
+  getSize(param?: any) {
+    return this.manager.getSize(param);
+  }
 }

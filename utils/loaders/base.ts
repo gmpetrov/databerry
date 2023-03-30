@@ -13,5 +13,6 @@ export abstract class DatasourceLoaderBase {
     return await import('langchain/document_loaders');
   }
 
+  abstract getSize(param?: any): Promise<number>;
   abstract load(file?: any): Promise<Document>;
 }

@@ -14,6 +14,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
 
+  plan SubscriptionPlan? @default(free)
+
   image    String?
   accounts Account[]
   sessions Session[]
@@ -172,4 +174,9 @@ enum DatasourceType {
 enum DatastoreType {
   pinecone
   qdrant
+}
+
+enum SubscriptionPlan {
+  free
+  premium
 }

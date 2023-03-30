@@ -6,6 +6,7 @@ import {
   DatasourceType,
   Prisma,
 } from '@prisma/client';
+import axios from 'axios';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
@@ -95,10 +96,19 @@ export default function BaseForm(props: Props) {
         ? undefined
         : values.datasourceText;
 
-      const datasource = await upsertDatasourceMutation.trigger({
+      const payload = {
         ...values,
         datasourceText,
-      } as any);
+      } as any;
+
+      const check = await axios.post('/api/datasources/check', values);
+
+      if (!check?.data?.valid) {
+        alert(check?.data?.message);
+        return;
+      }
+
+      const datasource = await upsertDatasourceMutation.trigger(payload);
 
       props?.onSubmitSuccess?.(datasource!);
     } catch (err) {
