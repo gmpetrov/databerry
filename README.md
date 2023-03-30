@@ -1,7 +1,7 @@
 
 <h1 align="center" style="font-weight: bold">
   <br>
-  <a href="https://webtorrent.io"><img src="public/databerry-logo-icon.png" alt="WebTorrent" width="200"></a>
+  <a href="https://databerry.ai"><img src="public/databerry-logo-icon.png" alt="WebTorrent" width="200"></a>
   <br>
   Databerry
   <br>
@@ -13,12 +13,13 @@
 <!-- <h4 align="center">The no-code platform for semantic search and retrieval of personal or organizational documents</h4> -->
 
 
+
+<h2 align="center">
+<img src="public/features.png" alt="WebTorrent" width="700" style="max-width: 100%;">
+</h2>
+
+
 **[Databerry](https://databerry.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
-
-
-
-
-Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-retrieval-plugin).
 
 ### Features
 - Load data from anywhere
@@ -45,3 +46,4 @@ Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-ret
 - Prisma
 - Qdrant
 
+Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-retrieval-plugin).
