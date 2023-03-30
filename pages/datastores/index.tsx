@@ -39,6 +39,10 @@ export default function DatasourcesPage() {
     Prisma.PromiseReturnType<typeof getDatastores>
   >('/api/datastores', fetcher);
 
+  const handleClickNewDatastore = () => {
+    setState({ isCreateDatastoreModalOpen: true });
+  };
+
   return (
     <Box
       component="main"
@@ -128,7 +132,7 @@ export default function DatasourcesPage() {
             variant="solid"
             color="primary"
             startDecorator={<AddIcon />}
-            onClick={() => setState({ isCreateDatastoreModalOpen: true })}
+            onClick={handleClickNewDatastore}
           >
             New Datastore
           </Button>
