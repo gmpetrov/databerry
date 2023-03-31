@@ -166,6 +166,7 @@ enum DatasourceStatus {
 enum DatasourceType {
   web_page
   text
+  file
   // html
   // pdf
   // notion

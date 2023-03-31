@@ -31,8 +31,7 @@ const options: DatsourceOption[] = [
     type: 'file' as any,
     label: 'File',
     description: 'It can be: PDF, CSV, JSON, Text, PowerPoint, Word, Excel',
-    // icon: '/notion-logo.svg',
-    disabled: true,
+    disabled: false,
   },
   {
     type: 'notion' as any,

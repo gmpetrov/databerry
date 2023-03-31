@@ -37,19 +37,6 @@ export const loadDatasource = async (
     return res.status(404).json({ message: 'Not found' });
   }
 
-  // If datasourceText is present update from text otherwise from source
-  // const document = data.datasourceText
-  //   ? new Document({
-  //       pageContent: data.datasourceText,
-  //       metadata: {
-  //         source_type: datasource.type,
-  //         source: (datasource?.config as any)?.url,
-  //         datasource_id: datasource.id,
-  //         tags: [],
-  //       },
-  //     })
-  //   : await new DatasourceLoader(datasource).load(data.datasourceText);
-
   const document = await new DatasourceLoader(datasource).load(
     data.datasourceText
   );
