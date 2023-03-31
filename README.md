@@ -25,9 +25,16 @@
 - Load data from anywhere
   - Raw text
   - Web page
-  - Pdf
-  - Notion
-  - ... (more coming soon)
+  - Files
+    - Word
+    - Excel
+    - Powerpoint
+    - PDF
+    - Mardown
+    - Plain Text
+  - Web Site (coming soon)
+  - Notion (coming soon)
+  - Airtable (coming soon)
 - No-code: User-friendly interface to manage your datastores and chat with your data
 - Securized API endpoint for querying your data
 - Auto sync data sources (coming soon)
