@@ -36,8 +36,6 @@ export default function Navigation() {
     }
   );
 
-  console.log('STATUS', getDatastoresQuery.data);
-
   const isStatusOK = getDatastoresQuery?.data?.status === AppStatus.OK;
 
   const items = React.useMemo(() => {

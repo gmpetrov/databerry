@@ -56,7 +56,6 @@ export default function SignInPage() {
   });
 
   const handleSubmitEmail = (values: Schema) => {
-    console.log(values);
     signIn('email', { email: values.email });
   };
 

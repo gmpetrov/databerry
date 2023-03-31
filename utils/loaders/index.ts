@@ -11,7 +11,9 @@ export class DatasourceLoader {
   loadersMap = {
     [DatasourceType.web_page]: WebPageLoader,
     [DatasourceType.text]: TextLoader,
-    // [DatasourceType.pdf]: PdfLoader,
+    // Files are converted to text in the browser.
+    // Just adding this type for typescript to be happy as there is a field 'file' in the DatasourceType enum
+    [DatasourceType.file]: TextLoader,
   };
 
   constructor(datasource: Datasource) {

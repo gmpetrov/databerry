@@ -99,16 +99,16 @@ export default function BaseForm(props: Props) {
       const payload = {
         ...values,
         datasourceText,
-      } as any;
+      } as UpsertDatasourceSchema;
 
-      const check = await axios.post('/api/datasources/check', values);
+      const check = await axios.post('/api/datasources/check', payload);
 
       if (!check?.data?.valid) {
         alert(check?.data?.message);
         return;
       }
 
-      const datasource = await upsertDatasourceMutation.trigger(payload);
+      const datasource = await upsertDatasourceMutation.trigger(payload as any);
 
       props?.onSubmitSuccess?.(datasource!);
     } catch (err) {
