@@ -8,12 +8,13 @@ import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
+import { UpsertDatasourceSchema } from '@app/types/models';
 import excelToText from '@app/utils/excel-to-text';
 import pdfToText from '@app/utils/pdf-to-text';
 import pptxToText from '@app/utils/pptx-to-text';
 import wordToText from '@app/utils/word-to-text';
 
-import Base, { UpsertDatasourceSchema } from './Base';
+import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
 type Props = DatasourceFormProps & {};

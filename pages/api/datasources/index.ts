@@ -1,8 +1,8 @@
 import { DatasourceStatus } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
-import { UpsertDatasourceSchema } from '@app/components/DatasourceForms/Base';
 import { AppNextApiRequest } from '@app/types/index';
+import { UpsertDatasourceSchema } from '@app/types/models';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';

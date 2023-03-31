@@ -5,8 +5,9 @@ import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
 import Input from '@app/components/Input';
+import { UpsertDatasourceSchema } from '@app/types/models';
 
-import Base, { UpsertDatasourceSchema } from './Base';
+import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
 type Props = DatasourceFormProps & {};

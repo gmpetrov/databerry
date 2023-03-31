@@ -1,8 +1,8 @@
 import { AppDatasource, SubscriptionPlan } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
-import { UpsertDatasourceSchema } from '@app/components/DatasourceForms/Base';
-import { AppNextApiRequest } from '@app/types/index';
+import { AppNextApiRequest } from '@app/types';
+import { UpsertDatasourceSchema } from '@app/types/models';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatasourceLoader } from '@app/utils/loaders';
 import validate from '@app/utils/validate';

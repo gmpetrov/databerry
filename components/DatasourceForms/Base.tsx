@@ -15,20 +15,10 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
+import { UpsertDatasourceSchema } from '@app/types/models';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 
 import type { DatasourceFormProps } from './types';
-
-export const UpsertDatasourceSchema = z.object({
-  id: z.string().trim().cuid().optional(),
-  type: z.nativeEnum(DatasourceType),
-  name: z.string().trim().optional(),
-  datastoreId: z.string().trim().cuid(),
-  datasourceText: z.string().optional(),
-  config: z.object({}),
-});
-
-export type UpsertDatasourceSchema = z.infer<typeof UpsertDatasourceSchema>;
 
 type Props = DatasourceFormProps & {
   schema: any;

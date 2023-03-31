@@ -15,6 +15,7 @@ import {
 } from '@mui/joy';
 import { Prisma } from '@prisma/client';
 import axios from 'axios';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -22,13 +23,19 @@ import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 
-import { DatasourceFormsMap } from '@app/components/DatasourceForms';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getDatasource } from '@app/pages/api/datasources/[id]';
 import { RouteNames } from '@app/types';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
+
+const DatasourceForm = dynamic(
+  () => import('@app/components/DatasourceForms'),
+  {
+    ssr: false,
+  }
+);
 
 export default function DatasourcePage() {
   const router = useRouter();
@@ -203,22 +210,23 @@ export default function DatasourcePage() {
             mx: 'auto',
           })}
         >
-          {React.createElement(
-            DatasourceFormsMap?.[getDatasourceQuery?.data?.type!],
-            {
-              onSubmitSuccess: () => {
+          {getDatasourceQuery?.data?.type && (
+            <DatasourceForm
+              type={getDatasourceQuery?.data?.type}
+              onSubmitSuccess={() => {
                 getDatasourceQuery.mutate();
-              },
-              defaultValues: getDatasourceQuery?.data as any,
-              submitButtonText: 'Update',
-              submitButtonProps: {
+              }}
+              defaultValues={getDatasourceQuery?.data as any}
+              submitButtonText={'Update'}
+              submitButtonProps={{
                 size: 'md',
                 color: 'primary',
                 variant: 'solid',
                 className: 'ml-auto',
-              },
-            }
+              }}
+            />
           )}
+
           <Divider sx={{ my: 4 }} />
 
           <FormControl sx={{ gap: 1 }}>

@@ -1,4 +1,4 @@
-import { DatastoreType } from '@prisma/client';
+import { DatasourceType, DatastoreType } from '@prisma/client';
 import { z } from 'zod';
 
 export const PineconeConfigSchema = z.object({
@@ -47,3 +47,14 @@ export const DocumentSchema = z.object({
   text: z.string().min(1),
   metadata: DocumentMetadataSchema.optional(),
 });
+
+export const UpsertDatasourceSchema = z.object({
+  id: z.string().trim().cuid().optional(),
+  type: z.nativeEnum(DatasourceType),
+  name: z.string().trim().optional(),
+  datastoreId: z.string().trim().cuid(),
+  datasourceText: z.string().optional(),
+  config: z.object({}),
+});
+
+export type UpsertDatasourceSchema = z.infer<typeof UpsertDatasourceSchema>;

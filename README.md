@@ -10,7 +10,7 @@
   
 </h1>
 
-<!-- <h4 align="center">The no-code platform for semantic search and retrieval of personal or organizational documents</h4> -->
+<!-- <h4 align="center">The no-code platform for semantic search and retrieval of personal or organizational documents.</h4> -->
 
 
 

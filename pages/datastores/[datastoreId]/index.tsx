@@ -28,6 +28,7 @@ import {
 } from '@mui/joy';
 import { DatastoreVisibility, Prisma } from '@prisma/client';
 import axios from 'axios';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -35,7 +36,6 @@ import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
 
-import CreateDatasourceModal from '@app/components/CreateDatasourceModal';
 import DatasourceTable from '@app/components/DatasourceTable';
 import { DatastoreFormsMap } from '@app/components/DatastoreForms';
 import Layout from '@app/components/Layout';
@@ -47,7 +47,12 @@ import getRootDomain from '@app/utils/get-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
-import { getDatastores } from '../../api/datastores';
+const CreateDatasourceModal = dynamic(
+  () => import('@app/components/CreateDatasourceModal'),
+  {
+    ssr: false,
+  }
+);
 
 export default function DatastorePage() {
   const router = useRouter();

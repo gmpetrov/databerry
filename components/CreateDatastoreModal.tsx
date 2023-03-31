@@ -17,6 +17,7 @@ import {
   Datastore,
   DatastoreType,
 } from '@prisma/client';
+import dynamic from 'next/dynamic';
 import React from 'react';
 
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -25,8 +26,14 @@ import { CreateDatastoreRequestSchema } from '@app/types/dtos';
 import DatasourceOptions from './DatasourceForms/DatasourceOptions';
 import { DatasourceFormProps } from './DatasourceForms/types';
 import { DatastoreFormProps } from './DatastoreForms/types';
-import { DatasourceFormsMap } from './DatasourceForms';
 import { DatastoreFormsMap } from './DatastoreForms';
+
+const DatasourceForm = dynamic(
+  () => import('@app/components/DatasourceForms'),
+  {
+    ssr: false,
+  }
+);
 
 type Props = {
   isOpen?: boolean;
@@ -147,13 +154,13 @@ export default function CreateDatastoreModal(props: Props) {
       label: 'Setup the Datasource',
       description: `An empty Datastore is not very useful! Now add some data in it`,
       disableButtons: true,
-      component:
-        DatasourceFormsMap?.[state.selectedSourceType!] &&
-        React.createElement(DatasourceFormsMap?.[state.selectedSourceType!], {
-          defaultValues: {
+      component: state.selectedSourceType && (
+        <DatasourceForm
+          type={state.selectedSourceType}
+          defaultValues={{
             datastoreId: state.datastore?.id,
-          },
-          onSubmitSuccess: (values) => {
+          }}
+          onSubmitSuccess={(values: any) => {
             handleNext();
 
             props.handleClose();
@@ -161,8 +168,8 @@ export default function CreateDatastoreModal(props: Props) {
             handleReset();
 
             props?.onSubmitSuccess?.(state.datastore!, values);
-          },
-          customSubmitButton: (btnProps: any) => (
+          }}
+          customSubmitButton={(btnProps: any) => (
             <Box sx={{ mb: 2 }}>
               <div>
                 <Button
@@ -182,8 +189,9 @@ export default function CreateDatastoreModal(props: Props) {
                 </Button>
               </div>
             </Box>
-          ),
-        } as DatasourceFormProps),
+          )}
+        />
+      ),
     },
   ];
 

@@ -43,7 +43,7 @@ specifiers:
   nodemailer: ^6.9.1
   nprogress: ^0.2.0
   p-map: ^5.5.0
-  pdfjs-dist: ^3.4.120
+  pdfjs-dist: 3.4.120
   pino: ^8.11.0
   pino-pretty: ^10.0.0
   postcss: ^8.4.21

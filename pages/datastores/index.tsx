@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/joy';
 import { Prisma, SubscriptionPlan } from '@prisma/client';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -17,7 +18,6 @@ import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
 
-import CreateDatastoreModal from '@app/components/CreateDatastoreModal';
 import DatastoreTable from '@app/components/DatastoreTable';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -26,6 +26,13 @@ import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
 import { getDatastores } from '../api/datastores';
+
+const CreateDatastoreModal = dynamic(
+  () => import('@app/components/CreateDatastoreModal'),
+  {
+    ssr: false,
+  }
+);
 
 export default function DatasourcesPage() {
   const router = useRouter();
