@@ -1,8 +1,11 @@
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, IconButton, Menu, MenuItem } from '@mui/joy';
+import { Avatar, Chip, Divider, IconButton, Menu, MenuItem } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
+import axios from 'axios';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react';
 
@@ -21,6 +24,7 @@ type Props = {
 };
 
 export default function Layout(props: Props) {
+  const router = useRouter();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [userMenuElement, setUserMenuElement] =
     React.useState<null | HTMLElement>(null);
@@ -33,6 +37,18 @@ export default function Layout(props: Props) {
 
   const closeUserMenu = () => {
     setUserMenuElement(null);
+  };
+
+  const handleClickManageSubsscription = async () => {
+    try {
+      const { data } = await axios.post('/api/stripe/customer-portal');
+
+      if (data) {
+        router.push(data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const { data: session, status } = useSession();
@@ -81,6 +97,12 @@ export default function Layout(props: Props) {
             <Typography component="h1" fontWeight="xl">
               Databerry
             </Typography>
+
+            {session?.user?.isPremium && (
+              <Chip color="warning" variant="soft" size="sm">
+                premium
+              </Chip>
+            )}
           </Box>
           {/* <Input
             size="sm"
@@ -184,6 +206,23 @@ export default function Layout(props: Props) {
                 zIndex: theme.zIndex.tooltip,
               })}
             >
+              {session?.user?.isPremium ? (
+                <MenuItem onClick={() => handleClickManageSubsscription()}>
+                  Manage Subscription
+                </MenuItem>
+              ) : (
+                <Link
+                  href={`${process.env
+                    .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
+                    session?.user?.id
+                  }`}
+                  className="w-full"
+                >
+                  <MenuItem>Subscribe</MenuItem>
+                </Link>
+              )}
+
+              <Divider />
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu>
           </Box>

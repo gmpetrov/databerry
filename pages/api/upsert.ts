@@ -13,10 +13,7 @@ import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
 
-export const generateAiPluginJson = async (
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) => {
+export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const host = req?.headers?.['host'];
   const subdomain = getSubdomain(host!);
   const data = req.body as UpsertRequestSchema;
@@ -79,7 +76,7 @@ export const generateAiPluginJson = async (
 handler.post(
   validate({
     body: SearchRequestSchema,
-    handler: respond(generateAiPluginJson),
+    handler: respond(upsert),
   })
 );
 

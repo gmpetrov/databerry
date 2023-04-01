@@ -11,7 +11,7 @@ import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
 
-export const generateAiPluginJson = async (
+export const generateOpenApiYaml = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
@@ -46,6 +46,6 @@ export const generateAiPluginJson = async (
 
   return res.send(doc.toString());
 };
-handler.get(generateAiPluginJson);
+handler.get(generateOpenApiYaml);
 
 export default handler;

@@ -21,15 +21,20 @@ export class WebPageLoader extends DatasourceLoaderBase {
     const url: string = (
       this.datasource.config as z.infer<typeof WebPageSourceSchema>['config']
     )['source'];
-    const loaders = await this.importLoaders();
-    const docs = (await new loaders.CheerioWebBaseLoader(
-      url
-    ).load()) as Document[];
+
+    const { load } = await import('cheerio');
+
+    const res = await axios(url);
+    const $ = load(res.data);
+    $('script').remove();
+    $('style').remove();
+    $('link').remove();
+    const text = $('body').text();
 
     return {
-      ...docs?.[0],
+      pageContent: text,
       metadata: {
-        ...docs?.[0]?.metadata,
+        source: url,
         datasource_id: this.datasource.id,
         source_type: this.datasource.type,
         tags: [],

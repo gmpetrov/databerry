@@ -14,6 +14,8 @@ export enum RouteNames {
   DATASTORES = '/datastores',
   CHAT = '/chat',
   MAINTENANCE = '/maintenance',
+  APPS = '/apps',
+  CHAT_SITE = '/products/chat-site',
 }
 
 export type AppNextApiRequest = NextApiRequest & {

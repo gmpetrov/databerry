@@ -1,12 +1,38 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { PrismaClient } from '@prisma/client';
 import NextAuth, { AuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GithubProvider from 'next-auth/providers/github';
 
 import prisma from '@app/utils/prisma-client';
 
+const CustomPrismaProvider = (p: PrismaClient) => {
+  return {
+    ...PrismaAdapter(p),
+    async getSessionAndUser(sessionToken: string) {
+      const userAndSession = await p.session.findUnique({
+        where: { sessionToken },
+        include: {
+          user: {
+            include: {
+              subscriptions: {
+                where: {
+                  status: 'active',
+                },
+              },
+            },
+          },
+        },
+      });
+      if (!userAndSession) return null;
+      const { user, ...session } = userAndSession;
+      return { user, session };
+    },
+  };
+};
+
 export const authOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: CustomPrismaProvider(prisma),
   providers: [
     EmailProvider({
       server: process.env.EMAIL_SERVER,
@@ -24,7 +50,8 @@ export const authOptions = {
         user: {
           ...session.user,
           id: user.id,
-          plan: (user as any).plan,
+          isPremium: (user as any)?.subscriptions?.length > 0,
+          customerId: (user as any)?.subscriptions?.[0]?.customerId as string,
         },
       };
     },

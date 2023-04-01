@@ -8,7 +8,7 @@ import {
   Link as JoyLink,
   Typography,
 } from '@mui/joy';
-import { Prisma, SubscriptionPlan } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -50,7 +50,7 @@ export default function DatasourcesPage() {
 
   const handleClickNewDatastore = () => {
     if (
-      session?.user?.plan === SubscriptionPlan.free &&
+      !session?.user?.isPremium &&
       (getDatastoresQuery?.data?.length || 0) >= 1
     ) {
       alert(

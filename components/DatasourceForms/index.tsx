@@ -10,6 +10,10 @@ const WebPageForm = dynamic(() => import('./WebPageForm'), {
   ssr: false,
 });
 
+const WebSiteForm = dynamic(() => import('./WebSiteForm'), {
+  ssr: false,
+});
+
 const FileForm = dynamic(() => import('./FileForm'), {
   ssr: false,
 });
@@ -18,6 +22,7 @@ const DatasourceFormsMap = {
   [DatasourceType.web_page]: WebPageForm,
   [DatasourceType.text]: TextForm,
   [DatasourceType.file]: FileForm,
+  [DatasourceType.web_site]: WebSiteForm,
 };
 
 type Props = {

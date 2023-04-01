@@ -8,7 +8,8 @@ declare module 'next-auth' {
   interface Session {
     user: {
       id: string;
-      plan: SubscriptionPlan;
+      isPremium: boolean;
+      customerId: string;
     } & DefaultSession['user'];
   }
 }

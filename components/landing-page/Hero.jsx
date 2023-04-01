@@ -1,14 +1,10 @@
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import Button from '@mui/joy/Button';
 import Image from 'next/image';
 import Link from 'next/link'
 
-import { Button } from '@app/components/landing-page/Button';
 import { Container } from '@app/components/landing-page/Container';
-import logoLaravel from '@app/images/logos/laravel.svg';
-import logoMirage from '@app/images/logos/mirage.svg';
-import logoStatamic from '@app/images/logos/statamic.svg';
-import logoStaticKit from '@app/images/logos/statickit.svg';
-import logoTransistor from '@app/images/logos/transistor.svg';
-import logoTuple from '@app/images/logos/tuple.svg';
+import { RouteNames } from '@app/types';
 
 export function Hero() {
   return (
@@ -24,13 +20,17 @@ export function Hero() {
       {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full">
         <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full"><span>New</span></span>We just launched on ProductHunt!<form action="#"><button className="text-[10px]underline-offset-4 text-indigo-500 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline">View Launch <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-narrow-right" width="20" height="20" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="5" y1="12" x2="19" y2="12"></line><line x1="15" y1="16" x2="19" y2="12"></line><line x1="15" y1="8" x2="19" y2="12"></line></svg></button></form></div> */}
 
-        <Link href="https://github.com/gmpetrov/databerry">
-        <div className='inline-flex items-center justify-center max-w-2xl p-2 mx-auto mb-4 border-2 border-indigo-400 rounded-full bg-black/30'>
+        <Link href={RouteNames.CHAT_SITE}>
+
+        <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button>
+
+        {/* <div className='inline-flex items-center justify-center max-w-2xl p-2 mx-auto mb-4 border-2 border-indigo-400 rounded-full bg-black/30'>
           <h2 className="text-xs font-semibold leading-none text-indigo-300 ">Open Source</h2>
-        </div>
+        </div> */}
         </Link>
       <h1 className="max-w-2xl mx-auto text-5xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-7xl">
-        {'Document Retrieval for ChatGPT in minutes'}
+        {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
+        {'Connect your data \nto ChatGPT \nin minutes'}
       </h1>
 
       <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2>
@@ -41,7 +41,7 @@ export function Hero() {
         We make your data ready for large language models
       </p>
       <div className="flex justify-center mt-10 gap-x-6">
-        <Button target="_blank" href="https://app.databerry.ai/signin">Start Building</Button>
+        {/* <Button target="_blank" href="https://app.databerry.ai/signin">Start Building</Button> */}
         {/* <Button
           href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           variant="outline"
