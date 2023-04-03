@@ -79,17 +79,17 @@ export default function Home() {
             </Button>
           </Link>
 
-          {/* <Box sx={{ width: 1, maxWidth: 800, mt: 8 }}>
+          <Box sx={{ width: 1, maxWidth: 800, mt: 8 }}>
             <iframe
               //   className="w-full h-[300px] rounded-2xl"
               //   width="560"
               className="w-full aspect-video rounded-3xl"
-              src="https://www.youtube.com/embed/vh8meWZzupY"
+              src="https://www.youtube.com/embed/LPISZdaiDBM"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             ></iframe>
-          </Box> */}
+          </Box>
         </Box>
 
         <PrimaryFeatures />
