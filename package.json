@@ -12,6 +12,9 @@
     "prisma:migrate:prod": "dotenv -e .env.local -- prisma migrate deploy",
     "dotenv": "dotenv -e .env.local"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.2",
     "@emotion/cache": "^11.10.5",
@@ -36,6 +39,7 @@
     "axios": "^1.3.4",
     "cheerio": "1.0.0-rc.12",
     "clsx": "^1.2.1",
+    "crisp-api": "^7.4.1",
     "cuid": "^3.0.0",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
@@ -57,6 +61,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.8",
+    "stripe": "^11.17.0",
     "superjson": "^1.12.2",
     "swr": "^2.1.1",
     "typescript": "5.0.2",

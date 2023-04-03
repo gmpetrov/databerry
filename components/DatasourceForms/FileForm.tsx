@@ -1,7 +1,7 @@
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Alert, Button, Card, Chip, IconButton, Typography } from '@mui/joy';
-import { DatasourceType, SubscriptionPlan } from '@prisma/client';
+import { DatasourceType } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import React, { useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -85,10 +85,7 @@ function Nested() {
       return;
     }
 
-    if (
-      session?.user?.plan === SubscriptionPlan.free &&
-      new Blob([text]).size / 1000000 > 1.1
-    ) {
+    if (!session?.user?.isPremium && new Blob([text]).size / 1000000 > 1.1) {
       alert(
         'File upload is limited to 5MB on the free plan. Contact support@databerry.ai to upgrade your account'
       );

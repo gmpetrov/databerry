@@ -1,4 +1,4 @@
-import { AppDatasource, SubscriptionPlan } from '@prisma/client';
+import { AppDatasource } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types';
@@ -31,7 +31,7 @@ export const checkDatasource = async (
     console.log('[checkDatasource]', err?.response?.status);
   }
 
-  if (session.user.plan === SubscriptionPlan.free && size / 1000000 > 1.1) {
+  if (!session.user?.isPremium && size / 1000000 > 1.1) {
     isValid = false;
     message =
       'The maximum file size is 1MB on the free plan. Contact support@databerry.ai to upgrade your account';

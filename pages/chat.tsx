@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Divider,
   IconButton,
   Input,
@@ -222,11 +223,21 @@ export default function DatasourcesPage() {
                   sx={{
                     mr: each.from === 'agent' ? 'auto' : 'none',
                     ml: each.from === 'human' ? 'auto' : 'none',
+                    whiteSpace: 'pre-wrap',
                   }}
                 >
                   {each.message}
                 </Card>
               ))}
+
+              {state.loading && (
+                <CircularProgress
+                  variant="soft"
+                  color="neutral"
+                  size="sm"
+                  sx={{ mx: 'auto', my: 2 }}
+                />
+              )}
             </Stack>
           </Stack>
 

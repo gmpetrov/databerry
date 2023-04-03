@@ -14,8 +14,6 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
 
-  plan SubscriptionPlan? @default(free)
-
   image    String?
   accounts Account[]
   sessions Session[]
@@ -23,9 +21,10 @@ model User {
   picture       String?
   hasOptInEmail Boolean? @default(false) @map("has_opt_in_email")
 
-  projects    Project[]
-  datastores  Datastore[]
-  datasources AppDatasource[]
+  projects      Project[]
+  datastores    Datastore[]
+  datasources   AppDatasource[]
+  subscriptions Subscription[]  @relation("user")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -103,8 +102,9 @@ model DatastoreApiKey {
   id  String @id @default(cuid())
   key String @unique()
 
-  datastoreId String?    @map("datastore_id")
-  datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+  datastoreId          String?               @map("datastore_id")
+  datastore            Datastore?            @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+  externalIntegrations ExternalIntegration[]
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -150,6 +150,77 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
+model ExternalIntegration {
+  id            String           @id @default(cuid())
+  integrationId String           @unique @map("integration_id")
+  apiKeyId      String           @map("api_key_id")
+  apiKey        DatastoreApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  type          IntegrationType
+
+  @@map("external_integrations")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  active      Boolean  @default(false)
+  name        String
+  description String?
+  image       String?
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  prices      Price[]
+
+  @@map("products")
+}
+
+model Price {
+  id                String         @id @default(cuid())
+  productId         String         @map("product_id")
+  active            Boolean        @default(false)
+  currency          String
+  interval          PriceInterval?
+  unitAmount        Int?           @map("unit_amount")
+  interval_count    Int?
+  trial_period_days Int?
+  type              PriceType?
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+  product           Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  subscriptions     Subscription[]
+
+  @@map("prices")
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  priceId              String
+  customerId           String             @map("customer_id")
+  status               SubscriptionStatus
+  start_date           DateTime?
+  ended_at             DateTime?
+  trial_end            DateTime?
+  trial_start          DateTime?
+  cancel_at            DateTime?
+  cancel_at_period_end Boolean?
+  canceled_at          DateTime?
+  metadata             Json?
+  coupon               String?
+
+  // projectId String?  @unique
+  // project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  price Price @relation(fields: [priceId], references: [id])
+
+  user   User?   @relation(name: "user", fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("subscriptions")
+}
+
 enum DatastoreVisibility {
   public
   private
@@ -165,6 +236,7 @@ enum DatasourceStatus {
 
 enum DatasourceType {
   web_page
+  web_site
   text
   file
   // html
@@ -180,4 +252,29 @@ enum DatastoreType {
 enum SubscriptionPlan {
   free
   premium
+}
+
+enum IntegrationType {
+  crisp
+}
+
+enum PriceType {
+  recurring
+}
+
+enum SubscriptionStatus {
+  active
+  canceled
+  incomplete
+  incomplete_expired
+  past_due
+  trialing
+  unpaid
+}
+
+enum PriceInterval {
+  day
+  month
+  week
+  year
 }

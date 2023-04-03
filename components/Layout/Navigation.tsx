@@ -1,20 +1,14 @@
-import AssistantPhotoRoundedIcon from '@mui/icons-material/AssistantPhotoRounded';
+import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import DraftsRoundedIcon from '@mui/icons-material/DraftsRounded';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import OutboxRoundedIcon from '@mui/icons-material/OutboxRounded';
 // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import { Card, Chip, Stack, Typography } from '@mui/joy';
+import { Card, Divider, Stack, Typography } from '@mui/joy';
 import Box from '@mui/joy/Box';
-import IconButton from '@mui/joy/IconButton';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import ListSubheader from '@mui/joy/ListSubheader';
 import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -51,6 +45,12 @@ export default function Navigation() {
         route: RouteNames.CHAT,
         icon: <ChatBubbleIcon fontSize="small" />,
         active: router.route === RouteNames.CHAT,
+      },
+      {
+        label: 'Apps',
+        route: RouteNames.APPS,
+        icon: <AutoFixHighRoundedIcon fontSize="small" />,
+        active: router.route === RouteNames.APPS,
       },
     ];
   }, [router.route]);
@@ -210,6 +210,12 @@ export default function Navigation() {
           <Typography>status: {isStatusOK ? 'ok' : 'ko'}</Typography>
         </Stack>
       </Card>
+      <Divider sx={{ my: 2 }}></Divider>
+      <Link href="mailto:support@databerry.ai" className="mx-auto">
+        <Typography level="body2" mx={'auto'}>
+          support@databerry.ai
+        </Typography>
+      </Link>
     </Stack>
   );
 }

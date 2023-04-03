@@ -1,8 +1,10 @@
+import Button from '@mui/joy/Button'
 import Link from 'next/link'
 
 import { Container } from '@app/components/landing-page/Container'
 import { Logo } from '@app/components/landing-page/Logo'
 import { NavLink } from '@app/components/landing-page/NavLink'
+import { RouteNames } from '@app/types';
 
 export function Footer() {
   return (
@@ -12,7 +14,18 @@ export function Footer() {
           <Logo className="w-auto h-10 mx-auto" />
           <nav className="mt-10 text-sm" aria-label="quick links">
             <div className="flex justify-center -my-1 gap-x-6">
-              <NavLink href="#features">Features</NavLink>
+            <Link href={RouteNames.CHAT_SITE}>
+                <Button
+                  href="/products/chat-site"
+                  size="sm"
+                  variant="outlined"
+                  color="success"
+                  sx={{ borderRadius: 100 }}
+                >
+                  Chat Site
+                </Button>
+              </Link>
+              <NavLink href="/pricing">Pricing</NavLink>
               <NavLink href="https://github.com/gmpetrov/databerry">GitHub</NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>

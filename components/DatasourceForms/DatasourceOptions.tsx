@@ -1,5 +1,6 @@
 import { Chip, Sheet, Stack, Typography } from '@mui/joy';
 import { DatasourceType } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 
 type Props = {
@@ -12,6 +13,7 @@ type DatsourceOption = {
   description: string;
   icon?: any;
   disabled?: boolean;
+  isPremium?: boolean | undefined;
 };
 
 const options: DatsourceOption[] = [
@@ -26,6 +28,13 @@ const options: DatsourceOption[] = [
     label: 'Web Page',
     description: 'Crawl text from a web page',
     icon: undefined,
+  },
+  {
+    type: DatasourceType.web_site,
+    label: 'Web Site',
+    description: 'Crawl all pages of a web site',
+    icon: undefined,
+    isPremium: true,
   },
   {
     type: 'file' as any,
@@ -43,6 +52,7 @@ const options: DatsourceOption[] = [
 ];
 
 const DatasourceOptions = (props: Props) => {
+  const { data: session, status } = useSession();
   return (
     <div className="flex space-x-4">
       <Stack className="space-y-4" direction={'row'} flexWrap={'wrap'}>
@@ -57,7 +67,9 @@ const DatasourceOptions = (props: Props) => {
               ':hover': { cursor: 'pointer' },
             }}
             onClick={
-              each.disabled ? undefined : () => props.onSelect(each.type)
+              each.disabled || (each.isPremium && !session?.user?.isPremium)
+                ? undefined
+                : () => props.onSelect(each.type)
             }
           >
             {each.icon && <img src={each.icon} className="w-16" alt="" />}
@@ -67,6 +79,11 @@ const DatasourceOptions = (props: Props) => {
                 <Typography level="body1" fontWeight={'bold'}>
                   {each.label}
                 </Typography>
+                {each.isPremium && (
+                  <Chip variant="soft" color="warning" size="sm">
+                    premium
+                  </Chip>
+                )}
                 {each.disabled && (
                   <Chip variant="soft" color="neutral" size="sm">
                     Coming Soon

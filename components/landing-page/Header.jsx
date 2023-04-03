@@ -1,19 +1,21 @@
-import { Popover, Transition } from '@headlessui/react'
-import clsx from 'clsx'
-import Link from 'next/link'
-import { Fragment } from 'react'
+import { Popover, Transition } from '@headlessui/react';
+import Button from '@mui/joy/Button';
+import clsx from 'clsx';
+import Link from 'next/link';
+import { Fragment } from 'react';
 
-import { Button } from '@app/components/landing-page/Button'
-import { Container } from '@app/components/landing-page/Container'
-import { Logo } from '@app/components/landing-page/Logo'
-import { NavLink } from '@app/components/landing-page/NavLink'
+// import { Button } from '@app/components/landing-page/Button'
+import { Container } from '@app/components/landing-page/Container';
+import { Logo } from '@app/components/landing-page/Logo';
+import { NavLink } from '@app/components/landing-page/NavLink';
+import { RouteNames } from '@app/types';
 
 function MobileNavLink({ href, children }) {
   return (
     <Popover.Button as={Link} href={href} className="block w-full p-2">
       {children}
     </Popover.Button>
-  )
+  );
 }
 
 function MobileNavIcon({ open }) {
@@ -40,7 +42,7 @@ function MobileNavIcon({ open }) {
         )}
       />
     </svg>
-  )
+  );
 }
 
 function MobileNavigation() {
@@ -50,7 +52,7 @@ function MobileNavigation() {
         className="relative z-10 flex h-8 w-8 items-center justify-center [&:not(:focus-visible)]:focus:outline-none bg-black"
         aria-label="Toggle Navigation"
       >
-        {({ open }) => <MobileNavIcon  open={open} />}
+        {({ open }) => <MobileNavIcon open={open} />}
       </Popover.Button>
       <Transition.Root>
         <Transition.Child
@@ -77,31 +79,48 @@ function MobileNavigation() {
             as="div"
             className="absolute inset-x-0 flex flex-col p-4 mt-4 text-lg tracking-tight origin-top bg-white shadow-xl top-full rounded-2xl text-slate-900 ring-1 ring-slate-900/5"
           >
-            <MobileNavLink href="#features">Features</MobileNavLink>
-            <MobileNavLink href="https://github.com/gmpetrov/databerry">GitHub</MobileNavLink>
+            <MobileNavLink href="/pricing">Pricing</MobileNavLink>
+            <MobileNavLink href="https://github.com/gmpetrov/databerry">
+              GitHub
+            </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
-            <MobileNavLink  href="https://app.databerry.ai">Sign in</MobileNavLink>
+            <MobileNavLink href="https://app.databerry.ai">
+              Sign in
+            </MobileNavLink>
           </Popover.Panel>
         </Transition.Child>
       </Transition.Root>
     </Popover>
-  )
+  );
 }
 
 export function Header() {
   return (
-    <header className="py-10 bg-black" >
+    <header className="py-10 bg-black">
       <Container>
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
-            <Link href="#" aria-label="Home">
+            <Link href="/" aria-label="Home">
               <Logo className="w-auto h-10" />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
-              <NavLink href="#features">Features</NavLink>
-              <NavLink href="https://github.com/gmpetrov/databerry">GitHub</NavLink>
+              <Link href={RouteNames.CHAT_SITE}>
+                <Button
+                  href="/products/chat-site"
+                  size="sm"
+                  variant="outlined"
+                  color="success"
+                  sx={{ borderRadius: 100 }}
+                >
+                  Chat Site
+                </Button>
+              </Link>
+              <NavLink href="/pricing">Pricing</NavLink>
+              <NavLink href="https://github.com/gmpetrov/databerry">
+                GitHub
+              </NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
@@ -110,11 +129,16 @@ export function Header() {
             {/* <div className="hidden md:block">
               <NavLink href="https://app.databerry.ai">Sign in</NavLink>
             </div> */}
-            <Button target="_blank" href="https://app.databerry.ai/signin" color="blue">
+            {/* <Button target="_blank" href="https://app.databerry.ai/signin" color="blue">
               <span>
                 Sign In
               </span>
-            </Button>
+            </Button> */}
+            <Link href="https://app.databerry.ai/signin">
+              <Button variant="outlined" sx={{ borderRadius: 100 }}>
+                Sign In
+              </Button>
+            </Link>
             <div className="-mr-1 md:hidden">
               <MobileNavigation />
             </div>
@@ -122,5 +146,5 @@ export function Header() {
         </nav>
       </Container>
     </header>
-  )
+  );
 }

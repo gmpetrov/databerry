@@ -17,6 +17,10 @@ export const envSchema = z.object({
 
   EMAIL_SERVER: z.string().min(1),
   EMAIL_FROM: z.string().min(1),
+
+  CRISP_HOOK_SECRET: z.string().optional(),
+  CRISP_TOKEN_ID: z.string().optional(),
+  CRISP_TOKEN_KEY: z.string().optional(),
 });
 
 if (typeof window === 'undefined') {
