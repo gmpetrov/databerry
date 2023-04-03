@@ -17,10 +17,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Databerry - LLMs automation without code</title>
+        <title>ChatSite by Databerry</title>
         <meta
           name="description"
-          content="Most bookkeeping software is accurate, but hard to use. We make the opposite trade-off, and hope you don’t get audited."
+          content="ChatGPT Bot trained on your company data. Integrates with existing customer support tools."
         />
       </Head>
       <Header />
