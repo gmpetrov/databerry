@@ -34,7 +34,7 @@ export const loadDatasource = async (
   });
 
   if (!datasource) {
-    return res.status(404).json({ message: 'Not found' });
+    throw new Error('Not found');
   }
 
   const document = await new DatasourceLoader(datasource).load(
@@ -81,7 +81,7 @@ export const loadDatasource = async (
     ACL: 'public-read',
   };
 
-  s3.putObject(params).promise();
+  await s3.putObject(params).promise();
 
   logger.info(`${data.datasourceId}: datasource runned successfully`);
 

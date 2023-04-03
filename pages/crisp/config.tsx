@@ -40,6 +40,7 @@ export default function Home() {
         }),
       }).then(() => {
         console.log('worked');
+        alert('Settings saved! You can now close this window.');
       });
     } catch (error) {
       console.log(error);

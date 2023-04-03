@@ -48,16 +48,17 @@ export const upsertDatasource = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    return res.status(403).json({ message: 'Unauthorized' });
+    throw new Error('Unauthorized');
   }
 
   // TODO: find a better way to handle this
   if (data.type === DatasourceType.web_site) {
     const urls = await findDomainPages((data as any).config.source);
+    const promises = [] as Promise<any>[];
 
     for (const each of urls) {
-      axios.post(
-        `${process.env.NEXT_PUBLIC_DASHBOARD_URL!}/api/datasources`,
+      console.log(
+        'PAYLOAD ============>',
         {
           ...data,
           type: 'web_page',
@@ -72,7 +73,28 @@ export const upsertDatasource = async (
           },
         }
       );
+
+      promises.push(
+        axios.post(
+          `${process.env.NEXT_PUBLIC_DASHBOARD_URL!}/api/datasources`,
+          {
+            ...data,
+            type: 'web_page',
+            name: each,
+            config: {
+              source: each,
+            },
+          },
+          {
+            headers: {
+              cookie: req.headers.cookie,
+            },
+          }
+        )
+      );
     }
+
+    await Promise.all(promises);
 
     return undefined;
   }
@@ -86,7 +108,7 @@ export const upsertDatasource = async (
     });
 
     if ((existingDatasource as any)?.ownerId !== session?.user?.id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      throw new Error('Unauthorized');
     }
   }
 
@@ -119,7 +141,20 @@ export const upsertDatasource = async (
     },
   });
 
-  triggerTaskLoadDatasource(id, data.datasourceText);
+  try {
+    await triggerTaskLoadDatasource(id, data.datasourceText);
+  } catch (err) {
+    console.log('ERROR TRIGGERING TASK', err);
+
+    await prisma.appDatasource.update({
+      where: {
+        id: datasource.id,
+      },
+      data: {
+        status: DatasourceStatus.error,
+      },
+    });
+  }
 
   return datasource;
 };

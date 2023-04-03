@@ -148,16 +148,14 @@ const handleQuery = async (
   });
 
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      handleSendInput(websiteId, sessionId);
+    setTimeout(async () => {
+      await handleSendInput(websiteId, sessionId);
       resolve(42);
     }, 300);
   });
 };
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
-  res.status(200).json({});
-
   const host = req?.headers?.['host'];
   const subdomain = getSubdomain(host!);
   const body = req.body as HookBody;
@@ -191,6 +189,14 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   //   const nbUserMsg =
   //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
 
+  console.log('HEADERS', req.headers);
+
+  if (req.headers['x-delivery-attempt-count'] !== '1') {
+    return res.status(200).json({
+      hello: 'world',
+    });
+  }
+
   switch (body.event) {
     case 'message:send':
       if (
@@ -221,6 +227,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         body.data.content.value
       ) {
         // x-delivery-attempt-count
+
         await handleQuery(
           body.website_id,
           body.data.session_id,
@@ -233,9 +240,11 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       break;
   }
 
-  return {
+  res.status(200).json({
     hello: 'world',
-  };
+  });
+
+  return;
 };
 
 handler.post(

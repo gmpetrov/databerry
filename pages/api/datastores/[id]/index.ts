@@ -24,7 +24,7 @@ export const getDatastore = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    throw new Error('Unauthorized');
   }
 
   return datastore;
@@ -49,7 +49,7 @@ export const deleteDatastore = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    throw new Error('Unauthorized');
   }
 
   const deleted = await prisma.datastore.delete({
