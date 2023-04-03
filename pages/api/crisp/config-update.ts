@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { AppNextApiRequest } from '@app/types/index';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import { getConnectedWebsites } from '@app/utils/crisp';
 import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
@@ -20,6 +21,12 @@ export const updateCrispConfig = async (
   res: NextApiResponse
 ) => {
   const data = req.body as z.infer<typeof schema>;
+
+  const websites = await getConnectedWebsites();
+
+  if (data.token !== websites[data.website_id]?.token) {
+    throw new Error('Invalid website token');
+  }
 
   await prisma.externalIntegration.upsert({
     where: {

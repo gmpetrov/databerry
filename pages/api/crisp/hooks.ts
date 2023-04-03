@@ -115,13 +115,13 @@ const handleSendInput = async (
     origin: 'chat',
     user: {
       type: 'website',
-      nickname: 'AI Bot',
+      nickname: 'Databerry.ai',
       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
 
     content: {
       id: `databerry-query-${cuid()}`,
-      text: '✨ Ask AI Bot',
+      text: '✨ Ask Databerry.ai',
       explain: 'Query',
       value,
     },

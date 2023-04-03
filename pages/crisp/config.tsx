@@ -9,17 +9,20 @@ import {
   Input,
   Stack,
 } from '@mui/joy';
+import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 
 import Logo from '@app/components/Logo';
+import { getConnectedWebsites } from '@app/utils/crisp';
+import prisma from '@app/utils/prisma-client';
 
-export default function Home() {
+export default function CrispConfig(props: { apiKey?: string }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(props.apiKey);
   const [submitError, setSubmitError] = useState('');
 
-  const sendConfig = (e: any) => {
+  const sendConfig = async (e: any) => {
     e.stopPropagation();
     try {
       setIsLoading(true);
@@ -70,6 +73,7 @@ export default function Home() {
               <FormControl>
                 <FormLabel>Databerry API Key</FormLabel>
                 <Input
+                  defaultValue={props.apiKey}
                   placeholder="Your datastore API Key here"
                   onChange={(e) => setInputValue(e.currentTarget.value)}
                 />
@@ -92,3 +96,40 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const websiteId = ctx.query.website_id as string;
+  const token = ctx.query.token as string;
+
+  const redirect = {
+    redirect: {
+      destination: '/',
+      permanent: false,
+    },
+  };
+
+  if (!websiteId || !token) {
+    return redirect;
+  }
+
+  const websites = await getConnectedWebsites();
+
+  if (token === websites[websiteId]?.token) {
+    const integration = await prisma.externalIntegration.findUnique({
+      where: {
+        integrationId: websiteId,
+      },
+      include: {
+        apiKey: true,
+      },
+    });
+
+    return {
+      props: {
+        apiKey: integration?.apiKey?.key || '',
+      },
+    };
+  }
+
+  return redirect;
+};
