@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -38,9 +40,30 @@ const nextConfig = {
       puppeteer: 'commonjs puppeteer',
       'html-to-text': 'commonjs html-to-text',
       epub2: 'commonjs epub2',
+      'fs/promises': 'commonjs fs/promises',
     });
+
+    if (isServer && config.name === 'server') {
+      const oldEntry = config.entry;
+
+      return {
+        ...config,
+        async entry(...args) {
+          const entries = await oldEntry(...args);
+          return {
+            ...entries,
+            'worker-datasource-loader': path.resolve(
+              process.cwd(),
+              'workers/datasource-loader.ts'
+            ),
+          };
+        },
+      };
+    }
+
     return config;
   },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;

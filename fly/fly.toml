@@ -1,0 +1,33 @@
+# fly.toml file generated for databerry on 2023-04-05T19:24:27+02:00
+
+app = "databerry"
+kill_signal = "SIGINT"
+kill_timeout = 5
+primary_region = "iad"
+
+# [processes]
+# web = "node server.js"
+# worker = "node server/worker-datasource-loader.js"
+
+[build]
+  [build.args]
+    NEXT_PUBLIC_S3_BUCKET_NAME = "databerry"
+
+[[services]]
+  processes = ["app"]
+  # processes = ["web"]
+  protocol = "tcp"
+  internal_port = 3000
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20

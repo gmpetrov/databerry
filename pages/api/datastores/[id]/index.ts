@@ -20,6 +20,7 @@ export const getDatastore = async (
     },
     include: {
       datasources: true,
+      apiKeys: true,
     },
   });
 

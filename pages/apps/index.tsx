@@ -168,6 +168,90 @@ export default function DatasourcesPage() {
           </Link>
         </Stack>
       </Card>
+      <Card variant="outlined" className="max-w-sm p-0 mt-8 overflow-hidden">
+        <Box className="relative w-full px-2 py-12 text-center">
+          <Typography
+            level="h2"
+            fontWeight={'bold'}
+            className="relative z-10 block"
+            sx={(theme) => theme.typography.display1}
+          >
+            Slack Bot
+          </Typography>
+
+          <Typography>ChatGPT Bot trained on website data</Typography>
+
+          <Stack direction={'column'} gap={1} mt={4}>
+            <Typography level={'body2'}>Integrated via</Typography>
+            <Link target="_blank" href={'https://crisp.chat/'}>
+              <Image
+                className="w-32 mx-auto "
+                src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg"
+                width={20}
+                height={20}
+                alt="crisp logo"
+              ></Image>
+            </Link>
+          </Stack>
+        </Box>
+
+        <Divider />
+
+        <Stack
+          p={4}
+          sx={{
+            with: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          gap={2}
+        >
+          {session?.user?.isPremium ? (
+            <Link
+              target="_blank"
+              href={`https://slack.com/oauth/v2/authorize?client_id=${`15098575894.5085094124864`}&scope=bot&redirect_uri=${
+                // process.env.NEXT_PUBLIC_DASHBOARD_URL
+                `https://49b1-195-68-57-166.eu.ngrok.io`
+              }/api/slack/auth-callback`}
+              //   <a href="https://slack.com/oauth/v2/authorize?client_id=YOUR_CLIENT_ID&scope=bot&redirect_uri=YOUR_REDIRECT_URI">
+              //   <img alt="Add to Slack" src="https://platform.slack-edge.com/img/add_to_slack.png" />
+              // </a>
+              className="w-full"
+            >
+              <Button
+                endDecorator={<ArrowForwardRoundedIcon />}
+                variant="outlined"
+                sx={{ width: '100%' }}
+              >
+                Settings
+              </Button>
+            </Link>
+          ) : (
+            <Link
+              href={`${process.env
+                .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
+                session?.user?.id
+              }`}
+              className="w-full"
+            >
+              <Button
+                endDecorator={<ArrowForwardRoundedIcon />}
+                variant="outlined"
+                sx={{ width: '100%' }}
+              >
+                Subscribe
+              </Button>
+            </Link>
+          )}
+
+          <Link href={RouteNames.CHAT_SITE}>
+            <Typography level="body2" color="neutral">
+              More info
+            </Typography>
+          </Link>
+        </Stack>
+      </Card>
     </Box>
   );
 }

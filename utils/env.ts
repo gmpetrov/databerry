@@ -23,8 +23,8 @@ export const envSchema = z.object({
   CRISP_TOKEN_KEY: z.string().optional(),
 });
 
-if (typeof window === 'undefined') {
-  envSchema.parse(process.env);
-}
+// if (typeof window === 'undefined') {
+//   envSchema.parse(process.env);
+// }
 
 export type ProcessEnv = z.infer<typeof envSchema>;

@@ -53,16 +53,34 @@ export const SearchRequestSchema = z.object({
 
 export type SearchRequestSchema = z.infer<typeof SearchRequestSchema>;
 
+export const SearchSimpleRequestSchema = z.object({
+  query: z.string(),
+});
+
+export type SearchSimpleRequestSchema = z.infer<
+  typeof SearchSimpleRequestSchema
+>;
+
+const SearchResultsSchema = z.array(
+  z.object({
+    id: z.string(),
+    text: z.string(),
+  })
+);
+
+export const SearchSimpleResponseSchema = z.object({
+  results: SearchResultsSchema,
+});
+
+export type SearchSimpleResponseSchema = z.infer<
+  typeof SearchSimpleResponseSchema
+>;
+
 export const SearchResponseSchema = z.object({
   results: z.array(
     z.object({
       query: z.string(),
-      results: z.array(
-        z.object({
-          id: z.string(),
-          text: z.string(),
-        })
-      ),
+      results: SearchResultsSchema,
     })
   ),
 });
