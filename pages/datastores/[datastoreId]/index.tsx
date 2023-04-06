@@ -67,10 +67,10 @@ export default function DatastorePage() {
     refreshInterval: 5000,
   });
 
-  const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-    `/api/datastores/${router.query?.datastoreId}/api-keys`,
-    fetcher
-  );
+  // const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
+  //   `/api/datastores/${router.query?.datastoreId}/api-keys`,
+  //   fetcher
+  // );
 
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;
@@ -98,7 +98,7 @@ export default function DatastorePage() {
   const handleCreatApiKey = async () => {
     await axios.post(`/api/datastores/${getDatastoreQuery?.data?.id}/api-keys`);
 
-    getApiKeysQuery.mutate();
+    getDatastoreQuery.mutate();
   };
 
   const handleDeleteApiKey = async (id: string) => {
@@ -112,7 +112,7 @@ export default function DatastorePage() {
         }
       );
 
-      getApiKeysQuery.mutate();
+      getDatastoreQuery.mutate();
     }
   };
 
@@ -325,7 +325,7 @@ export default function DatastorePage() {
               </Typography>
 
               <Stack direction={'column'} gap={2} mt={2}>
-                {getApiKeysQuery?.data?.map((each) => (
+                {getDatastoreQuery?.data?.apiKeys?.map((each) => (
                   <>
                     <Stack key={each.id} direction={'row'} gap={2}>
                       <Alert color="neutral" sx={{ width: '100%' }}>
@@ -377,7 +377,7 @@ export default function DatastorePage() {
                       )}/query \\`}
   -H 'Content-Type: application/json' \\
   -H 'Authorization: Bearer ${
-    getApiKeysQuery?.data?.[0]?.key || 'DATASTORE_API_KEY'
+    getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
   }' \\
   -d '${JSON.stringify({
     queries: [
