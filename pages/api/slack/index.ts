@@ -11,7 +11,6 @@ import { WebClient } from '@slack/web-api';
 import axios from 'axios';
 import { NextApiResponse } from 'next';
 
-import { SearchRequestSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import chat from '@app/utils/chat';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';

@@ -57,23 +57,6 @@ export const upsertDatasource = async (
     const promises = [] as Promise<any>[];
 
     for (const each of urls) {
-      console.log(
-        'PAYLOAD ============>',
-        {
-          ...data,
-          type: 'web_page',
-          name: each,
-          config: {
-            source: each,
-          },
-        },
-        {
-          headers: {
-            cookie: req.headers.cookie,
-          },
-        }
-      );
-
       promises.push(
         axios.post(
           `${process.env.NEXT_PUBLIC_DASHBOARD_URL!}/api/datasources`,

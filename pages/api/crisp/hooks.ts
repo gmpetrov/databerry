@@ -249,7 +249,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
 handler.post(
   validate({
-    // body: SearchRequestSchema,
+    // body: SearchManyRequestSchema,
     // handler: respond(hook),
     handler: hook,
   })

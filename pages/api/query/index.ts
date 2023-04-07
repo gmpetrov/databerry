@@ -1,7 +1,7 @@
 import { DatastoreVisibility } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
-import { SearchSimpleRequestSchema } from '@app/types/dtos';
+import { SearchRequestSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
@@ -19,7 +19,7 @@ export const queryURL = async (
   console.log('REG QUERY', req.query);
   const host = req?.headers?.['host'];
   const subdomain = getSubdomain(host!);
-  const data = req.body as SearchSimpleRequestSchema;
+  const data = req.body as SearchRequestSchema;
   const topK = parseInt((req as any).query.topK || 3);
 
   // get Bearer token from header
@@ -66,7 +66,7 @@ export const queryURL = async (
 
 handler.post(
   validate({
-    body: SearchSimpleRequestSchema,
+    body: SearchRequestSchema,
     handler: respond(queryURL),
   })
 );

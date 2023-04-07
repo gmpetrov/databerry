@@ -362,7 +362,7 @@ export default function DatastorePage() {
                 Here are the endpoints to interact with the datastore
               </Typography>
 
-              <Stack>
+              <Stack gap={2}>
                 <Stack gap={2} mt={2}>
                   <Typography level="body2">Query</Typography>
                   <Typography level="body3">
@@ -381,10 +381,119 @@ export default function DatastorePage() {
   }' \\
   -d '${JSON.stringify({
     query: 'What are the top 3 post on hacker news?',
-    filter: {
-      tags: ['a', 'b', 'c'],
-    },
+    // filter: {
+    //   tags: ['a', 'b', 'c'],
+    // },
   })}'`}
+                      {`\n
+# Response
+${JSON.stringify(
+  {
+    results: [
+      {
+        text: 'lorem ipsum dolor sit...',
+        score: 0.9,
+        source: 'https://example.com',
+      },
+    ],
+  },
+  null,
+  4
+)}
+\n`}
+                    </Typography>
+                  </Alert>
+                </Stack>
+                <Stack gap={2} mt={2}>
+                  <Typography level="body2">Upsert</Typography>
+                  <Typography level="body3">
+                    Add documents to the datastore
+                  </Typography>
+
+                  <Alert color="neutral" sx={{ width: '100%' }}>
+                    <Typography whiteSpace={'pre-wrap'}>
+                      {`curl -X POST ${`https://${
+                        getDatastoreQuery?.data?.id
+                      }.${getRootDomain(
+                        process.env.NEXT_PUBLIC_DASHBOARD_URL!
+                      )}/upsert \\`}
+  -H 'Content-Type: application/json' \\
+  -H 'Authorization: Bearer ${
+    getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
+  }' \\
+  -d '${JSON.stringify(
+    {
+      documents: [
+        {
+          name: 'My Document Name',
+          text: 'lorem ipsum dolor sit...',
+          metadata: {
+            source: 'https://example.com',
+          },
+        },
+        {
+          name: 'Another Document Name',
+          text: 'lorem ipsum dolor sit...',
+          metadata: {
+            source: 'https://example2.com',
+          },
+        },
+      ],
+    },
+    null,
+    4
+  )}'`}
+                      {`\n
+# Response
+${JSON.stringify(
+  {
+    ids: ['docID1', 'docID2'],
+  },
+  null,
+  4
+)}
+\n`}
+                    </Typography>
+                  </Alert>
+                </Stack>
+                <Stack gap={2} mt={2}>
+                  <Typography level="body2">Update</Typography>
+                  <Typography level="body3">
+                    Update a document in the datastore
+                  </Typography>
+                  <Alert color="neutral" sx={{ width: '100%' }}>
+                    <Typography whiteSpace={'pre-wrap'}>
+                      {`curl -X POST ${`https://${
+                        getDatastoreQuery?.data?.id
+                      }.${getRootDomain(
+                        process.env.NEXT_PUBLIC_DASHBOARD_URL!
+                      )}/update \\`}
+  -H 'Content-Type: application/json' \\
+  -H 'Authorization: Bearer ${
+    getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
+  }' \\
+  -d '${JSON.stringify(
+    {
+      id: 'docID1',
+      name: 'My Document Name',
+      text: 'lorem ipsum dolor sit...',
+      metadata: {
+        source: 'https://example.com',
+      },
+    },
+    null,
+    4
+  )}'`}
+                      {`\n
+# Response
+${JSON.stringify(
+  {
+    id: 'docID1',
+  },
+  null,
+  4
+)}
+\n`}
                     </Typography>
                   </Alert>
                 </Stack>

@@ -23,7 +23,7 @@ export const createCustomerPortalLink = async (
 
 handler.post(
   validate({
-    // body: SearchRequestSchema,
+    // body: SearchManyRequestSchema,
     handler: respond(createCustomerPortalLink),
   })
 );

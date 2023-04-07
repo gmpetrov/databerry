@@ -44,6 +44,7 @@ export const DocumentMetadataSchema = z.object({
 
 export const DocumentSchema = z.object({
   id: z.string().optional(),
+  name: z.string().optional(),
   text: z.string().min(1),
   metadata: DocumentMetadataSchema.optional(),
 });
