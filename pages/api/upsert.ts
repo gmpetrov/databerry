@@ -1,14 +1,19 @@
-import { DatastoreVisibility } from '@prisma/client';
+import {
+  DatasourceStatus,
+  DatasourceType,
+  DatastoreVisibility,
+} from '@prisma/client';
+import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 
-import { SearchRequestSchema, UpsertRequestSchema } from '@app/types/dtos';
+import { UpsertRequestSchema } from '@app/types/dtos';
 import { UpsertResponseSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import { DatastoreManager } from '@app/utils/datastores';
-import { Document } from '@app/utils/datastores/base';
+import generateFunId from '@app/utils/generate-fun-id';
 import getSubdomain from '@app/utils/get-subdomain';
 import prisma from '@app/utils/prisma-client';
+import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
@@ -48,34 +53,54 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
     throw new Error('Unauthorized');
   }
 
-  const store = new DatastoreManager(datastore);
+  const ids = data.documents.map(() => cuid());
 
-  const chunks = await Promise.all(
-    data.documents.map((each) => {
-      return store.upload(
-        new Document({
-          pageContent: each.text,
-          metadata: {
-            datasource_id: each.metadata?.source_id!,
-            tags: [],
-            source_type: each.metadata?.source!,
-            // TODO
-            source: 'upsert',
-            author: each.metadata?.author!,
+  await prisma.appDatasource.createMany({
+    data: data.documents.map((each, index) => ({
+      id: ids[index],
+      type: DatasourceType.text,
+      name: each.name || generateFunId(),
+      datastoreId: datastore.id,
+      status: DatasourceStatus.pending,
+      ownerId: datastore.ownerId,
+      config: {
+        ...each.metadata,
+      },
+    })),
+  });
+
+  const promises = data.documents.map((each, index) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await triggerTaskLoadDatasource(ids[index], each.text);
+      } catch (err) {
+        console.log('ERROR TRIGGERING TASK', err);
+
+        await prisma.appDatasource.update({
+          where: {
+            id: ids[index],
           },
-        })
-      );
-    })
-  );
+          data: {
+            status: DatasourceStatus.error,
+          },
+        });
+      } finally {
+        resolve(ids[index]);
+      }
+    });
+  });
+
+  // TODO REMOVE WHEN WILL SWITCH TO TASK QUEUES
+  await Promise.all(promises);
 
   return {
-    ids: [],
+    ids,
   } as UpsertResponseSchema;
 };
 
 handler.post(
   validate({
-    body: SearchRequestSchema,
+    body: UpsertRequestSchema,
     handler: respond(upsert),
   })
 );

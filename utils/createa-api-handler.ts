@@ -33,9 +33,12 @@ export function respond<T>(f: Handle<T>) {
       res.json(result);
     } catch (err) {
       console.log(err);
-
       res.statusCode = 500;
-      res.json({ error: JSON.stringify(err) });
+      res.json({
+        error: (err as any).toString
+          ? (err as any).toString()
+          : JSON.stringify(err),
+      });
     }
   };
 }

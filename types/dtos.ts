@@ -42,24 +42,18 @@ export type TaskRemoveDatastoreSchema = z.infer<
 >;
 
 export const SearchRequestSchema = z.object({
-  queries: z.array(
-    z.object({
-      query: z.string(),
-      filter: DocumentMetadataSchema.optional(),
-      top_k: z.number().default(3).optional(),
-    })
-  ),
+  query: z.string(),
+  topK: z.number().default(3).optional(),
+  filter: DocumentMetadataSchema.optional(),
 });
 
 export type SearchRequestSchema = z.infer<typeof SearchRequestSchema>;
 
-export const SearchSimpleRequestSchema = z.object({
-  query: z.string(),
+export const SearchManyRequestSchema = z.object({
+  queries: z.array(SearchRequestSchema),
 });
 
-export type SearchSimpleRequestSchema = z.infer<
-  typeof SearchSimpleRequestSchema
->;
+export type SearchManyRequestSchema = z.infer<typeof SearchManyRequestSchema>;
 
 const SearchResultsSchema = z.array(
   z.object({
@@ -98,6 +92,18 @@ export const UpsertResponseSchema = z.object({
 });
 
 export type UpsertResponseSchema = z.infer<typeof UpsertResponseSchema>;
+
+export const UpdateRequestSchema = DocumentSchema.extend({
+  id: z.string().min(1),
+});
+
+export type UpdateRequestSchema = z.infer<typeof UpdateRequestSchema>;
+
+export const UpdateResponseSchema = z.object({
+  id: z.string(),
+});
+
+export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 
 export const ChatRequest = z.object({
   query: z.string(),

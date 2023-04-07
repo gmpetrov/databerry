@@ -1,7 +1,7 @@
 import { DatastoreVisibility } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
-import { SearchRequestSchema } from '@app/types/dtos';
+import { SearchManyRequestSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
@@ -14,7 +14,7 @@ const handler = createApiHandler();
 export const query = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const host = req?.headers?.['host'];
   const subdomain = getSubdomain(host!);
-  const data = req.body as SearchRequestSchema;
+  const data = req.body as SearchManyRequestSchema;
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
@@ -52,7 +52,7 @@ export const query = async (req: AppNextApiRequest, res: NextApiResponse) => {
     data.queries.map((each) =>
       store.search({
         query: each.query,
-        topK: each.top_k || 3,
+        topK: each.topK || 3,
         tags: [],
       })
     )
@@ -72,7 +72,7 @@ export const query = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
 handler.post(
   validate({
-    body: SearchRequestSchema,
+    body: SearchManyRequestSchema,
     handler: respond(query),
   })
 );
