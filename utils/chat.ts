@@ -72,11 +72,11 @@ class DataberryRetriever {
 
     const docs = res.results.map((each) => ({
       metadata: {
-        source: (each as any)?.source,
-        score: (each as any)?.score,
+        source: each?.source,
+        score: each?.score,
       } as any,
       pageContent: `Content: ${each?.text}
-Source: ${(each as any)?.source}
+Source: ${each?.source}
 `,
     }));
 

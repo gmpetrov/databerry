@@ -151,11 +151,12 @@ model VerificationToken {
 }
 
 model ExternalIntegration {
-  id            String           @id @default(cuid())
-  integrationId String           @unique @map("integration_id")
-  apiKeyId      String           @map("api_key_id")
-  apiKey        DatastoreApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
-  type          IntegrationType
+  id               String           @id @default(cuid())
+  integrationId    String           @unique @map("integration_id")
+  integrationToken String?          @map("integration_token")
+  apiKeyId         String?          @map("api_key_id")
+  apiKey           DatastoreApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  type             IntegrationType
 
   @@map("external_integrations")
 }
@@ -256,6 +257,7 @@ enum SubscriptionPlan {
 
 enum IntegrationType {
   crisp
+  slack
 }
 
 enum PriceType {

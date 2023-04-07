@@ -63,8 +63,9 @@ export type SearchSimpleRequestSchema = z.infer<
 
 const SearchResultsSchema = z.array(
   z.object({
-    id: z.string(),
     text: z.string(),
+    score: z.number(),
+    source: z.string().optional(),
   })
 );
 

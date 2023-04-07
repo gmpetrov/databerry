@@ -168,7 +168,7 @@ export default function DatasourcesPage() {
           </Link>
         </Stack>
       </Card>
-      <Card variant="outlined" className="max-w-sm p-0 mt-8 overflow-hidden">
+      {/* <Card variant="outlined" className="max-w-sm p-0 mt-8 overflow-hidden">
         <Box className="relative w-full px-2 py-12 text-center">
           <Typography
             level="h2"
@@ -210,13 +210,12 @@ export default function DatasourcesPage() {
           {session?.user?.isPremium ? (
             <Link
               target="_blank"
-              href={`https://slack.com/oauth/v2/authorize?client_id=${`15098575894.5085094124864`}&scope=bot&redirect_uri=${
+              href={`https://slack.com/oauth/v2/authorize?client_id=${
+                process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+              }&scope=app_mentions:read,channels:history,chat:write,commands,users:read&redirect_uri=${
                 // process.env.NEXT_PUBLIC_DASHBOARD_URL
                 `https://49b1-195-68-57-166.eu.ngrok.io`
               }/api/slack/auth-callback`}
-              //   <a href="https://slack.com/oauth/v2/authorize?client_id=YOUR_CLIENT_ID&scope=bot&redirect_uri=YOUR_REDIRECT_URI">
-              //   <img alt="Add to Slack" src="https://platform.slack-edge.com/img/add_to_slack.png" />
-              // </a>
               className="w-full"
             >
               <Button
@@ -251,7 +250,7 @@ export default function DatasourcesPage() {
             </Typography>
           </Link>
         </Stack>
-      </Card>
+      </Card> */}
     </Box>
   );
 }
