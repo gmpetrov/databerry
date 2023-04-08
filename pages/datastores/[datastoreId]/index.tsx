@@ -374,13 +374,14 @@ export default function DatastorePage() {
                         getDatastoreQuery?.data?.id
                       }.${getRootDomain(
                         process.env.NEXT_PUBLIC_DASHBOARD_URL!
-                      )}/query?topK=3 \\`}
+                      )}/query \\`}
   -H 'Content-Type: application/json' \\
   -H 'Authorization: Bearer ${
     getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
   }' \\
   -d '${JSON.stringify({
     query: 'What are the top 3 post on hacker news?',
+    topK: 3,
     // filter: {
     //   tags: ['a', 'b', 'c'],
     // },

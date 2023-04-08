@@ -57,9 +57,10 @@ class DataberryRetriever {
       `${generateDatastoreUrl({
         appUrl: process.env.NEXT_PUBLIC_DASHBOARD_URL!,
         datastoreId: this.datastore.id,
-      })}/query?topK=${this.topK}`,
+      })}/query`,
       {
         query,
+        topK: this.topK,
       },
       {
         headers: {

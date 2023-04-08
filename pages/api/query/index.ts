@@ -20,7 +20,7 @@ export const queryURL = async (
   const host = req?.headers?.['host'];
   const subdomain = getSubdomain(host!);
   const data = req.body as SearchRequestSchema;
-  const topK = parseInt((req as any).query.topK || 3);
+  const topK = data.topK || 3;
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
