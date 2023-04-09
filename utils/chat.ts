@@ -2,7 +2,6 @@ import { Datastore } from '@prisma/client';
 import axios from 'axios';
 
 import { ChatResponse, SearchSimpleResponseSchema } from '@app/types';
-import { generateDatastoreUrl } from '@app/utils/get-root-domain';
 
 const QA_TEMPLATE = `You are an AI assistant providing helpful advice. Given the following extracted parts of a long document and a question, create a final answer with references ("SOURCES"). 
 If you don't know the answer, just say that you don't know. Don't try to make up an answer.
@@ -54,10 +53,7 @@ class DataberryRetriever {
     const apiKey = (this.datastore as any).apiKeys?.[0]?.key as string;
 
     const results = await axios.post(
-      `${generateDatastoreUrl({
-        appUrl: process.env.NEXT_PUBLIC_DASHBOARD_URL!,
-        datastoreId: this.datastore.id,
-      })}/query`,
+      `${process.env.NEXT_PUBLIC_DASHBOARD_URL!}/query/${this.datastore.id}`,
       {
         query,
         topK: this.topK,

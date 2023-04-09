@@ -370,11 +370,10 @@ export default function DatastorePage() {
                   </Typography>
                   <Alert color="neutral" sx={{ width: '100%' }}>
                     <Typography whiteSpace={'pre-wrap'}>
-                      {`curl -X POST ${`https://${
+                      {`curl -X POST ${`${process.env
+                        .NEXT_PUBLIC_DASHBOARD_URL!}/query/${
                         getDatastoreQuery?.data?.id
-                      }.${getRootDomain(
-                        process.env.NEXT_PUBLIC_DASHBOARD_URL!
-                      )}/query \\`}
+                      } \\`}
   -H 'Content-Type: application/json' \\
   -H 'Authorization: Bearer ${
     getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
@@ -413,11 +412,10 @@ ${JSON.stringify(
 
                   <Alert color="neutral" sx={{ width: '100%' }}>
                     <Typography whiteSpace={'pre-wrap'}>
-                      {`curl -X POST ${`https://${
+                      {`curl -X POST ${`${process.env
+                        .NEXT_PUBLIC_DASHBOARD_URL!}/upsert/${
                         getDatastoreQuery?.data?.id
-                      }.${getRootDomain(
-                        process.env.NEXT_PUBLIC_DASHBOARD_URL!
-                      )}/upsert \\`}
+                      } \\`}
   -H 'Content-Type: application/json' \\
   -H 'Authorization: Bearer ${
     getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
@@ -464,11 +462,10 @@ ${JSON.stringify(
                   </Typography>
                   <Alert color="neutral" sx={{ width: '100%' }}>
                     <Typography whiteSpace={'pre-wrap'}>
-                      {`curl -X POST ${`https://${
+                      {`curl -X POST ${`${process.env
+                        .NEXT_PUBLIC_DASHBOARD_URL!}/update/${
                         getDatastoreQuery?.data?.id
-                      }.${getRootDomain(
-                        process.env.NEXT_PUBLIC_DASHBOARD_URL!
-                      )}/update \\`}
+                      } \\`}
   -H 'Content-Type: application/json' \\
   -H 'Authorization: Bearer ${
     getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'

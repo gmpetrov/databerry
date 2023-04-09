@@ -5,29 +5,27 @@ import { UpdateRequestSchema } from '@app/types/dtos';
 import { UpdateResponseSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import getSubdomain from '@app/utils/get-subdomain';
 import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
 
-export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
-  const host = req?.headers?.['host'];
-  const subdomain = getSubdomain(host!);
+export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
+  const datastoreId = req.query.datastoreId as string;
   const data = req.body as UpdateRequestSchema;
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')?.[1];
 
-  if (!subdomain) {
+  if (!datastoreId) {
     return res.status(400).send('Missing subdomain');
   }
 
   const datastore = await prisma.datastore.findUnique({
     where: {
-      id: subdomain,
+      id: datastoreId,
     },
     include: {
       apiKeys: true,
@@ -91,7 +89,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
 handler.post(
   validate({
     body: UpdateRequestSchema,
-    handler: respond(upsert),
+    handler: respond(update),
   })
 );
 
