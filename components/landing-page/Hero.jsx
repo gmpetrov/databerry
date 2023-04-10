@@ -1,5 +1,8 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
+import RocketLaunchRounded from '@mui/icons-material/RocketLaunchRounded';
 import Button from '@mui/joy/Button';
+import Stack from '@mui/joy/Stack';
 import Image from 'next/image';
 import Link from 'next/link'
 
@@ -40,6 +43,29 @@ export function Hero() {
       <p className="max-w-2xl mx-auto mt-6 text-lg tracking-tight text-gray-200">
         We make your data ready for large language models
       </p>
+
+      <Stack direction={{
+        xs: 'column',
+        sm: 'row',
+      }}
+      justifyContent={'center'}
+      gap={2}
+      mt={6}
+      >
+
+      <Link target='_blank' href={'https://app.databerry.ai/signin'}>
+        <Button variant="solid" size="lg"
+          startDecorator={<RocketLaunchRounded />}
+          sx={{borderRadius: 100}}
+          >{`Start Now`}</Button>
+      </Link>
+      <Link target='_blank' href={'https://calendly.com/databerry-georges/15min'}>
+        <Button variant="outlined" size="lg"
+          startDecorator={<PhoneRoundedIcon />}
+          sx={{borderRadius: 100}}
+          >Book a Call</Button>
+      </Link>
+          </Stack>
       <div className="flex justify-center mt-10 gap-x-6">
         {/* <Button target="_blank" href="https://app.databerry.ai/signin">Start Building</Button> */}
         {/* <Button
