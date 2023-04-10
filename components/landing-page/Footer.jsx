@@ -1,3 +1,4 @@
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Button from '@mui/joy/Button'
 import Link from 'next/link'
 
@@ -21,12 +22,14 @@ export function Footer() {
                   variant="outlined"
                   color="success"
                   sx={{ borderRadius: 100 }}
+                  endDecorator={<ArrowForwardRoundedIcon />}
                 >
-                  Chat Site
+                  Discvover ChatSite
                 </Button>
               </Link>
               <NavLink href="/pricing">Pricing</NavLink>
               <NavLink href="https://github.com/gmpetrov/databerry">GitHub</NavLink>
+              <NavLink href="https://docs.databerry.ai/">Docs</NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
           </nav>

@@ -1,4 +1,5 @@
 import { Popover, Transition } from '@headlessui/react';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Button from '@mui/joy/Button';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -83,6 +84,9 @@ function MobileNavigation() {
             <MobileNavLink href="https://github.com/gmpetrov/databerry">
               GitHub
             </MobileNavLink>
+            <MobileNavLink href="https://docs.databerry.ai/">
+              Docs
+            </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
@@ -113,13 +117,17 @@ export function Header() {
                   variant="outlined"
                   color="success"
                   sx={{ borderRadius: 100 }}
+                  endDecorator={<ArrowForwardRoundedIcon />}
                 >
-                  Chat Site
+                  Discvover ChatSite
                 </Button>
               </Link>
               <NavLink href="/pricing">Pricing</NavLink>
               <NavLink href="https://github.com/gmpetrov/databerry">
                 GitHub
+              </NavLink>
+              <NavLink href="https://docs.databerry.ai/">
+                Docs
               </NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
