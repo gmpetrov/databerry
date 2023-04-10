@@ -1,5 +1,6 @@
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import { Card, Divider, Stack, Typography } from '@mui/joy';
@@ -51,6 +52,11 @@ export default function Navigation() {
         route: RouteNames.APPS,
         icon: <AutoFixHighRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.APPS,
+      },
+      {
+        label: 'Documentation',
+        route: 'https://docs.databerry.ai/',
+        icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];
   }, [router.route]);

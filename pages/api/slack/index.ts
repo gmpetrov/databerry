@@ -88,17 +88,29 @@ class SlackUtils {
   }
 }
 
-const getDatastoreyBySlackToken = async (token: string) => {
-  const datastore = await prisma.datastore.findUnique({
+const getIntegrationByTeamId = async (teamId: string) => {
+  const integration = await prisma.externalIntegration.findUnique({
     where: {
-      id: 'clg0m4y0i000c0u4dmhf381s6',
+      integrationId: `sl_${teamId}`,
     },
     include: {
-      apiKeys: true,
+      apiKey: {
+        include: {
+          datastore: {
+            include: {
+              apiKeys: true,
+            },
+          },
+        },
+      },
     },
   });
 
-  return datastore;
+  if (!integration?.apiKey?.datastore) {
+    throw new Error('No datastore found');
+  }
+
+  return integration;
 };
 
 const sendLoader = (props: {
@@ -124,7 +136,8 @@ const sendLoader = (props: {
 };
 
 const handleMention = async (payload: MentionEvent) => {
-  const datastore = await getDatastoreyBySlackToken(payload.token);
+  const integration = await getIntegrationByTeamId(payload.team_id);
+  const datastore = integration?.apiKey?.datastore;
 
   const args = payload.event.text.split(' ');
   // remove first element from array
@@ -133,7 +146,7 @@ const handleMention = async (payload: MentionEvent) => {
   const query = (args || []).join(' ');
   const cmd = args?.[0]?.toLowerCase();
   console.log('QUERUY---->', query);
-  const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN!);
+  const slackClient = new WebClient(integration?.integrationToken!);
 
   if (query) {
     sendLoader({
@@ -157,99 +170,6 @@ const handleMention = async (payload: MentionEvent) => {
       text: `<@${payload.event.user}> ${answer}`,
     });
   }
-
-  // if (cmd === 'summarize' || cmd === 'sum' || cmd === 's') {
-  //   // TODO HANDLE SUMMARIZE
-
-  // sendLoader({
-  //   client: slackClient,
-  //   channel: payload.event.channel,
-  //   thread_ts: payload.event.thread_ts,
-  // });
-
-  // const response = await slackClient.conversations.history({
-  //   channel: payload.event.channel,
-  //   limit: 100,
-  // });
-
-  // const messages = response.messages?.reverse();
-
-  // const ctx = [];
-  // const usernames: Record<string, string> = {};
-
-  //   for (const each of messages!) {
-  //     //   const id = (each.user || each.bot_id) as string;
-
-  //     //   if (!usernames[id]) {
-  //     //     let username = id;
-
-  //     //     if (each.user) {
-  //     //       const res = await slackClient.users.info({ user: each.user! });
-  //     //       username = res?.user?.name || each.user!;
-  //     //     } else if (each.bot_id) {
-  //     //       const res = await slackClient.bots.info({ bot: each.bot_id! });
-  //     //       username = res?.bot?.name || each.bot_id!;
-  //     //     }
-
-  //     //     usernames[id] = username;
-  //     //   }
-  //     //   ctx.push(`From: ${usernames[id]}\nMessage: ${each.text}`);
-  //     ctx.push(`Message: ${each.text}`);
-  //   }
-
-  //   // const context = messages
-  //   //   ?.map((each) => `From: ${each.user}\nMessage: ${each.text}`)
-  //   //   .join('\n\n');
-
-  //   const { answer } = await summarize({ text: ctx.join('\n\n') });
-
-  // await slackClient.chat.postMessage({
-  //   channel: payload.event.channel,
-  //   thread_ts: payload.event.thread_ts,
-  //   text: `<@${payload.event.user}> ${answer}`,
-  // });
-  // } else if (query) {
-  //   // just query the datastore
-
-  //   // const loadingBlocks = [
-  //   //   {
-  //   //     type: 'section',
-  //   //     text: {
-  //   //       type: 'mrkdwn',
-  //   //       text: ':hourglass_flowing_sand: Loading...',
-  //   //     },
-  //   //   },
-  //   // ];
-
-  //   // const loader = await slackClient.chat.postMessage({
-  //   //   channel: payload.event.channel,
-  //   //   thread_ts: payload.event.ts,
-  //   //   blocks: loadingBlocks,
-  //   // });
-
-  //   await sendLoader({
-  //     client: slackClient,
-  //     channel: payload.event.channel,
-  //     thread_ts: payload.event.thread_ts,
-  //   });
-
-  //   const { answer } = await chat({
-  //     datastore: datastore as any,
-  //     query,
-  //   });
-
-  //   // await slackClient.chat.update({
-  //   //   ts: loader.ts!,
-  //   //   channel: payload.event.channel,
-  //   //   thread_ts: payload.event.ts,
-  //   //   text: `<@${payload.event.user}> ${answer}`,
-  //   // });
-  //   await slackClient.chat.postMessage({
-  //     channel: payload.event.channel,
-  //     thread_ts: payload.event.thread_ts,
-  //     text: `<@${payload.event.user}> ${answer}`,
-  //   });
-  // }
 };
 
 const handleAsk = async (payload: CommandEvent) => {
@@ -257,7 +177,8 @@ const handleAsk = async (payload: CommandEvent) => {
     return;
   }
 
-  const datastore = await getDatastoreyBySlackToken(payload.token);
+  const integration = await getIntegrationByTeamId(payload.team_id);
+  const datastore = integration?.apiKey?.datastore;
 
   const { answer } = await chat({
     datastore: datastore as any,
@@ -266,7 +187,8 @@ const handleAsk = async (payload: CommandEvent) => {
 
   return axios.post(payload.response_url, {
     text: `${payload.text}\n\n${answer}`,
-    response_type: 'in_channel',
+    // response_type: 'in_channel',
+    response_type: 'ephemeral',
   });
 };
 
@@ -291,55 +213,7 @@ export const slack = async (req: AppNextApiRequest, res: NextApiResponse) => {
     return handleAsk(req.body);
   }
 
-  const channelId = req.body.channel_id as string;
-
-  const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN!);
-  const limit = 100;
-
-  try {
-    const response = await slackClient.conversations.history({
-      channel: channelId,
-      limit: limit,
-    });
-    const messages = response.messages?.reverse();
-
-    const context = messages
-      ?.map((each) => `From: ${each.user}\nMessage: ${each.text}`)
-      .join('\n\n');
-
-    const datastore = await prisma.datastore.findUnique({
-      where: {
-        id: 'clg0m4y0i000c0u4dmhf381s6',
-        // id: 'clg1xg2h80000l708dymr0fxc',
-      },
-      include: {
-        apiKeys: true,
-      },
-    });
-
-    const { answer } = await chat({
-      datastore: datastore as any,
-      query: `What's Daftpagae?`,
-    });
-
-    console.log('answer', answer);
-  } catch (e) {
-    console.log('ERROR', e);
-  }
-
-  //   const t = async () => {
-  //     return new Promise((resolve) => {
-  //       setTimeout(() => {
-  //         resolve('world');
-  //       }, 10000);
-  //     });
-  //   };
-
-  //   await t();
-
-  // return res.json({
-  //   hello: 'world44444',
-  // });
+  return {};
 };
 
 handler.post(slack);

@@ -26,18 +26,7 @@ const slackAgent = async ({
   const { PromptTemplate } = await import('langchain/prompts');
   const model = new OpenAI({ temperature: 0 });
 
-  const datastoreChain = await loadDatastoreChain({
-    datastore: datastore as any,
-  });
-
-  const qaTool = new ChainTool({
-    name: datastore?.name!,
-    description: `${datastore?.name!} QA - useful for when you need to ask questions about: ${datastore?.description!}}`,
-    chain: datastoreChain,
-    returnDirect: true,
-  });
-
-  const testTool = new DynamicTool({
+  const qaTool = new DynamicTool({
     name: datastore?.name!,
     description: `${datastore?.name!} QA - useful for when you need to ask questions about: ${
       datastore?.description! || datastore?.name
@@ -51,7 +40,7 @@ const slackAgent = async ({
       return answer;
     },
   });
-  testTool.returnDirect = true;
+  qaTool.returnDirect = true;
 
   const template = `Write a concise summary of the following based on this instruction ${input}:
 
@@ -91,17 +80,7 @@ const slackAgent = async ({
 
   summaryTool.returnDirect = true;
 
-  const tools = [
-    summaryTool,
-    testTool,
-    // qaTool,
-    // new DynamicTool({
-    //   name: 'daftpage',
-    //   description:
-    //     'Daftpage QA - useful for when you need to ask questions about Daftpage',
-    //   func: async () => 'Private data bla bla',
-    // }),
-  ];
+  const tools = [summaryTool, qaTool];
 
   const executor = await initializeAgentExecutor(
     tools,

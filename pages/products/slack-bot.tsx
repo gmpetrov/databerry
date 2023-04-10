@@ -10,17 +10,16 @@ import Link from 'next/link';
 
 import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
-import { Hero } from '@app/components/landing-page/Hero';
 import { RouteNames } from '@app/types';
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>ChatSite by Databerry</title>
+        <title>SlackBot by Databerry</title>
         <meta
           name="description"
-          content="ChatGPT Bot trained on your company data. Integrates with existing customer support tools."
+          content="A ChatGPT Bot trained on your company data."
         />
       </Head>
       <Header />
@@ -47,23 +46,22 @@ export default function Home() {
               className="relative z-10 block"
               sx={(theme) => theme.typography.display1}
             >
-              Chat Site
+              Slack Bot
             </Typography>
 
             <Typography level={'h6'}>
-              ChatGPT Bot trained on your website data
+              Slack Bot trained on your company data
             </Typography>
           </Stack>
 
           <Stack direction={'column'} gap={1} mt={4}>
-            <Typography level={'body2'}>Integrated via</Typography>
             <Link target="_blank" href={'https://crisp.chat/'}>
               <Image
-                className="w-32 mx-auto "
-                src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg"
-                width={20}
+                className="w-20 mx-auto "
+                src="/slack-logo.png"
+                width={300}
                 height={20}
-                alt="crisp logo"
+                alt="slack logo"
               ></Image>
             </Link>
           </Stack>
@@ -75,7 +73,7 @@ export default function Home() {
               sx={{ mt: 5, width: 1, maxWidth: 350 }}
               endDecorator={<ArrowForwardRoundedIcon />}
             >
-              Create Your ChatBot
+              Create your Slack Bot
             </Button>
           </Link>
 
@@ -84,7 +82,7 @@ export default function Home() {
               //   className="w-full h-[300px] rounded-2xl"
               //   width="560"
               className="w-full aspect-video rounded-3xl"
-              src="https://www.youtube.com/embed/LPISZdaiDBM"
+              src="https://www.youtube.com/embed/x8-poiGrBa8"
               title="YouTube video player"
               frameBorder="0"
               allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -129,9 +127,9 @@ const features = [
     icon: <LooksTwoRoundedIcon className="w-6 h-6" />,
   },
   {
-    name: 'Install Crisp plugin',
+    name: 'Install Slack plugin',
     description:
-      'The final step is to install the Crisp. \nNow your website is spiced up \nwith some AI magic ✨',
+      'The final step is to install Databerry Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
     icon: <Looks3RoundedIcon className="w-6 h-6" />,
   },
   {
@@ -154,7 +152,7 @@ export function PrimaryFeatures() {
             A chatbot train on your data in minutes
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-            Chat Site by Databerry, make it very easy to train a chatbot on your
+            SlackBot by Databerry, make it very easy to train a chatbot on your
             company data.
           </p>
         </div>

@@ -16,6 +16,7 @@ export enum RouteNames {
   MAINTENANCE = '/maintenance',
   APPS = '/apps',
   CHAT_SITE = '/products/chat-site',
+  SLACK_BOT = '/products/slack-bot',
 }
 
 export type AppNextApiRequest = NextApiRequest & {
