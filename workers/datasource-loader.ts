@@ -1,15 +1,44 @@
-// TODO: Handle datasource loading with a worker
+import { DatasourceStatus } from '@prisma/client';
+import Queue from 'bull';
 
-import Queue, { DoneCallback, Job } from 'bee-queue';
-import Redis from 'ioredis';
+import { TaskQueue } from '@app/types';
+import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
+import prisma from '@app/utils/prisma-client';
+import taskLoadDatasource from '@app/utils/task-load-datasource';
 
-const queue = new Queue('test-queue', {
-  isWorker: true,
-  redis: new Redis(process.env.REDIS_URL!),
+const datasourceLoadQueue = new Queue(
+  TaskQueue.load_datasource,
+  process.env.REDIS_URL!,
+  {
+    redis: {
+      tls: process.env.REDIS_URL?.includes('rediss') ? {} : undefined,
+    },
+  }
+);
+
+datasourceLoadQueue.process(async (job, done) => {
+  const data = job?.data as TaskLoadDatasourceRequestSchema;
+  try {
+    console.log('JOB', data);
+
+    taskLoadDatasource(data);
+
+    done();
+  } catch (err) {
+    // TODO: handle error
+    console.error(err);
+
+    await prisma.appDatasource.update({
+      where: {
+        id: data?.datasourceId,
+      },
+      data: {
+        status: DatasourceStatus.error,
+      },
+    });
+
+    throw err;
+  }
 });
 
-// Process jobs from as many servers or processes as you like
-queue.process((job: Job<any>, done: DoneCallback<any>) => {
-  console.log(`Processing job ${job.id}`);
-  return done(null, job.data.x + job.data.y);
-});
+export default datasourceLoadQueue;

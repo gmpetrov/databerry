@@ -7,7 +7,8 @@ import {
   Prisma,
 } from '@prisma/client';
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import mime from 'mime-types';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
@@ -15,7 +16,9 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
+import { GenerateUploadLinkRequest } from '@app/pages/api/datastores/[id]/generate-upload-link';
 import { UpsertDatasourceSchema } from '@app/types/models';
+import cuid from '@app/utils/cuid';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 
 import type { DatasourceFormProps } from './types';
@@ -61,6 +64,7 @@ const DatasourceText = (props: {
 };
 
 export default function BaseForm(props: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const methods = useForm<UpsertDatasourceSchema>({
     resolver: zodResolver(props.schema),
     defaultValues: {
@@ -82,27 +86,75 @@ export default function BaseForm(props: Props) {
 
   const onSubmit = async (values: UpsertDatasourceSchema) => {
     try {
+      setIsLoading(true);
       const datasourceText = !dirtyFields['datasourceText']
         ? undefined
         : values.datasourceText;
 
       const payload = {
+        id: cuid(),
         ...values,
-        datasourceText,
+        isUpdateText: !!datasourceText,
+        file: undefined,
       } as UpsertDatasourceSchema;
 
-      const check = await axios.post('/api/datasources/check', payload);
+      if (
+        datasourceText ||
+        payload.type === DatasourceType.text ||
+        payload.type === DatasourceType.file
+      ) {
+        let type = '';
+        let fileName = '';
+        let file: File;
 
-      if (!check?.data?.valid) {
-        alert(check?.data?.message);
-        return;
+        if (datasourceText || payload.type === DatasourceType.text) {
+          type = 'text/plain';
+          fileName = `${payload.id}.txt`;
+          file = new File([datasourceText!], fileName, { type });
+
+          // Treat text as file
+          payload['type'] = DatasourceType.file;
+          payload['config'] = {
+            ...values.config,
+            fileSize: file.size,
+            type,
+          };
+        } else {
+          type = (values as any).file.type as string;
+          fileName = `${payload.id}.${mime.extension(type)}`;
+          file = (values as any)?.file as File;
+        }
+
+        // upload text from file to AWS
+        const uploadLinkRes = await axios.post(
+          `/api/datastores/${props.defaultValues?.datastoreId}/generate-upload-link`,
+          {
+            fileName,
+            type,
+          } as GenerateUploadLinkRequest
+        );
+
+        await axios.put(uploadLinkRes.data, file, {
+          headers: {
+            'Content-Type': type,
+          },
+        });
       }
+
+      // const check = await axios.post('/api/datasources/check', payload);
+
+      // if (!check?.data?.valid) {
+      //   alert(check?.data?.message);
+      //   return;
+      // }
 
       const datasource = await upsertDatasourceMutation.trigger(payload as any);
 
       props?.onSubmitSuccess?.(datasource!);
     } catch (err) {
       console.log('error', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -135,14 +187,14 @@ export default function BaseForm(props: Props) {
 
         {props?.customSubmitButton ? (
           React.createElement(props.customSubmitButton, {
-            isLoading: upsertDatasourceMutation.isMutating,
+            isLoading: isLoading || upsertDatasourceMutation.isMutating,
           })
         ) : (
           <Button
             type="submit"
             variant="soft"
             color="primary"
-            loading={upsertDatasourceMutation.isMutating}
+            loading={isLoading || upsertDatasourceMutation.isMutating}
             disabled={!isDirty}
             {...props.submitButtonProps}
           >

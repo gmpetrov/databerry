@@ -20,7 +20,7 @@ const slackAgent = async ({
   const { AnalyzeDocumentChain, loadSummarizationChain } = await import(
     'langchain/chains'
   );
-  const { OpenAI } = await import('langchain/llms');
+  const { OpenAI } = await import('langchain/llms/openai');
   const { initializeAgentExecutor } = await import('langchain/agents');
   const { DynamicTool, ChainTool } = await import('langchain/tools');
   const { PromptTemplate } = await import('langchain/prompts');

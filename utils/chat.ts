@@ -95,7 +95,7 @@ export const loadDatastoreChain = async ({
     LLMChain,
   } = await import('langchain/chains');
   const { PromptTemplate } = await import('langchain/prompts');
-  const { OpenAI } = await import('langchain/llms');
+  const { OpenAI } = await import('langchain/llms/openai');
   const retriever = new DataberryRetriever({ datastore, topK });
   const model = new OpenAI({});
 

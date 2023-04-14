@@ -1,7 +1,6 @@
-const excelToText = async (file: File) => {
+const excelToText = async (buffer: ArrayBuffer) => {
   let text = '';
   const XLSX = await import('xlsx');
-  const buffer = await file.arrayBuffer();
 
   const workbook = XLSX.read(buffer, { type: 'array' });
 

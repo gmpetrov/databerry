@@ -9,9 +9,11 @@ import { NextApiResponse } from 'next';
 import { UpsertRequestSchema } from '@app/types/dtos';
 import { UpsertResponseSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
+import { s3 } from '@app/utils/aws';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import generateFunId from '@app/utils/generate-fun-id';
 import getSubdomain from '@app/utils/get-subdomain';
+import prepareSourceForWorker from '@app/utils/prepare-source-for-worker';
 import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
@@ -71,7 +73,12 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const promises = data.documents.map((each, index) => {
     return new Promise(async (resolve, reject) => {
       try {
-        await triggerTaskLoadDatasource(ids[index], each.text);
+        await prepareSourceForWorker({
+          datasourceId: ids[index],
+          datastoreId: datastore?.id,
+          text: each.text,
+        });
+        await await triggerTaskLoadDatasource(ids[index]);
       } catch (err) {
         console.log('ERROR TRIGGERING TASK', err);
 
@@ -89,7 +96,6 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
     });
   });
 
-  // TODO REMOVE WHEN WILL SWITCH TO TASK QUEUES
   await Promise.all(promises);
 
   return {

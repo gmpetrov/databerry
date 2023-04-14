@@ -55,6 +55,7 @@ export const UpsertDatasourceSchema = z.object({
   name: z.string().trim().optional(),
   datastoreId: z.string().trim().cuid(),
   datasourceText: z.string().optional(),
+  isUpdateText: z.boolean().optional(),
   config: z.object({}),
 });
 

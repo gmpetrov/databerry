@@ -59,7 +59,7 @@ const nextConfig = {
           const entries = await oldEntry(...args);
           return {
             ...entries,
-            'worker-datasource-loader': path.resolve(
+            'datasource-loader': path.resolve(
               process.cwd(),
               'workers/datasource-loader.ts'
             ),
