@@ -20,12 +20,24 @@ const nextConfig = {
         destination: '/api/openai/plugin/openapi-yaml',
       },
       {
+        source: '/chat/:path*',
+        destination: '/api/chat/:path*',
+      },
+      {
         source: '/upsert',
         destination: '/api/upsert',
       },
       {
+        source: '/upsert/:path*',
+        destination: '/api/upsert/:path*',
+      },
+      {
         source: '/update',
         destination: '/api/update',
+      },
+      {
+        source: '/update/:path*',
+        destination: '/api/update/:path*',
       },
       {
         source: '/query/:path*',
