@@ -55,7 +55,7 @@ function Nested() {
       return;
     }
 
-    if (file.size / 1000000 > 1.1) {
+    if (!session?.user?.isPremium && file.size / 1000000 > 1.1) {
       alert(
         'File upload is limited to 1MB on the free plan. To subscribe: Click your profile picture > Upgrade Account'
       );
