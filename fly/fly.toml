@@ -5,17 +5,17 @@ kill_signal = "SIGINT"
 kill_timeout = 5
 primary_region = "iad"
 
-# [processes]
-# web = "node server.js"
-# worker = "node server/worker-datasource-loader.js"
+[processes]
+web = "node server.js"
+worker = "node server/datasource-loader.js"
 
 [build]
   [build.args]
     NEXT_PUBLIC_S3_BUCKET_NAME = "databerry"
 
 [[services]]
-  processes = ["app"]
-  # processes = ["web"]
+  # processes = ["app"]
+  processes = ["web"]
   protocol = "tcp"
   internal_port = 3000
 

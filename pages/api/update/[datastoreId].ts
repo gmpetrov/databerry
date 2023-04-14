@@ -4,7 +4,9 @@ import { NextApiResponse } from 'next';
 import { UpdateRequestSchema } from '@app/types/dtos';
 import { UpdateResponseSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
+import { s3 } from '@app/utils/aws';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import prepareSourceForWorker from '@app/utils/prepare-source-for-worker';
 import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
@@ -67,7 +69,12 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
   });
 
   try {
-    await triggerTaskLoadDatasource(data.id, data.text);
+    await prepareSourceForWorker({
+      datasourceId: datasource.id,
+      datastoreId: datastore?.id,
+      text: data.text,
+    });
+    await triggerTaskLoadDatasource(data.id, true);
   } catch (err) {
     console.log('ERROR TRIGGERING TASK', err);
 

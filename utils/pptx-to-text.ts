@@ -1,7 +1,9 @@
-const pptxToText = async (file: File) => {
+const { DOMParser } = require('@xmldom/xmldom');
+
+const pptxToText = async (buffer: ArrayBuffer) => {
   const JSZip = await (await import('jszip')).default;
 
-  const zip = await JSZip.loadAsync(file);
+  const zip = await JSZip.loadAsync(buffer);
   const slidePromises = [] as any[];
 
   zip?.folder?.('ppt/slides')?.forEach((relativePath, file) => {
@@ -16,11 +18,12 @@ const pptxToText = async (file: File) => {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(slideContent, 'application/xml');
     const texts = xmlDoc.getElementsByTagName('a:t');
-    for (const text of texts) {
-      if (text.textContent) {
-        all.push(text.textContent);
+
+    Array.from(texts).forEach((el: any) => {
+      if (el?.textContent) {
+        all.push(el.textContent);
       }
-    }
+    });
   });
 
   return all.join('\n\n');

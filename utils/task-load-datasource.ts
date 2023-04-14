@@ -1,26 +1,15 @@
 import { DatasourceStatus } from '@prisma/client';
-import { NextApiResponse } from 'next';
 
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
-import { AppNextApiRequest } from '@app/types/index';
 import { s3 } from '@app/utils/aws';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
-import { Document } from '@app/utils/datastores/base';
 import { DatasourceLoader } from '@app/utils/loaders';
 import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
 
-const handler = createApiHandler();
-
-export const loadDatasource = async (
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) => {
-  const data = req.body as TaskLoadDatasourceRequestSchema;
-
+const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   logger.info(`${data.datasourceId}: fetching datasource`);
+
   const datasource = await prisma.appDatasource.update({
     where: {
       id: data.datasourceId,
@@ -37,10 +26,12 @@ export const loadDatasource = async (
     throw new Error('Not found');
   }
 
-  const document = await new DatasourceLoader(datasource).load(
-    data.datasourceText
-  );
+  console.log('datasource', datasource);
+  const document = data.isUpdateText
+    ? await new DatasourceLoader(datasource).loadText()
+    : await new DatasourceLoader(datasource).load();
 
+  console.log('document', document);
   const chunks = await new DatastoreManager(datasource.datastore!).upload(
     document
   );
@@ -84,15 +75,6 @@ export const loadDatasource = async (
   await s3.putObject(params).promise();
 
   logger.info(`${data.datasourceId}: datasource runned successfully`);
-
-  return updated;
 };
 
-handler.post(
-  validate({
-    body: TaskLoadDatasourceRequestSchema,
-    handler: respond(loadDatasource),
-  })
-);
-
-export default handler;
+export default taskLoadDatasource;

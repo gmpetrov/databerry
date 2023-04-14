@@ -45,10 +45,12 @@ export enum MetadataFields {
 
 export type DocumentMetadata = {
   datasource_id: string;
-  source_type: string;
-  author?: string;
   source?: string;
+  source_type: string;
+  file_type?: string;
+  author?: string;
   tags: string[];
+  [key: string]: unknown;
 };
 
 export interface Chunk extends Document {
@@ -59,4 +61,8 @@ export interface Chunk extends Document {
     datasource_hash: string;
     chunk_offset: number;
   };
+}
+
+export enum TaskQueue {
+  load_datasource = 'load-datasource',
 }

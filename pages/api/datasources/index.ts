@@ -1,5 +1,4 @@
 import { DatasourceStatus, DatasourceType } from '@prisma/client';
-import axios from 'axios';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
@@ -54,30 +53,23 @@ export const upsertDatasource = async (
   // TODO: find a better way to handle this
   if (data.type === DatasourceType.web_site) {
     const urls = await findDomainPages((data as any).config.source);
-    const promises = [] as Promise<any>[];
+    const ids = urls.map(() => cuid());
 
-    for (const each of urls) {
-      promises.push(
-        axios.post(
-          `${process.env.NEXT_PUBLIC_DASHBOARD_URL!}/api/datasources`,
-          {
-            ...data,
-            type: 'web_page',
-            name: each,
-            config: {
-              source: each,
-            },
-          },
-          {
-            headers: {
-              cookie: req.headers.cookie,
-            },
-          }
-        )
-      );
-    }
+    await prisma.appDatasource.createMany({
+      data: urls.map((each, idx) => ({
+        id: ids[idx],
+        type: DatasourceType.web_page,
+        name: each,
+        config: {
+          source: each,
+          ...data.config,
+        },
+        ownerId: session?.user?.id,
+        datastoreId: data.datastoreId,
+      })),
+    });
 
-    await Promise.all(promises);
+    await Promise.all(ids.map((each) => triggerTaskLoadDatasource(each)));
 
     return undefined;
   }
@@ -90,7 +82,10 @@ export const upsertDatasource = async (
       },
     });
 
-    if ((existingDatasource as any)?.ownerId !== session?.user?.id) {
+    if (
+      existingDatasource &&
+      (existingDatasource as any)?.ownerId !== session?.user?.id
+    ) {
       throw new Error('Unauthorized');
     }
   }
@@ -124,20 +119,7 @@ export const upsertDatasource = async (
     },
   });
 
-  try {
-    await triggerTaskLoadDatasource(id, data.datasourceText);
-  } catch (err) {
-    console.log('ERROR TRIGGERING TASK', err);
-
-    await prisma.appDatasource.update({
-      where: {
-        id: datasource.id,
-      },
-      data: {
-        status: DatasourceStatus.error,
-      },
-    });
-  }
+  await triggerTaskLoadDatasource(id, data.isUpdateText);
 
   return datasource;
 };

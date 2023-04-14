@@ -1,9 +1,7 @@
-const wordToText = async (file: File) => {
-  const buffer = await file.arrayBuffer();
-
+const wordToText = async (buffer: Buffer) => {
   const mammoth = await import('mammoth');
 
-  const result = await mammoth.extractRawText({ arrayBuffer: buffer });
+  const result = await mammoth.extractRawText({ buffer });
 
   return result.value;
 };

@@ -1,16 +1,26 @@
-import axios from 'axios';
+import Queue from 'bull';
+
+import { TaskQueue } from '@app/types';
+import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
+
+const datasourceLoadQueue = new Queue(
+  TaskQueue.load_datasource,
+  process.env.REDIS_URL!,
+  {
+    redis: {
+      tls: process.env.REDIS_URL?.includes('rediss') ? {} : undefined,
+    },
+  }
+);
 
 const triggerTaskLoadDatasource = async (
   datasourceId: string,
-  datasourceText?: string
+  isUpdateText?: boolean
 ) => {
-  return axios.post(
-    `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/tasks/load-datasource`,
-    {
-      datasourceId,
-      datasourceText,
-    }
-  );
+  return datasourceLoadQueue.add({
+    datasourceId: datasourceId,
+    isUpdateText: isUpdateText,
+  } as TaskLoadDatasourceRequestSchema);
 };
 
 export default triggerTaskLoadDatasource;

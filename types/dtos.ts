@@ -21,7 +21,7 @@ export const UpsertDatasourceRequestSchema = z.object({
 
 export const TaskLoadDatasourceRequestSchema = z.object({
   datasourceId: z.string().min(1),
-  datasourceText: z.string().optional(),
+  isUpdateText: z.boolean().optional().default(false),
 });
 export type TaskLoadDatasourceRequestSchema = z.infer<
   typeof TaskLoadDatasourceRequestSchema

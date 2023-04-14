@@ -1,6 +1,7 @@
 import { Datastore } from '@prisma/client';
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Embeddings, OpenAIEmbeddings } from 'langchain/embeddings';
+import { Embeddings } from 'langchain/embeddings';
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { z } from 'zod';
 
 import { Chunk, MetadataFields } from '@app/types';

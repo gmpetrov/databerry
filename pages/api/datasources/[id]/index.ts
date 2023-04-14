@@ -1,9 +1,10 @@
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
+import { deleteFolderFromS3Bucket } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
+import { DatastoreManager } from '@app/utils/datastores';
 import prisma from '@app/utils/prisma-client';
-import triggerTaskRemoveDatasource from '@app/utils/trigger-task-remove-datasource';
 
 const handler = createAuthApiHandler();
 
@@ -49,6 +50,7 @@ export const deleteDatasource = async (
     },
     include: {
       owner: true,
+      datastore: true,
     },
   });
 
@@ -56,18 +58,20 @@ export const deleteDatasource = async (
     throw new Error('Unauthorized');
   }
 
-  const deleted = await prisma.appDatasource.delete({
-    where: {
-      id,
-    },
-    include: {
-      datastore: true,
-    },
-  });
+  await Promise.all([
+    prisma.appDatasource.delete({
+      where: {
+        id,
+      },
+    }),
+    new DatastoreManager(datasource.datastore!).remove(datasource.id),
+    deleteFolderFromS3Bucket(
+      process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+      `datastores/${datasource?.datastore?.id!}/${datasource.id}`
+    ),
+  ]);
 
-  triggerTaskRemoveDatasource(deleted.datastore?.id!, id);
-
-  return deleted;
+  return datasource;
 };
 
 handler.delete(respond(deleteDatasource));
