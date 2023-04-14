@@ -31,7 +31,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     ? await new DatasourceLoader(datasource).loadText()
     : await new DatasourceLoader(datasource).load();
 
-  console.log('document', document);
+  // console.log('document', document);
   const chunks = await new DatastoreManager(datasource.datastore!).upload(
     document
   );
