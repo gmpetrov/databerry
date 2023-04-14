@@ -1,44 +1,44 @@
 import { DatasourceStatus } from '@prisma/client';
-import Queue from 'bull';
+import { Worker } from 'bullmq';
+import Redis from 'ioredis';
 
 import { TaskQueue } from '@app/types';
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
 import prisma from '@app/utils/prisma-client';
 import taskLoadDatasource from '@app/utils/task-load-datasource';
 
-const datasourceLoadQueue = new Queue(
+const connection = new Redis(process.env.REDIS_URL!);
+
+const datasourceLoadQueue = new Worker(
   TaskQueue.load_datasource,
-  process.env.REDIS_URL!,
+  async (job) => {
+    const data = job?.data as TaskLoadDatasourceRequestSchema;
+    try {
+      console.log('JOB', data);
+
+      taskLoadDatasource(data);
+
+      return;
+    } catch (err) {
+      // TODO: handle error
+      console.error(err);
+
+      await prisma.appDatasource.update({
+        where: {
+          id: data?.datasourceId,
+        },
+        data: {
+          status: DatasourceStatus.error,
+        },
+      });
+
+      throw err;
+    }
+  },
   {
-    redis: {
-      tls: process.env.REDIS_URL?.includes('rediss') ? {} : undefined,
-    },
+    connection,
+    concurrency: 5,
   }
 );
-
-datasourceLoadQueue.process(async (job, done) => {
-  const data = job?.data as TaskLoadDatasourceRequestSchema;
-  try {
-    console.log('JOB', data);
-
-    taskLoadDatasource(data);
-
-    done();
-  } catch (err) {
-    // TODO: handle error
-    console.error(err);
-
-    await prisma.appDatasource.update({
-      where: {
-        id: data?.datasourceId,
-      },
-      data: {
-        status: DatasourceStatus.error,
-      },
-    });
-
-    throw err;
-  }
-});
 
 export default datasourceLoadQueue;
