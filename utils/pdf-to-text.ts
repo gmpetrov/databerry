@@ -1,10 +1,9 @@
-const pdfToText = async (buffer: ArrayBuffer) => {
-  // @ts-ignore
-  const pdfJS = await import('pdfjs-dist/webpack');
+import * as pdfJS from 'pdfjs-dist';
 
+const pdfToText = async (buffer: ArrayBuffer) => {
   const pdf = await pdfJS.getDocument({
     data: new Uint8Array(buffer),
-    // useWorkerFetch: true,
+    useWorkerFetch: false,
     isEvalSupported: false,
     useSystemFonts: true,
   }).promise;

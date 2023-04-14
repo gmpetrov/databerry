@@ -169,8 +169,6 @@ function Nested() {
 export default function WebPageForm(props: Props) {
   const { defaultValues, ...rest } = props;
 
-  console.log('defaultValues?.datasourceText', defaultValues?.datasourceText);
-
   return (
     <Base
       schema={FileForm}
