@@ -16,7 +16,7 @@ const datasourceLoadQueue = new Worker(
     try {
       console.log('JOB', data);
 
-      taskLoadDatasource(data);
+      await taskLoadDatasource(data);
 
       return;
     } catch (err) {
@@ -32,12 +32,14 @@ const datasourceLoadQueue = new Worker(
         },
       });
 
-      throw err;
+      throw new Error(JSON.stringify(err));
     }
   },
   {
     connection,
     concurrency: 5,
+    removeOnComplete: { count: 1000 },
+    removeOnFail: { count: 5000 },
   }
 );
 
