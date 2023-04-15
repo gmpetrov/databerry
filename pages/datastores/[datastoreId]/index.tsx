@@ -40,6 +40,7 @@ import DatasourceTable from '@app/components/DatasourceTable';
 import { DatastoreFormsMap } from '@app/components/DatastoreForms';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
 import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { getApiKeys } from '@app/pages/api/datastores/[id]/api-keys';
 import { RouteNames } from '@app/types';
@@ -113,6 +114,17 @@ export default function DatastorePage() {
       );
 
       getDatastoreQuery.mutate();
+    }
+  };
+
+  const handleBulkDelete = async (datasourceIds: string[]) => {
+    if (window.confirm('Are you sure you want to delete these datasources?')) {
+      await axios.post('/api/datasources/bulk-delete', {
+        ids: datasourceIds,
+        datastoreId: getDatastoreQuery?.data?.id,
+      } as BulkDeleteDatasourcesSchema);
+
+      await getDatastoreQuery.mutate();
     }
   };
 
@@ -285,6 +297,7 @@ export default function DatastorePage() {
             <DatasourceTable
               items={getDatastoreQuery?.data?.datasources}
               handleSynch={handleSynchDatasource}
+              handleBulkDelete={handleBulkDelete}
             />
           )}
 

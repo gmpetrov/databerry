@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { AutorenewRounded, PlayArrow } from '@mui/icons-material';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { Checkbox } from '@mui/joy';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
 import Sheet from '@mui/joy/Sheet';
@@ -99,12 +101,48 @@ const SynchButton = ({
 export default function DatasourceTable({
   items,
   handleSynch,
+  handleBulkDelete,
 }: {
   items: Datasource[];
+  handleBulkDelete: (ids: string[]) => any;
   handleSynch: (datasourceId: string) => any;
 }) {
+  const [selected, setSelected] = React.useState<string[]>([]);
+  const [state, setState] = useStateReducer({
+    isBulkDeleting: false,
+  });
+
+  const onClikBulkDelete = async (ids: string[]) => {
+    try {
+      setState({ isBulkDeleting: true });
+      await handleBulkDelete(ids);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setState({ isBulkDeleting: false });
+      setSelected([]);
+    }
+  };
+
   return (
     <React.Fragment>
+      {selected?.length > 0 && (
+        <Button
+          loading={state.isBulkDeleting}
+          onClick={() => onClikBulkDelete(selected)}
+          variant="soft"
+          color="danger"
+          size="sm"
+          startDecorator={<DeleteRoundedIcon />}
+          sx={{
+            mr: 'auto',
+            mb: 1,
+          }}
+        >
+          Delete Selection
+        </Button>
+      )}
+
       <Sheet
         className="DatasourceTableContainer"
         variant="outlined"
@@ -130,6 +168,24 @@ export default function DatasourceTable({
         >
           <thead>
             <tr>
+              <th style={{ width: 48, textAlign: 'center', padding: 12 }}>
+                <Checkbox
+                  disabled={state.isBulkDeleting}
+                  // indeterminate={
+                  //   selected.length > 0 && selected.length !== rows.length
+                  // }
+
+                  checked={selected.length === items.length}
+                  onChange={(event) => {
+                    setSelected(
+                      event.target.checked
+                        ? items.map((datasource) => datasource.id)
+                        : []
+                    );
+                  }}
+                  sx={{ verticalAlign: 'text-bottom' }}
+                />
+              </th>
               <th style={{ width: 220, padding: 12 }}>Name</th>
               <th style={{ width: 120, padding: 12 }}>Type</th>
               <th style={{ width: 120, padding: 12 }}>Size</th>
@@ -160,6 +216,21 @@ export default function DatasourceTable({
                 {/* <td>
                   <Typography fontWeight="md">{row.id}</Typography>
                 </td> */}
+                <td>
+                  <div className="flex justify-center ">
+                    <Checkbox
+                      disabled={state.isBulkDeleting}
+                      checked={selected.includes(datasource.id)}
+                      onChange={(e) => {
+                        setSelected((ids) =>
+                          e.target.checked
+                            ? ids.concat(datasource.id)
+                            : ids.filter((itemId) => itemId !== datasource.id)
+                        );
+                      }}
+                    />
+                  </div>
+                </td>
                 <td>
                   <div className="flex flex-col">
                     <Link
