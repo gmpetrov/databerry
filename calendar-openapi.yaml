@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: Google Calendar API Events
+  version: '1.0'
+  description: A minimal OpenAPI specification for accessing Google Calendar API events.
+servers:
+  - url: 'https://www.googleapis.com/calendar/v3'
+paths:
+  /calendars/primary/events:
+    get:
+      summary: Get events from a calendar
+      operationId: getCalendarEvents
+      parameters:
+        - name: calendarId
+          in: path
+          required: true
+          description: The calendar identifier.
+          schema:
+            type: string
+        - name: maxResults
+          in: query
+          description: The maximum number of events to return in a single result page.
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 2500
+        - name: timeMin
+          in: query
+          description: Lower bound (exclusive) for an event's end time to filter by.
+          schema:
+            type: string
+            format: date-time
+        - name: timeMax
+          in: query
+          description: Upper bound (exclusive) for an event's start time to filter by.
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: A successful response containing the calendar events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarEventsResponse'
+
+components:
+  schemas:
+    CalendarEventsResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: 'calendar#events'
+        etag:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        updated:
+          type: string
+          format: date-time
+        timeZone:
+          type: string
+        accessRole:
+          type: string
+        # defaultReminders:
+        #   type: array
+        #   items:
+        #     $ref: '#/components/schemas/Reminder'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarEvent'
+
+    CalendarEvent:
+      type: object
+      properties:
+        kind:
+          type: string
+          example: 'calendar#event'
+        etag:
+          type: string
+        id:
+          type: string
+        status:
+          type: string
+        htmlLink:
+          type: string
+          format: uri
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        start:
+          $ref: '#/components/schemas/DateTimeOrDate'
+        end:
+          $ref: '#/components/schemas/DateTimeOrDate'
+
+    DateTimeOrDate:
+      type: object
+      properties:
+        dateTime:
+          type: string
+          format: date-time
+        date:
+          type: string
+          format: date

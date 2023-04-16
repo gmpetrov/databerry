@@ -1,4 +1,4 @@
-import { WarningRounded } from '@mui/icons-material';
+import WarningRounded from '@mui/icons-material/WarningRounded';
 import { Alert, Box, Card, Typography } from '@mui/joy';
 
 import Logo from '@app/components/Logo';

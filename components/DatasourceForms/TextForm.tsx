@@ -1,4 +1,6 @@
-import { FormControl, FormLabel, Textarea } from '@mui/joy';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Textarea from '@mui/joy/Textarea';
 import { DatasourceType } from '@prisma/client';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';

@@ -1,8 +1,11 @@
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { Alert, Button, Card, Chip, IconButton, Typography } from '@mui/joy';
+import Alert from '@mui/joy/Alert';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import IconButton from '@mui/joy/IconButton';
+import Typography from '@mui/joy/Typography';
 import { DatasourceType } from '@prisma/client';
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';

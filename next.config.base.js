@@ -27,28 +27,28 @@ const nextConfig = {
         destination: '/api/chat/:path*',
       },
       {
-        source: '/upsert',
-        destination: '/api/upsert',
+        source: '/query/:path*',
+        destination: '/api/external/datastores/query/:path*',
       },
       {
-        source: '/upsert/:path*',
-        destination: '/api/upsert/:path*',
-      },
-      {
-        source: '/update',
-        destination: '/api/update',
+        source: '/datastores/query/:path*',
+        destination: '/api/external/datastores/query/:path*',
       },
       {
         source: '/update/:path*',
-        destination: '/api/update/:path*',
+        destination: '/api/external/datastores/update/:path*',
       },
       {
-        source: '/query/:path*',
-        destination: '/api/query/:path*',
+        source: '/datastores/update/:path*',
+        destination: '/api/external/datastores/update/:path*',
       },
       {
-        source: '/queries',
-        destination: '/api/query/many',
+        source: '/upsert/:path*',
+        destination: '/api/external/datastores/upsert/:path*',
+      },
+      {
+        source: '/datastores/upsert/:path*',
+        destination: '/api/external/datastores/upsert/:path*',
       },
     ];
   },

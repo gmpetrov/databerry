@@ -26,8 +26,8 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getDatastores } from '@app/pages/api/datastores';
-import { getSlackIntegrations } from '@app/pages/api/slack/integrations';
+import { getAgents } from '@app/pages/api/agents';
+import { getSlackIntegrations } from '@app/pages/api/integrations/slack/integrations';
 import { fetcher } from '@app/utils/swr-fetcher';
 
 type Props = {
@@ -35,7 +35,7 @@ type Props = {
   handleCloseModal: () => any;
 };
 
-const Schema = z.object({ datastoreId: z.string().min(1) });
+const Schema = z.object({ agentId: z.string().min(1) });
 
 export default function SlackBotSettingsModal(props: Props) {
   const { data: session, status } = useSession();
@@ -46,11 +46,12 @@ export default function SlackBotSettingsModal(props: Props) {
   const router = useRouter();
   const getSlackIntegrationsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getSlackIntegrations>
-  >('/api/slack/integrations', fetcher);
+  >('/api/integrations/slack/integrations', fetcher);
 
-  const getDatastoresQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getDatastores>
-  >('/api/datastores', fetcher);
+  const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
+    '/api/agents',
+    fetcher
+  );
 
   const methods = useForm<z.infer<typeof Schema>>({
     resolver: zodResolver(Schema),
@@ -66,9 +67,9 @@ export default function SlackBotSettingsModal(props: Props) {
         process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
       }&scope=app_mentions:read,channels:history,groups:history,chat:write,commands,users:read&redirect_uri=${
         process.env.NEXT_PUBLIC_DASHBOARD_URL
-      }/api/slack/auth-callback&state=${JSON.stringify({
+      }/api/integrations/slack/auth-callback&state=${JSON.stringify({
         userId: session?.user.id,
-        datastoreId: values.datastoreId,
+        agentId: values.agentId,
       })}`
     ),
       '_blank';
@@ -77,9 +78,9 @@ export default function SlackBotSettingsModal(props: Props) {
   const handleUpdate = async (values: z.infer<typeof Schema>) => {
     try {
       setState({ isUpdateLoading: true });
-      await axios.put(`/api/slack/integrations`, {
+      await axios.put(`/api/integrations/slack/integrations`, {
         id: integration?.id,
-        datastoreId: values.datastoreId,
+        agentId: values.agentId,
       });
 
       getSlackIntegrationsQuery.mutate();
@@ -93,7 +94,7 @@ export default function SlackBotSettingsModal(props: Props) {
   const handleDelete = async () => {
     try {
       setState({ isDeleteLoading: true });
-      await axios.delete(`/api/slack/integrations`, {
+      await axios.delete(`/api/integrations/slack/integrations`, {
         data: {
           id: integration?.id,
         },
@@ -110,18 +111,14 @@ export default function SlackBotSettingsModal(props: Props) {
 
   useEffect(() => {
     if (integration) {
-      methodsUpdate.setValue(
-        'datastoreId',
-        integration?.apiKey?.datastoreId as string,
-        {
-          shouldDirty: false,
-        }
-      );
+      methodsUpdate.setValue('agentId', integration?.agentId as string, {
+        shouldDirty: false,
+      });
     }
   }, [integration, methodsUpdate]);
 
   const isLoading =
-    getDatastoresQuery.isLoading || getSlackIntegrationsQuery.isLoading;
+    getAgentsQuery.isLoading || getSlackIntegrationsQuery.isLoading;
 
   return (
     <Modal
@@ -149,18 +146,18 @@ export default function SlackBotSettingsModal(props: Props) {
               <form className="flex flex-col">
                 <Stack direction={'column'}>
                   <FormControl>
-                    <FormLabel>Connected Datastore</FormLabel>
+                    <FormLabel>Connected Agent</FormLabel>
                     <Select
-                      defaultValue={integration?.apiKey?.datastoreId}
+                      defaultValue={integration?.agentId}
                       onChange={(_, value) => {
-                        methodsUpdate.setValue('datastoreId', value as string, {
+                        methodsUpdate.setValue('agentId', value as string, {
                           shouldValidate: true,
                         });
                       }}
                     >
-                      {getDatastoresQuery?.data?.map((datastore) => (
-                        <Option key={datastore.id} value={datastore.id}>
-                          {datastore.name}
+                      {getAgentsQuery?.data?.map((agent) => (
+                        <Option key={agent.id} value={agent.id}>
+                          {agent.name}
                         </Option>
                       ))}
                     </Select>
@@ -197,16 +194,16 @@ export default function SlackBotSettingsModal(props: Props) {
               >
                 <Stack direction={'column'}>
                   <Select
-                    placeholder="Datastore to connect to Slack"
+                    placeholder="Agent to connect to Slack"
                     onChange={(_, value) => {
-                      methods.setValue('datastoreId', value as string, {
+                      methods.setValue('agentId', value as string, {
                         shouldValidate: true,
                       });
                     }}
                   >
-                    {getDatastoresQuery?.data?.map((datastore) => (
-                      <Option key={datastore.id} value={datastore.id}>
-                        {datastore.name}
+                    {getAgentsQuery?.data?.map((agent) => (
+                      <Option key={agent.id} value={agent.id}>
+                        {agent.name}
                       </Option>
                     ))}
                   </Select>

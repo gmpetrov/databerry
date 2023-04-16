@@ -6,7 +6,7 @@ import {
   ThemeCssVar as JoyThemeCssVar,
   ThemeVars as JoyThemeVars,
 } from '@mui/joy/styles';
-import { TypeBackground } from '@mui/material';
+import type { TypeBackground } from '@mui/material';
 import {
   experimental_extendTheme as extendMuiTheme,
   Overlays,

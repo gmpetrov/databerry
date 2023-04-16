@@ -1,0 +1,16 @@
+name: Trigger Reset Usage
+
+on:
+  schedule:
+    # Runs At 00:00 on day-of-month 1" 
+    - cron: '0 0 1 * *'
+
+jobs:
+  build:
+    name: Trigger Reset Usage
+    runs-on: ubuntu-latest
+    steps:
+      - name: cURL request
+        run: curl -X GET https://app.databerry.ai/api/crons/reset-usage?secret=$NEXTAUTH_SECRET
+        env:
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}

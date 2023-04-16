@@ -1,6 +1,6 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import { AutorenewRounded, PlayArrow } from '@mui/icons-material';
+import AutorenewRounded from '@mui/icons-material/AutorenewRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import PlayArrow from '@mui/icons-material/PlayArrow';
 import { Checkbox } from '@mui/joy';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';

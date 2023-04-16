@@ -34,6 +34,7 @@ import { RouteNames } from '@app/types';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
+import { getAgents } from './api/agents';
 import { getDatastores } from './api/datastores';
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -42,10 +43,17 @@ export default function DatasourcesPage() {
   const router = useRouter();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [state, setState] = useStateReducer({
-    currentDatastoreId: undefined as string | undefined,
+    currentChatInstance: undefined as
+      | { id: string; type: 'agent' | 'datastore' }
+      | undefined,
     history: [] as { from: 'human' | 'agent'; message: string }[],
     loading: false,
   });
+
+  const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
+    '/api/agents',
+    fetcher
+  );
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
@@ -57,7 +65,7 @@ export default function DatasourcesPage() {
   });
 
   const onSubmit = async (data: any) => {
-    if (!data.query || !state.currentDatastoreId) return;
+    if (!data.query || !state.currentChatInstance?.id) return;
 
     methods.reset();
 
@@ -72,7 +80,9 @@ export default function DatasourcesPage() {
     });
 
     const result = await axios.post(
-      `/api/datastores/${state.currentDatastoreId}/chat`,
+      `/api/${
+        state.currentChatInstance?.type === 'agent' ? 'agents' : 'datastores'
+      }/${state.currentChatInstance?.id}/query`,
       {
         query: data.query,
       }
@@ -94,6 +104,19 @@ export default function DatasourcesPage() {
 
     scrollableRef.current.scrollTo(0, scrollableRef.current.scrollHeight);
   }, [state?.history?.length]);
+
+  const agentId = router.query.agentId as string;
+
+  React.useEffect(() => {
+    if (agentId) {
+      setState({
+        currentChatInstance: {
+          id: agentId,
+          type: 'agent',
+        },
+      });
+    }
+  }, [agentId, setState]);
 
   return (
     <Box
@@ -137,16 +160,37 @@ export default function DatasourcesPage() {
         </Typography>
         <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
           <Select
-            placeholder="Select a Datastore to query"
+            defaultValue={agentId}
+            placeholder="Select an Agent or Datastore to query"
             onChange={(_, value) => {
-              setState({ currentDatastoreId: value as string });
+              const isAgent = getAgentsQuery?.data?.find(
+                (one) => one.id === value
+              );
+              setState({
+                currentChatInstance: {
+                  id: value as string,
+                  type: isAgent ? 'agent' : 'datastore',
+                },
+              });
             }}
           >
+            {/* <Typography level="body2" sx={{ pl: 1 }}>
+              Agents:
+            </Typography> */}
+            {getAgentsQuery?.data?.map((agent) => (
+              <Option key={agent.id} value={agent.id}>
+                {agent.name}
+              </Option>
+            ))}
+            {/* <Divider sx={{ my: 2 }}></Divider>
+            <Typography level="body2" sx={{ pl: 1 }}>
+              Datastores:
+            </Typography>
             {getDatastoresQuery?.data?.map((datastore) => (
               <Option key={datastore.id} value={datastore.id}>
                 {datastore.name}
               </Option>
-            ))}
+            ))} */}
           </Select>
         </Box>
       </Box>
@@ -154,14 +198,14 @@ export default function DatasourcesPage() {
       <Divider sx={{ mt: 2 }} />
 
       {(getDatastoresQuery?.data?.length || 0) > 0 &&
-        !state?.currentDatastoreId && (
+        !state?.currentChatInstance?.id && (
           <Alert
             color="warning"
             variant="soft"
             sx={{ mx: 'auto', mt: 6 }}
             size="lg"
           >
-            {`Select the datastore you want to query.`}
+            {`Select the agent or datastore you want to query.`}
           </Alert>
         )}
 
@@ -269,7 +313,7 @@ export default function DatasourcesPage() {
                 endDecorator={
                   <IconButton
                     type="submit"
-                    disabled={!state.currentDatastoreId || state.loading}
+                    disabled={!state.currentChatInstance?.id || state.loading}
                   >
                     <SendRoundedIcon />
                   </IconButton>

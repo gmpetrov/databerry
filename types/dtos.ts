@@ -1,3 +1,4 @@
+import { AgentVisibility, ToolType } from '@prisma/client';
 import { z } from 'zod';
 
 import {
@@ -116,3 +117,24 @@ export const ChatResponse = z.object({
 });
 
 export type ChatResponse = z.infer<typeof ChatResponse>;
+
+export const UpsertAgentSchema = z.object({
+  id: z.string().trim().cuid().optional(),
+  name: z.string().trim().optional(),
+  description: z.string().trim().min(1),
+  prompt: z.string().trim().optional().nullable(),
+  visibility: z.nativeEnum(AgentVisibility).default('private'),
+  tools: z
+    .array(
+      z.object({
+        id: z.string().cuid(),
+        type: z.nativeEnum(ToolType),
+        name: z.string().trim().optional(),
+        description: z.string().trim().optional(),
+      })
+    )
+    .optional(),
+  // .max(1),
+});
+
+export type UpsertAgentSchema = z.infer<typeof UpsertAgentSchema>;

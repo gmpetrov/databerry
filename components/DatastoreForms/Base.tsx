@@ -1,12 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Alert,
-  Button,
-  Checkbox,
-  FormControl,
-  FormLabel,
-  Typography,
-} from '@mui/joy';
+import Alert from '@mui/joy/Alert';
+import Button from '@mui/joy/Button';
+import Checkbox from '@mui/joy/Checkbox';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Typography from '@mui/joy/Typography';
 import { DatastoreType, Prisma } from '@prisma/client';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';

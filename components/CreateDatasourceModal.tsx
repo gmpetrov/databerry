@@ -1,20 +1,15 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  Link,
-  Modal,
-  ModalDialog,
-  Sheet,
-  Typography,
-} from '@mui/joy';
-import { LoadingButton } from '@mui/lab';
-import { Step, StepContent, StepLabel, Stepper } from '@mui/material';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Modal from '@mui/joy/Modal';
+import Sheet from '@mui/joy/Sheet';
+import Typography from '@mui/joy/Typography';
+import Step from '@mui/material/Step';
+import StepContent from '@mui/material/StepContent';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
 import {
   AppDatasource as Datasource,
   DatasourceType,
-  Datastore,
   DatastoreType,
 } from '@prisma/client';
 import dynamic from 'next/dynamic';
@@ -23,7 +18,6 @@ import React from 'react';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import DatasourceOptions from './DatasourceForms/DatasourceOptions';
-import { DatasourceFormProps } from './DatasourceForms/types';
 
 const DatasourceForm = dynamic(
   () => import('@app/components/DatasourceForms'),

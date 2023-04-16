@@ -1,4 +1,4 @@
-import type { SubscriptionPlan } from '@prisma/client';
+import type { SubscriptionPlan, Usage } from '@prisma/client';
 import NextAuth, { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
@@ -10,6 +10,10 @@ declare module 'next-auth' {
       id: string;
       isPremium: boolean;
       customerId: string;
+      currentPlan: SubscriptionPlan;
+      usage: Usage;
+      nbAgents: number;
+      nbDatastores: number;
     } & DefaultSession['user'];
   }
 }

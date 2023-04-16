@@ -1,3 +1,5 @@
+// DEPRECATED: This is not used anymore
+
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest, ChatRequest } from '@app/types';
@@ -18,9 +20,6 @@ export const chatRequest = async (
   const datastore = await prisma.datastore.findUnique({
     where: {
       id,
-    },
-    include: {
-      apiKeys: true,
     },
   });
 
