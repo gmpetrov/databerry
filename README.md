@@ -56,3 +56,31 @@
 - Qdrant
 
 Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-retrieval-plugin).
+
+### Run the project locally
+Minimum requirements to run the projects locally
+- Node.js v18
+- Postgres Database
+- Redis
+- Qdrant
+- Github App (NextAuth)
+- Email Provider (NextAuth)
+- OpenAI API Key
+- AWS S3 Credentials
+
+```bash
+# Create .env.local
+cp .env.example .env.local
+
+# Install dependencies
+pnpm install
+
+# Generate DB tables
+pnpm prisma:migrate:dev
+
+# Run server
+pnpm dev
+
+# Run worker process
+pnpm worker:datasource-loader
+```
