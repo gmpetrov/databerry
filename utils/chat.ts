@@ -97,7 +97,9 @@ export const loadDatastoreChain = async ({
   const { PromptTemplate } = await import('langchain/prompts');
   const { OpenAI } = await import('langchain/llms/openai');
   const retriever = new DataberryRetriever({ datastore, topK });
-  const model = new OpenAI({});
+  const model = new OpenAI({
+    modelName: 'gpt-3.5-turbo',
+  });
 
   //   const chain = ConversationalRetrievalQAChain.fromLLM(
   //     model as any,
