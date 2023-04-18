@@ -24,7 +24,11 @@ export class WebPageLoader extends DatasourceLoaderBase {
 
     const { load } = await import('cheerio');
 
-    const res = await axios(url);
+    const res = await axios(url, {
+      headers: {
+        'User-Agent': Date.now().toString(),
+      },
+    });
     const $ = load(res.data);
     $('script').remove();
     $('style').remove();

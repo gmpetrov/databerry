@@ -38,8 +38,14 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
     }
 
     // Fetch the page HTML
-    const response = await fetch(url);
-    const html = await response.text();
+    // const response = await fetch(url);
+    // const html = await response.text();
+    const response = await axios(url, {
+      headers: {
+        'User-Agent': Date.now().toString(),
+      },
+    });
+    const html = response.data;
 
     const c = load(html);
 

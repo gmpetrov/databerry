@@ -61,8 +61,8 @@ export const upsertDatasource = async (
         type: DatasourceType.web_page,
         name: each,
         config: {
-          source: each,
           ...data.config,
+          source: each,
         },
         ownerId: session?.user?.id,
         datastoreId: data.datastoreId,
