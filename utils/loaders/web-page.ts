@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { WebPageSourceSchema } from '@app/components/DatasourceForms/WebPageForm';
 import type { Document } from '@app/utils/datastores/base';
 
+import addSlashUrl from '../add-slash-url';
+
 import { DatasourceLoaderBase } from './base';
 
 export class WebPageLoader extends DatasourceLoaderBase {
@@ -24,7 +26,7 @@ export class WebPageLoader extends DatasourceLoaderBase {
 
     const { load } = await import('cheerio');
 
-    const res = await axios(url, {
+    const res = await axios(addSlashUrl(url), {
       headers: {
         'User-Agent': Date.now().toString(),
       },

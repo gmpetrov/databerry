@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { load } from 'cheerio';
+import pTimeout from 'p-timeout';
 import path from 'path';
+
+import addSlashUrl from './add-slash-url';
 
 // const sitemapUrl = 'https://mabanque.bnpparibas/sitemap.xml';
 // (async () => {
@@ -40,7 +43,7 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
     // Fetch the page HTML
     // const response = await fetch(url);
     // const html = await response.text();
-    const response = await axios(url, {
+    const response = await axios(addSlashUrl(url), {
       headers: {
         'User-Agent': Date.now().toString(),
       },
@@ -61,14 +64,21 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
       // Check if link is internal
       if (href?.startsWith(startingUrl) || href?.startsWith('/')) {
         await crawl(
-          href?.startsWith('/') ? path.join(startingUrl, href) : href
+          href?.startsWith('/')
+            ? path.join(new URL(startingUrl).origin, href)
+            : href
         );
       }
     }
   }
 
   // Start the crawl
-  await crawl(startingUrl);
+  try {
+    await pTimeout(crawl(startingUrl), {
+      //  STOP AFTER 45 SECONDS OTHERWISE LAMBDA WILL TIMEOUT AFTER 60 SECONDS
+      milliseconds: 50000,
+    });
+  } catch {}
 
   return Array.from(visitedUrls);
 };
