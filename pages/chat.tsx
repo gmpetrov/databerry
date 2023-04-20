@@ -28,6 +28,7 @@ import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { z } from 'zod';
 
+import ChatBox from '@app/components/ChatBox';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { RouteNames } from '@app/types';
@@ -39,61 +40,41 @@ import { getDatastores } from './api/datastores';
 const Schema = z.object({ query: z.string().min(1) });
 
 export default function DatasourcesPage() {
-  const router = useRouter();
-  const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [state, setState] = useStateReducer({
     currentDatastoreId: undefined as string | undefined,
     history: [] as { from: 'human' | 'agent'; message: string }[],
-    loading: false,
   });
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
   >('/api/datastores', fetcher);
 
-  const methods = useForm<z.infer<typeof Schema>>({
-    resolver: zodResolver(Schema),
-    defaultValues: {},
-  });
-
-  const onSubmit = async (data: any) => {
-    if (!data.query || !state.currentDatastoreId) return;
-
-    methods.reset();
+  const onSubmit = async (query: string) => {
+    if (!query || !state.currentDatastoreId) return;
 
     const history = [
       ...state.history,
-      { from: 'human', message: data.query as string },
+      { from: 'human', message: query as string },
     ];
 
     setState({
       history: history as any,
-      loading: true,
     });
 
     const result = await axios.post(
       `/api/datastores/${state.currentDatastoreId}/chat`,
       {
-        query: data.query,
+        query: query,
       }
     );
 
     setState({
-      loading: false,
       history: [
         ...history,
         { from: 'agent', message: result.data.answer as string },
       ] as any,
     });
   };
-
-  React.useEffect(() => {
-    if (!scrollableRef.current) {
-      return;
-    }
-
-    scrollableRef.current.scrollTo(0, scrollableRef.current.scrollHeight);
-  }, [state?.history?.length]);
 
   return (
     <Box
@@ -185,100 +166,7 @@ export default function DatasourcesPage() {
       )}
 
       {(getDatastoresQuery?.data?.length || 0) > 0 && (
-        <Stack
-          direction={'column'}
-          sx={{
-            width: '100%',
-            height: '100%',
-            maxHeight: '100%',
-            mx: 'auto',
-          }}
-        >
-          <Stack
-            ref={scrollableRef}
-            direction={'column'}
-            sx={{
-              height: '100%',
-              maxHeight: '100%',
-              overflowY: 'auto',
-              display: 'flex',
-              pb: 18,
-              pt: 2,
-            }}
-          >
-            <Stack
-              direction={'column'}
-              gap={2}
-              sx={{
-                maxWidth: '100%',
-                width: '700px',
-                mx: 'auto',
-              }}
-            >
-              {state?.history.map((each, index) => (
-                <Card
-                  key={index}
-                  variant={'outlined'}
-                  color={each.from === 'agent' ? 'primary' : 'neutral'}
-                  sx={{
-                    mr: each.from === 'agent' ? 'auto' : 'none',
-                    ml: each.from === 'human' ? 'auto' : 'none',
-                    whiteSpace: 'pre-wrap',
-                  }}
-                >
-                  {each.message}
-                </Card>
-              ))}
-
-              {state.loading && (
-                <CircularProgress
-                  variant="soft"
-                  color="neutral"
-                  size="sm"
-                  sx={{ mx: 'auto', my: 2 }}
-                />
-              )}
-            </Stack>
-          </Stack>
-
-          <Box
-            sx={{
-              mt: 'auto',
-              left: 0,
-              maxWidth: '100%',
-              width: '100%',
-              overflow: 'visible',
-              background: 'none',
-              position: 'absolute',
-              display: 'flex',
-              justifyContent: 'center',
-              bottom: 4,
-            }}
-          >
-            {/* <div className="w-full h-12 -translate-y-1/2 pointer-events-none backdrop-blur-lg"></div> */}
-            <form
-              style={{
-                maxWidth: '100%',
-                width: '700px',
-              }}
-              onSubmit={methods.handleSubmit(onSubmit)}
-            >
-              <Input
-                // disabled={!state.currentDatastoreId || state.loading}
-                variant="outlined"
-                endDecorator={
-                  <IconButton
-                    type="submit"
-                    disabled={!state.currentDatastoreId || state.loading}
-                  >
-                    <SendRoundedIcon />
-                  </IconButton>
-                }
-                {...methods.register('query')}
-              />
-            </form>
-          </Box>
-        </Stack>
+        <ChatBox messages={state.history} onSubmit={onSubmit} />
       )}
     </Box>
   );
