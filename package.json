@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "build:site-widget": "npx parcel build widgets/chat.tsx",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "dotenv -e .env.local -- prisma migrate dev",
     "prisma:migrate:prod": "dotenv -e .env.local -- prisma migrate deploy",
