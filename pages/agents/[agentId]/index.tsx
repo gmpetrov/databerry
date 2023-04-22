@@ -1,22 +1,26 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
-import {
-  Alert,
-  Box,
-  Breadcrumbs,
-  Button,
-  Chip,
-  ColorPaletteProp,
-  Divider,
-  FormControl,
-  FormLabel,
-  Stack,
-  Typography,
-} from '@mui/joy';
+import SettingsIcon from '@mui/icons-material/Settings';
+import type { ColorPaletteProp } from '@mui/joy';
+import Alert from '@mui/joy/Alert';
+import Box from '@mui/joy/Box';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Button from '@mui/joy/Button';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Stack from '@mui/joy/Stack';
+import Tab from '@mui/joy/Tab';
+import TabList from '@mui/joy/TabList';
+import Tabs from '@mui/joy/Tabs';
+import Typography from '@mui/joy/Typography';
 import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
@@ -28,6 +32,7 @@ import * as React from 'react';
 import useSWR from 'swr';
 
 import AgentForm from '@app/components/AgentForm';
+import ChatBox from '@app/components/ChatBox';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
@@ -49,6 +54,7 @@ export default function AgentPage() {
   const router = useRouter();
   const [state, setState] = useStateReducer({
     currentDatastoreId: undefined as string | undefined,
+    history: [] as { from: 'human' | 'agent'; message: string }[],
   });
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
@@ -73,37 +79,42 @@ export default function AgentPage() {
     }
   };
 
-  const handleCreatApiKey = async () => {
-    await axios.post(`/api/datastores/${getAgentQuery?.data?.id}/api-keys`);
-
-    getAgentQuery.mutate();
-  };
-
-  const handleDeleteApiKey = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this api key?')) {
-      await axios.delete(
-        `/api/datastores/${getAgentQuery?.data?.id}/api-keys`,
-        {
-          data: {
-            apiKeyId: id,
-          },
-        }
-      );
-
-      getAgentQuery.mutate();
+  const handleChatSubmit = async (message: string) => {
+    if (!message) {
+      return;
     }
+
+    const history = [...state.history, { from: 'human', message }];
+
+    setState({
+      history: history as any,
+    });
+
+    const result = await axios.post(
+      `/api/agents/${getAgentQuery?.data?.id}/query`,
+      {
+        query: message,
+      }
+    );
+
+    setState({
+      history: [
+        ...history,
+        { from: 'agent', message: result.data.answer as string },
+      ] as any,
+    });
   };
 
-  const handleBulkDelete = async (datasourceIds: string[]) => {
-    if (window.confirm('Are you sure you want to delete these datasources?')) {
-      await axios.post('/api/datasources/bulk-delete', {
-        ids: datasourceIds,
-        datastoreId: getAgentQuery?.data?.id,
-      } as BulkDeleteDatasourcesSchema);
+  const handleChangeTab = (tab: string) => {
+    router.query.tab = tab;
+    router.replace(router);
+  };
 
-      await getAgentQuery.mutate();
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && !router.query.tab) {
+      handleChangeTab('chat');
     }
-  };
+  }, [router.query.tab]);
 
   // React.useEffect(() => {
   //   if (!router.query.tab) {
@@ -142,6 +153,11 @@ export default function AgentPage() {
         minWidth: 0,
         // height: '100dvh',
         width: '100%',
+        ...(router.query.tab === 'chat'
+          ? {
+              height: '100%',
+            }
+          : {}),
         gap: 1,
       })}
     >
@@ -208,7 +224,38 @@ export default function AgentPage() {
                 {getAgentQuery?.data?.visibility}
               </Chip>
             </Box>
-            <Stack direction={'row'} gap={2}>
+
+            <Tabs
+              aria-label="Icon tabs"
+              defaultValue={(router.query.tab as string) || 'chat'}
+              size="md"
+              sx={{
+                borderRadius: 'lg',
+                display: 'inline-flex',
+                mr: 'auto',
+                //   mt: 4,
+              }}
+              onChange={(event, value) => {
+                handleChangeTab(value as string);
+              }}
+            >
+              <TabList size="sm">
+                <Tab value={'chat'}>
+                  <ListItemDecorator>
+                    <MessageRoundedIcon />
+                  </ListItemDecorator>
+                  Chat
+                </Tab>
+                <Tab value={'settings'}>
+                  <ListItemDecorator>
+                    <SettingsIcon />
+                  </ListItemDecorator>
+                  Settings
+                </Tab>
+              </TabList>
+            </Tabs>
+
+            {/* <Stack direction={'row'} gap={2}>
               <Link
                 href={`${RouteNames.CHAT}?agentId=${getAgentQuery?.data?.id}`}
               >
@@ -221,11 +268,25 @@ export default function AgentPage() {
                   Chat with Agent
                 </Button>
               </Link>
-            </Stack>
+            </Stack> */}
           </Stack>
         </Box>
 
         <Divider sx={{ mb: 4 }} />
+
+        {router.query.tab === 'chat' && (
+          <Box
+            sx={{
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              maxHeight: '100%',
+              overflow: 'hidden',
+            }}
+          >
+            <ChatBox messages={state.history} onSubmit={handleChatSubmit} />
+          </Box>
+        )}
 
         {
           <Box
@@ -235,60 +296,66 @@ export default function AgentPage() {
               mx: 'auto',
             })}
           >
-            <AgentForm
-              onSubmitSucces={() => getAgentQuery.mutate()}
-              defaultValues={{
-                ...getAgentQuery?.data,
-                tools: [...agent.tools.map((each) => agentToolFormat(each))],
-              }}
-            />
+            {router.query.tab === 'settings' && (
+              <>
+                <AgentForm
+                  onSubmitSucces={() => getAgentQuery.mutate()}
+                  defaultValues={{
+                    ...getAgentQuery?.data,
+                    tools: [
+                      ...agent.tools.map((each) => agentToolFormat(each)),
+                    ],
+                  }}
+                />
 
-            <Divider sx={{ my: 4 }} />
+                <Divider sx={{ my: 4 }} />
 
-            <FormControl sx={{ gap: 1 }}>
-              <FormLabel>Agent ID</FormLabel>
-              <Typography level="body3" mb={2}>
-                Use the Agent ID to query the agent through Databerry API
-              </Typography>
-              <Stack spacing={2}>
-                <Alert
-                  color="info"
-                  startDecorator={<HelpOutlineRoundedIcon />}
-                  endDecorator={
-                    <Link href="https://docs.databerry.ai" target="_blank">
-                      <Button
-                        variant="plain"
-                        size="sm"
-                        endDecorator={<ArrowForwardRoundedIcon />}
-                      >
-                        Documentation
-                      </Button>
-                    </Link>
-                  }
-                >
-                  Learn more about the Datatberry API
-                </Alert>
+                <FormControl sx={{ gap: 1 }}>
+                  <FormLabel>Agent ID</FormLabel>
+                  <Typography level="body3" mb={2}>
+                    Use the Agent ID to query the agent through Databerry API
+                  </Typography>
+                  <Stack spacing={2}>
+                    <Alert
+                      color="info"
+                      startDecorator={<HelpOutlineRoundedIcon />}
+                      endDecorator={
+                        <Link href="https://docs.databerry.ai" target="_blank">
+                          <Button
+                            variant="plain"
+                            size="sm"
+                            endDecorator={<ArrowForwardRoundedIcon />}
+                          >
+                            Documentation
+                          </Button>
+                        </Link>
+                      }
+                    >
+                      Learn more about the Datatberry API
+                    </Alert>
 
-                <Alert color="neutral">{getAgentQuery?.data?.id}</Alert>
-              </Stack>
-            </FormControl>
+                    <Alert color="neutral">{getAgentQuery?.data?.id}</Alert>
+                  </Stack>
+                </FormControl>
 
-            <Divider sx={{ my: 4 }} />
+                <Divider sx={{ my: 4 }} />
 
-            <FormControl sx={{ gap: 1 }}>
-              <FormLabel>Delete Agent</FormLabel>
-              <Typography level="body3">
-                It will delete the agent permanently
-              </Typography>
-              <Button
-                color="danger"
-                sx={{ mr: 'auto', mt: 2 }}
-                startDecorator={<DeleteIcon />}
-                onClick={handleDeleteAgent}
-              >
-                Delete
-              </Button>
-            </FormControl>
+                <FormControl sx={{ gap: 1 }}>
+                  <FormLabel>Delete Agent</FormLabel>
+                  <Typography level="body3">
+                    It will delete the agent permanently
+                  </Typography>
+                  <Button
+                    color="danger"
+                    sx={{ mr: 'auto', mt: 2 }}
+                    startDecorator={<DeleteIcon />}
+                    onClick={handleDeleteAgent}
+                  >
+                    Delete
+                  </Button>
+                </FormControl>
+              </>
+            )}
           </Box>
         }
       </>

@@ -8,6 +8,7 @@ import Sheet from '@mui/joy/Sheet';
 import { ColorPaletteProp } from '@mui/joy/styles';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
+import Stack from '@mui/material/Stack';
 import { Agent, Datastore } from '@prisma/client';
 import Link from 'next/link';
 import * as React from 'react';
@@ -86,13 +87,25 @@ export default function AgentTable({ items }: { items: Agent[] }) {
                   </Chip>
                 </td>
                 <td>
-                  <Link href={`${RouteNames.CHAT}/?agentId=${agent.id}`}>
-                    <Tooltip title="Chat with Agent">
-                      <IconButton color="neutral" size="sm">
-                        <MessageRoundedIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Link>
+                  <Stack direction="row" spacing={1}>
+                    <Link href={`${RouteNames.AGENTS}/${agent.id}/?tab=chat`}>
+                      <Tooltip title="Chat with Agent">
+                        <IconButton color="neutral" size="sm">
+                          <MessageRoundedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+
+                    <Link
+                      href={`${RouteNames.AGENTS}/${agent.id}/?tab=settings`}
+                    >
+                      <Tooltip title="Agent Settings">
+                        <IconButton color="neutral" size="sm">
+                          <SettingsIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Link>
+                  </Stack>
                 </td>
               </tr>
             ))}

@@ -51,12 +51,12 @@ export default function Navigation() {
         icon: <StorageRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.DATASTORES,
       },
-      {
-        label: 'Chat',
-        route: RouteNames.CHAT,
-        icon: <ChatBubbleIcon fontSize="small" />,
-        active: router.route === RouteNames.CHAT,
-      },
+      // {
+      //   label: 'Chat',
+      //   route: RouteNames.CHAT,
+      //   icon: <ChatBubbleIcon fontSize="small" />,
+      //   active: router.route === RouteNames.CHAT,
+      // },
       {
         label: 'Apps',
         route: RouteNames.APPS,
