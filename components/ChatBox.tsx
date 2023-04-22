@@ -60,24 +60,26 @@ function ChatBox({ messages, onSubmit }: Props) {
       }}
     >
       <Stack
-        ref={scrollableRef}
         direction={'column'}
         sx={{
           height: '100%',
           maxHeight: '100%',
-          overflowY: 'auto',
+          // overflowY: 'auto',
           display: 'flex',
-          pb: 18,
+          pb: 8,
           pt: 2,
         }}
       >
         <Stack
+          ref={scrollableRef}
           direction={'column'}
           gap={2}
           sx={{
             maxWidth: '100%',
             width: '700px',
             mx: 'auto',
+            maxHeight: '100%',
+            overflowY: 'auto',
           }}
         >
           {messages.map((each, index) => (
