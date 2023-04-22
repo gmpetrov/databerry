@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import {
   Box,
+  Button,
   Card,
   CircularProgress,
   IconButton,
@@ -17,13 +18,22 @@ type Message = { from: 'human' | 'agent'; message: string };
 type Props = {
   messages: Message[];
   onSubmit: (message: string) => Promise<any>;
+  messageTemplates?: string[];
+  initialMessage?: string;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
 
-function ChatBox({ messages, onSubmit }: Props) {
+function ChatBox({
+  messages,
+  onSubmit,
+  messageTemplates,
+  initialMessage,
+}: Props) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [firstMsg, setFirstMsg] = useState<Message>();
+  const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
 
   const methods = useForm<z.infer<typeof Schema>>({
     resolver: zodResolver(Schema),
@@ -33,6 +43,7 @@ function ChatBox({ messages, onSubmit }: Props) {
   const submit = async ({ query }: z.infer<typeof Schema>) => {
     try {
       setIsLoading(true);
+      setHideTemplateMessages(true);
       methods.reset();
       await onSubmit(query);
     } catch {
@@ -49,6 +60,14 @@ function ChatBox({ messages, onSubmit }: Props) {
     scrollableRef.current.scrollTo(0, scrollableRef.current.scrollHeight);
   }, [messages?.length]);
 
+  React.useEffect(() => {
+    if (initialMessage) {
+      setTimeout(() => {
+        setFirstMsg({ from: 'agent', message: initialMessage });
+      }, 0);
+    }
+  }, [initialMessage]);
+
   return (
     <Stack
       direction={'column'}
@@ -64,7 +83,6 @@ function ChatBox({ messages, onSubmit }: Props) {
         sx={{
           height: '100%',
           maxHeight: '100%',
-          // overflowY: 'auto',
           display: 'flex',
           pb: 8,
           pt: 2,
@@ -82,10 +100,30 @@ function ChatBox({ messages, onSubmit }: Props) {
             overflowY: 'auto',
           }}
         >
+          {firstMsg && (
+            <Card
+              size="sm"
+              variant={'outlined'}
+              color={'primary'}
+              className="message-agent"
+              sx={{
+                mr: 'auto',
+                ml: 'none',
+                whiteSpace: 'pre-wrap',
+              }}
+            >
+              {firstMsg?.message}
+            </Card>
+          )}
+
           {messages.map((each, index) => (
             <Card
+              size="sm"
               key={index}
               variant={'outlined'}
+              className={
+                each.from === 'agent' ? 'message-agent' : 'message-human'
+              }
               color={each.from === 'agent' ? 'primary' : 'neutral'}
               sx={{
                 mr: each.from === 'agent' ? 'auto' : 'none',
@@ -129,9 +167,34 @@ function ChatBox({ messages, onSubmit }: Props) {
           style={{
             maxWidth: '100%',
             width: '700px',
+            position: 'relative',
           }}
           onSubmit={methods.handleSubmit(submit)}
         >
+          {!hideTemplateMessages && (messageTemplates?.length || 0) > 0 && (
+            <Stack
+              direction="row"
+              gap={1}
+              sx={{
+                position: 'absolute',
+                zIndex: 1,
+                transform: 'translateY(-100%)',
+                flexWrap: 'wrap',
+                mt: -1,
+              }}
+            >
+              {messageTemplates?.map((each, idx) => (
+                <Button
+                  key={idx}
+                  size="sm"
+                  variant="soft"
+                  onClick={() => submit({ query: each })}
+                >
+                  {each}
+                </Button>
+              ))}
+            </Stack>
+          )}
           <Input
             // disabled={!state.currentDatastoreId || state.loading}
             variant="outlined"

@@ -157,6 +157,8 @@ model Agent {
 
   nbQueries Int? @default(0) @map("nb_queries")
 
+  interfaceConfig Json? @map("interface_config")
+
   tools Tool[]
 
   createdAt DateTime @default(now()) @map("created_at")
