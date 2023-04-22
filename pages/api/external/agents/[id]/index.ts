@@ -1,12 +1,18 @@
 import { Agent } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import Cors from 'cors';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 
 const handler = createApiHandler();
+
+const cors = Cors({
+  methods: ['GET', 'HEAD'],
+});
 
 export const getAgent = async (
   req: AppNextApiRequest,
@@ -61,4 +67,11 @@ export const getAgent = async (
 
 handler.get(respond(getAgent));
 
-export default handler;
+export default async function wrapper(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

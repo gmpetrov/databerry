@@ -1,5 +1,6 @@
 import { Usage } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import Cors from 'cors';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 import { ChatRequest } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
@@ -8,9 +9,13 @@ import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
+import runMiddleware from '@app/utils/run-middleware';
 
 const handler = createApiHandler();
+
+const cors = Cors({
+  methods: ['POST', 'HEAD'],
+});
 
 export const queryAgent = async (
   req: AppNextApiRequest,
@@ -22,9 +27,6 @@ export const queryAgent = async (
   // get Bearer token from header
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')?.[1];
-
-  console.log('DATA', data);
-  console.log('DATA =-==================>', data?.query);
 
   if (!agentId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -94,4 +96,11 @@ export const queryAgent = async (
 
 handler.post(respond(queryAgent));
 
-export default handler;
+export default async function wrapper(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

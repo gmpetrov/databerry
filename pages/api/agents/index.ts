@@ -83,6 +83,7 @@ export const upsertAgent = async (
       name: data.name || generateFunId(),
       description: data.description,
       prompt: data.prompt,
+      interfaceConfig: data.interfaceConfig,
       owner: {
         connect: {
           id: session?.user?.id,
@@ -107,6 +108,7 @@ export const upsertAgent = async (
       description: data.description,
       visibility: data.visibility || AgentVisibility.private,
       prompt: data.prompt,
+      interfaceConfig: data.interfaceConfig,
       tools: {
         createMany: {
           data: newTools.map((tool) => ({

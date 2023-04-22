@@ -1,7 +1,12 @@
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import ChatBubble from '@app/components/ChatBubble';
+import ChatBubble, { theme } from '@app/components/ChatBubble';
+
+const cache = createCache({ key: 'chat-bubble', prepend: true });
 
 if (typeof window !== 'undefined') {
   addEventListener('DOMContentLoaded', (event) => {
@@ -12,7 +17,13 @@ if (typeof window !== 'undefined') {
     const root = createRoot(div);
     root.render(
       <StrictMode>
-        <ChatBubble agentId={me?.id || 'clgqxreyd0000ya0u5hb560qs'} />
+        <StyledEngineProvider injectFirst>
+          <CacheProvider value={cache}>
+            <CssVarsProvider theme={theme} defaultMode="light">
+              <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} />
+            </CssVarsProvider>
+          </CacheProvider>
+        </StyledEngineProvider>
       </StrictMode>
     );
   });

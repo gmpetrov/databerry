@@ -40,3 +40,4 @@ migration.ts
 .parcel-cache
 
 dist
+packages/chat-bubble/chat-bubble*

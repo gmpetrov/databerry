@@ -68,12 +68,3 @@ export interface Chunk extends Document {
 export enum TaskQueue {
   load_datasource = 'load-datasource',
 }
-
-export type AgentInterfaceConfig = {
-  displayName?: string;
-  primaryColor?: string;
-  initialMessage?: string;
-  messageTemplates?: string[];
-  position?: 'left' | 'right';
-  authorizedDomains?: string[];
-};

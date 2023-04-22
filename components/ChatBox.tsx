@@ -61,11 +61,11 @@ function ChatBox({
   }, [messages?.length]);
 
   React.useEffect(() => {
-    if (initialMessage) {
-      setTimeout(() => {
-        setFirstMsg({ from: 'agent', message: initialMessage });
-      }, 0);
-    }
+    setTimeout(() => {
+      setFirstMsg(
+        initialMessage ? { from: 'agent', message: initialMessage } : undefined
+      );
+    }, 0);
   }, [initialMessage]);
 
   return (
@@ -75,6 +75,7 @@ function ChatBox({
         width: '100%',
         height: '100%',
         maxHeight: '100%',
+        minHeight: '100%',
         mx: 'auto',
       }}
     >

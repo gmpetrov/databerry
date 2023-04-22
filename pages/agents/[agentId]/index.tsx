@@ -15,6 +15,7 @@ import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import Stack from '@mui/joy/Stack';
 import Tab from '@mui/joy/Tab';
@@ -33,6 +34,8 @@ import useSWR from 'swr';
 
 import AgentForm from '@app/components/AgentForm';
 import ChatBox from '@app/components/ChatBox';
+import ChatBubble from '@app/components/ChatBubble';
+import ChatInterfaceConfigForm from '@app/components/ChatInterfaceConfigForm';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
@@ -302,6 +305,8 @@ export default function AgentPage() {
                   onSubmitSucces={() => getAgentQuery.mutate()}
                   defaultValues={{
                     ...getAgentQuery?.data,
+                    interfaceConfig: getAgentQuery?.data
+                      ?.interfaceConfig as any,
                     tools: [
                       ...agent.tools.map((each) => agentToolFormat(each)),
                     ],
@@ -339,12 +344,31 @@ export default function AgentPage() {
                 </FormControl>
 
                 <Divider sx={{ my: 4 }} />
+                <FormControl>
+                  <Typography level="h5">Chat Interface</Typography>
+                  <Typography level="body2" mb={2}>
+                    Customize the chat interface to match your brand when
+                    embedding the Agent on your website
+                  </Typography>
+
+                  {getAgentQuery?.data?.id && (
+                    <ChatInterfaceConfigForm
+                      agentId={getAgentQuery?.data?.id}
+                    />
+                  )}
+
+                  {/* <Box sx={{ position: 'relative' }}>
+                    <ChatBubble agentId={getAgentQuery?.data?.id}></ChatBubble>
+                  </Box> */}
+                </FormControl>
+                <Divider sx={{ my: 4 }} />
 
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Delete Agent</FormLabel>
                   <Typography level="body3">
                     It will delete the agent permanently
                   </Typography>
+
                   <Button
                     color="danger"
                     sx={{ mr: 'auto', mt: 2 }}

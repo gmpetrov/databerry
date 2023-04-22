@@ -2,6 +2,7 @@ import { AgentVisibility, ToolType } from '@prisma/client';
 import { z } from 'zod';
 
 import {
+  AgentInterfaceConfig,
   DatastoreSchema,
   DocumentMetadataSchema,
   DocumentSchema,
@@ -124,6 +125,7 @@ export const UpsertAgentSchema = z.object({
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
   visibility: z.nativeEnum(AgentVisibility).default('private'),
+  interfaceConfig: AgentInterfaceConfig.optional(),
   tools: z
     .array(
       z.object({
