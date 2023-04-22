@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import CssBaseline from '@mui/joy/CssBaseline';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
@@ -13,11 +12,15 @@ import RadioGroup from '@mui/joy/RadioGroup';
 import Stack from '@mui/joy/Stack';
 import { StyledEngineProvider } from '@mui/joy/styles';
 import Textarea from '@mui/joy/Textarea';
+import Typography from '@mui/joy/Typography';
 import { Prisma } from '@prisma/client';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { Controller, useForm } from 'react-hook-form';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
+import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 import useSWR from 'swr';
 
 import { getAgent } from '@app/pages/api/agents/[id]';
@@ -25,6 +28,10 @@ import { AgentInterfaceConfig } from '@app/types/models';
 import { fetcher } from '@app/utils/swr-fetcher';
 
 import ChatBubble, { theme } from './ChatBubble';
+
+if (typeof window !== 'undefined') {
+  SyntaxHighlighter.registerLanguage('htmlbars', html);
+}
 
 type Props = {
   agentId: string;
@@ -228,12 +235,29 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           </Frame>
         )}
 
-        <Alert>
+        <Stack gap={1}>
+          <Typography level="h6">
+            Embed Agent on your website section
+          </Typography>
+          <Typography level="body2">
+            To Embed the Agent on your website paste this code to the HTML Head
+            section
+          </Typography>
+        </Stack>
+
+        <SyntaxHighlighter
+          language="htmlbars"
+          style={docco}
+          customStyle={{
+            borderRadius: 10,
+          }}
+        >
           {`<script 
-          id="${getAgentQuery?.data?.id}}"
-          data-name="databerry-chat-bubble"
-          src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"></script>`}
-        </Alert>
+  id="${getAgentQuery?.data?.id}}"
+  data-name="databerry-chat-bubble"
+  src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
+/>`}
+        </SyntaxHighlighter>
 
         <Button type="submit" loading={isLoading} sx={{ ml: 'auto', mt: 2 }}>
           Update

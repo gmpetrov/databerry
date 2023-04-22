@@ -35,7 +35,6 @@ import useSWR from 'swr';
 import AgentForm from '@app/components/AgentForm';
 import ChatBox from '@app/components/ChatBox';
 import ChatBubble from '@app/components/ChatBubble';
-import ChatInterfaceConfigForm from '@app/components/ChatInterfaceConfigForm';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
@@ -46,8 +45,8 @@ import getRootDomain from '@app/utils/get-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
-const CreateDatasourceModal = dynamic(
-  () => import('@app/components/CreateDatasourceModal'),
+const ChatInterfaceConfigForm = dynamic(
+  () => import('@app/components/ChatInterfaceConfigForm'),
   {
     ssr: false,
   }
