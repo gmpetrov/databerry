@@ -131,6 +131,37 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
         </FormControl>
 
         <FormControl>
+          <FormLabel>Message Templates</FormLabel>
+
+          {/* <Alert sx={{ mb: 1 }}>
+            Domains where the chat widget will be added for security purposes.
+            e.g: example.com
+          </Alert> */}
+
+          <Textarea
+            placeholder={`Pricing Plans\nHow to create a website?`}
+            minRows={3}
+            defaultValue={config?.messageTemplates?.join('\n')}
+            onChange={(e) => {
+              e.stopPropagation();
+
+              try {
+                const str = e.target.value;
+
+                const values = str.split('\n');
+                const domains = values
+                  .map((each) => each.trim())
+                  .filter((each) => !!each);
+
+                methods.setValue('messageTemplates', domains);
+              } catch (err) {
+                console.log('err', err);
+              }
+            }}
+          />
+        </FormControl>
+
+        <FormControl>
           <FormLabel>Position</FormLabel>
           <Controller
             control={methods.control}
