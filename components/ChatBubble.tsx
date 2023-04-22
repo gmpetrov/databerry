@@ -55,7 +55,7 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // messageTemplates: ["What's the pricing?"],
 };
 
-const API_URL = 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -237,7 +237,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   backgroundColor: config.primaryColor,
                   borderColor: config.primaryColor,
                   color: pickColorBasedOnBgColor(
-                    config.primaryColor!,
+                    config?.primaryColor! || '#000000',
                     '#ffffff',
                     '#000000'
                   ),

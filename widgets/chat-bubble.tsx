@@ -10,8 +10,13 @@ const cache = createCache({ key: 'chat-bubble', prepend: true });
 
 if (typeof window !== 'undefined') {
   addEventListener('DOMContentLoaded', (event) => {
-    const me = document.querySelector('script[data-name="databerry-widget"]');
+    const me = document.querySelector(
+      'script[data-name="databerry-chat-bubble"]'
+    );
     console.log('CALLLED ------------->', me?.id);
+    if (!me?.id) {
+      return;
+    }
     const div = document.createElement('div');
     document.body.appendChild(div);
     const root = createRoot(div);
@@ -20,7 +25,9 @@ if (typeof window !== 'undefined') {
         <StyledEngineProvider injectFirst>
           <CacheProvider value={cache}>
             <CssVarsProvider theme={theme} defaultMode="light">
-              <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} />
+              {/* clgqxreyd0000ya0u5hb560qs */}
+
+              <ChatBubble agentId={me.id} />
             </CssVarsProvider>
           </CacheProvider>
         </StyledEngineProvider>

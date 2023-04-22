@@ -166,7 +166,9 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           <Controller
             control={methods.control}
             name="position"
-            defaultValue={(getAgentQuery as any).data?.interfaceConfig.position}
+            defaultValue={
+              (getAgentQuery as any).data?.interfaceConfig?.position
+            }
             render={({ field }) => (
               <RadioGroup {...field}>
                 <Radio value="left" label="Left" variant="plain" />
@@ -225,6 +227,13 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
             </FrameContextConsumer>
           </Frame>
         )}
+
+        <Alert>
+          {`<script 
+          id="${getAgentQuery?.data?.id}}"
+          data-name="databerry-chat-bubble"
+          src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"></script>`}
+        </Alert>
 
         <Button type="submit" loading={isLoading} sx={{ ml: 'auto', mt: 2 }}>
           Update
