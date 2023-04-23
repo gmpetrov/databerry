@@ -376,9 +376,9 @@ export default function BaseForm(props: Props) {
           loading={isLoading}
           sx={{ ml: 'auto', mt: 2 }}
           // disabled={!methods.formState.isValid}
-          startDecorator={<SaveRoundedIcon />}
+          // startDecorator={<SaveRoundedIcon />}
         >
-          {'Submit'}
+          {'Save'}
         </Button>
       </form>
 

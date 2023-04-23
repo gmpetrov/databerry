@@ -4,7 +4,10 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
+import IntegrationInstructionsRoundedIcon from '@mui/icons-material/IntegrationInstructionsRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import type { ColorPaletteProp } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
@@ -227,50 +230,62 @@ export default function AgentPage() {
               </Chip>
             </Box>
 
-            <Tabs
-              aria-label="Icon tabs"
-              defaultValue={(router.query.tab as string) || 'chat'}
-              size="md"
-              sx={{
-                borderRadius: 'lg',
-                display: 'inline-flex',
-                mr: 'auto',
-                //   mt: 4,
-              }}
-              onChange={(event, value) => {
-                handleChangeTab(value as string);
-              }}
-            >
-              <TabList size="sm">
-                <Tab value={'chat'}>
-                  <ListItemDecorator>
-                    <MessageRoundedIcon />
-                  </ListItemDecorator>
-                  Chat
-                </Tab>
-                <Tab value={'settings'}>
-                  <ListItemDecorator>
-                    <SettingsIcon />
-                  </ListItemDecorator>
-                  Settings
-                </Tab>
-              </TabList>
-            </Tabs>
-
-            {/* <Stack direction={'row'} gap={2}>
-              <Link
-                href={`${RouteNames.CHAT}?agentId=${getAgentQuery?.data?.id}`}
+            <Stack direction={'row'} gap={2} alignItems={'center'}>
+              <Tabs
+                aria-label="Icon tabs"
+                defaultValue={(router.query.tab as string) || 'chat'}
+                size="md"
+                sx={{
+                  borderRadius: 'lg',
+                  display: 'inline-flex',
+                  //   mt: 4,
+                }}
+                onChange={(event, value) => {
+                  handleChangeTab(value as string);
+                }}
               >
-                <Button
-                  size="sm"
-                  variant="plain"
-                  startDecorator={<MessageRoundedIcon />}
-                  sx={{ mr: 'auto' }}
-                >
-                  Chat with Agent
-                </Button>
-              </Link>
-            </Stack> */}
+                <TabList size="sm">
+                  <Tab value={'chat'}>
+                    <ListItemDecorator>
+                      <MessageRoundedIcon />
+                    </ListItemDecorator>
+                    Chat
+                  </Tab>
+                  <Tab value={'settings'}>
+                    <ListItemDecorator>
+                      <SettingsIcon />
+                    </ListItemDecorator>
+                    Settings
+                  </Tab>
+                </TabList>
+              </Tabs>
+
+              {router.query.tab === 'settings' && (
+                <>
+                  <Link href={`#chat-interface-config`}>
+                    <Button
+                      size="sm"
+                      variant="plain"
+                      startDecorator={<PaletteRoundedIcon />}
+                      sx={{ mr: 'auto' }}
+                    >
+                      Customize interface
+                    </Button>
+                  </Link>
+
+                  <Link href={`#embed`}>
+                    <Button
+                      size="sm"
+                      variant="plain"
+                      startDecorator={<IntegrationInstructionsRoundedIcon />}
+                      sx={{ mr: 'auto' }}
+                    >
+                      Embed on website
+                    </Button>
+                  </Link>
+                </>
+              )}
+            </Stack>
           </Stack>
         </Box>
 
@@ -344,7 +359,9 @@ export default function AgentPage() {
 
                 <Divider sx={{ my: 4 }} />
                 <FormControl>
-                  <Typography level="h5">Chat Interface</Typography>
+                  <Typography id="chat-interface-config" level="h5">
+                    Chat Interface
+                  </Typography>
                   <Typography level="body2" mb={2}>
                     Customize the chat interface to match your brand when
                     embedding the Agent on your website

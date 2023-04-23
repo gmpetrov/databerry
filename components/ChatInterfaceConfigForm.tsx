@@ -235,7 +235,11 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           </Frame>
         )}
 
-        <Stack gap={1}>
+        <Button type="submit" loading={isLoading} sx={{ ml: 'auto', mt: 2 }}>
+          Update
+        </Button>
+
+        <Stack id="embed" gap={1}>
           <Typography level="h6">
             Embed Agent on your website section
           </Typography>
@@ -253,15 +257,11 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           }}
         >
           {`<script 
-  id="${getAgentQuery?.data?.id}}"
+  id="${getAgentQuery?.data?.id}"
   data-name="databerry-chat-bubble"
   src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-/>`}
+></script>`}
         </SyntaxHighlighter>
-
-        <Button type="submit" loading={isLoading} sx={{ ml: 'auto', mt: 2 }}>
-          Update
-        </Button>
       </Stack>
     </form>
   );
