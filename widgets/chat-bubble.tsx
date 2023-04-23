@@ -25,9 +25,8 @@ if (typeof window !== 'undefined') {
         <StyledEngineProvider injectFirst>
           <CacheProvider value={cache}>
             <CssVarsProvider theme={theme} defaultMode="light">
-              {/* clgqxreyd0000ya0u5hb560qs */}
-
               <ChatBubble agentId={me.id} />
+              {/* <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} /> */}
             </CssVarsProvider>
           </CacheProvider>
         </StyledEngineProvider>

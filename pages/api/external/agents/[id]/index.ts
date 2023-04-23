@@ -5,6 +5,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import guardExternalAgent from '@app/utils/guard-external-agent';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 
@@ -20,9 +21,9 @@ export const getAgent = async (
 ) => {
   const agentId = req.query.id as string;
 
-  // get Bearer token from header
+  // get Bearer apiKey from header
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')?.[1];
+  const apiKey = authHeader && authHeader.split(' ')?.[1];
 
   if (!agentId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -52,12 +53,11 @@ export const getAgent = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  //   if (
-  //     agent?.visibility === DatastoreVisibility.private &&
-  //     (!token || !agent?.owner?.apiKeys.find((each) => each.key === token))
-  //   ) {
-  //     throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  //   }
+  guardExternalAgent({
+    agent: agent as any,
+    apiKey: apiKey,
+    hostname: req.headers.host,
+  });
 
   return {
     ...agent,

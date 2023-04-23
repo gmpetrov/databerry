@@ -8,6 +8,7 @@ import accountConfig from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import guardExternalAgent from '@app/utils/guard-external-agent';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 
@@ -26,7 +27,7 @@ export const queryAgent = async (
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')?.[1];
+  const apiKey = authHeader && authHeader.split(' ')?.[1];
 
   if (!agentId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -56,14 +57,13 @@ export const queryAgent = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  const usage = agent?.owner?.usage as Usage;
+  guardExternalAgent({
+    agent: agent as any,
+    apiKey: apiKey,
+    hostname: req.headers.host,
+  });
 
-  //   if (
-  //     agent?.visibility === DatastoreVisibility.private &&
-  //     (!token || !agent?.owner?.apiKeys.find((each) => each.key === token))
-  //   ) {
-  //     throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  //   }
+  const usage = agent?.owner?.usage as Usage;
 
   if (
     usage?.nbAgentQueries >=
@@ -72,8 +72,6 @@ export const queryAgent = async (
   ) {
     throw new ApiError(ApiErrorType.USAGE_LIMIT);
   }
-
-  console.log('agent', agent);
 
   const manager = new AgentManager({ agent, topK: 3 });
 

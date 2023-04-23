@@ -163,20 +163,27 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
       }}
     >
       {isOpen && (
-        <Box
+        <Card
+          variant="outlined"
           sx={(theme) => ({
             zIndex: 9999,
             position: 'absolute',
             bottom: '80px',
-            display: 'block',
+            display: 'flex',
+            flexDirection: 'column',
+            boxSizing: 'border-box',
 
             ...(config.position === 'right'
               ? {
-                  transform: `translateX(${-400 + 20}px)`,
+                  transform: `translateX(${-400 + 50}px)`,
                 }
               : {}),
 
+            width: '400px',
             [theme.breakpoints.down('sm')]: {
+              width: '100vw',
+              maxWidth: '100vw',
+
               bottom: '-20px',
 
               ...(config.position === 'left'
@@ -193,85 +200,75 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             },
           })}
         >
-          <Card
-            variant="outlined"
+          <Box sx={{ width: '100%', mt: -2, py: 1 }}>
+            <Stack direction="row" alignItems={'center'}>
+              {config?.displayName && (
+                <Typography>{config?.displayName}</Typography>
+              )}
+
+              <IconButton
+                variant="plain"
+                sx={{ ml: 'auto' }}
+                size="sm"
+                onClick={() => setIsOpen(false)}
+              >
+                <CloseRoundedIcon />
+              </IconButton>
+            </Stack>
+          </Box>
+          <Divider />
+          <Box
             sx={(theme) => ({
-              width: '400px',
-              // height: '680px',
-              overflow: 'hidden',
+              // flex: 1,
+              // display: 'flex',
+              width: '100%',
+              position: 'relative',
+
+              height: 'calc(100vh - 200px)',
+              maxHeight: '680px',
+
               [theme.breakpoints.down('sm')]: {
-                width: '100vw',
-                height: '90vh',
+                height: '80vh',
+                maxHeight: '80vh',
+                maxWidth: '100vw',
+              },
+
+              '& .message-agent': {
+                backgroundColor: config.primaryColor,
+                borderColor: config.primaryColor,
+                color: pickColorBasedOnBgColor(
+                  config?.primaryColor! || '#000000',
+                  '#ffffff',
+                  '#000000'
+                ),
               },
             })}
           >
-            <Box sx={{ width: '100%', mt: -2, py: 1 }}>
-              <Stack direction="row" alignItems={'center'}>
-                {config?.displayName && (
-                  <Typography>{config?.displayName}</Typography>
-                )}
-
-                <IconButton
-                  variant="plain"
-                  sx={{ ml: 'auto' }}
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <CloseRoundedIcon />
-                </IconButton>
-              </Stack>
-            </Box>
-            <Divider />
-            <Box
-              sx={(theme) => ({
-                width: '100%',
-                height: '680px',
-                maxHeight: '100%',
-                position: 'relative',
-
-                [theme.breakpoints.down('sm')]: {
-                  height: '100%',
-                },
-
-                '& .message-agent': {
-                  backgroundColor: config.primaryColor,
-                  borderColor: config.primaryColor,
-                  color: pickColorBasedOnBgColor(
-                    config?.primaryColor! || '#000000',
-                    '#ffffff',
-                    '#000000'
-                  ),
-                },
-              })}
-            >
-              <ChatBox
-                messages={messages}
-                onSubmit={handleChatSubmit}
-                messageTemplates={config.messageTemplates}
-                initialMessage={config.initialMessage}
-              />
-            </Box>
-            <a
-              href="https://databerry.ai"
-              target="_blank"
-              style={{
-                textDecoration: 'none',
-                marginLeft: 'auto',
-                //   marginTop: 2,
-                //   marginBottom: 2,
-              }}
-            >
-              <Box sx={{ py: 0 }}>
-                <Typography level="body3">
-                  Powered by{' '}
-                  <Typography color="primary" fontWeight={'bold'}>
-                    Databerry
-                  </Typography>
+            <ChatBox
+              messages={messages}
+              onSubmit={handleChatSubmit}
+              messageTemplates={config.messageTemplates}
+              initialMessage={config.initialMessage}
+            />
+          </Box>
+          <a
+            href="https://databerry.ai"
+            target="_blank"
+            style={{
+              textDecoration: 'none',
+              marginLeft: 'auto',
+            }}
+          >
+            <Box sx={{ mt: 1 }}>
+              <Typography level="body3">
+                Powered by{' '}
+                <Typography color="primary" fontWeight={'bold'}>
+                  Databerry
                 </Typography>
-              </Box>
-            </a>
-          </Card>
-        </Box>
+              </Typography>
+            </Box>
+          </a>
+        </Card>
       )}
       <IconButton
         // color={'neutral'}
@@ -283,7 +280,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           height: '60px',
           borderRadius: '100%',
           color: textColor,
-          // mixBlendMode: 'difference',
 
           '&:hover': {
             backgroundColor: config.primaryColor,

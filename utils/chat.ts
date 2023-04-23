@@ -81,7 +81,7 @@ const chat = async ({
 
   const regex = /SOURCES:\s*(.+)/;
   const match = output?.trim()?.match(regex);
-  const source = match?.[1];
+  const source = match?.[1]?.replace('N/A', '')?.replace('None', '')?.trim();
 
   let answer = output?.trim()?.replace(regex, '')?.trim();
   answer = source ? `${answer}\n\n${source}` : answer;

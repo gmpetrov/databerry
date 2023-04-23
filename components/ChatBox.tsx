@@ -71,7 +71,12 @@ function ChatBox({
   return (
     <Stack
       direction={'column'}
+      gap={2}
       sx={{
+        display: 'flex',
+        flex: 1,
+        flexBasis: '100%',
+        maxWidth: '700px',
         width: '100%',
         height: '100%',
         maxHeight: '100%',
@@ -80,134 +85,124 @@ function ChatBox({
       }}
     >
       <Stack
+        ref={scrollableRef}
         direction={'column'}
+        gap={2}
         sx={{
-          height: '100%',
+          boxSizing: 'border-box',
+          maxWidth: '100%',
+          width: '100%',
+          mx: 'auto',
+          flex: 1,
           maxHeight: '100%',
-          display: 'flex',
+          overflowY: 'auto',
           pb: 8,
           pt: 2,
         }}
       >
-        <Stack
-          ref={scrollableRef}
-          direction={'column'}
-          gap={2}
-          sx={{
-            maxWidth: '100%',
-            width: '700px',
-            mx: 'auto',
-            maxHeight: '100%',
-            overflowY: 'auto',
-          }}
-        >
-          {firstMsg && (
-            <Card
-              size="sm"
-              variant={'outlined'}
-              color={'primary'}
-              className="message-agent"
-              sx={{
-                mr: 'auto',
-                ml: 'none',
-                whiteSpace: 'pre-wrap',
-              }}
-            >
-              {firstMsg?.message}
-            </Card>
-          )}
+        {firstMsg && (
+          <Card
+            size="sm"
+            variant={'outlined'}
+            color={'primary'}
+            className="message-agent"
+            sx={{
+              mr: 'auto',
+              ml: 'none',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {firstMsg?.message}
+          </Card>
+        )}
 
-          {messages.map((each, index) => (
-            <Card
-              size="sm"
-              key={index}
-              variant={'outlined'}
-              className={
-                each.from === 'agent' ? 'message-agent' : 'message-human'
-              }
-              color={each.from === 'agent' ? 'primary' : 'neutral'}
-              sx={{
-                mr: each.from === 'agent' ? 'auto' : 'none',
-                ml: each.from === 'human' ? 'auto' : 'none',
-                whiteSpace: 'pre-wrap',
-              }}
-            >
-              {each.message}
-            </Card>
-          ))}
+        {messages.map((each, index) => (
+          <Card
+            size="sm"
+            key={index}
+            variant={'outlined'}
+            className={
+              each.from === 'agent' ? 'message-agent' : 'message-human'
+            }
+            color={each.from === 'agent' ? 'primary' : 'neutral'}
+            sx={{
+              mr: each.from === 'agent' ? 'auto' : 'none',
+              ml: each.from === 'human' ? 'auto' : 'none',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {each.message}
+          </Card>
+        ))}
 
-          {isLoading && (
-            <CircularProgress
-              variant="soft"
-              color="neutral"
-              size="sm"
-              sx={{ mx: 'auto', my: 2 }}
-            />
-          )}
-        </Stack>
+        {isLoading && (
+          <CircularProgress
+            variant="soft"
+            color="neutral"
+            size="sm"
+            sx={{ mx: 'auto', my: 2 }}
+          />
+        )}
       </Stack>
+      {/* </Stack> */}
 
-      <Box
-        sx={{
-          mt: 'auto',
-          left: 0,
+      {/* <div className="w-full h-12 -translate-y-1/2 pointer-events-none backdrop-blur-lg"></div> */}
+
+      <form
+        style={{
           maxWidth: '100%',
           width: '100%',
+          position: 'relative',
+          display: 'flex',
+
+          marginTop: 'auto',
           overflow: 'visible',
           background: 'none',
-          position: 'absolute',
-          display: 'flex',
           justifyContent: 'center',
-          bottom: 4,
-          paddingLeft: 'inherit',
-          paddingRight: 'inherit',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          // paddingLeft: 'inherit',
+          // paddingRight: 'inherit',
         }}
+        onSubmit={methods.handleSubmit(submit)}
       >
-        {/* <div className="w-full h-12 -translate-y-1/2 pointer-events-none backdrop-blur-lg"></div> */}
-        <form
-          style={{
-            maxWidth: '100%',
-            width: '700px',
-            position: 'relative',
-          }}
-          onSubmit={methods.handleSubmit(submit)}
-        >
-          {!hideTemplateMessages && (messageTemplates?.length || 0) > 0 && (
-            <Stack
-              direction="row"
-              gap={1}
-              sx={{
-                position: 'absolute',
-                zIndex: 1,
-                transform: 'translateY(-100%)',
-                flexWrap: 'wrap',
-                mt: -1,
-              }}
-            >
-              {messageTemplates?.map((each, idx) => (
-                <Button
-                  key={idx}
-                  size="sm"
-                  variant="soft"
-                  onClick={() => submit({ query: each })}
-                >
-                  {each}
-                </Button>
-              ))}
-            </Stack>
-          )}
-          <Input
-            // disabled={!state.currentDatastoreId || state.loading}
-            variant="outlined"
-            endDecorator={
-              <IconButton type="submit" disabled={isLoading}>
-                <SendRoundedIcon />
-              </IconButton>
-            }
-            {...methods.register('query')}
-          />
-        </form>
-      </Box>
+        {!hideTemplateMessages && (messageTemplates?.length || 0) > 0 && (
+          <Stack
+            direction="row"
+            gap={1}
+            sx={{
+              position: 'absolute',
+              zIndex: 1,
+              transform: 'translateY(-100%)',
+              flexWrap: 'wrap',
+              mt: -1,
+              left: '0',
+            }}
+          >
+            {messageTemplates?.map((each, idx) => (
+              <Button
+                key={idx}
+                size="sm"
+                variant="soft"
+                onClick={() => submit({ query: each })}
+              >
+                {each}
+              </Button>
+            ))}
+          </Stack>
+        )}
+        <Input
+          sx={{ width: '100%' }}
+          // disabled={!state.currentDatastoreId || state.loading}
+          variant="outlined"
+          endDecorator={
+            <IconButton type="submit" disabled={isLoading}>
+              <SendRoundedIcon />
+            </IconButton>
+          }
+          {...methods.register('query')}
+        />
+      </form>
     </Stack>
   );
 }

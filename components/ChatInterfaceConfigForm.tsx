@@ -129,12 +129,18 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
 
         <FormControl>
           <FormLabel>Display Name</FormLabel>
-          <Input {...methods.register('displayName')} />
+          <Input
+            placeholder="Agent Smith"
+            {...methods.register('displayName')}
+          />
         </FormControl>
 
         <FormControl>
           <FormLabel>Initial Message</FormLabel>
-          <Input {...methods.register('initialMessage')} />
+          <Input
+            placeholder="👋 Hi, How can I help you?"
+            {...methods.register('initialMessage')}
+          />
         </FormControl>
 
         <FormControl>
@@ -178,8 +184,8 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
             }
             render={({ field }) => (
               <RadioGroup {...field}>
-                <Radio value="left" label="Left" variant="plain" />
-                <Radio value="right" label="Right" variant="plain" />
+                <Radio value="left" label="Left" variant="soft" />
+                <Radio value="right" label="Right" variant="soft" />
               </RadioGroup>
             )}
           />
@@ -194,7 +200,7 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           <Frame
             style={{
               width: '100%',
-              height: 900,
+              height: 600,
               border: '1px solid rgba(0, 0, 0, 0.2)',
               borderRadius: 20,
             }}
