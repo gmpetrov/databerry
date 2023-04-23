@@ -18,13 +18,17 @@ const datasourceLoadQueue = new Queue(TaskQueue.load_datasource, {
 });
 
 const triggerTaskLoadDatasource = async (
-  datasourceId: string,
-  isUpdateText?: boolean
+  data: {
+    datasourceId: string;
+    isUpdateText?: boolean;
+  }[]
 ) => {
-  return datasourceLoadQueue.add(TaskQueue.load_datasource, {
-    datasourceId: datasourceId,
-    isUpdateText: isUpdateText,
-  } as TaskLoadDatasourceRequestSchema);
+  return datasourceLoadQueue.addBulk(
+    data.map((each) => ({
+      name: TaskQueue.load_datasource,
+      data: each as TaskLoadDatasourceRequestSchema,
+    }))
+  );
 };
 
 export default triggerTaskLoadDatasource;

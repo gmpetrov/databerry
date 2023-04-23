@@ -87,7 +87,11 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
           datastoreId: datastore?.id,
           text: each.text,
         });
-        await await triggerTaskLoadDatasource(ids[index]);
+        await triggerTaskLoadDatasource([
+          {
+            datasourceId: ids[index],
+          },
+        ]);
       } catch (err) {
         console.log('ERROR TRIGGERING TASK', err);
 

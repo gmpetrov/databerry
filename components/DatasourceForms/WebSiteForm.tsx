@@ -1,3 +1,7 @@
+import Alert from '@mui/joy/Alert';
+import Divider from '@mui/joy/Divider';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 import { DatasourceType } from '@prisma/client';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -13,9 +17,36 @@ import type { DatasourceFormProps } from './types';
 type Props = DatasourceFormProps & {};
 
 export const WebSiteSourceSchema = UpsertDatasourceSchema.extend({
-  config: z.object({
-    source: z.string().trim().url(),
-  }),
+  config: z
+    .object({
+      source: z.string().trim().optional(),
+      sitemap: z.string().trim().optional(),
+    })
+    .refine(
+      (data) => {
+        if (data.sitemap) {
+          return !!z
+            .string()
+            .url()
+            .parse(data.sitemap, {
+              path: ['config.sitemap'],
+            });
+        } else if (data.source) {
+          return !!z
+            .string()
+            .url()
+            .parse(data.source, {
+              path: ['config.source'],
+            });
+        }
+
+        return false;
+      },
+      {
+        message: 'You must provide either a web site URL or a sitemap URL',
+        path: ['config.sitemap', 'config.source'],
+      }
+    ),
 });
 
 function Nested() {
@@ -23,14 +54,36 @@ function Nested() {
     useFormContext<z.infer<typeof WebSiteSourceSchema>>();
 
   return (
-    <>
-      <Input
-        label="Web Site URL"
-        helperText="e.g.: https://example.com/"
-        control={control as any}
-        {...register('config.source')}
-      />
-    </>
+    <Stack gap={1}>
+      <Stack gap={1}>
+        <Input
+          label="Web Site URL"
+          helperText="e.g.: https://example.com/"
+          control={control as any}
+          {...register('config.source')}
+        />
+        <Alert color="info">
+          Will automatically try to find all pages on the site during 45s max.
+        </Alert>
+      </Stack>
+
+      <Typography color="primary" fontWeight={'bold'} mx={'auto'} mt={2}>
+        Or
+      </Typography>
+
+      <Stack gap={1}>
+        <Input
+          label="Sitemap URL"
+          helperText="e.g.: https://example.com/sitemap.xml"
+          control={control as any}
+          {...register('config.sitemap')}
+        />
+
+        <Alert color="info">
+          Will process all pages in the sitemap during. 500 pages max.
+        </Alert>
+      </Stack>
+    </Stack>
   );
 }
 

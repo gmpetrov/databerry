@@ -5,7 +5,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import { UpsertDatasourceSchema } from '@app/types/models';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
-import findDomainPages from '@app/utils/find-domain-pages';
+import findDomainPages, { getSitemapPages } from '@app/utils/find-domain-pages';
 import generateFunId from '@app/utils/generate-fun-id';
 import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
@@ -52,7 +52,18 @@ export const upsertDatasource = async (
 
   // TODO: find a better way to handle this
   if (data.type === DatasourceType.web_site) {
-    const urls = await findDomainPages((data as any).config.source);
+    let urls: string[] = [];
+    const sitemap = (data as any).config.sitemap;
+    const source = (data as any).config.source;
+
+    if (sitemap) {
+      urls = await getSitemapPages(sitemap);
+    } else if (source) {
+      urls = await findDomainPages((data as any).config.source);
+    } else {
+      return;
+    }
+
     const ids = urls.map(() => cuid());
 
     await prisma.appDatasource.createMany({
@@ -69,9 +80,13 @@ export const upsertDatasource = async (
       })),
     });
 
-    await Promise.all(ids.map((each) => triggerTaskLoadDatasource(each)));
+    await triggerTaskLoadDatasource(
+      ids.map((each) => ({
+        datasourceId: each,
+      }))
+    );
 
-    return undefined;
+    return;
   }
 
   let existingDatasource;
@@ -119,7 +134,9 @@ export const upsertDatasource = async (
     },
   });
 
-  await triggerTaskLoadDatasource(id, data.isUpdateText);
+  await triggerTaskLoadDatasource([
+    { datasourceId: id, isUpdateText: data.isUpdateText },
+  ]);
 
   return datasource;
 };

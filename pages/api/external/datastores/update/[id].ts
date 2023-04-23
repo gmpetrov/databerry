@@ -84,7 +84,12 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
       datastoreId: datastore?.id,
       text: data.text,
     });
-    await triggerTaskLoadDatasource(data.id, true);
+    await triggerTaskLoadDatasource([
+      {
+        datasourceId: data.id,
+        isUpdateText: true,
+      },
+    ]);
   } catch (err) {
     console.log('ERROR TRIGGERING TASK', err);
 

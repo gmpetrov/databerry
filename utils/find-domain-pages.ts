@@ -1,3 +1,4 @@
+import { DOMParser } from '@xmldom/xmldom';
 import axios from 'axios';
 import { load } from 'cheerio';
 import pTimeout from 'p-timeout';
@@ -5,22 +6,29 @@ import path from 'path';
 
 import addSlashUrl from './add-slash-url';
 
-// const sitemapUrl = 'https://mabanque.bnpparibas/sitemap.xml';
-// (async () => {
-//   axios
-//     .get(sitemapUrl)
-//     .then((response) => {
-//       const parser = new DOMParser();
-//       const xmlDom = parser.parseFromString(response.data, 'text/xml');
-//       const locElements = xmlDom.getElementsByTagName('loc');
-//       for (let i = 0; i < locElements.length; i++) {
-//         console.log(locElements[i].textContent);
-//       }
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// })();
+export const getSitemapPages = async (sitemapURL: string) => {
+  const urls: string[] = [];
+
+  await axios
+    .get(sitemapURL)
+    .then((response) => {
+      const parser = new DOMParser();
+      const xmlDom = parser.parseFromString(response.data, 'text/xml');
+      const locElements = xmlDom.getElementsByTagName('loc');
+      for (let i = 0; i < locElements.length; i++) {
+        const url = locElements[i].textContent;
+
+        if (url) {
+          urls.push(url);
+        }
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  return urls;
+};
 
 const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
   // Create a set to track visited URLs

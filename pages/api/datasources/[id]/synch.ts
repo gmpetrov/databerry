@@ -40,7 +40,11 @@ export const synchDatasource = async (
     },
   });
 
-  triggerTaskLoadDatasource(datasource.id);
+  triggerTaskLoadDatasource([
+    {
+      datasourceId: datasource.id,
+    },
+  ]);
 
   return updated;
 };
