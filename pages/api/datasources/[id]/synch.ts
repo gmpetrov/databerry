@@ -2,7 +2,9 @@ import { AppDatasource as Datasource, DatasourceStatus } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
+import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 
@@ -20,13 +22,22 @@ export const synchDatasource = async (
       id,
     },
     include: {
-      owner: true,
+      owner: {
+        include: {
+          usage: true,
+        },
+      },
     },
   });
 
   if (datasource?.owner?.id !== session?.user?.id) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
+
+  guardDataProcessingUsage({
+    usage: datasource?.owner?.usage!,
+    plan: session?.user?.currentPlan,
+  });
 
   const updated = await prisma.appDatasource.update({
     where: {
@@ -40,7 +51,7 @@ export const synchDatasource = async (
     },
   });
 
-  triggerTaskLoadDatasource([
+  await triggerTaskLoadDatasource([
     {
       datasourceId: datasource.id,
     },

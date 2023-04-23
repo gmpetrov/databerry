@@ -8,6 +8,7 @@ import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import chat from '@app/utils/chat';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
+import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 
 const handler = createAuthApiHandler();
@@ -40,12 +41,10 @@ export const chatAgentRequest = async (
 
   const usage = agent?.owner?.usage as Usage;
 
-  if (
-    usage?.nbAgentQueries >=
-    accountConfig[session?.user?.currentPlan]?.limits?.maxAgentsQueries
-  ) {
-    throw new ApiError(ApiErrorType.USAGE_LIMIT);
-  }
+  guardAgentQueryUsage({
+    usage,
+    plan: session?.user?.currentPlan,
+  });
 
   if (agent?.ownerId !== session?.user?.id) {
     throw new Error('Unauthorized');

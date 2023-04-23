@@ -15,6 +15,7 @@ import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import { AgentInterfaceConfig } from '@app/types/models';
+import { ApiErrorType } from '@app/utils/api-error';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 
 export const theme = extendTheme({
@@ -89,8 +90,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         ...agentConfig,
         ...defaultChatBubbleConfig,
       });
-
-      console.log('data', data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -98,33 +97,47 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   };
 
   const handleChatSubmit = async (message: string) => {
-    if (!message) {
-      return;
-    }
-
-    const history = [...messages, { from: 'human', message }];
-
-    setMessages(history as any);
-
-    const result = await fetch(
-      `${API_URL}/api/external/agents/${props.agentId}/query`,
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          query: message,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    try {
+      if (!message) {
+        return;
       }
-    );
 
-    const data = await result.json();
+      const history = [...messages, { from: 'human', message }];
 
-    setMessages([
-      ...history,
-      { from: 'agent', message: data?.answer as string },
-    ] as any);
+      setMessages(history as any);
+
+      const result = await fetch(
+        `${API_URL}/api/external/agents/${props.agentId}/query`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            query: message,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const data = await result.json();
+
+      let answer = data?.answer;
+
+      if (data.error) {
+        switch (data.error) {
+          case ApiErrorType.USAGE_LIMIT:
+            answer = 'Usage limit reached. Please contact support.';
+            break;
+          default:
+            answer = `Error: ${data.error}`;
+            break;
+        }
+      }
+
+      setMessages([...history, { from: 'agent', message: answer }] as any);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {

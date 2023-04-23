@@ -24,8 +24,10 @@ import useSWR from 'swr';
 import AgentForm from '@app/components/AgentForm';
 import AgentTable from '@app/components/AgentTable';
 import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { RouteNames } from '@app/types';
+import accountConfig from '@app/utils/account-config';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
@@ -48,6 +50,7 @@ export default function AgentsPage() {
     isCreateDatasourceModalV2Open: false,
     currentDatastoreId: undefined as string | undefined,
     isAgentModalOpen: false,
+    isUsageLimitModalOpen: false,
   });
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
@@ -133,7 +136,18 @@ export default function AgentsPage() {
             variant="solid"
             color="primary"
             startDecorator={<AddIcon />}
-            onClick={() => setState({ isAgentModalOpen: true })}
+            onClick={() => {
+              if (
+                (getAgentsQuery?.data?.length || 0) >=
+                accountConfig[session?.user?.currentPlan!]?.limits?.maxAgents
+              ) {
+                return setState({
+                  isUsageLimitModalOpen: true,
+                });
+              }
+
+              setState({ isAgentModalOpen: true });
+            }}
           >
             New Agent
           </Button>
@@ -175,6 +189,14 @@ export default function AgentsPage() {
           />
         </Sheet>
       </Modal>
+      <UsageLimitModal
+        isOpen={state.isUsageLimitModalOpen}
+        handleClose={() =>
+          setState({
+            isUsageLimitModalOpen: false,
+          })
+        }
+      />
     </Box>
   );
 }

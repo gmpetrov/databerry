@@ -19,14 +19,17 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
 
 import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
+import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
@@ -50,9 +53,11 @@ const Datasources = dynamic(() => import('@app/components/Datasources'), {
 
 export default function DatastorePage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isCreateDatasourceModalOpen: false,
     currentDatastoreId: undefined as string | undefined,
+    isUsageLimitModalOpen: false,
   });
 
   const getDatastoreQuery = useSWR<
@@ -189,7 +194,18 @@ export default function DatastorePage() {
               variant="solid"
               color="primary"
               startDecorator={<AddIcon />}
-              onClick={() => setState({ isCreateDatasourceModalOpen: true })}
+              onClick={() => {
+                try {
+                  guardDataProcessingUsage({
+                    usage: session?.user.usage!,
+                    plan: session?.user.currentPlan!,
+                  });
+
+                  setState({ isCreateDatasourceModalOpen: true });
+                } catch {
+                  setState({ isUsageLimitModalOpen: true });
+                }
+              }}
             >
               Add Datasource
             </Button>
@@ -250,6 +266,15 @@ export default function DatastorePage() {
           }}
         />
       </>
+
+      <UsageLimitModal
+        isOpen={state.isUsageLimitModalOpen}
+        handleClose={() =>
+          setState({
+            isUsageLimitModalOpen: false,
+          })
+        }
+      />
     </Box>
   );
 }

@@ -8,6 +8,7 @@ import accountConfig from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import guardExternalAgent from '@app/utils/guard-external-agent';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
@@ -61,6 +62,11 @@ export const queryAgent = async (
     agent: agent as any,
     apiKey: apiKey,
     hostname: req.headers.host,
+  });
+
+  guardAgentQueryUsage({
+    usage: agent?.owner?.usage!,
+    plan: agent?.owner?.subscriptions?.[0]?.plan!,
   });
 
   const usage = agent?.owner?.usage as Usage;

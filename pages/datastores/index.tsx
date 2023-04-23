@@ -20,8 +20,10 @@ import useSWR from 'swr';
 
 import DatastoreTable from '@app/components/DatastoreTable';
 import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { RouteNames } from '@app/types';
+import accountConfig from '@app/utils/account-config';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
@@ -42,6 +44,7 @@ export default function DatasourcesPage() {
     isCreateDatastoreModalOpen: false,
     isCreateDatasourceModalV2Open: false,
     currentDatastoreId: undefined as string | undefined,
+    isUsageModalOpen: false,
   });
 
   const getDatastoresQuery = useSWR<
@@ -50,12 +53,10 @@ export default function DatasourcesPage() {
 
   const handleClickNewDatastore = () => {
     if (
-      !session?.user?.isPremium &&
-      (getDatastoresQuery?.data?.length || 0) >= 1
+      (getDatastoresQuery?.data?.length || 0) >=
+      accountConfig[session?.user?.currentPlan!]?.limits?.maxDatastores
     ) {
-      alert(
-        `You're limited to 1 datastore on the free plan. Contact support@databerry.ai to upgrade your account.`
-      );
+      setState({ isUsageModalOpen: true });
     } else {
       setState({ isCreateDatastoreModalOpen: true });
     }
@@ -169,6 +170,11 @@ export default function DatasourcesPage() {
         handleClose={() => {
           setState({ isCreateDatastoreModalOpen: false });
         }}
+      />
+
+      <UsageLimitModal
+        isOpen={state.isUsageModalOpen}
+        handleClose={() => setState({ isUsageModalOpen: false })}
       />
     </Box>
   );

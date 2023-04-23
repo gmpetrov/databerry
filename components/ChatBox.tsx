@@ -46,7 +46,7 @@ function ChatBox({
       setHideTemplateMessages(true);
       methods.reset();
       await onSubmit(query);
-    } catch {
+    } catch (err) {
     } finally {
       setIsLoading(false);
     }

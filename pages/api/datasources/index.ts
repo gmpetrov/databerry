@@ -1,12 +1,14 @@
-import { DatasourceStatus, DatasourceType } from '@prisma/client';
+import { DatasourceStatus, DatasourceType, Usage } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
 import { UpsertDatasourceSchema } from '@app/types/models';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
 import findDomainPages, { getSitemapPages } from '@app/utils/find-domain-pages';
 import generateFunId from '@app/utils/generate-fun-id';
+import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
@@ -44,11 +46,23 @@ export const upsertDatasource = async (
     where: {
       id: data.datastoreId,
     },
+    include: {
+      owner: {
+        include: {
+          usage: true,
+        },
+      },
+    },
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
+
+  guardDataProcessingUsage({
+    usage: datastore?.owner?.usage as Usage,
+    plan: session?.user?.currentPlan,
+  });
 
   // TODO: find a better way to handle this
   if (data.type === DatasourceType.web_site) {

@@ -26,7 +26,7 @@ import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
 import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -44,6 +44,7 @@ import { getAgent } from '@app/pages/api/agents/[id]';
 import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
 import { RouteNames } from '@app/types';
 import agentToolFormat from '@app/utils/agent-tool-format';
+import { ApiErrorType } from '@app/utils/api-error';
 import getRootDomain from '@app/utils/get-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
@@ -66,11 +67,6 @@ export default function AgentPage() {
     `/api/agents/${router.query?.agentId}`,
     fetcher
   );
-
-  // const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-  //   `/api/datastores/${router.query?.datastoreId}/api-keys`,
-  //   fetcher
-  // );
 
   const handleDeleteAgent = async () => {
     if (
@@ -95,17 +91,39 @@ export default function AgentPage() {
       history: history as any,
     });
 
-    const result = await axios.post(
-      `/api/agents/${getAgentQuery?.data?.id}/query`,
-      {
-        query: message,
+    let answer = '';
+    let error = '';
+
+    try {
+      const { data } = await axios.post(
+        `/api/agents/${getAgentQuery?.data?.id}/query`,
+        {
+          query: message,
+        }
+      );
+
+      answer = data?.answer;
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        if (err.response?.data?.error) {
+          error = err.response?.data?.error;
+
+          if (error === ApiErrorType.USAGE_LIMIT) {
+            answer =
+              'Usage limit reached. Please upgrade your plan to get higher usage.';
+          } else {
+            answer = `Error: ${error}`;
+          }
+        } else {
+          answer = `Error: ${error}`;
+        }
       }
-    );
+    }
 
     setState({
       history: [
         ...history,
-        { from: 'agent', message: result.data.answer as string },
+        { from: 'agent', message: answer as string },
       ] as any,
     });
   };
@@ -120,12 +138,6 @@ export default function AgentPage() {
       handleChangeTab('chat');
     }
   }, [router.query.tab]);
-
-  // React.useEffect(() => {
-  //   if (!router.query.tab) {
-  //     handleChangeTab('datasources');
-  //   }
-  // }, [router.query.tab]);
 
   if (!getAgentQuery?.data) {
     return null;
