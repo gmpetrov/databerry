@@ -56,7 +56,7 @@ export const getAgent = async (
   guardExternalAgent({
     agent: agent as any,
     apiKey: apiKey,
-    hostname: req.headers.host,
+    hostname: new URL(req.headers.origin!).host,
   });
 
   return {

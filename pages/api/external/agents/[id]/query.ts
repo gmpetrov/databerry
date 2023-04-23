@@ -30,6 +30,8 @@ export const queryAgent = async (
   const authHeader = req.headers.authorization;
   const apiKey = authHeader && authHeader.split(' ')?.[1];
 
+  console.log('REQ HEADERS', req.headers);
+
   if (!agentId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
@@ -61,7 +63,7 @@ export const queryAgent = async (
   guardExternalAgent({
     agent: agent as any,
     apiKey: apiKey,
-    hostname: req.headers.host,
+    hostname: new URL(req.headers.origin!).host,
   });
 
   guardAgentQueryUsage({
