@@ -15,6 +15,8 @@ type Props = {
   apiKey?: string;
 };
 const guardExternalAgent = ({ agent, apiKey, hostname }: Props) => {
+  console.log('{ agent, apiKey, hostname }', { agent, apiKey, hostname });
+
   if (!agent) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }

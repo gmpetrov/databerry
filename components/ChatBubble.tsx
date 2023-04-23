@@ -50,7 +50,7 @@ export const theme = extendTheme({
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
-  // primaryColor: '#000000',
+  primaryColor: '#000000',
   // initialMessage: 'Hi, how can I help you?',
   // position: 'right',
   // messageTemplates: ["What's the pricing?"],
@@ -61,16 +61,17 @@ const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [agent, setAgent] = React.useState<Agent | undefined>();
-  const [config, setConfig] = React.useState<AgentInterfaceConfig>(
-    props.initConfig || defaultChatBubbleConfig
-  );
+  const [config, setConfig] = React.useState<AgentInterfaceConfig>({
+    ...defaultChatBubbleConfig,
+    ...props.initConfig,
+  });
   const [messages, setMessages] = React.useState(
     [] as { from: 'human' | 'agent'; message: string }[]
   );
 
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(
-      config.primaryColor || '#000000',
+      config.primaryColor || '#ffffff',
       '#ffffff',
       '#000000'
     );
@@ -250,7 +251,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 backgroundColor: config.primaryColor,
                 borderColor: config.primaryColor,
                 color: pickColorBasedOnBgColor(
-                  config?.primaryColor! || '#000000',
+                  config?.primaryColor! || '#ffffff',
                   '#ffffff',
                   '#000000'
                 ),

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.popover-button {
+  background: none;
+  outline: none;
+}
+
 /* :root {
   --max-width: 1100px;
   --border-radius: 12px;

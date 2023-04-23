@@ -8,6 +8,7 @@ import { Fragment } from 'react';
 // import { Button } from '@app/components/landing-page/Button'
 import { Container } from '@app/components/landing-page/Container';
 import { Logo } from '@app/components/landing-page/Logo';
+import Menu from '@app/components/landing-page/Menu';
 import { NavLink } from '@app/components/landing-page/NavLink';
 import { RouteNames } from '@app/types';
 
@@ -110,7 +111,7 @@ export function Header() {
               <Logo className="w-auto h-10" />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
-              <Link href={RouteNames.CHAT_SITE}>
+              {/* <Link href={RouteNames.CHAT_SITE}>
                 <Button
                   href="/products/chat-site"
                   size="sm"
@@ -121,7 +122,10 @@ export function Header() {
                 >
                   Discvover ChatSite
                 </Button>
-              </Link>
+              </Link> */}
+
+<Menu />
+
               <NavLink href="/pricing">Pricing</NavLink>
               <NavLink href="https://github.com/gmpetrov/databerry">
                 GitHub
