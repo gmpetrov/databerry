@@ -4,6 +4,7 @@ import nc, { ErrorHandler } from 'next-connect';
 import { AppNextApiRequest } from '@app/types';
 import auth from '@app/utils/auth';
 
+import { ApiError } from './api-error';
 import { Handle, options } from './validate';
 
 export const onError: ErrorHandler<NextApiRequest, NextApiResponse> = (
@@ -33,11 +34,20 @@ export function respond<T>(f: Handle<T>) {
       res.json(result);
     } catch (err) {
       console.log(err);
-      res.statusCode = 500;
-      res.json({
-        error: (err as any).toString
+      res.statusCode = (err as any)?.status || 500;
+
+      let message = '';
+
+      if (err instanceof ApiError) {
+        message = err.message;
+      } else {
+        message = (err as any).toString
           ? (err as any).toString()
-          : JSON.stringify(err),
+          : JSON.stringify(err);
+      }
+
+      res.json({
+        error: message,
       });
     }
   };

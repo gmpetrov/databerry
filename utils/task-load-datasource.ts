@@ -19,6 +19,11 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     },
     include: {
       datastore: true,
+      owner: {
+        include: {
+          usage: true,
+        },
+      },
     },
   });
 
@@ -51,6 +56,18 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
       lastSynch: new Date(),
       nbSynch: datasource?.nbSynch! + 1,
       hash,
+      // Update usage
+      owner: {
+        update: {
+          usage: {
+            update: {
+              nbDataProcessingBytes:
+                (datasource?.owner?.usage?.nbDataProcessingBytes || 0) +
+                new TextEncoder().encode(document?.pageContent).length,
+            },
+          },
+        },
+      },
     },
     include: {
       datastore: true,

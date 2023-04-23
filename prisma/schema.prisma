@@ -22,14 +22,32 @@ model User {
   hasOptInEmail Boolean? @default(false) @map("has_opt_in_email")
 
   projects      Project[]
+  agents        Agent[]
   datastores    Datastore[]
   datasources   AppDatasource[]
   subscriptions Subscription[]  @relation("user")
+  apiKeys       UserApiKey[]
+  usage         Usage?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
+}
+
+model Usage {
+  id String @id @default(cuid())
+
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  nbAgentQueries        Int @default(0) @map("nb_agent_queries")
+  nbDatastoreQueries    Int @default(0) @map("nb_datastore_queries")
+  nbUploadedBytes       Int @default(0) @map("nb_uploaded_bytes")
+  nbDataProcessingBytes Int @default(0) @map("nb_data_processing_bytes")
+  nbModelTokens         Int @default(0) @map("nb_tokens")
+
+  @@map("usages")
 }
 
 model Project {
@@ -57,6 +75,7 @@ model Datastore {
   datasources AppDatasource[]
   visibility  DatastoreVisibility @default(private)
   apiKeys     DatastoreApiKey[]
+  tool        Tool[]
 
   config Json?
 
@@ -98,6 +117,18 @@ model AppDatasource {
   @@map("data_sources")
 }
 
+model UserApiKey {
+  id  String @id @default(cuid())
+  key String @unique()
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("user_api_keys")
+}
+
 model DatastoreApiKey {
   id  String @id @default(cuid())
   key String @unique()
@@ -109,6 +140,47 @@ model DatastoreApiKey {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("datastore_api_keys")
+}
+
+model Agent {
+  id String @id @default(cuid())
+
+  name        String
+  description String
+  prompt      String?
+
+  visibility AgentVisibility @default(private)
+
+  ownerId             String?               @map("owner_id")
+  owner               User?                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  externalIntegration ExternalIntegration[]
+
+  nbQueries Int? @default(0) @map("nb_queries")
+
+  interfaceConfig Json? @map("interface_config")
+
+  tools Tool[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("agents")
+}
+
+model Tool {
+  id   String   @id @default(cuid())
+  type ToolType
+
+  agent   Agent?  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId String? @map("agent_id")
+
+  datastoreId String?    @map("datastore_id")
+  datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("tools")
 }
 
 model Account {
@@ -151,12 +223,18 @@ model VerificationToken {
 }
 
 model ExternalIntegration {
-  id               String           @id @default(cuid())
-  integrationId    String           @unique @map("integration_id")
-  integrationToken String?          @map("integration_token")
-  apiKeyId         String?          @map("api_key_id")
-  apiKey           DatastoreApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
-  type             IntegrationType
+  id   String          @id @default(cuid())
+  type IntegrationType
+
+  integrationId    String  @unique @map("integration_id")
+  integrationToken String? @map("integration_token")
+
+  agentId String? @map("agent_id")
+  agent   Agent?  @relation(fields: [agentId], references: [id])
+
+  // DEPRECATED
+  apiKeyId String?          @map("api_key_id")
+  apiKey   DatastoreApiKey? @relation(fields: [apiKeyId], references: [id])
 
   @@map("external_integrations")
 }
@@ -195,6 +273,7 @@ model Price {
 
 model Subscription {
   id                   String             @id @default(cuid())
+  plan                 SubscriptionPlan?  @default(level_1)
   priceId              String
   customerId           String             @map("customer_id")
   status               SubscriptionStatus
@@ -227,6 +306,11 @@ enum DatastoreVisibility {
   private
 }
 
+enum AgentVisibility {
+  public
+  private
+}
+
 enum DatasourceStatus {
   unsynched
   pending
@@ -250,9 +334,17 @@ enum DatastoreType {
   qdrant
 }
 
+enum ToolType {
+  datastore
+  connector
+  agent
+}
+
 enum SubscriptionPlan {
-  free
-  premium
+  level_0
+  level_1
+  level_2
+  level_3
 }
 
 enum IntegrationType {

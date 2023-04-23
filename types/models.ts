@@ -60,3 +60,14 @@ export const UpsertDatasourceSchema = z.object({
 });
 
 export type UpsertDatasourceSchema = z.infer<typeof UpsertDatasourceSchema>;
+
+export const AgentInterfaceConfig = z.object({
+  displayName: z.string().trim().optional(),
+  primaryColor: z.string().trim().optional(),
+  initialMessage: z.string().trim().optional(),
+  messageTemplates: z.array(z.string()).optional(),
+  position: z.enum(['left', 'right']).optional(),
+  authorizedDomains: z.array(z.string()).optional(),
+});
+
+export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig>;

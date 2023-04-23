@@ -1,0 +1,19 @@
+{
+  "name": "@databerry/chat-bubble",
+  "version": "1.0.2",
+  "description": "Databerry.ai Chat Bubble Widget",
+  "main": "chat-bubble.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmpetrov/databerry.git"
+  },
+  "author": "Georges Petrov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gmpetrov/databerry/issues"
+  },
+  "homepage": "https://github.com/gmpetrov/databerry#readme"
+}

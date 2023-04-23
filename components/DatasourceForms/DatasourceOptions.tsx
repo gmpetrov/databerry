@@ -1,4 +1,7 @@
-import { Chip, Sheet, Stack, Typography } from '@mui/joy';
+import Chip from '@mui/joy/Chip';
+import Sheet from '@mui/joy/Sheet';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 import { DatasourceType } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import React from 'react';

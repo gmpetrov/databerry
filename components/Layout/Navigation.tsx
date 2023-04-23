@@ -1,15 +1,19 @@
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
-// Icons import
+import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import { Card, Divider, Stack, Typography } from '@mui/joy';
 import Box from '@mui/joy/Box';
+import Card from '@mui/joy/Card';
+import Divider from '@mui/joy/Divider';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 import { Prisma } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -36,22 +40,34 @@ export default function Navigation() {
   const items = React.useMemo(() => {
     return [
       {
+        label: 'Agents',
+        route: RouteNames.AGENTS,
+        icon: <SmartToyRoundedIcon fontSize="small" />,
+        active: router.route === RouteNames.AGENTS,
+      },
+      {
         label: 'Datastores',
         route: RouteNames.DATASTORES,
         icon: <StorageRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.DATASTORES,
       },
-      {
-        label: 'Chat',
-        route: RouteNames.CHAT,
-        icon: <ChatBubbleIcon fontSize="small" />,
-        active: router.route === RouteNames.CHAT,
-      },
+      // {
+      //   label: 'Chat',
+      //   route: RouteNames.CHAT,
+      //   icon: <ChatBubbleIcon fontSize="small" />,
+      //   active: router.route === RouteNames.CHAT,
+      // },
       {
         label: 'Apps',
         route: RouteNames.APPS,
         icon: <AutoFixHighRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.APPS,
+      },
+      {
+        label: 'Account',
+        route: RouteNames.ACCOUNT,
+        icon: <ManageAccountsRoundedIcon fontSize="small" />,
+        active: router.route === RouteNames.ACCOUNT,
       },
       {
         label: 'Documentation',

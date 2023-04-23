@@ -1,12 +1,14 @@
-import { DatasourceStatus, DatasourceType } from '@prisma/client';
+import { DatasourceStatus, DatasourceType, Usage } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
 import { UpsertDatasourceSchema } from '@app/types/models';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
-import findDomainPages from '@app/utils/find-domain-pages';
+import findDomainPages, { getSitemapPages } from '@app/utils/find-domain-pages';
 import generateFunId from '@app/utils/generate-fun-id';
+import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
@@ -44,15 +46,38 @@ export const upsertDatasource = async (
     where: {
       id: data.datastoreId,
     },
+    include: {
+      owner: {
+        include: {
+          usage: true,
+        },
+      },
+    },
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
+
+  guardDataProcessingUsage({
+    usage: datastore?.owner?.usage as Usage,
+    plan: session?.user?.currentPlan,
+  });
 
   // TODO: find a better way to handle this
   if (data.type === DatasourceType.web_site) {
-    const urls = await findDomainPages((data as any).config.source);
+    let urls: string[] = [];
+    const sitemap = (data as any).config.sitemap;
+    const source = (data as any).config.source;
+
+    if (sitemap) {
+      urls = await getSitemapPages(sitemap);
+    } else if (source) {
+      urls = await findDomainPages((data as any).config.source);
+    } else {
+      return;
+    }
+
     const ids = urls.map(() => cuid());
 
     await prisma.appDatasource.createMany({
@@ -69,9 +94,13 @@ export const upsertDatasource = async (
       })),
     });
 
-    await Promise.all(ids.map((each) => triggerTaskLoadDatasource(each)));
+    await triggerTaskLoadDatasource(
+      ids.map((each) => ({
+        datasourceId: each,
+      }))
+    );
 
-    return undefined;
+    return;
   }
 
   let existingDatasource;
@@ -119,7 +148,9 @@ export const upsertDatasource = async (
     },
   });
 
-  await triggerTaskLoadDatasource(id, data.isUpdateText);
+  await triggerTaskLoadDatasource([
+    { datasourceId: id, isUpdateText: data.isUpdateText },
+  ]);
 
   return datasource;
 };

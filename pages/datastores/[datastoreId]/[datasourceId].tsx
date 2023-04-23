@@ -1,18 +1,15 @@
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Chip,
-  ColorPaletteProp,
-  Divider,
-  FormControl,
-  FormLabel,
-  Link as JoyLink,
-  Typography,
-} from '@mui/joy';
+import type { ColorPaletteProp } from '@mui/joy';
+import Box from '@mui/joy/Box';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Button from '@mui/joy/Button';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Typography from '@mui/joy/Typography';
 import { Prisma } from '@prisma/client';
 import axios from 'axios';
 import dynamic from 'next/dynamic';

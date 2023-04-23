@@ -8,12 +8,14 @@ import type { Document } from '@app/utils/datastores/base';
 export * from './dtos';
 
 export enum RouteNames {
-  HOME = '/datastores',
+  HOME = '/agents',
   SIGN_IN = '/signin',
   SIGN_UP = '/signup',
+  AGENTS = '/agents',
   DATASTORES = '/datastores',
   CHAT = '/chat',
   MAINTENANCE = '/maintenance',
+  ACCOUNT = '/account',
   APPS = '/apps',
   CHAT_SITE = '/products/chat-site',
   SLACK_BOT = '/products/slack-bot',

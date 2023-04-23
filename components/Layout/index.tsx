@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function Layout(props: Props) {
-  const router = useRouter();
+  const { data: session, status } = useSession();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [userMenuElement, setUserMenuElement] =
     React.useState<null | HTMLElement>(null);
@@ -38,20 +38,6 @@ export default function Layout(props: Props) {
   const closeUserMenu = () => {
     setUserMenuElement(null);
   };
-
-  const handleClickManageSubsscription = async () => {
-    try {
-      const { data } = await axios.post('/api/stripe/customer-portal');
-
-      if (data) {
-        router.push(data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const { data: session, status } = useSession();
 
   return (
     <>
@@ -206,23 +192,6 @@ export default function Layout(props: Props) {
                 zIndex: theme.zIndex.tooltip,
               })}
             >
-              {session?.user?.isPremium ? (
-                <MenuItem onClick={() => handleClickManageSubsscription()}>
-                  Manage Subscription
-                </MenuItem>
-              ) : (
-                <Link
-                  href={`${process.env
-                    .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
-                    session?.user?.id
-                  }`}
-                  className="w-full"
-                >
-                  <MenuItem>Subscribe</MenuItem>
-                </Link>
-              )}
-
-              <Divider />
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu>
           </Box>

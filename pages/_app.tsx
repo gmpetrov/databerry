@@ -4,7 +4,7 @@ import '@app/styles/preflight.css';
 import '@app/styles/nprogress.css';
 
 import { CacheProvider } from '@emotion/react';
-import { CssBaseline } from '@mui/joy';
+import CssBaseline from '@mui/joy/CssBaseline';
 import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';

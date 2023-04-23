@@ -1,50 +1,35 @@
 import AddIcon from '@mui/icons-material/Add';
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
-import {
-  Alert,
-  Box,
-  Breadcrumbs,
-  Button,
-  Chip,
-  ColorPaletteProp,
-  Divider,
-  FormControl,
-  FormLabel,
-  IconButton,
-  Input,
-  Link as JoyLink,
-  ListItemDecorator,
-  Sheet,
-  Stack,
-  Tab,
-  tabClasses,
-  TabList,
-  Tabs,
-  Typography,
-} from '@mui/joy';
-import { DatastoreVisibility, Prisma } from '@prisma/client';
-import axios from 'axios';
+import type { ColorPaletteProp } from '@mui/joy';
+import Box from '@mui/joy/Box';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Button from '@mui/joy/Button';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Tab from '@mui/joy/Tab';
+import TabList from '@mui/joy/TabList';
+import Tabs from '@mui/joy/Tabs';
+import Typography from '@mui/joy/Typography';
+import { Prisma } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
 
-import DatasourceTable from '@app/components/DatasourceTable';
-import { DatastoreFormsMap } from '@app/components/DatastoreForms';
 import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
 import useStateReducer from '@app/hooks/useStateReducer';
-import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
 import { getDatastore } from '@app/pages/api/datastores/[id]';
-import { getApiKeys } from '@app/pages/api/datastores/[id]/api-keys';
 import { RouteNames } from '@app/types';
-import getRootDomain from '@app/utils/get-root-domain';
+import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
@@ -55,81 +40,37 @@ const CreateDatasourceModal = dynamic(
   }
 );
 
+const DatastoreSettings = dynamic(
+  () => import('@app/components/DatastoreSettings'),
+  {
+    ssr: false,
+  }
+);
+
+const Datasources = dynamic(() => import('@app/components/Datasources'), {
+  ssr: false,
+});
+
 export default function DatastorePage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isCreateDatasourceModalOpen: false,
     currentDatastoreId: undefined as string | undefined,
+    isUsageLimitModalOpen: false,
   });
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
-  >(`/api/datastores/${router.query?.datastoreId}`, fetcher, {
-    refreshInterval: 5000,
-  });
-
-  // const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-  //   `/api/datastores/${router.query?.datastoreId}/api-keys`,
-  //   fetcher
-  // );
+  >(`/api/datastores/${router.query?.datastoreId}`, fetcher);
 
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;
-    router.push(router);
-  };
-
-  const handleSynchDatasource = async (datasourceId: string) => {
-    await axios.post(`/api/datasources/${datasourceId}/synch`);
-
-    getDatastoreQuery.mutate();
-  };
-
-  const handleDeleteDatastore = async () => {
-    if (
-      window.confirm(
-        'Are you sure you want to delete this datastore? This action is irreversible.'
-      )
-    ) {
-      await axios.delete(`/api/datastores/${getDatastoreQuery?.data?.id}`);
-
-      router.push(RouteNames.DATASTORES);
-    }
-  };
-
-  const handleCreatApiKey = async () => {
-    await axios.post(`/api/datastores/${getDatastoreQuery?.data?.id}/api-keys`);
-
-    getDatastoreQuery.mutate();
-  };
-
-  const handleDeleteApiKey = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this api key?')) {
-      await axios.delete(
-        `/api/datastores/${getDatastoreQuery?.data?.id}/api-keys`,
-        {
-          data: {
-            apiKeyId: id,
-          },
-        }
-      );
-
-      getDatastoreQuery.mutate();
-    }
-  };
-
-  const handleBulkDelete = async (datasourceIds: string[]) => {
-    if (window.confirm('Are you sure you want to delete these datasources?')) {
-      await axios.post('/api/datasources/bulk-delete', {
-        ids: datasourceIds,
-        datastoreId: getDatastoreQuery?.data?.id,
-      } as BulkDeleteDatasourcesSchema);
-
-      await getDatastoreQuery.mutate();
-    }
+    router.replace(router);
   };
 
   React.useEffect(() => {
-    if (!router.query.tab) {
+    if (typeof window !== 'undefined' && !router.query.tab) {
       handleChangeTab('datasources');
     }
   }, [router.query.tab]);
@@ -253,7 +194,18 @@ export default function DatastorePage() {
               variant="solid"
               color="primary"
               startDecorator={<AddIcon />}
-              onClick={() => setState({ isCreateDatasourceModalOpen: true })}
+              onClick={() => {
+                try {
+                  guardDataProcessingUsage({
+                    usage: session?.user.usage!,
+                    plan: session?.user.currentPlan!,
+                  });
+
+                  setState({ isCreateDatasourceModalOpen: true });
+                } catch {
+                  setState({ isUsageLimitModalOpen: true });
+                }
+              }}
             >
               Add Datasource
             </Button>
@@ -292,271 +244,12 @@ export default function DatastorePage() {
 
         <Divider sx={{ my: 4 }} />
 
-        {router.query.tab === 'datasources' &&
-          getDatastoreQuery?.data?.datasources && (
-            <DatasourceTable
-              items={getDatastoreQuery?.data?.datasources}
-              handleSynch={handleSynchDatasource}
-              handleBulkDelete={handleBulkDelete}
-            />
-          )}
+        {router.query.tab === 'datasources' && getDatastoreQuery?.data?.id && (
+          <Datasources datastoreId={getDatastoreQuery?.data?.id} />
+        )}
 
         {getDatastoreQuery?.data && router.query.tab === 'settings' && (
-          <Box
-            sx={(theme) => ({
-              maxWidth: '100%',
-              width: theme.breakpoints.values.md,
-              mx: 'auto',
-            })}
-          >
-            {React.createElement(
-              DatastoreFormsMap?.[getDatastoreQuery?.data?.type!],
-              {
-                onSubmitSuccess: () => {
-                  getDatastoreQuery.mutate();
-                },
-                defaultValues: {
-                  ...getDatastoreQuery?.data,
-                  isPublic:
-                    getDatastoreQuery?.data?.visibility ===
-                    DatastoreVisibility.public,
-                } as any,
-                submitButtonText: 'Update',
-                submitButtonProps: {
-                  // variant: 'contained',
-                  variant: 'outlined',
-                  className: 'ml-auto',
-                },
-              }
-            )}
-
-            <Divider sx={{ my: 4 }} />
-            <FormControl sx={{ gap: 1 }}>
-              <FormLabel>API Keys</FormLabel>
-              <Typography level="body3">
-                Use the api key to access the datastore when private
-              </Typography>
-
-              <Stack direction={'column'} gap={2} mt={2}>
-                {getDatastoreQuery?.data?.apiKeys?.map((each) => (
-                  <>
-                    <Stack key={each.id} direction={'row'} gap={2}>
-                      <Alert color="neutral" sx={{ width: '100%' }}>
-                        {each.key}
-                      </Alert>
-
-                      <IconButton
-                        color="danger"
-                        variant="outlined"
-                        onClick={() => handleDeleteApiKey(each.id)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Stack>
-                  </>
-                ))}
-              </Stack>
-
-              <Button
-                startDecorator={<AddIcon />}
-                sx={{ mt: 3, ml: 'auto' }}
-                variant="outlined"
-                onClick={handleCreatApiKey}
-              >
-                Create API Key
-              </Button>
-            </FormControl>
-
-            <Divider sx={{ my: 4 }} />
-
-            <FormControl sx={{ gap: 1 }}>
-              <FormLabel>API Endpoints</FormLabel>
-              <Typography level="body3">
-                Here are the endpoints to interact with the datastore
-              </Typography>
-
-              <Stack gap={2}>
-                <Stack gap={2} mt={2}>
-                  <Typography level="body2">Query</Typography>
-                  <Typography level="body3">
-                    Retrieve data from the datastore
-                  </Typography>
-                  <Alert color="neutral" sx={{ width: '100%' }}>
-                    <Typography whiteSpace={'pre-wrap'}>
-                      {`curl -X POST ${`${process.env
-                        .NEXT_PUBLIC_DASHBOARD_URL!}/query/${
-                        getDatastoreQuery?.data?.id
-                      } \\`}
-  -H 'Content-Type: application/json' \\
-  -H 'Authorization: Bearer ${
-    getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
-  }' \\
-  -d '${JSON.stringify({
-    query: 'What are the top 3 post on hacker news?',
-    topK: 3,
-    // filter: {
-    //   tags: ['a', 'b', 'c'],
-    // },
-  })}'`}
-                      {`\n
-# Response
-${JSON.stringify(
-  {
-    results: [
-      {
-        text: 'lorem ipsum dolor sit...',
-        score: 0.9,
-        source: 'https://example.com',
-      },
-    ],
-  },
-  null,
-  4
-)}
-\n`}
-                    </Typography>
-                  </Alert>
-                </Stack>
-                <Stack gap={2} mt={2}>
-                  <Typography level="body2">Upsert</Typography>
-                  <Typography level="body3">
-                    Add documents to the datastore
-                  </Typography>
-
-                  <Alert color="neutral" sx={{ width: '100%' }}>
-                    <Typography whiteSpace={'pre-wrap'}>
-                      {`curl -X POST ${`${process.env
-                        .NEXT_PUBLIC_DASHBOARD_URL!}/upsert/${
-                        getDatastoreQuery?.data?.id
-                      } \\`}
-  -H 'Content-Type: application/json' \\
-  -H 'Authorization: Bearer ${
-    getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
-  }' \\
-  -d '${JSON.stringify(
-    {
-      documents: [
-        {
-          name: 'My Document Name',
-          text: 'lorem ipsum dolor sit...',
-          metadata: {
-            source: 'https://example.com',
-          },
-        },
-        {
-          name: 'Another Document Name',
-          text: 'lorem ipsum dolor sit...',
-          metadata: {
-            source: 'https://example2.com',
-          },
-        },
-      ],
-    },
-    null,
-    4
-  )}'`}
-                      {`\n
-# Response
-${JSON.stringify(
-  {
-    ids: ['docID1', 'docID2'],
-  },
-  null,
-  4
-)}
-\n`}
-                    </Typography>
-                  </Alert>
-                </Stack>
-                <Stack gap={2} mt={2}>
-                  <Typography level="body2">Update</Typography>
-                  <Typography level="body3">
-                    Update a document in the datastore
-                  </Typography>
-                  <Alert color="neutral" sx={{ width: '100%' }}>
-                    <Typography whiteSpace={'pre-wrap'}>
-                      {`curl -X POST ${`${process.env
-                        .NEXT_PUBLIC_DASHBOARD_URL!}/update/${
-                        getDatastoreQuery?.data?.id
-                      } \\`}
-  -H 'Content-Type: application/json' \\
-  -H 'Authorization: Bearer ${
-    getDatastoreQuery?.data?.apiKeys?.[0]?.key || 'DATASTORE_API_KEY'
-  }' \\
-  -d '${JSON.stringify(
-    {
-      id: 'docID1',
-      name: 'My Document Name',
-      text: 'lorem ipsum dolor sit...',
-      metadata: {
-        source: 'https://example.com',
-      },
-    },
-    null,
-    4
-  )}'`}
-                      {`\n
-# Response
-${JSON.stringify(
-  {
-    id: 'docID1',
-  },
-  null,
-  4
-)}
-\n`}
-                    </Typography>
-                  </Alert>
-                </Stack>
-              </Stack>
-            </FormControl>
-
-            <Divider sx={{ my: 4 }} />
-
-            <FormControl sx={{ gap: 1 }}>
-              <FormLabel>ChatGPT Plugin</FormLabel>
-              <Typography level="body3">
-                Configuration files for the ChatGPT Plugin are generated
-                automatically
-              </Typography>
-
-              <Stack>
-                <Stack gap={2} mt={2}>
-                  <Typography level="body2">ai-plugin.json</Typography>
-                  <Alert color="neutral" sx={{ width: '100%' }}>
-                    {`https://${getDatastoreQuery?.data?.id}.${getRootDomain(
-                      process.env.NEXT_PUBLIC_DASHBOARD_URL!
-                    )}/.well-known/ai-plugin.json`}
-                  </Alert>
-                </Stack>
-                <Stack gap={2} mt={2}>
-                  <Typography level="body2">openapi.yaml</Typography>
-                  <Alert color="neutral" sx={{ width: '100%' }}>
-                    {`https://${getDatastoreQuery?.data?.id}.${getRootDomain(
-                      process.env.NEXT_PUBLIC_DASHBOARD_URL!
-                    )}/.well-known/openapi.yaml`}
-                  </Alert>
-                </Stack>
-              </Stack>
-            </FormControl>
-
-            <Divider sx={{ my: 4 }} />
-
-            <FormControl sx={{ gap: 1 }}>
-              <FormLabel>Delete Datastore</FormLabel>
-              <Typography level="body3">
-                It will delete the datastore and all its datasources
-              </Typography>
-              <Button
-                color="danger"
-                sx={{ mr: 'auto', mt: 2 }}
-                startDecorator={<DeleteIcon />}
-                onClick={handleDeleteDatastore}
-              >
-                Delete
-              </Button>
-            </FormControl>
-          </Box>
+          <DatastoreSettings datastoreId={getDatastoreQuery?.data?.id} />
         )}
 
         <CreateDatasourceModal
@@ -573,6 +266,15 @@ ${JSON.stringify(
           }}
         />
       </>
+
+      <UsageLimitModal
+        isOpen={state.isUsageLimitModalOpen}
+        handleClose={() =>
+          setState({
+            isUsageLimitModalOpen: false,
+          })
+        }
+      />
     </Box>
   );
 }

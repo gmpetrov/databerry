@@ -1,18 +1,19 @@
-import { Datastore } from '@prisma/client';
+import { Agent, Datastore } from '@prisma/client';
 import { WebClient } from '@slack/web-api';
 
-import chat, { loadDatastoreChain } from './chat';
+import { AgentWithTools } from './agent';
+import chat from './chat';
 import summarize from './summarize';
 
 const slackAgent = async ({
   input,
-  datastore,
+  agent,
   client,
   channel,
   ts,
 }: {
   input: string;
-  datastore: Datastore;
+  agent: AgentWithTools;
   channel: string;
   client: WebClient;
   ts: string;
@@ -26,21 +27,21 @@ const slackAgent = async ({
   const { PromptTemplate } = await import('langchain/prompts');
   const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
 
-  const qaTool = new DynamicTool({
-    name: datastore?.name!,
-    description: `${datastore?.name!} QA - useful for when you need to ask questions about: ${
-      datastore?.description! || datastore?.name
-    }}}`,
-    func: async () => {
-      const { answer } = await chat({
-        datastore: datastore as any,
-        query: input,
-      });
+  // const qaTool = new DynamicTool({
+  //   name: datastore?.name!,
+  //   description: `${datastore?.name!} QA - useful for when you need to ask questions about: ${
+  //     datastore?.description! || datastore?.name
+  //   }}}`,
+  //   func: async () => {
+  //     const { answer } = await chat({
+  //       datastore: datastore as any,
+  //       query: input,
+  //     });
 
-      return answer;
-    },
-  });
-  qaTool.returnDirect = true;
+  //     return answer;
+  //   },
+  // });
+  // qaTool.returnDirect = true;
 
   const template = `Write a concise summary of the following based on this instruction ${input}:
 
@@ -80,7 +81,10 @@ const slackAgent = async ({
 
   summaryTool.returnDirect = true;
 
-  const tools = [summaryTool, qaTool];
+  const tools = [
+    summaryTool,
+    // qaTool
+  ];
 
   const executor = await initializeAgentExecutor(
     tools,

@@ -10,7 +10,10 @@ import {
   Typography,
 } from '@mui/joy';
 import Button from '@mui/joy/Button';
-import { Step, StepContent, StepLabel, Stepper } from '@mui/material';
+import Step from '@mui/material/Step';
+import StepContent from '@mui/material/StepContent';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
 import {
   AppDatasource as Datasource,
   DatasourceType,

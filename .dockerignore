@@ -9,3 +9,6 @@ next.config.js
 wrangler.toml
 edge
 fly
+.parcel-cache
+dist
+packages
