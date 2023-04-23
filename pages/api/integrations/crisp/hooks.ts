@@ -1,3 +1,4 @@
+import { SubscriptionPlan } from '@prisma/client';
 import Crisp from 'crisp-api';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
@@ -6,6 +7,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import AgentManager from '@app/utils/agent';
 import { createApiHandler } from '@app/utils/createa-api-handler';
 import getSubdomain from '@app/utils/get-subdomain';
+import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
@@ -85,6 +87,12 @@ const getAgent = async (websiteId: string) => {
     include: {
       agent: {
         include: {
+          owner: {
+            include: {
+              usage: true,
+              subscriptions: true,
+            },
+          },
           tools: {
             include: {
               datastore: true,
@@ -134,6 +142,28 @@ const handleQuery = async (
   query: string
 ) => {
   const agent = await getAgent(websiteId);
+
+  const usage = agent?.owner?.usage!;
+  const plan =
+    agent?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
+
+  try {
+    guardAgentQueryUsage({
+      usage,
+      plan,
+    });
+  } catch {
+    return await CrispClient.website.sendMessageInConversation(
+      websiteId,
+      sessionId,
+      {
+        type: 'text',
+        from: 'operator',
+        origin: 'chat',
+        content: 'Usage limit reached.',
+      }
+    );
+  }
 
   const answer = await new AgentManager({ agent }).query(query);
 

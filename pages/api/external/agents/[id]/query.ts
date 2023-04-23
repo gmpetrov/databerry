@@ -1,4 +1,4 @@
-import { Usage } from '@prisma/client';
+import { SubscriptionPlan, Usage } from '@prisma/client';
 import Cors from 'cors';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -66,7 +66,7 @@ export const queryAgent = async (
 
   guardAgentQueryUsage({
     usage: agent?.owner?.usage!,
-    plan: agent?.owner?.subscriptions?.[0]?.plan!,
+    plan: agent?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0,
   });
 
   const usage = agent?.owner?.usage as Usage;

@@ -7,6 +7,7 @@
 //  + I think it's better to minimize dependency with other providers if we want to work on a full onpremise solution in the future
 // ATM Dockerizing the app and host it on Fly.io for handling that type of use-cases
 
+import { SubscriptionPlan } from '@prisma/client';
 import { WebClient } from '@slack/web-api';
 import axios from 'axios';
 import { NextApiResponse } from 'next';
@@ -14,6 +15,7 @@ import { NextApiResponse } from 'next';
 import { AppNextApiRequest } from '@app/types/index';
 import AgentManager from '@app/utils/agent';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import slackAgent from '@app/utils/slack-agent';
 
@@ -92,6 +94,12 @@ const getIntegrationByTeamId = async (teamId: string) => {
     include: {
       agent: {
         include: {
+          owner: {
+            include: {
+              usage: true,
+              subscriptions: true,
+            },
+          },
           tools: {
             include: {
               datastore: true,
@@ -143,6 +151,25 @@ const handleMention = async (payload: MentionEvent) => {
   const cmd = args?.[0]?.toLowerCase();
   console.log('QUERUY---->', query);
   const slackClient = new WebClient(integration?.integrationToken!);
+
+  try {
+    const usage = agent?.owner?.usage!;
+    const plan =
+      agent?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
+
+    guardAgentQueryUsage({
+      usage,
+      plan,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return await slackClient.chat.postMessage({
+      channel: payload.event.channel,
+      thread_ts: payload.event.thread_ts,
+      text: `<@${payload.event.user}> Usage limit reached. Please upgrade your plan to continue using the bot.`,
+    });
+  }
 
   if (query) {
     sendLoader({
