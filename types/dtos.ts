@@ -125,7 +125,7 @@ export const UpsertAgentSchema = z.object({
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
   visibility: z.nativeEnum(AgentVisibility).default('private'),
-  interfaceConfig: AgentInterfaceConfig.optional(),
+  interfaceConfig: AgentInterfaceConfig.optional().nullable(),
   tools: z
     .array(
       z.object({

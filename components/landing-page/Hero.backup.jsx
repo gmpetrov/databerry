@@ -25,25 +25,23 @@ export function Hero() {
 
         <Link href={RouteNames.CHAT_SITE}>
 
-        {/* <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button> */}
+        <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button>
 
         {/* <div className='inline-flex items-center justify-center max-w-2xl p-2 mx-auto mb-4 border-2 border-indigo-400 rounded-full bg-black/30'>
           <h2 className="text-xs font-semibold leading-none text-indigo-300 ">Open Source</h2>
         </div> */}
         </Link>
-        <h2 className='mb-4 text-2xl font-bold text-violet-300'>Build Your Own</h2>
-      <h1 className="max-w-lg mx-auto text-4xl font-bold !leading-snug tracking-tight text-center text-white whitespace-pre-wrap font-display sm:text-5xl sm:text-center">
+      <h1 className="max-w-2xl mx-auto text-5xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-7xl">
         {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
-        {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}
-        {`ChatGPT Agents\nTrained On\nYour Custom Data`}
+        {'Connect your data \nto ChatGPT \nin minutes'}
       </h1>
 
-      {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
+      <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2>
 
 
 
-      <p className="max-w-sm mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:max-w-lg">
-      With our <strong className='text-violet-300' >no-code platform</strong>, you can create a <strong className='text-violet-300'>custom AI chatbot</strong> trained on your data in seconds. Streamline customer support, onboard new team members, and more!
+      <p className="max-w-2xl mx-auto mt-6 text-lg tracking-tight text-gray-200">
+        We make your data ready for large language models
       </p>
 
       <Stack direction={{
@@ -57,9 +55,9 @@ export function Hero() {
 
       <Link target='_blank' href={'https://app.databerry.ai/signin'}>
         <Button variant="solid" size="lg"
-          // startDecorator={<RocketLaunchRounded />}
+          startDecorator={<RocketLaunchRounded />}
           sx={{borderRadius: 100}}
-          >{`⚡️ Get Started Now`}</Button>
+          >{`Start Now`}</Button>
       </Link>
       <Link target='_blank' href={'https://calendly.com/databerry-georges/15min'}>
         <Button variant="outlined" size="lg"

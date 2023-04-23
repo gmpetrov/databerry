@@ -10,13 +10,13 @@ const features = [
   {
     name: 'No-code',
     description:
-      'User-friendly interface to manage your datastores and chat with your data',
+      'User-friendly interface to create agents and manage your data',
     icon: CursorArrowRaysIcon,
   },
   {
     name: 'Securized API Endpoints',
     description:
-      'We provide you with secured api endpoints to query your data from anywhere via a simple HTTP POST request. Useful for integrating personal data into language models',
+      'We provide you with secured api endpoints to query your agents or your datastores from anywhere via a simple HTTP POST request. Useful for integrating custom data into language models',
     icon: LockClosedIcon,
   },
 
@@ -42,12 +42,12 @@ export function PrimaryFeatures() {
       >
       <div className="px-6 mx-auto max-w-7xl lg:px-8">
         <div className="max-w-2xl mx-auto lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-indigo-600">Make LLMs aware of your personal data</h2>
+          <h2 className="text-base font-semibold leading-7 text-indigo-600">ChatGPT Agents Trained On Your Custom Data</h2>
           <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
           Prepare your data for the new AI era
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-          Databerry provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge
+          Databerry provides a user-friendly solution to quickly setup a semantic search system over your custom data without any technical knowledge
           </p>
         </div>
         <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">
