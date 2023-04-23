@@ -50,6 +50,19 @@ const nextConfig = {
         source: '/datastores/upsert/:path*',
         destination: '/api/external/datastores/upsert/:path*',
       },
+      // TODO remove routes below after migration
+      {
+        source: '/crisp/:path*',
+        destination: '/integrations/crisp/:path*',
+      },
+      {
+        source: '/api/crisp/:path*',
+        destination: '/api/integrations/crisp/:path*',
+      },
+      {
+        source: '/api/slack/:path*',
+        destination: '/api/integrations/slack/:path*',
+      },
     ];
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {

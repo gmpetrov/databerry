@@ -13,6 +13,9 @@ import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import { UpsertDatasourceSchema } from '@app/types/models';
+import accountConfig from '@app/utils/account-config';
+
+import UsageLimitModal from '../UsageLimitModal';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
@@ -49,6 +52,7 @@ function Nested() {
     file: null as File | null,
     isDragEnter: false,
     isProcessing: false,
+    isUsageLimitModalOpen: false,
   });
 
   const datasourceText = watch('datasourceText');
@@ -58,10 +62,11 @@ function Nested() {
       return;
     }
 
-    if (!session?.user?.isPremium && file.size / 1000000 > 1.1) {
-      alert(
-        'File upload is limited to 1MB on the free plan. To subscribe: Click your profile picture > Upgrade Account'
-      );
+    if (
+      file.size >
+      accountConfig[session?.user?.currentPlan!]?.limits?.maxFileSize
+    ) {
+      setState({ isUsageLimitModalOpen: true });
       return;
     }
 
@@ -163,6 +168,14 @@ function Nested() {
           <Typography level="body3" textAlign={'center'} mt={2}>
             PDF, PowerPoint, Excel, Word, Text, Markdown,
           </Typography>
+          <UsageLimitModal
+            isOpen={state.isUsageLimitModalOpen}
+            handleClose={() =>
+              setState({
+                isUsageLimitModalOpen: false,
+              })
+            }
+          />
         </Card>
       )}
     </>
