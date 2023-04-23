@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import ConstructionOutlined from '@mui/icons-material/ConstructionOutlined';
@@ -33,6 +34,7 @@ import {
 } from '@prisma/client';
 import axios from 'axios';
 import mime from 'mime-types';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
@@ -49,6 +51,13 @@ import { RouteNames } from '@app/types';
 import { UpsertAgentSchema } from '@app/types/dtos';
 import cuid from '@app/utils/cuid';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
+
+const CreateDatastoreModal = dynamic(
+  () => import('@app/components/CreateDatastoreModal'),
+  {
+    ssr: false,
+  }
+);
 
 type Props = {
   defaultValues?: UpsertAgentSchema;
@@ -94,6 +103,8 @@ const Tool = (props: {
 
 export default function BaseForm(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
+    useState(false);
   const methods = useForm<UpsertAgentSchema>({
     resolver: zodResolver(UpsertAgentSchema),
     defaultValues: {
@@ -199,7 +210,7 @@ export default function BaseForm(props: Props) {
           {/* <FormLabel>Tools</FormLabel> */}
           <Typography level="body2" mb={2}>
             {/* Datastores or external integrations your Agent can access */}
-            The Datastore your Agent can access
+            The Datastore your Agent can access.
           </Typography>
 
           {tools.length === 0 && (
@@ -210,12 +221,12 @@ export default function BaseForm(props: Props) {
               variant="soft"
               sx={{ mb: 2 }}
             >
-              Agent has access to zero tool
+              Agent does not have access to custom data
             </Alert>
           )}
 
           <Select
-            defaultValue={tools[0]?.id}
+            value={tools[0]?.id}
             placeholder="Choose a Datastore"
             onChange={(_, value) => {
               const datastore = getDatastoresQuery?.data?.find(
@@ -261,21 +272,57 @@ export default function BaseForm(props: Props) {
             ))} */}
           </Select>
 
-          <Stack direction={'row'} gap={1}>
-            <Link
-              href={`${RouteNames.DATASTORES}/${tools?.[0]?.id}`}
-              style={{ marginLeft: 'auto' }}
-            >
+          {!tools[0]?.id && (
+            <Stack direction={'column'} gap={1}>
               <Button
-                sx={{ ml: 'auto', mt: 2 }}
+                sx={{ mr: 'auto', mt: 2 }}
                 variant="plain"
-                endDecorator={<ArrowForwardRoundedIcon />}
+                // endDecorator={<ArrowForwardRoundedIcon />}
+                startDecorator={<AddIcon />}
                 size="sm"
+                onClick={() => setIsCreateDatastoreModalOpen(true)}
               >
-                Go to Datastore
+                Create a Datastore
               </Button>
-            </Link>
-          </Stack>
+            </Stack>
+          )}
+
+          {tools[0]?.id && (
+            <Stack direction={'row'} gap={1}>
+              <Link
+                href={`${RouteNames.DATASTORES}/${tools?.[0]?.id}`}
+                style={{ marginLeft: 'auto' }}
+              >
+                <Button
+                  sx={{ mt: 2 }}
+                  variant="plain"
+                  endDecorator={<ArrowForwardRoundedIcon />}
+                  size="sm"
+                >
+                  Go to Datastore
+                </Button>
+              </Link>
+            </Stack>
+          )}
+
+          <CreateDatastoreModal
+            isOpen={isCreateDatastoreModalOpen}
+            onSubmitSuccess={(newDatatore) => {
+              getDatastoresQuery.mutate();
+              setIsCreateDatastoreModalOpen(false);
+
+              methods.setValue('tools', [
+                {
+                  id: newDatatore.id!,
+                  type: ToolType.datastore,
+                },
+              ]);
+            }}
+            handleClose={() => {
+              setIsCreateDatastoreModalOpen(true);
+            }}
+          />
+          {/* )} */}
 
           {/* <Stack direction={'row'} gap={1} flexWrap={'wrap'}>
             {tools.map((tool) => (
