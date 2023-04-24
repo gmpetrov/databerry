@@ -35,7 +35,7 @@ export function Hero() {
       <h1 className="max-w-lg mx-auto text-4xl font-bold !leading-snug tracking-tight text-center text-white whitespace-pre-wrap font-display sm:text-5xl sm:text-center">
         {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
         {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}
-        {`ChatGPT Agents\nTrained On\nYour Custom Data`}
+        {`ChatGPT Agent\nTrained On\nYour Custom Data`}
       </h1>
 
       {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
