@@ -26,14 +26,13 @@ export const getUrlsFromSitemap = (data: any) => {
 export const getSitemapPages = async (sitemapURL: string) => {
   let urls: string[] = [];
 
-  await axios
-    .get(sitemapURL)
-    .then((response) => {
-      urls = [...getUrlsFromSitemap(response.data)];
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  try {
+    const { data } = await axios.get(sitemapURL);
+
+    return getUrlsFromSitemap(data);
+  } catch (err) {
+    console.log(err);
+  }
 
   return urls;
 };

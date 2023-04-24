@@ -21,8 +21,9 @@ async function getSitemapFromRobotsTxt(websiteUrl: string) {
 // Function to fetch the sitemap.xml file directly from the website root
 async function getSitemapFromRoot(websiteUrl: string) {
   try {
-    await axios.get(`${websiteUrl}/sitemap.xml`);
-    return websiteUrl;
+    const sitemapUrl = `${websiteUrl}/sitemap.xml`;
+    await axios.head(sitemapUrl);
+    return sitemapUrl;
   } catch (error: any) {
     console.error('Error fetching sitemap.xml:', error?.message);
   }
@@ -37,16 +38,16 @@ async function findSitemap(websiteUrl: string) {
   } catch {}
 
   // First, try to find the sitemap URL from the robots.txt file
-  const sitemapUrl = await getSitemapFromRobotsTxt(origin);
+  let sitemapUrl = await getSitemapFromRobotsTxt(origin);
   if (sitemapUrl) {
     console.log('Sitemap URL found in robots.txt:', sitemapUrl);
     return sitemapUrl;
   }
 
   // If not found in robots.txt, try to fetch the sitemap.xml file directly from the website root
-  const sitemapXml = await getSitemapFromRoot(origin);
-  if (sitemapXml) {
-    console.log('Sitemap XML found at website root:', sitemapXml);
+  sitemapUrl = await getSitemapFromRoot(origin);
+  if (sitemapUrl) {
+    console.log('Sitemap XML found at website root:', sitemapUrl);
     return sitemapUrl;
   }
 
