@@ -19,6 +19,7 @@ import { ApiErrorType } from '@app/utils/api-error';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 
 export const theme = extendTheme({
+  cssVarPrefix: 'databerry-chat-bubble',
   colorSchemes: {
     dark: {
       palette: {
