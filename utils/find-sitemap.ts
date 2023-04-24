@@ -1,5 +1,4 @@
 import axios from 'axios';
-import cheerio from 'cheerio';
 
 // Function to fetch the sitemap URL from the robots.txt file
 async function getSitemapFromRobotsTxt(websiteUrl: string) {
@@ -10,10 +9,11 @@ async function getSitemapFromRobotsTxt(websiteUrl: string) {
       .split('\n')
       .find((line: string) => line.startsWith('Sitemap:'));
     if (sitemapLine) {
-      return sitemapLine.split(' ')[1];
+      return sitemapLine.split(' ')[1] as string;
     }
   } catch (error: any) {
     console.error('Error fetching robots.txt:', error?.message);
+    return null;
   }
   return null;
 }
@@ -21,8 +21,8 @@ async function getSitemapFromRobotsTxt(websiteUrl: string) {
 // Function to fetch the sitemap.xml file directly from the website root
 async function getSitemapFromRoot(websiteUrl: string) {
   try {
-    const response = await axios.get(`${websiteUrl}/sitemap.xml`);
-    return response.data;
+    await axios.get(`${websiteUrl}/sitemap.xml`);
+    return websiteUrl;
   } catch (error: any) {
     console.error('Error fetching sitemap.xml:', error?.message);
   }
