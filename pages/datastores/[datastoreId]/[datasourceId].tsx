@@ -172,6 +172,7 @@ export default function DatasourcePage() {
                   running: 'info',
                   synched: 'success',
                   error: 'danger',
+                  usage_limit_reached: 'warning',
                 }[getDatasourceQuery?.data?.status!] as ColorPaletteProp
               }
             >

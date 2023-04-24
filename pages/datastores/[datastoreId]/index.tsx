@@ -257,7 +257,7 @@ export default function DatastorePage() {
         )}
 
         {getDatastoreQuery?.data && router.query.tab === 'settings' && (
-          <DatastoreSettings datastoreId={getDatastoreQuery?.data?.id} />
+          <DatastoreSettings />
         )}
 
         <CreateDatasourceModal
