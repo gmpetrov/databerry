@@ -31,10 +31,6 @@ const nextConfig = {
         destination: '/api/external/datastores/query/:path*',
       },
       {
-        source: '/datastores/:path*',
-        destination: '/api/external/datastores/:path*',
-      },
-      {
         source: '/datastores/query/:path*',
         destination: '/api/external/datastores/query/:path*',
       },
