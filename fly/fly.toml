@@ -12,6 +12,7 @@ worker = "node --max-old-space-size=1536 server/datasource-loader.js"
 
 [build]
   [build.args]
+    NEXT_PUBLIC_DASHBOARD_URL = "https://databerry.fly.dev"
     NEXT_PUBLIC_S3_BUCKET_NAME = "databerry"
 
 [[services]]
