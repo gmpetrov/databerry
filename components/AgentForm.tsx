@@ -7,23 +7,24 @@ import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutl
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
-import {
-  Alert,
-  Box,
-  Button,
-  Checkbox,
-  Chip,
-  Divider,
-  FormControl,
-  FormLabel,
-  IconButton,
-  Option,
-  Select,
-  Sheet,
-  Stack,
-  Typography,
-} from '@mui/joy';
+import Alert from '@mui/joy/Alert';
+import Avatar from '@mui/joy/Avatar';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import Checkbox from '@mui/joy/Checkbox';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import IconButton from '@mui/joy/IconButton';
+import Modal from '@mui/joy/Modal';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
+import Sheet from '@mui/joy/Sheet';
+import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
+import Typography from '@mui/joy/Typography';
 import {
   Agent,
   AgentVisibility,
@@ -67,6 +68,30 @@ type Props = {
 // const BASE_PROMPT_TEMPLATE = `Imagine you are an AI customer support assistant, specifically trained on custom data to accurately answer queries based on the provided context. Your primary goal is to assist users by providing relevant information, and you should not attempt to make up answers if the information is not available in the context. Given the following context, please provide the best possible answer to the user's query:`;
 const BASE_PROMPT_TEMPLATE = `As a customer support agent, please provide a helpful and professional response to the user's question or issue.`;
 
+const PROMPT_TEMPLATES = [
+  {
+    label: 'Customer Support',
+    image: '',
+    description: 'Default customer support agent template',
+    prompt: BASE_PROMPT_TEMPLATE,
+  },
+];
+const PROMPT_TEMPLATES_FUN = [
+  {
+    label: 'Shakespeare',
+    image:
+      'https://actintheatre.com/wp-content/uploads/2019/01/Shakespeare-300x278.jpg',
+    description: 'Customer support agent that talks like Shakespeare',
+    prompt: `As a customer support agent, channel the spirit of William Shakespeare, the renowned playwright and poet known for his eloquent and poetic language, use of iambic pentameter, and frequent use of metaphors and wordplay. Respond to the user's question or issue in the style of the Bard himself.`,
+  },
+  {
+    label: 'Arnold Schwarzenegger',
+    image: 'https://i.redd.it/ni0if4asnrd71.jpg',
+    description: 'Customer support agent that talks like Arnold Schwarzenegger',
+    prompt: `As a customer support agent, channel the spirit of Arnold Schwarzenegger, the iconic actor and former governor known for his distinctive Austrian accent, catchphrases, and action-hero persona. Respond to the user's question or issue in the style of Arnold himself.`,
+  },
+];
+
 const Tool = (props: {
   id: string;
   title: string;
@@ -105,6 +130,9 @@ export default function BaseForm(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
     useState(false);
+
+  const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] =
+    useState(false);
   const methods = useForm<UpsertAgentSchema>({
     resolver: zodResolver(UpsertAgentSchema),
     defaultValues: {
@@ -142,6 +170,7 @@ export default function BaseForm(props: Props) {
 
   const visiblity = methods.watch('visibility');
   const tools = methods.watch('tools') || [];
+  const prompt = methods.watch('prompt');
 
   console.log('validation errors', methods.formState.errors);
 
@@ -195,7 +224,20 @@ export default function BaseForm(props: Props) {
 
         <FormControl>
           <FormLabel>Prompt</FormLabel>
-          <Textarea maxRows={21} minRows={4} {...register('prompt')} />
+          <Textarea
+            value={prompt || ''}
+            maxRows={21}
+            minRows={4}
+            {...register('prompt')}
+          />
+          <Button
+            variant="plain"
+            endDecorator={<ArrowForwardRoundedIcon />}
+            sx={{ mt: 1, ml: 'auto' }}
+            onClick={() => setIsPromptTemplatesModalOpen(true)}
+          >
+            Choose a Prompt Template
+          </Button>
         </FormControl>
 
         <FormControl>
@@ -436,6 +478,98 @@ export default function BaseForm(props: Props) {
       >
         test
       </Button> */}
+
+      <Modal
+        open={isPromptTemplatesModalOpen}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onClose={() => {
+          setIsPromptTemplatesModalOpen(false);
+        }}
+      >
+        <Card
+          variant="outlined"
+          sx={{
+            width: '100%',
+            maxWidth: 500,
+            maxHeight: '100%',
+            overflowY: 'auto',
+          }}
+        >
+          <Typography level="h6">Prompt Templates</Typography>
+          <Typography level="body2">Tailored to your business needs</Typography>
+
+          <Divider sx={{ my: 2 }}></Divider>
+          <Stack gap={1} direction="column">
+            {PROMPT_TEMPLATES.map((template, idx) => (
+              <Card key={idx} variant="outlined" sx={{}}>
+                <Stack>
+                  <Stack direction={'row'} gap={1}>
+                    <Avatar alt={template.image} src={template.image} />
+                    <Stack>
+                      <Typography>{template.label}</Typography>
+                      <Typography level="body2">
+                        {template.description}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+
+                  <Button
+                    size="sm"
+                    variant="plain"
+                    endDecorator={<ArrowForwardRoundedIcon />}
+                    sx={{ ml: 'auto', mt: 2 }}
+                    onClick={() => {
+                      methods.setValue('prompt', template.prompt);
+                      setIsPromptTemplatesModalOpen(false);
+                    }}
+                  >
+                    Use Template
+                  </Button>
+                </Stack>
+              </Card>
+            ))}
+          </Stack>
+          <Divider sx={{ my: 4 }}></Divider>
+
+          <Typography sx={{ mx: 'auto', mb: 2 }} color="primary">
+            Just for fun 🎉
+          </Typography>
+          <Stack gap={1}>
+            {PROMPT_TEMPLATES_FUN.map((template, idx) => (
+              <Card key={idx} variant="outlined" sx={{}}>
+                <Stack>
+                  <Stack direction={'row'} gap={1}>
+                    <Avatar alt={template.image} src={template.image} />
+                    <Stack>
+                      <Typography>{template.label}</Typography>
+                      <Typography level="body2">
+                        {template.description}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+
+                  <Button
+                    size="sm"
+                    variant="plain"
+                    endDecorator={<ArrowForwardRoundedIcon />}
+                    sx={{ ml: 'auto', mt: 2 }}
+                    onClick={() => {
+                      methods.setValue('prompt', template.prompt);
+                      setIsPromptTemplatesModalOpen(false);
+                    }}
+                  >
+                    Use Template
+                  </Button>
+                </Stack>
+              </Card>
+            ))}
+          </Stack>
+        </Card>
+      </Modal>
     </FormProvider>
   );
 }
