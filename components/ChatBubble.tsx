@@ -61,10 +61,9 @@ const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [agent, setAgent] = React.useState<Agent | undefined>();
-  const [config, setConfig] = React.useState<AgentInterfaceConfig>({
-    ...defaultChatBubbleConfig,
-    ...props.initConfig,
-  });
+  const [config, setConfig] = React.useState<AgentInterfaceConfig>(
+    props.initConfig || defaultChatBubbleConfig
+  );
   const [messages, setMessages] = React.useState(
     [] as { from: 'human' | 'agent'; message: string }[]
   );
@@ -88,8 +87,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
       setAgent(data);
       setConfig({
-        ...agentConfig,
         ...defaultChatBubbleConfig,
+        ...agentConfig,
       });
     } catch (err) {
       console.error(err);
