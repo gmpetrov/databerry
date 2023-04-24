@@ -31,6 +31,10 @@ const nextConfig = {
         destination: '/api/external/datastores/query/:path*',
       },
       {
+        source: '/datastores/:path*',
+        destination: '/api/external/datastores/:path*',
+      },
+      {
         source: '/datastores/query/:path*',
         destination: '/api/external/datastores/query/:path*',
       },
@@ -49,6 +53,10 @@ const nextConfig = {
       {
         source: '/datastores/upsert/:path*',
         destination: '/api/external/datastores/upsert/:path*',
+      },
+      {
+        source: '/agents/query/:path*',
+        destination: '/api/external/agents/query/:path*',
       },
       // TODO remove routes below after migration
       {

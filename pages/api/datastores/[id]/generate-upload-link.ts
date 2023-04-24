@@ -3,22 +3,13 @@
 import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
-import { AppNextApiRequest } from '@app/types/index';
+import { AppNextApiRequest, GenerateUploadLinkRequest } from '@app/types';
 import { s3 } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
 const handler = createAuthApiHandler();
-
-export const GenerateUploadLinkRequest = z.object({
-  fileName: z.string(),
-  type: z.string(),
-});
-
-export type GenerateUploadLinkRequest = z.infer<
-  typeof GenerateUploadLinkRequest
->;
 
 export const generateUploadLink = async (
   req: AppNextApiRequest,

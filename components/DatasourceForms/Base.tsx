@@ -16,7 +16,7 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
-import { GenerateUploadLinkRequest } from '@app/pages/api/datastores/[id]/generate-upload-link';
+import { GenerateUploadLinkRequest } from '@app/types/dtos';
 import { UpsertDatasourceSchema } from '@app/types/models';
 import cuid from '@app/utils/cuid';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';

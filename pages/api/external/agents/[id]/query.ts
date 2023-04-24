@@ -9,7 +9,6 @@ import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import guardExternalAgent from '@app/utils/guard-external-agent';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 
@@ -41,9 +40,13 @@ export const queryAgent = async (
     include: {
       owner: {
         include: {
-          subscriptions: true,
           usage: true,
           apiKeys: true,
+          subscriptions: {
+            where: {
+              status: 'active',
+            },
+          },
         },
       },
       tools: {

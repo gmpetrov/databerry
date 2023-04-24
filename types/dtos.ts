@@ -140,3 +140,12 @@ export const UpsertAgentSchema = z.object({
 });
 
 export type UpsertAgentSchema = z.infer<typeof UpsertAgentSchema>;
+
+export const GenerateUploadLinkRequest = z.object({
+  fileName: z.string(),
+  type: z.string(),
+});
+
+export type GenerateUploadLinkRequest = z.infer<
+  typeof GenerateUploadLinkRequest
+>;

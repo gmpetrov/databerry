@@ -47,7 +47,6 @@ import { z } from 'zod';
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
 import { getDatastores } from '@app/pages/api/datastores';
-import { GenerateUploadLinkRequest } from '@app/pages/api/datastores/[id]/generate-upload-link';
 import { RouteNames } from '@app/types';
 import { UpsertAgentSchema } from '@app/types/dtos';
 import cuid from '@app/utils/cuid';

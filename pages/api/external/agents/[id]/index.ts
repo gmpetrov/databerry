@@ -36,9 +36,13 @@ export const getAgent = async (
     include: {
       owner: {
         include: {
-          subscriptions: true,
           usage: true,
           apiKeys: true,
+          subscriptions: {
+            where: {
+              status: 'active',
+            },
+          },
         },
       },
       tools: {
