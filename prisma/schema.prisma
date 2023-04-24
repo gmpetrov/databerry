@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  previewFeatures = ["jsonProtocol", "fullTextSearch", "filteredRelationCount"]
 }
 
 datasource db {
@@ -317,6 +317,7 @@ enum DatasourceStatus {
   running
   synched
   error
+  usage_limit_reached
 }
 
 enum DatasourceType {

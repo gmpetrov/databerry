@@ -6,22 +6,30 @@ import path from 'path';
 
 import addSlashUrl from './add-slash-url';
 
-export const getSitemapPages = async (sitemapURL: string) => {
+export const getUrlsFromSitemap = (data: any) => {
   const urls: string[] = [];
+  const parser = new DOMParser();
+  const xmlDom = parser.parseFromString(data, 'text/xml');
+  const locElements = xmlDom.getElementsByTagName('loc');
+
+  for (let i = 0; i < locElements.length; i++) {
+    const url = locElements[i].textContent;
+
+    if (url) {
+      urls.push(url);
+    }
+  }
+
+  return urls;
+};
+
+export const getSitemapPages = async (sitemapURL: string) => {
+  let urls: string[] = [];
 
   await axios
     .get(sitemapURL)
     .then((response) => {
-      const parser = new DOMParser();
-      const xmlDom = parser.parseFromString(response.data, 'text/xml');
-      const locElements = xmlDom.getElementsByTagName('loc');
-      for (let i = 0; i < locElements.length; i++) {
-        const url = locElements[i].textContent;
-
-        if (url) {
-          urls.push(url);
-        }
-      }
+      urls = [...getUrlsFromSitemap(response.data)];
     })
     .catch((error) => {
       console.error(error);

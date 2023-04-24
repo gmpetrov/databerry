@@ -14,15 +14,44 @@ export const getDatastore = async (
 ) => {
   const session = req.session;
   const id = req.query.id as string;
+  const search = req.query.search as string;
+  const offset = parseInt((req.query.offset as string) || '0');
+  const limit = parseInt((req.query.limit as string) || '100');
 
   const datastore = await prisma.datastore.findUnique({
     where: {
       id,
     },
     include: {
+      _count: {
+        select: {
+          datasources: {
+            where: {
+              ...(search
+                ? {
+                    name: {
+                      contains: search,
+                    },
+                  }
+                : {}),
+            },
+          },
+        },
+      },
       datasources: {
+        skip: offset * limit,
+        take: limit,
+        where: {
+          ...(search
+            ? {
+                name: {
+                  contains: search,
+                },
+              }
+            : {}),
+        },
         orderBy: {
-          createdAt: 'asc',
+          lastSynch: 'desc',
         },
       },
       apiKeys: true,

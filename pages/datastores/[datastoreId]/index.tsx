@@ -29,6 +29,7 @@ import UsageLimitModal from '@app/components/UsageLimitModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
+import config from '@app/utils/config';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
@@ -53,6 +54,10 @@ const Datasources = dynamic(() => import('@app/components/Datasources'), {
 
 export default function DatastorePage() {
   const router = useRouter();
+  const limit = Number(router.query.limit || config.datasourceTable.limit);
+  const offset = Number(router.query.offset || 0);
+  const search = router.query.search || '';
+
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isCreateDatasourceModalOpen: false,
@@ -62,7 +67,10 @@ export default function DatastorePage() {
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
-  >(`/api/datastores/${router.query?.datastoreId}`, fetcher);
+  >(
+    `/api/datastores/${router.query?.datastoreId}?offset=${offset}&limit=${limit}&search=${search}`,
+    fetcher
+  );
 
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;

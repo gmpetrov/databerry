@@ -13,7 +13,6 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { DatastoreVisibility, Prisma } from '@prisma/client';
 import axios from 'axios';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -22,6 +21,7 @@ import useSWR from 'swr';
 import { DatastoreFormsMap } from '@app/components/DatastoreForms';
 import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
+import config from '@app/utils/config';
 import getRootDomain from '@app/utils/get-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 
@@ -29,12 +29,18 @@ type Props = {
   datastoreId: string;
 };
 
-function DatastoreSettings(props: Props) {
+function DatastoreSettings() {
   const router = useRouter();
+  const limit = Number(router.query.limit || config.datasourceTable.limit);
+  const offset = Number(router.query.offset || 0);
+  const search = router.query.search || '';
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
-  >(`/api/datastores/${props.datastoreId}`, fetcher);
+  >(
+    `/api/datastores/${router.query?.datastoreId}?offset=${offset}&limit=${limit}&search=${search}`,
+    fetcher
+  );
 
   const handleDeleteDatastore = async () => {
     if (

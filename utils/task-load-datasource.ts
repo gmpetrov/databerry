@@ -1,4 +1,4 @@
-import { DatasourceStatus } from '@prisma/client';
+import { DatasourceStatus, SubscriptionPlan, Usage } from '@prisma/client';
 
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
 import { s3 } from '@app/utils/aws';
@@ -6,6 +6,8 @@ import { DatastoreManager } from '@app/utils/datastores';
 import { DatasourceLoader } from '@app/utils/loaders';
 import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
+
+import guardDataProcessingUsage from './guard-data-processing-usage';
 
 const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   logger.info(`${data.datasourceId}: fetching datasource`);
@@ -22,6 +24,11 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
       owner: {
         include: {
           usage: true,
+          subscriptions: {
+            where: {
+              status: 'active',
+            },
+          },
         },
       },
     },
@@ -29,6 +36,26 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
 
   if (!datasource) {
     throw new Error('Not found');
+  }
+
+  try {
+    guardDataProcessingUsage({
+      usage: datasource?.owner?.usage as Usage,
+      plan:
+        datasource?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0,
+    });
+  } catch {
+    logger.info(`${data.datasourceId}: usage limit reached`);
+
+    await prisma.appDatasource.update({
+      where: {
+        id: datasource.id,
+      },
+      data: {
+        status: DatasourceStatus.usage_limit_reached,
+      },
+    });
+    return;
   }
 
   console.log('datasource', datasource);

@@ -1,10 +1,20 @@
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutorenewRounded from '@mui/icons-material/AutorenewRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PlayArrow from '@mui/icons-material/PlayArrow';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { Checkbox } from '@mui/joy';
+import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
+import CircularProgress from '@mui/joy/CircularProgress';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
+import Input from '@mui/joy/Input';
 import Sheet from '@mui/joy/Sheet';
+import Stack from '@mui/joy/Stack';
 import { ColorPaletteProp } from '@mui/joy/styles';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
@@ -12,13 +22,21 @@ import {
   AppDatasource as Datasource,
   DatasourceStatus,
   DatasourceType,
+  Prisma,
 } from '@prisma/client';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import pDebounce from 'p-debounce';
 import * as React from 'react';
+import useSWR from 'swr';
 
 import useStateReducer from '@app/hooks/useStateReducer';
+import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
+import config from '@app/utils/config';
+import pagination from '@app/utils/pagination';
 import relativeDate from '@app/utils/relative-date';
+import { fetcher } from '@app/utils/swr-fetcher';
 
 const SynchButton = ({
   datasource,
@@ -99,14 +117,30 @@ const SynchButton = ({
 };
 
 export default function DatasourceTable({
-  items,
   handleSynch,
   handleBulkDelete,
 }: {
-  items: Datasource[];
+  // items: Datasource[];
   handleBulkDelete: (ids: string[]) => any;
   handleSynch: (datasourceId: string) => any;
 }) {
+  const router = useRouter();
+  const limit = Number(router.query.limit || config.datasourceTable.limit);
+  const offset = Number(router.query.offset || 0);
+  const search = router.query.search || '';
+
+  const getDatastoreQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getDatastore>
+  >(
+    `/api/datastores/${
+      router.query?.datastoreId
+    }?offset=${offset}&limit=${limit}&search=${router.query.search || ''}`,
+    fetcher,
+    {
+      refreshInterval: 5000,
+    }
+  );
+
   const [selected, setSelected] = React.useState<string[]>([]);
   const [state, setState] = useStateReducer({
     isBulkDeleting: false,
@@ -123,6 +157,29 @@ export default function DatasourceTable({
       setSelected([]);
     }
   };
+
+  const total = getDatastoreQuery?.data?._count?.datasources || 0;
+  const items = getDatastoreQuery?.data?.datasources || [];
+  const nbPages = Math.ceil(total / limit) || 1;
+
+  const offsetIndexes =
+    React.useMemo(() => {
+      return pagination(offset, nbPages).map((each) => `${each}`);
+    }, [offset, nbPages]) || [];
+
+  React.useEffect(() => {
+    router.query.limit = `${limit}`;
+    router.query.offset = `${offset}`;
+    router.replace(router, undefined, { shallow: true });
+  }, []);
+
+  const handleSearch = React.useCallback(
+    pDebounce(async (query?: string) => {
+      router.query.search = query || '';
+      router.replace(router, undefined, { shallow: true });
+    }, 1000),
+    [router]
+  );
 
   return (
     <React.Fragment>
@@ -142,6 +199,86 @@ export default function DatasourceTable({
           Delete Selection
         </Button>
       )}
+
+      <Box
+        className="SearchAndFilters-tabletUp"
+        sx={{
+          borderRadius: 'sm',
+          pb: 2,
+          display: {
+            xs: 'none',
+            sm: 'flex',
+          },
+          flexWrap: 'wrap',
+          gap: 1.5,
+          '& > *': {
+            minWidth: {
+              xs: '120px',
+              md: '160px',
+            },
+          },
+        }}
+      >
+        <Stack width="100%">
+          <FormControl sx={{ flex: 1 }} size="sm">
+            <Stack
+              direction={'row'}
+              justifyContent={'space-between'}
+              alignItems={'center'}
+            >
+              <FormLabel>Search for datasource (name)</FormLabel>
+              <Typography level="body2" color="primary">{`${total} result${
+                total > 1 ? 's' : ''
+              }`}</Typography>
+            </Stack>
+            <Input
+              autoFocus
+              defaultValue={search}
+              placeholder="Search"
+              startDecorator={<SearchRoundedIcon />}
+              endDecorator={
+                getDatastoreQuery?.isLoading ? (
+                  <Button variant="plain" size="sm" loading />
+                ) : null
+              }
+              onChange={(e) => {
+                const value = e?.currentTarget?.value || '';
+
+                handleSearch(value);
+              }}
+            />
+          </FormControl>
+        </Stack>
+
+        {/* <React.Fragment>
+          <FormControl size="sm">
+            <FormLabel>Status</FormLabel>
+            <Select
+              placeholder="Filter by status"
+              slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
+            >
+              <Option value="paid">Paid</Option>
+              <Option value="pending">Pending</Option>
+              <Option value="refunded">Refunded</Option>
+              <Option value="cancelled">Cancelled</Option>
+            </Select>
+          </FormControl>
+
+          <FormControl size="sm">
+            <FormLabel>Category</FormLabel>
+            <Select placeholder="All">
+              <Option value="all">All</Option>
+            </Select>
+          </FormControl>
+
+          <FormControl size="sm">
+            <FormLabel>Customer</FormLabel>
+            <Select placeholder="All">
+              <Option value="all">All</Option>
+            </Select>
+          </FormControl>
+        </React.Fragment> */}
+      </Box>
 
       <Sheet
         className="DatasourceTableContainer"
@@ -321,6 +458,7 @@ export default function DatasourceTable({
                         running: 'info',
                         synched: 'success',
                         error: 'danger',
+                        usage_limit_reached: 'warning',
                       }[datasource.status] as ColorPaletteProp
                     }
                   >
@@ -341,6 +479,98 @@ export default function DatasourceTable({
           </tbody>
         </Table>
       </Sheet>
+
+      <Box
+        className="Pagination-mobile"
+        sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}
+      >
+        <IconButton
+          aria-label="previous page"
+          variant="outlined"
+          color="neutral"
+          size="sm"
+        >
+          <i data-feather="arrow-left" />
+        </IconButton>
+        <Typography level="body2" mx="auto">
+          Page 1 of 10
+        </Typography>
+        <IconButton
+          aria-label="next page"
+          variant="outlined"
+          color="neutral"
+          size="sm"
+        >
+          <i data-feather="arrow-right" />
+        </IconButton>
+      </Box>
+      <Box
+        className="Pagination-laptopUp"
+        sx={{
+          pt: 4,
+          gap: 1,
+          [`& .${iconButtonClasses.root}`]: { borderRadius: '50%' },
+          display: {
+            xs: 'none',
+            md: 'flex',
+          },
+        }}
+      >
+        <Button
+          size="sm"
+          variant="plain"
+          color="neutral"
+          startDecorator={<ArrowBackRoundedIcon />}
+          onClick={() => {
+            if (offset - 1 >= 0) {
+              router.query.offset = `${offset - 1}`;
+              router.replace(router, undefined, { shallow: true });
+            }
+          }}
+        >
+          Previous
+        </Button>
+
+        <Box sx={{ flex: 1 }} />
+        {offsetIndexes.map((page) => (
+          <IconButton
+            key={page}
+            size="sm"
+            variant={Number(page) ? 'outlined' : 'plain'}
+            color={
+              Number(page) && Number(page) - 1 === offset
+                ? 'primary'
+                : 'neutral'
+            }
+            onClick={() => {
+              const nb = Number(page);
+              if (nb) {
+                router.query.offset = `${nb - 1}`;
+                router.replace(router, undefined, { shallow: true });
+              }
+            }}
+          >
+            {page}
+          </IconButton>
+        ))}
+        <Box sx={{ flex: 1 }} />
+
+        <Button
+          size="sm"
+          variant="plain"
+          color="neutral"
+          endDecorator={<ArrowForwardRoundedIcon />}
+          onClick={() => {
+            if (offset + 1 < nbPages) {
+              router.query.offset = `${offset + 1}`;
+              router.replace(router, undefined, { shallow: true });
+            }
+          }}
+        >
+          Next
+        </Button>
+      </Box>
+
       {/* <Box
         className="Pagination-mobile"
         sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}

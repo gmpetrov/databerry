@@ -7,6 +7,7 @@ import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
 import findDomainPages, { getSitemapPages } from '@app/utils/find-domain-pages';
+import findSitemap from '@app/utils/find-sitemap';
 import generateFunId from '@app/utils/generate-fun-id';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
@@ -73,10 +74,20 @@ export const upsertDatasource = async (
     if (sitemap) {
       urls = await getSitemapPages(sitemap);
     } else if (source) {
-      urls = await findDomainPages((data as any).config.source);
+      // Try to find sitemap
+      const sitemapURL = await findSitemap(source);
+
+      if (sitemapURL) {
+        urls = await getSitemapPages(sitemapURL);
+      } else {
+        // Fallback to recursive search
+        urls = await findDomainPages((data as any).config.source);
+      }
     } else {
       return;
     }
+
+    // urls = urls.slice(0, 10);
 
     const ids = urls.map(() => cuid());
 
