@@ -51,7 +51,7 @@ const tiers = [
         accountConfig['level_0'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'Manual data synching',
-      'Acess to Databerry API',
+      'Access to Databerry API',
       'ChatGPT plugin',
     ],
     mostPopular: false,
