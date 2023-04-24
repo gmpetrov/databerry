@@ -79,9 +79,7 @@ function Nested() {
           {...register('config.sitemap')}
         />
 
-        <Alert color="info">
-          Will process all pages in the sitemap during. 500 pages max.
-        </Alert>
+        <Alert color="info">Will process all pages in the sitemap.</Alert>
       </Stack>
     </Stack>
   );
