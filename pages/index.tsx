@@ -58,7 +58,7 @@ export default function Home() {
         <Faqs /> */}
         <FeaturesForCustomerSupport />
         <FeaturesForSlack />
-        <FeaturesForInfluencers />
+        {/* <FeaturesForInfluencers /> */}
         <FeaturesForDevs />
         <ChatBotBenefits />
         <FAQ />
