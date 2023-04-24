@@ -78,7 +78,9 @@ export const upsertDatasource = async (
       const sitemapURL = await findSitemap(source);
 
       if (sitemapURL) {
+        console.log('CALLLED--------->', sitemapURL);
         urls = await getSitemapPages(sitemapURL);
+        console.log('END--------->', urls);
       } else {
         // Fallback to recursive search
         urls = await findDomainPages((data as any).config.source);
@@ -89,7 +91,9 @@ export const upsertDatasource = async (
 
     // urls = urls.slice(0, 10);
 
+    console.log('CALLED 2222');
     const ids = urls.map(() => cuid());
+    console.log('CALLED 33333');
 
     await prisma.appDatasource.createMany({
       data: urls.map((each, idx) => ({
@@ -104,6 +108,7 @@ export const upsertDatasource = async (
         datastoreId: data.datastoreId,
       })),
     });
+    console.log('CALLED 33333');
 
     await triggerTaskLoadDatasource(
       ids.map((each) => ({
