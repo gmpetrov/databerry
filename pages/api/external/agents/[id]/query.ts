@@ -30,8 +30,6 @@ export const queryAgent = async (
   const authHeader = req.headers.authorization;
   const apiKey = authHeader && authHeader.split(' ')?.[1];
 
-  console.log('REQ HEADERS', req.headers);
-
   if (!agentId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }

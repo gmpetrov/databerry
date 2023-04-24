@@ -163,6 +163,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         position: 'fixed',
         height: '60px',
         bottom: '20px',
+        zIndex: 9999999999,
 
         ...(config.position === 'left'
           ? {

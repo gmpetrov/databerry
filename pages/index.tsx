@@ -39,12 +39,18 @@ export default function Home() {
           src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
         ></script> */}
 
-      {/* <script
-        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.2"
-        // src="dist/chat-bubble.js"
-        id="clgtujkqh022j0u0zw3ut8vk3"
-        data-name="databerry-chat-bubble"
-      ></script> */}
+      {/* ts- next line */}
+
+      {
+        // @ts-ignore
+        <script
+          src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
+          // src="dist/chat-bubble.js"
+          id="clgtujkqh022j0u0zw3ut8vk3"
+          data-name="databerry-chat-bubble"
+        ></script>
+      }
+
       <main className="bg-black min-heigh-full">
         <Hero />
         {/* <Image

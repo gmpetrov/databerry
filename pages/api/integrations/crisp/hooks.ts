@@ -216,8 +216,6 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   //   const nbUserMsg =
   //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
 
-  console.log('HEADERS', req.headers);
-
   if (req.headers['x-delivery-attempt-count'] !== '1') {
     return res.status(200).json({
       hello: 'world',
