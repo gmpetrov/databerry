@@ -33,23 +33,12 @@ export default function Home() {
       </Head>
       <Header />
 
-      {/* <script 
-          id="clgtujkqh022j0u0zw3ut8vk3"
-          data-name="databerry-chat-bubble"
-          src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-        ></script> */}
-
-      {/* ts- next line */}
-
-      {
-        // @ts-ignore
-        <script
-          src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-          // src="dist/chat-bubble.js"
-          id="clgtujkqh022j0u0zw3ut8vk3"
-          data-name="databerry-chat-bubble"
-        ></script>
-      }
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
+        id="clgtujkqh022j0u0zw3ut8vk3"
+        data-name="databerry-chat-bubble"
+      ></script>
 
       <main className="bg-black min-heigh-full">
         <Hero />
