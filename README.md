@@ -32,7 +32,7 @@
     - Excel
     - Powerpoint
     - PDF
-    - Mardown
+    - Markdown
     - Plain Text
   - Web Site (coming soon)
   - Notion (coming soon)
