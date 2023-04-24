@@ -47,7 +47,7 @@ async function findSitemap(websiteUrl: string) {
   const sitemapXml = await getSitemapFromRoot(origin);
   if (sitemapXml) {
     console.log('Sitemap XML found at website root:', sitemapXml);
-    return sitemapXml;
+    return sitemapUrl;
   }
 
   // If both methods fail, the sitemap could not be found
