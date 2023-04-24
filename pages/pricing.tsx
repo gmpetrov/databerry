@@ -41,8 +41,8 @@ const tiers = [
     price: { monthly: '$0', annually: '$144' },
     description: 'The essentials to get started quickly.',
     features: [
-      `${accountConfig['level_0'].limits.maxAgents} agent`,
-      `${accountConfig['level_0'].limits.maxDatastores} datastore`,
+      `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
+      `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_0'].limits.maxAgentsQueries} agents queries / month`,
       `File uplpoad limited to ${
         accountConfig['level_0'].limits.maxFileSize / 1000000
@@ -63,8 +63,8 @@ const tiers = [
     price: { monthly: '$25', annually: '$288' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
-      `${accountConfig['level_1'].limits.maxAgents} agent`,
-      `${accountConfig['level_1'].limits.maxDatastores} datastore`,
+      `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
+      `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_1'].limits.maxAgentsQueries} agents queries / month`,
       `File uplpoad limited to ${
         accountConfig['level_1'].limits.maxFileSize / 1000000
@@ -85,8 +85,8 @@ const tiers = [
     price: { monthly: '$99', annually: '$576' },
     description: 'Dedicated support and for your company.',
     features: [
-      `${accountConfig['level_2'].limits.maxAgents} agent`,
-      `${accountConfig['level_2'].limits.maxDatastores} datastore`,
+      `${accountConfig['level_2'].limits.maxAgents} agent(s)`,
+      `${accountConfig['level_2'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_2'].limits.maxAgentsQueries} agents queries / month`,
       `File uplpoad limited to ${
         accountConfig['level_2'].limits.maxFileSize / 1000000
