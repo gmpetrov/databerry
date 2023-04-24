@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
 import { Hero } from '@app/components/landing-page/Hero';
+import accountConfig from '@app/utils/account-config';
 
 export default function Home() {
   return (
@@ -40,11 +41,17 @@ const tiers = [
     price: { monthly: '$0', annually: '$144' },
     description: 'The essentials to get started quickly.',
     features: [
-      '1 datastore',
-      'Up to 10 datasources per datastore',
+      `${accountConfig['level_0'].limits.maxAgents} agent`,
+      `${accountConfig['level_0'].limits.maxDatastores} datastore`,
+      `${accountConfig['level_0'].limits.maxAgentsQueries} agents queries / month`,
+      `File uplpoad limited to ${
+        accountConfig['level_0'].limits.maxFileSize / 1000000
+      }MB / file`,
+      `Data processing limited to ${
+        accountConfig['level_0'].limits.maxDataProcessing / 1000000
+      }MB / month`,
       'Manual data synching',
-      'File uplpoad limited to 1MB / file',
-      'API Access to query a datastore',
+      'Acess to Databerry API',
       'ChatGPT plugin',
     ],
     mostPopular: false,
@@ -56,14 +63,18 @@ const tiers = [
     price: { monthly: '$25', annually: '$288' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
-      'Everything from the free plan',
-      'Access to Chat Site',
-      'Chat Site Bot trained on 25 pages max',
-      'auto synch datasources',
-      '5 datastores',
-      'Up to 30 datasource per datastore',
-      'Auto synch datasources',
-      'File uplpoad limited to 5MB / file',
+      `${accountConfig['level_1'].limits.maxAgents} agent`,
+      `${accountConfig['level_1'].limits.maxDatastores} datastore`,
+      `${accountConfig['level_1'].limits.maxAgentsQueries} agents queries / month`,
+      `File uplpoad limited to ${
+        accountConfig['level_1'].limits.maxFileSize / 1000000
+      }MB / file`,
+      `Data processing limited to ${
+        accountConfig['level_1'].limits.maxDataProcessing / 1000000
+      }MB / month`,
+      'Manual data synching',
+      'Access to Crisp Plugin',
+      'Access to Slack Bot',
     ],
     mostPopular: true,
   },
@@ -74,10 +85,16 @@ const tiers = [
     price: { monthly: '$99', annually: '$576' },
     description: 'Dedicated support and for your company.',
     features: [
-      'Everything from the startup plan',
-      '15 datastores',
-      'Up to 50 datasource per datastore',
-      'File uplpoad limited to 10MB / file',
+      `${accountConfig['level_2'].limits.maxAgents} agent`,
+      `${accountConfig['level_2'].limits.maxDatastores} datastore`,
+      `${accountConfig['level_2'].limits.maxAgentsQueries} agents queries / month`,
+      `File uplpoad limited to ${
+        accountConfig['level_2'].limits.maxFileSize / 1000000
+      }MB / file`,
+      `Data processing limited to ${
+        accountConfig['level_2'].limits.maxDataProcessing / 1000000
+      }MB / month`,
+      'auto synch datasources',
     ],
     mostPopular: false,
   },
@@ -191,7 +208,8 @@ function Example() {
                     className={clsx('flex gap-x-3', {
                       'text-green-400':
                         feature.includes('ChatGPT') ||
-                        feature.includes('Chat Site'),
+                        feature.includes('Crisp Plugin') ||
+                        feature.includes('Slack Bot'),
                     })}
                   >
                     <CheckIcon
