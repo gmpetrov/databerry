@@ -53,11 +53,11 @@ export const getAgent = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  // guardExternalAgent({
-  //   agent: agent as any,
-  //   apiKey: apiKey,
-  //   hostname: new URL(req.headers.origin!).host,
-  // });
+  guardExternalAgent({
+    agent: agent as any,
+    apiKey: apiKey,
+    hostname: new URL(req.headers['origin'] as string).host,
+  });
 
   return {
     ...agent,

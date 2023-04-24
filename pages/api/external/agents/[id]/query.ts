@@ -58,20 +58,13 @@ export const queryAgent = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  console.log('HEADERS ---------------->', req.headers['origin']);
+  console.log('ORIGIN ---------------->', req.headers['origin']);
 
-  try {
-    const test = new URL(req.headers['origin'] as string);
-    console.log('test');
-  } catch (err) {
-    console.log('errr', err);
-  }
-
-  // guardExternalAgent({
-  //   agent: agent as any,
-  //   apiKey: apiKey,
-  //   hostname: new URL(req.headers.origin!).host,
-  // });
+  guardExternalAgent({
+    agent: agent as any,
+    apiKey: apiKey,
+    hostname: new URL(req.headers['origin'] as string).host,
+  });
 
   guardAgentQueryUsage({
     usage: agent?.owner?.usage!,
