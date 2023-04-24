@@ -47,7 +47,7 @@ export default function Home() {
               className="relative z-10 block"
               sx={(theme) => theme.typography.display1}
             >
-              Chat Site
+              Crisp Plugin
             </Typography>
 
             <Typography level={'h6'}>
@@ -154,7 +154,7 @@ export function PrimaryFeatures() {
             A chatbot train on your data in minutes
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-            Chat Site by Databerry, make it very easy to train a chatbot on your
+            The Crisp Plugin, make it very easy to train a chatbot on your
             company data.
           </p>
         </div>

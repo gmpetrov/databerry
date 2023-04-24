@@ -1,43 +1,12 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import {
-  Alert,
-  Box,
-  Breadcrumbs,
-  Button,
-  Card,
-  CircularProgress,
-  Divider,
-  FormControl,
-  FormLabel,
-  IconButton,
-  Input,
-  Link as JoyLink,
-  Option,
-  Select,
-  Sheet,
-  Stack,
-  Typography,
-} from '@mui/joy';
-import { Prisma } from '@prisma/client';
-import axios from 'axios';
+import { Box, Breadcrumbs, Divider, Stack, Typography } from '@mui/joy';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
 import { z } from 'zod';
 
 import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
 import { RouteNames } from '@app/types';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
 
 const Schema = z.object({ query: z.string().min(1) });
 
@@ -87,7 +56,7 @@ export default function DatasourcesPage() {
           </Typography>
         </Link>
         <Typography fontSize="inherit" color="neutral">
-          Chat Site
+          Crisp Plugin
         </Typography>
         {/* <JoyLink
           underline="hover"

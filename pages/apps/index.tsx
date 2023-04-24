@@ -127,7 +127,7 @@ export default function DatasourcesPage() {
               className="relative z-10 block"
               sx={(theme) => theme.typography.display1}
             >
-              Chat Site
+              Crisp Plugin
             </Typography>
 
             <Typography>ChatGPT Bot trained on website data</Typography>

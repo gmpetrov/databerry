@@ -15,7 +15,7 @@ export function Footer() {
           <Logo className="w-auto h-10 mx-auto" />
           <nav className="mt-10 text-sm" aria-label="quick links">
             <div className="flex justify-center -my-1 gap-x-6">
-            <Link href={RouteNames.CHAT_SITE}>
+            {/* <Link href={RouteNames.CHAT_SITE}>
                 <Button
                   href="/products/chat-site"
                   size="sm"
@@ -26,7 +26,7 @@ export function Footer() {
                 >
                   Discvover ChatSite
                 </Button>
-              </Link>
+              </Link> */}
               <NavLink href="/pricing">Pricing</NavLink>
               <NavLink href="https://github.com/gmpetrov/databerry">GitHub</NavLink>
               <NavLink href="https://docs.databerry.ai/">Docs</NavLink>
