@@ -71,6 +71,7 @@ const nextConfig = {
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.externals.push({
+      playwright: true,
       '@huggingface/inference': 'commonjs @huggingface/inference',
       replicate: 'commonjs replicate',
       'cohere-ai': 'commonjs cohere-ai',
