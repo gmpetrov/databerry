@@ -18,13 +18,16 @@ import FeaturesForCustomerSupport from './FeaturesForCustomerSupport';
 import FeaturesForDevs from './FeaturesForDevs';
 import FeaturesForInfluencers from './FeaturesForInfluencers';
 import FeaturesForSlack from './FeaturesForSlack';
+import { useTranslation } from 'next-i18next'
 
 export default function Home() {
+  const { t } = useTranslation('common')
+
   return (
     <>
       <Head>
         <title>
-          Databerry - Build ChatGPT Agents trained on your custom data
+          {t('home')}
         </title>
         <meta
           name="description"

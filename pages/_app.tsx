@@ -2,6 +2,7 @@ import '@app/utils/env';
 import '@app/styles/globals.css';
 import '@app/styles/preflight.css';
 import '@app/styles/nprogress.css';
+import { appWithTranslation } from 'next-i18next'
 
 import { CacheProvider } from '@emotion/react';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -29,7 +30,7 @@ const TopProgressBar = dynamic(
   { ssr: false }
 );
 
-export default function App({
+function App({
   Component,
   pageProps,
   ...otherProps
@@ -62,3 +63,5 @@ export default function App({
     </StyledEngineProvider>
   );
 }
+
+export default appWithTranslation(App)
