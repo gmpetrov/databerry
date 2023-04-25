@@ -1,4 +1,9 @@
-import { DatasourceStatus, SubscriptionPlan, Usage } from '@prisma/client';
+import {
+  DatasourceStatus,
+  DatasourceType,
+  SubscriptionPlan,
+  Usage,
+} from '@prisma/client';
 
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
 import { s3 } from '@app/utils/aws';
@@ -7,7 +12,11 @@ import { DatasourceLoader } from '@app/utils/loaders';
 import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
 
+import cuid from './cuid';
+import findDomainPages, { getSitemapPages } from './find-domain-pages';
+import findSitemap from './find-sitemap';
 import guardDataProcessingUsage from './guard-data-processing-usage';
+import triggerTaskLoadDatasource from './trigger-task-load-datasource';
 
 const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   logger.info(`${data.datasourceId}: fetching datasource`);
@@ -55,6 +64,70 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
         status: DatasourceStatus.usage_limit_reached,
       },
     });
+    return;
+  }
+
+  // TODO: find a better way to handle this
+  if (datasource.type === DatasourceType.web_site) {
+    let urls: string[] = [];
+    const sitemap = (datasource.config as any).sitemap;
+    const source = (datasource.config as any).source;
+
+    if (sitemap) {
+      urls = await getSitemapPages(sitemap);
+    } else if (source) {
+      // Try to find sitemap
+      const sitemapURL = await findSitemap(source);
+
+      if (sitemapURL) {
+        console.log('CALLLED--------->', sitemapURL);
+        urls = await getSitemapPages(sitemapURL);
+        console.log('END--------->', urls);
+      } else {
+        // Fallback to recursive search
+        urls = await findDomainPages((data as any).config.source);
+      }
+    } else {
+      return;
+    }
+
+    // urls = urls.slice(0, 10);
+
+    console.log('CALLED 2222');
+    const ids = urls.map(() => cuid());
+    console.log('CALLED 33333');
+
+    await prisma.appDatasource.createMany({
+      data: urls.map((each, idx) => ({
+        id: ids[idx],
+        type: DatasourceType.web_page,
+        name: each,
+        config: {
+          ...(datasource.config as any),
+          source: each,
+        },
+        ownerId: datasource?.ownerId,
+        datastoreId: datasource?.datastoreId,
+      })),
+    });
+    console.log('CALLED 33333');
+
+    await triggerTaskLoadDatasource(
+      ids.map((each) => ({
+        datasourceId: each,
+      }))
+    );
+
+    await prisma.appDatasource.delete({
+      where: {
+        id: datasource.id,
+      },
+    });
+
+    logger.info(
+      `${datasource?.id}: datasource of type ${datasource?.type} runned successfully`
+    );
+
     return;
   }
 

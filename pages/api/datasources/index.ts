@@ -65,59 +65,59 @@ export const upsertDatasource = async (
     plan: session?.user?.currentPlan,
   });
 
-  // TODO: find a better way to handle this
-  if (data.type === DatasourceType.web_site) {
-    let urls: string[] = [];
-    const sitemap = (data as any).config.sitemap;
-    const source = (data as any).config.source;
+  // // TODO: find a better way to handle this
+  // if (data.type === DatasourceType.web_site) {
+  //   let urls: string[] = [];
+  //   const sitemap = (data as any).config.sitemap;
+  //   const source = (data as any).config.source;
 
-    if (sitemap) {
-      urls = await getSitemapPages(sitemap);
-    } else if (source) {
-      // Try to find sitemap
-      const sitemapURL = await findSitemap(source);
+  //   if (sitemap) {
+  //     urls = await getSitemapPages(sitemap);
+  //   } else if (source) {
+  //     // Try to find sitemap
+  //     const sitemapURL = await findSitemap(source);
 
-      if (sitemapURL) {
-        console.log('CALLLED--------->', sitemapURL);
-        urls = await getSitemapPages(sitemapURL);
-        console.log('END--------->', urls);
-      } else {
-        // Fallback to recursive search
-        urls = await findDomainPages((data as any).config.source);
-      }
-    } else {
-      return;
-    }
+  //     if (sitemapURL) {
+  //       console.log('CALLLED--------->', sitemapURL);
+  //       urls = await getSitemapPages(sitemapURL);
+  //       console.log('END--------->', urls);
+  //     } else {
+  //       // Fallback to recursive search
+  //       urls = await findDomainPages((data as any).config.source);
+  //     }
+  //   } else {
+  //     return;
+  //   }
 
-    // urls = urls.slice(0, 10);
+  //   // urls = urls.slice(0, 10);
 
-    console.log('CALLED 2222');
-    const ids = urls.map(() => cuid());
-    console.log('CALLED 33333');
+  //   console.log('CALLED 2222');
+  //   const ids = urls.map(() => cuid());
+  //   console.log('CALLED 33333');
 
-    await prisma.appDatasource.createMany({
-      data: urls.map((each, idx) => ({
-        id: ids[idx],
-        type: DatasourceType.web_page,
-        name: each,
-        config: {
-          ...data.config,
-          source: each,
-        },
-        ownerId: session?.user?.id,
-        datastoreId: data.datastoreId,
-      })),
-    });
-    console.log('CALLED 33333');
+  //   await prisma.appDatasource.createMany({
+  //     data: urls.map((each, idx) => ({
+  //       id: ids[idx],
+  //       type: DatasourceType.web_page,
+  //       name: each,
+  //       config: {
+  //         ...data.config,
+  //         source: each,
+  //       },
+  //       ownerId: session?.user?.id,
+  //       datastoreId: data.datastoreId,
+  //     })),
+  //   });
+  //   console.log('CALLED 33333');
 
-    await triggerTaskLoadDatasource(
-      ids.map((each) => ({
-        datasourceId: each,
-      }))
-    );
+  //   await triggerTaskLoadDatasource(
+  //     ids.map((each) => ({
+  //       datasourceId: each,
+  //     }))
+  //   );
 
-    return;
-  }
+  //   return;
+  // }
 
   let existingDatasource;
   if (data?.id) {
