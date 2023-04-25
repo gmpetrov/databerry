@@ -2,6 +2,7 @@ import Head from 'next/head';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
 import Script from 'next/script';
+import { useTranslation } from 'next-i18next'
 
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
@@ -18,7 +19,6 @@ import FeaturesForCustomerSupport from './FeaturesForCustomerSupport';
 import FeaturesForDevs from './FeaturesForDevs';
 import FeaturesForInfluencers from './FeaturesForInfluencers';
 import FeaturesForSlack from './FeaturesForSlack';
-import { useTranslation } from 'next-i18next'
 
 export default function Home() {
   const { t } = useTranslation('common')

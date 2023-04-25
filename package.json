@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build:widget:chat-bubble": "NEXT_PUBLIC_DASHBOARD_URL=https://api.databerry.ai npx parcel build widgets/chat-bubble.tsx",
+    "build:widget:chat-bubble": "NEXT_PUBLIC_DASHBOARD_URL=https://databerry-p73spm96r-serge-trymaducom.vercel.app/ npx parcel build widgets/chat-bubble.tsx",
     "publish:package:chat-bubble": "npm run build:widget:chat-bubble && cp dist/chat-bubble* packages/chat-bubble/ && cd packages/chat-bubble && npm version patch && npm publish --access public",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "dotenv -e .env.local -- prisma migrate dev",
