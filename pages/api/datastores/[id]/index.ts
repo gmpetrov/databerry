@@ -1,3 +1,4 @@
+import { DatasourceStatus } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
@@ -15,6 +16,7 @@ export const getDatastore = async (
   const session = req.session;
   const id = req.query.id as string;
   const search = req.query.search as string;
+  const status = req.query.status as DatasourceStatus;
   const offset = parseInt((req.query.offset as string) || '0');
   const limit = parseInt((req.query.limit as string) || '100');
 
@@ -34,6 +36,11 @@ export const getDatastore = async (
                     },
                   }
                 : {}),
+              ...(status
+                ? {
+                    status,
+                  }
+                : {}),
             },
           },
         },
@@ -47,6 +54,11 @@ export const getDatastore = async (
                 name: {
                   contains: search,
                 },
+              }
+            : {}),
+          ...(status
+            ? {
+                status,
               }
             : {}),
         },
