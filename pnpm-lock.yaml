@@ -107,7 +107,7 @@ dependencies:
     specifier: ^4.9.0
     version: 4.9.0
   i18next:
-    specifier: ^22.4.15
+    specifier: ^22.4.6
     version: 22.4.15
   ioredis:
     specifier: ^5.3.1
@@ -140,7 +140,7 @@ dependencies:
     specifier: ^0.13.0
     version: 0.13.0
   next-i18next:
-    specifier: ^13.2.2
+    specifier: ^13.0.2
     version: 13.2.2(i18next@22.4.15)(next@13.2.4)(react-i18next@12.2.2)(react@18.2.0)
   nodemailer:
     specifier: ^6.9.1
@@ -182,7 +182,7 @@ dependencies:
     specifier: ^7.43.8
     version: 7.43.8(react@18.2.0)
   react-i18next:
-    specifier: ^12.2.2
+    specifier: ^12.1.1
     version: 12.2.2(i18next@22.4.15)(react-dom@18.2.0)(react@18.2.0)
   react-syntax-highlighter:
     specifier: ^15.5.0
