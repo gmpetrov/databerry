@@ -2,7 +2,6 @@ import '@app/utils/env';
 import '@app/styles/globals.css';
 import '@app/styles/preflight.css';
 import '@app/styles/nprogress.css';
-import { appWithTranslation } from 'next-i18next'
 
 import { CacheProvider } from '@emotion/react';
 import CssBaseline from '@mui/joy/CssBaseline';
@@ -11,6 +10,7 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import router from 'next/router';
 import { SessionProvider } from 'next-auth/react';
+import { appWithTranslation } from 'next-i18next'
 import { useEffect } from 'react';
 
 import { NextPageWithLayout, RouteNames } from '@app/types';
