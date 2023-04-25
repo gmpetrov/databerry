@@ -77,7 +77,6 @@
     "pdfjs-dist": "3.4.120",
     "pino": "^8.11.0",
     "pino-pretty": "^10.0.0",
-    "playwright": "^1.32.3",
     "radash": "^10.7.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
