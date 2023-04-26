@@ -63,7 +63,7 @@ export const getDatastore = async (
             : {}),
         },
         orderBy: {
-          lastSynch: 'asc',
+          lastSynch: 'desc',
         },
       },
       apiKeys: true,
