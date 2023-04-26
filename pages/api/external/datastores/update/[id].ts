@@ -88,6 +88,7 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
       {
         datasourceId: data.id,
         isUpdateText: true,
+        priority: 1,
       },
     ]);
   } catch (err) {

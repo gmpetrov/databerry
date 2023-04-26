@@ -15,21 +15,37 @@ worker = "node --max-old-space-size=1536 server/datasource-loader.js"
     NEXT_PUBLIC_DASHBOARD_URL = "https://databerry.fly.dev"
     NEXT_PUBLIC_S3_BUCKET_NAME = "databerry"
 
-[[services]]
-  # processes = ["app"]
+[http_service]
   processes = ["web"]
-  protocol = "tcp"
   internal_port = 3000
-
-  [[services.ports]]
-    port = 80
-    handlers = ["http"]
-    force_https = true
-
-  [[services.ports]]
-    port = 443
-    handlers = ["tls", "http"]
-  [services.concurrency]
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  [http_service.concurrency]
     type = "connections"
     hard_limit = 25
     soft_limit = 20
+
+[[services]]
+  processes = ["worker"]
+  auto_stop_machines = true
+  auto_start_machines = true
+
+# [[services]]
+#   # processes = ["app"]
+#   processes = ["web"]
+#   protocol = "tcp"
+#   internal_port = 3000
+
+#   [[services.ports]]
+#     port = 80
+#     handlers = ["http"]
+#     force_https = true
+
+#   [[services.ports]]
+#     port = 443
+#     handlers = ["tls", "http"]
+#   [services.concurrency]
+#     type = "connections"
+#     hard_limit = 25
+#     soft_limit = 20

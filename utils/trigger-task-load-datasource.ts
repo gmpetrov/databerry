@@ -9,7 +9,7 @@ const connection = new Redis(process.env.REDIS_URL!);
 const datasourceLoadQueue = new Queue(TaskQueue.load_datasource, {
   connection,
   defaultJobOptions: {
-    attempts: 3,
+    attempts: 2,
     backoff: {
       type: 'exponential',
       delay: 5000,
@@ -21,12 +21,16 @@ const triggerTaskLoadDatasource = async (
   data: {
     datasourceId: string;
     isUpdateText?: boolean;
+    priority?: number;
   }[]
 ) => {
   return datasourceLoadQueue.addBulk(
     data.map((each) => ({
       name: TaskQueue.load_datasource,
       data: each as TaskLoadDatasourceRequestSchema,
+      opts: {
+        ...(each.priority ? { priority: each.priority } : {}),
+      },
     }))
   );
 };
