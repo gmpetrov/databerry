@@ -63,6 +63,7 @@ specifiers:
   pdfjs-dist: 3.4.120
   pino: ^8.11.0
   pino-pretty: ^10.0.0
+  playwright: ^1.32.3
   postcss: ^8.4.21
   prisma: ^4.12.0
   radash: ^10.7.1
@@ -120,7 +121,7 @@ dependencies:
   ioredis: 5.3.1
   js-yaml: 4.1.0
   jszip: 3.10.1
-  langchain: 0.0.56_vholedydbe3z4a7mfeetak63om
+  langchain: 0.0.56_pyfctqx4qvx27diyx5vdwj6z74
   mammoth: 1.5.1
   mime-types: 2.1.35
   nanoid: 4.0.2
@@ -135,6 +136,7 @@ dependencies:
   pdfjs-dist: 3.4.120
   pino: 8.11.0
   pino-pretty: 10.0.0
+  playwright: 1.32.3
   radash: 10.7.1
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -3649,7 +3651,7 @@ packages:
       json-buffer: 3.0.1
     dev: false
 
-  /langchain/0.0.56_vholedydbe3z4a7mfeetak63om:
+  /langchain/0.0.56_pyfctqx4qvx27diyx5vdwj6z74:
     resolution: {integrity: sha512-5+UCYhKwg//fm2Gb32EpKQiuNlJqt2YdKIFyZRCEyqMSmTd1Cu4QcdRMjFfl7IVwyY3xrUC7dQIMsJ6k+TsRrA==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -3750,6 +3752,7 @@ packages:
       p-queue: 6.6.2
       p-retry: 4.6.2
       pdfjs-dist: 3.4.120
+      playwright: 1.32.3
       uuid: 9.0.0
       yaml: 2.2.1
       zod: 3.21.4
@@ -4550,6 +4553,21 @@ packages:
       safe-stable-stringify: 2.4.3
       sonic-boom: 3.3.0
       thread-stream: 2.3.0
+    dev: false
+
+  /playwright-core/1.32.3:
+    resolution: {integrity: sha512-SB+cdrnu74ZIn5Ogh/8278ngEh9NEEV0vR4sJFmK04h2iZpybfbqBY0bX6+BLYWVdV12JLLI+JEFtSnYgR+mWg==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: false
+
+  /playwright/1.32.3:
+    resolution: {integrity: sha512-h/ylpgoj6l/EjkfUDyx8cdOlfzC96itPpPe8BXacFkqpw/YsuxkpPyVbzEq4jw+bAJh5FLgh31Ljg2cR6HV3uw==}
+    engines: {node: '>=14'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      playwright-core: 1.32.3
     dev: false
 
   /postcss-import/14.1.0_postcss@8.4.21:
