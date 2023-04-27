@@ -45,7 +45,7 @@ const chat = async ({
 
   const finalPrompt = `${prompt || CUSTOMER_SUPPORT}
 Ensure that your responses are clear, concise, and do not reiterate the same information. Create a final answer with references ("SOURCE") if relevant.
-Never break the character mentioned above.
+Never break the character mentioned above and ALWAYS answer in the same language as the customer.
 
 Context:
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
@@ -71,7 +71,7 @@ ${context}
 Customer's Query:
 ${query}
 
-Answer with readability in mind:`;
+Answer with readability in mind using same language as the customer:`;
 
   const model = new OpenAI({ modelName: 'gpt-3.5-turbo' });
 
