@@ -63,7 +63,7 @@ Minimum requirements to run the projects locally
 - Postgres Database
 - Redis
 - Qdrant
-- Github App (NextAuth)
+- GitHub App (NextAuth)
 - Email Provider (NextAuth)
 - OpenAI API Key
 - AWS S3 Credentials
