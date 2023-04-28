@@ -5,11 +5,14 @@ import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import Image from 'next/image';
 import Link from 'next/link'
+import {useTranslations} from 'next-intl';
 
 import { Container } from '@app/components/landing-page/Container';
 import { RouteNames } from '@app/types';
 
 export function Hero() {
+  const t = useTranslations('hero');
+
   return (
     <Container className="relative z-10 pt-20 pb-16 mb-12 text-center lg:pt-32">
 
@@ -31,7 +34,7 @@ export function Hero() {
           <h2 className="text-xs font-semibold leading-none text-indigo-300 ">Open Source</h2>
         </div> */}
         </Link>
-        <h2 className='mb-4 text-2xl font-bold text-violet-300'>Build Your Own</h2>
+        <h2 className='mb-4 text-2xl font-bold text-violet-300'>{t("title")}</h2>
       <h1 className="max-w-lg mx-auto text-4xl font-bold !leading-snug tracking-tight text-center text-white whitespace-pre-wrap font-display sm:text-5xl sm:text-center">
         {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
         {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}

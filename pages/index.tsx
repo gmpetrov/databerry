@@ -1,8 +1,9 @@
+import {GetStaticPropsContext} from 'next';
 import Head from 'next/head';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
 import Script from 'next/script';
-import { useTranslation } from 'next-i18next'
+import {useTranslations} from 'next-intl';
 
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
@@ -21,13 +22,13 @@ import FeaturesForInfluencers from './FeaturesForInfluencers';
 import FeaturesForSlack from './FeaturesForSlack';
 
 export default function Home() {
-  const { t } = useTranslation('common')
+  const t = useTranslations('common');
 
   return (
     <>
       <Head>
         <title>
-          {t('home')}
+          {t('title')}
         </title>
         <meta
           name="description"
@@ -70,4 +71,14 @@ export default function Home() {
       <Footer />
     </>
   );
+}
+
+export async function getStaticProps({locale}: GetStaticPropsContext) {
+  return {
+    props: {
+      // You can get the messages from anywhere you like. The recommended pattern
+      // is to put them in JSON files separated by locale (e.g. `en.json`).
+      messages: (await import(`../public/locales/${locale}.json`)).default
+    }
+  };
 }

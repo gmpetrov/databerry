@@ -10,7 +10,7 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import router from 'next/router';
 import { SessionProvider } from 'next-auth/react';
-import { appWithTranslation } from 'next-i18next'
+import {NextIntlProvider} from 'next-intl';
 import { useEffect } from 'react';
 
 import { NextPageWithLayout, RouteNames } from '@app/types';
@@ -30,7 +30,7 @@ const TopProgressBar = dynamic(
   { ssr: false }
 );
 
-function App({
+export default function App({
   Component,
   pageProps,
   ...otherProps
@@ -50,13 +50,16 @@ function App({
   }, []);
 
   return (
+    
     <StyledEngineProvider injectFirst>
       <CacheProvider value={emotionCache}>
         <CssVarsProvider theme={theme} defaultMode="dark">
           <CssBaseline enableColorScheme />
           <TopProgressBar />
           <SessionProvider>
-            {getLayout(<Component {...pageProps} />)}
+          <NextIntlProvider messages={pageProps.messages}>
+          {getLayout(<Component {...pageProps} />)}
+          </NextIntlProvider>
           </SessionProvider>
         </CssVarsProvider>
       </CacheProvider>
@@ -64,4 +67,4 @@ function App({
   );
 }
 
-export default appWithTranslation(App)
+
