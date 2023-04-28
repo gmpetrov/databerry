@@ -1,16 +1,11 @@
-import { Prisma } from '@prisma/client';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React from 'react';
-import useSWR from 'swr';
 
 import DatasourceTable from '@app/components/DatasourceTable';
+import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
-import { getDatastore } from '@app/pages/api/datastores/[id]';
-import config from '@app/utils/config';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
-import { fetcher } from '@app/utils/swr-fetcher';
 
 import UsageLimitModal from './UsageLimitModal';
 
@@ -19,23 +14,14 @@ type Props = {
 };
 
 function Datasources(props: Props) {
-  const router = useRouter();
-  const limit = Number(router.query.limit || config.datasourceTable.limit);
-  const offset = Number(router.query.offset || 0);
-  const search = router.query.search || '';
-
   const { data: session, status } = useSession();
   const [isUsageModalOpen, setIsUsageModalOpen] = React.useState(false);
 
-  const getDatastoreQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getDatastore>
-  >(
-    `/api/datastores/${router.query?.datastoreId}?offset=${offset}&limit=${limit}&search=${search}`,
-    fetcher,
-    {
+  const { getDatastoreQuery } = useGetDatastoreQuery({
+    swrConfig: {
       refreshInterval: 5000,
-    }
-  );
+    },
+  });
 
   const handleSynchDatasource = async (datasourceId: string) => {
     try {

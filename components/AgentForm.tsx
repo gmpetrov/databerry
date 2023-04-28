@@ -45,11 +45,11 @@ import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
 import Input from '@app/components/Input';
-import { upsertDatasource } from '@app/pages/api/datasources';
 import { getDatastores } from '@app/pages/api/datastores';
 import { RouteNames } from '@app/types';
 import { UpsertAgentSchema } from '@app/types/dtos';
 import cuid from '@app/utils/cuid';
+import { CUSTOMER_SUPPORT } from '@app/utils/prompt-templates';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 
 const CreateDatastoreModal = dynamic(
@@ -65,14 +65,13 @@ type Props = {
 };
 
 // const BASE_PROMPT_TEMPLATE = `Imagine you are an AI customer support assistant, specifically trained on custom data to accurately answer queries based on the provided context. Your primary goal is to assist users by providing relevant information, and you should not attempt to make up answers if the information is not available in the context. Given the following context, please provide the best possible answer to the user's query:`;
-const BASE_PROMPT_TEMPLATE = `As a customer support agent, please provide a helpful and professional response to the user's question or issue.`;
 
 const PROMPT_TEMPLATES = [
   {
     label: 'Customer Support',
     image: '',
     description: 'Default customer support agent template',
-    prompt: BASE_PROMPT_TEMPLATE,
+    prompt: CUSTOMER_SUPPORT,
   },
 ];
 const PROMPT_TEMPLATES_FUN = [
@@ -135,7 +134,7 @@ export default function BaseForm(props: Props) {
   const methods = useForm<UpsertAgentSchema>({
     resolver: zodResolver(UpsertAgentSchema),
     defaultValues: {
-      prompt: BASE_PROMPT_TEMPLATE,
+      prompt: CUSTOMER_SUPPORT,
       ...props?.defaultValues,
     },
   });

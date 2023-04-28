@@ -90,6 +90,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
         await triggerTaskLoadDatasource([
           {
             datasourceId: ids[index],
+            priority: 1,
           },
         ]);
       } catch (err) {

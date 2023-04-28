@@ -7,24 +7,48 @@ import path from 'path';
 import addSlashUrl from './add-slash-url';
 
 export const getUrlsFromSitemap = (data: any) => {
-  const urls: string[] = [];
+  const pages: string[] = [];
+  const sitemaps: string[] = [];
   const parser = new DOMParser();
   const xmlDom = parser.parseFromString(data, 'text/xml');
-  const locElements = xmlDom.getElementsByTagName('loc');
+  const urlElements = xmlDom.getElementsByTagName('url');
+  const sitemapElements = xmlDom.getElementsByTagName('sitemap');
 
-  for (let i = 0; i < locElements.length; i++) {
-    const url = locElements[i].textContent;
+  for (let i = 0; i < urlElements.length; i++) {
+    const locs = urlElements[i].getElementsByTagName('loc');
 
-    if (url) {
-      urls.push(url);
+    for (let j = 0; j < locs.length; j++) {
+      const url = locs[j].textContent;
+
+      if (url) {
+        pages.push(url);
+      }
     }
   }
 
-  return urls;
+  for (let i = 0; i < sitemapElements.length; i++) {
+    const locs = sitemapElements[i].getElementsByTagName('loc');
+
+    for (let j = 0; j < locs.length; j++) {
+      const url = locs[j].textContent;
+
+      if (url) {
+        sitemaps.push(url);
+      }
+    }
+  }
+
+  return {
+    pages,
+    sitemaps,
+  };
 };
 
 export const getSitemapPages = async (sitemapURL: string) => {
-  let urls: string[] = [];
+  const result = {
+    pages: [] as string[],
+    sitemaps: [] as string[],
+  };
 
   try {
     const { data } = await axios.get(sitemapURL);
@@ -34,7 +58,7 @@ export const getSitemapPages = async (sitemapURL: string) => {
     console.log(err);
   }
 
-  return urls;
+  return result;
 };
 
 const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {

@@ -28,13 +28,14 @@ export default class AgentManager {
     this.topK = topK;
   }
 
-  async query(input: string) {
+  async query(input: string, stream?: any) {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
         prompt: this.agent.prompt as string,
         datastore: this.agent?.tools[0]?.datastore as any,
         query: input,
         topK: this.topK,
+        stream,
       });
 
       return answer;

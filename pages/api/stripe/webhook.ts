@@ -1,4 +1,8 @@
-import { PriceType, SubscriptionStatus } from '@prisma/client';
+import {
+  PriceType,
+  SubscriptionPlan,
+  SubscriptionStatus,
+} from '@prisma/client';
 import Stripe from 'stripe';
 
 import { createApiHandler } from '@app/utils/createa-api-handler';
@@ -129,6 +133,12 @@ handler.post(async (req, res) => {
         case 'customer.subscription.updated': {
           const data = event.data.object as Stripe.Subscription;
 
+          const product = await stripe.products.retrieve(
+            (data as any)?.plan?.product as string
+          );
+
+          const plan = product?.metadata?.plan as SubscriptionPlan;
+
           await prisma.subscription.update({
             where: {
               id: data.id,
@@ -139,6 +149,7 @@ handler.post(async (req, res) => {
                   id: data.items.data[0].price.id,
                 },
               },
+              plan: plan,
               status: data.status as any,
               metadata: data.metadata,
               cancel_at_period_end: data.cancel_at_period_end,
@@ -160,7 +171,6 @@ handler.post(async (req, res) => {
             if (!userId) {
               throw new Error('No user id found');
             }
-            // const projectId = data?.metadata?.projectId as string;
 
             const subscription = await stripe.subscriptions.retrieve(
               data.subscription as string,
@@ -168,6 +178,12 @@ handler.post(async (req, res) => {
                 expand: ['default_payment_method'],
               }
             );
+
+            const product = await stripe.products.retrieve(
+              (subscription as any)?.plan?.product as string
+            );
+
+            const plan = product?.metadata?.plan as SubscriptionPlan;
 
             const couponName = subscription?.discount?.coupon?.name;
 
@@ -197,6 +213,7 @@ handler.post(async (req, res) => {
                     id: subscription.items.data[0].price.id,
                   },
                 },
+                plan: plan,
                 coupon: couponName,
                 status: subscription.status as SubscriptionStatus,
                 metadata: subscription.metadata,
@@ -209,6 +226,7 @@ handler.post(async (req, res) => {
                 trial_end: timestampToDate(subscription.trial_end!),
               },
               update: {
+                plan: plan,
                 coupon: couponName,
                 status: subscription.status as SubscriptionStatus,
                 metadata: subscription.metadata,

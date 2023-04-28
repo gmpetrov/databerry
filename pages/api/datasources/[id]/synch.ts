@@ -54,6 +54,7 @@ export const synchDatasource = async (
   await triggerTaskLoadDatasource([
     {
       datasourceId: datasource.id,
+      priority: 2,
     },
   ]);
 

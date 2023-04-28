@@ -3,6 +3,7 @@ export enum ApiErrorType {
   USAGE_LIMIT = 'USAGE_LIMIT',
   NOT_FOUND = 'NOT_FOUND',
   INVALID_REQUEST = 'INVALID_REQUEST',
+  WEBPAGE_IS_SITEMAP = 'WEBPAGE_IS_SITEMAP',
 }
 
 export class ApiError extends Error {
