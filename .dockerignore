@@ -12,3 +12,4 @@ fly
 .parcel-cache
 dist
 packages
+.env.local

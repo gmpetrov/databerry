@@ -8,7 +8,6 @@ import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { DatastoreVisibility, Prisma } from '@prisma/client';
@@ -16,14 +15,11 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import useSWR from 'swr';
 
 import { DatastoreFormsMap } from '@app/components/DatastoreForms';
-import { getDatastore } from '@app/pages/api/datastores/[id]';
+import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import { RouteNames } from '@app/types';
-import config from '@app/utils/config';
 import getRootDomain from '@app/utils/get-root-domain';
-import { fetcher } from '@app/utils/swr-fetcher';
 
 type Props = {
   datastoreId: string;
@@ -31,16 +27,8 @@ type Props = {
 
 function DatastoreSettings() {
   const router = useRouter();
-  const limit = Number(router.query.limit || config.datasourceTable.limit);
-  const offset = Number(router.query.offset || 0);
-  const search = router.query.search || '';
 
-  const getDatastoreQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getDatastore>
-  >(
-    `/api/datastores/${router.query?.datastoreId}?offset=${offset}&limit=${limit}&search=${search}`,
-    fetcher
-  );
+  const { getDatastoreQuery } = useGetDatastoreQuery({});
 
   const handleDeleteDatastore = async () => {
     if (
@@ -130,7 +118,7 @@ function DatastoreSettings() {
           <Alert color="neutral">{getDatastoreQuery?.data?.id}</Alert>
         </Stack>
       </FormControl>
-      <Divider sx={{ my: 4 }} />
+      {/* <Divider sx={{ my: 4 }} />
       <FormControl sx={{ gap: 1 }}>
         <FormLabel>API Keys</FormLabel>
         <Typography level="body3">
@@ -165,7 +153,7 @@ function DatastoreSettings() {
         >
           Create API Key
         </Button>
-      </FormControl>
+      </FormControl> */}
 
       <Divider sx={{ my: 4 }} />
 

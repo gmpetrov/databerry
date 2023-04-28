@@ -140,6 +140,10 @@ export default function AccountPage() {
         gap: 1,
       })}
     >
+      {/* <Head>
+        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+      </Head> */}
+
       <Box
         sx={{
           display: 'flex',
@@ -185,6 +189,13 @@ export default function AccountPage() {
           mx: 'auto',
         })}
       >
+        {/* <stripe-pricing-table
+          pricing-table-id="prctbl_1MzJqKIDmvRZDzsDjQUfIE8Z"
+          publishable-key="pk_test_51MsM5yIDmvRZDzsDxkUmQWtyG0gzpBQTkVTJSpcKXl5wnlSnizkCPLSEHoD1izTYfbaZQ0X1By3uKOQa1zA37GcS00lWvBPQHt"
+          client-reference-id={session?.user?.id}
+          customer-email={session?.user?.email}
+        ></stripe-pricing-table> */}
+
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
           {/* <Typography level="body3">
@@ -297,7 +308,7 @@ export default function AccountPage() {
                 href={`${process.env
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
                   session?.user?.id
-                }`}
+                }&prefilled_email=${session?.user?.email}`}
                 style={{ marginLeft: 'auto' }}
               >
                 <Button
@@ -312,6 +323,9 @@ export default function AccountPage() {
 
             {currentPlan?.type &&
               currentPlan?.type !== SubscriptionPlan?.level_0 && (
+                // <a
+                //   href={`https://billing.stripe.com/p/login/test_dR67ufbBYa6Ig8waEE?prefilled_email=${session?.user?.email}`}
+                // >
                 <Button
                   onClick={handleClickManageSubscription}
                   endDecorator={<ArrowForwardRoundedIcon />}
@@ -320,6 +334,7 @@ export default function AccountPage() {
                 >
                   Manage Subscription
                 </Button>
+                // </a>
               )}
           </Card>
         </FormControl>

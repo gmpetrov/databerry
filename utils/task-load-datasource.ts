@@ -1,13 +1,24 @@
-import { DatasourceStatus, SubscriptionPlan, Usage } from '@prisma/client';
+import {
+  DatasourceStatus,
+  DatasourceType,
+  SubscriptionPlan,
+  Usage,
+} from '@prisma/client';
 
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
 import { s3 } from '@app/utils/aws';
 import { DatastoreManager } from '@app/utils/datastores';
+import type { Document } from '@app/utils/datastores/base';
 import { DatasourceLoader } from '@app/utils/loaders';
 import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
 
+import { ApiError, ApiErrorType } from './api-error';
+import cuid from './cuid';
+import findDomainPages, { getSitemapPages } from './find-domain-pages';
+import findSitemap from './find-sitemap';
 import guardDataProcessingUsage from './guard-data-processing-usage';
+import triggerTaskLoadDatasource from './trigger-task-load-datasource';
 
 const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   logger.info(`${data.datasourceId}: fetching datasource`);
@@ -58,10 +69,132 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     return;
   }
 
+  // TODO: find a better way to handle this
+  if (datasource.type === DatasourceType.web_site) {
+    let urls: string[] = [];
+    let nestedSitemaps: string[] = [];
+    const sitemap = (datasource.config as any).sitemap;
+    const source = (datasource.config as any).source;
+
+    if (sitemap) {
+      const { pages, sitemaps } = await getSitemapPages(sitemap);
+      urls = pages;
+      nestedSitemaps = sitemaps;
+    } else if (source) {
+      // Try to find sitemap
+      const sitemapURL = await findSitemap(source);
+
+      if (sitemapURL) {
+        const { pages, sitemaps } = await getSitemapPages(sitemapURL);
+        urls = pages;
+        nestedSitemaps = sitemaps;
+      } else {
+        // Fallback to recursive search
+        urls = await findDomainPages((data as any).config.source);
+      }
+    } else {
+      return;
+    }
+
+    // urls = urls.slice(0, 10);
+
+    const ids = urls.map(() => cuid());
+    const idsSitemaps = nestedSitemaps.map(() => cuid());
+
+    if (ids.length > 0) {
+      await prisma.appDatasource.createMany({
+        data: urls.map((each, idx) => ({
+          id: ids[idx],
+          type: DatasourceType.web_page,
+          name: each,
+          config: {
+            ...(datasource.config as any),
+            source: each,
+          },
+          ownerId: datasource?.ownerId,
+          datastoreId: datasource?.datastoreId,
+        })),
+      });
+    }
+
+    if (idsSitemaps.length > 0) {
+      await prisma.appDatasource.createMany({
+        data: nestedSitemaps.map((each, idx) => ({
+          id: idsSitemaps[idx],
+          type: DatasourceType.web_site,
+          name: each,
+          config: {
+            ...(datasource.config as any),
+            sitemap: each,
+          },
+          ownerId: datasource?.ownerId,
+          datastoreId: datasource?.datastoreId,
+        })),
+      });
+    }
+
+    await triggerTaskLoadDatasource(
+      [...ids, ...idsSitemaps].map((each) => ({
+        datasourceId: each,
+        priority: 10,
+      }))
+    );
+
+    await prisma.appDatasource.delete({
+      where: {
+        id: datasource.id,
+      },
+    });
+
+    logger.info(
+      `${datasource?.id}: datasource of type ${datasource?.type} runned successfully`
+    );
+
+    return;
+  }
+
   console.log('datasource', datasource);
-  const document = data.isUpdateText
-    ? await new DatasourceLoader(datasource).loadText()
-    : await new DatasourceLoader(datasource).load();
+  let document: Document;
+
+  try {
+    document = data.isUpdateText
+      ? await new DatasourceLoader(datasource).loadText()
+      : await new DatasourceLoader(datasource).load();
+  } catch (err) {
+    if (err instanceof ApiError) {
+      if (err.name === ApiErrorType.WEBPAGE_IS_SITEMAP) {
+        console.log(
+          'ApiErrorType.WEBPAGE_IS_SITEMAP',
+          ApiErrorType.WEBPAGE_IS_SITEMAP
+        );
+
+        // WebPage is a sitemap re-run as a sitemap
+        await prisma.appDatasource.update({
+          where: {
+            id: datasource.id,
+          },
+          data: {
+            type: DatasourceType.web_site,
+            status: DatasourceStatus.unsynched,
+            config: {
+              ...(datasource.config as any),
+              sitemap: (datasource?.config as any)?.source,
+            },
+          },
+        });
+
+        //
+        await triggerTaskLoadDatasource([
+          {
+            datasourceId: datasource.id,
+            priority: 2,
+          },
+        ]);
+        return;
+      }
+    }
+    throw err;
+  }
 
   // console.log('document', document);
   const chunks = await new DatastoreManager(datasource.datastore!).upload(

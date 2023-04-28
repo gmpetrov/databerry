@@ -1,6 +1,7 @@
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutorenewRounded from '@mui/icons-material/AutorenewRounded';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -13,6 +14,8 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
 import Sheet from '@mui/joy/Sheet';
 import Stack from '@mui/joy/Stack';
 import { ColorPaletteProp } from '@mui/joy/styles';
@@ -30,6 +33,7 @@ import pDebounce from 'p-debounce';
 import * as React from 'react';
 import useSWR from 'swr';
 
+import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
@@ -125,21 +129,13 @@ export default function DatasourceTable({
   handleSynch: (datasourceId: string) => any;
 }) {
   const router = useRouter();
-  const limit = Number(router.query.limit || config.datasourceTable.limit);
-  const offset = Number(router.query.offset || 0);
-  const search = router.query.search || '';
 
-  const getDatastoreQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getDatastore>
-  >(
-    `/api/datastores/${
-      router.query?.datastoreId
-    }?offset=${offset}&limit=${limit}&search=${router.query.search || ''}`,
-    fetcher,
-    {
-      refreshInterval: 5000,
-    }
-  );
+  const { getDatastoreQuery, offset, limit, search, status } =
+    useGetDatastoreQuery({
+      swrConfig: {
+        refreshInterval: 5000,
+      },
+    });
 
   const [selected, setSelected] = React.useState<string[]>([]);
   const [state, setState] = useStateReducer({
@@ -219,7 +215,7 @@ export default function DatasourceTable({
           },
         }}
       >
-        <Stack width="100%">
+        <Stack width="100%" direction="row" gap={2}>
           <FormControl sx={{ flex: 1 }} size="sm">
             <Stack
               direction={'row'}
@@ -248,21 +244,57 @@ export default function DatasourceTable({
               }}
             />
           </FormControl>
+
+          <FormControl size="sm">
+            <FormLabel sx={{ ml: 'auto' }}>Status</FormLabel>
+            <Select
+              placeholder="Filter by status"
+              value={status}
+              slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
+              onChange={(_, value) => {
+                if (value) {
+                  router.query.status = value as string;
+                  router.replace(router, undefined, { shallow: true });
+                }
+              }}
+              {...(status && {
+                // display the button and remove select indicator
+                // when user has selected a value
+                endDecorator: (
+                  <IconButton
+                    size="sm"
+                    variant="plain"
+                    color="neutral"
+                    onMouseDown={(event) => {
+                      // don't open the popup when clicking on this button
+                      event.stopPropagation();
+                    }}
+                    onClick={() => {
+                      router.query.status = '';
+                      router.replace(router, undefined, { shallow: true });
+                    }}
+                  >
+                    <CloseRounded />
+                  </IconButton>
+                ),
+                indicator: null,
+              })}
+            >
+              {Object.keys(DatasourceStatus).map((each) => (
+                <Option key={each} value={each}>
+                  {each}
+                </Option>
+              ))}
+              {/* <Option value="paid">Paid</Option>
+            <Option value="pending">Pending</Option>
+            <Option value="refunded">Refunded</Option>
+            <Option value="cancelled">Cancelled</Option> */}
+            </Select>
+          </FormControl>
         </Stack>
 
         {/* <React.Fragment>
-          <FormControl size="sm">
-            <FormLabel>Status</FormLabel>
-            <Select
-              placeholder="Filter by status"
-              slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-            >
-              <Option value="paid">Paid</Option>
-              <Option value="pending">Pending</Option>
-              <Option value="refunded">Refunded</Option>
-              <Option value="cancelled">Cancelled</Option>
-            </Select>
-          </FormControl>
+
 
           <FormControl size="sm">
             <FormLabel>Category</FormLabel>
