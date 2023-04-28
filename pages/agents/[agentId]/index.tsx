@@ -1,3 +1,7 @@
+import {
+  EventStreamContentType,
+  fetchEventSource,
+} from '@microsoft/fetch-event-source';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
@@ -44,7 +48,7 @@ import { getAgent } from '@app/pages/api/agents/[id]';
 import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
 import { RouteNames } from '@app/types';
 import agentToolFormat from '@app/utils/agent-tool-format';
-import { ApiErrorType } from '@app/utils/api-error';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import getRootDomain from '@app/utils/get-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
@@ -86,6 +90,7 @@ export default function AgentPage() {
     }
 
     const history = [...state.history, { from: 'human', message }];
+    const nextIndex = history.length;
 
     setState({
       history: history as any,
@@ -95,18 +100,101 @@ export default function AgentPage() {
     let error = '';
 
     try {
-      const { data } = await axios.post(
-        `/api/agents/${getAgentQuery?.data?.id}/query`,
-        {
-          query: message,
-        }
-      );
+      const ctrl = new AbortController();
+      let buffer = '';
 
-      answer = data?.answer;
+      class RetriableError extends Error {}
+      class FatalError extends Error {}
+
+      await fetchEventSource(`/api/agents/${getAgentQuery?.data?.id}/query`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Accept: 'text/event-stream',
+        },
+        body: JSON.stringify({
+          streaming: true,
+          query: message,
+        }),
+        signal: ctrl.signal,
+
+        async onopen(response) {
+          if (
+            response.ok &&
+            response.headers.get('content-type') === EventStreamContentType
+          ) {
+            return; // everything's good
+          } else if (
+            response.status >= 400 &&
+            response.status < 500 &&
+            response.status !== 429
+          ) {
+            if (response.status === 402) {
+              throw new ApiError(ApiErrorType.USAGE_LIMIT);
+            }
+            // client-side errors are usually non-retriable:
+            throw new FatalError();
+          } else {
+            throw new RetriableError();
+          }
+        },
+        onclose() {
+          // if the server closes the connection unexpectedly, retry:
+          throw new RetriableError();
+        },
+        onerror(err) {
+          console.log('on error', err, Object.keys(err));
+          if (err instanceof FatalError) {
+            ctrl.abort();
+            throw err; // rethrow to stop the operation
+          } else if (err instanceof ApiError) {
+            console.log('ApiError', ApiError);
+            throw err;
+          } else {
+            // do nothing to automatically retry. You can also
+            // return a specific retry interval here.
+          }
+        },
+
+        onmessage: (event) => {
+          if (event.data === '[DONE]') {
+            ctrl.abort();
+          } else if (event.data?.startsWith('[ERROR]')) {
+            ctrl.abort();
+
+            setState({
+              history: [
+                ...history,
+                {
+                  from: 'agent',
+                  message: event.data.replace('[ERROR]', ''),
+                } as any,
+              ],
+            });
+          } else {
+            // const data = JSON.parse(event.data || `{}`);
+            buffer += event.data as string;
+            console.log(buffer);
+
+            const h = [...history];
+
+            if (h?.[nextIndex]) {
+              h[nextIndex].message = `${buffer}`;
+            } else {
+              h.push({ from: 'agent', message: buffer });
+            }
+
+            setState({
+              history: h as any,
+            });
+          }
+        },
+      });
     } catch (err) {
-      if (err instanceof AxiosError) {
-        if (err.response?.data?.error) {
-          error = err.response?.data?.error;
+      console.log('err', err);
+      if (err instanceof ApiError) {
+        if (err?.message) {
+          error = err?.message;
 
           if (error === ApiErrorType.USAGE_LIMIT) {
             answer =
@@ -117,15 +205,15 @@ export default function AgentPage() {
         } else {
           answer = `Error: ${error}`;
         }
+
+        setState({
+          history: [
+            ...history,
+            { from: 'agent', message: answer as string },
+          ] as any,
+        });
       }
     }
-
-    setState({
-      history: [
-        ...history,
-        { from: 'agent', message: answer as string },
-      ] as any,
-    });
   };
 
   const handleChangeTab = (tab: string) => {
