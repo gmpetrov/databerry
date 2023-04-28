@@ -61,8 +61,6 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // messageTemplates: ["What's the pricing?"],
 };
 
-const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
-
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [agent, setAgent] = React.useState<Agent | undefined>();
@@ -84,7 +82,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   const handleFetchAgent = async () => {
     try {
       const res = await fetch(
-        `${API_URL}/api/external/agents/${props.agentId}`
+        `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/external/agents/${props.agentId}`
       );
       const data = (await res.json()) as Agent;
 
