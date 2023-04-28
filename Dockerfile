@@ -1,8 +1,6 @@
 # FROM node:18-alpine AS base
 FROM mcr.microsoft.com/playwright:v1.32.0-focal as base
 
-ARG NEXT_PUBLIC_S3_BUCKET_NAME
-
 # Install dependencies only when needed
 FROM base AS deps
 
@@ -33,6 +31,14 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN mv next.config.docker.js next.config.js
 RUN yarn prisma:generate
+
+ARG NEXT_PUBLIC_S3_BUCKET_NAME
+ARG NEXT_PUBLIC_S3_BUCKET_NAME
+ARG NEXT_PUBLIC_DASHBOARD_URL
+ARG NEXT_PUBLIC_SLACK_CLIENT_ID
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ARG NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1
+
 RUN yarn build
 
 # If using npm comment out above and use below instead
