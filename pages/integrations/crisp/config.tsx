@@ -189,6 +189,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const websiteId = ctx.query.website_id as string;
   const token = ctx.query.token as string;
 
+  console.log('TOKEN', token);
+
   const redirect = {
     redirect: {
       destination: '/',
@@ -200,32 +202,32 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return redirect;
   }
 
-  const websites = await getConnectedWebsites();
+  // const websites = await getConnectedWebsites();
 
-  if (token === websites[websiteId]?.token) {
-    const integration = await prisma.externalIntegration.findUnique({
-      where: {
-        integrationId: websiteId,
-      },
-      include: {
-        agent: {
-          include: {
-            owner: {
-              include: {
-                apiKeys: true,
-              },
+  // if (token === websites[websiteId]?.token) {
+  const integration = await prisma.externalIntegration.findUnique({
+    where: {
+      integrationId: websiteId,
+    },
+    include: {
+      agent: {
+        include: {
+          owner: {
+            include: {
+              apiKeys: true,
             },
           },
         },
       },
-    });
+    },
+  });
 
-    return {
-      props: {
-        agent: superjson.serialize(integration?.agent).json || null,
-      },
-    };
-  }
+  return {
+    props: {
+      agent: superjson.serialize(integration?.agent).json || null,
+    },
+  };
+  // }
 
   return redirect;
 };
