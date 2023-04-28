@@ -72,7 +72,6 @@ const nextConfig = {
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.externals.push({
       playwright: true,
-      'pdf-parse/lib/pdf.js/v1.10.100/build/pdf.js': true,
       '@huggingface/inference': 'commonjs @huggingface/inference',
       replicate: 'commonjs replicate',
       'cohere-ai': 'commonjs cohere-ai',

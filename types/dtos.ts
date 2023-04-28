@@ -109,7 +109,6 @@ export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 
 export const ChatRequest = z.object({
   query: z.string(),
-  streaming: z.boolean().optional().default(false),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;

@@ -1,4 +1,5 @@
 import { Usage } from '@prisma/client';
+import { ConsoleCallbackHandler } from 'langchain/dist/callbacks';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest, ChatRequest } from '@app/types';
@@ -46,25 +47,13 @@ export const chatAgentRequest = async (
   });
 
   if (agent?.ownerId !== session?.user?.id) {
-    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+    throw new Error('Unauthorized');
   }
 
   const manager = new AgentManager({ agent, topK: 3 });
 
-  if (data.streaming) {
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-    });
-  }
-
-  const streamData = (data: string) => {
-    res.write(`data: ${data}\n\n`);
-  };
-
   const [answer] = await Promise.all([
-    manager.query(data.query, data.streaming ? streamData : undefined),
+    manager.query(data.query),
     prisma.usage.update({
       where: {
         id: agent?.owner?.usage?.id,
@@ -75,13 +64,9 @@ export const chatAgentRequest = async (
     }),
   ]);
 
-  if (data.streaming) {
-    streamData('[DONE]');
-  } else {
-    return {
-      answer,
-    };
-  }
+  return {
+    answer,
+  };
 };
 
 handler.post(respond(chatAgentRequest));

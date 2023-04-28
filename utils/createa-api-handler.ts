@@ -31,12 +31,7 @@ export function respond<T>(f: Handle<T>) {
   return async (req: AppNextApiRequest, res: NextApiResponse) => {
     try {
       const result = await f(req, res);
-
-      if (!req?.body?.streaming) {
-        res.json(result);
-      } else {
-        res.end();
-      }
+      res.json(result);
     } catch (err) {
       console.log(err);
       res.statusCode = (err as any)?.status || 500;
@@ -51,14 +46,9 @@ export function respond<T>(f: Handle<T>) {
           : JSON.stringify(err);
       }
 
-      if (!req?.body?.streaming) {
-        res.json({
-          error: message,
-        });
-      } else {
-        res.write(`data: [ERROR]${message}\n\n`);
-        res.end();
-      }
+      res.json({
+        error: message,
+      });
     }
   };
 }
