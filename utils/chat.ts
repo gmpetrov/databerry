@@ -11,11 +11,13 @@ const chat = async ({
   query,
   topK,
   prompt,
+  stream,
 }: {
   datastore: Datastore;
   query: string;
   prompt?: string;
   topK?: number;
+  stream?: any;
 }) => {
   let results = [] as {
     text: string;
@@ -73,7 +75,15 @@ ${query}
 
 Answer with readability in mind using same language as the customer:`;
 
-  const model = new OpenAI({ modelName: 'gpt-3.5-turbo' });
+  const model = new OpenAI({
+    modelName: 'gpt-3.5-turbo',
+    streaming: Boolean(stream),
+    callbacks: [
+      {
+        handleLLMNewToken: stream,
+      },
+    ],
+  });
 
   const output = await model.call(finalPrompt);
 
