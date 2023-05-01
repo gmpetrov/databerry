@@ -11,6 +11,7 @@ import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
+import { validate } from '@app/utils/validate';
 
 const handler = createApiHandler();
 
@@ -122,7 +123,12 @@ export const queryAgent = async (
   }
 };
 
-handler.post(respond(queryAgent));
+handler.post(
+  validate({
+    body: ChatRequest,
+    handler: respond(queryAgent),
+  })
+);
 
 export default async function wrapper(
   req: NextApiRequest,
