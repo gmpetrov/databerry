@@ -129,19 +129,16 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         integrationId: websiteId,
       },
       include: {
-        apiKey: {
+        agent: {
           include: {
-            datastore: {
+            owner: {
               include: {
-                owner: {
-                  include: {
-                    subscriptions: {
-                      where: {
-                        status: 'active',
-                      },
-                    },
+                subscriptions: {
+                  where: {
+                    status: 'active',
                   },
                 },
+                apiKeys: true,
               },
             },
           },
@@ -149,17 +146,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       },
     });
 
-    console.log(
-      'integration?.apiKey?.datastore?.owner?.subscriptions',
-      integration?.apiKey?.datastore?.owner?.subscriptions
-    );
-
     return {
       props: {
-        // apiKey: integration?.apiKey?.key || '',
-        isPremium:
-          (integration?.apiKey?.datastore?.owner?.subscriptions?.length || 0) >
-          0,
+        isPremium: (integration?.agent?.owner?.subscriptions?.length || 0) > 0,
       },
     };
   }
