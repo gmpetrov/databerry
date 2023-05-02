@@ -3,7 +3,7 @@
   <br>
   <a href="https://databerry.ai"><img src="public/databerry-logo-icon.png" alt="WebTorrent" width="200"></a>
   <br>
-  Databerry
+  GriotAI
   <br>
     <h3 align="center">Connect your data to large language models!</h3>
   <br>
@@ -19,7 +19,7 @@
 </h2>
 
 
-**[Databerry](https://databerry.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
+**[GriotAI](https://databerry.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
 
 ### [📄 Documentation](https://docs.databerry.ai/)
 

@@ -7,14 +7,13 @@ import { useState } from 'react';
 
 import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
-import { Hero } from '@app/components/landing-page/Hero';
 import accountConfig from '@app/utils/account-config';
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>Databerry - Pricing</title>
+        <title>GriotAI - Pricing</title>
         <meta
           name="description"
           content="Simple Pricing. No hidden fees. No credit card required."
@@ -38,7 +37,7 @@ const tiers = [
     name: 'Discover',
     id: 'tier-free',
     href: '/signin',
-    price: { monthly: '$0', annually: '$0' },
+    price: { monthly: '$0', annually: '$144' },
     description: 'The essentials to get started quickly.',
     features: [
       `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
@@ -51,7 +50,7 @@ const tiers = [
         accountConfig['level_0'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'Manual data synching',
-      'Access to Databerry API',
+      'Access to GriotAI API',
       'ChatGPT plugin',
     ],
     mostPopular: false,
@@ -60,7 +59,7 @@ const tiers = [
     name: 'Startup',
     id: 'tier-startup',
     href: '/signin',
-    price: { monthly: '$25', annually: '$250' },
+    price: { monthly: '$25', annually: '$288' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
       `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
@@ -73,17 +72,16 @@ const tiers = [
         accountConfig['level_1'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'Manual data synching',
-      `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
       'Access to Crisp Plugin',
       'Access to Slack Bot',
     ],
-    mostPopular: false,
+    mostPopular: true,
   },
   {
     name: 'Pro',
     id: 'tier-enterprise',
     href: '/signin',
-    price: { monthly: '$99', annually: '$990' },
+    price: { monthly: '$99', annually: '$576' },
     description: 'Dedicated support and for your company.',
     features: [
       `${accountConfig['level_2'].limits.maxAgents} agent(s)`,
@@ -96,29 +94,6 @@ const tiers = [
         accountConfig['level_2'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'auto synch datasources',
-      `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
-    ],
-    mostPopular: true,
-  },
-  {
-    name: 'Enterprise',
-    id: 'tier-enterprise',
-    href: '/signin',
-    price: { monthly: '$499', annually: '$4990' },
-    description:
-      'You’ve got a huge amount of assets but it’s not enough. To the moon.',
-    features: [
-      `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_3'].limits.maxAgentsQueries} agents queries / month`,
-      `File uplpoad limited to ${
-        accountConfig['level_3'].limits.maxFileSize / 1000000
-      }MB / file`,
-      `Data processing limited to ${
-        accountConfig['level_3'].limits.maxDataProcessing / 1000000
-      }MB / month`,
-      'auto synch datasources',
-      `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: false,
   },
@@ -133,7 +108,7 @@ function Example() {
 
   return (
     <div className="py-24 bg-black sm:py-32">
-      <div className="px-6 mx-auto max-w-[1500px] lg:px-8">
+      <div className="px-6 mx-auto max-w-7xl lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-400">
             Pricing
@@ -171,7 +146,7 @@ function Example() {
             ))}
           </RadioGroup>
         </div> */}
-        <div className="grid max-w-md grid-cols-1 gap-8 mx-auto mt-16 isolate lg:mx-0 lg:max-w-none lg:grid-cols-4">
+        <div className="grid max-w-md grid-cols-1 gap-8 mx-auto mt-16 isolate lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {tiers.map((tier) => (
             <Card
               key={tier.id}
@@ -233,8 +208,7 @@ function Example() {
                       'text-green-400':
                         feature.includes('ChatGPT') ||
                         feature.includes('Crisp Plugin') ||
-                        feature.includes('Slack Bot') ||
-                        feature.includes('Website loader'),
+                        feature.includes('Slack Bot'),
                     })}
                   >
                     <CheckIcon

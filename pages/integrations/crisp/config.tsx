@@ -100,7 +100,7 @@ export default function CrispConfig(props: { agent: Agent }) {
   return (
     <>
       <Head>
-        <title>Databerry - LLMs automation without code</title>
+        <title>GriotAI - LLMs automation without code</title>
         <meta
           name="description"
           content="Most bookkeeping software is accurate, but hard to use. We make the opposite trade-off, and hope you don’t get audited."
@@ -122,10 +122,10 @@ export default function CrispConfig(props: { agent: Agent }) {
             <form className="flex flex-col">
               <Stack spacing={2}>
                 <FormControl>
-                  <FormLabel>Databerry API Key</FormLabel>
+                  <FormLabel>GriotAI API Key</FormLabel>
                   <Input
                     value={inputValue}
-                    placeholder="Your Databerry API Key here"
+                    placeholder="Your GriotAI API Key here"
                     onChange={(e) => setInputValue(e.currentTarget.value)}
                   />
                 </FormControl>

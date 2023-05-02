@@ -32,7 +32,7 @@ export default function Home() {
         </title>
         <meta
           name="description"
-          content="Databerry is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models."
+          content="GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models."
         />
       </Head>
       <Header />

@@ -365,7 +365,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               <Typography level="body3">
                 Powered by{' '}
                 <Typography color="primary" fontWeight={'bold'}>
-                  Databerry
+                  GriotAI
                 </Typography>
               </Typography>
             </Box>

@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>SlackBot by Databerry</title>
+        <title>SlackBot by GriotAI</title>
         <meta
           name="description"
           content="A ChatGPT Bot trained on your company data."
@@ -129,7 +129,7 @@ const features = [
   {
     name: 'Install Slack plugin',
     description:
-      'The final step is to install Databerry Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
+      'The final step is to install GriotAI Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
     icon: <Looks3RoundedIcon className="w-6 h-6" />,
   },
   {
@@ -152,7 +152,7 @@ export function PrimaryFeatures() {
             A chatbot train on your data in minutes
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-            SlackBot by Databerry, make it very easy to train a chatbot on your
+            SlackBot by GriotAI, make it very easy to train a chatbot on your
             company data.
           </p>
         </div>

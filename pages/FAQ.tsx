@@ -21,7 +21,7 @@ const faqs = [
     id: 4,
     question: 'Does it support other languages?',
     answer:
-      'Yes, Databerry supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
+      'Yes, GriotAI supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
   },
 
   // More questions...

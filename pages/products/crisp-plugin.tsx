@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>ChatSite by Databerry</title>
+        <title>ChatSite by GriotAI</title>
         <meta
           name="description"
           content="ChatGPT Bot trained on your company data. Integrates with existing customer support tools."

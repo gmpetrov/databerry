@@ -1,7 +1,7 @@
 {
   "name": "@databerry/chat-bubble",
   "version": "1.0.10",
-  "description": "Databerry.ai Chat Bubble Widget",
+  "description": "GriotAI.ai Chat Bubble Widget",
   "main": "chat-bubble.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

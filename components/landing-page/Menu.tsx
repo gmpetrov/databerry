@@ -57,7 +57,7 @@ const solutions = [
   },
   {
     name: 'On Premise',
-    description: 'Install Databerry on your own infrastructure',
+    description: 'Install GriotAI on your own infrastructure',
     href: 'https://github.com/gmpetrov/databerry',
     icon: CpuChipIcon,
   },

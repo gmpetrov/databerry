@@ -129,13 +129,13 @@ const handleSendInput = async ({
     origin: 'chat',
     user: {
       type: 'website',
-      nickname: agentName || 'Databerry.ai',
+      nickname: agentName || 'GriotAI.ai',
       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
 
     content: {
       id: `databerry-query-${cuid()}`,
-      text: `✨ Ask ${agentName || `Databerry.ai`}`,
+      text: `✨ Ask ${agentName || `GriotAI.ai`}`,
       explain: 'Query',
       value,
     },

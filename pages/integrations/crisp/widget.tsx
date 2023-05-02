@@ -71,10 +71,10 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
   return (
     <>
       <Head>
-        <title>Databerry - Crisp Widget</title>
+        <title>GriotAI - Crisp Widget</title>
         <meta
           name="description"
-          content="Databerry is the leading document retrievial platform"
+          content="GriotAI is the leading document retrievial platform"
         />
       </Head>
       <Box
@@ -102,7 +102,7 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
           </Stack>
         ) : (
           <Alert color="warning" sx={{ m: 2 }}>
-            This feature is restricted to Databerry.ai premium users
+            This feature is restricted to GriotAI.ai premium users
           </Alert>
         )}
       </Box>

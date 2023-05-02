@@ -122,7 +122,7 @@ function DatastoreSettings() {
       <FormControl sx={{ gap: 1 }}>
         <FormLabel>API Keys</FormLabel>
         <Typography level="body3">
-          Use the api key to access the datastore from the Databerry API
+          Use the api key to access the datastore from the GriotAI API
         </Typography>
 
         <Stack direction={'column'} gap={2} mt={2}>
