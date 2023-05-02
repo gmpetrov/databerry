@@ -112,24 +112,30 @@ const getAgent = async (websiteId: string) => {
   return agent;
 };
 
-const handleSendInput = async (
-  websiteId: string,
-  sessionId: string,
-  value?: string
-) => {
+const handleSendInput = async ({
+  websiteId,
+  sessionId,
+  value,
+  agentName,
+}: {
+  websiteId: string;
+  sessionId: string;
+  value?: string;
+  agentName?: string;
+}) => {
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
     type: 'field',
     from: 'operator',
     origin: 'chat',
     user: {
       type: 'website',
-      nickname: 'Databerry.ai',
+      nickname: agentName || 'Databerry.ai',
       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
 
     content: {
       id: `databerry-query-${cuid()}`,
-      text: '✨ Ask Databerry.ai',
+      text: `✨ Ask ${agentName || `Databerry.ai`}`,
       explain: 'Query',
       value,
     },
@@ -176,7 +182,7 @@ const handleQuery = async (
 
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
-      await handleSendInput(websiteId, sessionId);
+      await handleSendInput({ websiteId, sessionId, agentName: agent?.name });
       resolve(42);
     }, 300);
   });
@@ -230,11 +236,14 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         body.data.type === 'text'
       ) {
         if (!hasSentDataberryInputOnce) {
-          await handleSendInput(
-            body.website_id,
-            body.data.session_id,
-            body.data.content
-          );
+          const agent = await getAgent(body.website_id);
+
+          await handleSendInput({
+            websiteId: body.website_id,
+            sessionId: body.data.session_id,
+            value: body.data.content,
+            agentName: agent?.name,
+          });
 
           await handleQuery(
             body.website_id,

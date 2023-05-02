@@ -122,47 +122,36 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   if (!websiteId || !token) {
     return redirect;
   }
-  const websites = await getConnectedWebsites();
-  if (token === websites[websiteId]?.token) {
-    const integration = await prisma.externalIntegration.findUnique({
-      where: {
-        integrationId: websiteId,
-      },
-      include: {
-        apiKey: {
-          include: {
-            datastore: {
-              include: {
-                owner: {
-                  include: {
-                    subscriptions: {
-                      where: {
-                        status: 'active',
-                      },
-                    },
-                  },
+  // const websites = await getConnectedWebsites();
+  // if (token === websites[websiteId]?.token) {
+  const integration = await prisma.externalIntegration.findUnique({
+    where: {
+      integrationId: websiteId,
+    },
+    include: {
+      agent: {
+        include: {
+          owner: {
+            include: {
+              subscriptions: {
+                where: {
+                  status: 'active',
                 },
               },
+              apiKeys: true,
             },
           },
         },
       },
-    });
+    },
+  });
 
-    console.log(
-      'integration?.apiKey?.datastore?.owner?.subscriptions',
-      integration?.apiKey?.datastore?.owner?.subscriptions
-    );
-
-    return {
-      props: {
-        // apiKey: integration?.apiKey?.key || '',
-        isPremium:
-          (integration?.apiKey?.datastore?.owner?.subscriptions?.length || 0) >
-          0,
-      },
-    };
-  }
+  return {
+    props: {
+      isPremium: (integration?.agent?.owner?.subscriptions?.length || 0) > 0,
+    },
+  };
+  // }
 
   return { props: {} };
 };

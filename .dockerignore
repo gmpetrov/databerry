@@ -13,3 +13,4 @@ fly
 dist
 packages
 .env.local
+.env.prod.local

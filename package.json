@@ -13,7 +13,8 @@
     "prisma:migrate:dev": "dotenv -e .env.local -- prisma migrate dev",
     "prisma:migrate:prod": "dotenv -e .env.local -- prisma migrate deploy",
     "worker:datasource-loader": "dotenv -e .env.local -- npx tsx --watch workers/datasource-loader.ts",
-    "dotenv": "dotenv -e .env.local"
+    "dotenv": "dotenv -e .env.local",
+    "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -86,6 +87,7 @@
     "react-frame-component": "^5.2.6",
     "react-hook-form": "^7.43.8",
     "react-syntax-highlighter": "^15.5.0",
+    "sharp": "^0.32.1",
     "stripe": "^11.17.0",
     "superjson": "^1.12.2",
     "swr": "^2.1.1",

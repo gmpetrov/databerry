@@ -1,15 +1,15 @@
 import Alert from '@mui/joy/Alert';
-import Divider from '@mui/joy/Divider';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { DatasourceType } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { UpsertDatasourceSchema } from '@app/types/models';
-import findDomainPages from '@app/utils/find-domain-pages';
+import accountConfig from '@app/utils/account-config';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
@@ -50,6 +50,7 @@ export const WebSiteSourceSchema = UpsertDatasourceSchema.extend({
 });
 
 function Nested() {
+  const { data: session, status } = useSession();
   const { control, register } =
     useFormContext<z.infer<typeof WebSiteSourceSchema>>();
 
@@ -63,7 +64,18 @@ function Nested() {
           {...register('config.source')}
         />
         <Alert color="info">
-          Will automatically try to find all pages on the site during 45s max.
+          <Stack>
+            Will automatically try to find all pages on the website during 45s
+            max.
+            <strong>
+              Limited to{' '}
+              {
+                accountConfig[session?.user?.currentPlan!]?.limits
+                  ?.maxWebsiteURL
+              }
+              {' Pages on your plan.'}
+            </strong>
+          </Stack>
         </Alert>
       </Stack>
 
@@ -79,7 +91,19 @@ function Nested() {
           {...register('config.sitemap')}
         />
 
-        <Alert color="info">Will process all pages in the sitemap.</Alert>
+        <Alert color="info">
+          <Stack>
+            Will process all pages in the sitemap.
+            <strong>
+              Limited to{' '}
+              {
+                accountConfig[session?.user?.currentPlan!]?.limits
+                  ?.maxWebsiteURL
+              }
+              {' Pages on your plan.'}
+            </strong>
+          </Stack>
+        </Alert>
       </Stack>
     </Stack>
   );
