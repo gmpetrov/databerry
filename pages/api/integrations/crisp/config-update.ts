@@ -24,11 +24,11 @@ export const updateCrispConfig = async (
 ) => {
   const data = req.body as z.infer<typeof schema>;
 
-  const websites = await getConnectedWebsites();
+  // const websites = await getConnectedWebsites();
 
-  if (data.token !== websites[data.website_id]?.token) {
-    throw new ApiError(ApiErrorType.INVALID_REQUEST);
-  }
+  // if (data.token !== websites[data.website_id]?.token) {
+  //   throw new ApiError(ApiErrorType.INVALID_REQUEST);
+  // }
 
   const agent = await prisma.agent.findUnique({
     where: {
