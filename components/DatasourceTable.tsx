@@ -93,7 +93,11 @@ const SynchButton = ({
     });
   }, [datasource?.status]);
 
-  if (![DatasourceType.web_page].includes(datasource.type as any)) {
+  if (
+    ![DatasourceType.web_page, DatasourceType.web_site].includes(
+      datasource.type as any
+    )
+  ) {
     return null;
   }
 
