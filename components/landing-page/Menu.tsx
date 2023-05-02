@@ -50,7 +50,7 @@ const solutions = [
     ),
   },
   {
-    name: 'Datberry API',
+    name: 'GriotAI API',
     description: 'Document Retrieval as a service',
     href: 'https://docs.databerry.ai/introduction',
     icon: ServerIcon,
