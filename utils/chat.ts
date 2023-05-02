@@ -47,16 +47,17 @@ const chat = async ({
 
   const finalPrompt = `${prompt || CUSTOMER_SUPPORT}
 Ensure that your responses are clear, concise, and do not reiterate the same information. Create a final answer with references ("SOURCE") if relevant.
-Never break the character mentioned above and ALWAYS answer in the same language as the customer.
 
-Context:
+START_CONTEXT:
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
 SOURCE: https://www.spotify.com/us/premium
 CHUNK: ...
 SOURCE: ...
+END_CONTEXT
 
-Customer's Query:
+START_QUERY:
 What is the cost of the Premium plan and what features does it include?
+END_QUERY
 
 Answer:
 The cost of the Premium plan is $9.99 per month. The features included in this plan are:
@@ -67,16 +68,19 @@ The cost of the Premium plan is $9.99 per month. The features included in this p
 
 SOURCE: https://www.spotify.com/us/premium
 
-Context:
+START_CONTEXT:
 ${context}
+END_CONTEXT
 
-Customer's Query:
+START_QUERY (this is the last query):
 ${query}
+END_QUERY
 
-Answer with readability in mind using same language as the customer:`;
+Answer (use same language as the query, the text between START_QUERY and END_QUERY, but never translate SOURCES and ulrs):`;
 
   const model = new OpenAI({
     modelName: 'gpt-3.5-turbo',
+    temperature: 0,
     streaming: Boolean(stream),
     callbacks: [
       {

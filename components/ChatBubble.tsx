@@ -1,3 +1,7 @@
+import {
+  EventStreamContentType,
+  fetchEventSource,
+} from '@microsoft/fetch-event-source';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
@@ -15,7 +19,7 @@ import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import { AgentInterfaceConfig } from '@app/types/models';
-import { ApiErrorType } from '@app/utils/api-error';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 
 export const theme = extendTheme({
@@ -98,46 +102,129 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   };
 
   const handleChatSubmit = async (message: string) => {
+    if (!message) {
+      return;
+    }
+
+    const history = [...messages, { from: 'human', message }];
+    const nextIndex = history.length;
+
+    setMessages(history as any);
+
+    let answer = '';
+    let error = '';
+
     try {
-      if (!message) {
-        return;
-      }
+      const ctrl = new AbortController();
+      let buffer = '';
 
-      const history = [...messages, { from: 'human', message }];
+      class RetriableError extends Error {}
+      class FatalError extends Error {}
 
-      setMessages(history as any);
-
-      const result = await fetch(
+      await fetchEventSource(
         `${API_URL}/api/external/agents/${props.agentId}/query`,
         {
           method: 'POST',
-          body: JSON.stringify({
-            query: message,
-          }),
           headers: {
             'Content-Type': 'application/json',
+            // Accept: 'text/event-stream',
+          },
+          body: JSON.stringify({
+            streaming: true,
+            query: message,
+          }),
+          signal: ctrl.signal,
+
+          async onopen(response) {
+            if (
+              response.ok &&
+              response.headers.get('content-type') === EventStreamContentType
+            ) {
+              return; // everything's good
+            } else if (
+              response.status >= 400 &&
+              response.status < 500 &&
+              response.status !== 429
+            ) {
+              if (response.status === 402) {
+                throw new ApiError(ApiErrorType.USAGE_LIMIT);
+              }
+              // client-side errors are usually non-retriable:
+              throw new FatalError();
+            } else {
+              throw new RetriableError();
+            }
+          },
+          onclose() {
+            // if the server closes the connection unexpectedly, retry:
+            throw new RetriableError();
+          },
+          onerror(err) {
+            console.log('on error', err, Object.keys(err));
+            if (err instanceof FatalError) {
+              ctrl.abort();
+              throw err; // rethrow to stop the operation
+            } else if (err instanceof ApiError) {
+              console.log('ApiError', ApiError);
+              throw err;
+            } else {
+              // do nothing to automatically retry. You can also
+              // return a specific retry interval here.
+            }
+          },
+
+          onmessage: (event) => {
+            if (event.data === '[DONE]') {
+              ctrl.abort();
+            } else if (event.data?.startsWith('[ERROR]')) {
+              ctrl.abort();
+
+              setMessages([
+                ...history,
+                {
+                  from: 'agent',
+                  message: event.data.replace('[ERROR]', ''),
+                } as any,
+              ]);
+            } else {
+              // const data = JSON.parse(event.data || `{}`);
+              buffer += event.data as string;
+              console.log(buffer);
+
+              const h = [...history];
+
+              if (h?.[nextIndex]) {
+                h[nextIndex].message = `${buffer}`;
+              } else {
+                h.push({ from: 'agent', message: buffer });
+              }
+
+              setMessages(h as any);
+            }
           },
         }
       );
-
-      const data = await result.json();
-
-      let answer = data?.answer;
-
-      if (data.error) {
-        switch (data.error) {
-          case ApiErrorType.USAGE_LIMIT:
-            answer = 'Usage limit reached. Please contact support.';
-            break;
-          default:
-            answer = `Error: ${data.error}`;
-            break;
-        }
-      }
-
-      setMessages([...history, { from: 'agent', message: answer }] as any);
     } catch (err) {
-      console.error(err);
+      console.log('err', err);
+      if (err instanceof ApiError) {
+        if (err?.message) {
+          error = err?.message;
+
+          if (error === ApiErrorType.USAGE_LIMIT) {
+            answer =
+              'Usage limit reached. Please upgrade your plan to get higher usage.';
+          } else {
+            answer = `Error: ${error}`;
+          }
+        } else {
+          answer = `Error: ${error}`;
+        }
+
+        setMessages([
+          ...messages,
+          { from: 'agent', message: answer as string },
+        ]);
+      }
     }
   };
 

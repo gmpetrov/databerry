@@ -22,6 +22,8 @@ import prisma from '@app/utils/prisma-client';
 
 export default function CrispConfig(props: { agent: Agent }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+
   const [isApiKeyValid, setIsApiKeyValid] = useState(!!props.agent);
   const [isFetchAgentsLoading, setIsFetchAgentsLoading] = useState(false);
   const [inputValue, setInputValue] = useState(
@@ -48,7 +50,7 @@ export default function CrispConfig(props: { agent: Agent }) {
       console.log('agents', agents);
     } catch (err) {
       console.log('err', err);
-      alert(err);
+      setSubmitError(JSON.stringify(err));
     } finally {
       setIsFetchAgentsLoading(false);
     }
@@ -75,7 +77,7 @@ export default function CrispConfig(props: { agent: Agent }) {
         }),
       }).then(() => {
         console.log('worked');
-        alert('Settings saved! You can now close this window.');
+        setShowSuccessAlert(true);
       });
     } catch (error) {
       console.log(error);
@@ -106,8 +108,14 @@ export default function CrispConfig(props: { agent: Agent }) {
       </Head>
       {/* <Header /> */}
       <Box className="flex flex-col items-center justify-center w-screen h-screen p-4 overflow-y-auto bg-black">
-        <Stack className="w-full max-w-sm mx-auto">
+        <Stack className="w-full max-w-sm mx-auto" gap={2}>
           {submitError && <Alert color="danger">{submitError}</Alert>}
+
+          {showSuccessAlert && (
+            <Alert color="success">
+              Settings saved! You can now close this window.
+            </Alert>
+          )}
 
           <Card variant="outlined">
             <Logo className="w-20 mx-auto mb-5" />
@@ -166,6 +174,7 @@ export default function CrispConfig(props: { agent: Agent }) {
                       setInputValue('');
                       setIsApiKeyValid(false);
                       setCurrentAgent(undefined);
+                      setShowSuccessAlert(false);
                     }}
                     variant="plain"
                   >
@@ -189,6 +198,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const websiteId = ctx.query.website_id as string;
   const token = ctx.query.token as string;
 
+  console.log('TOKEN', token);
+
   const redirect = {
     redirect: {
       destination: '/',
@@ -200,32 +211,32 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     return redirect;
   }
 
-  const websites = await getConnectedWebsites();
+  // const websites = await getConnectedWebsites();
 
-  if (token === websites[websiteId]?.token) {
-    const integration = await prisma.externalIntegration.findUnique({
-      where: {
-        integrationId: websiteId,
-      },
-      include: {
-        agent: {
-          include: {
-            owner: {
-              include: {
-                apiKeys: true,
-              },
+  // if (token === websites[websiteId]?.token) {
+  const integration = await prisma.externalIntegration.findUnique({
+    where: {
+      integrationId: websiteId,
+    },
+    include: {
+      agent: {
+        include: {
+          owner: {
+            include: {
+              apiKeys: true,
             },
           },
         },
       },
-    });
+    },
+  });
 
-    return {
-      props: {
-        agent: superjson.serialize(integration?.agent).json || null,
-      },
-    };
-  }
+  return {
+    props: {
+      agent: superjson.serialize(integration?.agent).json || null,
+    },
+  };
+  // }
 
   return redirect;
 };

@@ -6,6 +6,7 @@ import {
 } from '@prisma/client';
 
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
+import accountConfig from '@app/utils/account-config';
 import { s3 } from '@app/utils/aws';
 import { DatastoreManager } from '@app/utils/datastores';
 import type { Document } from '@app/utils/datastores/base';
@@ -49,11 +50,13 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     throw new Error('Not found');
   }
 
+  const currentPlan =
+    datasource?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
+
   try {
     guardDataProcessingUsage({
       usage: datasource?.owner?.usage as Usage,
-      plan:
-        datasource?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0,
+      plan: currentPlan,
     });
   } catch {
     logger.info(`${data.datasourceId}: usage limit reached`);
@@ -96,7 +99,10 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
       return;
     }
 
-    // urls = urls.slice(0, 10);
+    urls = urls.slice(
+      0,
+      accountConfig[currentPlan]?.limits?.maxWebsiteURL || 10
+    );
 
     const ids = urls.map(() => cuid());
     const idsSitemaps = nestedSitemaps.map(() => cuid());
