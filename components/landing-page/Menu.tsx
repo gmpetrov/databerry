@@ -28,7 +28,7 @@ const solutions = [
     name: 'Crisp Plugin',
     description:
       'Connect your agent to Crisp. Summarize conversations and more!',
-    href: 'https://www.databerry.ai/products/chat-site',
+    href: 'https://www.databerry.ai/products/crisp-plugin',
     icon: (props: any) => (
       <img
         {...props}
