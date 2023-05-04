@@ -1,7 +1,7 @@
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import { IconButton,useColorScheme } from '@mui/joy';
-import React from 'react';
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+import { IconButton, useColorScheme } from "@mui/joy";
+import React from "react";
 
 export default function ColorSchemeToggle() {
   const { mode, setMode } = useColorScheme();
@@ -19,14 +19,14 @@ export default function ColorSchemeToggle() {
       variant="outlined"
       color="primary"
       onClick={() => {
-        if (mode === 'light') {
-          setMode('dark');
+        if (mode === "light") {
+          setMode("dark");
         } else {
-          setMode('light');
+          setMode("light");
         }
       }}
     >
-      {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+      {mode === "light" ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
     </IconButton>
   );
 }

@@ -2,25 +2,25 @@ import {
   CloudArrowUpIcon,
   LockClosedIcon,
   ServerIcon,
-} from '@heroicons/react/20/solid';
+} from "@heroicons/react/20/solid";
 
 const features = [
   {
-    name: 'Efficient',
+    name: "Efficient",
     description: `Your AI chatbot can answer frequently asked questions and handle simple support requests, allowing your team to focus on providing more personalized assistance to
       customers.`,
     icon: CloudArrowUpIcon,
   },
   {
-    name: '24/7 Support',
+    name: "24/7 Support",
     description:
-      'Your AI chatbot can handle customer inquiries around the clock, providing efficient support even when your team is unavailable.',
+      "Your AI chatbot can handle customer inquiries around the clock, providing efficient support even when your team is unavailable.",
     icon: LockClosedIcon,
   },
   {
-    name: 'Easy to Implement',
+    name: "Easy to Implement",
     description:
-      'Integrating your AI chatbot onto your website is a breeze - simply copy and paste our code onto your site and start providing instant support to your visitors.',
+      "Integrating your AI chatbot onto your website is a breeze - simply copy and paste our code onto your site and start providing instant support to your visitors.",
     icon: ServerIcon,
   },
 ];
@@ -55,7 +55,7 @@ export default function Example() {
                         aria-hidden="true"
                       />
                       {feature.name}
-                    </dt>{' '}
+                    </dt>{" "}
                     <dd className="inline">{feature.description}</dd>
                   </div>
                 ))}

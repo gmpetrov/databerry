@@ -1,25 +1,25 @@
-import { ShareIcon, StarIcon, SwatchIcon } from '@heroicons/react/20/solid';
+import { ShareIcon, StarIcon, SwatchIcon } from "@heroicons/react/20/solid";
 
 const features = [
   {
-    name: 'Personalized Engagement',
+    name: "Personalized Engagement",
     description:
-      'Clones of yourself in the form of AI chatbots can help to engage with your followers on Whatsapp or messenger with your knowledge and personality',
-    href: '#',
+      "Clones of yourself in the form of AI chatbots can help to engage with your followers on Whatsapp or messenger with your knowledge and personality",
+    href: "#",
     icon: SwatchIcon,
   },
   {
-    name: 'Become an Advisor or Influencer',
+    name: "Become an Advisor or Influencer",
     description:
-      'Your personal Whatsapp AI chatbot can act as a digital mentor or influencer, guiding your followers and sharing your expertise.',
-    href: '#',
+      "Your personal Whatsapp AI chatbot can act as a digital mentor or influencer, guiding your followers and sharing your expertise.",
+    href: "#",
     icon: StarIcon,
   },
   {
-    name: 'Share Your Knowledge',
+    name: "Share Your Knowledge",
     description:
-      'Train your AI chatbot to share your digital knowledge and insights, such as investment advice, content creation, or even cooking recipes.',
-    href: '#',
+      "Train your AI chatbot to share your digital knowledge and insights, such as investment advice, content creation, or even cooking recipes.",
+    href: "#",
     icon: ShareIcon,
   },
 ];

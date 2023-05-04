@@ -1,8 +1,8 @@
-import { Queue } from 'bullmq';
-import Redis from 'ioredis';
+import { Queue } from "bullmq";
+import Redis from "ioredis";
 
-import { TaskQueue } from '@app/types';
-import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
+import { TaskQueue } from "@app/types";
+import { TaskLoadDatasourceRequestSchema } from "@app/types/dtos";
 
 const connection = new Redis(process.env.REDIS_URL!);
 
@@ -11,7 +11,7 @@ const datasourceLoadQueue = new Queue(TaskQueue.load_datasource, {
   defaultJobOptions: {
     attempts: 2,
     backoff: {
-      type: 'exponential',
+      type: "exponential",
       delay: 5000,
     },
   },

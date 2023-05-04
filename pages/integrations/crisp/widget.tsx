@@ -8,23 +8,23 @@ import {
   FormLabel,
   Input,
   Stack,
-} from '@mui/joy';
-import axios from 'axios';
-import { GetServerSidePropsContext } from 'next';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+} from "@mui/joy";
+import axios from "axios";
+import { GetServerSidePropsContext } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
-import Logo from '@app/components/Logo';
-import { getConnectedWebsites } from '@app/utils/crisp';
-import prisma from '@app/utils/prisma-client';
+import Logo from "@app/components/Logo";
+import { getConnectedWebsites } from "@app/utils/crisp";
+import prisma from "@app/utils/prisma-client";
 
 // query params website_id=5678ba03-6008-4fe3-aeef-aa78466c0bbc&session_id=session_f55e6731-51a4-4815-a1e3-655db78bb358&token=xxx&locale=en
 
 export default function CrispConfig(props: { isPremium?: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
   // const [inputValue, setInputValue] = useState(props.apiKey);
-  const [submitError, setSubmitError] = useState('');
+  const [submitError, setSubmitError] = useState("");
   const router = useRouter();
 
   // const sendConfig = async (e: any) => {
@@ -59,7 +59,7 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
   // };
   const handleSummarize = async () => {
     setIsLoading(true);
-    await axios.post('/api/crisp/widget', {
+    await axios.post("/api/crisp/widget", {
       website_id: router.query.website_id,
       session_id: router.query.session_id,
       token: router.query.token,
@@ -87,7 +87,7 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
 
             <Card>
               <form className="flex">
-                <Stack direction={'column'} spacing={1} width={'100%'}>
+                <Stack direction={"column"} spacing={1} width={"100%"}>
                   <Button
                     loading={isLoading}
                     className="w-full max-w-xs mx-auto"
@@ -115,7 +115,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const token = ctx.query.token as string;
   const redirect = {
     redirect: {
-      destination: '/',
+      destination: "/",
       permanent: false,
     },
   };
@@ -135,7 +135,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
             include: {
               subscriptions: {
                 where: {
-                  status: 'active',
+                  status: "active",
                 },
               },
               apiKeys: true,

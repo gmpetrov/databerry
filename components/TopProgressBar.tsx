@@ -1,5 +1,5 @@
-import Router from 'next/router';
-import NProgress from 'nprogress';
+import Router from "next/router";
+import NProgress from "nprogress";
 
 let timer: any;
 let state: any;
@@ -7,11 +7,11 @@ let activeRequests = 0;
 const delay = 250;
 
 function load() {
-  if (state === 'loading') {
+  if (state === "loading") {
     return;
   }
 
-  state = 'loading';
+  state = "loading";
 
   timer = setTimeout(function () {
     NProgress.start();
@@ -23,15 +23,15 @@ function stop() {
     return;
   }
 
-  state = 'stop';
+  state = "stop";
 
   clearTimeout(timer);
   NProgress.done();
 }
 
-Router.events.on('routeChangeStart', load);
-Router.events.on('routeChangeComplete', stop);
-Router.events.on('routeChangeError', stop);
+Router.events.on("routeChangeStart", load);
+Router.events.on("routeChangeComplete", stop);
+Router.events.on("routeChangeError", stop);
 
 const originalFetch = window.fetch;
 window.fetch = async function (...args) {

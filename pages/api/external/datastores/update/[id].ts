@@ -1,15 +1,15 @@
-import { DatasourceStatus, DatastoreVisibility } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import { DatasourceStatus, DatastoreVisibility } from "@prisma/client";
+import { NextApiResponse } from "next";
 
-import { UpdateRequestSchema } from '@app/types/dtos';
-import { UpdateResponseSchema } from '@app/types/dtos';
-import { AppNextApiRequest } from '@app/types/index';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import prepareSourceForWorker from '@app/utils/prepare-source-for-worker';
-import prisma from '@app/utils/prisma-client';
-import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
-import validate from '@app/utils/validate';
+import { UpdateRequestSchema } from "@app/types/dtos";
+import { UpdateResponseSchema } from "@app/types/dtos";
+import { AppNextApiRequest } from "@app/types/index";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import prepareSourceForWorker from "@app/utils/prepare-source-for-worker";
+import prisma from "@app/utils/prisma-client";
+import triggerTaskLoadDatasource from "@app/utils/trigger-task-load-datasource";
+import validate from "@app/utils/validate";
 
 const handler = createApiHandler();
 
@@ -19,7 +19,7 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')?.[1];
+  const token = authHeader && authHeader.split(" ")?.[1];
 
   if (!datastoreId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -92,7 +92,7 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
       },
     ]);
   } catch (err) {
-    console.log('ERROR TRIGGERING TASK', err);
+    console.log("ERROR TRIGGERING TASK", err);
 
     await prisma.appDatasource.update({
       where: {

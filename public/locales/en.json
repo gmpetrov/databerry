@@ -1,9 +1,8 @@
 {
-    "common": {
-        "title" : "GriotAI - Build your ChatGPT Agent Trained on your own data"
-
-    },
-    "hero": {
-        "title": "Build Your Own"
-    }
+  "common": {
+    "title": "GriotAI - Build your ChatGPT Agent Trained on your own data"
+  },
+  "hero": {
+    "title": "Build Your Own"
+  }
 }

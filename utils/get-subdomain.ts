@@ -1,5 +1,5 @@
 const getSubdomain = (url: string) => {
-  const subdomain = url?.split('.')[0];
+  const subdomain = url?.split(".")[0];
 
   return subdomain;
 };

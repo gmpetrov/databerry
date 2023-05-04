@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { NextApiResponse } from 'next';
+import axios from "axios";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest, AppStatus } from '@app/types';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest, AppStatus } from "@app/types";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createApiHandler();
 
@@ -24,11 +24,11 @@ export const getStatus = async (
     const client = axios.create({
       baseURL: process.env.QDRANT_API_URL,
       headers: {
-        'api-key': process.env.QDRANT_API_KEY,
+        "api-key": process.env.QDRANT_API_KEY,
       },
     });
 
-    await client.get('/aliases');
+    await client.get("/aliases");
   } catch {
     vectorDbCheck = AppStatus.KO;
   }

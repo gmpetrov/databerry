@@ -1,51 +1,51 @@
-import AddIcon from '@mui/icons-material/Add';
-import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import SettingsIcon from '@mui/icons-material/Settings';
-import type { ColorPaletteProp } from '@mui/joy';
-import Box from '@mui/joy/Box';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Button from '@mui/joy/Button';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Tab from '@mui/joy/Tab';
-import TabList from '@mui/joy/TabList';
-import Tabs from '@mui/joy/Tabs';
-import Typography from '@mui/joy/Typography';
-import { Prisma } from '@prisma/client';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
+import AddIcon from "@mui/icons-material/Add";
+import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import SettingsIcon from "@mui/icons-material/Settings";
+import type { ColorPaletteProp } from "@mui/joy";
+import Box from "@mui/joy/Box";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import Button from "@mui/joy/Button";
+import Chip from "@mui/joy/Chip";
+import Divider from "@mui/joy/Divider";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Tab from "@mui/joy/Tab";
+import TabList from "@mui/joy/TabList";
+import Tabs from "@mui/joy/Tabs";
+import Typography from "@mui/joy/Typography";
+import { Prisma } from "@prisma/client";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { ReactElement } from "react";
+import * as React from "react";
 
-import Layout from '@app/components/Layout';
-import UsageLimitModal from '@app/components/UsageLimitModal';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
-import useStateReducer from '@app/hooks/useStateReducer';
-import { RouteNames } from '@app/types';
-import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
-import { withAuth } from '@app/utils/withAuth';
+import Layout from "@app/components/Layout";
+import UsageLimitModal from "@app/components/UsageLimitModal";
+import useGetDatastoreQuery from "@app/hooks/useGetDatastoreQuery";
+import useStateReducer from "@app/hooks/useStateReducer";
+import { RouteNames } from "@app/types";
+import guardDataProcessingUsage from "@app/utils/guard-data-processing-usage";
+import { withAuth } from "@app/utils/withAuth";
 
 const CreateDatasourceModal = dynamic(
-  () => import('@app/components/CreateDatasourceModal'),
+  () => import("@app/components/CreateDatasourceModal"),
   {
     ssr: false,
   }
 );
 
 const DatastoreSettings = dynamic(
-  () => import('@app/components/DatastoreSettings'),
+  () => import("@app/components/DatastoreSettings"),
   {
     ssr: false,
   }
 );
 
-const Datasources = dynamic(() => import('@app/components/Datasources'), {
+const Datasources = dynamic(() => import("@app/components/Datasources"), {
   ssr: false,
 });
 
@@ -67,8 +67,8 @@ export default function DatastorePage() {
   };
 
   React.useEffect(() => {
-    if (typeof window !== 'undefined' && !router.query.tab) {
-      handleChangeTab('datasources');
+    if (typeof window !== "undefined" && !router.query.tab) {
+      handleChangeTab("datasources");
     }
   }, [router.query.tab]);
 
@@ -96,11 +96,11 @@ export default function DatastorePage() {
           md: 3,
         },
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         minWidth: 0,
         // height: '100dvh',
-        width: '100%',
+        width: "100%",
         gap: 1,
       })}
     >
@@ -110,10 +110,10 @@ export default function DatastorePage() {
           aria-label="breadcrumbs"
           separator={<ChevronRightRoundedIcon />}
           sx={{
-            '--Breadcrumbs-gap': '1rem',
-            '--Icon-fontSize': '16px',
-            fontWeight: 'lg',
-            color: 'neutral.400',
+            "--Breadcrumbs-gap": "1rem",
+            "--Icon-fontSize": "16px",
+            fontWeight: "lg",
+            color: "neutral.400",
             px: 0,
           }}
         >
@@ -149,19 +149,19 @@ export default function DatastorePage() {
 
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
+            display: "flex",
+            alignItems: "center",
             mt: 1,
             mb: 2,
             gap: 1,
-            flexWrap: 'wrap',
+            flexWrap: "wrap",
             // '& > *': {
             //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
             //   flexGrow: 1,
             // },
           }}
         >
-          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
             <Typography level="h1" fontSize="xl4">
               {getDatastoreQuery?.data?.name}
             </Typography>
@@ -170,8 +170,8 @@ export default function DatastorePage() {
               variant="soft"
               color={
                 {
-                  public: 'success',
-                  private: 'neutral',
+                  public: "success",
+                  private: "neutral",
                 }[getDatastoreQuery?.data?.visibility!] as ColorPaletteProp
               }
             >
@@ -181,10 +181,10 @@ export default function DatastorePage() {
 
           <Box
             sx={{
-              display: 'flex',
-              ml: 'auto',
+              display: "flex",
+              ml: "auto",
               gap: 2,
-              '& > *': { flexGrow: 1 },
+              "& > *": { flexGrow: 1 },
             }}
           >
             <Button
@@ -211,12 +211,12 @@ export default function DatastorePage() {
 
         <Tabs
           aria-label="Icon tabs"
-          defaultValue={(router.query.tab as string) || 'datasources'}
+          defaultValue={(router.query.tab as string) || "datasources"}
           size="md"
           sx={{
-            borderRadius: 'lg',
-            display: 'inline-flex',
-            mr: 'auto',
+            borderRadius: "lg",
+            display: "inline-flex",
+            mr: "auto",
             //   mt: 4,
           }}
           onChange={(event, value) => {
@@ -224,13 +224,13 @@ export default function DatastorePage() {
           }}
         >
           <TabList size="sm">
-            <Tab value={'datasources'}>
+            <Tab value={"datasources"}>
               <ListItemDecorator>
                 <AutoGraphRoundedIcon />
               </ListItemDecorator>
               Datasources
             </Tab>
-            <Tab value={'settings'}>
+            <Tab value={"settings"}>
               <ListItemDecorator>
                 <SettingsIcon />
               </ListItemDecorator>
@@ -241,11 +241,11 @@ export default function DatastorePage() {
 
         <Divider sx={{ my: 4 }} />
 
-        {router.query.tab === 'datasources' && getDatastoreQuery?.data?.id && (
+        {router.query.tab === "datasources" && getDatastoreQuery?.data?.id && (
           <Datasources datastoreId={getDatastoreQuery?.data?.id} />
         )}
 
-        {getDatastoreQuery?.data && router.query.tab === 'settings' && (
+        {getDatastoreQuery?.data && router.query.tab === "settings" && (
           <DatastoreSettings />
         )}
 

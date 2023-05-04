@@ -1,12 +1,12 @@
-import colors from '@mui/joy/colors';
+import colors from "@mui/joy/colors";
 import {
   extendTheme as extendJoyTheme,
   FontSize,
   Theme as JoyTheme,
   ThemeCssVar as JoyThemeCssVar,
   ThemeVars as JoyThemeVars,
-} from '@mui/joy/styles';
-import type { TypeBackground } from '@mui/material';
+} from "@mui/joy/styles";
+import type { TypeBackground } from "@mui/material";
 import {
   experimental_extendTheme as extendMuiTheme,
   Overlays,
@@ -31,14 +31,14 @@ import {
   TypeAction,
   TypeText,
   ZIndex,
-} from '@mui/material/styles';
-import { CommonColors } from '@mui/material/styles/createPalette';
-import type {} from '@mui/material/themeCssVarsAugmentation';
-import { deepmerge } from '@mui/utils';
-import * as React from 'react';
+} from "@mui/material/styles";
+import { CommonColors } from "@mui/material/styles/createPalette";
+import type {} from "@mui/material/themeCssVarsAugmentation";
+import { deepmerge } from "@mui/utils";
+import * as React from "react";
 
 // extends Joy theme to include tokens from Material UI
-declare module '@mui/joy/styles' {
+declare module "@mui/joy/styles" {
   interface Palette {
     secondary: PaletteColorChannel;
     error: PaletteColorChannel;
@@ -78,17 +78,17 @@ declare module '@mui/joy/styles' {
 
 type MergedThemeCssVar = { [k in JoyThemeCssVar]: true };
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Theme {
     // put everything back to Material UI `theme.vars`
-    vars: JoyTheme['vars'];
+    vars: JoyTheme["vars"];
   }
 
   // makes Material UI theme.getCssVar() sees Joy theme tokens
   interface ThemeCssVarOverrides extends MergedThemeCssVar {}
 }
 
-declare module '@mui/material/SvgIcon' {
+declare module "@mui/material/SvgIcon" {
   interface SvgIconPropsSizeOverrides extends Record<keyof FontSize, true> {}
 
   interface SvgIconPropsColorOverrides {
@@ -121,7 +121,7 @@ declare module '@mui/material/SvgIcon' {
 // };
 
 const muiTheme = extendMuiTheme({
-  cssVarPrefix: 'joy',
+  cssVarPrefix: "joy",
   colorSchemes: {
     light: {
       palette: {
@@ -144,8 +144,8 @@ const muiTheme = extendMuiTheme({
           main: colors.yellow[200],
         },
         common: {
-          white: '#FFF',
-          black: '#09090D',
+          white: "#FFF",
+          black: "#09090D",
         },
         divider: colors.grey[200],
         text: {
@@ -175,8 +175,8 @@ const muiTheme = extendMuiTheme({
           main: colors.yellow[300],
         },
         common: {
-          white: '#FFF',
-          black: '#09090D',
+          white: "#FFF",
+          black: "#09090D",
         },
         divider: colors.grey[800],
         text: {
@@ -206,8 +206,8 @@ const joyTheme = extendJoyTheme({
     },
   },
   fontFamily: {
-    body: 'Josefin Sans, sans-serif',
-    display: 'Josefin Sans, sans-serif',
+    body: "Josefin Sans, sans-serif",
+    display: "Josefin Sans, sans-serif",
   },
   typography: {
     display1: {
@@ -215,10 +215,10 @@ const joyTheme = extendJoyTheme({
       // If you have a custom prefix, you have to use it instead.
       // For more details about the custom prefix, go to https://mui.com/joy-ui/customization/using-css-variables/#custom-prefix
       background:
-        'linear-gradient(-30deg, var(--joy-palette-primary-900), var(--joy-palette-primary-400))',
+        "linear-gradient(-30deg, var(--joy-palette-primary-900), var(--joy-palette-primary-400))",
       // `Webkit*` properties must come later.
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
     },
   },
 });

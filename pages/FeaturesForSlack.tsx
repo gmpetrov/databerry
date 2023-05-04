@@ -8,21 +8,21 @@ import {
   ServerIcon,
   SparklesIcon,
   UsersIcon,
-} from '@heroicons/react/20/solid';
+} from "@heroicons/react/20/solid";
 
 const features = [
   {
-    name: 'Onboard with Ease',
+    name: "Onboard with Ease",
     description: `Your new team members can now be onboarded quickly and efficiently with the help of your personal Slack AI chatbot, trained on your company's wiki or Notion pages.`,
     icon: UsersIcon,
   },
   {
-    name: 'Efficient Communication',
+    name: "Efficient Communication",
     description: `YourAIchatbotcanprovide fast, efficient communication between team members, streamlining your team's productivity.`,
     icon: ChatBubbleLeftRightIcon,
   },
   {
-    name: 'Automate Tasks (Coming soon)',
+    name: "Automate Tasks (Coming soon)",
     description: `YourAIchatbotcansimplify your team's workflow by automating repetitive tasks, freeing up time for more meaningful work.`,
     icon: SparklesIcon,
   },
@@ -79,7 +79,7 @@ export default function Example() {
                   aria-hidden="true"
                 />
                 {feature.name}
-              </dt>{' '}
+              </dt>{" "}
               <dd className="inline">{feature.description}</dd>
             </div>
           ))}

@@ -1,9 +1,9 @@
-import '../widgets/chat-bubble';
+import "../widgets/chat-bubble";
 
-import dynamic from 'next/dynamic';
-import { ReactElement, useState } from 'react';
+import dynamic from "next/dynamic";
+import { ReactElement, useState } from "react";
 
-import Layout from '@app/components/Layout';
+import Layout from "@app/components/Layout";
 export default function TestPage() {
   return (
     <>

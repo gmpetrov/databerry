@@ -3,25 +3,25 @@ import {
   HeartIcon,
   LockClosedIcon,
   ServerIcon,
-} from '@heroicons/react/20/solid';
+} from "@heroicons/react/20/solid";
 
 const features = [
   {
-    name: 'Easy to Use',
+    name: "Easy to Use",
     description:
-      'Our no-code platform allows you to create and manage your AI chatbots with ease, even with no technical knowledge.',
+      "Our no-code platform allows you to create and manage your AI chatbots with ease, even with no technical knowledge.",
     icon: HeartIcon,
   },
   {
-    name: 'Data, APIs integrations',
+    name: "Data, APIs integrations",
     description:
-      'Build highly integrated LLM agents that connect to data and APIs, opening up a world of possibilities for limitless applications.',
+      "Build highly integrated LLM agents that connect to data and APIs, opening up a world of possibilities for limitless applications.",
     icon: ServerIcon,
   },
   {
-    name: 'Seamless Integrations',
+    name: "Seamless Integrations",
     description:
-      'Integrate your AI chatbot onto Slack, Whatsapp and other platforms with ease, and start engaging with your audience on the channels they prefer.',
+      "Integrate your AI chatbot onto Slack, Whatsapp and other platforms with ease, and start engaging with your audience on the channels they prefer.",
     icon: CloudArrowUpIcon,
   },
 ];
@@ -53,7 +53,7 @@ export default function Example() {
                         aria-hidden="true"
                       />
                       {feature.name}
-                    </dt>{' '}
+                    </dt>{" "}
                     <dd className="inline">{feature.description}</dd>
                   </div>
                 ))}

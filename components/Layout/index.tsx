@@ -1,23 +1,23 @@
-import MailRoundedIcon from '@mui/icons-material/MailRounded';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Chip, Divider, IconButton, Menu, MenuItem } from '@mui/joy';
-import Box from '@mui/joy/Box';
-import Typography from '@mui/joy/Typography';
-import axios from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/react';
-import React from 'react';
+import MailRoundedIcon from "@mui/icons-material/MailRounded";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Avatar, Chip, Divider, IconButton, Menu, MenuItem } from "@mui/joy";
+import Box from "@mui/joy/Box";
+import Typography from "@mui/joy/Typography";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { signOut, useSession } from "next-auth/react";
+import React from "react";
 
-import Logo from '../Logo';
+import Logo from "../Logo";
 
-import ColorSchemeToggle from './ColorSchemeToggle';
-import Header from './Header';
-import Main from './Main';
-import Navigation from './Navigation';
-import Root from './Root';
-import SideDrawer from './SideDrawer';
-import SideNav from './SideNav';
+import ColorSchemeToggle from "./ColorSchemeToggle";
+import Header from "./Header";
+import Main from "./Main";
+import Navigation from "./Navigation";
+import Root from "./Root";
+import SideDrawer from "./SideDrawer";
+import SideNav from "./SideNav";
 
 type Props = {
   children: React.ReactNode;
@@ -49,18 +49,18 @@ export default function Layout(props: Props) {
       <Root
         sx={{
           ...(drawerOpen && {
-            height: '100vh',
-            overflow: 'hidden',
+            height: "100vh",
+            overflow: "hidden",
           }),
-          maxHeight: '100vh',
+          maxHeight: "100vh",
         }}
       >
         <Header>
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
               gap: 1.5,
             }}
           >
@@ -68,7 +68,7 @@ export default function Layout(props: Props) {
               variant="outlined"
               size="sm"
               onClick={() => setDrawerOpen(true)}
-              sx={{ display: { sm: 'none' } }}
+              sx={{ display: { sm: "none" } }}
             >
               <MenuIcon />
             </IconButton>
@@ -113,7 +113,7 @@ export default function Layout(props: Props) {
               },
             }}
           /> */}
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5 }}>
             {/* <IconButton
               size="sm"
               variant="outlined"
@@ -166,16 +166,16 @@ export default function Layout(props: Props) {
             <Box
               onClick={openUserMenu as any}
               id="basic-demo-button"
-              aria-controls={isMenuOpen ? 'basic-menu' : undefined}
+              aria-controls={isMenuOpen ? "basic-menu" : undefined}
               aria-haspopup="true"
-              aria-expanded={isMenuOpen ? 'true' : undefined}
+              aria-expanded={isMenuOpen ? "true" : undefined}
             >
               <Avatar
                 size="sm"
                 src={session?.user?.image!}
                 sx={{
-                  ':hover': {
-                    cursor: 'pointer',
+                  ":hover": {
+                    cursor: "pointer",
                   },
                 }}
               />
@@ -202,9 +202,9 @@ export default function Layout(props: Props) {
 
         <Main
           sx={{
-            height: '100%',
-            maxHeight: '100%',
-            overflowY: 'scroll',
+            height: "100%",
+            maxHeight: "100%",
+            overflowY: "scroll",
           }}
         >
           {props.children}

@@ -1,16 +1,16 @@
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
-import Looks4RoundedIcon from '@mui/icons-material/Looks4Rounded';
-import LooksOneRoundedIcon from '@mui/icons-material/LooksOneRounded';
-import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
-import { Box, Button, Stack, Typography } from '@mui/joy';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import Looks3RoundedIcon from "@mui/icons-material/Looks3Rounded";
+import Looks4RoundedIcon from "@mui/icons-material/Looks4Rounded";
+import LooksOneRoundedIcon from "@mui/icons-material/LooksOneRounded";
+import LooksTwoRoundedIcon from "@mui/icons-material/LooksTwoRounded";
+import { Box, Button, Stack, Typography } from "@mui/joy";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Footer } from '@app/components/landing-page/Footer';
-import { Header } from '@app/components/landing-page/Header';
-import { RouteNames } from '@app/types';
+import { Footer } from "@app/components/landing-page/Footer";
+import { Header } from "@app/components/landing-page/Header";
+import { RouteNames } from "@app/types";
 
 export default function Home() {
   return (
@@ -26,12 +26,12 @@ export default function Home() {
       <main className="flex flex-col min-h-full mb-auto bg-black">
         <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            textAlign: 'center',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            textAlign: "center",
             p: {
               xs: 2,
               md: 4,
@@ -42,20 +42,20 @@ export default function Home() {
           <Stack gap={2}>
             <Typography
               level="h2"
-              fontWeight={'bold'}
+              fontWeight={"bold"}
               className="relative z-10 block"
               sx={(theme) => theme.typography.display1}
             >
               Slack Bot
             </Typography>
 
-            <Typography level={'h6'}>
+            <Typography level={"h6"}>
               Slack Bot trained on your company data
             </Typography>
           </Stack>
 
-          <Stack direction={'column'} gap={1} mt={4}>
-            <Link target="_blank" href={'https://crisp.chat/'}>
+          <Stack direction={"column"} gap={1} mt={4}>
+            <Link target="_blank" href={"https://crisp.chat/"}>
               <Image
                 className="w-20 mx-auto "
                 src="/slack-logo.png"
@@ -115,27 +115,27 @@ export default function Home() {
 
 const features = [
   {
-    name: 'Just paste your website url',
+    name: "Just paste your website url",
     description:
-      'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+      "We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)",
     icon: <LooksOneRoundedIcon className="w-6 h-6" />,
   },
   {
-    name: 'Training',
+    name: "Training",
     description:
-      'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+      "After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️",
     icon: <LooksTwoRoundedIcon className="w-6 h-6" />,
   },
   {
-    name: 'Install Slack plugin',
+    name: "Install Slack plugin",
     description:
-      'The final step is to install GriotAI Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
+      "The final step is to install GriotAI Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨",
     icon: <Looks3RoundedIcon className="w-6 h-6" />,
   },
   {
-    name: 'Auto Synch',
+    name: "Auto Synch",
     description:
-      'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+      "We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.",
     icon: <Looks4RoundedIcon className="w-6 h-6" />,
   },
 ];
@@ -163,7 +163,7 @@ export function PrimaryFeatures() {
                 <dt className="text-base font-semibold leading-7 text-gray-100">
                   <Box
                     className="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-lg"
-                    sx={{ backgroundColor: 'primary.600' }}
+                    sx={{ backgroundColor: "primary.600" }}
                   >
                     {/* <feature.icon
                       className="w-6 h-6 text-white"

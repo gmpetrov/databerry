@@ -1,29 +1,29 @@
 import {
   EventStreamContentType,
   fetchEventSource,
-} from '@microsoft/fetch-event-source';
-import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
-import Box from '@mui/joy/Box';
-import Card from '@mui/joy/Card';
-import colors from '@mui/joy/colors';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Divider from '@mui/joy/Divider';
-import IconButton from '@mui/joy/IconButton';
-import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/material/Stack';
-import { Agent } from '@prisma/client';
-import React, { useEffect, useMemo } from 'react';
+} from "@microsoft/fetch-event-source";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded";
+import Box from "@mui/joy/Box";
+import Card from "@mui/joy/Card";
+import colors from "@mui/joy/colors";
+import CssBaseline from "@mui/joy/CssBaseline";
+import Divider from "@mui/joy/Divider";
+import IconButton from "@mui/joy/IconButton";
+import { CssVarsProvider, extendTheme } from "@mui/joy/styles";
+import Typography from "@mui/joy/Typography";
+import Stack from "@mui/material/Stack";
+import { Agent } from "@prisma/client";
+import React, { useEffect, useMemo } from "react";
 
-import ChatBox from '@app/components/ChatBox';
-import { AgentInterfaceConfig } from '@app/types/models';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
+import ChatBox from "@app/components/ChatBox";
+import { AgentInterfaceConfig } from "@app/types/models";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import pickColorBasedOnBgColor from "@app/utils/pick-color-based-on-bgcolor";
 
 export const theme = extendTheme({
-  cssVarPrefix: 'databerry-chat-bubble',
+  cssVarPrefix: "databerry-chat-bubble",
   colorSchemes: {
     dark: {
       palette: {
@@ -55,7 +55,7 @@ export const theme = extendTheme({
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
-  primaryColor: '#000000',
+  primaryColor: "#000000",
   // initialMessage: 'Hi, how can I help you?',
   // position: 'right',
   // messageTemplates: ["What's the pricing?"],
@@ -70,14 +70,14 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     props.initConfig || defaultChatBubbleConfig
   );
   const [messages, setMessages] = React.useState(
-    [] as { from: 'human' | 'agent'; message: string }[]
+    [] as { from: "human" | "agent"; message: string }[]
   );
 
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(
-      config.primaryColor || '#ffffff',
-      '#ffffff',
-      '#000000'
+      config.primaryColor || "#ffffff",
+      "#ffffff",
+      "#000000"
     );
   }, [config.primaryColor]);
 
@@ -106,17 +106,17 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
       return;
     }
 
-    const history = [...messages, { from: 'human', message }];
+    const history = [...messages, { from: "human", message }];
     const nextIndex = history.length;
 
     setMessages(history as any);
 
-    let answer = '';
-    let error = '';
+    let answer = "";
+    let error = "";
 
     try {
       const ctrl = new AbortController();
-      let buffer = '';
+      let buffer = "";
 
       class RetriableError extends Error {}
       class FatalError extends Error {}
@@ -124,9 +124,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
       await fetchEventSource(
         `${API_URL}/api/external/agents/${props.agentId}/query`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             // Accept: 'text/event-stream',
           },
           body: JSON.stringify({
@@ -138,7 +138,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           async onopen(response) {
             if (
               response.ok &&
-              response.headers.get('content-type') === EventStreamContentType
+              response.headers.get("content-type") === EventStreamContentType
             ) {
               return; // everything's good
             } else if (
@@ -160,12 +160,12 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             throw new RetriableError();
           },
           onerror(err) {
-            console.log('on error', err, Object.keys(err));
+            console.log("on error", err, Object.keys(err));
             if (err instanceof FatalError) {
               ctrl.abort();
               throw err; // rethrow to stop the operation
             } else if (err instanceof ApiError) {
-              console.log('ApiError', ApiError);
+              console.log("ApiError", ApiError);
               throw err;
             } else {
               // do nothing to automatically retry. You can also
@@ -174,16 +174,16 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           },
 
           onmessage: (event) => {
-            if (event.data === '[DONE]') {
+            if (event.data === "[DONE]") {
               ctrl.abort();
-            } else if (event.data?.startsWith('[ERROR]')) {
+            } else if (event.data?.startsWith("[ERROR]")) {
               ctrl.abort();
 
               setMessages([
                 ...history,
                 {
-                  from: 'agent',
-                  message: event.data.replace('[ERROR]', ''),
+                  from: "agent",
+                  message: event.data.replace("[ERROR]", ""),
                 } as any,
               ]);
             } else {
@@ -196,7 +196,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               if (h?.[nextIndex]) {
                 h[nextIndex].message = `${buffer}`;
               } else {
-                h.push({ from: 'agent', message: buffer });
+                h.push({ from: "agent", message: buffer });
               }
 
               setMessages(h as any);
@@ -205,14 +205,14 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         }
       );
     } catch (err) {
-      console.log('err', err);
+      console.log("err", err);
       if (err instanceof ApiError) {
         if (err?.message) {
           error = err?.message;
 
           if (error === ApiErrorType.USAGE_LIMIT) {
             answer =
-              'Usage limit reached. Please upgrade your plan to get higher usage.';
+              "Usage limit reached. Please upgrade your plan to get higher usage.";
           } else {
             answer = `Error: ${error}`;
           }
@@ -222,7 +222,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
         setMessages([
           ...messages,
-          { from: 'agent', message: answer as string },
+          { from: "agent", message: answer as string },
         ]);
       }
     }
@@ -246,20 +246,20 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     <Box
       sx={{
         // bgcolor: 'red',
-        overflow: 'visible',
-        position: 'fixed',
-        height: '60px',
-        bottom: '20px',
+        overflow: "visible",
+        position: "fixed",
+        height: "60px",
+        bottom: "20px",
         zIndex: 9999999999,
 
-        ...(config.position === 'left'
+        ...(config.position === "left"
           ? {
-              left: '20px',
+              left: "20px",
             }
           : {}),
-        ...(config.position === 'right'
+        ...(config.position === "right"
           ? {
-              right: '20px',
+              right: "20px",
             }
           : {}),
       }}
@@ -269,48 +269,48 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           variant="outlined"
           sx={(theme) => ({
             zIndex: 9999,
-            position: 'absolute',
-            bottom: '80px',
-            display: 'flex',
-            flexDirection: 'column',
-            boxSizing: 'border-box',
+            position: "absolute",
+            bottom: "80px",
+            display: "flex",
+            flexDirection: "column",
+            boxSizing: "border-box",
 
-            ...(config.position === 'right'
+            ...(config.position === "right"
               ? {
                   transform: `translateX(${-400 + 50}px)`,
                 }
               : {}),
 
-            width: '400px',
-            [theme.breakpoints.down('sm')]: {
-              width: '100vw',
-              maxWidth: '100vw',
+            width: "400px",
+            [theme.breakpoints.down("sm")]: {
+              width: "100vw",
+              maxWidth: "100vw",
 
-              bottom: '-20px',
+              bottom: "-20px",
 
-              ...(config.position === 'left'
+              ...(config.position === "left"
                 ? {
-                    left: '-20px',
+                    left: "-20px",
                   }
                 : {}),
-              ...(config.position === 'right'
+              ...(config.position === "right"
                 ? {
                     transform: `translateX(0px)`,
-                    right: '-20px',
+                    right: "-20px",
                   }
                 : {}),
             },
           })}
         >
-          <Box sx={{ width: '100%', mt: -2, py: 1 }}>
-            <Stack direction="row" alignItems={'center'}>
+          <Box sx={{ width: "100%", mt: -2, py: 1 }}>
+            <Stack direction="row" alignItems={"center"}>
               {config?.displayName && (
                 <Typography>{config?.displayName}</Typography>
               )}
 
               <IconButton
                 variant="plain"
-                sx={{ ml: 'auto' }}
+                sx={{ ml: "auto" }}
                 size="sm"
                 onClick={() => setIsOpen(false)}
               >
@@ -323,25 +323,25 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             sx={(theme) => ({
               // flex: 1,
               // display: 'flex',
-              width: '100%',
-              position: 'relative',
+              width: "100%",
+              position: "relative",
 
-              height: 'calc(100vh - 200px)',
-              maxHeight: '680px',
+              height: "calc(100vh - 200px)",
+              maxHeight: "680px",
 
-              [theme.breakpoints.down('sm')]: {
-                height: '80vh',
-                maxHeight: '80vh',
-                maxWidth: '100vw',
+              [theme.breakpoints.down("sm")]: {
+                height: "80vh",
+                maxHeight: "80vh",
+                maxWidth: "100vw",
               },
 
-              '& .message-agent': {
+              "& .message-agent": {
                 backgroundColor: config.primaryColor,
                 borderColor: config.primaryColor,
                 color: pickColorBasedOnBgColor(
-                  config?.primaryColor! || '#ffffff',
-                  '#ffffff',
-                  '#000000'
+                  config?.primaryColor! || "#ffffff",
+                  "#ffffff",
+                  "#000000"
                 ),
               },
             })}
@@ -357,14 +357,14 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             href="https://databerry.ai"
             target="_blank"
             style={{
-              textDecoration: 'none',
-              marginLeft: 'auto',
+              textDecoration: "none",
+              marginLeft: "auto",
             }}
           >
             <Box sx={{ mt: 1 }}>
               <Typography level="body3">
-                Powered by{' '}
-                <Typography color="primary" fontWeight={'bold'}>
+                Powered by{" "}
+                <Typography color="primary" fontWeight={"bold"}>
                   GriotAI
                 </Typography>
               </Typography>
@@ -378,14 +378,14 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         onClick={() => setIsOpen(!isOpen)}
         sx={(theme) => ({
           backgroundColor: config.primaryColor,
-          width: '60px',
-          height: '60px',
-          borderRadius: '100%',
+          width: "60px",
+          height: "60px",
+          borderRadius: "100%",
           color: textColor,
 
-          '&:hover': {
+          "&:hover": {
             backgroundColor: config.primaryColor,
-            filter: 'brightness(0.9)',
+            filter: "brightness(0.9)",
           },
         })}
       >

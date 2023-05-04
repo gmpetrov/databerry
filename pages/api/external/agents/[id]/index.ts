@@ -1,18 +1,18 @@
-import { Agent } from '@prisma/client';
-import Cors from 'cors';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { Agent } from "@prisma/client";
+import Cors from "cors";
+import { NextApiRequest, NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import guardExternalAgent from '@app/utils/guard-external-agent';
-import prisma from '@app/utils/prisma-client';
-import runMiddleware from '@app/utils/run-middleware';
+import { AppNextApiRequest } from "@app/types/index";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import guardExternalAgent from "@app/utils/guard-external-agent";
+import prisma from "@app/utils/prisma-client";
+import runMiddleware from "@app/utils/run-middleware";
 
 const handler = createApiHandler();
 
 const cors = Cors({
-  methods: ['GET', 'HEAD'],
+  methods: ["GET", "HEAD"],
 });
 
 export const getAgent = async (
@@ -23,7 +23,7 @@ export const getAgent = async (
 
   // get Bearer apiKey from header
   const authHeader = req.headers.authorization;
-  const apiKey = authHeader && authHeader.split(' ')?.[1];
+  const apiKey = authHeader && authHeader.split(" ")?.[1];
 
   if (!agentId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -40,7 +40,7 @@ export const getAgent = async (
           apiKeys: true,
           subscriptions: {
             where: {
-              status: 'active',
+              status: "active",
             },
           },
         },

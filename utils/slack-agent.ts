@@ -1,9 +1,9 @@
-import { Agent, Datastore } from '@prisma/client';
-import { WebClient } from '@slack/web-api';
+import { Agent, Datastore } from "@prisma/client";
+import { WebClient } from "@slack/web-api";
 
-import { AgentWithTools } from './agent';
-import chat from './chat';
-import summarize from './summarize';
+import { AgentWithTools } from "./agent";
+import chat from "./chat";
+import summarize from "./summarize";
 
 const slackAgent = async ({
   input,
@@ -19,13 +19,13 @@ const slackAgent = async ({
   ts: string;
 }) => {
   const { AnalyzeDocumentChain, loadSummarizationChain } = await import(
-    'langchain/chains'
+    "langchain/chains"
   );
-  const { OpenAI } = await import('langchain/llms/openai');
-  const { initializeAgentExecutor } = await import('langchain/agents');
-  const { DynamicTool, ChainTool } = await import('langchain/tools');
-  const { PromptTemplate } = await import('langchain/prompts');
-  const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
+  const { OpenAI } = await import("langchain/llms/openai");
+  const { initializeAgentExecutor } = await import("langchain/agents");
+  const { DynamicTool, ChainTool } = await import("langchain/tools");
+  const { PromptTemplate } = await import("langchain/prompts");
+  const model = new OpenAI({ temperature: 0, modelName: "gpt-3.5-turbo" });
 
   // const qaTool = new DynamicTool({
   //   name: datastore?.name!,
@@ -53,12 +53,12 @@ const slackAgent = async ({
 
   const prompt = new PromptTemplate({
     template,
-    inputVariables: ['text'],
+    inputVariables: ["text"],
   });
 
   const summaryTool = new DynamicTool({
-    name: 'Summary',
-    description: 'call this to perform a summary',
+    name: "Summary",
+    description: "call this to perform a summary",
     func: async () => {
       const response = await client.conversations.history({
         channel: channel,
@@ -69,13 +69,13 @@ const slackAgent = async ({
         ?.reverse()
         .filter((each) => each.ts !== ts && !each?.bot_id);
 
-      console.log('messages', messages);
+      console.log("messages", messages);
 
       const text =
-        messages?.map((message) => `Message: ${message.text}`).join('\n\n') ||
-        'EMPTY';
+        messages?.map((message) => `Message: ${message.text}`).join("\n\n") ||
+        "EMPTY";
 
-      return summarize({ text, prompt })?.then((res) => res.answer || '');
+      return summarize({ text, prompt })?.then((res) => res.answer || "");
     },
   });
 
@@ -89,7 +89,7 @@ const slackAgent = async ({
   const executor = await initializeAgentExecutor(
     tools,
     model,
-    'zero-shot-react-description'
+    "zero-shot-react-description"
   );
 
   const result = await executor.call({ input });

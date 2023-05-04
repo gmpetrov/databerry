@@ -1,9 +1,9 @@
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
-import uuidv4 from '@app/utils/uuid';
+import { AppNextApiRequest } from "@app/types/index";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
+import uuidv4 from "@app/utils/uuid";
 
 const handler = createAuthApiHandler();
 
@@ -75,7 +75,7 @@ export const deleteApiKey = async (
     apiKey?.user?.apiKeys?.length === 1
   ) {
     // User should always have at least one API key
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   const deleted = await prisma.userApiKey.delete({

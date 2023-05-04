@@ -1,4 +1,4 @@
-import * as pdfJS from 'pdfjs-dist';
+import * as pdfJS from "pdfjs-dist";
 
 const pdfToText = async (buffer: ArrayBuffer) => {
   const pdf = await pdfJS.getDocument({
@@ -14,11 +14,11 @@ const pdfToText = async (buffer: ArrayBuffer) => {
   for (let i = 1; i <= pdf.numPages; i += 1) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const text = content.items.map((item: any) => item.str).join('\n');
+    const text = content.items.map((item: any) => item.str).join("\n");
     pages.push(text);
   }
 
-  return pages.join('\n\n');
+  return pages.join("\n\n");
 };
 
 export default pdfToText;

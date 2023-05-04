@@ -1,16 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import SettingsIcon from '@mui/icons-material/Settings';
-import Chip from '@mui/joy/Chip';
-import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
-import Sheet from '@mui/joy/Sheet';
-import { ColorPaletteProp } from '@mui/joy/styles';
-import Table from '@mui/joy/Table';
-import Typography from '@mui/joy/Typography';
-import { Datastore } from '@prisma/client';
-import Link from 'next/link';
-import * as React from 'react';
+import SettingsIcon from "@mui/icons-material/Settings";
+import Chip from "@mui/joy/Chip";
+import IconButton, { iconButtonClasses } from "@mui/joy/IconButton";
+import Sheet from "@mui/joy/Sheet";
+import { ColorPaletteProp } from "@mui/joy/styles";
+import Table from "@mui/joy/Table";
+import Typography from "@mui/joy/Typography";
+import { Datastore } from "@prisma/client";
+import Link from "next/link";
+import * as React from "react";
 
-import { RouteNames } from '@app/types';
+import { RouteNames } from "@app/types";
 
 export default function DatastoreTable({ items }: { items: Datastore[] }) {
   return (
@@ -19,10 +19,10 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
         className="DatastoreTableContainer"
         variant="outlined"
         sx={{
-          width: '100%',
-          borderRadius: 'md',
+          width: "100%",
+          borderRadius: "md",
           flex: 1,
-          overflow: 'auto',
+          overflow: "auto",
           minHeight: 0,
           my: 4,
         }}
@@ -32,10 +32,10 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
           stickyHeader
           hoverRow
           sx={{
-            '--TableCell-headBackground': (theme) =>
+            "--TableCell-headBackground": (theme) =>
               theme.vars.palette.background.level1,
-            '--Table-headerUnderlineThickness': '1px',
-            '--TableRow-hoverBackground': (theme) =>
+            "--Table-headerUnderlineThickness": "1px",
+            "--TableRow-hoverBackground": (theme) =>
               theme.vars.palette.background.level1,
           }}
         >
@@ -57,7 +57,7 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
                     <Link href={`${RouteNames.DATASTORES}/${datastore.id}`}>
                       <Typography
                         className="truncate hover:underline"
-                        fontWeight={'bold'}
+                        fontWeight={"bold"}
                         color="primary"
                         // fontSize={'md'}
                       >
@@ -76,9 +76,9 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
                     variant="soft"
                     size="sm"
                     sx={{
-                      textTransform: 'capitalize2',
+                      textTransform: "capitalize2",
                     }}
-                    color={'neutral'}
+                    color={"neutral"}
                   >
                     qdrant
                   </Chip>
@@ -89,8 +89,8 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
                     size="sm"
                     color={
                       {
-                        public: 'success',
-                        private: 'neutral',
+                        public: "success",
+                        private: "neutral",
                       }[datastore.visibility] as ColorPaletteProp
                     }
                   >

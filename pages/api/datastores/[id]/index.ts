@@ -1,11 +1,11 @@
-import { DatasourceStatus } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import { DatasourceStatus } from "@prisma/client";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { deleteFolderFromS3Bucket } from '@app/utils/aws';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import { DatastoreManager } from '@app/utils/datastores';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest } from "@app/types/index";
+import { deleteFolderFromS3Bucket } from "@app/utils/aws";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import { DatastoreManager } from "@app/utils/datastores";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createAuthApiHandler();
 
@@ -17,8 +17,8 @@ export const getDatastore = async (
   const id = req.query.id as string;
   const search = req.query.search as string;
   const status = req.query.status as DatasourceStatus;
-  const offset = parseInt((req.query.offset as string) || '0');
-  const limit = parseInt((req.query.limit as string) || '100');
+  const offset = parseInt((req.query.offset as string) || "0");
+  const limit = parseInt((req.query.limit as string) || "100");
 
   const datastore = await prisma.datastore.findUnique({
     where: {
@@ -63,7 +63,7 @@ export const getDatastore = async (
             : {}),
         },
         orderBy: {
-          lastSynch: 'desc',
+          lastSynch: "desc",
         },
       },
       apiKeys: true,
@@ -71,7 +71,7 @@ export const getDatastore = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   return datastore;
@@ -96,7 +96,7 @@ export const deleteDatastore = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   await Promise.all([
@@ -113,7 +113,7 @@ export const deleteDatastore = async (
 
     deleteFolderFromS3Bucket(
       process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-      `datastores/${datastore.id || 'UNKNOWN'}` // add UNKNOWN to avoid to delete all the folder 😅
+      `datastores/${datastore.id || "UNKNOWN"}` // add UNKNOWN to avoid to delete all the folder 😅
     ),
   ]);
 

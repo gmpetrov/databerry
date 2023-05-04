@@ -1,16 +1,16 @@
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Textarea from '@mui/joy/Textarea';
-import { DatasourceType } from '@prisma/client';
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Textarea from "@mui/joy/Textarea";
+import { DatasourceType } from "@prisma/client";
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import { z } from "zod";
 
-import Input from '@app/components/Input';
-import { UpsertDatasourceSchema } from '@app/types/models';
+import Input from "@app/components/Input";
+import { UpsertDatasourceSchema } from "@app/types/models";
 
-import Base from './Base';
-import type { DatasourceFormProps } from './types';
+import Base from "./Base";
+import type { DatasourceFormProps } from "./types";
 
 type Props = DatasourceFormProps & {};
 
@@ -32,12 +32,12 @@ function Nested() {
         label="Source (optional)"
         control={control as any}
         placeholder="https://news.ycombinator.com"
-        {...register('config.source')}
+        {...register("config.source")}
       />
 
       <FormControl>
         <FormLabel>Text</FormLabel>
-        <Textarea maxRows={21} minRows={4} {...register('datasourceText')} />
+        <Textarea maxRows={21} minRows={4} {...register("datasourceText")} />
       </FormControl>
     </>
   );

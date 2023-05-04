@@ -1,11 +1,11 @@
-import { DatasourceStatus } from '@prisma/client';
-import { Worker } from 'bullmq';
-import Redis from 'ioredis';
+import { DatasourceStatus } from "@prisma/client";
+import { Worker } from "bullmq";
+import Redis from "ioredis";
 
-import { TaskQueue } from '@app/types';
-import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
-import prisma from '@app/utils/prisma-client';
-import taskLoadDatasource from '@app/utils/task-load-datasource';
+import { TaskQueue } from "@app/types";
+import { TaskLoadDatasourceRequestSchema } from "@app/types/dtos";
+import prisma from "@app/utils/prisma-client";
+import taskLoadDatasource from "@app/utils/task-load-datasource";
 
 const connection = new Redis(process.env.REDIS_URL!);
 
@@ -14,7 +14,7 @@ const datasourceLoadQueue = new Worker(
   async (job) => {
     const data = job?.data as TaskLoadDatasourceRequestSchema;
     try {
-      console.log('JOB', data);
+      console.log("JOB", data);
 
       await taskLoadDatasource(data);
 

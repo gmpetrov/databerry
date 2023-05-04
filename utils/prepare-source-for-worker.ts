@@ -1,6 +1,6 @@
-import { AppDatasource } from '@prisma/client';
+import { AppDatasource } from "@prisma/client";
 
-import { s3 } from '@app/utils/aws';
+import { s3 } from "@app/utils/aws";
 
 const prepareSourceForWorker = (props: {
   datastoreId: string;
@@ -12,9 +12,9 @@ const prepareSourceForWorker = (props: {
       Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
       Key: `datastores/${props.datastoreId}/${props.datasourceId}.txt`,
       Body: props.text,
-      CacheControl: 'no-cache',
-      ContentType: 'text/plain',
-      ACL: 'public-read',
+      CacheControl: "no-cache",
+      ContentType: "text/plain",
+      ACL: "public-read",
     })
     .promise();
 };

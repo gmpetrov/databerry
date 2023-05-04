@@ -1,7 +1,7 @@
-import { NextApiResponse } from 'next';
-import { z } from 'zod';
+import { NextApiResponse } from "next";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types';
+import { AppNextApiRequest } from "@app/types";
 
 export type options = {
   query?: z.ZodTypeAny;
@@ -24,15 +24,15 @@ export function validate<T>(
         config.query.parse(req.query);
       } catch (err) {
         if (err instanceof z.ZodError) {
-          console.error('error parsing request query', err.issues);
+          console.error("error parsing request query", err.issues);
 
           return res.status(400).json({
-            error: 'error invalid request query',
+            error: "error invalid request query",
             details: err.format(),
           });
         }
 
-        return res.status(400).json({ error: 'error invalid request query' });
+        return res.status(400).json({ error: "error invalid request query" });
       }
     }
 
@@ -42,15 +42,15 @@ export function validate<T>(
         config.body.parse(req.body);
       } catch (err) {
         if (err instanceof z.ZodError) {
-          console.error('error parsing request body', err.issues);
+          console.error("error parsing request body", err.issues);
 
           return res.status(400).json({
-            error: 'error invalid request body',
+            error: "error invalid request body",
             details: err.format(),
           });
         }
 
-        return res.status(400).json({ error: 'error invalid request body' });
+        return res.status(400).json({ error: "error invalid request body" });
       }
     }
 

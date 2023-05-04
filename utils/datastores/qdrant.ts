@@ -1,15 +1,15 @@
-import { Datastore } from '@prisma/client';
-import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Embeddings } from 'langchain/embeddings';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { z } from 'zod';
+import { Datastore } from "@prisma/client";
+import axios, { AxiosError, AxiosInstance } from "axios";
+import { Embeddings } from "langchain/embeddings";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
+import { z } from "zod";
 
-import { Chunk, MetadataFields } from '@app/types';
-import { QdrantConfigSchema } from '@app/types/models';
+import { Chunk, MetadataFields } from "@app/types";
+import { QdrantConfigSchema } from "@app/types/models";
 
-import uuidv4 from '../uuid';
+import uuidv4 from "../uuid";
 
-import { ClientManager } from './base';
+import { ClientManager } from "./base";
 
 type DatastoreType = Datastore & {
   config: z.infer<typeof QdrantConfigSchema>;
@@ -18,7 +18,7 @@ type DatastoreType = Datastore & {
 type Point = {
   id: string;
   vector: number[];
-  payload: Omit<Chunk['metadata'], 'chunk_id'> & {
+  payload: Omit<Chunk["metadata"], "chunk_id"> & {
     text: string;
   };
 };
@@ -35,14 +35,14 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     this.client = axios.create({
       baseURL: process.env.QDRANT_API_URL,
       headers: {
-        'api-key': process.env.QDRANT_API_KEY,
+        "api-key": process.env.QDRANT_API_KEY,
       },
     });
   }
 
   private async initAppCollection() {
     await this.client.put(`/collections/text-embedding-ada-002`, {
-      name: 'text-embedding-ada-002',
+      name: "text-embedding-ada-002",
       hnsw_config: {
         payload_m: 16,
         m: 0,
@@ -52,24 +52,24 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       },
       vectors: {
         size: 1536,
-        distance: 'Cosine',
+        distance: "Cosine",
       },
       on_disk_payload: true,
     });
 
     await this.client.put(`/collections/text-embedding-ada-002/index`, {
       field_name: MetadataFields.datastore_id,
-      field_schema: 'keyword',
+      field_schema: "keyword",
     });
 
     await this.client.put(`/collections/text-embedding-ada-002/index`, {
       field_name: MetadataFields.datasource_id,
-      field_schema: 'keyword',
+      field_schema: "keyword",
     });
 
     await this.client.put(`/collections/text-embedding-ada-002/index`, {
       field_name: MetadataFields.tags,
-      field_schema: 'keyword',
+      field_schema: "keyword",
     });
   }
 

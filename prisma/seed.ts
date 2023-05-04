@@ -1,7 +1,7 @@
-import Stripe from 'stripe';
+import Stripe from "stripe";
 
-import prisma from '@app/utils/prisma-client';
-import { stripe } from '@app/utils/stripe';
+import prisma from "@app/utils/prisma-client";
+import { stripe } from "@app/utils/stripe";
 
 async function main() {
   try {
@@ -67,7 +67,7 @@ async function main() {
       )
     );
   } catch (err) {
-    console.log('prisma seed err', err);
+    console.log("prisma seed err", err);
     throw err;
   }
 }

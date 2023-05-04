@@ -1,6 +1,6 @@
-import { Document } from '@app/utils/datastores/base';
+import { Document } from "@app/utils/datastores/base";
 
-import { DatasourceLoaderBase } from './base';
+import { DatasourceLoaderBase } from "./base";
 
 export class TextLoader extends DatasourceLoaderBase {
   async getSize(text: string) {

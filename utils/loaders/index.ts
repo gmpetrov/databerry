@@ -1,12 +1,12 @@
-import { AppDatasource as Datasource, DatasourceType } from '@prisma/client';
+import { AppDatasource as Datasource, DatasourceType } from "@prisma/client";
 
-import { s3 } from '@app/utils/aws';
-import { Document } from '@app/utils/datastores/base';
+import { s3 } from "@app/utils/aws";
+import { Document } from "@app/utils/datastores/base";
 
-import { DatasourceLoaderBase } from './base';
-import { FileLoader } from './file';
-import { TextLoader } from './text';
-import { WebPageLoader } from './web-page';
+import { DatasourceLoaderBase } from "./base";
+import { FileLoader } from "./file";
+import { TextLoader } from "./text";
+import { WebPageLoader } from "./web-page";
 
 export class DatasourceLoader {
   datasource: Datasource;
@@ -43,7 +43,7 @@ export class DatasourceLoader {
       .promise();
 
     return new Document({
-      pageContent: (res as any).Body.toString('utf-8'),
+      pageContent: (res as any).Body.toString("utf-8"),
       metadata: {
         datasource_id: this.datasource.id,
         source_type: this.datasource.type,

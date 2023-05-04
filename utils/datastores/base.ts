@@ -1,9 +1,9 @@
-import type { Datastore } from '@prisma/client';
-import { Document as LangchainDocument } from 'langchain/document';
+import type { Datastore } from "@prisma/client";
+import { Document as LangchainDocument } from "langchain/document";
 
-import { Chunk, DocumentMetadata } from '@app/types';
+import { Chunk, DocumentMetadata } from "@app/types";
 
-export const INDEX_NAME = 'databerry';
+export const INDEX_NAME = "databerry";
 
 export class Document extends LangchainDocument {
   metadata: DocumentMetadata;

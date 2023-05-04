@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next/types';
+import { NextApiRequest, NextApiResponse } from "next/types";
 
 const runMiddleware = (
   req: NextApiRequest,

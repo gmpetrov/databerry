@@ -1,21 +1,21 @@
-import { DOMParser } from '@xmldom/xmldom';
-import axios from 'axios';
-import { load } from 'cheerio';
-import pTimeout from 'p-timeout';
-import path from 'path';
+import { DOMParser } from "@xmldom/xmldom";
+import axios from "axios";
+import { load } from "cheerio";
+import pTimeout from "p-timeout";
+import path from "path";
 
-import addSlashUrl from './add-slash-url';
+import addSlashUrl from "./add-slash-url";
 
 export const getUrlsFromSitemap = (data: any) => {
   const pages: string[] = [];
   const sitemaps: string[] = [];
   const parser = new DOMParser();
-  const xmlDom = parser.parseFromString(data, 'text/xml');
-  const urlElements = xmlDom.getElementsByTagName('url');
-  const sitemapElements = xmlDom.getElementsByTagName('sitemap');
+  const xmlDom = parser.parseFromString(data, "text/xml");
+  const urlElements = xmlDom.getElementsByTagName("url");
+  const sitemapElements = xmlDom.getElementsByTagName("sitemap");
 
   for (let i = 0; i < urlElements.length; i++) {
-    const locs = urlElements[i].getElementsByTagName('loc');
+    const locs = urlElements[i].getElementsByTagName("loc");
 
     for (let j = 0; j < locs.length; j++) {
       const url = locs[j].textContent;
@@ -27,7 +27,7 @@ export const getUrlsFromSitemap = (data: any) => {
   }
 
   for (let i = 0; i < sitemapElements.length; i++) {
-    const locs = sitemapElements[i].getElementsByTagName('loc');
+    const locs = sitemapElements[i].getElementsByTagName("loc");
 
     for (let j = 0; j < locs.length; j++) {
       const url = locs[j].textContent;
@@ -84,14 +84,14 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
     // const html = await response.text();
     const response = await axios(addSlashUrl(url), {
       headers: {
-        'User-Agent': Date.now().toString(),
+        "User-Agent": Date.now().toString(),
       },
     });
     const html = response.data;
 
     const c = load(html);
 
-    const links = c('a');
+    const links = c("a");
 
     // Follow internal links recursively
     for (const link of links) {
@@ -99,11 +99,11 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
         return;
       }
 
-      const href = c(link).attr('href');
+      const href = c(link).attr("href");
       // Check if link is internal
-      if (href?.startsWith(startingUrl) || href?.startsWith('/')) {
+      if (href?.startsWith(startingUrl) || href?.startsWith("/")) {
         await crawl(
-          href?.startsWith('/')
+          href?.startsWith("/")
             ? path.join(new URL(startingUrl).origin, href)
             : href
         );

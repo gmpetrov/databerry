@@ -1,11 +1,11 @@
-import { Datastore, IntegrationType, UserApiKey } from '@prisma/client';
-import axios from 'axios';
-import { NextApiResponse } from 'next';
+import { Datastore, IntegrationType, UserApiKey } from "@prisma/client";
+import axios from "axios";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
-import uuidv4 from '@app/utils/uuid';
+import { AppNextApiRequest } from "@app/types/index";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
+import uuidv4 from "@app/utils/uuid";
 
 const handler = createApiHandler();
 
@@ -14,14 +14,14 @@ export const authCallback = async (
   res: NextApiResponse
 ) => {
   const authCode = req.query.code;
-  console.log('PAYLOAD', req.query);
+  console.log("PAYLOAD", req.query);
   const metadata = JSON.parse(req.query.state as any) as {
     userId: string;
     agentId: string;
   };
 
   const response = await axios.post(
-    'https://slack.com/api/oauth.v2.access',
+    "https://slack.com/api/oauth.v2.access",
     null,
     {
       params: {
@@ -32,13 +32,13 @@ export const authCallback = async (
     }
   );
 
-  console.log('metadata', metadata);
+  console.log("metadata", metadata);
 
   const { data } = response;
 
   if (!data.ok) {
     console.log(data);
-    throw new Error('Slack auth failed');
+    throw new Error("Slack auth failed");
   }
 
   const agent = await prisma.agent.findUnique({
@@ -48,7 +48,7 @@ export const authCallback = async (
   });
 
   if (agent?.ownerId !== metadata.userId) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   const accessToken = data.access_token;

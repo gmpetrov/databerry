@@ -1,34 +1,29 @@
-import { Popover, Transition } from '@headlessui/react';
+import { Popover, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
   PhoneIcon,
   PlayCircleIcon,
-} from '@heroicons/react/20/solid';
+} from "@heroicons/react/20/solid";
 import {
-  ArrowPathIcon,
-  ChartPieIcon,
   ChatBubbleLeftEllipsisIcon,
   CpuChipIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
   ServerIcon,
-  SquaresPlusIcon,
-} from '@heroicons/react/24/outline';
-import { Fragment } from 'react';
+} from "@heroicons/react/24/outline";
+import { Fragment } from "react";
 
 const solutions = [
   {
-    name: 'Embed Agent on your website',
+    name: "Embed Agent on your website",
     description:
-      'Automate customer support with a ChatGPT Bot trained on your data',
-    href: '#for-customer-support',
+      "Automate customer support with a ChatGPT Bot trained on your data",
+    href: "#for-customer-support",
     icon: ChatBubbleLeftEllipsisIcon,
   },
   {
-    name: 'Crisp Plugin',
+    name: "Crisp Plugin",
     description:
-      'Connect your agent to Crisp. Summarize conversations and more!',
-    href: 'https://www.databerry.ai/products/crisp-plugin',
+      "Connect your agent to Crisp. Summarize conversations and more!",
+    href: "https://www.databerry.ai/products/crisp-plugin",
     icon: (props: any) => (
       <img
         {...props}
@@ -38,9 +33,9 @@ const solutions = [
     ),
   },
   {
-    name: 'Slack Bot',
-    description: 'Deploy an Agent trained on your data to Slack',
-    href: 'https://www.databerry.ai/products/slack-bot',
+    name: "Slack Bot",
+    description: "Deploy an Agent trained on your data to Slack",
+    href: "https://www.databerry.ai/products/slack-bot",
     icon: (props: any) => (
       <img
         {...props}
@@ -50,27 +45,27 @@ const solutions = [
     ),
   },
   {
-    name: 'GriotAI API',
-    description: 'Document Retrieval as a service',
-    href: 'https://docs.databerry.ai/introduction',
+    name: "GriotAI API",
+    description: "Document Retrieval as a service",
+    href: "https://docs.databerry.ai/introduction",
     icon: ServerIcon,
   },
   {
-    name: 'On Premise',
-    description: 'Install GriotAI on your own infrastructure',
-    href: 'https://github.com/SergeWilfried/griotai',
+    name: "On Premise",
+    description: "Install GriotAI on your own infrastructure",
+    href: "https://github.com/SergeWilfried/griotai",
     icon: CpuChipIcon,
   },
 ];
 const callsToAction = [
   {
-    name: 'Watch demo',
-    href: 'https://www.youtube.com/watch?v=LPISZdaiDBM',
+    name: "Watch demo",
+    href: "https://www.youtube.com/watch?v=LPISZdaiDBM",
     icon: PlayCircleIcon,
   },
   {
-    name: 'Book a Call',
-    href: 'https://calendly.com/databerry-georges/15min',
+    name: "Book a Call",
+    href: "https://calendly.com/databerry-georges/15min",
     icon: PhoneIcon,
   },
 ];

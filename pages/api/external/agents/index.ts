@@ -1,9 +1,9 @@
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest } from "@app/types/index";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createApiHandler();
 
@@ -13,7 +13,7 @@ export const getAgentsAPI = async (
 ) => {
   // get Bearer token from header
   const authHeader = req.headers.authorization;
-  const apiKey = authHeader && authHeader.split(' ')?.[1];
+  const apiKey = authHeader && authHeader.split(" ")?.[1];
 
   if (!apiKey) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -45,7 +45,7 @@ export const getAgentsAPI = async (
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 

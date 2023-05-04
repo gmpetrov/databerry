@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 // Function to fetch the sitemap URL from the robots.txt file
 async function getSitemapFromRobotsTxt(websiteUrl: string) {
@@ -6,13 +6,13 @@ async function getSitemapFromRobotsTxt(websiteUrl: string) {
     const response = await axios.get(`${websiteUrl}/robots.txt`);
     const robotsTxt = response.data;
     const sitemapLine = robotsTxt
-      .split('\n')
-      .find((line: string) => line.startsWith('Sitemap:'));
+      .split("\n")
+      .find((line: string) => line.startsWith("Sitemap:"));
     if (sitemapLine) {
-      return sitemapLine.split(' ')[1] as string;
+      return sitemapLine.split(" ")[1] as string;
     }
   } catch (error: any) {
-    console.error('Error fetching robots.txt:', error?.message);
+    console.error("Error fetching robots.txt:", error?.message);
     return null;
   }
   return null;
@@ -25,7 +25,7 @@ async function getSitemapFromRoot(websiteUrl: string) {
     await axios.head(sitemapUrl);
     return sitemapUrl;
   } catch (error: any) {
-    console.error('Error fetching sitemap.xml:', error?.message);
+    console.error("Error fetching sitemap.xml:", error?.message);
   }
   return null;
 }
@@ -40,19 +40,19 @@ async function findSitemap(websiteUrl: string) {
   // First, try to find the sitemap URL from the robots.txt file
   let sitemapUrl = await getSitemapFromRobotsTxt(origin);
   if (sitemapUrl) {
-    console.log('Sitemap URL found in robots.txt:', sitemapUrl);
+    console.log("Sitemap URL found in robots.txt:", sitemapUrl);
     return sitemapUrl;
   }
 
   // If not found in robots.txt, try to fetch the sitemap.xml file directly from the website root
   sitemapUrl = await getSitemapFromRoot(origin);
   if (sitemapUrl) {
-    console.log('Sitemap XML found at website root:', sitemapUrl);
+    console.log("Sitemap XML found at website root:", sitemapUrl);
     return sitemapUrl;
   }
 
   // If both methods fail, the sitemap could not be found
-  console.log('Sitemap not found');
+  console.log("Sitemap not found");
   return null;
 }
 

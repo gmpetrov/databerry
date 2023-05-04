@@ -1,8 +1,8 @@
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest } from "@app/types/index";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createAuthApiHandler();
 
@@ -27,7 +27,7 @@ export const getAgent = async (
   });
 
   if (agent?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   return agent;
@@ -56,7 +56,7 @@ export const deleteAgent = async (
   });
 
   if (agent?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   await prisma.agent.delete({

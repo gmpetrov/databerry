@@ -1,4 +1,4 @@
-import { Datastore, Tool, ToolType } from '@prisma/client';
+import { Datastore, Tool, ToolType } from "@prisma/client";
 
 const agentToolFormat = (
   tool: Tool & {
