@@ -8,9 +8,6 @@ export const absUrl = (path: string): string => {
   }
 
   const appUrl =
-    process.env.APP_URL ||
-    process.env.NEXT_PUBLIC_APP_URL ||
-    "http://localhost:3000";
-
+    process.env.NEXT_PUBLIC_APP_URL
   return `${appUrl}/${path}`;
 };
