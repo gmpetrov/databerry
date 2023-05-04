@@ -173,8 +173,7 @@ export default function AgentPage() {
             });
           } else {
             // const data = JSON.parse(event.data || `{}`);
-            buffer += event.data as string;
-            console.log(buffer);
+            buffer += decodeURIComponent(event.data) as string;
 
             const h = [...history];
 
