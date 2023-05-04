@@ -130,7 +130,7 @@ const handleSendInput = async ({
     user: {
       type: 'participant',
       nickname: agentName || 'GriotAI',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+      avatar: 'https://griot.kasetolabs.xyz/databerry-rounded-bg-white.png',
     },
 
     content: {
@@ -169,7 +169,7 @@ const handleQuery = async (
         content: 'Usage limit reached.',
         user: {
           type: 'participant',
-          nickname: agent?.name || 'GriotAi',
+          nickname: agent?.name || 'GriotAI',
           avatar: 'https://griot.kasetolabs.xyz/databerry-rounded-bg-white.png',
         },
       }
@@ -185,8 +185,8 @@ const handleQuery = async (
     content: answer,
     user: {
       type: 'participant',
-      nickname: agent?.name || 'Databerry.ai',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+      nickname: agent?.name || 'GriotAI',
+      avatar: 'https://griot.kasetolabs.xyz/databerry-rounded-bg-white.png',
     },
   });
 

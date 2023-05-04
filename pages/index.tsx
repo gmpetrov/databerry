@@ -29,7 +29,7 @@ export default function Home() {
   const t = useTranslations("common");
   const ogProperties = useOpenGraph({
     url: absUrl("/"),
-    title: t("title"), // Add you homepage title
+    title: "GriotAI - Build your ChatGPT Agent Trained on your own data", // Add you homepage title
     image: {
       // some default image preview for your website
       type: "image/png",
@@ -37,7 +37,7 @@ export default function Home() {
       alt: "GriotAI Logo",
     },
     description:
-      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
+      "With our no-code platform, you can create a custom AI chatbot trained on your data in seconds. Use GriotAI API to query your agent or to perform document retrievial",
     type: "website",
   });
   return (
