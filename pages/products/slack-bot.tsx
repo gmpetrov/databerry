@@ -19,7 +19,7 @@ export default function Home() {
         <title>SlackBot by GriotAI</title>
         <meta
           name="description"
-          content="A ChatGPT Bot trained on your company data."
+          content="A ChatGPT Slack Bot trained on your company data."
         />
       </Head>
       <Header />

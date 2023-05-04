@@ -128,9 +128,9 @@ const handleSendInput = async ({
     from: "operator",
     origin: "chat",
     user: {
-      type: 'website',
-      nickname: agentName || 'GriotAI.ai',
-      avatar: 'https://griotai.kasetolabs.xyz/databerry-rounded-bg-white.png',
+      type: "website",
+      nickname: agentName || "GriotAI.ai",
+      avatar: "https://griotai.kasetolabs.xyz/databerry-rounded-bg-white.png",
     },
 
     content: {
