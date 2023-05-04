@@ -58,7 +58,7 @@ const solutions = [
   {
     name: 'On Premise',
     description: 'Install GriotAI on your own infrastructure',
-    href: 'https://github.com/gmpetrov/databerry',
+    href: 'https://github.com/SergeWilfried/griotai',
     icon: CpuChipIcon,
   },
 ];
