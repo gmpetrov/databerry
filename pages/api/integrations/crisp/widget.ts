@@ -74,8 +74,8 @@ export const widgetActions = async (
       from: "operator",
       origin: "chat",
       user: {
-        nickname: "GriotAI.ai",
-        avatar: "https://databerry.ai/databerry-rounded-bg-white.png",
+        nickname: 'GriotAI',
+        avatar: 'https://griotai.kasetolabs.xyz/databerry-rounded-bg-white.png',
       },
       stealth: true,
       content: `Summary:\n${output}`,

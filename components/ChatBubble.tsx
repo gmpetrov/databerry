@@ -354,7 +354,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             />
           </Box>
           <a
-            href="https://databerry.ai"
+            href="https://griotai.kasetolabs.xyz"
             target="_blank"
             style={{
               textDecoration: "none",

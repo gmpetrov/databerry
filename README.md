@@ -1,6 +1,6 @@
 <h1 align="center" style="font-weight: bold">
   <br>
-  <a href="https://databerry.ai"><img src="public/databerry-logo-icon.png" alt="WebTorrent" width="200"></a>
+  <a href="https://griotai.kasetolabs.xyz"><img src="public/databerry-logo-icon.png" alt="WebTorrent" width="200"></a>
   <br>
   GriotAI
   <br>
@@ -15,7 +15,9 @@
 <img src="public/features.png" alt="WebTorrent" width="700" style="max-width: 100%;">
 </h2>
 
-**[GriotAI](https://databerry.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
+
+**[GriotAI](https://griotai.kasetolabs.xyz)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
+
 
 ### [📄 Documentation](https://docs.databerry.ai/)
 
