@@ -46,7 +46,7 @@ const chat = async ({
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
 
   const finalPrompt = `${prompt || CUSTOMER_SUPPORT}
-Ensure that your responses are clear, concise, and do not reiterate the same information. Create a final answer with references ("SOURCE") if relevant.
+Ensure that your responses are clear, concise, and do not reiterate the same information and never break character mentioned above. Create a final answer with references ("SOURCE") if relevant.
 
 START_CONTEXT:
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
