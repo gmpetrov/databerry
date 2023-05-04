@@ -1,8 +1,8 @@
 const excelToText = async (buffer: ArrayBuffer) => {
-  let text = '';
-  const XLSX = await import('xlsx');
+  let text = "";
+  const XLSX = await import("xlsx");
 
-  const workbook = XLSX.read(buffer, { type: 'array' });
+  const workbook = XLSX.read(buffer, { type: "array" });
 
   workbook.SheetNames.forEach((sheetName) => {
     const worksheet = workbook.Sheets[sheetName];

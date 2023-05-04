@@ -1,19 +1,19 @@
-import createCache from '@emotion/cache';
-import { CacheProvider } from '@emotion/react';
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import {
   CssVarsProvider,
   StyledEngineProvider,
   ThemeProvider,
-} from '@mui/joy/styles';
-import React, { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+} from "@mui/joy/styles";
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-import ChatBubble, { theme } from '@app/components/ChatBubble';
+import ChatBubble, { theme } from "@app/components/ChatBubble";
 
-if (typeof window !== 'undefined') {
-  addEventListener('DOMContentLoaded', (event) => {
+if (typeof window !== "undefined") {
+  addEventListener("DOMContentLoaded", (event) => {
     const cache = createCache({
-      key: 'chat-bubble',
+      key: "chat-bubble",
       prepend: true,
       speedy: true,
     });
@@ -24,7 +24,7 @@ if (typeof window !== 'undefined') {
     if (!me?.id) {
       return;
     }
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     document.body.appendChild(div);
     const root = createRoot(div);
     root.render(

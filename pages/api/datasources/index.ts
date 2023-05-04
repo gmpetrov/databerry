@@ -1,18 +1,18 @@
-import { DatasourceStatus, DatasourceType, Usage } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import { DatasourceStatus, DatasourceType, Usage } from "@prisma/client";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { UpsertDatasourceSchema } from '@app/types/models';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import cuid from '@app/utils/cuid';
-import findDomainPages, { getSitemapPages } from '@app/utils/find-domain-pages';
-import findSitemap from '@app/utils/find-sitemap';
-import generateFunId from '@app/utils/generate-fun-id';
-import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
-import prisma from '@app/utils/prisma-client';
-import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import { UpsertDatasourceSchema } from "@app/types/models";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import cuid from "@app/utils/cuid";
+import findDomainPages, { getSitemapPages } from "@app/utils/find-domain-pages";
+import findSitemap from "@app/utils/find-sitemap";
+import generateFunId from "@app/utils/generate-fun-id";
+import guardDataProcessingUsage from "@app/utils/guard-data-processing-usage";
+import prisma from "@app/utils/prisma-client";
+import triggerTaskLoadDatasource from "@app/utils/trigger-task-load-datasource";
+import validate from "@app/utils/validate";
 
 const handler = createAuthApiHandler();
 
@@ -27,7 +27,7 @@ export const getDatasources = async (
       ownerId: session?.user?.id,
     },
     orderBy: {
-      updatedAt: 'desc',
+      updatedAt: "desc",
     },
   });
 
@@ -131,7 +131,7 @@ export const upsertDatasource = async (
       existingDatasource &&
       (existingDatasource as any)?.ownerId !== session?.user?.id
     ) {
-      throw new Error('Unauthorized');
+      throw new Error("Unauthorized");
     }
   }
 

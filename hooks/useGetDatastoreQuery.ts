@@ -1,10 +1,10 @@
-import { Prisma } from '@prisma/client';
-import { useRouter } from 'next/router';
-import useSWR from 'swr';
+import { Prisma } from "@prisma/client";
+import { useRouter } from "next/router";
+import useSWR from "swr";
 
-import { getDatastore } from '@app/pages/api/datastores/[id]';
-import config from '@app/utils/config';
-import { fetcher } from '@app/utils/swr-fetcher';
+import { getDatastore } from "@app/pages/api/datastores/[id]";
+import config from "@app/utils/config";
+import { fetcher } from "@app/utils/swr-fetcher";
 
 type Props = {
   swrConfig?: {
@@ -16,8 +16,8 @@ const useGetDatastoreQuery = (props: Props) => {
   const router = useRouter();
   const limit = Number(router.query.limit || config.datasourceTable.limit);
   const offset = Number(router.query.offset || 0);
-  const search = router.query.search || '';
-  const status = router.query.status || '';
+  const search = router.query.search || "";
+  const status = router.query.status || "";
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>

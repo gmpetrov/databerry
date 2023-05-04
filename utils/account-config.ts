@@ -1,4 +1,4 @@
-import { SubscriptionPlan } from '@prisma/client';
+import { SubscriptionPlan } from "@prisma/client";
 
 type Plan = {
   type: SubscriptionPlan;
@@ -23,7 +23,7 @@ const config: {
 } = {
   [SubscriptionPlan.level_0]: {
     type: SubscriptionPlan.level_0,
-    label: 'Free',
+    label: "Free",
     limits: {
       maxAgents: 1,
       maxAgentsQueries: 20,
@@ -37,7 +37,7 @@ const config: {
   },
   [SubscriptionPlan.level_1]: {
     type: SubscriptionPlan.level_1,
-    label: 'Growth',
+    label: "Growth",
     limits: {
       maxAgents: 2,
       maxAgentsQueries: 100,
@@ -51,7 +51,7 @@ const config: {
   },
   [SubscriptionPlan.level_2]: {
     type: SubscriptionPlan.level_2,
-    label: 'Pro',
+    label: "Pro",
     limits: {
       maxAgents: 5,
       maxAgentsQueries: 10000,
@@ -65,7 +65,7 @@ const config: {
   },
   [SubscriptionPlan.level_3]: {
     type: SubscriptionPlan.level_3,
-    label: 'Enterprise',
+    label: "Enterprise",
     limits: {
       //  No limits
       maxAgents: 100,

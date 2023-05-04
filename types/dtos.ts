@@ -1,12 +1,12 @@
-import { AgentVisibility, ToolType } from '@prisma/client';
-import { z } from 'zod';
+import { AgentVisibility, ToolType } from "@prisma/client";
+import { z } from "zod";
 
 import {
   AgentInterfaceConfig,
   DatastoreSchema,
   DocumentMetadataSchema,
   DocumentSchema,
-} from './models';
+} from "./models";
 
 export const CreateDatastoreRequestSchema = DatastoreSchema.extend({
   id: z.string().trim().cuid().optional(),
@@ -125,7 +125,7 @@ export const UpsertAgentSchema = z.object({
   name: z.string().trim().optional(),
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
-  visibility: z.nativeEnum(AgentVisibility).default('private'),
+  visibility: z.nativeEnum(AgentVisibility).default("private"),
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
   tools: z
     .array(

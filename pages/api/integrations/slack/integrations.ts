@@ -1,12 +1,12 @@
-import { IntegrationType } from '@prisma/client';
-import { NextApiResponse } from 'next';
-import { z } from 'zod';
+import { IntegrationType } from "@prisma/client";
+import { NextApiResponse } from "next";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
-import uuidv4 from '@app/utils/uuid';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
+import uuidv4 from "@app/utils/uuid";
+import validate from "@app/utils/validate";
 
 const handler = createAuthApiHandler();
 
@@ -55,7 +55,7 @@ export const updateSlackIntegration = async (
   });
 
   if (integration?.agent?.ownerId !== session.user.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   const agent = await prisma.agent.findUnique({
@@ -65,7 +65,7 @@ export const updateSlackIntegration = async (
   });
 
   if (agent?.ownerId !== session.user.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   const updated = await prisma.externalIntegration.update({
@@ -112,7 +112,7 @@ export const deleteSlackIntegration = async (
   });
 
   if (integration?.agent?.ownerId !== session.user.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   const updated = await prisma.externalIntegration.delete({

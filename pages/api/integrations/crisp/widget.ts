@@ -1,11 +1,11 @@
-import Crisp from 'crisp-api';
-import { OpenAI } from 'langchain/llms/openai';
-import { NextApiResponse } from 'next';
-import { z } from 'zod';
+import Crisp from "crisp-api";
+import { OpenAI } from "langchain/llms/openai";
+import { NextApiResponse } from "next";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import validate from "@app/utils/validate";
 
 const handler = createApiHandler();
 
@@ -20,7 +20,7 @@ const schema = z.object({
 const CrispClient = new Crisp();
 
 CrispClient.authenticateTier(
-  'plugin',
+  "plugin",
   process.env.CRISP_TOKEN_ID!,
   process.env.CRISP_TOKEN_KEY!
 );
@@ -44,18 +44,18 @@ export const widgetActions = async (
 
   const messagesStr = messages
     .map((msg: any) =>
-      msg?.content && typeof msg?.content === 'string'
-        ? `FROM: ${msg?.from} ${msg?.user?.nickname || ''} \nMESSAGE: ${
+      msg?.content && typeof msg?.content === "string"
+        ? `FROM: ${msg?.from} ${msg?.user?.nickname || ""} \nMESSAGE: ${
             msg.content
           }\n`
         : ``
     )
     .filter((msg: any) => msg !== ``)
-    .join('\n\n');
+    .join("\n\n");
 
   const model = new OpenAI({
     temperature: 0,
-    modelName: 'gpt-3.5-turbo',
+    modelName: "gpt-3.5-turbo",
   });
 
   const prompt = `The following is conversation between a customer and a customer suport operator. Generate a summary of the conversation that would be useful to the operator.
@@ -70,11 +70,11 @@ export const widgetActions = async (
     data.website_id,
     data.session_id,
     {
-      type: 'text',
-      from: 'operator',
-      origin: 'chat',
+      type: "text",
+      from: "operator",
+      origin: "chat",
       user: {
-        nickname: 'GriotAI.ai',
+        nickname: 'GriotAI',
         avatar: 'https://griotai.kasetolabs.xyz/databerry-rounded-bg-white.png',
       },
       stealth: true,

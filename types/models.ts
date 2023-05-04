@@ -1,10 +1,10 @@
-import { DatasourceType, DatastoreType } from '@prisma/client';
-import { z } from 'zod';
+import { DatasourceType, DatastoreType } from "@prisma/client";
+import { z } from "zod";
 
 export const PineconeConfigSchema = z.object({
   apiKey: z.string().trim().min(3),
   indexName: z.string().trim().optional(),
-  region: z.string().trim().default('us-east1-gcp'),
+  region: z.string().trim().default("us-east1-gcp"),
 });
 
 export type PineconeConfigSchema = z.infer<typeof PineconeConfigSchema>;
@@ -35,7 +35,7 @@ export type DatastoreSchema = z.infer<typeof DatastoreSchema>;
 
 export const DocumentMetadataSchema = z.object({
   document_id: z.string().optional(),
-  source: z.enum(['email', 'file', 'chat']).optional(),
+  source: z.enum(["email", "file", "chat"]).optional(),
   source_id: z.string().optional(),
   author: z.string().optional(),
   start_date: z.string().optional(),
@@ -66,7 +66,7 @@ export const AgentInterfaceConfig = z.object({
   primaryColor: z.string().trim().optional(),
   initialMessage: z.string().trim().optional(),
   messageTemplates: z.array(z.string()).optional(),
-  position: z.enum(['left', 'right']).optional(),
+  position: z.enum(["left", "right"]).optional(),
   authorizedDomains: z.array(z.string()).optional(),
 });
 

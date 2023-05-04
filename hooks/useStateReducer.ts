@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useReducer } from "react";
 
 const useStateReducer = <T>(initialState: T) => {
   const methods = useReducer(

@@ -1,11 +1,11 @@
 // DEPRECATED: This is not used anymore
 
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest, ChatRequest } from '@app/types';
-import chat from '@app/utils/chat';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest, ChatRequest } from "@app/types";
+import chat from "@app/utils/chat";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createAuthApiHandler();
 
@@ -24,7 +24,7 @@ export const chatRequest = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    return res.status(403).json({ error: "Unauthorized" });
   }
 
   const result = await chat({

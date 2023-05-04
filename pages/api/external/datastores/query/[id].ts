@@ -1,13 +1,13 @@
-import { DatastoreVisibility } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import { DatastoreVisibility } from "@prisma/client";
+import { NextApiResponse } from "next";
 
-import { SearchRequestSchema } from '@app/types/dtos';
-import { AppNextApiRequest } from '@app/types/index';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import { DatastoreManager } from '@app/utils/datastores';
-import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
+import { SearchRequestSchema } from "@app/types/dtos";
+import { AppNextApiRequest } from "@app/types/index";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import { DatastoreManager } from "@app/utils/datastores";
+import prisma from "@app/utils/prisma-client";
+import validate from "@app/utils/validate";
 
 const handler = createApiHandler();
 
@@ -15,15 +15,15 @@ export const queryURL = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  console.log('REG BODY', req.body);
-  console.log('REG QUERY', req.query);
+  console.log("REG BODY", req.body);
+  console.log("REG QUERY", req.query);
   const datastoreId = req.query.id as string;
   const data = req.body as SearchRequestSchema;
   const topK = data.topK || 3;
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')?.[1];
+  const token = authHeader && authHeader.split(" ")?.[1];
 
   if (!datastoreId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -44,7 +44,7 @@ export const queryURL = async (
   });
 
   if (!datastore) {
-    throw new Error('Not found');
+    throw new Error("Not found");
   }
 
   if (

@@ -1,25 +1,25 @@
-import AddIcon from '@mui/icons-material/Add';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import Alert from '@mui/joy/Alert';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { DatastoreVisibility, Prisma } from '@prisma/client';
-import axios from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+import AddIcon from "@mui/icons-material/Add";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { DatastoreVisibility, Prisma } from "@prisma/client";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
 
-import { DatastoreFormsMap } from '@app/components/DatastoreForms';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
-import { RouteNames } from '@app/types';
-import getRootDomain from '@app/utils/get-root-domain';
+import { DatastoreFormsMap } from "@app/components/DatastoreForms";
+import useGetDatastoreQuery from "@app/hooks/useGetDatastoreQuery";
+import { RouteNames } from "@app/types";
+import getRootDomain from "@app/utils/get-root-domain";
 
 type Props = {
   datastoreId: string;
@@ -33,7 +33,7 @@ function DatastoreSettings() {
   const handleDeleteDatastore = async () => {
     if (
       window.confirm(
-        'Are you sure you want to delete this datastore? This action is irreversible.'
+        "Are you sure you want to delete this datastore? This action is irreversible."
       )
     ) {
       await axios.delete(`/api/datastores/${getDatastoreQuery?.data?.id}`);
@@ -49,7 +49,7 @@ function DatastoreSettings() {
   };
 
   const handleDeleteApiKey = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this api key?')) {
+    if (window.confirm("Are you sure you want to delete this api key?")) {
       await axios.delete(
         `/api/datastores/${getDatastoreQuery?.data?.id}/api-keys`,
         {
@@ -66,9 +66,9 @@ function DatastoreSettings() {
   return (
     <Box
       sx={(theme) => ({
-        maxWidth: '100%',
+        maxWidth: "100%",
         width: theme.breakpoints.values.md,
-        mx: 'auto',
+        mx: "auto",
       })}
     >
       {React.createElement(
@@ -83,11 +83,11 @@ function DatastoreSettings() {
               getDatastoreQuery?.data?.visibility ===
               DatastoreVisibility.public,
           } as any,
-          submitButtonText: 'Update',
+          submitButtonText: "Update",
           submitButtonProps: {
             // variant: 'contained',
-            variant: 'outlined',
-            className: 'ml-auto',
+            variant: "outlined",
+            className: "ml-auto",
           },
         }
       )}
@@ -166,7 +166,7 @@ function DatastoreSettings() {
         <Stack>
           <Stack gap={2} mt={2}>
             <Typography level="body2">ai-plugin.json</Typography>
-            <Alert color="neutral" sx={{ width: '100%' }}>
+            <Alert color="neutral" sx={{ width: "100%" }}>
               {`https://${getDatastoreQuery?.data?.id}.${getRootDomain(
                 process.env.NEXT_PUBLIC_DASHBOARD_URL!
               )}/.well-known/ai-plugin.json`}
@@ -174,7 +174,7 @@ function DatastoreSettings() {
           </Stack>
           <Stack gap={2} mt={2}>
             <Typography level="body2">openapi.yaml</Typography>
-            <Alert color="neutral" sx={{ width: '100%' }}>
+            <Alert color="neutral" sx={{ width: "100%" }}>
               {`https://${getDatastoreQuery?.data?.id}.${getRootDomain(
                 process.env.NEXT_PUBLIC_DASHBOARD_URL!
               )}/.well-known/openapi.yaml`}
@@ -192,7 +192,7 @@ function DatastoreSettings() {
         </Typography>
         <Button
           color="danger"
-          sx={{ mr: 'auto', mt: 2 }}
+          sx={{ mr: "auto", mt: 2 }}
           startDecorator={<DeleteIcon />}
           onClick={handleDeleteDatastore}
         >

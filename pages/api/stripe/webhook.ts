@@ -2,12 +2,12 @@ import {
   PriceType,
   SubscriptionPlan,
   SubscriptionStatus,
-} from '@prisma/client';
-import Stripe from 'stripe';
+} from "@prisma/client";
+import Stripe from "stripe";
 
-import { createApiHandler } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
-import { stripe } from '@app/utils/stripe';
+import { createApiHandler } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
+import { stripe } from "@app/utils/stripe";
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -26,26 +26,26 @@ export const timestampToDate = (t?: number) => {
 async function buffer(readable: any) {
   const chunks = [];
   for await (const chunk of readable) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
   }
   return Buffer.concat(chunks);
 }
 
 const relevantEvents = new Set([
-  'product.created',
-  'product.updated',
-  'price.created',
-  'price.updated',
-  'checkout.session.completed',
-  'customer.subscription.updated',
-  'customer.subscription.deleted',
+  "product.created",
+  "product.updated",
+  "price.created",
+  "price.updated",
+  "checkout.session.completed",
+  "customer.subscription.updated",
+  "customer.subscription.deleted",
 ]);
 
 const handler = createApiHandler();
 
 handler.post(async (req, res) => {
   const buf = await buffer(req);
-  const sig = req.headers['stripe-signature'];
+  const sig = req.headers["stripe-signature"];
   let event;
 
   try {
@@ -62,8 +62,8 @@ handler.post(async (req, res) => {
   if (relevantEvents.has(event.type)) {
     try {
       switch (event.type) {
-        case 'product.created':
-        case 'product.updated': {
+        case "product.created":
+        case "product.updated": {
           const data = event.data.object as Stripe.Product;
           await prisma.product.upsert({
             where: {
@@ -85,8 +85,8 @@ handler.post(async (req, res) => {
           });
           break;
         }
-        case 'price.created':
-        case 'price.updated': {
+        case "price.created":
+        case "price.updated": {
           const data = event.data.object as Stripe.Price;
           await prisma.price.upsert({
             where: {
@@ -119,7 +119,7 @@ handler.post(async (req, res) => {
           });
           break;
         }
-        case 'customer.subscription.deleted': {
+        case "customer.subscription.deleted": {
           const data = event.data.object as Stripe.Subscription;
 
           await prisma.subscription.delete({
@@ -130,7 +130,7 @@ handler.post(async (req, res) => {
 
           break;
         }
-        case 'customer.subscription.updated': {
+        case "customer.subscription.updated": {
           const data = event.data.object as Stripe.Subscription;
 
           const product = await stripe.products.retrieve(
@@ -163,19 +163,19 @@ handler.post(async (req, res) => {
           });
           break;
         }
-        case 'checkout.session.completed':
+        case "checkout.session.completed":
           {
             const data = event.data.object as Stripe.Checkout.Session;
             const userId = data.client_reference_id as string;
 
             if (!userId) {
-              throw new Error('No user id found');
+              throw new Error("No user id found");
             }
 
             const subscription = await stripe.subscriptions.retrieve(
               data.subscription as string,
               {
-                expand: ['default_payment_method'],
+                expand: ["default_payment_method"],
               }
             );
 

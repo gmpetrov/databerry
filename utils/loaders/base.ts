@@ -1,6 +1,6 @@
-import { AppDatasource as Datasource } from '@prisma/client';
+import { AppDatasource as Datasource } from "@prisma/client";
 
-import { Document } from '@app/utils/datastores/base';
+import { Document } from "@app/utils/datastores/base";
 
 export abstract class DatasourceLoaderBase {
   datasource: Datasource;
@@ -10,7 +10,7 @@ export abstract class DatasourceLoaderBase {
   }
 
   async importLoaders() {
-    return await import('langchain/document_loaders');
+    return await import("langchain/document_loaders");
   }
 
   abstract getSize(param?: any): Promise<number>;

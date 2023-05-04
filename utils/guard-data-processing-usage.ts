@@ -1,7 +1,7 @@
-import { SubscriptionPlan, Usage } from '@prisma/client';
+import { SubscriptionPlan, Usage } from "@prisma/client";
 
-import accountConfig from './account-config';
-import { ApiError, ApiErrorType } from './api-error';
+import accountConfig from "./account-config";
+import { ApiError, ApiErrorType } from "./api-error";
 
 const guardDataProcessingUsage = (props: {
   usage: Usage;

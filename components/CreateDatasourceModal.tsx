@@ -1,26 +1,26 @@
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Modal from '@mui/joy/Modal';
-import Sheet from '@mui/joy/Sheet';
-import Typography from '@mui/joy/Typography';
-import Step from '@mui/material/Step';
-import StepContent from '@mui/material/StepContent';
-import StepLabel from '@mui/material/StepLabel';
-import Stepper from '@mui/material/Stepper';
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Modal from "@mui/joy/Modal";
+import Sheet from "@mui/joy/Sheet";
+import Typography from "@mui/joy/Typography";
+import Step from "@mui/material/Step";
+import StepContent from "@mui/material/StepContent";
+import StepLabel from "@mui/material/StepLabel";
+import Stepper from "@mui/material/Stepper";
 import {
   AppDatasource as Datasource,
   DatasourceType,
   DatastoreType,
-} from '@prisma/client';
-import dynamic from 'next/dynamic';
-import React from 'react';
+} from "@prisma/client";
+import dynamic from "next/dynamic";
+import React from "react";
 
-import useStateReducer from '@app/hooks/useStateReducer';
+import useStateReducer from "@app/hooks/useStateReducer";
 
-import DatasourceOptions from './DatasourceForms/DatasourceOptions';
+import DatasourceOptions from "./DatasourceForms/DatasourceOptions";
 
 const DatasourceForm = dynamic(
-  () => import('@app/components/DatasourceForms'),
+  () => import("@app/components/DatasourceForms"),
   {
     ssr: false,
   }
@@ -69,7 +69,7 @@ export default function CreateDatastoreModal(props: Props) {
 
   const steps = [
     {
-      label: 'Choose a Datasource',
+      label: "Choose a Datasource",
       description: `An empty Datastore is not very useful! Now add some data in it`,
       disableButtons: true,
       component: (
@@ -84,7 +84,7 @@ export default function CreateDatastoreModal(props: Props) {
       ),
     },
     {
-      label: 'Setup the Datasource',
+      label: "Setup the Datasource",
       // description: `An empty Datastore is not very useful! Now add some data in it`,
       disableButtons: true,
       component: state?.selectedSourceType && (
@@ -133,16 +133,16 @@ export default function CreateDatastoreModal(props: Props) {
     <Modal
       onClose={props.handleClose}
       open={props.isOpen!}
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
     >
       <Sheet
         variant="outlined"
         sx={{
           width: 600,
-          maxWidth: '100%',
-          borderRadius: 'md',
+          maxWidth: "100%",
+          borderRadius: "md",
           p: 3,
-          boxShadow: 'lg',
+          boxShadow: "lg",
         }}
       >
         {/* <Alert severity="info">
@@ -177,7 +177,7 @@ export default function CreateDatastoreModal(props: Props) {
                             onClick={handleNext}
                             sx={{ mt: 1, mr: 1 }}
                           >
-                            {index === steps.length - 1 ? 'Finish' : 'Continue'}
+                            {index === steps.length - 1 ? "Finish" : "Continue"}
                           </Button>
                           <Button
                             disabled={index === 0}

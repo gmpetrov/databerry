@@ -1,15 +1,15 @@
-import { NextApiResponse } from 'next';
-import pMap from 'p-map';
-import { z } from 'zod';
+import { NextApiResponse } from "next";
+import pMap from "p-map";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types';
-import { UpsertDatasourceSchema } from '@app/types/models';
-import { deleteFolderFromS3Bucket } from '@app/utils/aws';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import { DatastoreManager } from '@app/utils/datastores';
-import { DatasourceLoader } from '@app/utils/loaders';
-import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types";
+import { UpsertDatasourceSchema } from "@app/types/models";
+import { deleteFolderFromS3Bucket } from "@app/utils/aws";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import { DatastoreManager } from "@app/utils/datastores";
+import { DatasourceLoader } from "@app/utils/loaders";
+import prisma from "@app/utils/prisma-client";
+import validate from "@app/utils/validate";
 
 const handler = createAuthApiHandler();
 
@@ -36,7 +36,7 @@ export const bulkDeleteDatasources = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   const datasources = await prisma.appDatasource.findMany({
@@ -54,7 +54,7 @@ export const bulkDeleteDatasources = async (
 
   for (const { id, datastoreId } of datasources) {
     if (datastore.id !== datastoreId) {
-      throw new Error('Unauthorized');
+      throw new Error("Unauthorized");
     }
   }
 

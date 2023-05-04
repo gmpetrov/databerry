@@ -1,9 +1,9 @@
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import { stripe } from '@app/utils/stripe';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import { stripe } from "@app/utils/stripe";
+import validate from "@app/utils/validate";
 
 const handler = createAuthApiHandler();
 

@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gmpetrov/databerry.git"
+    "url": "git+https://github.com/SergeWilfried/griotai.git"
   },
   "author": "Georges Petrov",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gmpetrov/databerry/issues"
+    "url": "https://github.com/SergeWilfried/griotai/issues"
   },
-  "homepage": "https://github.com/gmpetrov/databerry#readme"
+  "homepage": "https://github.com/SergeWilfried/griotai#readme"
 }

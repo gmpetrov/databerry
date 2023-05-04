@@ -1,8 +1,8 @@
-import { GetServerSideProps } from 'next';
-import { getServerSession } from 'next-auth/next';
+import { GetServerSideProps } from "next";
+import { getServerSession } from "next-auth/next";
 
-import { authOptions } from '@app/pages/api/auth/[...nextauth]';
-import { RouteNames } from '@app/types';
+import { authOptions } from "@app/pages/api/auth/[...nextauth]";
+import { RouteNames } from "@app/types";
 
 export const withAuth: (fn: any) => GetServerSideProps = (gssp) => {
   return async (ctx) => {

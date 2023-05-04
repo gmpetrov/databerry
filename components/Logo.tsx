@@ -1,6 +1,6 @@
-import clsx from 'clsx';
-import Image from 'next/image';
-import React, { forwardRef } from 'react';
+import clsx from "clsx";
+import Image from "next/image";
+import React, { forwardRef } from "react";
 
 interface Props extends React.HtmlHTMLAttributes<HTMLImageElement> {
   src?: string;
@@ -14,7 +14,7 @@ const Logo = forwardRef<HTMLImageElement, Props>(
         {...(otherProps as any)}
         width="200"
         height="200"
-        className={clsx('h-auto w-12', className)}
+        className={clsx("h-auto w-12", className)}
         alt="GriotAI"
       />
     );
@@ -22,7 +22,7 @@ const Logo = forwardRef<HTMLImageElement, Props>(
 );
 
 Logo.defaultProps = {
-  src: '/databerry-logo-icon.png',
+  src: "/databerry-logo-icon.png",
 };
 
 export default Logo;

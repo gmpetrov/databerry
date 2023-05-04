@@ -1,7 +1,7 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import { zodResolver } from "@hookform/resolvers/zod";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import {
   Button,
   Card,
@@ -14,21 +14,21 @@ import {
   Select,
   Stack,
   Typography,
-} from '@mui/joy';
-import { Prisma } from '@prisma/client';
-import axios from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
-import { z } from 'zod';
+} from "@mui/joy";
+import { Prisma } from "@prisma/client";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import { z } from "zod";
 
-import useStateReducer from '@app/hooks/useStateReducer';
-import { getAgents } from '@app/pages/api/agents';
-import { getSlackIntegrations } from '@app/pages/api/integrations/slack/integrations';
-import { fetcher } from '@app/utils/swr-fetcher';
+import useStateReducer from "@app/hooks/useStateReducer";
+import { getAgents } from "@app/pages/api/agents";
+import { getSlackIntegrations } from "@app/pages/api/integrations/slack/integrations";
+import { fetcher } from "@app/utils/swr-fetcher";
 
 type Props = {
   isOpen: boolean;
@@ -46,10 +46,10 @@ export default function SlackBotSettingsModal(props: Props) {
   const router = useRouter();
   const getSlackIntegrationsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getSlackIntegrations>
-  >('/api/integrations/slack/integrations', fetcher);
+  >("/api/integrations/slack/integrations", fetcher);
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
-    '/api/agents',
+    "/api/agents",
     fetcher
   );
 
@@ -72,7 +72,7 @@ export default function SlackBotSettingsModal(props: Props) {
         agentId: values.agentId,
       })}`
     ),
-      '_blank';
+      "_blank";
   };
 
   const handleUpdate = async (values: z.infer<typeof Schema>) => {
@@ -111,7 +111,7 @@ export default function SlackBotSettingsModal(props: Props) {
 
   useEffect(() => {
     if (integration) {
-      methodsUpdate.setValue('agentId', integration?.agentId as string, {
+      methodsUpdate.setValue("agentId", integration?.agentId as string, {
         shouldDirty: false,
       });
     }
@@ -125,13 +125,13 @@ export default function SlackBotSettingsModal(props: Props) {
       open={props.isOpen}
       onClose={props.handleCloseModal}
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         p: 2,
       }}
     >
-      <Card sx={{ width: '100%', maxWidth: 400 }}>
+      <Card sx={{ width: "100%", maxWidth: 400 }}>
         <Typography level="h4">Slack Bot</Typography>
         <Typography color="neutral" level="h6">
           Settings
@@ -139,18 +139,18 @@ export default function SlackBotSettingsModal(props: Props) {
         <Divider sx={{ my: 2 }}></Divider>
 
         {isLoading ? (
-          <CircularProgress size="sm" sx={{ mx: 'auto', my: 4 }} />
+          <CircularProgress size="sm" sx={{ mx: "auto", my: 4 }} />
         ) : (
           <>
             {integration ? (
               <form className="flex flex-col">
-                <Stack direction={'column'}>
+                <Stack direction={"column"}>
                   <FormControl>
                     <FormLabel>Connected Agent</FormLabel>
                     <Select
                       defaultValue={integration?.agentId}
                       onChange={(_, value) => {
-                        methodsUpdate.setValue('agentId', value as string, {
+                        methodsUpdate.setValue("agentId", value as string, {
                           shouldValidate: true,
                         });
                       }}
@@ -164,7 +164,7 @@ export default function SlackBotSettingsModal(props: Props) {
                   </FormControl>
                 </Stack>
 
-                <Stack sx={{ mt: 4, ml: 'auto' }} direction={'row'} gap={1}>
+                <Stack sx={{ mt: 4, ml: "auto" }} direction={"row"} gap={1}>
                   <Button
                     startDecorator={<DeleteRoundedIcon />}
                     color="danger"
@@ -192,11 +192,11 @@ export default function SlackBotSettingsModal(props: Props) {
                 onSubmit={methods.handleSubmit(onSubmit)}
                 className="flex flex-col"
               >
-                <Stack direction={'column'}>
+                <Stack direction={"column"}>
                   <Select
                     placeholder="Agent to connect to Slack"
                     onChange={(_, value) => {
-                      methods.setValue('agentId', value as string, {
+                      methods.setValue("agentId", value as string, {
                         shouldValidate: true,
                       });
                     }}
@@ -212,7 +212,7 @@ export default function SlackBotSettingsModal(props: Props) {
                 <Button
                   type="submit"
                   endDecorator={<ArrowForwardRoundedIcon />}
-                  sx={{ mt: 4, ml: 'auto' }}
+                  sx={{ mt: 4, ml: "auto" }}
                   disabled={!methods.formState.isValid}
                 >
                   Connect to Slack

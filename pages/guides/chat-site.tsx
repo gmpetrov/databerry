@@ -1,12 +1,12 @@
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import { Box, Breadcrumbs, Divider, Stack, Typography } from '@mui/joy';
-import Link from 'next/link';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import { z } from 'zod';
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import { Box, Breadcrumbs, Divider, Stack, Typography } from "@mui/joy";
+import Link from "next/link";
+import { ReactElement } from "react";
+import * as React from "react";
+import { z } from "zod";
 
-import Layout from '@app/components/Layout';
-import { RouteNames } from '@app/types';
+import Layout from "@app/components/Layout";
+import { RouteNames } from "@app/types";
 
 const Schema = z.object({ query: z.string().min(1) });
 
@@ -16,11 +16,11 @@ export default function DatasourcesPage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        maxHeight: '100%',
-        overflow: 'hidden',
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        maxHeight: "100%",
+        overflow: "hidden",
         px: {
           xs: 2,
           md: 6,
@@ -32,8 +32,8 @@ export default function DatasourcesPage() {
           md: 3,
         },
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         minWidth: 0,
         gap: 1,
       })}
@@ -43,10 +43,10 @@ export default function DatasourcesPage() {
         aria-label="breadcrumbs"
         separator={<ChevronRightRoundedIcon />}
         sx={{
-          '--Breadcrumbs-gap': '1rem',
-          '--Icon-fontSize': '16px',
-          fontWeight: 'lg',
-          color: 'neutral.400',
+          "--Breadcrumbs-gap": "1rem",
+          "--Icon-fontSize": "16px",
+          fontWeight: "lg",
+          color: "neutral.400",
           px: 0,
         }}
       >
@@ -75,21 +75,21 @@ export default function DatasourcesPage() {
 
       <Box
         sx={(theme) => ({
-          maxWidth: '100%',
+          maxWidth: "100%",
           width: theme.breakpoints.values.md,
-          mx: 'auto',
+          mx: "auto",
           mt: 4,
         })}
       >
         <Stack gap={4}>
           <Typography level="body1">
-            1. Get the API Key of one of your Datastore{' '}
+            1. Get the API Key of one of your Datastore{" "}
           </Typography>
           <Typography level="body1">
             {`2. Go to Crisp's marketplace and install GriotAI plugin`}
           </Typography>
           <Typography level="body1">
-            3. Get the API Key of one of your Datastore{' '}
+            3. Get the API Key of one of your Datastore{" "}
           </Typography>
         </Stack>
       </Box>

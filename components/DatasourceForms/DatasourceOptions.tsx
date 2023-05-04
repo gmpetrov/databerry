@@ -1,10 +1,10 @@
-import Chip from '@mui/joy/Chip';
-import Sheet from '@mui/joy/Sheet';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { DatasourceType } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import React from 'react';
+import Chip from "@mui/joy/Chip";
+import Sheet from "@mui/joy/Sheet";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { DatasourceType } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import React from "react";
 
 type Props = {
   onSelect: (type: DatasourceType) => any;
@@ -22,33 +22,33 @@ type DatsourceOption = {
 const options: DatsourceOption[] = [
   {
     type: DatasourceType.text,
-    label: 'Text',
-    description: 'Paste some text',
+    label: "Text",
+    description: "Paste some text",
     icon: undefined,
   },
   {
     type: DatasourceType.web_page,
-    label: 'Web Page',
-    description: 'Crawl text from a web page',
+    label: "Web Page",
+    description: "Crawl text from a web page",
     icon: undefined,
   },
   {
     type: DatasourceType.web_site,
-    label: 'Web Site',
-    description: 'Crawl all pages of a web site',
+    label: "Web Site",
+    description: "Crawl all pages of a web site",
     icon: undefined,
     isPremium: true,
   },
   {
-    type: 'file' as any,
-    label: 'File',
-    description: 'It can be: PDF, CSV, JSON, Text, PowerPoint, Word, Excel',
+    type: "file" as any,
+    label: "File",
+    description: "It can be: PDF, CSV, JSON, Text, PowerPoint, Word, Excel",
     disabled: false,
   },
   {
-    type: 'notion' as any,
-    label: 'Notion',
-    description: 'Download a Notion notebook',
+    type: "notion" as any,
+    label: "Notion",
+    description: "Download a Notion notebook",
     // icon: '/notion-logo.svg',
     disabled: true,
   },
@@ -58,16 +58,16 @@ const DatasourceOptions = (props: Props) => {
   const { data: session, status } = useSession();
   return (
     <div className="flex space-x-4">
-      <Stack className="space-y-4" direction={'row'} flexWrap={'wrap'}>
+      <Stack className="space-y-4" direction={"row"} flexWrap={"wrap"}>
         {options.map((each) => (
           <Sheet
             key={each.type}
             variant="outlined"
             sx={{
-              borderRadius: 'md',
+              borderRadius: "md",
               p: 1.5,
-              width: '100%',
-              ':hover': { cursor: 'pointer' },
+              width: "100%",
+              ":hover": { cursor: "pointer" },
             }}
             onClick={
               each.disabled || (each.isPremium && !session?.user?.isPremium)
@@ -79,7 +79,7 @@ const DatasourceOptions = (props: Props) => {
 
             <Stack gap={1}>
               <Stack gap={1} direction="row">
-                <Typography level="body1" fontWeight={'bold'}>
+                <Typography level="body1" fontWeight={"bold"}>
                   {each.label}
                 </Typography>
                 {each.isPremium && (

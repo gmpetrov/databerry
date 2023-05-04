@@ -1,11 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import nc, { ErrorHandler } from 'next-connect';
+import { NextApiRequest, NextApiResponse } from "next";
+import nc, { ErrorHandler } from "next-connect";
 
-import { AppNextApiRequest } from '@app/types';
-import auth from '@app/utils/auth';
+import { AppNextApiRequest } from "@app/types";
+import auth from "@app/utils/auth";
 
-import { ApiError } from './api-error';
-import { Handle, options } from './validate';
+import { ApiError } from "./api-error";
+import { Handle, options } from "./validate";
 
 export const onError: ErrorHandler<NextApiRequest, NextApiResponse> = (
   err,
@@ -13,7 +13,7 @@ export const onError: ErrorHandler<NextApiRequest, NextApiResponse> = (
   res,
   next
 ) => {
-  console.log('err', err);
+  console.log("err", err);
   res.status(500).end(err.toString());
 };
 
@@ -41,7 +41,7 @@ export function respond<T>(f: Handle<T>) {
       console.log(err);
       res.statusCode = (err as any)?.status || 500;
 
-      let message = '';
+      let message = "";
 
       if (err instanceof ApiError) {
         message = err.message;

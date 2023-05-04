@@ -1,6 +1,6 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import { zodResolver } from "@hookform/resolvers/zod";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import {
   Alert,
   Box,
@@ -17,29 +17,29 @@ import {
   Sheet,
   Stack,
   Typography,
-} from '@mui/joy';
-import { Prisma } from '@prisma/client';
-import axios from 'axios';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
-import { z } from 'zod';
+} from "@mui/joy";
+import { Prisma } from "@prisma/client";
+import axios from "axios";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { ReactElement } from "react";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import { z } from "zod";
 
-import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
-import { RouteNames } from '@app/types';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import Layout from "@app/components/Layout";
+import useStateReducer from "@app/hooks/useStateReducer";
+import { RouteNames } from "@app/types";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
 const SlackBotModal = dynamic(
-  () => import('@app/components/SlackBotSettingsModal'),
+  () => import("@app/components/SlackBotSettingsModal"),
   {
     ssr: false,
   }
@@ -75,22 +75,22 @@ export default function DatasourcesPage() {
           md: 3,
         },
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         minWidth: 0,
         // height: '100dvh',
-        width: '100%',
+        width: "100%",
         gap: 1,
       })}
     >
       <Box
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           my: 1,
           gap: 1,
-          flexWrap: 'wrap',
+          flexWrap: "wrap",
         }}
       >
         <Typography level="h1" fontSize="xl4">
@@ -102,18 +102,18 @@ export default function DatasourcesPage() {
 
       <Stack
         direction={{
-          xs: 'column',
-          lg: 'row',
+          xs: "column",
+          lg: "row",
         }}
-        width={'100%'}
+        width={"100%"}
         gap={4}
         justifyContent={{
-          xs: 'center',
-          lg: 'flex-start',
+          xs: "center",
+          lg: "flex-start",
         }}
         alignItems={{
-          xs: 'center',
-          lg: 'flex-start',
+          xs: "center",
+          lg: "flex-start",
         }}
       >
         <Card
@@ -123,7 +123,7 @@ export default function DatasourcesPage() {
           <Box className="relative w-full px-2 py-12 text-center">
             <Typography
               level="h2"
-              fontWeight={'bold'}
+              fontWeight={"bold"}
               className="relative z-10 block"
               sx={(theme) => theme.typography.display1}
             >
@@ -132,9 +132,9 @@ export default function DatasourcesPage() {
 
             <Typography>ChatGPT Bot trained on website data</Typography>
 
-            <Stack direction={'column'} gap={1} mt={4}>
-              <Typography level={'body2'}>Integrated via</Typography>
-              <Link target="_blank" href={'https://crisp.chat/'}>
+            <Stack direction={"column"} gap={1} mt={4}>
+              <Typography level={"body2"}>Integrated via</Typography>
+              <Link target="_blank" href={"https://crisp.chat/"}>
                 <Image
                   className="w-32 mx-auto "
                   src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg"
@@ -151,10 +151,10 @@ export default function DatasourcesPage() {
           <Stack
             p={4}
             sx={{
-              with: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              with: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
             gap={2}
           >
@@ -167,7 +167,7 @@ export default function DatasourcesPage() {
                 <Button
                   endDecorator={<ArrowForwardRoundedIcon />}
                   variant="outlined"
-                  sx={{ width: '100%' }}
+                  sx={{ width: "100%" }}
                 >
                   Settings
                 </Button>
@@ -183,7 +183,7 @@ export default function DatasourcesPage() {
                 <Button
                   endDecorator={<ArrowForwardRoundedIcon />}
                   variant="outlined"
-                  sx={{ width: '100%' }}
+                  sx={{ width: "100%" }}
                 >
                   Subscribe
                 </Button>
@@ -204,7 +204,7 @@ export default function DatasourcesPage() {
           <Box className="relative w-full px-2 py-12 text-center">
             <Typography
               level="h2"
-              fontWeight={'bold'}
+              fontWeight={"bold"}
               className="relative z-10 block"
               sx={(theme) => theme.typography.display1}
             >
@@ -215,7 +215,7 @@ export default function DatasourcesPage() {
               ChatGPT Bot trained on company data with superpowers ✨
             </Typography>
 
-            <Stack direction={'column'} gap={1} mt={4}>
+            <Stack direction={"column"} gap={1} mt={4}>
               <Image
                 className="w-16 mx-auto "
                 src="/slack-logo.png"
@@ -231,10 +231,10 @@ export default function DatasourcesPage() {
           <Stack
             p={4}
             sx={{
-              with: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              with: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
             gap={2}
           >
@@ -243,7 +243,7 @@ export default function DatasourcesPage() {
                 onClick={() => setState({ isSlackModalOpen: true })}
                 endDecorator={<ArrowForwardRoundedIcon />}
                 variant="outlined"
-                sx={{ width: '100%' }}
+                sx={{ width: "100%" }}
               >
                 Settings
               </Button>
@@ -258,7 +258,7 @@ export default function DatasourcesPage() {
                 <Button
                   endDecorator={<ArrowForwardRoundedIcon />}
                   variant="outlined"
-                  sx={{ width: '100%' }}
+                  sx={{ width: "100%" }}
                 >
                   Subscribe
                 </Button>
