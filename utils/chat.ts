@@ -80,7 +80,7 @@ Answer (use same language as the query, the text between START_QUERY and END_QUE
 
   const model = new OpenAI({
     modelName: 'gpt-3.5-turbo',
-    temperature: 0,
+    // temperature: 0,
     streaming: Boolean(stream),
     callbacks: [
       {
