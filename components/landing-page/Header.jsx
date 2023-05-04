@@ -82,7 +82,7 @@ function MobileNavigation() {
             className="absolute inset-x-0 flex flex-col p-4 mt-4 text-lg tracking-tight origin-top bg-white shadow-xl top-full rounded-2xl text-slate-900 ring-1 ring-slate-900/5"
           >
             <MobileNavLink href="/pricing">Pricing</MobileNavLink>
-            <MobileNavLink href="https://github.com/gmpetrov/databerry">
+            <MobileNavLink href="https://github.com/SergeWilfried/griotai">
               GitHub
             </MobileNavLink>
             <MobileNavLink href="https://docs.databerry.ai/">
@@ -127,7 +127,7 @@ export function Header() {
 <Menu />
 
               <NavLink href="/pricing">Pricing</NavLink>
-              <NavLink href="https://github.com/gmpetrov/databerry">
+              <NavLink href="https://github.com/SergeWilfried/griotai">
                 GitHub
               </NavLink>
               <NavLink href="https://docs.databerry.ai/">

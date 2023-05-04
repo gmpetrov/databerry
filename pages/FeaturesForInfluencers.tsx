@@ -4,14 +4,14 @@ const features = [
   {
     name: 'Personalized Engagement',
     description:
-      'Clones of yourself in the form of AI chatbots can help to engage with your followers on Watsapp or messenger with your knowledge and personality',
+      'Clones of yourself in the form of AI chatbots can help to engage with your followers on Whatsapp or messenger with your knowledge and personality',
     href: '#',
     icon: SwatchIcon,
   },
   {
     name: 'Become an Advisor or Influencer',
     description:
-      'Your personal Watsapp AI chatbot can act as a digital mentor or influencer, guiding your followers and sharing your expertise.',
+      'Your personal Whatsapp AI chatbot can act as a digital mentor or influencer, guiding your followers and sharing your expertise.',
     href: '#',
     icon: StarIcon,
   },
