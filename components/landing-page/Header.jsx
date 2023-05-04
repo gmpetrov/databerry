@@ -113,7 +113,7 @@ export function Header() {
             <div className="hidden md:flex md:gap-x-6">
               {/* <Link href={RouteNames.CHAT_SITE}>
                 <Button
-                  href="/products/chat-site"
+                  href="/products/crisp-plugin"
                   size="sm"
                   variant="outlined"
                   color="success"

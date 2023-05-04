@@ -17,7 +17,7 @@ export function Footer() {
             <div className="flex justify-center -my-1 gap-x-6">
             {/* <Link href={RouteNames.CHAT_SITE}>
                 <Button
-                  href="/products/chat-site"
+                  href="/products/crisp-plugin"
                   size="sm"
                   variant="outlined"
                   color="success"
