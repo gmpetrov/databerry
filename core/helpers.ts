@@ -7,7 +7,6 @@ export const absUrl = (path: string): string => {
     path = path.substring(1);
   }
 
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
   return `${appUrl}/${path}`;
 };
