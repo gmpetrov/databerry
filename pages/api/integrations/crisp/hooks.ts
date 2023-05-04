@@ -128,7 +128,7 @@ const handleSendInput = async ({
     from: 'operator',
     origin: 'chat',
     user: {
-      type: 'website',
+      type: 'participant',
       nickname: agentName || 'Databerry.ai',
       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
@@ -167,6 +167,11 @@ const handleQuery = async (
         from: 'operator',
         origin: 'chat',
         content: 'Usage limit reached.',
+        user: {
+          type: 'participant',
+          nickname: agent?.name || 'Databerry.ai',
+          avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+        },
       }
     );
   }
@@ -178,6 +183,11 @@ const handleQuery = async (
     from: 'operator',
     origin: 'chat',
     content: answer,
+    user: {
+      type: 'participant',
+      nickname: agent?.name || 'Databerry.ai',
+      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+    },
   });
 
   return new Promise((resolve, reject) => {
