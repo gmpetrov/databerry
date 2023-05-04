@@ -46,7 +46,8 @@ const chat = async ({
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
 
   const finalPrompt = `${prompt || CUSTOMER_SUPPORT}
-Ensure that your responses are clear, concise, and do not reiterate the same information. Create a final answer with references ("SOURCE") if relevant.
+Ensure that your responses are clear, detailed, and do not reiterate the same information. Create a final answer with references ("SOURCE") if relevant.
+NEVER BREAK THE CHARACTER MENTIONED ABOVE.
 
 START_CONTEXT:
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
@@ -79,8 +80,8 @@ END_QUERY
 Answer (use same language as the query, the text between START_QUERY and END_QUERY, but never translate SOURCES and ulrs):`;
 
   const model = new OpenAI({
-    modelName: "gpt-3.5-turbo",
-    temperature: 0,
+    modelName: 'gpt-3.5-turbo',
+    // temperature: 0,
     streaming: Boolean(stream),
     callbacks: [
       {
@@ -91,15 +92,15 @@ Answer (use same language as the query, the text between START_QUERY and END_QUE
 
   const output = await model.call(finalPrompt);
 
-  const regex = /SOURCE:\s*(.+)/;
-  const match = output?.trim()?.match(regex);
-  const source = match?.[1]?.replace("N/A", "")?.replace("None", "")?.trim();
+  // const regex = /SOURCE:\s*(.+)/;
+  // const match = output?.trim()?.match(regex);
+  // const source = match?.[1]?.replace('N/A', '')?.replace('None', '')?.trim();
 
-  let answer = output?.trim()?.replace(regex, "")?.trim();
-  answer = source ? `${answer}\n\n${source}` : answer;
+  // let answer = output?.trim()?.replace(regex, '')?.trim();
+  // answer = source ? `${answer}\n\n${source}` : answer;
 
   return {
-    answer,
+    answer: output?.trim?.(),
   } as ChatResponse;
 };
 

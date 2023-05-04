@@ -188,7 +188,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               ]);
             } else {
               // const data = JSON.parse(event.data || `{}`);
-              buffer += event.data as string;
+              buffer += decodeURIComponent(event.data) as string;
               console.log(buffer);
 
               const h = [...history];

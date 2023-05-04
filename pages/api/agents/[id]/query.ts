@@ -60,7 +60,8 @@ export const chatAgentRequest = async (
   }
 
   const streamData = (data: string) => {
-    res.write(`data: ${data}\n\n`);
+    const input = data === '[DONE]' ? data : encodeURIComponent(data);
+    res.write(`data: ${input}\n\n`);
   };
 
   const [answer] = await Promise.all([

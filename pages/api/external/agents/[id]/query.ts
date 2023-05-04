@@ -97,7 +97,8 @@ export const queryAgent = async (
   }
 
   const streamData = (data: string) => {
-    res.write(`data: ${data}\n\n`);
+    const input = data === '[DONE]' ? data : encodeURIComponent(data);
+    res.write(`data: ${input}\n\n`);
   };
 
   const manager = new AgentManager({ agent, topK: 3 });
