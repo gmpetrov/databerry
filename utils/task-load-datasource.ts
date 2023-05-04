@@ -93,7 +93,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
         nestedSitemaps = sitemaps;
       } else {
         // Fallback to recursive search
-        urls = await findDomainPages((data as any).config.source);
+        urls = await findDomainPages(source);
       }
     } else {
       return;
