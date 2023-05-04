@@ -359,7 +359,7 @@ export default function BaseForm(props: Props) {
               ]);
             }}
             handleClose={() => {
-              setIsCreateDatastoreModalOpen(true);
+              setIsCreateDatastoreModalOpen(false);
             }}
           />
           {/* )} */}
