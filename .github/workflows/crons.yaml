@@ -2,8 +2,8 @@ name: Trigger Reset Usage
 
 on:
   schedule:
-    # Runs At 00:00 on day-of-month 1" 
-    - cron: '0 0 1 * *'
+    # Runs At 00:00 on day-of-month 1"
+    - cron: "0 0 1 * *"
 
 jobs:
   build:

@@ -1,14 +1,14 @@
-import { AgentVisibility, ToolType } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import { AgentVisibility, ToolType } from "@prisma/client";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types';
-import { UpsertAgentSchema } from '@app/types/dtos';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import cuid from '@app/utils/cuid';
-import generateFunId from '@app/utils/generate-fun-id';
-import prisma from '@app/utils/prisma-client';
-import uuidv4 from '@app/utils/uuid';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types";
+import { UpsertAgentSchema } from "@app/types/dtos";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import cuid from "@app/utils/cuid";
+import generateFunId from "@app/utils/generate-fun-id";
+import prisma from "@app/utils/prisma-client";
+import uuidv4 from "@app/utils/uuid";
+import validate from "@app/utils/validate";
 
 const handler = createAuthApiHandler();
 
@@ -32,7 +32,7 @@ export const getAgents = async (
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 
@@ -60,7 +60,7 @@ export const upsertAgent = async (
     });
 
     if (existingAgent?.ownerId !== session?.user?.id) {
-      throw new Error('Unauthorized');
+      throw new Error("Unauthorized");
     }
   }
 

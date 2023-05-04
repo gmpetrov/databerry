@@ -1,9 +1,9 @@
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
-import uuidv4 from '@app/utils/uuid';
+import { AppNextApiRequest } from "@app/types/index";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
+import uuidv4 from "@app/utils/uuid";
 
 const handler = createAuthApiHandler();
 
@@ -32,7 +32,7 @@ export const getApiKeys = async (
   }
 
   if (apiKeys?.[0]?.datastore?.ownerId !== session?.user?.id) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    return res.status(403).json({ error: "Unauthorized" });
   }
 
   return apiKeys;
@@ -54,7 +54,7 @@ export const createApiKey = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    return res.status(403).json({ error: "Unauthorized" });
   }
 
   const apiKey = await prisma.datastoreApiKey.create({
@@ -98,7 +98,7 @@ export const deleteApiKey = async (
     apiKey?.datastoreId !== id ||
     apiKey?.datastore?.ownerId !== session?.user?.id
   ) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    return res.status(403).json({ error: "Unauthorized" });
   }
 
   const deleted = await prisma.datastoreApiKey.delete({

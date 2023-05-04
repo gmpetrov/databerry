@@ -1,60 +1,60 @@
 import {
   EventStreamContentType,
   fetchEventSource,
-} from '@microsoft/fetch-event-source';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
-import IntegrationInstructionsRoundedIcon from '@mui/icons-material/IntegrationInstructionsRounded';
-import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
-import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
-import SettingsIcon from '@mui/icons-material/Settings';
-import type { ColorPaletteProp } from '@mui/joy';
-import Alert from '@mui/joy/Alert';
-import Box from '@mui/joy/Box';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Button from '@mui/joy/Button';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Stack from '@mui/joy/Stack';
-import Tab from '@mui/joy/Tab';
-import TabList from '@mui/joy/TabList';
-import Tabs from '@mui/joy/Tabs';
-import Typography from '@mui/joy/Typography';
-import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
-import axios, { AxiosError } from 'axios';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import useSWR from 'swr';
+} from "@microsoft/fetch-event-source";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
+import IntegrationInstructionsRoundedIcon from "@mui/icons-material/IntegrationInstructionsRounded";
+import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
+import PaletteRoundedIcon from "@mui/icons-material/PaletteRounded";
+import SettingsIcon from "@mui/icons-material/Settings";
+import type { ColorPaletteProp } from "@mui/joy";
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import Button from "@mui/joy/Button";
+import Chip from "@mui/joy/Chip";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Stack from "@mui/joy/Stack";
+import Tab from "@mui/joy/Tab";
+import TabList from "@mui/joy/TabList";
+import Tabs from "@mui/joy/Tabs";
+import Typography from "@mui/joy/Typography";
+import { DatastoreVisibility, Prisma, ToolType } from "@prisma/client";
+import axios, { AxiosError } from "axios";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { ReactElement } from "react";
+import * as React from "react";
+import useSWR from "swr";
 
-import AgentForm from '@app/components/AgentForm';
-import ChatBox from '@app/components/ChatBox';
-import ChatBubble from '@app/components/ChatBubble';
-import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
-import { getAgent } from '@app/pages/api/agents/[id]';
-import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
-import { RouteNames } from '@app/types';
-import agentToolFormat from '@app/utils/agent-tool-format';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import getRootDomain from '@app/utils/get-root-domain';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import AgentForm from "@app/components/AgentForm";
+import ChatBox from "@app/components/ChatBox";
+import ChatBubble from "@app/components/ChatBubble";
+import Layout from "@app/components/Layout";
+import useStateReducer from "@app/hooks/useStateReducer";
+import { getAgent } from "@app/pages/api/agents/[id]";
+import { BulkDeleteDatasourcesSchema } from "@app/pages/api/datasources/bulk-delete";
+import { RouteNames } from "@app/types";
+import agentToolFormat from "@app/utils/agent-tool-format";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import getRootDomain from "@app/utils/get-root-domain";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
 const ChatInterfaceConfigForm = dynamic(
-  () => import('@app/components/ChatInterfaceConfigForm'),
+  () => import("@app/components/ChatInterfaceConfigForm"),
   {
     ssr: false,
   }
@@ -64,7 +64,7 @@ export default function AgentPage() {
   const router = useRouter();
   const [state, setState] = useStateReducer({
     currentDatastoreId: undefined as string | undefined,
-    history: [] as { from: 'human' | 'agent'; message: string }[],
+    history: [] as { from: "human" | "agent"; message: string }[],
   });
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
@@ -75,7 +75,7 @@ export default function AgentPage() {
   const handleDeleteAgent = async () => {
     if (
       window.confirm(
-        'Are you sure you want to delete this agent? This action is irreversible.'
+        "Are you sure you want to delete this agent? This action is irreversible."
       )
     ) {
       await axios.delete(`/api/agents/${getAgentQuery?.data?.id}`);
@@ -89,27 +89,27 @@ export default function AgentPage() {
       return;
     }
 
-    const history = [...state.history, { from: 'human', message }];
+    const history = [...state.history, { from: "human", message }];
     const nextIndex = history.length;
 
     setState({
       history: history as any,
     });
 
-    let answer = '';
-    let error = '';
+    let answer = "";
+    let error = "";
 
     try {
       const ctrl = new AbortController();
-      let buffer = '';
+      let buffer = "";
 
       class RetriableError extends Error {}
       class FatalError extends Error {}
 
       await fetchEventSource(`/api/agents/${getAgentQuery?.data?.id}/query`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           // Accept: 'text/event-stream',
         },
         body: JSON.stringify({
@@ -121,7 +121,7 @@ export default function AgentPage() {
         async onopen(response) {
           if (
             response.ok &&
-            response.headers.get('content-type') === EventStreamContentType
+            response.headers.get("content-type") === EventStreamContentType
           ) {
             return; // everything's good
           } else if (
@@ -143,12 +143,12 @@ export default function AgentPage() {
           throw new RetriableError();
         },
         onerror(err) {
-          console.log('on error', err, Object.keys(err));
+          console.log("on error", err, Object.keys(err));
           if (err instanceof FatalError) {
             ctrl.abort();
             throw err; // rethrow to stop the operation
           } else if (err instanceof ApiError) {
-            console.log('ApiError', ApiError);
+            console.log("ApiError", ApiError);
             throw err;
           } else {
             // do nothing to automatically retry. You can also
@@ -157,17 +157,17 @@ export default function AgentPage() {
         },
 
         onmessage: (event) => {
-          if (event.data === '[DONE]') {
+          if (event.data === "[DONE]") {
             ctrl.abort();
-          } else if (event.data?.startsWith('[ERROR]')) {
+          } else if (event.data?.startsWith("[ERROR]")) {
             ctrl.abort();
 
             setState({
               history: [
                 ...history,
                 {
-                  from: 'agent',
-                  message: event.data.replace('[ERROR]', ''),
+                  from: "agent",
+                  message: event.data.replace("[ERROR]", ""),
                 } as any,
               ],
             });
@@ -181,7 +181,7 @@ export default function AgentPage() {
             if (h?.[nextIndex]) {
               h[nextIndex].message = `${buffer}`;
             } else {
-              h.push({ from: 'agent', message: buffer });
+              h.push({ from: "agent", message: buffer });
             }
 
             setState({
@@ -191,14 +191,14 @@ export default function AgentPage() {
         },
       });
     } catch (err) {
-      console.log('err', err);
+      console.log("err", err);
       if (err instanceof ApiError) {
         if (err?.message) {
           error = err?.message;
 
           if (error === ApiErrorType.USAGE_LIMIT) {
             answer =
-              'Usage limit reached. Please upgrade your plan to get higher usage.';
+              "Usage limit reached. Please upgrade your plan to get higher usage.";
           } else {
             answer = `Error: ${error}`;
           }
@@ -209,7 +209,7 @@ export default function AgentPage() {
         setState({
           history: [
             ...history,
-            { from: 'agent', message: answer as string },
+            { from: "agent", message: answer as string },
           ] as any,
         });
       }
@@ -222,8 +222,8 @@ export default function AgentPage() {
   };
 
   React.useEffect(() => {
-    if (typeof window !== 'undefined' && !router.query.tab) {
-      handleChangeTab('chat');
+    if (typeof window !== "undefined" && !router.query.tab) {
+      handleChangeTab("chat");
     }
   }, [router.query.tab]);
 
@@ -253,14 +253,14 @@ export default function AgentPage() {
           md: 3,
         },
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         minWidth: 0,
         // height: '100dvh',
-        width: '100%',
-        ...(router.query.tab === 'chat'
+        width: "100%",
+        ...(router.query.tab === "chat"
           ? {
-              height: '100%',
+              height: "100%",
             }
           : {}),
         gap: 1,
@@ -272,10 +272,10 @@ export default function AgentPage() {
           aria-label="breadcrumbs"
           separator={<ChevronRightRoundedIcon />}
           sx={{
-            '--Breadcrumbs-gap': '1rem',
-            '--Icon-fontSize': '16px',
-            fontWeight: 'lg',
-            color: 'neutral.400',
+            "--Breadcrumbs-gap": "1rem",
+            "--Icon-fontSize": "16px",
+            fontWeight: "lg",
+            color: "neutral.400",
             px: 0,
           }}
         >
@@ -299,12 +299,12 @@ export default function AgentPage() {
 
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
+            display: "flex",
+            alignItems: "center",
             mt: 1,
             mb: 2,
             gap: 1,
-            flexWrap: 'wrap',
+            flexWrap: "wrap",
             // '& > *': {
             //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
             //   flexGrow: 1,
@@ -312,7 +312,7 @@ export default function AgentPage() {
           }}
         >
           <Stack gap={2}>
-            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
               <Typography level="h1" fontSize="xl4">
                 {getAgentQuery?.data?.name}
               </Typography>
@@ -321,8 +321,8 @@ export default function AgentPage() {
                 variant="soft"
                 color={
                   {
-                    public: 'success',
-                    private: 'neutral',
+                    public: "success",
+                    private: "neutral",
                   }[getAgentQuery?.data?.visibility!] as ColorPaletteProp
                 }
               >
@@ -330,14 +330,14 @@ export default function AgentPage() {
               </Chip>
             </Box>
 
-            <Stack direction={'row'} gap={2} alignItems={'center'}>
+            <Stack direction={"row"} gap={2} alignItems={"center"}>
               <Tabs
                 aria-label="Icon tabs"
-                defaultValue={(router.query.tab as string) || 'chat'}
+                defaultValue={(router.query.tab as string) || "chat"}
                 size="md"
                 sx={{
-                  borderRadius: 'lg',
-                  display: 'inline-flex',
+                  borderRadius: "lg",
+                  display: "inline-flex",
                   //   mt: 4,
                 }}
                 onChange={(event, value) => {
@@ -345,13 +345,13 @@ export default function AgentPage() {
                 }}
               >
                 <TabList size="sm">
-                  <Tab value={'chat'}>
+                  <Tab value={"chat"}>
                     <ListItemDecorator>
                       <MessageRoundedIcon />
                     </ListItemDecorator>
                     Chat
                   </Tab>
-                  <Tab value={'settings'}>
+                  <Tab value={"settings"}>
                     <ListItemDecorator>
                       <SettingsIcon />
                     </ListItemDecorator>
@@ -360,14 +360,14 @@ export default function AgentPage() {
                 </TabList>
               </Tabs>
 
-              {router.query.tab === 'settings' && (
+              {router.query.tab === "settings" && (
                 <>
                   <Link href={`#chat-interface-config`}>
                     <Button
                       size="sm"
                       variant="plain"
                       startDecorator={<PaletteRoundedIcon />}
-                      sx={{ mr: 'auto' }}
+                      sx={{ mr: "auto" }}
                     >
                       Customize interface
                     </Button>
@@ -378,7 +378,7 @@ export default function AgentPage() {
                       size="sm"
                       variant="plain"
                       startDecorator={<IntegrationInstructionsRoundedIcon />}
-                      sx={{ mr: 'auto' }}
+                      sx={{ mr: "auto" }}
                     >
                       Embed on website
                     </Button>
@@ -391,14 +391,14 @@ export default function AgentPage() {
 
         <Divider sx={{ mb: 4 }} />
 
-        {router.query.tab === 'chat' && (
+        {router.query.tab === "chat" && (
           <Box
             sx={{
-              position: 'relative',
-              width: '100%',
-              height: '100%',
-              maxHeight: '100%',
-              overflow: 'hidden',
+              position: "relative",
+              width: "100%",
+              height: "100%",
+              maxHeight: "100%",
+              overflow: "hidden",
             }}
           >
             <ChatBox messages={state.history} onSubmit={handleChatSubmit} />
@@ -408,12 +408,12 @@ export default function AgentPage() {
         {
           <Box
             sx={(theme) => ({
-              maxWidth: '100%',
+              maxWidth: "100%",
               width: theme.breakpoints.values.md,
-              mx: 'auto',
+              mx: "auto",
             })}
           >
-            {router.query.tab === 'settings' && (
+            {router.query.tab === "settings" && (
               <>
                 <AgentForm
                   onSubmitSucces={() => getAgentQuery.mutate()}
@@ -487,7 +487,7 @@ export default function AgentPage() {
 
                   <Button
                     color="danger"
-                    sx={{ mr: 'auto', mt: 2 }}
+                    sx={{ mr: "auto", mt: 2 }}
                     startDecorator={<DeleteIcon />}
                     onClick={handleDeleteAgent}
                   >

@@ -1,9 +1,9 @@
-import Crisp from 'crisp-api';
+import Crisp from "crisp-api";
 
 const client = new Crisp();
 
 client.authenticateTier(
-  'plugin',
+  "plugin",
   process.env.CRISP_TOKEN_ID!,
   process.env.CRISP_TOKEN_KEY!
 );
@@ -18,7 +18,7 @@ export const getConnectedWebsites = async () => {
     };
   }
 
-  console.log('WEBSITES', connected);
+  console.log("WEBSITES", connected);
 
   return connected;
 };

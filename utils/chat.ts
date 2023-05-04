@@ -1,10 +1,10 @@
-import { Datastore } from '@prisma/client';
-import { OpenAI } from 'langchain/llms/openai';
+import { Datastore } from "@prisma/client";
+import { OpenAI } from "langchain/llms/openai";
 
-import { ChatResponse } from '@app/types';
+import { ChatResponse } from "@app/types";
 
-import { DatastoreManager } from './datastores';
-import { CUSTOMER_SUPPORT } from './prompt-templates';
+import { DatastoreManager } from "./datastores";
+import { CUSTOMER_SUPPORT } from "./prompt-templates";
 
 const chat = async ({
   datastore,
@@ -36,7 +36,7 @@ const chat = async ({
 
   const context = results
     ?.map((each) => `CHUNK: ${each.text}\nSOURCE: ${each.source}`)
-    ?.join('\n\n');
+    ?.join("\n\n");
 
   // const finalPrompt = `As a customer support agent, channel the spirit of William Shakespeare, the renowned playwright and poet known for his eloquent and poetic language, use of iambic pentameter, and frequent use of metaphors and wordplay. Respond to the user's question or issue in the style of the Bard himself.
   // const finalPrompt = `As a customer support agent, channel the spirit of Arnold Schwarzenegger, the iconic actor and former governor known for his distinctive Austrian accent, catchphrases, and action-hero persona. Respond to the user's question or issue in the style of Arnold himself.
@@ -79,7 +79,7 @@ END_QUERY
 Answer (use same language as the query, the text between START_QUERY and END_QUERY, but never translate SOURCES and ulrs):`;
 
   const model = new OpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: "gpt-3.5-turbo",
     temperature: 0,
     streaming: Boolean(stream),
     callbacks: [
@@ -93,9 +93,9 @@ Answer (use same language as the query, the text between START_QUERY and END_QUE
 
   const regex = /SOURCE:\s*(.+)/;
   const match = output?.trim()?.match(regex);
-  const source = match?.[1]?.replace('N/A', '')?.replace('None', '')?.trim();
+  const source = match?.[1]?.replace("N/A", "")?.replace("None", "")?.trim();
 
-  let answer = output?.trim()?.replace(regex, '')?.trim();
+  let answer = output?.trim()?.replace(regex, "")?.trim();
   answer = source ? `${answer}\n\n${source}` : answer;
 
   return {

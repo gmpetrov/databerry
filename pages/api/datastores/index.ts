@@ -1,14 +1,14 @@
-import { DatastoreVisibility } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import { DatastoreVisibility } from "@prisma/client";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types';
-import { CreateDatastoreRequestSchema } from '@app/types/dtos';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import cuid from '@app/utils/cuid';
-import generateFunId from '@app/utils/generate-fun-id';
-import prisma from '@app/utils/prisma-client';
-import uuidv4 from '@app/utils/uuid';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types";
+import { CreateDatastoreRequestSchema } from "@app/types/dtos";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import cuid from "@app/utils/cuid";
+import generateFunId from "@app/utils/generate-fun-id";
+import prisma from "@app/utils/prisma-client";
+import uuidv4 from "@app/utils/uuid";
+import validate from "@app/utils/validate";
 
 const handler = createAuthApiHandler();
 
@@ -30,7 +30,7 @@ export const getDatastores = async (
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 
@@ -55,7 +55,7 @@ export const createDatastore = async (
     });
 
     if (existingDatastore?.ownerId !== session?.user?.id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      return res.status(403).json({ message: "Unauthorized" });
     }
   }
 

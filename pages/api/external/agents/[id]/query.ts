@@ -1,22 +1,22 @@
-import { SubscriptionPlan, Usage } from '@prisma/client';
-import Cors from 'cors';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { SubscriptionPlan, Usage } from "@prisma/client";
+import Cors from "cors";
+import { NextApiRequest, NextApiResponse } from "next";
 
-import { ChatRequest } from '@app/types/dtos';
-import { AppNextApiRequest } from '@app/types/index';
-import accountConfig from '@app/utils/account-config';
-import AgentManager from '@app/utils/agent';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import prisma from '@app/utils/prisma-client';
-import runMiddleware from '@app/utils/run-middleware';
-import { validate } from '@app/utils/validate';
+import { ChatRequest } from "@app/types/dtos";
+import { AppNextApiRequest } from "@app/types/index";
+import accountConfig from "@app/utils/account-config";
+import AgentManager from "@app/utils/agent";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
+import prisma from "@app/utils/prisma-client";
+import runMiddleware from "@app/utils/run-middleware";
+import { validate } from "@app/utils/validate";
 
 const handler = createApiHandler();
 
 const cors = Cors({
-  methods: ['POST', 'HEAD'],
+  methods: ["POST", "HEAD"],
 });
 
 export const queryAgent = async (
@@ -28,7 +28,7 @@ export const queryAgent = async (
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
-  const apiKey = authHeader && authHeader.split(' ')?.[1];
+  const apiKey = authHeader && authHeader.split(" ")?.[1];
 
   if (!agentId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -45,7 +45,7 @@ export const queryAgent = async (
           apiKeys: true,
           subscriptions: {
             where: {
-              status: 'active',
+              status: "active",
             },
           },
         },
@@ -90,9 +90,9 @@ export const queryAgent = async (
 
   if (data.streaming) {
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
     });
   }
 
@@ -115,7 +115,7 @@ export const queryAgent = async (
   ]);
 
   if (data.streaming) {
-    streamData('[DONE]');
+    streamData("[DONE]");
   } else {
     return {
       answer,

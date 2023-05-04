@@ -1,5 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import { zodResolver } from "@hookform/resolvers/zod";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import {
   Box,
   Button,
@@ -8,12 +8,12 @@ import {
   IconButton,
   Input,
   Stack,
-} from '@mui/joy';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from "@mui/joy";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-type Message = { from: 'human' | 'agent'; message: string };
+type Message = { from: "human" | "agent"; message: string };
 
 type Props = {
   messages: Message[];
@@ -63,39 +63,39 @@ function ChatBox({
   React.useEffect(() => {
     setTimeout(() => {
       setFirstMsg(
-        initialMessage ? { from: 'agent', message: initialMessage } : undefined
+        initialMessage ? { from: "agent", message: initialMessage } : undefined
       );
     }, 0);
   }, [initialMessage]);
 
   return (
     <Stack
-      direction={'column'}
+      direction={"column"}
       gap={2}
       sx={{
-        display: 'flex',
+        display: "flex",
         flex: 1,
-        flexBasis: '100%',
-        maxWidth: '700px',
-        width: '100%',
-        height: '100%',
-        maxHeight: '100%',
-        minHeight: '100%',
-        mx: 'auto',
+        flexBasis: "100%",
+        maxWidth: "700px",
+        width: "100%",
+        height: "100%",
+        maxHeight: "100%",
+        minHeight: "100%",
+        mx: "auto",
       }}
     >
       <Stack
         ref={scrollableRef}
-        direction={'column'}
+        direction={"column"}
         gap={2}
         sx={{
-          boxSizing: 'border-box',
-          maxWidth: '100%',
-          width: '100%',
-          mx: 'auto',
+          boxSizing: "border-box",
+          maxWidth: "100%",
+          width: "100%",
+          mx: "auto",
           flex: 1,
-          maxHeight: '100%',
-          overflowY: 'auto',
+          maxHeight: "100%",
+          overflowY: "auto",
           pb: 8,
           pt: 2,
         }}
@@ -103,13 +103,13 @@ function ChatBox({
         {firstMsg && (
           <Card
             size="sm"
-            variant={'outlined'}
-            color={'primary'}
+            variant={"outlined"}
+            color={"primary"}
             className="message-agent"
             sx={{
-              mr: 'auto',
-              ml: 'none',
-              whiteSpace: 'pre-wrap',
+              mr: "auto",
+              ml: "none",
+              whiteSpace: "pre-wrap",
             }}
           >
             {firstMsg?.message}
@@ -120,15 +120,15 @@ function ChatBox({
           <Card
             size="sm"
             key={index}
-            variant={'outlined'}
+            variant={"outlined"}
             className={
-              each.from === 'agent' ? 'message-agent' : 'message-human'
+              each.from === "agent" ? "message-agent" : "message-human"
             }
-            color={each.from === 'agent' ? 'primary' : 'neutral'}
+            color={each.from === "agent" ? "primary" : "neutral"}
             sx={{
-              mr: each.from === 'agent' ? 'auto' : 'none',
-              ml: each.from === 'human' ? 'auto' : 'none',
-              whiteSpace: 'pre-wrap',
+              mr: each.from === "agent" ? "auto" : "none",
+              ml: each.from === "human" ? "auto" : "none",
+              whiteSpace: "pre-wrap",
             }}
           >
             {each.message}
@@ -140,7 +140,7 @@ function ChatBox({
             variant="soft"
             color="neutral"
             size="sm"
-            sx={{ mx: 'auto', my: 2 }}
+            sx={{ mx: "auto", my: 2 }}
           />
         )}
       </Stack>
@@ -150,17 +150,17 @@ function ChatBox({
 
       <form
         style={{
-          maxWidth: '100%',
-          width: '100%',
-          position: 'relative',
-          display: 'flex',
+          maxWidth: "100%",
+          width: "100%",
+          position: "relative",
+          display: "flex",
 
-          marginTop: 'auto',
-          overflow: 'visible',
-          background: 'none',
-          justifyContent: 'center',
-          marginLeft: 'auto',
-          marginRight: 'auto',
+          marginTop: "auto",
+          overflow: "visible",
+          background: "none",
+          justifyContent: "center",
+          marginLeft: "auto",
+          marginRight: "auto",
           // paddingLeft: 'inherit',
           // paddingRight: 'inherit',
         }}
@@ -171,12 +171,12 @@ function ChatBox({
             direction="row"
             gap={1}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               zIndex: 1,
-              transform: 'translateY(-100%)',
-              flexWrap: 'wrap',
+              transform: "translateY(-100%)",
+              flexWrap: "wrap",
               mt: -1,
-              left: '0',
+              left: "0",
             }}
           >
             {messageTemplates?.map((each, idx) => (
@@ -192,7 +192,7 @@ function ChatBox({
           </Stack>
         )}
         <Input
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
           // disabled={!state.currentDatastoreId || state.loading}
           variant="outlined"
           endDecorator={
@@ -200,7 +200,7 @@ function ChatBox({
               <SendRoundedIcon />
             </IconButton>
           }
-          {...methods.register('query')}
+          {...methods.register("query")}
         />
       </form>
     </Stack>

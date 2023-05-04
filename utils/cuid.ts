@@ -1,3 +1,3 @@
-import cuid from 'cuid';
+import cuid from "cuid";
 
 export default cuid as () => string;

@@ -1,9 +1,9 @@
-import { Agent, AgentVisibility, UserApiKey } from '@prisma/client';
+import { Agent, AgentVisibility, UserApiKey } from "@prisma/client";
 
-import { AgentInterfaceConfig } from '@app/types/models';
+import { AgentInterfaceConfig } from "@app/types/models";
 
-import { AgentWithTools } from './agent';
-import { ApiError, ApiErrorType } from './api-error';
+import { AgentWithTools } from "./agent";
+import { ApiError, ApiErrorType } from "./api-error";
 
 type Props = {
   agent: AgentWithTools & {
@@ -15,7 +15,7 @@ type Props = {
   apiKey?: string;
 };
 const guardExternalAgent = ({ agent, apiKey, hostname }: Props) => {
-  console.log('{ agent, apiKey, hostname }', { agent, apiKey, hostname });
+  console.log("{ agent, apiKey, hostname }", { agent, apiKey, hostname });
 
   if (!agent) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
@@ -31,7 +31,7 @@ const guardExternalAgent = ({ agent, apiKey, hostname }: Props) => {
   if (agent?.visibility === AgentVisibility.private) {
     if (
       !agent?.owner?.apiKeys.find((each) => each.key === apiKey) &&
-      !authrorizedDomains.includes(hostname || '')
+      !authrorizedDomains.includes(hostname || "")
     )
       throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }

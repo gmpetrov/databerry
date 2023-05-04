@@ -1,18 +1,18 @@
-import Alert from '@mui/joy/Alert';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { DatasourceType } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
+import Alert from "@mui/joy/Alert";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { DatasourceType } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import { z } from "zod";
 
-import Input from '@app/components/Input';
-import { UpsertDatasourceSchema } from '@app/types/models';
-import accountConfig from '@app/utils/account-config';
+import Input from "@app/components/Input";
+import { UpsertDatasourceSchema } from "@app/types/models";
+import accountConfig from "@app/utils/account-config";
 
-import Base from './Base';
-import type { DatasourceFormProps } from './types';
+import Base from "./Base";
+import type { DatasourceFormProps } from "./types";
 
 type Props = DatasourceFormProps & {};
 
@@ -29,22 +29,22 @@ export const WebSiteSourceSchema = UpsertDatasourceSchema.extend({
             .string()
             .url()
             .parse(data.sitemap, {
-              path: ['config.sitemap'],
+              path: ["config.sitemap"],
             });
         } else if (data.source) {
           return !!z
             .string()
             .url()
             .parse(data.source, {
-              path: ['config.source'],
+              path: ["config.source"],
             });
         }
 
         return false;
       },
       {
-        message: 'You must provide either a web site URL or a sitemap URL',
-        path: ['config.sitemap', 'config.source'],
+        message: "You must provide either a web site URL or a sitemap URL",
+        path: ["config.sitemap", "config.source"],
       }
     ),
 });
@@ -61,25 +61,25 @@ function Nested() {
           label="Web Site URL"
           helperText="e.g.: https://example.com/"
           control={control as any}
-          {...register('config.source')}
+          {...register("config.source")}
         />
         <Alert color="info">
           <Stack>
             Will automatically try to find all pages on the website during 45s
             max.
             <strong>
-              Limited to{' '}
+              Limited to{" "}
               {
                 accountConfig[session?.user?.currentPlan!]?.limits
                   ?.maxWebsiteURL
               }
-              {' Pages on your plan.'}
+              {" Pages on your plan."}
             </strong>
           </Stack>
         </Alert>
       </Stack>
 
-      <Typography color="primary" fontWeight={'bold'} mx={'auto'} mt={2}>
+      <Typography color="primary" fontWeight={"bold"} mx={"auto"} mt={2}>
         Or
       </Typography>
 
@@ -88,19 +88,19 @@ function Nested() {
           label="Sitemap URL"
           helperText="e.g.: https://example.com/sitemap.xml"
           control={control as any}
-          {...register('config.sitemap')}
+          {...register("config.sitemap")}
         />
 
         <Alert color="info">
           <Stack>
             Will process all pages in the sitemap.
             <strong>
-              Limited to{' '}
+              Limited to{" "}
               {
                 accountConfig[session?.user?.currentPlan!]?.limits
                   ?.maxWebsiteURL
               }
-              {' Pages on your plan.'}
+              {" Pages on your plan."}
             </strong>
           </Stack>
         </Alert>

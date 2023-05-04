@@ -7,31 +7,31 @@ import {
   SparklesIcon,
   SwatchIcon,
   TrashIcon,
-} from '@heroicons/react/24/outline';
+} from "@heroicons/react/24/outline";
 
 const features = [
   {
-    name: 'Efficiency',
+    name: "Efficiency",
     description:
-      'Chatbots provide fast, efficient communication that can streamline workflows and reduce response times for customers.',
+      "Chatbots provide fast, efficient communication that can streamline workflows and reduce response times for customers.",
     icon: BoltIcon,
   },
   {
-    name: 'Personalization',
+    name: "Personalization",
     description:
-      'With chatbots, you can create a personalized experience for your audience, allowing them to engage with your brand in a more meaningful way.',
+      "With chatbots, you can create a personalized experience for your audience, allowing them to engage with your brand in a more meaningful way.",
     icon: SwatchIcon,
   },
   {
-    name: 'Automation',
+    name: "Automation",
     description:
-      'Chatbots can automate repetitive tasks, allowing your team to focus on higher-level work and increasing overall productivity.',
+      "Chatbots can automate repetitive tasks, allowing your team to focus on higher-level work and increasing overall productivity.",
     icon: SparklesIcon,
   },
   {
-    name: 'Cost Savings',
+    name: "Cost Savings",
     description:
-      'Chatbots can provide cost savings by reducing the need for large support or customer service teams, and are available 24/7 for customer inquiries.',
+      "Chatbots can provide cost savings by reducing the need for large support or customer service teams, and are available 24/7 for customer inquiries.",
     icon: CurrencyDollarIcon,
   },
 ];

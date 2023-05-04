@@ -1,22 +1,22 @@
-import { SubscriptionPlan } from '@prisma/client';
-import Crisp from 'crisp-api';
-import cuid from 'cuid';
-import { NextApiResponse } from 'next';
+import { SubscriptionPlan } from "@prisma/client";
+import Crisp from "crisp-api";
+import cuid from "cuid";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import AgentManager from '@app/utils/agent';
-import { createApiHandler } from '@app/utils/createa-api-handler';
-import getSubdomain from '@app/utils/get-subdomain';
-import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import AgentManager from "@app/utils/agent";
+import { createApiHandler } from "@app/utils/createa-api-handler";
+import getSubdomain from "@app/utils/get-subdomain";
+import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
+import prisma from "@app/utils/prisma-client";
+import validate from "@app/utils/validate";
 
 const handler = createApiHandler();
 
 const CrispClient = new Crisp();
 
 CrispClient.authenticateTier(
-  'plugin',
+  "plugin",
   process.env.CRISP_TOKEN_ID!,
   process.env.CRISP_TOKEN_KEY!
 );
@@ -25,15 +25,15 @@ CrispClient.authenticateTier(
 CrispClient.setRtmMode(Crisp.RTM_MODES.WebHooks);
 
 type HookEventType =
-  | 'message:send'
-  | 'message:updated'
-  | 'message:compose:send'
-  | 'message:notify:unread:send'
-  | 'message:acknowledge:delivered';
+  | "message:send"
+  | "message:updated"
+  | "message:compose:send"
+  | "message:notify:unread:send"
+  | "message:acknowledge:delivered";
 
-type HookDataType = 'text';
+type HookDataType = "text";
 
-type HookFrom = 'user' | 'operator';
+type HookFrom = "user" | "operator";
 
 type HookBodyBase = {
   website_id: string;
@@ -45,7 +45,7 @@ type HookBodyBase = {
 };
 
 type HookBodyMessageSent = HookBodyBase & {
-  event: Extract<HookEventType, 'message:send'>;
+  event: Extract<HookEventType, "message:send">;
   data: {
     type: HookDataType;
     origin: string;
@@ -63,7 +63,7 @@ type HookBodyMessageSent = HookBodyBase & {
 };
 
 type HookBodyMessageUpdated = HookBodyBase & {
-  event: Extract<HookEventType, 'message:updated'>;
+  event: Extract<HookEventType, "message:updated">;
   data: {
     content: {
       id: string;
@@ -106,7 +106,7 @@ const getAgent = async (websiteId: string) => {
   const agent = integration?.agent;
 
   if (!agent) {
-    throw new Error('Datastore not found');
+    throw new Error("Datastore not found");
   }
 
   return agent;
@@ -124,19 +124,19 @@ const handleSendInput = async ({
   agentName?: string;
 }) => {
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
-    type: 'field',
-    from: 'operator',
-    origin: 'chat',
+    type: "field",
+    from: "operator",
+    origin: "chat",
     user: {
-      type: 'website',
-      nickname: agentName || 'GriotAI.ai',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+      type: "website",
+      nickname: agentName || "GriotAI.ai",
+      avatar: "https://databerry.ai/databerry-rounded-bg-white.png",
     },
 
     content: {
       id: `databerry-query-${cuid()}`,
       text: `✨ Ask ${agentName || `GriotAI.ai`}`,
-      explain: 'Query',
+      explain: "Query",
       value,
     },
   });
@@ -163,10 +163,10 @@ const handleQuery = async (
       websiteId,
       sessionId,
       {
-        type: 'text',
-        from: 'operator',
-        origin: 'chat',
-        content: 'Usage limit reached.',
+        type: "text",
+        from: "operator",
+        origin: "chat",
+        content: "Usage limit reached.",
       }
     );
   }
@@ -174,9 +174,9 @@ const handleQuery = async (
   const answer = await new AgentManager({ agent }).query(query);
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
-    type: 'text',
-    from: 'operator',
-    origin: 'chat',
+    type: "text",
+    from: "operator",
+    origin: "chat",
     content: answer,
   });
 
@@ -189,14 +189,14 @@ const handleQuery = async (
 };
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
-  const host = req?.headers?.['host'];
+  const host = req?.headers?.["host"];
   const subdomain = getSubdomain(host!);
   const body = req.body as HookBody;
 
-  console.log('BODY', body);
+  console.log("BODY", body);
 
-  const _timestamp = req.headers['x-crisp-request-timestamp'];
-  const _signature = req.headers['x-crisp-signature'];
+  const _timestamp = req.headers["x-crisp-request-timestamp"];
+  const _signature = req.headers["x-crisp-signature"];
 
   const verified = CrispClient.verifyHook(
     process.env.CRISP_HOOK_SECRET!,
@@ -217,23 +217,23 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   );
 
   const hasSentDataberryInputOnce = !!messages?.find((msg: any) =>
-    msg?.content?.id?.startsWith?.('databerry-query')
+    msg?.content?.id?.startsWith?.("databerry-query")
   );
   //   const nbUserMsg =
   //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
 
-  if (req.headers['x-delivery-attempt-count'] !== '1') {
+  if (req.headers["x-delivery-attempt-count"] !== "1") {
     return res.status(200).json({
-      hello: 'world',
+      hello: "world",
     });
   }
 
   switch (body.event) {
-    case 'message:send':
+    case "message:send":
       if (
-        body.data.origin === 'chat' &&
-        body.data.from === 'user' &&
-        body.data.type === 'text'
+        body.data.origin === "chat" &&
+        body.data.from === "user" &&
+        body.data.type === "text"
       ) {
         if (!hasSentDataberryInputOnce) {
           const agent = await getAgent(body.website_id);
@@ -255,9 +255,9 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       }
 
       break;
-    case 'message:updated':
+    case "message:updated":
       if (
-        body.data.content.id?.startsWith?.('databerry-query') &&
+        body.data.content.id?.startsWith?.("databerry-query") &&
         body.data.content.value
       ) {
         // x-delivery-attempt-count
@@ -275,7 +275,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   }
 
   res.status(200).json({
-    hello: 'world',
+    hello: "world",
   });
 
   return;

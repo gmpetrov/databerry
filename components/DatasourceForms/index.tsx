@@ -1,20 +1,20 @@
-import { DatasourceType } from '@prisma/client';
-import dynamic from 'next/dynamic';
-import React from 'react';
+import { DatasourceType } from "@prisma/client";
+import dynamic from "next/dynamic";
+import React from "react";
 
-const TextForm = dynamic(() => import('./TextForm'), {
+const TextForm = dynamic(() => import("./TextForm"), {
   ssr: false,
 });
 
-const WebPageForm = dynamic(() => import('./WebPageForm'), {
+const WebPageForm = dynamic(() => import("./WebPageForm"), {
   ssr: false,
 });
 
-const WebSiteForm = dynamic(() => import('./WebSiteForm'), {
+const WebSiteForm = dynamic(() => import("./WebSiteForm"), {
   ssr: false,
 });
 
-const FileForm = dynamic(() => import('./FileForm'), {
+const FileForm = dynamic(() => import("./FileForm"), {
   ssr: false,
 });
 

@@ -1,10 +1,10 @@
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { deleteFolderFromS3Bucket } from '@app/utils/aws';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import { DatastoreManager } from '@app/utils/datastores';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest } from "@app/types/index";
+import { deleteFolderFromS3Bucket } from "@app/utils/aws";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import { DatastoreManager } from "@app/utils/datastores";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createAuthApiHandler();
 
@@ -29,7 +29,7 @@ export const getDatasource = async (
   });
 
   if (datasource?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   return datasource;
@@ -55,7 +55,7 @@ export const deleteDatasource = async (
   });
 
   if (datasource?.owner?.id !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   await Promise.all([

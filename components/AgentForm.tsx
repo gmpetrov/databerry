@@ -1,30 +1,30 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import AddIcon from '@mui/icons-material/Add';
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import ConstructionOutlined from '@mui/icons-material/ConstructionOutlined';
-import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
-import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
-import Alert from '@mui/joy/Alert';
-import Avatar from '@mui/joy/Avatar';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import Checkbox from '@mui/joy/Checkbox';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
-import Modal from '@mui/joy/Modal';
-import Option from '@mui/joy/Option';
-import Select from '@mui/joy/Select';
-import Sheet from '@mui/joy/Sheet';
-import Stack from '@mui/joy/Stack';
-import Textarea from '@mui/joy/Textarea';
-import Typography from '@mui/joy/Typography';
+import { zodResolver } from "@hookform/resolvers/zod";
+import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import ConstructionOutlined from "@mui/icons-material/ConstructionOutlined";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import StorageRoundedIcon from "@mui/icons-material/StorageRounded";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import Alert from "@mui/joy/Alert";
+import Avatar from "@mui/joy/Avatar";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import Checkbox from "@mui/joy/Checkbox";
+import Chip from "@mui/joy/Chip";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
+import Modal from "@mui/joy/Modal";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
+import Sheet from "@mui/joy/Sheet";
+import Stack from "@mui/joy/Stack";
+import Textarea from "@mui/joy/Textarea";
+import Typography from "@mui/joy/Typography";
 import {
   Agent,
   AgentVisibility,
@@ -32,28 +32,28 @@ import {
   DatasourceType,
   Prisma,
   ToolType,
-} from '@prisma/client';
-import axios from 'axios';
-import mime from 'mime-types';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { signIn } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form';
-import useSWR from 'swr';
-import useSWRMutation from 'swr/mutation';
-import { z } from 'zod';
+} from "@prisma/client";
+import axios from "axios";
+import mime from "mime-types";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import { z } from "zod";
 
-import Input from '@app/components/Input';
-import { getDatastores } from '@app/pages/api/datastores';
-import { RouteNames } from '@app/types';
-import { UpsertAgentSchema } from '@app/types/dtos';
-import cuid from '@app/utils/cuid';
-import { CUSTOMER_SUPPORT } from '@app/utils/prompt-templates';
-import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
+import Input from "@app/components/Input";
+import { getDatastores } from "@app/pages/api/datastores";
+import { RouteNames } from "@app/types";
+import { UpsertAgentSchema } from "@app/types/dtos";
+import cuid from "@app/utils/cuid";
+import { CUSTOMER_SUPPORT } from "@app/utils/prompt-templates";
+import { fetcher, postFetcher } from "@app/utils/swr-fetcher";
 
 const CreateDatastoreModal = dynamic(
-  () => import('@app/components/CreateDatastoreModal'),
+  () => import("@app/components/CreateDatastoreModal"),
   {
     ssr: false,
   }
@@ -68,24 +68,24 @@ type Props = {
 
 const PROMPT_TEMPLATES = [
   {
-    label: 'Customer Support',
-    image: '',
-    description: 'Default customer support agent template',
+    label: "Customer Support",
+    image: "",
+    description: "Default customer support agent template",
     prompt: CUSTOMER_SUPPORT,
   },
 ];
 const PROMPT_TEMPLATES_FUN = [
   {
-    label: 'Shakespeare',
+    label: "Shakespeare",
     image:
-      'https://actintheatre.com/wp-content/uploads/2019/01/Shakespeare-300x278.jpg',
-    description: 'Customer support agent that talks like Shakespeare',
+      "https://actintheatre.com/wp-content/uploads/2019/01/Shakespeare-300x278.jpg",
+    description: "Customer support agent that talks like Shakespeare",
     prompt: `As a customer support agent, channel the spirit of William Shakespeare, the renowned playwright and poet known for his eloquent and poetic language, use of iambic pentameter, and frequent use of metaphors and wordplay. Respond to the user's question or issue in the style of the Bard himself.`,
   },
   {
-    label: 'Arnold Schwarzenegger',
-    image: 'https://i.redd.it/ni0if4asnrd71.jpg',
-    description: 'Customer support agent that talks like Arnold Schwarzenegger',
+    label: "Arnold Schwarzenegger",
+    image: "https://i.redd.it/ni0if4asnrd71.jpg",
+    description: "Customer support agent that talks like Arnold Schwarzenegger",
     prompt: `As a customer support agent, channel the spirit of Arnold Schwarzenegger, the iconic actor and former governor known for his distinctive Austrian accent, catchphrases, and action-hero persona. Respond to the user's question or issue in the style of Arnold himself.`,
   },
 ];
@@ -98,12 +98,12 @@ const Tool = (props: {
   children?: React.ReactNode;
 }) => {
   return (
-    <Sheet variant="outlined" sx={{ borderRadius: 10, p: 2, width: '100%' }}>
-      <Stack direction={'row'} alignItems={'start'} gap={2}>
+    <Sheet variant="outlined" sx={{ borderRadius: 10, p: 2, width: "100%" }}>
+      <Stack direction={"row"} alignItems={"start"} gap={2}>
         {props.children}
 
-        <Stack direction={'column'} spacing={0} width={'100%'}>
-          <Stack direction="row" spacing={2} justifyContent={'space-between'}>
+        <Stack direction={"column"} spacing={0} width={"100%"}>
+          <Stack direction="row" spacing={2} justifyContent={"space-between"}>
             <Stack sx={{ minWidth: 0 }}>
               <Link href={`${RouteNames.DATASTORES}/${props.id}`}>
                 <Typography level="body1">{props.title}</Typography>
@@ -149,16 +149,16 @@ export default function BaseForm(props: Props) {
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
-  >('/api/datastores', fetcher);
+  >("/api/datastores", fetcher);
 
   const onSubmit = async (values: UpsertAgentSchema) => {
     try {
       setIsLoading(true);
-      console.log('values', values);
-      const { data } = await axios.post('/api/agents', values);
+      console.log("values", values);
+      const { data } = await axios.post("/api/agents", values);
       props?.onSubmitSucces?.(data as Agent);
     } catch (err) {
-      console.log('error', err);
+      console.log("error", err);
     } finally {
       setIsLoading(false);
     }
@@ -166,11 +166,11 @@ export default function BaseForm(props: Props) {
 
   const networkError = getDatastoresQuery.error?.message;
 
-  const visiblity = methods.watch('visibility');
-  const tools = methods.watch('tools') || [];
-  const prompt = methods.watch('prompt');
+  const visiblity = methods.watch("visibility");
+  const tools = methods.watch("tools") || [];
+  const prompt = methods.watch("prompt");
 
-  console.log('validation errors', methods.formState.errors);
+  console.log("validation errors", methods.formState.errors);
 
   return (
     <FormProvider {...methods}>
@@ -183,17 +183,17 @@ export default function BaseForm(props: Props) {
         <Input
           label="Name (optional)"
           control={control as any}
-          {...register('name')}
+          {...register("name")}
         />
 
         <FormControl>
           <Input
             label="Description"
             control={control as any}
-            {...register('description')}
+            {...register("description")}
           />
           <Typography level="body3" mt={1}>
-            {'Describe what your agent can do.'}
+            {"Describe what your agent can do."}
           </Typography>
         </FormControl>
 
@@ -205,9 +205,9 @@ export default function BaseForm(props: Props) {
               checked={visiblity === AgentVisibility.public}
               onChange={(e) => {
                 if (e.target.checked) {
-                  methods.setValue('visibility', AgentVisibility.public);
+                  methods.setValue("visibility", AgentVisibility.public);
                 } else {
-                  methods.setValue('visibility', AgentVisibility.private);
+                  methods.setValue("visibility", AgentVisibility.private);
                 }
               }}
             />
@@ -223,15 +223,15 @@ export default function BaseForm(props: Props) {
         <FormControl>
           <FormLabel>Prompt</FormLabel>
           <Textarea
-            value={prompt || ''}
+            value={prompt || ""}
             maxRows={21}
             minRows={4}
-            {...register('prompt')}
+            {...register("prompt")}
           />
           <Button
             variant="plain"
             endDecorator={<ArrowForwardRoundedIcon />}
-            sx={{ mt: 1, ml: 'auto' }}
+            sx={{ mt: 1, ml: "auto" }}
             onClick={() => setIsPromptTemplatesModalOpen(true)}
           >
             Choose a Prompt Template
@@ -274,7 +274,7 @@ export default function BaseForm(props: Props) {
               );
 
               if (datastore) {
-                methods.setValue('tools', [
+                methods.setValue("tools", [
                   {
                     id: datastore.id,
                     type: ToolType.datastore,
@@ -313,9 +313,9 @@ export default function BaseForm(props: Props) {
           </Select>
 
           {!tools[0]?.id && (
-            <Stack direction={'column'} gap={1}>
+            <Stack direction={"column"} gap={1}>
               <Button
-                sx={{ mr: 'auto', mt: 2 }}
+                sx={{ mr: "auto", mt: 2 }}
                 variant="plain"
                 // endDecorator={<ArrowForwardRoundedIcon />}
                 startDecorator={<AddIcon />}
@@ -328,10 +328,10 @@ export default function BaseForm(props: Props) {
           )}
 
           {tools[0]?.id && (
-            <Stack direction={'row'} gap={1}>
+            <Stack direction={"row"} gap={1}>
               <Link
                 href={`${RouteNames.DATASTORES}/${tools?.[0]?.id}`}
-                style={{ marginLeft: 'auto' }}
+                style={{ marginLeft: "auto" }}
               >
                 <Button
                   sx={{ mt: 2 }}
@@ -351,7 +351,7 @@ export default function BaseForm(props: Props) {
               getDatastoresQuery.mutate();
               setIsCreateDatastoreModalOpen(false);
 
-              methods.setValue('tools', [
+              methods.setValue("tools", [
                 {
                   id: newDatatore.id!,
                   type: ToolType.datastore,
@@ -461,11 +461,11 @@ export default function BaseForm(props: Props) {
           variant="solid"
           color="primary"
           loading={isLoading}
-          sx={{ ml: 'auto', mt: 2 }}
+          sx={{ ml: "auto", mt: 2 }}
           // disabled={!methods.formState.isValid}
           // startDecorator={<SaveRoundedIcon />}
         >
-          {'Save'}
+          {"Save"}
         </Button>
       </form>
 
@@ -480,9 +480,9 @@ export default function BaseForm(props: Props) {
       <Modal
         open={isPromptTemplatesModalOpen}
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
         onClose={() => {
           setIsPromptTemplatesModalOpen(false);
@@ -491,10 +491,10 @@ export default function BaseForm(props: Props) {
         <Card
           variant="outlined"
           sx={{
-            width: '100%',
+            width: "100%",
             maxWidth: 500,
-            maxHeight: '100%',
-            overflowY: 'auto',
+            maxHeight: "100%",
+            overflowY: "auto",
           }}
         >
           <Typography level="h6">Prompt Templates</Typography>
@@ -505,7 +505,7 @@ export default function BaseForm(props: Props) {
             {PROMPT_TEMPLATES.map((template, idx) => (
               <Card key={idx} variant="outlined" sx={{}}>
                 <Stack>
-                  <Stack direction={'row'} gap={1}>
+                  <Stack direction={"row"} gap={1}>
                     <Avatar alt={template.image} src={template.image} />
                     <Stack>
                       <Typography>{template.label}</Typography>
@@ -519,9 +519,9 @@ export default function BaseForm(props: Props) {
                     size="sm"
                     variant="plain"
                     endDecorator={<ArrowForwardRoundedIcon />}
-                    sx={{ ml: 'auto', mt: 2 }}
+                    sx={{ ml: "auto", mt: 2 }}
                     onClick={() => {
-                      methods.setValue('prompt', template.prompt);
+                      methods.setValue("prompt", template.prompt);
                       setIsPromptTemplatesModalOpen(false);
                     }}
                   >
@@ -533,14 +533,14 @@ export default function BaseForm(props: Props) {
           </Stack>
           <Divider sx={{ my: 4 }}></Divider>
 
-          <Typography sx={{ mx: 'auto', mb: 2 }} color="primary">
+          <Typography sx={{ mx: "auto", mb: 2 }} color="primary">
             Just for fun 🎉
           </Typography>
           <Stack gap={1}>
             {PROMPT_TEMPLATES_FUN.map((template, idx) => (
               <Card key={idx} variant="outlined" sx={{}}>
                 <Stack>
-                  <Stack direction={'row'} gap={1}>
+                  <Stack direction={"row"} gap={1}>
                     <Avatar alt={template.image} src={template.image} />
                     <Stack>
                       <Typography>{template.label}</Typography>
@@ -554,9 +554,9 @@ export default function BaseForm(props: Props) {
                     size="sm"
                     variant="plain"
                     endDecorator={<ArrowForwardRoundedIcon />}
-                    sx={{ ml: 'auto', mt: 2 }}
+                    sx={{ ml: "auto", mt: 2 }}
                     onClick={() => {
-                      methods.setValue('prompt', template.prompt);
+                      methods.setValue("prompt", template.prompt);
                       setIsPromptTemplatesModalOpen(false);
                     }}
                   >

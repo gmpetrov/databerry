@@ -1,38 +1,38 @@
-import AddIcon from '@mui/icons-material/Add';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
-import Alert from '@mui/joy/Alert';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { Prisma, SubscriptionPlan } from '@prisma/client';
-import axios from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
-import { z } from 'zod';
+import AddIcon from "@mui/icons-material/Add";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { Prisma, SubscriptionPlan } from "@prisma/client";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { ReactElement } from "react";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import { z } from "zod";
 
-import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
-import accountConfig from '@app/utils/account-config';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import Layout from "@app/components/Layout";
+import useStateReducer from "@app/hooks/useStateReducer";
+import accountConfig from "@app/utils/account-config";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
-import { getApiKeys } from './api/accounts/api-keys';
+import { getApiKeys } from "./api/accounts/api-keys";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -43,13 +43,13 @@ export default function AccountPage() {
   });
 
   const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-    '/api/accounts/api-keys',
+    "/api/accounts/api-keys",
     fetcher
   );
 
   const handleClickManageSubscription = async () => {
     try {
-      const { data } = await axios.post('/api/stripe/customer-portal');
+      const { data } = await axios.post("/api/stripe/customer-portal");
 
       if (data) {
         router.push(data);
@@ -80,10 +80,10 @@ export default function AccountPage() {
   const handleDeleteApiKey = async (id: string) => {
     try {
       if (getApiKeysQuery?.data?.length === 1) {
-        return alert('You must have at least one api key');
+        return alert("You must have at least one api key");
       }
 
-      if (window.confirm('Are you sure you want to delete this api key?')) {
+      if (window.confirm("Are you sure you want to delete this api key?")) {
         setState({
           isLoadingDeleteApiKey: true,
         });
@@ -118,11 +118,11 @@ export default function AccountPage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        maxHeight: '100%',
-        overflowY: 'auto',
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        maxHeight: "100%",
+        overflowY: "auto",
         px: {
           xs: 2,
           md: 6,
@@ -134,8 +134,8 @@ export default function AccountPage() {
           md: 3,
         },
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         minWidth: 0,
         gap: 1,
       })}
@@ -146,12 +146,12 @@ export default function AccountPage() {
 
       <Box
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           my: 1,
           gap: 1,
-          flexWrap: 'wrap',
+          flexWrap: "wrap",
         }}
       >
         <Typography level="h1" fontSize="xl4">
@@ -159,7 +159,7 @@ export default function AccountPage() {
         </Typography>
       </Box>
 
-      <Stack direction={'row'} gap={2}>
+      <Stack direction={"row"} gap={2}>
         <Link href={`#plan`}>
           <Button
             size="sm"
@@ -184,14 +184,14 @@ export default function AccountPage() {
 
       <Box
         sx={(theme) => ({
-          maxWidth: '100%',
+          maxWidth: "100%",
           width: theme.breakpoints.values.md,
-          mx: 'auto',
+          mx: "auto",
         })}
       >
         {/* <stripe-pricing-table
           pricing-table-id="prctbl_1MzJqKIDmvRZDzsDjQUfIE8Z"
-          publishable-key="pk_test_51MsM5yIDmvRZDzsDxkUmQWtyG0gzpBQTkVTJSpcKXl5wnlSnizkCPLSEHoD1izTYfbaZQ0X1By3uKOQa1zA37GcS00lWvBPQHt"
+          publishable-key="pk_live_51N41cNHQFS2NgY7DReNorltREsO8N8KN7Y2wNmrVDxzpwzIuzYMM8cOH1CggkHLd25uoZWg3PXJMcLCYX8t09Epg00J0jbi1D4"
           client-reference-id={session?.user?.id}
           customer-email={session?.user?.email}
         ></stripe-pricing-table> */}
@@ -205,11 +205,11 @@ export default function AccountPage() {
           <Card variant="outlined">
             <Typography
               level="h4"
-              fontWeight={'bold'}
+              fontWeight={"bold"}
               color={
                 currentPlan?.type === SubscriptionPlan?.level_0
-                  ? 'warning'
-                  : 'success'
+                  ? "warning"
+                  : "success"
               }
             >{`${currentPlan?.label}`}</Typography>
 
@@ -217,14 +217,14 @@ export default function AccountPage() {
               <Stack spacing={1}>
                 <Typography level="body1">Current Usage</Typography>
                 <Typography level="h6">
-                  <Stack direction={'row'} spacing={1}>
+                  <Stack direction={"row"} spacing={1}>
                     <Typography color="neutral">Agents Responses:</Typography>
                     <Typography
                       color={
                         session?.user?.usage?.nbAgentQueries >=
                         currentPlan?.limits?.maxAgentsQueries
-                          ? 'danger'
-                          : 'success'
+                          ? "danger"
+                          : "success"
                       }
                     >
                       {`${session?.user?.usage?.nbAgentQueries}/${currentPlan?.limits?.maxAgentsQueries}`}
@@ -247,14 +247,14 @@ export default function AccountPage() {
                   </Stack>
                 </Typography> */}
                 <Typography level="h6">
-                  <Stack direction={'row'} spacing={1}>
+                  <Stack direction={"row"} spacing={1}>
                     <Typography color="neutral">Data Processing:</Typography>
                     <Typography
                       color={
                         session?.user?.usage?.nbDataProcessingBytes >=
                         currentPlan?.limits?.maxDataProcessing
-                          ? 'danger'
-                          : 'success'
+                          ? "danger"
+                          : "success"
                       }
                     >
                       {`${
@@ -309,7 +309,7 @@ export default function AccountPage() {
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
                   session?.user?.id
                 }&prefilled_email=${session?.user?.email}`}
-                style={{ marginLeft: 'auto' }}
+                style={{ marginLeft: "auto" }}
               >
                 <Button
                   endDecorator={<ArrowForwardRoundedIcon />}
@@ -330,7 +330,7 @@ export default function AccountPage() {
                   onClick={handleClickManageSubscription}
                   endDecorator={<ArrowForwardRoundedIcon />}
                   variant="plain"
-                  sx={{ ml: 'auto' }}
+                  sx={{ ml: "auto" }}
                 >
                   Manage Subscription
                 </Button>
@@ -349,7 +349,7 @@ export default function AccountPage() {
               Use the api key to access the GriotAI API
             </Typography>
 
-            <Stack direction={'column'} gap={2} mt={2}>
+            <Stack direction={"column"} gap={2} mt={2}>
               <Alert
                 color="info"
                 startDecorator={<HelpOutlineRoundedIcon />}
@@ -369,8 +369,8 @@ export default function AccountPage() {
               </Alert>
               {getApiKeysQuery?.data?.map((each) => (
                 <>
-                  <Stack key={each.id} direction={'row'} gap={2}>
-                    <Alert color="neutral" sx={{ width: '100%' }}>
+                  <Stack key={each.id} direction={"row"} gap={2}>
+                    <Alert color="neutral" sx={{ width: "100%" }}>
                       {each.key}
                     </Alert>
 
@@ -388,7 +388,7 @@ export default function AccountPage() {
 
             <Button
               startDecorator={<AddIcon />}
-              sx={{ mt: 3, ml: 'auto' }}
+              sx={{ mt: 3, ml: "auto" }}
               variant="outlined"
               onClick={handleCreatApiKey}
             >

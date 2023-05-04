@@ -1,7 +1,7 @@
-import { Datastore } from '@prisma/client';
-import axios from 'axios';
+import { Datastore } from "@prisma/client";
+import axios from "axios";
 
-import { ChatResponse, SearchSimpleResponseSchema } from '@app/types';
+import { ChatResponse, SearchSimpleResponseSchema } from "@app/types";
 
 const QA_TEMPLATE = `You are an AI assistant providing helpful advice. Given the following extracted parts of a long document and a question, create a final answer with references ("SOURCES"). 
 If you don't know the answer, just say that you don't know. Don't try to make up an answer.
@@ -93,12 +93,12 @@ export const loadDatastoreChain = async ({
     RetrievalQAChain,
     StuffDocumentsChain,
     LLMChain,
-  } = await import('langchain/chains');
-  const { PromptTemplate } = await import('langchain/prompts');
-  const { OpenAI } = await import('langchain/llms/openai');
+  } = await import("langchain/chains");
+  const { PromptTemplate } = await import("langchain/prompts");
+  const { OpenAI } = await import("langchain/llms/openai");
   const retriever = new DataberryRetriever({ datastore, topK });
   const model = new OpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: "gpt-3.5-turbo",
   });
 
   //   const chain = ConversationalRetrievalQAChain.fromLLM(
@@ -121,14 +121,14 @@ export const loadDatastoreChain = async ({
       llm: model,
       prompt: new PromptTemplate({
         template: QA_TEMPLATE,
-        inputVariables: ['question', 'context'],
+        inputVariables: ["question", "context"],
       }),
     }),
   });
 
   return RetrievalQAChain.fromLLM(model as any, retriever, {
     returnSourceDocuments: true,
-    inputKey: 'question',
+    inputKey: "question",
     combineDocumentsChain,
   } as any);
 };
@@ -156,7 +156,7 @@ const chat = async ({
   const match = chainResult?.text?.trim()?.match(regex);
   const source = match?.[1];
 
-  let answer = chainResult?.text?.replace(regex, '')?.trim();
+  let answer = chainResult?.text?.replace(regex, "")?.trim();
   answer = source ? `${answer}\n\n${source}` : answer;
   //   const source = match?.[1] && match[1].startWith('http') ? match[1] : '';
 

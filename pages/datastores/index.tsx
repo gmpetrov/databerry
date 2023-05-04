@@ -1,36 +1,36 @@
-import AddIcon from '@mui/icons-material/Add';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import AddIcon from "@mui/icons-material/Add";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import {
   Box,
   Breadcrumbs,
   Button,
   Link as JoyLink,
   Typography,
-} from '@mui/joy';
-import { Prisma } from '@prisma/client';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import useSWR from 'swr';
+} from "@mui/joy";
+import { Prisma } from "@prisma/client";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { ReactElement } from "react";
+import * as React from "react";
+import useSWR from "swr";
 
-import DatastoreTable from '@app/components/DatastoreTable';
-import Layout from '@app/components/Layout';
-import UsageLimitModal from '@app/components/UsageLimitModal';
-import useStateReducer from '@app/hooks/useStateReducer';
-import { RouteNames } from '@app/types';
-import accountConfig from '@app/utils/account-config';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import DatastoreTable from "@app/components/DatastoreTable";
+import Layout from "@app/components/Layout";
+import UsageLimitModal from "@app/components/UsageLimitModal";
+import useStateReducer from "@app/hooks/useStateReducer";
+import { RouteNames } from "@app/types";
+import accountConfig from "@app/utils/account-config";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
-import { getDatastores } from '../api/datastores';
+import { getDatastores } from "../api/datastores";
 
 const CreateDatastoreModal = dynamic(
-  () => import('@app/components/CreateDatastoreModal'),
+  () => import("@app/components/CreateDatastoreModal"),
   {
     ssr: false,
   }
@@ -49,7 +49,7 @@ export default function DatasourcesPage() {
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
-  >('/api/datastores', fetcher);
+  >("/api/datastores", fetcher);
 
   const handleClickNewDatastore = () => {
     if (
@@ -82,11 +82,11 @@ export default function DatasourcesPage() {
           md: 3,
         },
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         minWidth: 0,
         // height: '100dvh',
-        width: '100%',
+        width: "100%",
         gap: 1,
       })}
     >
@@ -95,10 +95,10 @@ export default function DatasourcesPage() {
         aria-label="breadcrumbs"
         separator={<ChevronRightRoundedIcon />}
         sx={{
-          '--Breadcrumbs-gap': '1rem',
-          '--Icon-fontSize': '16px',
-          fontWeight: 'lg',
-          color: 'neutral.400',
+          "--Breadcrumbs-gap": "1rem",
+          "--Icon-fontSize": "16px",
+          fontWeight: "lg",
+          color: "neutral.400",
           px: 0,
         }}
       >
@@ -123,12 +123,12 @@ export default function DatasourcesPage() {
 
       <Box
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           my: 1,
           gap: 1,
-          flexWrap: 'wrap',
+          flexWrap: "wrap",
           // '& > *': {
           //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
           //   flexGrow: 1,
@@ -139,7 +139,7 @@ export default function DatasourcesPage() {
           Datastores
         </Typography>
         {/* <Box sx={{ flex: 999999 }} /> */}
-        <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
+        <Box sx={{ display: "flex", gap: 1, "& > *": { flexGrow: 1 } }}>
           {/* <Button
             variant="outlined"
             color="neutral"

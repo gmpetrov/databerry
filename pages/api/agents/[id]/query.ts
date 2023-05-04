@@ -1,14 +1,14 @@
-import { Usage } from '@prisma/client';
-import { NextApiResponse } from 'next';
+import { Usage } from "@prisma/client";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest, ChatRequest } from '@app/types';
-import accountConfig from '@app/utils/account-config';
-import AgentManager from '@app/utils/agent';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import chat from '@app/utils/chat';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest, ChatRequest } from "@app/types";
+import accountConfig from "@app/utils/account-config";
+import AgentManager from "@app/utils/agent";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import chat from "@app/utils/chat";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createAuthApiHandler();
 
@@ -53,9 +53,9 @@ export const chatAgentRequest = async (
 
   if (data.streaming) {
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
     });
   }
 
@@ -76,7 +76,7 @@ export const chatAgentRequest = async (
   ]);
 
   if (data.streaming) {
-    streamData('[DONE]');
+    streamData("[DONE]");
   } else {
     return {
       answer,

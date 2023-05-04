@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
-import React from 'react';
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import React from "react";
 
-import DatasourceTable from '@app/components/DatasourceTable';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
-import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
-import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
+import DatasourceTable from "@app/components/DatasourceTable";
+import useGetDatastoreQuery from "@app/hooks/useGetDatastoreQuery";
+import { BulkDeleteDatasourcesSchema } from "@app/pages/api/datasources/bulk-delete";
+import guardDataProcessingUsage from "@app/utils/guard-data-processing-usage";
 
-import UsageLimitModal from './UsageLimitModal';
+import UsageLimitModal from "./UsageLimitModal";
 
 type Props = {
   datastoreId: string;
@@ -39,8 +39,8 @@ function Datasources(props: Props) {
   };
 
   const handleBulkDelete = async (datasourceIds: string[]) => {
-    if (window.confirm('Are you sure you want to delete these datasources?')) {
-      await axios.post('/api/datasources/bulk-delete', {
+    if (window.confirm("Are you sure you want to delete these datasources?")) {
+      await axios.post("/api/datasources/bulk-delete", {
         ids: datasourceIds,
         datastoreId: getDatastoreQuery?.data?.id,
       } as BulkDeleteDatasourcesSchema);

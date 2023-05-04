@@ -3,23 +3,23 @@ import {
   DatasourceType,
   SubscriptionPlan,
   Usage,
-} from '@prisma/client';
+} from "@prisma/client";
 
-import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
-import accountConfig from '@app/utils/account-config';
-import { s3 } from '@app/utils/aws';
-import { DatastoreManager } from '@app/utils/datastores';
-import type { Document } from '@app/utils/datastores/base';
-import { DatasourceLoader } from '@app/utils/loaders';
-import logger from '@app/utils/logger';
-import prisma from '@app/utils/prisma-client';
+import { TaskLoadDatasourceRequestSchema } from "@app/types/dtos";
+import accountConfig from "@app/utils/account-config";
+import { s3 } from "@app/utils/aws";
+import { DatastoreManager } from "@app/utils/datastores";
+import type { Document } from "@app/utils/datastores/base";
+import { DatasourceLoader } from "@app/utils/loaders";
+import logger from "@app/utils/logger";
+import prisma from "@app/utils/prisma-client";
 
-import { ApiError, ApiErrorType } from './api-error';
-import cuid from './cuid';
-import findDomainPages, { getSitemapPages } from './find-domain-pages';
-import findSitemap from './find-sitemap';
-import guardDataProcessingUsage from './guard-data-processing-usage';
-import triggerTaskLoadDatasource from './trigger-task-load-datasource';
+import { ApiError, ApiErrorType } from "./api-error";
+import cuid from "./cuid";
+import findDomainPages, { getSitemapPages } from "./find-domain-pages";
+import findSitemap from "./find-sitemap";
+import guardDataProcessingUsage from "./guard-data-processing-usage";
+import triggerTaskLoadDatasource from "./trigger-task-load-datasource";
 
 const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   logger.info(`${data.datasourceId}: fetching datasource`);
@@ -38,7 +38,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
           usage: true,
           subscriptions: {
             where: {
-              status: 'active',
+              status: "active",
             },
           },
         },
@@ -47,7 +47,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   });
 
   if (!datasource) {
-    throw new Error('Not found');
+    throw new Error("Not found");
   }
 
   const currentPlan =
@@ -159,7 +159,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     return;
   }
 
-  console.log('datasource', datasource);
+  console.log("datasource", datasource);
   let document: Document;
 
   try {
@@ -170,7 +170,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     if (err instanceof ApiError) {
       if (err.name === ApiErrorType.WEBPAGE_IS_SITEMAP) {
         console.log(
-          'ApiErrorType.WEBPAGE_IS_SITEMAP',
+          "ApiErrorType.WEBPAGE_IS_SITEMAP",
           ApiErrorType.WEBPAGE_IS_SITEMAP
         );
 
@@ -250,9 +250,9 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
         text: document.pageContent,
       })
     ),
-    CacheControl: 'no-cache',
-    ContentType: 'application/json',
-    ACL: 'public-read',
+    CacheControl: "no-cache",
+    ContentType: "application/json",
+    ACL: "public-read",
   };
 
   await s3.putObject(params).promise();

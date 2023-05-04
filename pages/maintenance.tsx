@@ -1,19 +1,19 @@
-import WarningRounded from '@mui/icons-material/WarningRounded';
-import { Alert, Box, Card, Typography } from '@mui/joy';
+import WarningRounded from "@mui/icons-material/WarningRounded";
+import { Alert, Box, Card, Typography } from "@mui/joy";
 
-import Logo from '@app/components/Logo';
+import Logo from "@app/components/Logo";
 
 export default function MaintenancePage() {
   return (
     <>
       <Box
         sx={{
-          height: '100vh',
-          width: '100vw',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
+          height: "100vh",
+          width: "100vw",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
           p: 4,
           gap: 4,
         }}
@@ -33,7 +33,7 @@ export default function MaintenancePage() {
         >
           <Logo className="w-24" />
 
-          <Typography level="h4" fontWeight={'bold'}>
+          <Typography level="h4" fontWeight={"bold"}>
             Coming back soon
           </Typography>
         </Card>

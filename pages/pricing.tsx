@@ -1,14 +1,15 @@
-import { CheckIcon } from '@heroicons/react/20/solid';
-import Card from '@mui/joy/Card';
-import clsx from 'clsx';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useState } from 'react';
+import { CheckIcon } from "@heroicons/react/20/solid";
+import Card from "@mui/joy/Card";
+import clsx from "clsx";
+import type { Metadata } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import { useState } from "react";
 
-import { Footer } from '@app/components/landing-page/Footer';
-import { Header } from '@app/components/landing-page/Header';
-import { Hero } from '@app/components/landing-page/Hero';
-import accountConfig from '@app/utils/account-config';
+import { Footer } from "@app/components/landing-page/Footer";
+import { Header } from "@app/components/landing-page/Header";
+import { Hero } from "@app/components/landing-page/Hero";
+import accountConfig from "@app/utils/account-config";
 
 export default function Home() {
   return (
@@ -30,102 +31,102 @@ export default function Home() {
 }
 
 const frequencies = [
-  { value: 'monthly', label: 'Monthly', priceSuffix: '/month' },
-  { value: 'annually', label: 'Annually', priceSuffix: '/year' },
+  { value: "monthly", label: "Monthly", priceSuffix: "/month" },
+  { value: "annually", label: "Annually", priceSuffix: "/year" },
 ];
 const tiers = [
   {
-    name: 'Discover',
-    id: 'tier-free',
-    href: '/signin',
-    price: { monthly: '$0', annually: '$0' },
-    description: 'The essentials to get started quickly.',
+    name: "Discover",
+    id: "tier-free",
+    href: "/signin",
+    price: { monthly: "$0", annually: "$0" },
+    description: "The essentials to get started quickly.",
     features: [
-      `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_0'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig["level_0"].limits.maxAgents} agent(s)`,
+      `${accountConfig["level_0"].limits.maxDatastores} datastore(s)`,
+      `${accountConfig["level_0"].limits.maxAgentsQueries} agents queries / month`,
       `File uplpoad limited to ${
-        accountConfig['level_0'].limits.maxFileSize / 1000000
+        accountConfig["level_0"].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
-        accountConfig['level_0'].limits.maxDataProcessing / 1000000
+        accountConfig["level_0"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'Manual data synching',
-      'Access to GriotAI API',
-      'ChatGPT plugin',
+      "Manual data synching",
+      "Access to GriotAI API",
+      "ChatGPT plugin",
     ],
     mostPopular: false,
   },
   {
-    name: 'Startup',
-    id: 'tier-startup',
-    href: '/signin',
-    price: { monthly: '$25', annually: '$250' },
-    description: 'A plan that scales with your rapidly growing business.',
+    name: "Startup",
+    id: "tier-startup",
+    href: "/signin",
+    price: { monthly: "$25", annually: "$250" },
+    description: "A plan that scales with your rapidly growing business.",
     features: [
-      `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_1'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig["level_1"].limits.maxAgents} agent(s)`,
+      `${accountConfig["level_1"].limits.maxDatastores} datastore(s)`,
+      `${accountConfig["level_1"].limits.maxAgentsQueries} agents queries / month`,
       `File uplpoad limited to ${
-        accountConfig['level_1'].limits.maxFileSize / 1000000
+        accountConfig["level_1"].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
-        accountConfig['level_1'].limits.maxDataProcessing / 1000000
+        accountConfig["level_1"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'Manual data synching',
-      `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
-      'Access to Crisp Plugin',
-      'Access to Slack Bot',
+      "Manual data synching",
+      `Website loader limited to  ${accountConfig["level_1"].limits.maxWebsiteURL} Pages`,
+      "Access to Crisp Plugin",
+      "Access to Slack Bot",
     ],
     mostPopular: false,
   },
   {
-    name: 'Pro',
-    id: 'tier-enterprise',
-    href: '/signin',
-    price: { monthly: '$99', annually: '$990' },
-    description: 'Dedicated support and for your company.',
+    name: "Pro",
+    id: "tier-enterprise",
+    href: "/signin",
+    price: { monthly: "$99", annually: "$990" },
+    description: "Dedicated support and for your company.",
     features: [
-      `${accountConfig['level_2'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_2'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_2'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig["level_2"].limits.maxAgents} agent(s)`,
+      `${accountConfig["level_2"].limits.maxDatastores} datastore(s)`,
+      `${accountConfig["level_2"].limits.maxAgentsQueries} agents queries / month`,
       `File uplpoad limited to ${
-        accountConfig['level_2'].limits.maxFileSize / 1000000
+        accountConfig["level_2"].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
-        accountConfig['level_2'].limits.maxDataProcessing / 1000000
+        accountConfig["level_2"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'auto synch datasources',
-      `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
+      "auto synch datasources",
+      `Website loader limited to  ${accountConfig["level_2"].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: true,
   },
   {
-    name: 'Enterprise',
-    id: 'tier-enterprise',
-    href: '/signin',
-    price: { monthly: '$499', annually: '$4990' },
+    name: "Enterprise",
+    id: "tier-enterprise",
+    href: "/signin",
+    price: { monthly: "$499", annually: "$4990" },
     description:
-      'You’ve got a huge amount of assets but it’s not enough. To the moon.',
+      "You’ve got a huge amount of assets but it’s not enough. To the moon.",
     features: [
-      `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_3'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig["level_3"].limits.maxAgents} agent(s)`,
+      `${accountConfig["level_3"].limits.maxDatastores} datastore(s)`,
+      `${accountConfig["level_3"].limits.maxAgentsQueries} agents queries / month`,
       `File uplpoad limited to ${
-        accountConfig['level_3'].limits.maxFileSize / 1000000
+        accountConfig["level_3"].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
-        accountConfig['level_3'].limits.maxDataProcessing / 1000000
+        accountConfig["level_3"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'auto synch datasources',
-      `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
+      "auto synch datasources",
+      `Website loader limited to  ${accountConfig["level_3"].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: false,
   },
 ];
 
 function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 }
 
 function Example() {
@@ -177,9 +178,9 @@ function Example() {
               key={tier.id}
               className={classNames(
                 tier.mostPopular
-                  ? 'bg-white/5 ring-2 ring-indigo-500'
-                  : 'ring-1 ring-white/10',
-                'rounded-3xl p-8 xl:p-10'
+                  ? "bg-white/5 ring-2 ring-indigo-500"
+                  : "ring-1 ring-white/10",
+                "rounded-3xl p-8 xl:p-10"
               )}
             >
               <div className="flex items-center justify-between gap-x-4">
@@ -200,11 +201,11 @@ function Example() {
               </p>
               <p className="flex items-baseline mt-6 gap-x-1">
                 <span className="text-4xl font-bold tracking-tight text-white">
-                  {tier.id === 'tier-free'
-                    ? 'Free'
+                  {tier.id === "tier-free"
+                    ? "Free"
                     : (tier as any).price[frequency.value]}
                 </span>
-                {tier.id !== 'tier-free' && (
+                {tier.id !== "tier-free" && (
                   <span className="text-sm font-semibold leading-6 text-gray-300">
                     {frequency.priceSuffix}
                   </span>
@@ -215,12 +216,12 @@ function Example() {
                 aria-describedby={tier.id}
                 className={classNames(
                   tier.mostPopular
-                    ? 'bg-indigo-500 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-indigo-500'
-                    : 'bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white',
-                  'mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2'
+                    ? "bg-indigo-500 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline-indigo-500"
+                    : "bg-white/10 text-white hover:bg-white/20 focus-visible:outline-white",
+                  "mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 )}
               >
-                {tier.id === 'tier-free' ? 'Sign Up' : 'Subscribe'}
+                {tier.id === "tier-free" ? "Sign Up" : "Subscribe"}
               </Link>
               <ul
                 role="list"
@@ -229,16 +230,16 @@ function Example() {
                 {tier.features.map((feature) => (
                   <li
                     key={feature}
-                    className={clsx('flex gap-x-3', {
-                      'text-green-400':
-                        feature.includes('ChatGPT') ||
-                        feature.includes('Crisp Plugin') ||
-                        feature.includes('Slack Bot') ||
-                        feature.includes('Website loader'),
+                    className={clsx("flex gap-x-3", {
+                      "text-green-400":
+                        feature.includes("ChatGPT") ||
+                        feature.includes("Crisp Plugin") ||
+                        feature.includes("Slack Bot") ||
+                        feature.includes("Website loader"),
                     })}
                   >
                     <CheckIcon
-                      className={clsx('flex-none w-5 h-6 text-white')}
+                      className={clsx("flex-none w-5 h-6 text-white")}
                       aria-hidden="true"
                     />
                     {feature}

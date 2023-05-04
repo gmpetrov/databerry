@@ -3,7 +3,7 @@ const pickColorBasedOnBgColor = (
   lightColor: string,
   darkColor: string
 ) => {
-  var color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+  var color = bgColor.charAt(0) === "#" ? bgColor.substring(1, 7) : bgColor;
   var r = parseInt(color.substring(0, 2), 16); // hexToR
   var g = parseInt(color.substring(2, 4), 16); // hexToG
   var b = parseInt(color.substring(4, 6), 16); // hexToB

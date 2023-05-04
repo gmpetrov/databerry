@@ -1,7 +1,7 @@
-import { S3 } from 'aws-sdk';
+import { S3 } from "aws-sdk";
 
 export const s3 = new S3({
-  signatureVersion: 'v4',
+  signatureVersion: "v4",
   accessKeyId: process.env.APP_AWS_ACCESS_KEY,
   secretAccessKey: process.env.APP_AWS_SECRET_KEY,
 });

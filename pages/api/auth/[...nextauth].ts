@@ -1,12 +1,12 @@
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { PrismaClient, SubscriptionPlan, Usage } from '@prisma/client';
-import NextAuth, { AuthOptions } from 'next-auth';
-import EmailProvider from 'next-auth/providers/email';
-import GithubProvider from 'next-auth/providers/github';
-import GoogleProvider from 'next-auth/providers/google';
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient, SubscriptionPlan, Usage } from "@prisma/client";
+import NextAuth, { AuthOptions } from "next-auth";
+import EmailProvider from "next-auth/providers/email";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 
-import prisma from '@app/utils/prisma-client';
-import uuidv4 from '@app/utils/uuid';
+import prisma from "@app/utils/prisma-client";
+import uuidv4 from "@app/utils/uuid";
 
 const CustomPrismaProvider = (p: PrismaClient) => {
   return {
@@ -34,7 +34,7 @@ const CustomPrismaProvider = (p: PrismaClient) => {
               usage: true,
               subscriptions: {
                 where: {
-                  status: 'active',
+                  status: "active",
                 },
               },
               _count: {
@@ -71,10 +71,10 @@ export const authOptions = {
       authorization: {
         params: {
           scope:
-            'https://www.googleapis.com/auth/calendar.readonly openid email profile',
-          prompt: 'consent',
-          access_type: 'offline',
-          response_type: 'code',
+            "https://www.googleapis.com/auth/calendar.readonly openid email profile",
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
         },
       },
     }),
@@ -86,8 +86,8 @@ export const authOptions = {
         user: {
           ...session.user,
           usage: (user as any)?.usage as Usage,
-          nbAgents: (user as any)?.['_count']?.agents as number,
-          nbDatastores: (user as any)?.['_count']?.datastores as number,
+          nbAgents: (user as any)?.["_count"]?.agents as number,
+          nbDatastores: (user as any)?.["_count"]?.datastores as number,
           id: user.id,
           currentPlan:
             (user as any)?.subscriptions?.[0]?.plan ||

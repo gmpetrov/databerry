@@ -1,13 +1,13 @@
-import { DatasourceType } from '@prisma/client';
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
+import { DatasourceType } from "@prisma/client";
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import { z } from "zod";
 
-import Input from '@app/components/Input';
-import { UpsertDatasourceSchema } from '@app/types/models';
+import Input from "@app/components/Input";
+import { UpsertDatasourceSchema } from "@app/types/models";
 
-import Base from './Base';
-import type { DatasourceFormProps } from './types';
+import Base from "./Base";
+import type { DatasourceFormProps } from "./types";
 
 type Props = DatasourceFormProps & {};
 
@@ -26,7 +26,7 @@ function Nested() {
       label="Web Page URL"
       helperText="e.g.: https://en.wikipedia.org/wiki/Nuclear_fusion"
       control={control as any}
-      {...register('config.source')}
+      {...register("config.source")}
     />
   );
 }

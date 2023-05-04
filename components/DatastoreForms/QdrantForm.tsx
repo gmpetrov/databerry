@@ -1,10 +1,10 @@
-import { DatastoreType, Prisma } from '@prisma/client';
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
+import { DatastoreType, Prisma } from "@prisma/client";
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import { z } from "zod";
 
-import Base, { UpsertDatastoreSchema } from './Base';
-import { DatastoreFormProps } from './types';
+import Base, { UpsertDatastoreSchema } from "./Base";
+import { DatastoreFormProps } from "./types";
 
 type Props = DatastoreFormProps & {};
 

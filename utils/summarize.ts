@@ -1,4 +1,4 @@
-import { BasePromptTemplate } from 'langchain/prompts';
+import { BasePromptTemplate } from "langchain/prompts";
 
 const summarize = async ({
   text,
@@ -8,10 +8,10 @@ const summarize = async ({
   prompt?: BasePromptTemplate;
 }) => {
   const { AnalyzeDocumentChain, loadSummarizationChain } = await import(
-    'langchain/chains'
+    "langchain/chains"
   );
-  const { OpenAI } = await import('langchain/llms/openai');
-  const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
+  const { OpenAI } = await import("langchain/llms/openai");
+  const model = new OpenAI({ temperature: 0, modelName: "gpt-3.5-turbo" });
   const combineDocsChain = loadSummarizationChain(model, {
     prompt,
     combineMapPrompt: prompt,

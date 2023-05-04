@@ -1,6 +1,6 @@
-import { DatastoreType } from '@prisma/client';
+import { DatastoreType } from "@prisma/client";
 
-import QdrantForm from './QdrantForm';
+import QdrantForm from "./QdrantForm";
 
 export const DatastoreFormsMap = {
   [DatastoreType.pinecone]: undefined as any,

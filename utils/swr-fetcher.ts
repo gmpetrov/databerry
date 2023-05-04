@@ -1,8 +1,8 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from "axios";
 
 export const postFetcher = <T>(uri: string, { arg }: { arg: T }) =>
   axios(uri, {
-    method: 'POST',
+    method: "POST",
     data: arg,
   }).then((r) => r.data);
 

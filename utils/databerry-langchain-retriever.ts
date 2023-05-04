@@ -1,6 +1,6 @@
-import { Datastore } from '@prisma/client';
+import { Datastore } from "@prisma/client";
 
-import { DatastoreManager } from './datastores';
+import { DatastoreManager } from "./datastores";
 
 export default class DataberryRetriever {
   datastore: Datastore;

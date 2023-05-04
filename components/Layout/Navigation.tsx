@@ -1,34 +1,34 @@
-import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
-import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
-import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
-import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
-import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import Box from '@mui/joy/Box';
-import Card from '@mui/joy/Card';
-import Divider from '@mui/joy/Divider';
-import List from '@mui/joy/List';
-import ListItem from '@mui/joy/ListItem';
-import ListItemButton from '@mui/joy/ListItemButton';
-import ListItemContent from '@mui/joy/ListItemContent';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { Prisma } from '@prisma/client';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import useSWR from 'swr';
+import AutoFixHighRoundedIcon from "@mui/icons-material/AutoFixHighRounded";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
+import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
+import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
+import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded"; // Icons import
+import StorageRoundedIcon from "@mui/icons-material/StorageRounded";
+import Box from "@mui/joy/Box";
+import Card from "@mui/joy/Card";
+import Divider from "@mui/joy/Divider";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
+import ListItemButton from "@mui/joy/ListItemButton";
+import ListItemContent from "@mui/joy/ListItemContent";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { Prisma } from "@prisma/client";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import * as React from "react";
+import useSWR from "swr";
 
-import { getStatus } from '@app/pages/api/status';
-import { AppStatus, RouteNames } from '@app/types';
-import { fetcher } from '@app/utils/swr-fetcher';
+import { getStatus } from "@app/pages/api/status";
+import { AppStatus, RouteNames } from "@app/types";
+import { fetcher } from "@app/utils/swr-fetcher";
 
 export default function Navigation() {
   const router = useRouter();
 
   const getDatastoresQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
-    '/api/status',
+    "/api/status",
     fetcher,
     {
       refreshInterval: 60000,
@@ -40,13 +40,13 @@ export default function Navigation() {
   const items = React.useMemo(() => {
     return [
       {
-        label: 'Agents',
+        label: "Agents",
         route: RouteNames.AGENTS,
         icon: <SmartToyRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.AGENTS,
       },
       {
-        label: 'Datastores',
+        label: "Datastores",
         route: RouteNames.DATASTORES,
         icon: <StorageRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.DATASTORES,
@@ -58,28 +58,28 @@ export default function Navigation() {
       //   active: router.route === RouteNames.CHAT,
       // },
       {
-        label: 'Apps',
+        label: "Apps",
         route: RouteNames.APPS,
         icon: <AutoFixHighRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.APPS,
       },
       {
-        label: 'Account',
+        label: "Account",
         route: RouteNames.ACCOUNT,
         icon: <ManageAccountsRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.ACCOUNT,
       },
       {
-        label: 'Documentation',
-        route: 'https://docs.databerry.ai/',
+        label: "Documentation",
+        route: "https://docs.databerry.ai/",
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];
   }, [router.route]);
 
   return (
-    <Stack sx={{ height: '100%' }}>
-      <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
+    <Stack sx={{ height: "100%" }}>
+      <List size="sm" sx={{ "--ListItem-radius": "8px" }}>
         <ListItem nested>
           {/* <ListSubheader>
           Browse
@@ -95,18 +95,18 @@ export default function Navigation() {
           <List
             aria-labelledby="nav-list-browse"
             sx={{
-              '& .JoyListItemButton-root': { p: '8px' },
+              "& .JoyListItemButton-root": { p: "8px" },
             }}
           >
             {items.map((each) => (
               <Link key={each.route} href={each.route}>
                 <ListItem>
                   <ListItemButton
-                    variant={each.active ? 'soft' : 'plain'}
-                    color={each.active ? 'primary' : 'neutral'}
+                    variant={each.active ? "soft" : "plain"}
+                    color={each.active ? "primary" : "neutral"}
                   >
                     <ListItemDecorator
-                      sx={{ color: each.active ? 'inherit' : 'neutral.500' }}
+                      sx={{ color: each.active ? "inherit" : "neutral.500" }}
                     >
                       {each.icon}
                     </ListItemDecorator>
@@ -203,38 +203,38 @@ export default function Navigation() {
 
       <Card
         sx={{
-          mt: 'auto',
-          mx: 'auto',
+          mt: "auto",
+          mx: "auto",
           py: 1,
           px: 2,
         }}
         variant="soft"
-        color={`${isStatusOK ? 'success' : 'danger'}`}
+        color={`${isStatusOK ? "success" : "danger"}`}
       >
         <Stack
-          direction={'row'}
+          direction={"row"}
           gap={1}
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Box
             sx={{
-              width: '10px',
-              height: '10px',
-              borderRadius: '99px',
-              bgcolor: isStatusOK ? 'success.300' : 'danger.500',
+              width: "10px",
+              height: "10px",
+              borderRadius: "99px",
+              bgcolor: isStatusOK ? "success.300" : "danger.500",
             }}
           />
 
-          <Typography>status: {isStatusOK ? 'ok' : 'ko'}</Typography>
+          <Typography>status: {isStatusOK ? "ok" : "ko"}</Typography>
         </Stack>
       </Card>
       <Divider sx={{ my: 2 }}></Divider>
       <Link href="mailto:support@databerry.ai" className="mx-auto">
-        <Typography level="body2" mx={'auto'}>
+        <Typography level="body2" mx={"auto"}>
           support@databerry.ai
         </Typography>
       </Link>

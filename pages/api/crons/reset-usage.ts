@@ -1,9 +1,9 @@
-import { NextApiResponse } from 'next';
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest } from "@app/types";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createApiHandler();
 

@@ -1,6 +1,6 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import { zodResolver } from "@hookform/resolvers/zod";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import {
   Alert,
   Box,
@@ -16,23 +16,23 @@ import {
   Sheet,
   Stack,
   Typography,
-} from '@mui/joy';
-import { Prisma } from '@prisma/client';
-import axios from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
-import { z } from 'zod';
+} from "@mui/joy";
+import { Prisma } from "@prisma/client";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { ReactElement } from "react";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import { z } from "zod";
 
-import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
-import { RouteNames } from '@app/types';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import Layout from "@app/components/Layout";
+import useStateReducer from "@app/hooks/useStateReducer";
+import { RouteNames } from "@app/types";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
 const Schema = z.object({ query: z.string().min(1) });
 
@@ -40,8 +40,8 @@ export default function DatasourcesPage() {
   const router = useRouter();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [state, setState] = useStateReducer({
-    currentDatastoreId: 'clggib2du0000kz084jos02sq',
-    history: [] as { from: 'human' | 'agent'; message: string }[],
+    currentDatastoreId: "clggib2du0000kz084jos02sq",
+    history: [] as { from: "human" | "agent"; message: string }[],
     loading: false,
   });
 
@@ -57,7 +57,7 @@ export default function DatasourcesPage() {
 
     const history = [
       ...state.history,
-      { from: 'human', message: data.query as string },
+      { from: "human", message: data.query as string },
     ];
 
     setState({
@@ -73,7 +73,7 @@ export default function DatasourcesPage() {
       loading: false,
       history: [
         ...history,
-        { from: 'agent', message: result.data.answer as string },
+        { from: "agent", message: result.data.answer as string },
       ] as any,
     });
   };
@@ -91,11 +91,11 @@ export default function DatasourcesPage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        maxHeight: '100%',
-        overflow: 'hidden',
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        maxHeight: "100%",
+        overflow: "hidden",
         px: {
           xs: 2,
           md: 6,
@@ -107,20 +107,20 @@ export default function DatasourcesPage() {
           md: 3,
         },
         flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         minWidth: 0,
         gap: 1,
       })}
     >
       <Box
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           my: 1,
           gap: 1,
-          flexWrap: 'wrap',
+          flexWrap: "wrap",
         }}
       >
         <Typography level="h1" fontSize="xl4">
@@ -160,44 +160,44 @@ export default function DatasourcesPage() {
       )} */}
 
       <Stack
-        direction={'column'}
+        direction={"column"}
         sx={{
-          width: '100%',
-          height: '100%',
-          maxHeight: '100%',
-          mx: 'auto',
+          width: "100%",
+          height: "100%",
+          maxHeight: "100%",
+          mx: "auto",
         }}
       >
         <Stack
           ref={scrollableRef}
-          direction={'column'}
+          direction={"column"}
           sx={{
-            height: '100%',
-            maxHeight: '100%',
-            overflowY: 'auto',
-            display: 'flex',
+            height: "100%",
+            maxHeight: "100%",
+            overflowY: "auto",
+            display: "flex",
             pb: 18,
             pt: 2,
           }}
         >
           <Stack
-            direction={'column'}
+            direction={"column"}
             gap={2}
             sx={{
-              maxWidth: '100%',
-              width: '700px',
-              mx: 'auto',
+              maxWidth: "100%",
+              width: "700px",
+              mx: "auto",
             }}
           >
             {state?.history.map((each, index) => (
               <Card
                 key={index}
-                variant={'outlined'}
-                color={each.from === 'agent' ? 'primary' : 'neutral'}
+                variant={"outlined"}
+                color={each.from === "agent" ? "primary" : "neutral"}
                 sx={{
-                  mr: each.from === 'agent' ? 'auto' : 'none',
-                  ml: each.from === 'human' ? 'auto' : 'none',
-                  whiteSpace: 'pre-wrap',
+                  mr: each.from === "agent" ? "auto" : "none",
+                  ml: each.from === "human" ? "auto" : "none",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 {each.message}
@@ -209,7 +209,7 @@ export default function DatasourcesPage() {
                 variant="soft"
                 color="neutral"
                 size="sm"
-                sx={{ mx: 'auto', my: 2 }}
+                sx={{ mx: "auto", my: 2 }}
               />
             )}
           </Stack>
@@ -217,23 +217,23 @@ export default function DatasourcesPage() {
 
         <Box
           sx={{
-            mt: 'auto',
+            mt: "auto",
             left: 0,
-            maxWidth: '100%',
-            width: '100%',
-            overflow: 'visible',
-            background: 'none',
-            position: 'absolute',
-            display: 'flex',
-            justifyContent: 'center',
+            maxWidth: "100%",
+            width: "100%",
+            overflow: "visible",
+            background: "none",
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
             bottom: 4,
           }}
         >
           {/* <div className="w-full h-12 -translate-y-1/2 pointer-events-none backdrop-blur-lg"></div> */}
           <form
             style={{
-              maxWidth: '100%',
-              width: '700px',
+              maxWidth: "100%",
+              width: "700px",
             }}
             onSubmit={methods.handleSubmit(onSubmit)}
           >
@@ -248,7 +248,7 @@ export default function DatasourcesPage() {
                   <SendRoundedIcon />
                 </IconButton>
               }
-              {...methods.register('query')}
+              {...methods.register("query")}
             />
           </form>
         </Box>

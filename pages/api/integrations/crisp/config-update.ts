@@ -1,13 +1,13 @@
-import { IntegrationType } from '@prisma/client';
-import { NextApiResponse } from 'next';
-import { z } from 'zod';
+import { IntegrationType } from "@prisma/client";
+import { NextApiResponse } from "next";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import { getConnectedWebsites } from '@app/utils/crisp';
-import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import { getConnectedWebsites } from "@app/utils/crisp";
+import prisma from "@app/utils/prisma-client";
+import validate from "@app/utils/validate";
 
 const handler = createApiHandler();
 

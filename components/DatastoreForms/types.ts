@@ -1,7 +1,7 @@
 // import type { LoadingButtonProps } from '@mui/lab/LoadingButton';
-import type { Datastore } from '@prisma/client';
+import type { Datastore } from "@prisma/client";
 
-import type { CreateDatastoreRequestSchema } from '@app/types/dtos';
+import type { CreateDatastoreRequestSchema } from "@app/types/dtos";
 
 export type DatastoreFormProps = {
   defaultValues?: CreateDatastoreRequestSchema;

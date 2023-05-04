@@ -1,18 +1,18 @@
-import { Transition } from '@headlessui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import { Box, Button, Divider, Typography } from '@mui/joy';
-import CircularProgress from '@mui/joy/CircularProgress';
-import { useRouter } from 'next/router';
-import { signIn, useSession } from 'next-auth/react';
+import { Transition } from "@headlessui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import { Box, Button, Divider, Typography } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+import { useRouter } from "next/router";
+import { signIn, useSession } from "next-auth/react";
 // import { parseCookies } from 'nookies';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import React, { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import Input from '@app/components/Input';
-import Logo from '@app/components/Logo';
-import { RouteNames } from '@app/types';
+import Input from "@app/components/Input";
+import Logo from "@app/components/Logo";
+import { RouteNames } from "@app/types";
 
 type Props = {
   // subscription: Subscription | null;
@@ -38,9 +38,9 @@ export default function SignInPage() {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (status === "unauthenticated") {
       setIsReady(true);
-    } else if (status === 'authenticated') {
+    } else if (status === "authenticated") {
       router.push(RouteNames.HOME);
     }
   }, [status]);
@@ -56,7 +56,7 @@ export default function SignInPage() {
   });
 
   const handleSubmitEmail = (values: Schema) => {
-    signIn('email', { email: values.email });
+    signIn("email", { email: values.email });
   };
 
   return (
@@ -70,7 +70,7 @@ export default function SignInPage() {
         <div className="flex flex-col justify-center flex-1 px-4 py-12 sm:px-6 lg:px-20 xl:px-24">
           <div className="flex w-full max-w-sm mx-auto lg:w-96 ">
             {!isReady && (
-              <CircularProgress size="sm" variant="soft" sx={{ mx: 'auto' }} />
+              <CircularProgress size="sm" variant="soft" sx={{ mx: "auto" }} />
             )}
             <Transition
               show={isReady}
@@ -99,7 +99,7 @@ export default function SignInPage() {
                       label="Email address"
                       control={control as any}
                       size="lg"
-                      {...register('email')}
+                      {...register("email")}
                     ></Input>
 
                     <Button
@@ -118,7 +118,7 @@ export default function SignInPage() {
                 <div className="mt-8">
                   <div className="relative">
                     <div className="absolute inset-0 flex justify-center">
-                      <Divider sx={{ width: '100%', my: 'auto' }} />
+                      <Divider sx={{ width: "100%", my: "auto" }} />
 
                       {/* <div className="w-full border-t border-gray-500" /> */}
                     </div>
@@ -126,7 +126,7 @@ export default function SignInPage() {
                       <Typography
                         level="body3"
                         className="px-2"
-                        sx={{ backgroundColor: 'background.surface' }}
+                        sx={{ backgroundColor: "background.surface" }}
                       >
                         Or continue with
                       </Typography>
@@ -136,7 +136,7 @@ export default function SignInPage() {
                   <div className="grid grid-cols-1 gap-3 mt-6 cursor-pointer">
                     <Button
                       size="lg"
-                      onClick={() => signIn('github')}
+                      onClick={() => signIn("github")}
                       // className="bg-white"
                       variant="outlined"
                       color="neutral"

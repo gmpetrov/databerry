@@ -7,17 +7,17 @@
 //  + I think it's better to minimize dependency with other providers if we want to work on a full onpremise solution in the future
 // ATM Dockerizing the app and host it on Fly.io for handling that type of use-cases
 
-import { SubscriptionPlan } from '@prisma/client';
-import { WebClient } from '@slack/web-api';
-import axios from 'axios';
-import { NextApiResponse } from 'next';
+import { SubscriptionPlan } from "@prisma/client";
+import { WebClient } from "@slack/web-api";
+import axios from "axios";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import AgentManager from '@app/utils/agent';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import prisma from '@app/utils/prisma-client';
-import slackAgent from '@app/utils/slack-agent';
+import { AppNextApiRequest } from "@app/types/index";
+import AgentManager from "@app/utils/agent";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
+import prisma from "@app/utils/prisma-client";
+import slackAgent from "@app/utils/slack-agent";
 
 const handler = createApiHandler();
 
@@ -48,7 +48,7 @@ type MentionEvent = {
   event_context: string;
   event: {
     client_msg_id: string;
-    type: 'app_mention';
+    type: "app_mention";
     text: string;
     user: string;
     ts: string;
@@ -70,10 +70,10 @@ class SlackUtils {
   sendLoader(props: { channel: string; ts: string; blocks: any }) {
     const loadingBlocks = [
       {
-        type: 'section',
+        type: "section",
         text: {
-          type: 'mrkdwn',
-          text: ':hourglass_flowing_sand: Loading...',
+          type: "mrkdwn",
+          text: ":hourglass_flowing_sand: Loading...",
         },
       },
     ];
@@ -111,7 +111,7 @@ const getIntegrationByTeamId = async (teamId: string) => {
   });
 
   if (!integration?.agent) {
-    throw new Error('No agent found');
+    throw new Error("No agent found");
   }
 
   return integration;
@@ -124,10 +124,10 @@ const sendLoader = (props: {
 }) => {
   const loadingBlocks = [
     {
-      type: 'section',
+      type: "section",
       text: {
-        type: 'mrkdwn',
-        text: ':hourglass_flowing_sand: Loading...',
+        type: "mrkdwn",
+        text: ":hourglass_flowing_sand: Loading...",
       },
     },
   ];
@@ -143,13 +143,13 @@ const handleMention = async (payload: MentionEvent) => {
   const integration = await getIntegrationByTeamId(payload.team_id);
   const agent = integration?.agent;
 
-  const args = payload.event.text.split(' ');
+  const args = payload.event.text.split(" ");
   // remove first element from array
   args.shift();
 
-  const query = (args || []).join(' ');
+  const query = (args || []).join(" ");
   const cmd = args?.[0]?.toLowerCase();
-  console.log('QUERUY---->', query);
+  console.log("QUERUY---->", query);
   const slackClient = new WebClient(integration?.integrationToken!);
 
   try {
@@ -208,28 +208,28 @@ const handleAsk = async (payload: CommandEvent) => {
   return axios.post(payload.response_url, {
     text: `${payload.text}\n\n${answer}`,
     // response_type: 'in_channel',
-    response_type: 'ephemeral',
+    response_type: "ephemeral",
   });
 };
 
 export const slack = async (req: AppNextApiRequest, res: NextApiResponse) => {
-  console.log('PAYLOAD', req.body);
+  console.log("PAYLOAD", req.body);
 
-  if (req.body?.type === 'url_verification') {
+  if (req.body?.type === "url_verification") {
     return res.json({ challenge: `${req.body?.challenge}` });
   }
 
   // Return ASAP so that Slack does not timeout
-  res.status(200).send('Loading...');
+  res.status(200).send("Loading...");
 
-  if (req.body?.type === 'event_callback') {
-    if (req.body?.event?.type === 'app_mention') {
+  if (req.body?.type === "event_callback") {
+    if (req.body?.event?.type === "app_mention") {
       // TODO HANDLE mention
       return handleMention(req.body);
     }
 
     return {};
-  } else if (req.body?.command === '/ask') {
+  } else if (req.body?.command === "/ask") {
     return handleAsk(req.body);
   }
 
