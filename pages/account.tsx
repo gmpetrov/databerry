@@ -191,7 +191,7 @@ export default function AccountPage() {
       >
         {/* <stripe-pricing-table
           pricing-table-id="prctbl_1MzJqKIDmvRZDzsDjQUfIE8Z"
-          publishable-key="pk_test_51MsM5yIDmvRZDzsDxkUmQWtyG0gzpBQTkVTJSpcKXl5wnlSnizkCPLSEHoD1izTYfbaZQ0X1By3uKOQa1zA37GcS00lWvBPQHt"
+          publishable-key="pk_live_51N41cNHQFS2NgY7DReNorltREsO8N8KN7Y2wNmrVDxzpwzIuzYMM8cOH1CggkHLd25uoZWg3PXJMcLCYX8t09Epg00J0jbi1D4"
           client-reference-id={session?.user?.id}
           customer-email={session?.user?.email}
         ></stripe-pricing-table> */}
