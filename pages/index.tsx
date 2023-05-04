@@ -13,6 +13,10 @@ import { Hero } from "@app/components/landing-page/Hero";
 // import { Pricing } from '@app/landing-page/components/Pricing';
 import { PrimaryFeatures } from "@app/components/landing-page/PrimaryFeatures";
 
+import OpenGraph from "../components/OpenGraph";
+import { absUrl } from "../core/helpers";
+import useOpenGraph from "../hooks/useOpenGraph";
+
 import ChatBotBenefits from "./ChatBotBenefits";
 import Cta from "./Cta";
 import FAQ from "./FAQ";
@@ -23,7 +27,19 @@ import FeaturesForSlack from "./FeaturesForSlack";
 
 export default function Home() {
   const t = useTranslations("common");
-
+  const ogProperties = useOpenGraph({
+    url: absUrl("/"),
+    title: t("title"), // Add you homepage title
+    image: {
+      // some default image preview for your website
+      type: "image/png",
+      url: "/public/databerry-logo-icon.png",
+      alt: "GriotAI Logo",
+    },
+    description:
+      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
+    type: "website",
+  });
   return (
     <>
       <Head>
@@ -32,6 +48,7 @@ export default function Home() {
           name="description"
           content="GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models."
         />
+        <OpenGraph properties={ogProperties} />
       </Head>
       <Header />
 
