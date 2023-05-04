@@ -10,10 +10,10 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://databerry.ai/.well-known/openapi.yaml",
+    "url": "https://griotai.kasetolabs.xyz/.well-known/openapi.yaml",
     "has_user_authentication": false
   },
-  "logo_url": "https://databerry.ai/.well-known/logo.png",
+  "logo_url": "https://griotai.kasetolabs.xyz/.well-known/logo.png",
   "contact_email": "hello@databerry.ai",
   "legal_info_url": "hello@databerry.ai"
 }

@@ -130,7 +130,7 @@ const handleSendInput = async ({
     user: {
       type: 'website',
       nickname: agentName || 'GriotAI.ai',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+      avatar: 'https://griotai.kasetolabs.xyz/databerry-rounded-bg-white.png',
     },
 
     content: {
