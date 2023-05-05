@@ -249,14 +249,19 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
                   <StyledEngineProvider injectFirst>
                     <CacheProvider value={cache}>
                       <ThemeProvider theme={theme}>
-                        <CssVarsProvider theme={theme}>
-                          <CssBaseline enableColorScheme />
+                        <CssVarsProvider
+                          theme={theme}
+                          defaultMode="light"
+                          modeStorageKey="databerry-chat-bubble"
+                        >
+                          <CssBaseline />
                           <Box
                             sx={{
                               width: '100vw',
                               height: '100vh',
                               maxHeight: '100%',
                               overflow: 'hidden',
+                              p: 2,
                             }}
                           >
                             <ChatBubble
@@ -363,7 +368,11 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
                 <StyledEngineProvider injectFirst>
                   <CacheProvider value={cache}>
                     <ThemeProvider theme={theme}>
-                      <CssVarsProvider theme={theme}>
+                      <CssVarsProvider
+                        theme={theme}
+                        defaultMode="light"
+                        modeStorageKey="databerry-chat-iframe"
+                      >
                         <CssBaseline enableColorScheme />
                         <Box
                           style={{ width: '100vw', height: '100vh' }}

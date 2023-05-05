@@ -38,7 +38,13 @@ const IframeTheme = (props: any) => {
     <StyledEngineProvider injectFirst>
       <CacheProvider value={cache}>
         <ThemeProvider theme={theme}>
-          <CssVarsProvider theme={theme}>{props.children}</CssVarsProvider>
+          <CssVarsProvider
+            theme={theme}
+            defaultMode="light"
+            modeStorageKey="databerry-chat-iframe"
+          >
+            {props.children}
+          </CssVarsProvider>
         </ThemeProvider>
       </CacheProvider>
     </StyledEngineProvider>
