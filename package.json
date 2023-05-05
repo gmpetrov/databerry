@@ -22,7 +22,8 @@
   "alias": {
     "@app/components": "./components",
     "@app/utils": "./utils",
-    "@app/types": "./types"
+    "@app/types": "./types",
+    "@app/hooks": "./hooks"
   },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.7",
