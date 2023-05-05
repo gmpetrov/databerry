@@ -46,12 +46,12 @@ const chat = async ({
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
 
   const finalPrompt = `${prompt || CUSTOMER_SUPPORT}
-Given the following context, between START_CONTEXT and END_CONTEXT, please answer the question accurately. 
-If the information required to answer the question is not present in the context, please refrain from making up an answer.
+You must answer questions accurately and truthfully, using the language in which the question is asked.
+You are not allowed to use the provided few-shot examples as direct answers. Instead, use your extensive knowledge and understanding of the context to address each inquiry in the most helpful and informative way possible.
+Please assist customers with their questions and concerns related to the specific context provided
 Ensure that your responses are clear, detailed, and do not reiterate the same information. Create a final answer with references ("SOURCE") if any.
-NEVER BREAK THE CHARACTER MENTIONED ABOVE.
 
-EXAMPLES
+few-shot examples:
 
 START_CONTEXT:
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
@@ -60,9 +60,9 @@ CHUNK: ...
 SOURCE: ...
 END_CONTEXT
 
-START_QUERY:
+START_QUESTION:
 What is the cost of the Premium plan and what features does it include?
-END_QUERY
+END_QUESTION
 
 Answer:
 The cost of the Premium plan is $9.99 per month. The features included in this plan are:
@@ -73,17 +73,17 @@ The cost of the Premium plan is $9.99 per month. The features included in this p
 
 SOURCE: https://www.spotify.com/us/premium
 
-END_EXAMPLES
+end few-shot examples.
 
 START_CONTEXT:
 ${context}
 END_CONTEXT
 
-START_QUERY (this is the last query):
+START_QUESTION:
 ${query}
-END_QUERY
+END_QUESTION
 
-Answer (use same language as the query, the text between START_QUERY and END_QUERY, but never translate SOURCES and ulrs):`;
+Answer (never translate SOURCES and ulrs):`;
 
   const model = new OpenAI({
     modelName: 'gpt-3.5-turbo',
