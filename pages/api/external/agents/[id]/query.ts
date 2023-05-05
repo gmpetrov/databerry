@@ -62,6 +62,8 @@ export const queryAgent = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
+  console.log('HEADERS', req.headers);
+
   // try {
   //   origin = new URL(req.headers['origin'] as string).host;
   // } catch (err) {

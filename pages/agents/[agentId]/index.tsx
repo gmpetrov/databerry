@@ -325,7 +325,7 @@ export default function AgentPage() {
                 <Divider sx={{ my: 4 }} />
                 <FormControl>
                   <Typography id="chat-interface-config" level="h5">
-                    Chat Interface
+                    Embedded Chat Settings
                   </Typography>
                   <Typography level="body2" mb={2}>
                     Customize the chat interface to match your brand when

@@ -136,6 +136,9 @@ function ChatBox({
               a: {
                 textDecoration: 'underline',
               },
+              ['& p']: {
+                m: 0,
+              },
               gap: 2,
             }}
           >
