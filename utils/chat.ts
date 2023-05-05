@@ -46,8 +46,12 @@ const chat = async ({
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
 
   const finalPrompt = `${prompt || CUSTOMER_SUPPORT}
-Ensure that your responses are clear, detailed, and do not reiterate the same information. Create a final answer with references ("SOURCE") if relevant.
+Given the following context, between START_CONTEXT and END_CONTEXT, please answer the question accurately. 
+If the information required to answer the question is not present in the context, please refrain from making up an answer.
+Ensure that your responses are clear, detailed, and do not reiterate the same information. Create a final answer with references ("SOURCE") if any.
 NEVER BREAK THE CHARACTER MENTIONED ABOVE.
+
+EXAMPLES
 
 START_CONTEXT:
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
@@ -69,6 +73,8 @@ The cost of the Premium plan is $9.99 per month. The features included in this p
 
 SOURCE: https://www.spotify.com/us/premium
 
+END_EXAMPLES
+
 START_CONTEXT:
 ${context}
 END_CONTEXT
@@ -81,7 +87,7 @@ Answer (use same language as the query, the text between START_QUERY and END_QUE
 
   const model = new OpenAI({
     modelName: 'gpt-3.5-turbo',
-    // temperature: 0,
+    temperature: 0,
     streaming: Boolean(stream),
     callbacks: [
       {
