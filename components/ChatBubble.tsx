@@ -6,7 +6,7 @@ import Card from '@mui/joy/Card';
 import colors from '@mui/joy/colors';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
-import { extendTheme } from '@mui/joy/styles';
+import { extendTheme, useColorScheme } from '@mui/joy/styles';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/material/Stack';
 import { Agent } from '@prisma/client';
@@ -35,6 +35,7 @@ export const theme = extendTheme({
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
+  theme: 'light',
   primaryColor: '#000000',
   // initialMessage: 'Hi, how can I help you?',
   // position: 'right',
@@ -44,6 +45,7 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
+  // const { setMode } = useColorScheme();
   const [isOpen, setIsOpen] = React.useState(false);
   const [agent, setAgent] = React.useState<Agent | undefined>();
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
@@ -91,6 +93,12 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
       setConfig(props.initConfig);
     }
   }, [props.initConfig]);
+
+  // useEffect(() => {
+  //   if (config?.theme) {
+  //     setMode(config.theme!);
+  //   }
+  // }, [config.theme]);
 
   if (!agent) {
     return null;

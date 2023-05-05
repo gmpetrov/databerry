@@ -68,6 +68,8 @@ export const AgentInterfaceConfig = z.object({
   messageTemplates: z.array(z.string()).optional(),
   position: z.enum(['left', 'right']).optional(),
   authorizedDomains: z.array(z.string()).optional(),
+  theme: z.enum(['light', 'dark']).optional(),
+  isBgTransparent: z.boolean().optional(),
 });
 
 export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig>;
