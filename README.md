@@ -5,7 +5,7 @@
   <br>
   Databerry
   <br>
-    <h3 align="center">Connect your data to large language models!</h3>
+    <h3 align="center">Build custom LLM agents without code</h3>
   <br>
   
 </h1>
@@ -15,7 +15,7 @@
 
 
 <h2 align="center">
-<img src="public/features.png" alt="WebTorrent" width="700" style="max-width: 100%;">
+<img src="public/og-image.png" alt="Databerry" width="700" style="max-width: 100%;">
 </h2>
 
 
