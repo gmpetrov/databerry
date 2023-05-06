@@ -26,10 +26,30 @@ export default function Home() {
         <title>
           Databerry - Build ChatGPT Agents trained on your custom data
         </title>
+
+        <meta
+          name="title"
+          content="Databerry - Build ChatGPT Agents trained on your custom data"
+        />
         <meta
           name="description"
-          content="Databerry is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models."
+          content="Databerry offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
         />
+        <meta
+          name="keywords"
+          content="AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, Databerry"
+        />
+        <meta
+          property="og:title"
+          content="Databerry - Build ChatGPT Agents trained on your custom data"
+        />
+        <meta
+          property="og:description"
+          content="With our no-code platform, create a custom AI chatbot trained on your data in seconds. Streamline customer support, onboard new team members, and more!"
+        />
+        <meta property="og:url" content="https://www.databerry.ai/" />
+        <meta property="og:site_name" content="Databerry" />
+        <meta property="og:type" content="website" />
       </Head>
       <Header />
 

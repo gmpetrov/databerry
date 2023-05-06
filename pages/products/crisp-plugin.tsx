@@ -17,10 +17,16 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>ChatSite by Databerry</title>
+        <title>Databerry - Crisp Plugin</title>
+        <meta name="title" content="Databerry - Crisp Plugin" />
+        {}
         <meta
           name="description"
           content="ChatGPT Bot trained on your company data. Integrates with existing customer support tools."
+        />
+        <meta
+          name="keywords"
+          content="Databerry, Crisp Plugin, AI chatbot, automatic data synchronization, custom data training, fast chatbot training, easy chatbot setup"
         />
       </Head>
       <Header />

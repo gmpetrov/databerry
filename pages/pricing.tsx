@@ -14,11 +14,21 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Databerry - Pricing</title>
+        <title>Databerry Pricing - Plans for Teams of All Sizes</title>
+
+        <meta
+          name="title"
+          content="Databerry Pricing - Plans for Teams of All Sizes"
+        />
         <meta
           name="description"
-          content="Simple Pricing. No hidden fees. No credit card required."
+          content="Choose an affordable plan with Databerry. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
         />
+        <meta
+          name="keywords"
+          content="Databerry, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
+        />
+        <meta name="robots" content="index, follow" />
       </Head>
       <Header />
       <main className="flex flex-col min-h-full mb-auto bg-black">
