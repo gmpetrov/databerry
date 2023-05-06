@@ -15,9 +15,8 @@
 
 
 <h2 align="center">
-<img src="public/og-image.png" alt="Databerry" width="700" style="max-width: 100%;">
+<img src="public/og-image.png" alt="Databerry" width="1000" style="max-width: 100%;">
 </h2>
-
 
 **[Databerry](https://databerry.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
 
