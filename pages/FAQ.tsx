@@ -38,7 +38,7 @@ export default function FAQ() {
           Have a different question and can’t find the answer you’re looking
           for? Reach out to our support team by{" "}
           <a
-            href="mailto:support@databerry.ai"
+            href="mailto:support@kasetolabs.xyz"
             className="font-semibold text-indigo-400 hover:text-indigo-300"
           >
             sending us an email

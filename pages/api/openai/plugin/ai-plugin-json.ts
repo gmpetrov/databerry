@@ -49,8 +49,8 @@ export const generateAiPluginJson = async (
       has_user_authentication: false,
     },
     logo_url: `https://${host}/.well-known/logo.png`,
-    contact_email: "hello@databerry.ai",
-    legal_info_url: "hello@databerry.ai",
+    contact_email: "hello@kasetolabs.xyz",
+    legal_info_url: "hello@kasetolabs.xyz",
   };
 
   return res.json(config);

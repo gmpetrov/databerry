@@ -17,7 +17,7 @@
 
 **[GriotAI](https://griotai.kasetolabs.xyz)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
 
-### [📄 Documentation](https://docs.databerry.ai/)
+### [📄 Documentation](https://docs.kasetolabs.xyz/)
 
 ### Features
 
@@ -31,7 +31,7 @@
     - PDF
     - Markdown
     - Plain Text
-  - Web Site (coming soon)
+    - Website
   - Notion (coming soon)
   - Airtable (coming soon)
 - No-code: User-friendly interface to manage your datastores and chat with your data

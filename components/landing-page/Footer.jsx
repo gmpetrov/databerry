@@ -31,7 +31,7 @@ export function Footer() {
               <NavLink href="https://github.com/SergeWilfried/griotai">
                 GitHub
               </NavLink>
-              <NavLink href="https://docs.databerry.ai/">Docs</NavLink>
+              <NavLink href="https://docs.kasetolabs.xyz/">Docs</NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
           </nav>

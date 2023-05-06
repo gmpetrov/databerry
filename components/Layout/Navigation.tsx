@@ -71,7 +71,7 @@ export default function Navigation() {
       },
       {
         label: "Documentation",
-        route: "https://docs.databerry.ai/",
+        route: "https://docs.kasetolabs.xyz/",
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];
@@ -233,9 +233,9 @@ export default function Navigation() {
         </Stack>
       </Card>
       <Divider sx={{ my: 2 }}></Divider>
-      <Link href="mailto:support@databerry.ai" className="mx-auto">
+      <Link href="mailto:support@kasetolabs.xyz" className="mx-auto">
         <Typography level="body2" mx={"auto"}>
-          support@databerry.ai
+          support@kasetolabs.xyz
         </Typography>
       </Link>
     </Stack>

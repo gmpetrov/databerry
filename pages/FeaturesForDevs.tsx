@@ -1,7 +1,6 @@
 import {
   CloudArrowUpIcon,
   HeartIcon,
-  LockClosedIcon,
   ServerIcon,
 } from "@heroicons/react/20/solid";
 

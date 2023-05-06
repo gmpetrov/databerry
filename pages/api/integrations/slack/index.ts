@@ -149,7 +149,7 @@ const handleMention = async (payload: MentionEvent) => {
 
   const query = (args || []).join(" ");
   const cmd = args?.[0]?.toLowerCase();
-  console.log("QUERUY---->", query);
+  console.log("QUERY---->", query);
   const slackClient = new WebClient(integration?.integrationToken!);
 
   try {

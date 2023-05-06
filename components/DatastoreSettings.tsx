@@ -101,7 +101,7 @@ function DatastoreSettings() {
             color="info"
             startDecorator={<HelpOutlineRoundedIcon />}
             endDecorator={
-              <Link href="https://docs.databerry.ai" target="_blank">
+              <Link href="https://docs.kasetolabs.xyz" target="_blank">
                 <Button
                   variant="plain"
                   size="sm"

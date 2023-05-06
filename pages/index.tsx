@@ -33,7 +33,7 @@ export default function Home() {
     image: {
       // some default image preview for your website
       type: "image/png",
-      url: "/public/databerry-logo-icon.png",
+      url: "./databerry-logo-icon.png",
       alt: "GriotAI Logo",
     },
     description:
