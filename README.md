@@ -5,7 +5,7 @@
   <br>
   Databerry
   <br>
-    <h3 align="center">Build custom LLM agents without code</h3>
+    <h3 align="center">The no-code platform for building custom LLM Agents</h3>
   <br>
   
 </h1>
