@@ -19,6 +19,12 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+
+          <meta property="og:image" content="/og-image.png" />
+          <meta property="twitter:card" content="summary_large_image" />
+          <meta property="twitter:image" content="/og-image.png" />
+
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Public+Sans&display=swap"
@@ -41,6 +47,17 @@ class CustomDocument extends Document {
 
           gtag('config', 'G-ZVS1NP66C3');
         `}
+          </Script>
+
+          <Script id="hotjar" strategy="afterInteractive">
+            {`(function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:3480619,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`}
           </Script>
         </Head>
         <body>

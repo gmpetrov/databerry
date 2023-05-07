@@ -85,7 +85,7 @@ function MobileNavigation() {
             <MobileNavLink href="https://github.com/SergeWilfried/griotai">
               GitHub
             </MobileNavLink>
-            <MobileNavLink href="https://docs.kasetolabs.xyz/">
+            <MobileNavLink href="https://docs.griotai.kasetolabs.xyz/">
               Docs
             </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
@@ -130,7 +130,7 @@ export function Header() {
               <NavLink href="https://github.com/SergeWilfried/griotai">
                 GitHub
               </NavLink>
-              <NavLink href="https://docs.kasetolabs.xyz/">Docs</NavLink>
+              <NavLink href="https://docs.griotai.kasetolabs.xyz/">Docs</NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>

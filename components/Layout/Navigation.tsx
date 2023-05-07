@@ -71,7 +71,7 @@ export default function Navigation() {
       },
       {
         label: "Documentation",
-        route: "https://docs.kasetolabs.xyz/",
+        route: "https://docs.griotai.kasetolabs.xyz/",
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];

@@ -1,5 +1,5 @@
 // copilot
-// https://griotai.kasetolabs.xyz => kasetolabs.xyz
+// https://app.griotai.kasetolabs.xyz => griotai.kasetolabs.xyz
 export const getRootDomain = (url: string) => {
   const domain = url.split("/")[2];
   const parts = domain.split(".");

@@ -22,7 +22,6 @@ import Cta from "./Cta";
 import FAQ from "./FAQ";
 import FeaturesForCustomerSupport from "./FeaturesForCustomerSupport";
 import FeaturesForDevs from "./FeaturesForDevs";
-import FeaturesForInfluencers from "./FeaturesForInfluencers";
 import FeaturesForSlack from "./FeaturesForSlack";
 
 export default function Home() {
@@ -46,7 +45,11 @@ export default function Home() {
         <title>{t("title")}</title>
         <meta
           name="description"
-          content="GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models."
+          content="GriotAI offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
+        />
+        <meta
+          name="keywords"
+          content="AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, GriotAI"
         />
         <OpenGraph properties={ogProperties} />
       </Head>
@@ -54,7 +57,7 @@ export default function Home() {
 
       <script
         defer
-        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.11"
+        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.15"
         id="clgtujkqh022j0u0zw3ut8vk3"
         data-name="databerry-chat-bubble"
       ></script>

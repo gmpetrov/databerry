@@ -161,7 +161,7 @@ export default function DatasourcesPage() {
             {session?.user?.isPremium ? (
               <Link
                 target="_blank"
-                href={`https://blog.kasetolabs.xyz/chat-site`}
+                href={`https://blog.griotai.kasetolabs.xyz/chat-site`}
                 className="w-full"
               >
                 <Button

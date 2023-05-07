@@ -1,11 +1,7 @@
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import Button from "@mui/joy/Button";
-import Link from "next/link";
 
 import { Container } from "@app/components/landing-page/Container";
 import { Logo } from "@app/components/landing-page/Logo";
 import { NavLink } from "@app/components/landing-page/NavLink";
-import { RouteNames } from "@app/types";
 
 export function Footer() {
   return (
@@ -31,7 +27,7 @@ export function Footer() {
               <NavLink href="https://github.com/SergeWilfried/griotai">
                 GitHub
               </NavLink>
-              <NavLink href="https://docs.kasetolabs.xyz/">Docs</NavLink>
+              <NavLink href="https://docs.griotai.kasetolabs.xyz/">Docs</NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
           </nav>

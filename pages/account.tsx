@@ -354,7 +354,10 @@ export default function AccountPage() {
                 color="info"
                 startDecorator={<HelpOutlineRoundedIcon />}
                 endDecorator={
-                  <Link href="https://docs.kasetolabs.xyz" target="_blank">
+                  <Link
+                    href="https://docs.griotai.kasetolabs.xyz"
+                    target="_blank"
+                  >
                     <Button
                       variant="plain"
                       size="sm"
@@ -365,7 +368,7 @@ export default function AccountPage() {
                   </Link>
                 }
               >
-                Learn more about the Datatberry API
+                Learn more about the GriotAI API
               </Alert>
               {getApiKeysQuery?.data?.map((each) => (
                 <>

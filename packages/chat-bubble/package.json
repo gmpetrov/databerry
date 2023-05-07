@@ -1,6 +1,6 @@
 {
   "name": "@databerry/chat-bubble",
-  "version": "1.0.11",
+  "version": "1.0.15",
   "description": "GriotAI Chat Bubble Widget",
   "main": "chat-bubble.js",
   "scripts": {

@@ -4,13 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Alert from "@mui/joy/Alert";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
+import Checkbox from "@mui/joy/Checkbox";
+import CssBaseline from "@mui/joy/CssBaseline";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import Input from "@mui/joy/Input";
 import Radio from "@mui/joy/Radio";
 import RadioGroup from "@mui/joy/RadioGroup";
 import Stack from "@mui/joy/Stack";
-import { StyledEngineProvider } from "@mui/joy/styles";
+import { CssVarsProvider, StyledEngineProvider } from "@mui/joy/styles";
 import Textarea from "@mui/joy/Textarea";
 import Typography from "@mui/joy/Typography";
 import { Prisma } from "@prisma/client";
@@ -27,6 +29,7 @@ import { getAgent } from "@app/pages/api/agents/[id]";
 import { AgentInterfaceConfig } from "@app/types/models";
 import { fetcher } from "@app/utils/swr-fetcher";
 
+import ChatBoxFrame from "./ChatBoxFrame";
 import ChatBubble, { theme } from "./ChatBubble";
 
 if (typeof window !== "undefined") {
@@ -128,14 +131,6 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
         </FormControl>
 
         <FormControl>
-          <FormLabel>Display Name</FormLabel>
-          <Input
-            placeholder="Agent Smith"
-            {...methods.register("displayName")}
-          />
-        </FormControl>
-
-        <FormControl>
           <FormLabel>Initial Message</FormLabel>
           <Input
             placeholder="👋 Hi, How can I help you?"
@@ -175,6 +170,43 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
         </FormControl>
 
         <FormControl>
+          <FormLabel>Brand Color</FormLabel>
+          <Input placeholder="#000000" {...methods.register("primaryColor")} />
+        </FormControl>
+
+        {/* <FormControl>
+          <FormLabel>Theme</FormLabel>
+          <Controller
+            control={methods.control}
+            name="theme"
+            defaultValue={
+              (getAgentQuery as any).data?.interfaceConfig?.theme || 'light'
+            }
+            render={({ field }) => (
+              <RadioGroup {...field}>
+                <Radio value="light" label="Light" variant="soft" />
+                <Radio value="dark" label="Dark" variant="soft" />
+              </RadioGroup>
+            )}
+          />
+        </FormControl> */}
+
+        <Button type="submit" loading={isLoading} sx={{ ml: "auto", mt: 2 }}>
+          Update
+        </Button>
+
+        <FormControl sx={{ mt: 2 }}>
+          <Typography mb={1} level="body1">
+            Bubble Widget Settings
+          </Typography>
+          <FormLabel>Display Name</FormLabel>
+          <Input
+            placeholder="Agent Smith"
+            {...methods.register("displayName")}
+          />
+        </FormControl>
+
+        <FormControl>
           <FormLabel>Position</FormLabel>
           <Controller
             control={methods.control}
@@ -191,10 +223,9 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           />
         </FormControl>
 
-        <FormControl>
-          <FormLabel>Brand Color</FormLabel>
-          <Input placeholder="#000000" {...methods.register("primaryColor")} />
-        </FormControl>
+        <Button type="submit" loading={isLoading} sx={{ ml: "auto", mt: 2 }}>
+          Update
+        </Button>
 
         {getAgentQuery?.data?.id && (
           <Frame
@@ -218,20 +249,27 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
                   <StyledEngineProvider injectFirst>
                     <CacheProvider value={cache}>
                       <ThemeProvider theme={theme}>
-                        <Box
-                          sx={{
-                            width: "100vw",
-                            height: "100vh",
-                            maxHeight: "100%",
-                            overflow: "hidden",
-                          }}
+                        <CssVarsProvider
+                          theme={theme}
+                          defaultMode="light"
+                          modeStorageKey="databerry-chat-bubble"
                         >
-                          {/* <CssBaseline enableColorScheme /> */}
-                          <ChatBubble
-                            agentId={getAgentQuery?.data?.id!}
-                            initConfig={values}
-                          />
-                        </Box>
+                          <CssBaseline />
+                          <Box
+                            sx={{
+                              width: "100vw",
+                              height: "100vh",
+                              maxHeight: "100%",
+                              overflow: "hidden",
+                              p: 2,
+                            }}
+                          >
+                            <ChatBubble
+                              agentId={getAgentQuery?.data?.id!}
+                              initConfig={values}
+                            />
+                          </Box>
+                        </CssVarsProvider>
                       </ThemeProvider>
                     </CacheProvider>
                   </StyledEngineProvider>
@@ -241,19 +279,127 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           </Frame>
         )}
 
-        <Button type="submit" loading={isLoading} sx={{ ml: "auto", mt: 2 }}>
+        <Stack id="embed" gap={2} mb={2}>
+          <Typography level="body2">
+            To Embed the Agent as a Chat Bubble on your website paste this code
+            to the HTML Head section
+          </Typography>
+
+          <SyntaxHighlighter
+            language="htmlbars"
+            style={docco}
+            customStyle={{
+              borderRadius: 10,
+            }}
+          >
+            {`<script 
+  id="${getAgentQuery?.data?.id}"
+  data-name="databerry-chat-bubble"
+  src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
+></script>`}
+          </SyntaxHighlighter>
+        </Stack>
+      </Stack>
+
+      {/* {getAgentQuery?.data?.id && (
+          <Box
+            style={{
+              width: '100%',
+              height: 600,
+              border: '1px solid rgba(0, 0, 0, 0.2)',
+              borderRadius: 20,
+              overflow: 'hidden',
+            }}
+          >
+            <iframe
+              width="100%"
+              height="100%"
+              src={`/agents/${getAgentQuery?.data?.id}/iframe`}
+              frameBorder="0"
+            />
+          </Box>
+        )} */}
+
+      <FormControl sx={{ mt: 4, mb: 2 }}>
+        <Typography mb={1} level="body1">
+          Iframe Widget Settings
+        </Typography>
+      </FormControl>
+
+      <FormControl>
+        <Checkbox
+          label="Transparent Background"
+          defaultChecked={
+            !!(getAgentQuery as any).data?.interfaceConfig?.isBgTransparent
+          }
+          {...methods.register("isBgTransparent")}
+        />
+      </FormControl>
+
+      <Box width={"100%"} display="flex">
+        <Button
+          type="submit"
+          loading={isLoading}
+          sx={{ ml: "auto", mt: 2, mb: 4 }}
+        >
           Update
         </Button>
+      </Box>
 
-        <Stack id="embed" gap={1}>
-          <Typography level="h6">
-            Embed Agent on your website section
-          </Typography>
-          <Typography level="body2">
-            To Embed the Agent on your website paste this code to the HTML Head
-            section
-          </Typography>
-        </Stack>
+      {getAgentQuery?.data?.id && (
+        <Frame
+          style={{
+            width: "100%",
+            height: 600,
+            border: "1px solid rgba(0, 0, 0, 0.2)",
+            borderRadius: 20,
+          }}
+        >
+          <FrameContextConsumer>
+            {({ document }) => {
+              const cache = createCache({
+                key: "iframe",
+                container: document?.head,
+                prepend: true,
+                speedy: true,
+              });
+
+              return (
+                <StyledEngineProvider injectFirst>
+                  <CacheProvider value={cache}>
+                    <ThemeProvider theme={theme}>
+                      <CssVarsProvider
+                        theme={theme}
+                        defaultMode="light"
+                        modeStorageKey="databerry-chat-iframe"
+                      >
+                        <CssBaseline enableColorScheme />
+                        <Box
+                          style={{ width: "100vw", height: "100vh" }}
+                          sx={{
+                            body: {
+                              padding: 0,
+                              margin: 0,
+                            },
+                          }}
+                        >
+                          <ChatBoxFrame initConfig={values} />
+                        </Box>
+                      </CssVarsProvider>
+                    </ThemeProvider>
+                  </CacheProvider>
+                </StyledEngineProvider>
+              );
+            }}
+          </FrameContextConsumer>
+        </Frame>
+      )}
+
+      <Stack id="embed" gap={2} mt={4} mb={2}>
+        <Typography level="body2">
+          To Embed the Agent as an iFrame on your website paste this code into
+          an HTML page
+        </Typography>
 
         <SyntaxHighlighter
           language="htmlbars"
@@ -262,11 +408,13 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
             borderRadius: 10,
           }}
         >
-          {`<script 
-  id="${getAgentQuery?.data?.id}"
-  data-name="databerry-chat-bubble"
-  src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-></script>`}
+          {`<iframe
+  src="https://app.griotai.kasetolabs.xyz/agents/${getAgentQuery?.data?.id}/iframe"
+  width="100%"
+  height="100%"
+></iframe>
+
+`}
         </SyntaxHighlighter>
       </Stack>
     </form>

@@ -35,7 +35,7 @@
   - Notion (coming soon)
   - Airtable (coming soon)
 - No-code: User-friendly interface to manage your datastores and chat with your data
-- Securized API endpoint for querying your data
+- Secured API endpoint for querying your data
 - Auto sync data sources (coming soon)
 - **Auto generates a ChatGPT Plugin** for each datastore
 

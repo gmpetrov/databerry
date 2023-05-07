@@ -3,20 +3,15 @@ import "@app/styles/globals.css";
 import "@app/styles/preflight.css";
 import "@app/styles/nprogress.css";
 
-import { CacheProvider } from "@emotion/react";
-import CssBaseline from "@mui/joy/CssBaseline";
-import { CssVarsProvider, StyledEngineProvider } from "@mui/joy/styles";
-import { Analytics } from "@vercel/analytics/react";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { SessionProvider } from "next-auth/react";
-import { NextIntlProvider } from "next-intl";
 import { useEffect } from "react";
 
+import DashboardThemeProvider from "@app/components/DashboardThemeProvider";
 import { NextPageWithLayout, RouteNames } from "@app/types";
 import createEmotionCache from "@app/utils/create-emotion-cache";
-import theme from "@app/utils/theme";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -36,8 +31,7 @@ export default function App({
   pageProps,
   ...otherProps
 }: AppPropsWithLayout) {
-  const { emotionCache = clientSideEmotionCache } = otherProps as any;
-
+  const router = useRouter();
   const getLayout = Component.getLayout ?? ((page) => page);
 
   useEffect(() => {
@@ -50,20 +44,16 @@ export default function App({
     }
   }, []);
 
+  if (router.pathname === "/agents/[agentId]/iframe") {
+    return getLayout(<Component {...pageProps} />);
+  }
+
   return (
-    <StyledEngineProvider injectFirst>
-      <CacheProvider value={emotionCache}>
-        <CssVarsProvider theme={theme} defaultMode="dark">
-          <CssBaseline enableColorScheme />
-          <TopProgressBar />
-          <SessionProvider>
-            <NextIntlProvider messages={pageProps.messages}>
-              {getLayout(<Component {...pageProps} />)}
-            </NextIntlProvider>
-            <Analytics />
-          </SessionProvider>
-        </CssVarsProvider>
-      </CacheProvider>
-    </StyledEngineProvider>
+    <DashboardThemeProvider {...otherProps}>
+      <TopProgressBar />
+      <SessionProvider>
+        {getLayout(<Component {...pageProps} />)}
+      </SessionProvider>
+    </DashboardThemeProvider>
   );
 }

@@ -13,15 +13,36 @@ import { Header } from "@app/components/landing-page/Header";
 import { Hero } from "@app/components/landing-page/Hero";
 import { RouteNames } from "@app/types";
 
+import OpenGraph from "../../components/OpenGraph";
+import { absUrl } from "../../core/helpers";
+import useOpenGraph from "../../hooks/useOpenGraph";
+
 export default function Home() {
+  const ogProperties = useOpenGraph({
+    url: absUrl("/"),
+    title: "GriotAI - Crisp Plugin", // Add you homepage title
+    image: {
+      // some default image preview for your website
+      type: "image/png",
+      url: "/og-image.png",
+      alt: "GriotAI Logo",
+    },
+    description:
+      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
+    type: "website",
+  });
   return (
     <>
       <Head>
-        <title>ChatSite by GriotAI</title>
         <meta
           name="description"
           content="ChatGPT Bot trained on your company data. Integrates with existing customer support tools."
         />
+        <meta
+          name="keywords"
+          content="GriotAI, Crisp Plugin, AI chatbot, automatic data synchronization, custom data training, fast chatbot training, easy chatbot setup"
+        />
+        <OpenGraph properties={ogProperties} />
       </Head>
       <Header />
       <main className="flex flex-col min-h-full mb-auto bg-black">

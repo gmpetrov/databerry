@@ -158,6 +158,12 @@ export default function BaseForm(props: Props) {
     }
   };
 
+  const onSubmitWrapper = (e: any) => {
+    e.stopPropagation();
+
+    handleSubmit(onSubmit)(e);
+  };
+
   const networkError = upsertDatasourceMutation.error?.message;
 
   console.log("validation errors", methods.formState.errors);
@@ -166,7 +172,7 @@ export default function BaseForm(props: Props) {
     <FormProvider {...methods}>
       <form
         className="flex flex-col w-full space-y-6"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={onSubmitWrapper}
       >
         {networkError && <Alert color="danger">{networkError}</Alert>}
 

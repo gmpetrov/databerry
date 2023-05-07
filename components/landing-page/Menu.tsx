@@ -23,7 +23,7 @@ const solutions = [
     name: "Crisp Plugin",
     description:
       "Connect your agent to Crisp. Summarize conversations and more!",
-    href: "https://www.kasetolabs.xyz/products/crisp-plugin",
+    href: "https://www.griotai.kasetolabs.xyz/products/crisp-plugin",
     icon: (props: any) => (
       <img
         {...props}
@@ -35,7 +35,7 @@ const solutions = [
   {
     name: "Slack Bot",
     description: "Deploy an Agent trained on your data to Slack",
-    href: "https://www.kasetolabs.xyz/products/slack-bot",
+    href: "https://www.griotai.kasetolabs.xyz/products/slack-bot",
     icon: (props: any) => (
       <img
         {...props}
@@ -47,7 +47,7 @@ const solutions = [
   {
     name: "GriotAI API",
     description: "Document Retrieval as a service",
-    href: "https://docs.kasetolabs.xyz/introduction",
+    href: "https://docs.griotai.kasetolabs.xyz/introduction",
     icon: ServerIcon,
   },
   {
