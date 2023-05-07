@@ -8,18 +8,40 @@ import { useState } from "react";
 
 import { Footer } from "@app/components/landing-page/Footer";
 import { Header } from "@app/components/landing-page/Header";
-import { Hero } from "@app/components/landing-page/Hero";
 import accountConfig from "@app/utils/account-config";
 
+import OpenGraph from "../components/OpenGraph";
+import { absUrl } from "../core/helpers";
+import useOpenGraph from "../hooks/useOpenGraph";
+
 export default function Home() {
+  const ogProperties = useOpenGraph({
+    url: absUrl("/pricing"),
+    title: "GriotAI Pricing - Plans for Teams of All Sizes", // Add you homepage title
+    image: {
+      // some default image preview for your website
+      type: "image/png",
+      url: "/og-image.png",
+      alt: "GriotAI Logo",
+    },
+    description:
+      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
+    type: "website",
+  });
   return (
     <>
       <Head>
         <title>GriotAI - Pricing</title>
         <meta
           name="description"
-          content="Simple Pricing. No hidden fees. No credit card required."
+          content="Choose an affordable plan with GriotAI. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
         />
+        <meta
+          name="keywords"
+          content="GriotAI, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
+        />
+        <OpenGraph properties={ogProperties} />
+        <meta name="robots" content="index, follow" />
       </Head>
       <Header />
       <main className="flex flex-col min-h-full mb-auto bg-black">

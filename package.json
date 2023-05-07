@@ -23,10 +23,11 @@
   "alias": {
     "@app/components": "./components",
     "@app/utils": "./utils",
-    "@app/types": "./types"
+    "@app/types": "./types",
+    "@app/hooks": "./hooks"
   },
   "dependencies": {
-    "@dqbd/tiktoken": "^1.0.2",
+    "@dqbd/tiktoken": "^1.0.7",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",

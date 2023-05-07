@@ -23,7 +23,7 @@ export const useOpenGraph = (data: PageOgData) => {
       title: data.title,
       type: data.type,
       author: data.author,
-      site_name: "OpenGraph Article",
+      site_name: "GriotAI",
       description: data.description,
       image: data.image
         ? {

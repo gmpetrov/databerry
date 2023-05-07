@@ -12,15 +12,37 @@ import { Footer } from "@app/components/landing-page/Footer";
 import { Header } from "@app/components/landing-page/Header";
 import { RouteNames } from "@app/types";
 
+import OpenGraph from "../../components/OpenGraph";
+import { absUrl } from "../../core/helpers";
+import useOpenGraph from "../../hooks/useOpenGraph";
+
 export default function Home() {
+  const ogProperties = useOpenGraph({
+    url: absUrl("/"),
+    title: "Slack Bot by GriotAI - Train a Chatbot on Your Company Data", // Add you homepage title
+    image: {
+      // some default image preview for your website
+      type: "image/png",
+      url: "/og-image.png",
+      alt: "GriotAI Logo",
+    },
+    description:
+      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
+    type: "website",
+  });
   return (
     <>
       <Head>
-        <title>SlackBot by GriotAI</title>
         <meta
           name="description"
-          content="A ChatGPT Slack Bot trained on your company data."
+          content="GriotAI's Slack Bot makes it easy to train a chatbot on your company data. Just paste your website URL, we process your data and train your bot quickly. The bot is kept up-to-date with your data automatically. Other data sources like PDF, Gdoc, Sheets, Notion, Airtable, and more are also supported."
         />
+        <meta
+          name="keywords"
+          content="GriotAI, Slack Bot, AI chatbot, company data, chatbot training, automatic data sync, Slack plugin"
+        />
+
+        <OpenGraph properties={ogProperties} />
       </Head>
       <Header />
       <main className="flex flex-col min-h-full mb-auto bg-black">

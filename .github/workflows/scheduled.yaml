@@ -1,0 +1,13 @@
+name: Sync Datasources
+on:
+  schedule:
+    - cron: '0 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+        - name: cURL request
+          run: curl -X GET https://app.griot.kasetolabs.xyz/api/crons/load-datasources?secret=$NEXTAUTH_SECRET
+          env:
+            NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+  

@@ -1,4 +1,4 @@
-name: Databerry on Fly.io
+name: GriotAI on Fly.io
 on:
   push:
     branches:

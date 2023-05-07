@@ -60,7 +60,7 @@ export const chatAgentRequest = async (
   }
 
   const streamData = (data: string) => {
-    const input = data === '[DONE]' ? data : encodeURIComponent(data);
+    const input = data === "[DONE]" ? data : encodeURIComponent(data);
     res.write(`data: ${input}\n\n`);
   };
 

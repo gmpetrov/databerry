@@ -128,9 +128,9 @@ const handleSendInput = async ({
     from: "operator",
     origin: "chat",
     user: {
-      type: 'participant',
-      nickname: agentName || 'GriotAI',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+      type: "participant",
+      nickname: agentName || "GriotAI",
+      avatar: "https://griot.kasetolabs.xyz/databerry-rounded-bg-white.png",
     },
 
     content: {
@@ -163,14 +163,14 @@ const handleQuery = async (
       websiteId,
       sessionId,
       {
-        type: 'text',
-        from: 'operator',
-        origin: 'chat',
-        content: 'Usage limit reached.',
+        type: "text",
+        from: "operator",
+        origin: "chat",
+        content: "Usage limit reached.",
         user: {
-          type: 'participant',
-          nickname: agent?.name || 'GriotAi',
-          avatar: 'https://griot.kasetolabs.xyz/databerry-rounded-bg-white.png',
+          type: "participant",
+          nickname: agent?.name || "GriotAi",
+          avatar: "https://griot.kasetolabs.xyz/databerry-rounded-bg-white.png",
         },
       }
     );
@@ -184,9 +184,9 @@ const handleQuery = async (
     origin: "chat",
     content: answer,
     user: {
-      type: 'participant',
-      nickname: agent?.name || 'Databerry.ai',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+      type: "participant",
+      nickname: agent?.name || "Databerry.ai",
+      avatar: "https://griot.kasetolabs.xyz/databerry-rounded-bg-white.png",
     },
   });
 

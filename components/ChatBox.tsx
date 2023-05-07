@@ -1,16 +1,16 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import CircularProgress from '@mui/joy/CircularProgress';
-import IconButton from '@mui/joy/IconButton';
-import Input from '@mui/joy/Input';
-import Stack from '@mui/joy/Stack';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import CircularProgress from "@mui/joy/CircularProgress";
+import IconButton from "@mui/joy/IconButton";
+import Input from "@mui/joy/Input";
+import Stack from "@mui/joy/Stack";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { z } from "zod";
 
 type Message = { from: "human" | "agent"; message: string };
 
@@ -125,21 +125,24 @@ function ChatBox({
             }
             color={each.from === "agent" ? "primary" : "neutral"}
             sx={{
-              mr: each.from === 'agent' ? 'auto' : 'none',
-              ml: each.from === 'human' ? 'auto' : 'none',
-              whiteSpace: 'pre-wrap',
-              'ul, ol': {
-                listStyleType: 'disc',
+              mr: each.from === "agent" ? "auto" : "none",
+              ml: each.from === "human" ? "auto" : "none",
+              whiteSpace: "pre-wrap",
+              "ul, ol": {
+                listStyleType: "disc",
                 pl: 2,
                 gap: 1,
               },
               a: {
-                textDecoration: 'underline',
+                textDecoration: "underline",
+              },
+              ["& p"]: {
+                m: 0,
               },
               gap: 2,
             }}
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget={'_blank'}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget={"_blank"}>
               {each.message}
             </ReactMarkdown>
           </Card>

@@ -71,7 +71,7 @@ const OpenGraph = ({ properties }: { properties: OGProperties }) => {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description || ""} />
       <meta name="twitter:site" content="@griotai" />
-      <meta name="twitter:creator" content="@willy" />
+      <meta name="twitter:creator" content="@JeSappelleSerge" />
     </>
   );
 };

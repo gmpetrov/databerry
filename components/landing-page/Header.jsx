@@ -85,13 +85,13 @@ function MobileNavigation() {
             <MobileNavLink href="https://github.com/SergeWilfried/griotai">
               GitHub
             </MobileNavLink>
-            <MobileNavLink href="https://docs.databerry.ai/">
+            <MobileNavLink href="https://docs.griot.kasetolabs.xyz/">
               Docs
             </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
-            <MobileNavLink href="https://app.databerry.ai">
+            <MobileNavLink href="https://app.griot.kasetolabs.xyz">
               Sign in
             </MobileNavLink>
           </Popover.Panel>
@@ -130,21 +130,21 @@ export function Header() {
               <NavLink href="https://github.com/SergeWilfried/griotai">
                 GitHub
               </NavLink>
-              <NavLink href="https://docs.databerry.ai/">Docs</NavLink>
+              <NavLink href="https://docs.griot.kasetolabs.xyz/">Docs</NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             {/* <div className="hidden md:block">
-              <NavLink href="https://app.databerry.ai">Sign in</NavLink>
+              <NavLink href="https://app.griot.kasetolabs.xyz">Sign in</NavLink>
             </div> */}
-            {/* <Button target="_blank" href="https://app.databerry.ai/signin" color="blue">
+            {/* <Button target="_blank" href="https://app.griot.kasetolabs.xyz/signin" color="blue">
               <span>
                 Sign In
               </span>
             </Button> */}
-            <Link href="https://app.databerry.ai/signin">
+            <Link href="https://app.griot.kasetolabs.xyz/signin">
               <Button variant="outlined" sx={{ borderRadius: 100 }}>
                 Sign In
               </Button>
