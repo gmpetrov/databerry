@@ -4,7 +4,7 @@
   <br>
   GriotAI
   <br>
-    <h3 align="center">Connect your data to large language models!</h3>
+    <h3 align="center">The no-code platform for building custom LLM Agents</h3>
   <br>
   
 </h1>
@@ -12,7 +12,7 @@
 <!-- <h4 align="center">The no-code platform for semantic search and retrieval of personal or organizational documents.</h4> -->
 
 <h2 align="center">
-<img src="public/features.png" alt="WebTorrent" width="700" style="max-width: 100%;">
+<img src="public/og-image.png" alt="Databerry" width="1000" style="max-width: 100%;">
 </h2>
 
 **[GriotAI](https://griotai.kasetolabs.xyz)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
