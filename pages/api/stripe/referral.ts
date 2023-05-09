@@ -1,10 +1,10 @@
-import { NextApiResponse } from 'next';
-import { z } from 'zod';
+import { NextApiResponse } from "next";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import { stripe } from '@app/utils/stripe';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import { stripe } from "@app/utils/stripe";
+import validate from "@app/utils/validate";
 
 const handler = createAuthApiHandler();
 
@@ -20,7 +20,7 @@ export const referral = async (
   const checkoutSessionId = req.body.checkoutSessionId as string;
   const referralId = req.body.referralId as string;
 
-  console.log('payload', req.body);
+  console.log("payload", req.body);
 
   const data = await stripe.checkout.sessions.retrieve(checkoutSessionId);
 

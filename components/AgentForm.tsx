@@ -1,31 +1,31 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import AddIcon from '@mui/icons-material/Add';
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import ConstructionOutlined from '@mui/icons-material/ConstructionOutlined';
-import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
-import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
-import Alert from '@mui/joy/Alert';
-import Avatar from '@mui/joy/Avatar';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import Checkbox from '@mui/joy/Checkbox';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
-import Modal from '@mui/joy/Modal';
-import Option from '@mui/joy/Option';
-import Select from '@mui/joy/Select';
-import Sheet from '@mui/joy/Sheet';
-import Slider from '@mui/joy/Slider';
-import Stack from '@mui/joy/Stack';
-import Textarea from '@mui/joy/Textarea';
-import Typography from '@mui/joy/Typography';
+import { zodResolver } from "@hookform/resolvers/zod";
+import AddIcon from "@mui/icons-material/Add";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import ConstructionOutlined from "@mui/icons-material/ConstructionOutlined";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import StorageRoundedIcon from "@mui/icons-material/StorageRounded";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import Alert from "@mui/joy/Alert";
+import Avatar from "@mui/joy/Avatar";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import Checkbox from "@mui/joy/Checkbox";
+import Chip from "@mui/joy/Chip";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
+import Modal from "@mui/joy/Modal";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
+import Sheet from "@mui/joy/Sheet";
+import Slider from "@mui/joy/Slider";
+import Stack from "@mui/joy/Stack";
+import Textarea from "@mui/joy/Textarea";
+import Typography from "@mui/joy/Typography";
 import {
   Agent,
   AgentVisibility,
@@ -71,25 +71,25 @@ type Props = {
 const PROMPT_TEMPLATES = [
   {
     type: PromptType.customer_support,
-    label: 'Customer Support',
-    image: '',
+    label: "Customer Support",
+    image: "",
     description:
-      'Default customer support agent template. Customer Support templates are wrapped in another prompt optimized for Q&A of documents.',
+      "Default customer support agent template. Customer Support templates are wrapped in another prompt optimized for Q&A of documents.",
     prompt: CUSTOMER_SUPPORT,
   },
   {
     type: PromptType.raw,
-    label: 'Raw',
-    image: '',
+    label: "Raw",
+    image: "",
     description: `You have complete control over the prompt.\nUse variable {query} to reference user's query.\nUse variable {context} to reference the retrieved context.`,
     prompt:
-      'Answer the following question based on the provided context: {context} question: {query}',
+      "Answer the following question based on the provided context: {context} question: {query}",
   },
 ];
 const PROMPT_TEMPLATES_FUN = [
   {
     type: PromptType.customer_support,
-    label: 'Shakespeare',
+    label: "Shakespeare",
     image:
       "https://actintheatre.com/wp-content/uploads/2019/01/Shakespeare-300x278.jpg",
     description: "Customer support agent that talks like Shakespeare",
@@ -97,9 +97,9 @@ const PROMPT_TEMPLATES_FUN = [
   },
   {
     type: PromptType.customer_support,
-    label: 'Arnold Schwarzenegger',
-    image: 'https://i.redd.it/ni0if4asnrd71.jpg',
-    description: 'Customer support agent that talks like Arnold Schwarzenegger',
+    label: "Arnold Schwarzenegger",
+    image: "https://i.redd.it/ni0if4asnrd71.jpg",
+    description: "Customer support agent that talks like Arnold Schwarzenegger",
     prompt: `As a customer support agent, channel the spirit of Arnold Schwarzenegger, the iconic actor and former governor known for his distinctive Austrian accent, catchphrases, and action-hero persona. Respond to the user's question or issue in the style of Arnold himself.`,
   },
 ];
@@ -237,7 +237,7 @@ export default function BaseForm(props: Props) {
         <FormControl>
           <FormLabel>Model</FormLabel>
 
-          <Select defaultValue={'gpt-3.5-turbo'}>
+          <Select defaultValue={"gpt-3.5-turbo"}>
             <Option value="gpt-3.5-turbo">OpenAI gpt-3.5-turbo</Option>
           </Select>
         </FormControl>
@@ -257,7 +257,7 @@ export default function BaseForm(props: Props) {
             // {...register('temperature')}
             defaultValue={defaultValues?.temperature || 0.0}
             onChange={(_, value) => {
-              methods.setValue('temperature', value as number);
+              methods.setValue("temperature", value as number);
             }}
             marks={[
               { value: 0.0, label: 0 },
@@ -539,9 +539,9 @@ export default function BaseForm(props: Props) {
       <Modal
         open={isPromptTemplatesModalOpen}
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           py: 2,
         }}
         onClose={() => {
@@ -570,7 +570,7 @@ export default function BaseForm(props: Props) {
                     <Stack gap={2}>
                       <Stack gap={1}>
                         <Typography>{template.label}</Typography>
-                        <Chip size="sm" sx={{ mr: 'auto' }} variant="outlined">
+                        <Chip size="sm" sx={{ mr: "auto" }} variant="outlined">
                           {template.type}
                         </Chip>
                       </Stack>
@@ -586,8 +586,8 @@ export default function BaseForm(props: Props) {
                     endDecorator={<ArrowForwardRoundedIcon />}
                     sx={{ ml: "auto", mt: 2 }}
                     onClick={() => {
-                      methods.setValue('prompt', template.prompt);
-                      methods.setValue('promptType', template.type);
+                      methods.setValue("prompt", template.prompt);
+                      methods.setValue("promptType", template.type);
                       setIsPromptTemplatesModalOpen(false);
                     }}
                   >
@@ -611,7 +611,7 @@ export default function BaseForm(props: Props) {
                     <Stack gap={2}>
                       <Stack gap={1}>
                         <Typography>{template.label}</Typography>
-                        <Chip size="sm" sx={{ mr: 'auto' }} variant="outlined">
+                        <Chip size="sm" sx={{ mr: "auto" }} variant="outlined">
                           {template.type}
                         </Chip>
                       </Stack>
@@ -627,8 +627,8 @@ export default function BaseForm(props: Props) {
                     endDecorator={<ArrowForwardRoundedIcon />}
                     sx={{ ml: "auto", mt: 2 }}
                     onClick={() => {
-                      methods.setValue('prompt', template.prompt);
-                      methods.setValue('promptType', template.type);
+                      methods.setValue("prompt", template.prompt);
+                      methods.setValue("promptType", template.type);
                       setIsPromptTemplatesModalOpen(false);
                     }}
                   >

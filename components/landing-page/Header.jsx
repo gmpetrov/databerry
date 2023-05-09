@@ -131,7 +131,10 @@ export function Header() {
               </NavLink>
               <NavLink href="#">Docs</NavLink>
 
-              <NavLink href="https://griotai.getrewardful.com/" target={"_blank"}>
+              <NavLink
+                href="https://griotai.getrewardful.com/"
+                target={"_blank"}
+              >
                 Affiliates
               </NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}

@@ -111,7 +111,7 @@ export default function AccountPage() {
     function getClientReferenceId() {
       return (
         ((window as any)?.Rewardful && (window as any)?.Rewardful?.referral) ||
-        'checkout_' + new Date().getTime()
+        "checkout_" + new Date().getTime()
       );
     }
 
@@ -123,7 +123,7 @@ export default function AccountPage() {
       }
 
       await axios
-        .post('/api/stripe/referral', {
+        .post("/api/stripe/referral", {
           checkoutSessionId,
           referralId: getClientReferenceId(),
         })

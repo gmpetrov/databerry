@@ -1,4 +1,3 @@
-
 import { Container } from "@app/components/landing-page/Container";
 import { Logo } from "@app/components/landing-page/Logo";
 import { NavLink } from "@app/components/landing-page/NavLink";
@@ -28,7 +27,10 @@ export function Footer() {
                 GitHub
               </NavLink>
               <NavLink href="#">Docs</NavLink>
-              <NavLink href="https://griotai.getrewardful.com/" target={"_blank"}>
+              <NavLink
+                href="https://griotai.getrewardful.com/"
+                target={"_blank"}
+              >
                 Affiliates
               </NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}

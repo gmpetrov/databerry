@@ -1,5 +1,5 @@
-import { Datastore, PromptType } from '@prisma/client';
-import { OpenAI } from 'langchain/llms/openai';
+import { Datastore, PromptType } from "@prisma/client";
+import { OpenAI } from "langchain/llms/openai";
 
 import { ChatResponse } from "@app/types";
 
@@ -90,7 +90,7 @@ const chat = async ({
 
   const context = results
     ?.map((each) => `CHUNK: ${each.text}\nSOURCE: ${each.source}`)
-    ?.join('\n\n');
+    ?.join("\n\n");
 
   // const finalPrompt = `As a customer support agent, channel the spirit of William Shakespeare, the renowned playwright and poet known for his eloquent and poetic language, use of iambic pentameter, and frequent use of metaphors and wordplay. Respond to the user's question or issue in the style of the Bard himself.
   // const finalPrompt = `As a customer support agent, channel the spirit of Arnold Schwarzenegger, the iconic actor and former governor known for his distinctive Austrian accent, catchphrases, and action-hero persona. Respond to the user's question or issue in the style of Arnold himself.
@@ -99,7 +99,7 @@ const chat = async ({
   // const instruct = `You are an AI assistant providing helpful advice, given the following extracted parts of a long document and a question.
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
 
-  let finalPrompt = prompt || '';
+  let finalPrompt = prompt || "";
 
   switch (promptType) {
     case PromptType.customer_support:
@@ -111,15 +111,15 @@ const chat = async ({
       break;
     case PromptType.raw:
       finalPrompt = finalPrompt
-        ?.replace('{query}', query)
-        ?.replace('{context}', context);
+        ?.replace("{query}", query)
+        ?.replace("{context}", context);
       break;
     default:
       break;
   }
 
   const model = new OpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: "gpt-3.5-turbo",
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [
