@@ -141,7 +141,10 @@ export default function DatasourcesPage() {
                   width={20}
                   height={20}
                   alt="crisp logo"
-                ></Image>
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto"
+                  }}></Image>
               </Link>
             </Stack>
           </Box>
@@ -222,7 +225,10 @@ export default function DatasourcesPage() {
                 width={100}
                 height={100}
                 alt="slack logo"
-              ></Image>
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }}></Image>
             </Stack>
           </Box>
 

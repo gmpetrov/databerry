@@ -21,7 +21,7 @@ export default function Home() {
     image: {
       // some default image preview for your website
       type: "image/png",
-      url: "/og-image.png",
+      url: " https://griotai.kasetolabs.xyz/og-image.png",
       alt: "GriotAI Logo",
     },
     description:

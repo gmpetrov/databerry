@@ -28,7 +28,7 @@ export function Footer() {
               </NavLink>
               <NavLink href="#">Docs</NavLink>
               <NavLink
-                href="https://griotai.getrewardful.com/"
+                href="https://griotai.getrewardful.com/signup"
                 target={"_blank"}
               >
                 Affiliates

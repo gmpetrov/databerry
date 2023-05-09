@@ -84,7 +84,7 @@ function MobileNavigation() {
               GitHub
             </MobileNavLink>
 
-            <MobileNavLink href="https://griotai.getrewardful.com/">
+            <MobileNavLink href="https://griotai.getrewardful.com/signup">
               Affiliates
             </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
@@ -132,7 +132,7 @@ export function Header() {
               <NavLink href="#">Docs</NavLink>
 
               <NavLink
-                href="https://griotai.getrewardful.com/"
+                href="https://griotai.getrewardful.com/signup"
                 target={"_blank"}
               >
                 Affiliates

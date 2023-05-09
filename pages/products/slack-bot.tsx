@@ -23,116 +23,117 @@ export default function Home() {
     image: {
       // some default image preview for your website
       type: "image/png",
-      url: "/og-image.png",
+      url: " https://griotai.kasetolabs.xyz/og-image.png",
       alt: "GriotAI Logo",
     },
     description:
       "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
     type: "website",
   });
-  return (
-    <>
-      <Head>
-        <meta
-          name="description"
-          content="GriotAI's Slack Bot makes it easy to train a chatbot on your company data. Just paste your website URL, we process your data and train your bot quickly. The bot is kept up-to-date with your data automatically. Other data sources like PDF, Gdoc, Sheets, Notion, Airtable, and more are also supported."
-        />
-        <meta
-          name="keywords"
-          content="GriotAI, Slack Bot, AI chatbot, company data, chatbot training, automatic data sync, Slack plugin"
-        />
+  return <>
+    <Head>
+      <meta
+        name="description"
+        content="GriotAI's Slack Bot makes it easy to train a chatbot on your company data. Just paste your website URL, we process your data and train your bot quickly. The bot is kept up-to-date with your data automatically. Other data sources like PDF, Gdoc, Sheets, Notion, Airtable, and more are also supported."
+      />
+      <meta
+        name="keywords"
+        content="GriotAI, Slack Bot, AI chatbot, company data, chatbot training, automatic data sync, Slack plugin"
+      />
 
-        <OpenGraph properties={ogProperties} />
-      </Head>
-      <Header />
-      <main className="flex flex-col min-h-full mb-auto bg-black">
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            textAlign: "center",
-            p: {
-              xs: 2,
-              md: 4,
-              lg: 8,
-            },
-          }}
-        >
-          <Stack gap={2}>
-            <Typography
-              level="h2"
-              fontWeight={"bold"}
-              className="relative z-10 block"
-              sx={(theme) => theme.typography.display1}
-            >
-              Slack Bot
-            </Typography>
+      <OpenGraph properties={ogProperties} />
+    </Head>
+    <Header />
+    <main className="flex flex-col min-h-full mb-auto bg-black">
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          textAlign: "center",
+          p: {
+            xs: 2,
+            md: 4,
+            lg: 8,
+          },
+        }}
+      >
+        <Stack gap={2}>
+          <Typography
+            level="h2"
+            fontWeight={"bold"}
+            className="relative z-10 block"
+            sx={(theme) => theme.typography.display1}
+          >
+            Slack Bot
+          </Typography>
 
-            <Typography level={"h6"}>
-              Slack Bot trained on your company data
-            </Typography>
-          </Stack>
+          <Typography level={"h6"}>
+            Slack Bot trained on your company data
+          </Typography>
+        </Stack>
 
-          <Stack direction={"column"} gap={1} mt={4}>
-            <Link target="_blank" href={"https://crisp.chat/"}>
-              <Image
-                className="w-20 mx-auto "
-                src="/slack-logo.png"
-                width={300}
-                height={20}
-                alt="slack logo"
-              ></Image>
-            </Link>
-          </Stack>
-
-          <Link href={RouteNames.SIGN_IN} className="w-full">
-            <Button
-              variant="solid"
-              size="lg"
-              sx={{ mt: 5, width: 1, maxWidth: 350 }}
-              endDecorator={<ArrowForwardRoundedIcon />}
-            >
-              Create your Slack Bot
-            </Button>
+        <Stack direction={"column"} gap={1} mt={4}>
+          <Link target="_blank" href={"https://crisp.chat/"}>
+            <Image
+              className="w-20 mx-auto "
+              src="/slack-logo.png"
+              width={300}
+              height={20}
+              alt="slack logo"
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }}></Image>
           </Link>
+        </Stack>
 
-          <Box sx={{ width: 1, maxWidth: 800, mt: 8 }}>
-            <iframe
-              //   className="w-full h-[300px] rounded-2xl"
-              //   width="560"
-              className="w-full aspect-video rounded-3xl"
-              src="https://www.youtube.com/embed/x8-poiGrBa8"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            ></iframe>
-          </Box>
+        <Link href={RouteNames.SIGN_IN} className="w-full">
+          <Button
+            variant="solid"
+            size="lg"
+            sx={{ mt: 5, width: 1, maxWidth: 350 }}
+            endDecorator={<ArrowForwardRoundedIcon />}
+          >
+            Create your Slack Bot
+          </Button>
+        </Link>
+
+        <Box sx={{ width: 1, maxWidth: 800, mt: 8 }}>
+          <iframe
+            //   className="w-full h-[300px] rounded-2xl"
+            //   width="560"
+            className="w-full aspect-video rounded-3xl"
+            src="https://www.youtube.com/embed/x8-poiGrBa8"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          ></iframe>
         </Box>
+      </Box>
 
-        <PrimaryFeatures />
+      <PrimaryFeatures />
 
-        {/* <Hero /> */}
-        {/* <Image
-          src="/features.png"
-          alt="features"
-          width="800"
-          height="200"
-          className="mx-auto"
-        /> */}
-        {/* <PrimaryFeatures /> */}
-        {/* 
-        <SecondaryFeatures />
-        <CallToAction />
-        <Testimonials />
-        <Pricing />
-        <Faqs /> */}
-      </main>
-      <Footer />
-    </>
-  );
+      {/* <Hero /> */}
+      {/* <Image
+        src="/features.png"
+        alt="features"
+        width="800"
+        height="200"
+        className="mx-auto"
+      /> */}
+      {/* <PrimaryFeatures /> */}
+      {/* 
+      <SecondaryFeatures />
+      <CallToAction />
+      <Testimonials />
+      <Pricing />
+      <Faqs /> */}
+    </main>
+    <Footer />
+  </>;
 }
 
 const features = [
