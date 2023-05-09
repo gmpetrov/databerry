@@ -15,10 +15,7 @@ export function Logo(props) {
         className={clsx(props.className)}
         src="/databerry-logo-icon.png"
         alt=""
-        style={{
-          maxWidth: "100%",
-          height: "auto"
-        }} />
+      />
       <span className="text-xl">GriotAI</span>
     </div>
   );
