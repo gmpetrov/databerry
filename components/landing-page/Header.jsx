@@ -1,5 +1,4 @@
 import { Popover, Transition } from "@headlessui/react";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import Button from "@mui/joy/Button";
 import clsx from "clsx";
 import Link from "next/link";
@@ -10,7 +9,6 @@ import { Container } from "@app/components/landing-page/Container";
 import { Logo } from "@app/components/landing-page/Logo";
 import Menu from "@app/components/landing-page/Menu";
 import { NavLink } from "@app/components/landing-page/NavLink";
-import { RouteNames } from "@app/types";
 
 function MobileNavLink({ href, children }) {
   return (
@@ -85,16 +83,13 @@ function MobileNavigation() {
             <MobileNavLink href="https://github.com/SergeWilfried/griotai">
               GitHub
             </MobileNavLink>
-            <MobileNavLink href="https://docs.griot.kasetolabs.xyz/">
-              Docs
-            </MobileNavLink>
             <MobileNavLink href="https://griotai.getrewardful.com/">
               Affiliates
             </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
-            <MobileNavLink href="https://griotai.kasetolabs.xyz">
+            <MobileNavLink href="https://griotai.kasetolabs.xyz/signin">
               Sign in
             </MobileNavLink>
           </Popover.Panel>
