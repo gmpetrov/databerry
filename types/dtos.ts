@@ -1,5 +1,5 @@
-import { AgentVisibility, ToolType } from "@prisma/client";
-import { z } from "zod";
+import { AgentVisibility, PromptType, ToolType } from '@prisma/client';
+import { z } from 'zod';
 
 import {
   AgentInterfaceConfig,
@@ -125,7 +125,9 @@ export const UpsertAgentSchema = z.object({
   name: z.string().trim().optional(),
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
-  visibility: z.nativeEnum(AgentVisibility).default("private"),
+  temperature: z.number().default(0.0),
+  promptType: z.nativeEnum(PromptType).default('customer_support'),
+  visibility: z.nativeEnum(AgentVisibility).default('private'),
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
   tools: z
     .array(

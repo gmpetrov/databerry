@@ -59,6 +59,15 @@ class CustomDocument extends Document {
         a.appendChild(r);
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`}
           </Script>
+
+          <script
+            async
+            src="https://r.wdfl.co/rw.js"
+            data-rewardful="cb12e7"
+          ></script>
+          <Script id="rewardfull" strategy="afterInteractive">
+            {`(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`}
+          </Script>
         </Head>
         <body>
           {getInitColorSchemeScript()}

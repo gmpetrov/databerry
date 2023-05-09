@@ -32,9 +32,11 @@ export default class AgentManager {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
         prompt: this.agent.prompt as string,
+        promptType: this.agent.promptType,
         datastore: this.agent?.tools[0]?.datastore as any,
         query: input,
         topK: this.topK,
+        temperature: this.agent.temperature,
         stream,
       });
 

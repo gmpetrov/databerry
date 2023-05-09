@@ -148,6 +148,8 @@ model Agent {
   name        String
   description String
   prompt      String?
+  promptType  PromptType @default(customer_support) @map("prompt_type")
+  temperature Float      @default(0.0)
 
   visibility AgentVisibility @default(private)
 
@@ -372,4 +374,9 @@ enum PriceInterval {
   month
   week
   year
+}
+
+enum PromptType {
+  raw
+  customer_support
 }
