@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import React, { forwardRef } from "react";
 
 interface Props extends React.HtmlHTMLAttributes<HTMLImageElement> {
@@ -12,11 +12,14 @@ const Logo = forwardRef<HTMLImageElement, Props>(
       <Image
         ref={ref}
         {...(otherProps as any)}
-        width="200"
-        height="200"
+        width="50"
+        height="50"
         className={clsx("h-auto w-12", className)}
         alt="GriotAI"
-      />
+        style={{
+          maxWidth: "50%",
+          height: "auto"
+        }} />
     );
   }
 );

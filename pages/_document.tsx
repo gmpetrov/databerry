@@ -21,9 +21,9 @@ class CustomDocument extends Document {
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
 
-          <meta property="og:image" content="/og-image.png" />
+          <meta property="og:image" content=" https://griotai.kasetolabs.xyz/og-image.png" />
           <meta property="twitter:card" content="summary_large_image" />
-          <meta property="twitter:image" content="/og-image.png" />
+          <meta property="twitter:image" content=" https://griotai.kasetolabs.xyz/og-image.png" />
 
           <link
             rel="stylesheet"
