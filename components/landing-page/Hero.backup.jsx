@@ -3,7 +3,7 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import RocketLaunchRounded from "@mui/icons-material/RocketLaunchRounded";
 import Button from "@mui/joy/Button";
 import Stack from "@mui/joy/Stack";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 
 import { Container } from "@app/components/landing-page/Container";

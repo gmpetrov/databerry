@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import React, { forwardRef } from "react";
 
 interface Props extends React.HtmlHTMLAttributes<HTMLImageElement> {

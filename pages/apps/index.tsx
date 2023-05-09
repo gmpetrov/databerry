@@ -21,7 +21,7 @@ import {
 import { Prisma } from "@prisma/client";
 import axios from "axios";
 import dynamic from "next/dynamic";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";

@@ -5,7 +5,7 @@ import LooksOneRoundedIcon from "@mui/icons-material/LooksOneRounded";
 import LooksTwoRoundedIcon from "@mui/icons-material/LooksTwoRounded";
 import { Box, Button, Stack, Typography } from "@mui/joy";
 import Head from "next/head";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 
 import { Footer } from "@app/components/landing-page/Footer";
