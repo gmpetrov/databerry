@@ -65,7 +65,7 @@ const callsToAction = [
   },
   {
     name: "Book a Call",
-    href: "https://calendly.com/databerry-georges/15min",
+    href: "https://calendly.com/sergewilfried/15min",
     icon: PhoneIcon,
   },
 ];
