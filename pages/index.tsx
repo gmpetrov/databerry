@@ -3,7 +3,6 @@ import Head from "next/head";
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
 import Script from "next/script";
-import { useTranslations } from "next-intl";
 
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
@@ -25,7 +24,6 @@ import FeaturesForDevs from "./FeaturesForDevs";
 import FeaturesForSlack from "./FeaturesForSlack";
 
 export default function Home() {
-  const t = useTranslations("common");
   const ogProperties = useOpenGraph({
     url: absUrl("/"),
     title: "GriotAI - Build your ChatGPT Agent Trained on your own data", // Add you homepage title
@@ -42,7 +40,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>{t("title")}</title>
+        <title>GriotAI - Build your ChatGPT Agent Trained on your own data</title>
         <meta
           name="description"
           content="GriotAI offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
