@@ -63,7 +63,7 @@ class CustomDocument extends Document {
           <script
             async
             src="https://r.wdfl.co/rw.js"
-            data-rewardful="cb12e7"
+            data-rewardful="e5e005"
           ></script>
           <Script id="rewardfull" strategy="afterInteractive">
             {`(function(w,r){w._rwq=r;w[r]=w[r]||function(){(w[r].q=w[r].q||[]).push(arguments)}})(window,'rewardful');`}
