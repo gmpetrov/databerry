@@ -107,6 +107,33 @@ export default function AccountPage() {
     }
   };
 
+  React.useEffect(() => {
+    function getClientReferenceId() {
+      return (
+        ((window as any)?.Rewardful && (window as any)?.Rewardful?.referral) ||
+        'checkout_' + new Date().getTime()
+      );
+    }
+
+    (async () => {
+      const checkoutSessionId = router.query?.checkout_session_id;
+
+      if (!checkoutSessionId) {
+        return;
+      }
+
+      await axios
+        .post('/api/stripe/referral', {
+          checkoutSessionId,
+          referralId: getClientReferenceId(),
+        })
+        .catch(console.log);
+
+      // delete router.query.checkout_session_id;
+      // router.replace(router, undefined, { shallow: true });
+    })();
+  }, []);
+
   const currentPlan = accountConfig[session?.user?.currentPlan!];
 
   if (!session?.user) {

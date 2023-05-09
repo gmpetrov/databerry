@@ -88,10 +88,13 @@ function MobileNavigation() {
             <MobileNavLink href="https://docs.griot.kasetolabs.xyz/">
               Docs
             </MobileNavLink>
+            <MobileNavLink href="https://griotai.getrewardful.com/">
+              Affiliates
+            </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
-            <MobileNavLink href="https://app.griot.kasetolabs.xyz">
+            <MobileNavLink href="https://griotai.kasetolabs.xyz">
               Sign in
             </MobileNavLink>
           </Popover.Panel>
@@ -130,7 +133,12 @@ export function Header() {
               <NavLink href="https://github.com/SergeWilfried/griotai">
                 GitHub
               </NavLink>
-              <NavLink href="https://docs.griot.kasetolabs.xyz/">Docs</NavLink>
+              <NavLink href="#">
+                Docs
+              </NavLink>
+              <NavLink href="https://griotai.getrewardful.com/" target={"_blank"}>
+                Affiliates
+              </NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
@@ -144,7 +152,7 @@ export function Header() {
                 Sign In
               </span>
             </Button> */}
-            <Link href="https://app.griot.kasetolabs.xyz/signin">
+            <Link href="https://griotai.kasetolabs.xyz/signin">
               <Button variant="outlined" sx={{ borderRadius: 100 }}>
                 Sign In
               </Button>

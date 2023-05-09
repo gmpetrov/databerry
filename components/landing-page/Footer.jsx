@@ -32,6 +32,9 @@ export function Footer() {
                 GitHub
               </NavLink>
               <NavLink href="https://docs.griot.kasetolabs.xyz/">Docs</NavLink>
+              <NavLink href="https://griotai.getrewardful.com/" target={"_blank"}>
+                Affiliates
+              </NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
           </nav>
