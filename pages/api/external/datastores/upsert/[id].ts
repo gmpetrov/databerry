@@ -89,6 +89,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
         });
         await triggerTaskLoadDatasource([
           {
+            userId: datastore.ownerId!,
             datasourceId: ids[index],
             priority: 1,
           },

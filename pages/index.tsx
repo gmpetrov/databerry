@@ -1,9 +1,9 @@
-import { GetStaticPropsContext } from "next";
-import Head from "next/head";
+import { useColorScheme } from '@mui/joy/styles';
+import Head from 'next/head';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
-import Script from "next/script";
-import { useTranslations } from "next-intl";
+import Script from 'next/script';
+import { useEffect } from 'react';
 
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
@@ -25,20 +25,13 @@ import FeaturesForDevs from "./FeaturesForDevs";
 import FeaturesForSlack from "./FeaturesForSlack";
 
 export default function Home() {
-  const t = useTranslations("common");
-  const ogProperties = useOpenGraph({
-    url: absUrl("/"),
-    title: t("title"), // Add you homepage title
-    image: {
-      // some default image preview for your website
-      type: "image/png",
-      url: "/databerry-logo-icon.png",
-      alt: "GriotAI Logo",
-    },
-    description:
-      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
-    type: "website",
-  });
+  // Force dark mode on the landing page
+  const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    setMode('dark');
+  }, []);
+
   return (
     <>
       <Head>
