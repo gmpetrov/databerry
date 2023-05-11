@@ -225,7 +225,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           >
             <Box sx={{ mt: 1 }}>
               <Typography level="body3">
-                Powered by{" "}
+                Powered by {" "}
                 <Typography color="primary" fontWeight={"bold"}>
                   GriotAI
                 </Typography>

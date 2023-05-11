@@ -67,7 +67,7 @@ export function Hero() {
           </Link>
           <Link
             target="_blank"
-            href={"https://calendly.com/databerry-georges/15min"}
+            href={"https://calendly.com/sergewilfried/15min"}
           >
             <Button
               variant="outlined"
