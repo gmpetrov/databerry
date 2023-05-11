@@ -141,6 +141,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
 
     await triggerTaskLoadDatasource(
       [...ids, ...idsSitemaps].map((each) => ({
+        userId: datasource?.ownerId!,
         datasourceId: each,
         priority: 10,
       }))
@@ -192,6 +193,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
         //
         await triggerTaskLoadDatasource([
           {
+            userId: datasource.ownerId!,
             datasourceId: datasource.id,
             priority: 2,
           },

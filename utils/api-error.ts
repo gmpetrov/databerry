@@ -4,6 +4,7 @@ export enum ApiErrorType {
   NOT_FOUND = 'NOT_FOUND',
   INVALID_REQUEST = 'INVALID_REQUEST',
   WEBPAGE_IS_SITEMAP = 'WEBPAGE_IS_SITEMAP',
+  EMPTY_DATASOURCE = 'EMPTY_DATASOURCE',
 }
 
 export class ApiError extends Error {
@@ -22,6 +23,9 @@ export class ApiError extends Error {
           this.status = 404;
           break;
         case ApiErrorType.INVALID_REQUEST:
+          this.status = 400;
+          break;
+        case ApiErrorType.EMPTY_DATASOURCE:
           this.status = 400;
           break;
         default:

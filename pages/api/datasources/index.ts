@@ -165,7 +165,12 @@ export const upsertDatasource = async (
   });
 
   await triggerTaskLoadDatasource([
-    { datasourceId: id, isUpdateText: data.isUpdateText, priority: 1 },
+    {
+      userId: session.user.id,
+      datasourceId: id,
+      isUpdateText: data.isUpdateText,
+      priority: 1,
+    },
   ]);
 
   return datasource;
