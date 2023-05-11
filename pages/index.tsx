@@ -1,7 +1,9 @@
+import { useColorScheme } from '@mui/joy/styles';
 import Head from 'next/head';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
 import Script from 'next/script';
+import { useEffect } from 'react';
 
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
@@ -20,6 +22,13 @@ import FeaturesForInfluencers from './FeaturesForInfluencers';
 import FeaturesForSlack from './FeaturesForSlack';
 
 export default function Home() {
+  // Force dark mode on the landing page
+  const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    setMode('dark');
+  }, []);
+
   return (
     <>
       <Head>
