@@ -1,10 +1,10 @@
-import { CheckIcon } from "@heroicons/react/20/solid";
-import Card from "@mui/joy/Card";
-import clsx from "clsx";
-import type { Metadata } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { useState } from "react";
+import { CheckIcon } from '@heroicons/react/20/solid';
+import Card from '@mui/joy/Card';
+import { useColorScheme } from '@mui/joy/styles';
+import clsx from 'clsx';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 import { Footer } from "@app/components/landing-page/Footer";
 import { Header } from "@app/components/landing-page/Header";
@@ -152,7 +152,14 @@ function classNames(...classes: any) {
 }
 
 function Example() {
-  const [frequency, setFrequency] = useState(frequencies[0]);
+  const [frequency] = useState(frequencies[0]);
+
+  const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    // Force dark mode on the landing page
+    setMode('dark');
+  }, []);
 
   return (
     <div className="py-24 bg-black sm:py-32">

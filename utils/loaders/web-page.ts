@@ -11,6 +11,19 @@ import { ApiError, ApiErrorType } from "../api-error";
 
 import { DatasourceLoaderBase } from "./base";
 
+const getTextFromHTML = async (html: string) => {
+  const { load } = await import('cheerio');
+
+  const $ = load(html);
+  $('script').remove();
+  $('style').remove();
+  $('link').remove();
+  $('svg').remove();
+  const text = $('body').text();
+
+  return text;
+};
+
 const loadPageContent = async (url: string) => {
   const urlWithSlash = addSlashUrl(url);
 
@@ -20,6 +33,12 @@ const loadPageContent = async (url: string) => {
         "User-Agent": Date.now().toString(),
       },
     });
+
+    const text = await getTextFromHTML(data);
+
+    if (!text) {
+      throw new Error('Empty body');
+    }
 
     return data as string;
   } catch (err) {
@@ -43,7 +62,20 @@ const loadPageContent = async (url: string) => {
       timeout: 100000,
     });
 
-    const content = await page.content();
+    let content = await page.content();
+    let text = await getTextFromHTML(content);
+
+    if (!text) {
+      console.log(
+        "not text parssed from html, let's try again after 10 seconds"
+      );
+      await page.waitForTimeout(10000);
+    }
+
+    content = await page.content();
+    text = await getTextFromHTML(content);
+
+    console.log('content', content);
 
     await context.close();
     await browser.close();
@@ -68,16 +100,13 @@ export class WebPageLoader extends DatasourceLoaderBase {
       this.datasource.config as z.infer<typeof WebPageSourceSchema>["config"]
     )["source"];
 
-    const { load } = await import("cheerio");
-
     const content = await loadPageContent(url);
 
-    const $ = load(content);
-    $("script").remove();
-    $("style").remove();
-    $("link").remove();
-    $("svg").remove();
-    const text = $("body").text();
+    const text = await getTextFromHTML(content);
+
+    if (!text) {
+      throw new ApiError(ApiErrorType.EMPTY_DATASOURCE);
+    }
 
     return {
       pageContent: text,

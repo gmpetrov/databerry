@@ -108,7 +108,13 @@ export const fileUpload = async (
     },
   });
 
-  await triggerTaskLoadDatasource([{ datasourceId: id, priority: 1 }]);
+  await triggerTaskLoadDatasource([
+    {
+      userId: datasource.ownerId!,
+      datasourceId: id,
+      priority: 1,
+    },
+  ]);
 
   return datasource;
 };

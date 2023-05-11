@@ -53,6 +53,7 @@ export const synchDatasource = async (
 
   await triggerTaskLoadDatasource([
     {
+      userId: session?.user?.id!,
       datasourceId: datasource.id,
       priority: 2,
     },

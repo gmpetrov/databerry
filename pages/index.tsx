@@ -1,8 +1,9 @@
-import { GetStaticPropsContext } from "next";
-import Head from "next/head";
+import { useColorScheme } from '@mui/joy/styles';
+import Head from 'next/head';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
-import Script from "next/script";
+import Script from 'next/script';
+import { useEffect } from 'react';
 
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
@@ -37,6 +38,13 @@ export default function Home() {
       "With our no-code platform, you can create a custom AI chatbot trained on your data in seconds. Use GriotAI API to query your agent or to perform document retrievial",
     type: "website",
   });
+  // Force dark mode on the landing page
+  const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    setMode('dark');
+  }, []);
+
   return (
     <>
       <Head>

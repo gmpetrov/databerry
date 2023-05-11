@@ -1,0 +1,1 @@
+export { UnrecoverableError } from 'bullmq';

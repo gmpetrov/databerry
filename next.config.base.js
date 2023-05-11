@@ -8,6 +8,10 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  eslint: {
+    dirs: ['pages', 'utils', 'components', 'hooks', 'types', 'widgets'],
+  },
+
   reactStrictMode: true,
   async redirects() {
     return [];
