@@ -1,5 +1,6 @@
 import { useColorScheme } from '@mui/joy/styles';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
 import Script from 'next/script';
@@ -22,8 +23,21 @@ import FeaturesForInfluencers from './FeaturesForInfluencers';
 import FeaturesForSlack from './FeaturesForSlack';
 
 export default function Home() {
-  // Force dark mode on the landing page
+  const router = useRouter();
   const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    // Force dark mode on the landing page
+    const handleRouteChange = (newPath: string) => {
+      window.location.href = router.basePath + newPath;
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
 
   useEffect(() => {
     setMode('dark');
@@ -64,7 +78,7 @@ export default function Home() {
 
       <script
         defer
-        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.15"
+        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.16"
         id="clgtujkqh022j0u0zw3ut8vk3"
         data-name="databerry-chat-bubble"
       ></script>

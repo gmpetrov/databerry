@@ -4,6 +4,7 @@ import { useColorScheme } from '@mui/joy/styles';
 import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { Footer } from '@app/components/landing-page/Footer';
@@ -11,7 +12,7 @@ import { Header } from '@app/components/landing-page/Header';
 import { Hero } from '@app/components/landing-page/Hero';
 import accountConfig from '@app/utils/account-config';
 
-export default function Home() {
+export default function Pricing() {
   return (
     <>
       <Head>
@@ -92,7 +93,7 @@ const tiers = [
   },
   {
     name: 'Pro',
-    id: 'tier-enterprise',
+    id: 'tier-pro',
     href: '/signin',
     price: { monthly: '$99', annually: '$990' },
     description: 'Dedicated support and for your company.',
@@ -139,18 +140,40 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
 }
 
-function Example() {
-  const [frequency] = useState(frequencies[0]);
-
+const ForceDarkMode = () => {
   const { setMode } = useColorScheme();
 
   useEffect(() => {
-    // Force dark mode on the landing page
+    setMode('dark');
+  }, []);
+
+  return null;
+};
+
+function Example() {
+  const { setMode } = useColorScheme();
+  const router = useRouter();
+  const [frequency] = useState(frequencies[0]);
+
+  useEffect(() => {
+    const handleRouteChange = (newPath: string) => {
+      window.location.href = router.basePath + newPath;
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
     setMode('dark');
   }, []);
 
   return (
     <div className="py-24 bg-black sm:py-32">
+      {/* <ForceDarkMode key={Date.now()} /> */}
       <div className="px-6 mx-auto max-w-[1500px] lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-400">

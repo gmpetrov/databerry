@@ -36,6 +36,7 @@ if (typeof window !== 'undefined') {
                 theme={theme}
                 defaultMode="light"
                 modeStorageKey="databerry-chat-bubble"
+                colorSchemeStorageKey="databerry-chat-bubble-scheme"
               >
                 <ChatBubble agentId={me.id} />
                 {/* <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} /> */}
