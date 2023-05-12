@@ -99,10 +99,10 @@ export default function Home() {
         <Testimonials />
         <Pricing />
         <Faqs /> */}
+        <FeaturesForDevs />
         <FeaturesForCustomerSupport />
         <FeaturesForSlack />
         {/* <FeaturesForInfluencers /> */}
-        <FeaturesForDevs />
         <ChatBotBenefits />
         <FAQ />
         <Cta />

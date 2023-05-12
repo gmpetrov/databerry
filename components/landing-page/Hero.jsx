@@ -119,6 +119,22 @@ export function Hero() {
         </ul>
       </div> */}
 
+
+<div className="relative pt-16 overflow-hidden">
+        <div className="px-6 mx-auto max-w-7xl lg:px-8">
+          <iframe
+            //   className="w-full h-[300px] rounded-2xl"
+            //   width="560"
+            className="w-full aspect-video rounded-3xl"
+            src="https://www.youtube.com/embed/Pa-cyPJzt5k"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          ></iframe>
+
+      </div>
+      </div>
+
       </div>
     </Container>
   );
