@@ -40,7 +40,10 @@ export const generateOpenApiYaml = async (
 
   doc.setIn(['info', 'title'], datastore.name);
   doc.setIn(['info', 'description'], datastore.description);
-  doc.setIn(['info', 'servers', 0, 'url'], `https://${host}`);
+  doc.setIn(
+    ['info', 'servers', 0, 'url'],
+    `https://api.databerry.ai/datastores/query/${datastore.id}`
+  );
 
   res.setHeader('Content-Type', 'text/x-yaml');
 
