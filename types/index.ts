@@ -13,6 +13,7 @@ export enum RouteNames {
   SIGN_UP = '/signup',
   AGENTS = '/agents',
   DATASTORES = '/datastores',
+  LOGS = '/logs',
   CHAT = '/chat',
   MAINTENANCE = '/maintenance',
   ACCOUNT = '/account',

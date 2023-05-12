@@ -31,6 +31,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
@@ -43,11 +44,8 @@ import Layout from '@app/components/Layout';
 import useAgentChat from '@app/hooks/useAgentChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
-import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
 import { RouteNames } from '@app/types';
 import agentToolFormat from '@app/utils/agent-tool-format';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import getRootDomain from '@app/utils/get-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
@@ -60,6 +58,7 @@ const ChatInterfaceConfigForm = dynamic(
 
 export default function AgentPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
     `/api/agents/${router.query?.agentId}`,
@@ -67,7 +66,8 @@ export default function AgentPage() {
   );
 
   const { handleChatSubmit, history } = useAgentChat({
-    queryAgentURL: `/api/agents/${getAgentQuery?.data?.id}/query`,
+    queryAgentURL: `/api/agents/${router.query?.agentId}/query`,
+    // queryHistoryURL: `/api/agents/${router.query?.agentId}/history/${session?.user?.id}`,
   });
 
   const handleDeleteAgent = async () => {

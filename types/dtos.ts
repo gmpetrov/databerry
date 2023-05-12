@@ -1,4 +1,9 @@
-import { AgentVisibility, PromptType, ToolType } from '@prisma/client';
+import {
+  AgentVisibility,
+  ConversationChannel,
+  PromptType,
+  ToolType,
+} from '@prisma/client';
 import { z } from 'zod';
 
 import {
@@ -110,6 +115,8 @@ export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 export const ChatRequest = z.object({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
+  visitorId: z.string().optional(),
+  channel: z.nativeEnum(ConversationChannel).default('dashboard'),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;

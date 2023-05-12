@@ -192,6 +192,8 @@ export default function Layout(props: Props) {
                 zIndex: theme.zIndex.tooltip,
               })}
             >
+              <MenuItem>{session?.user?.email}</MenuItem>
+              <Divider />
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu>
           </Box>
