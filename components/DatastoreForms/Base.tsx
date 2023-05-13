@@ -8,6 +8,7 @@ import Typography from '@mui/joy/Typography';
 import { DatastoreType, Prisma } from '@prisma/client';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
@@ -59,7 +60,14 @@ export default function BaseForm(props: Props) {
 
   const onSubmit = async (values: Schema) => {
     try {
-      const datastore = await upsertDatastoreMutation.trigger(values as any);
+      const datastore = await toast.promise(
+        upsertDatastoreMutation.trigger(values as any),
+        {
+          loading: 'Updating...',
+          success: 'Updated!',
+          error: 'Something went wrong',
+        }
+      );
 
       if (datastore) {
         props?.onSubmitSuccess?.(datastore);

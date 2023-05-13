@@ -20,6 +20,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
@@ -62,10 +63,17 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
 
       console.log('values', values);
 
-      await axios.post('/api/agents', {
-        ...getAgentQuery?.data,
-        interfaceConfig: values,
-      });
+      await toast.promise(
+        axios.post('/api/agents', {
+          ...getAgentQuery?.data,
+          interfaceConfig: values,
+        }),
+        {
+          loading: 'Updating...',
+          success: 'Updated!',
+          error: 'Something went wrong',
+        }
+      );
 
       getAgentQuery.mutate();
     } catch (err) {

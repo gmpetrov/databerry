@@ -42,6 +42,7 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
@@ -169,7 +170,13 @@ export default function BaseForm(props: Props) {
     try {
       setIsLoading(true);
       console.log('values', values);
-      const { data } = await axios.post('/api/agents', values);
+      const { data } = await toast.promise(axios.post('/api/agents', values), {
+        loading: 'Updating...',
+        success: 'Updated!',
+        error: 'Something went wrong',
+      });
+
+      console.log('DATA', data);
       props?.onSubmitSucces?.(data as Agent);
     } catch (err) {
       console.log('error', err);
