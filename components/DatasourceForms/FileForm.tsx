@@ -170,6 +170,8 @@ function Nested() {
           </Typography>
           <UsageLimitModal
             isOpen={state.isUsageLimitModalOpen}
+            title="File size limit exceeded"
+            description="Please upgrade your plan to upload larger files."
             handleClose={() =>
               setState({
                 isUsageLimitModalOpen: false,

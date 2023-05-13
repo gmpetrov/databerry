@@ -16,6 +16,7 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { Prisma, SubscriptionPlan } from '@prisma/client';
 import axios from 'axios';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -171,9 +172,13 @@ export default function AccountPage() {
         gap: 1,
       })}
     >
-      {/* <Head>
-        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-      </Head> */}
+      <Head>
+        <script
+          id="stripe-pricing-table"
+          async
+          src="https://js.stripe.com/v3/pricing-table.js"
+        ></script>
+      </Head>
 
       <Box
         sx={{
@@ -213,19 +218,24 @@ export default function AccountPage() {
 
       <Divider sx={{ mt: 2, mb: 4 }} />
 
-      <Box
+      <Stack
+        gap={4}
         sx={(theme) => ({
           maxWidth: '100%',
           width: theme.breakpoints.values.md,
           mx: 'auto',
         })}
       >
-        {/* <stripe-pricing-table
-          pricing-table-id="prctbl_1MzJqKIDmvRZDzsDjQUfIE8Z"
-          publishable-key="pk_test_51MsM5yIDmvRZDzsDxkUmQWtyG0gzpBQTkVTJSpcKXl5wnlSnizkCPLSEHoD1izTYfbaZQ0X1By3uKOQa1zA37GcS00lWvBPQHt"
-          client-reference-id={session?.user?.id}
-          customer-email={session?.user?.email}
-        ></stripe-pricing-table> */}
+        {currentPlan?.type === SubscriptionPlan?.level_0 && (
+          <Card variant="outlined" sx={{ bgcolor: 'black' }}>
+            <stripe-pricing-table
+              pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
+              publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+              client-reference-id={session?.user?.id}
+              customer-email={session?.user?.email}
+            ></stripe-pricing-table>
+          </Card>
+        )}
 
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
@@ -334,7 +344,7 @@ export default function AccountPage() {
 
             <Divider sx={{ my: 2 }} />
 
-            {currentPlan?.type === SubscriptionPlan?.level_0 && (
+            {/* {currentPlan?.type === SubscriptionPlan?.level_0 && (
               <Link
                 href={`${process.env
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
@@ -350,7 +360,7 @@ export default function AccountPage() {
                   Subscribe
                 </Button>
               </Link>
-            )}
+            )} */}
 
             {currentPlan?.type &&
               currentPlan?.type !== SubscriptionPlan?.level_0 && (
@@ -461,7 +471,7 @@ export default function AccountPage() {
             Delete
           </Button>
         </FormControl> */}
-      </Box>
+      </Stack>
     </Box>
   );
 }

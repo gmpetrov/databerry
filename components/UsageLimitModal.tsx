@@ -12,12 +12,13 @@ import React from 'react';
 import { RouteNames } from '@app/types';
 
 type Props = {
+  title?: string;
   isOpen: boolean;
   description?: string;
   handleClose: () => any;
 };
 
-function UsageLimitModal({ isOpen, description, handleClose }: Props) {
+function UsageLimitModal({ isOpen, title, description, handleClose }: Props) {
   return (
     <Modal
       open={isOpen}
@@ -43,7 +44,7 @@ function UsageLimitModal({ isOpen, description, handleClose }: Props) {
         >
           <div>
             <Typography fontWeight="lg" mt={0.25}>
-              {'Usage limit reached'}
+              {title || 'Usage limit reached'}
             </Typography>
             <Typography fontSize="sm" sx={{ opacity: 0.8 }}>
               {`${description || 'Upgrade your plan to get higher usage'}`}

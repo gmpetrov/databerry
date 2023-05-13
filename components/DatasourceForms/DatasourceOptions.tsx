@@ -6,6 +6,8 @@ import { DatasourceType } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
+import UsageLimitModal from '../UsageLimitModal';
+
 type Props = {
   onSelect: (type: DatasourceType) => any;
 };
@@ -56,6 +58,7 @@ const options: DatsourceOption[] = [
 
 const DatasourceOptions = (props: Props) => {
   const { data: session, status } = useSession();
+  const [showUsageLimitModal, setShowUsageLimitModal] = React.useState(false);
   return (
     <div className="flex space-x-4">
       <Stack className="space-y-4" direction={'row'} flexWrap={'wrap'}>
@@ -71,7 +74,7 @@ const DatasourceOptions = (props: Props) => {
             }}
             onClick={
               each.disabled || (each.isPremium && !session?.user?.isPremium)
-                ? undefined
+                ? () => setShowUsageLimitModal(true)
                 : () => props.onSelect(each.type)
             }
           >
@@ -98,6 +101,13 @@ const DatasourceOptions = (props: Props) => {
           </Sheet>
         ))}
       </Stack>
+
+      <UsageLimitModal
+        isOpen={showUsageLimitModal}
+        handleClose={() => setShowUsageLimitModal(false)}
+        title="Premium Feature"
+        description="Upgrade your account to access this feature"
+      />
     </div>
   );
 };
