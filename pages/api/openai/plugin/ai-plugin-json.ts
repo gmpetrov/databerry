@@ -58,7 +58,7 @@ export const generateAiPluginJson = async (
       url: `https://${host}/.well-known/openapi.yaml`,
       has_user_authentication: false,
     },
-    logo_url: `https://${host}/.well-known/logo.png`,
+    logo_url: datastore.pluginIconUrl || `https://${host}/.well-known/logo.png`,
     contact_email: 'support@databerry.ai',
     legal_info_url: 'support@databerry.ai',
   };

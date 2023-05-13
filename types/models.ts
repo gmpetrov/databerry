@@ -22,6 +22,7 @@ export const DatastoreSchema = z.object({
   description: z.string().trim().min(1),
   // datasources: z.array(DatasourceSchema).optional(),
   isPublic: z.boolean().optional(),
+  pluginIconUrl: z.string().trim().optional(),
   // config: z.union([PineconeConfigSchema]),
 });
 export const PineconeSchema = DatastoreSchema.extend({

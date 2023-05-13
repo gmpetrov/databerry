@@ -77,6 +77,8 @@ model Datastore {
   apiKeys     DatastoreApiKey[]
   tool        Tool[]
 
+  pluginIconUrl String? @map("plugin_icon_url")
+
   config Json?
 
   ownerId String? @map("owner_id")

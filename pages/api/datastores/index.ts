@@ -92,6 +92,7 @@ export const createDatastore = async (
       type: data.type,
       name: data.name,
       description: data.description,
+      pluginIconUrl: data.pluginIconUrl,
       visibility: data.isPublic
         ? DatastoreVisibility.public
         : DatastoreVisibility.private,
