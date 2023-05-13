@@ -13,5 +13,4 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only --config fly/fly.toml
         env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

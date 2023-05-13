@@ -46,7 +46,7 @@ ARG NEXT_PUBLIC_SLACK_CLIENT_ID
 ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 ARG NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1
 
-RUN yarn build
+RUN NODE_OPTIONS="--max_old_space_size=4096" yarn build
 
 # If using npm comment out above and use below instead
 # RUN npm run build
