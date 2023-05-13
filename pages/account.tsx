@@ -129,8 +129,8 @@ export default function AccountPage() {
         })
         .catch(console.log);
 
-      // delete router.query.checkout_session_id;
-      // router.replace(router, undefined, { shallow: true });
+      delete router.query.checkout_session_id;
+      router.replace(router, undefined, { shallow: true });
     })();
   }, []);
 
