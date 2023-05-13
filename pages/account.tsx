@@ -220,14 +220,7 @@ export default function AccountPage() {
 
       <Divider sx={{ mt: 2, mb: 4 }} />
 
-      <Stack
-        gap={4}
-        sx={(theme) => ({
-          maxWidth: '100%',
-          width: theme.breakpoints.values.md,
-          mx: 'auto',
-        })}
-      >
+      <Box mb={4}>
         <UserFree>
           <Card variant="outlined" sx={{ bgcolor: 'black' }}>
             <stripe-pricing-table
@@ -238,7 +231,16 @@ export default function AccountPage() {
             ></stripe-pricing-table>
           </Card>
         </UserFree>
+      </Box>
 
+      <Stack
+        gap={4}
+        sx={(theme) => ({
+          maxWidth: '100%',
+          width: theme.breakpoints.values.md,
+          mx: 'auto',
+        })}
+      >
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
           {/* <Typography level="body3">
