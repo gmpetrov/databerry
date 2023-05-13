@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
 import { NextPageWithLayout, RouteNames } from '@app/types';
@@ -52,6 +53,7 @@ export default function App({
     <DashboardThemeProvider {...otherProps}>
       <TopProgressBar />
       <SessionProvider>
+        <Toaster />
         {getLayout(<Component {...pageProps} />)}
       </SessionProvider>
     </DashboardThemeProvider>

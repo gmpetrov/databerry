@@ -33,6 +33,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 import * as React from 'react';
+import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
 import AgentForm from '@app/components/AgentForm';
@@ -318,7 +319,20 @@ export default function AgentPage() {
                       Learn more about the Datatberry API
                     </Alert>
 
-                    <Alert color="neutral">{getAgentQuery?.data?.id}</Alert>
+                    <Alert
+                      color="neutral"
+                      sx={{
+                        cursor: 'copy',
+                      }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(getAgentQuery?.data?.id!);
+                        toast.success('Copied!', {
+                          position: 'bottom-center',
+                        });
+                      }}
+                    >
+                      {getAgentQuery?.data?.id}
+                    </Alert>
                   </Stack>
                 </FormControl>
 

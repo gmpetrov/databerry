@@ -72,6 +72,7 @@ specifiers:
   react-dom: 18.2.0
   react-frame-component: ^5.2.6
   react-hook-form: ^7.43.8
+  react-hot-toast: ^2.4.1
   react-markdown: ^8.0.7
   react-syntax-highlighter: ^15.5.0
   remark-gfm: ^3.0.1
@@ -148,6 +149,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-frame-component: 5.2.6_biqbaboplfbrettd7655fr4n2y
   react-hook-form: 7.43.8_react@18.2.0
+  react-hot-toast: 2.4.1_biqbaboplfbrettd7655fr4n2y
   react-markdown: 8.0.7_k4en7uapxoluuejoeg6o3ic2aa
   react-syntax-highlighter: 15.5.0_react@18.2.0
   remark-gfm: 3.0.1
@@ -266,6 +268,16 @@ packages:
       stylis: 4.1.3
     dev: false
 
+  /@emotion/cache/11.11.0:
+    resolution: {integrity: sha512-P34z9ssTCBi3e9EI1ZsWpNHcfY1r09ZO0rZbRO2ob3ZQMnFI35jB536qoXbkdesr5EUhYi22anuEJuyxifaqAQ==}
+    dependencies:
+      '@emotion/memoize': 0.8.1
+      '@emotion/sheet': 1.2.2
+      '@emotion/utils': 1.2.1
+      '@emotion/weak-memoize': 0.3.1
+      stylis: 4.2.0
+    dev: false
+
   /@emotion/hash/0.9.0:
     resolution: {integrity: sha512-14FtKiHhy2QoPIzdTcvh//8OyBlknNs2nXRwIhG904opCby3l+9Xaf/wuPvICBF0rc1ZCNBd3nKe9cd2mecVkQ==}
     dev: false
@@ -278,6 +290,10 @@ packages:
 
   /@emotion/memoize/0.8.0:
     resolution: {integrity: sha512-G/YwXTkv7Den9mXDO7AhLWkE3q+I92B+VqAE+dYG4NGPaHZGvt3G8Q0p9vmE+sq7rTGphUbAvmQ9YpbfMQGGlA==}
+    dev: false
+
+  /@emotion/memoize/0.8.1:
+    resolution: {integrity: sha512-W2P2c/VRW1/1tLox0mVUalvnWXxavmv/Oum2aPsRcoDJuob75FC3Y8FbpfLwUegRcxINtGUMPq0tFCvYNTBXNA==}
     dev: false
 
   /@emotion/react/11.10.6_k4en7uapxoluuejoeg6o3ic2aa:
@@ -313,6 +329,10 @@ packages:
 
   /@emotion/sheet/1.2.1:
     resolution: {integrity: sha512-zxRBwl93sHMsOj4zs+OslQKg/uhF38MB+OMKoCrVuS0nyTkqnau+BM3WGEoOptg9Oz45T/aIGs1qbVAsEFo3nA==}
+    dev: false
+
+  /@emotion/sheet/1.2.2:
+    resolution: {integrity: sha512-0QBtGvaqtWi+nx6doRwDdBIzhNdZrXUppvTM4dtZZWEGTXL/XE/yJxLMGlDT1Gt+UHH5IX1n+jkXyytE/av7OA==}
     dev: false
 
   /@emotion/styled/11.10.6_zor2bu4ftuliqy4oeppgoopsea:
@@ -352,8 +372,16 @@ packages:
     resolution: {integrity: sha512-sn3WH53Kzpw8oQ5mgMmIzzyAaH2ZqFEbozVVBSYp538E06OSE6ytOp7pRAjNQR+Q/orwqdQYJSe2m3hCOeznkw==}
     dev: false
 
+  /@emotion/utils/1.2.1:
+    resolution: {integrity: sha512-Y2tGf3I+XVnajdItskUCn6LX+VUDmP6lTL4fcqsXAv43dnlbZiuW4MWQW38rW/BVWSE7Q/7+XQocmpnRYILUmg==}
+    dev: false
+
   /@emotion/weak-memoize/0.3.0:
     resolution: {integrity: sha512-AHPmaAx+RYfZz0eYu6Gviiagpmiyw98ySSlQvCUhVGDRtDFe4DBS0x1bSjdF3gqUDYOczB+yYvBTtEylYSdRhg==}
+    dev: false
+
+  /@emotion/weak-memoize/0.3.1:
+    resolution: {integrity: sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==}
     dev: false
 
   /@eslint-community/eslint-utils/4.4.0_eslint@8.36.0:
@@ -581,7 +609,7 @@ packages:
       '@emotion/styled': 11.10.6_zor2bu4ftuliqy4oeppgoopsea
       '@mui/base': 5.0.0-alpha.122_aen5vu2fkbnw3ssyd5drxdxkh4
       '@mui/core-downloads-tracker': 5.11.14
-      '@mui/system': 5.11.14_gtis2il6psfhtfszsb2riwaf54
+      '@mui/system': 5.12.3_gtis2il6psfhtfszsb2riwaf54
       '@mui/types': 7.2.3_@types+react@18.0.29
       '@mui/utils': 5.11.13_react@18.2.0
       '@types/react': 18.0.29
@@ -616,7 +644,7 @@ packages:
       '@emotion/styled': 11.10.6_zor2bu4ftuliqy4oeppgoopsea
       '@mui/base': 5.0.0-alpha.122_aen5vu2fkbnw3ssyd5drxdxkh4
       '@mui/material': 5.11.14_fnqbmkzq76f7s3wszy2zei75o4
-      '@mui/system': 5.11.14_gtis2il6psfhtfszsb2riwaf54
+      '@mui/system': 5.12.3_gtis2il6psfhtfszsb2riwaf54
       '@mui/types': 7.2.3_@types+react@18.0.29
       '@mui/utils': 5.11.13_react@18.2.0
       '@types/react': 18.0.29
@@ -649,7 +677,7 @@ packages:
       '@emotion/styled': 11.10.6_zor2bu4ftuliqy4oeppgoopsea
       '@mui/base': 5.0.0-alpha.122_aen5vu2fkbnw3ssyd5drxdxkh4
       '@mui/core-downloads-tracker': 5.11.14
-      '@mui/system': 5.11.14_gtis2il6psfhtfszsb2riwaf54
+      '@mui/system': 5.12.3_gtis2il6psfhtfszsb2riwaf54
       '@mui/types': 7.2.3_@types+react@18.0.29
       '@mui/utils': 5.11.13_react@18.2.0
       '@types/react': 18.0.29
@@ -663,8 +691,8 @@ packages:
       react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
     dev: false
 
-  /@mui/private-theming/5.11.13_k4en7uapxoluuejoeg6o3ic2aa:
-    resolution: {integrity: sha512-PJnYNKzW5LIx3R+Zsp6WZVPs6w5sEKJ7mgLNnUXuYB1zo5aX71FVLtV7geyPXRcaN2tsoRNK7h444ED0t7cIjA==}
+  /@mui/private-theming/5.12.3_k4en7uapxoluuejoeg6o3ic2aa:
+    resolution: {integrity: sha512-o1e7Z1Bp27n4x2iUHhegV4/Jp6H3T6iBKHJdLivS5GbwsuAE/5l4SnZ+7+K+e5u9TuhwcAKZLkjvqzkDe8zqfA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0
@@ -674,14 +702,14 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.21.0
-      '@mui/utils': 5.11.13_react@18.2.0
+      '@mui/utils': 5.12.3_react@18.2.0
       '@types/react': 18.0.29
       prop-types: 15.8.1
       react: 18.2.0
     dev: false
 
-  /@mui/styled-engine/5.11.11_xqp3pgpqjlfxxa3zxu4zoc4fba:
-    resolution: {integrity: sha512-wV0UgW4lN5FkDBXefN8eTYeuE9sjyQdg5h94vtwZCUamGQEzmCOtir4AakgmbWMy0x8OLjdEUESn9wnf5J9MOg==}
+  /@mui/styled-engine/5.12.3_xqp3pgpqjlfxxa3zxu4zoc4fba:
+    resolution: {integrity: sha512-AhZtiRyT8Bjr7fufxE/mLS+QJ3LxwX1kghIcM2B2dvJzSSg9rnIuXDXM959QfUVIM3C8U4x3mgVoPFMQJvc4/g==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@emotion/react': ^11.4.1
@@ -694,16 +722,16 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.21.0
-      '@emotion/cache': 11.10.5
+      '@emotion/cache': 11.11.0
       '@emotion/react': 11.10.6_k4en7uapxoluuejoeg6o3ic2aa
       '@emotion/styled': 11.10.6_zor2bu4ftuliqy4oeppgoopsea
-      csstype: 3.1.1
+      csstype: 3.1.2
       prop-types: 15.8.1
       react: 18.2.0
     dev: false
 
-  /@mui/system/5.11.14_gtis2il6psfhtfszsb2riwaf54:
-    resolution: {integrity: sha512-/MBv5dUoijJNEKEGi5tppIszGN0o2uejmeISi5vl0CLcaQsI1cd+uBgK+JYUP1VWvI/MtkWRLVSWtF2FWhu5Nw==}
+  /@mui/system/5.12.3_gtis2il6psfhtfszsb2riwaf54:
+    resolution: {integrity: sha512-JB/6sypHqeJCqwldWeQ1MKkijH829EcZAKKizxbU2MJdxGG5KSwZvTBa5D9qiJUA1hJFYYupjiuy9ZdJt6rV6w==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       '@emotion/react': ^11.5.0
@@ -721,13 +749,13 @@ packages:
       '@babel/runtime': 7.21.0
       '@emotion/react': 11.10.6_k4en7uapxoluuejoeg6o3ic2aa
       '@emotion/styled': 11.10.6_zor2bu4ftuliqy4oeppgoopsea
-      '@mui/private-theming': 5.11.13_k4en7uapxoluuejoeg6o3ic2aa
-      '@mui/styled-engine': 5.11.11_xqp3pgpqjlfxxa3zxu4zoc4fba
-      '@mui/types': 7.2.3_@types+react@18.0.29
-      '@mui/utils': 5.11.13_react@18.2.0
+      '@mui/private-theming': 5.12.3_k4en7uapxoluuejoeg6o3ic2aa
+      '@mui/styled-engine': 5.12.3_xqp3pgpqjlfxxa3zxu4zoc4fba
+      '@mui/types': 7.2.4_@types+react@18.0.29
+      '@mui/utils': 5.12.3_react@18.2.0
       '@types/react': 18.0.29
       clsx: 1.2.1
-      csstype: 3.1.1
+      csstype: 3.1.2
       prop-types: 15.8.1
       react: 18.2.0
     dev: false
@@ -743,8 +771,33 @@ packages:
       '@types/react': 18.0.29
     dev: false
 
+  /@mui/types/7.2.4_@types+react@18.0.29:
+    resolution: {integrity: sha512-LBcwa8rN84bKF+f5sDyku42w1NTxaPgPyYKODsh01U1fVstTClbUoSA96oyRBnSNyEiAVjKm6Gwx9vjR+xyqHA==}
+    peerDependencies:
+      '@types/react': '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@types/react': 18.0.29
+    dev: false
+
   /@mui/utils/5.11.13_react@18.2.0:
     resolution: {integrity: sha512-5ltA58MM9euOuUcnvwFJqpLdEugc9XFsRR8Gt4zZNb31XzMfSKJPR4eumulyhsOTK1rWf7K4D63NKFPfX0AxqA==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0
+    dependencies:
+      '@babel/runtime': 7.21.0
+      '@types/prop-types': 15.7.5
+      '@types/react-is': 17.0.3
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-is: 18.2.0
+    dev: false
+
+  /@mui/utils/5.12.3_react@18.2.0:
+    resolution: {integrity: sha512-D/Z4Ub3MRl7HiUccid7sQYclTr24TqUAQFFlxHQF8FR177BrCTQ0JJZom7EqYjZCdXhwnSkOj2ph685MSKNtIA==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       react: ^17.0.0 || ^18.0.0
@@ -2087,6 +2140,10 @@ packages:
   /csstype/3.1.1:
     resolution: {integrity: sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==}
 
+  /csstype/3.1.2:
+    resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
+    dev: false
+
   /cuid/3.0.0:
     resolution: {integrity: sha512-WZYYkHdIDnaxdeP8Misq3Lah5vFjJwGuItJuV+tvMafosMzw0nF297T7mrm8IOWiPJkV6gc7sa8pzx27+w25Zg==}
     deprecated: Cuid and other k-sortable and non-cryptographic ids (Ulid, ObjectId, KSUID, all UUIDs) are all insecure. Use @paralleldrive/cuid2 instead.
@@ -3145,6 +3202,12 @@ packages:
 
   /globrex/0.1.2:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
+    dev: false
+
+  /goober/2.1.13:
+    resolution: {integrity: sha512-jFj3BQeleOoy7t93E9rZ2de+ScC4lQICLwiAQmKMg9F6roKGaLSHoCDYKkWlSafg138jejvq/mTdvmnwDQgqoQ==}
+    peerDependencies:
+      csstype: ^3.0.10
     dev: false
 
   /google-auth-library/8.7.0:
@@ -5400,6 +5463,20 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-hot-toast/2.4.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-j8z+cQbWIM5LY37pR6uZR6D4LfseplqnuAO4co4u8917hBUvXlEqyP1ZzqVLcqoyUesZZv/ImreoCeHVDpE5pQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      goober: 2.1.13
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - csstype
+    dev: false
+
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
     dev: false
@@ -5977,6 +6054,10 @@ packages:
 
   /stylis/4.1.3:
     resolution: {integrity: sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==}
+    dev: false
+
+  /stylis/4.2.0:
+    resolution: {integrity: sha512-Orov6g6BB1sDfYgzWfTHDOxamtX1bE/zo104Dh9e6fqJ3PooipYyfJ0pUmrZO2wAvO8YbEyeFrkV91XTsGMSrw==}
     dev: false
 
   /superjson/1.12.2:

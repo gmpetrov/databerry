@@ -86,6 +86,7 @@
     "react-dom": "18.2.0",
     "react-frame-component": "^5.2.6",
     "react-hook-form": "^7.43.8",
+    "react-hot-toast": "^2.4.1",
     "react-markdown": "^8.0.7",
     "react-syntax-highlighter": "^15.5.0",
     "remark-gfm": "^3.0.1",

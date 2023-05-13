@@ -23,6 +23,7 @@ import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import { z } from 'zod';
 
@@ -44,7 +45,10 @@ export default function AccountPage() {
 
   const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
     '/api/accounts/api-keys',
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 5000,
+    }
   );
 
   const handleClickManageSubscription = async () => {
@@ -396,8 +400,26 @@ export default function AccountPage() {
               </Alert>
               {getApiKeysQuery?.data?.map((each) => (
                 <>
-                  <Stack key={each.id} direction={'row'} gap={2}>
-                    <Alert color="neutral" sx={{ width: '100%' }}>
+                  <Stack
+                    key={each.id}
+                    direction={'row'}
+                    gap={2}
+                    onClick={() => {
+                      navigator.clipboard.writeText(each.key);
+                      toast.success('Copied!', {
+                        position: 'bottom-center',
+                      });
+                    }}
+                  >
+                    <Alert
+                      color="neutral"
+                      sx={{
+                        width: '100%',
+                        ':hover': {
+                          cursor: 'copy',
+                        },
+                      }}
+                    >
                       {each.key}
                     </Alert>
 

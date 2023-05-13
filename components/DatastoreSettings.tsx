@@ -15,6 +15,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+import toast from 'react-hot-toast';
 
 import { DatastoreFormsMap } from '@app/components/DatastoreForms';
 import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
@@ -115,7 +116,20 @@ function DatastoreSettings() {
             Learn more about the Datatberry API
           </Alert>
 
-          <Alert color="neutral">{getDatastoreQuery?.data?.id}</Alert>
+          <Alert
+            color="neutral"
+            sx={{
+              cursor: 'copy',
+            }}
+            onClick={() => {
+              navigator.clipboard.writeText(getDatastoreQuery?.data?.id!);
+              toast.success('Copied!', {
+                position: 'bottom-center',
+              });
+            }}
+          >
+            {getDatastoreQuery?.data?.id}
+          </Alert>
         </Stack>
       </FormControl>
       {/* <Divider sx={{ my: 4 }} />
@@ -165,8 +179,48 @@ function DatastoreSettings() {
 
         <Stack>
           <Stack gap={2} mt={2}>
+            <Typography level="body2">Plugin Root</Typography>
+            <Alert
+              color="neutral"
+              sx={{
+                width: '100%',
+                cursor: 'copy',
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `https://${getDatastoreQuery?.data?.id}.${getRootDomain(
+                    process.env.NEXT_PUBLIC_DASHBOARD_URL!
+                  )}`
+                );
+                toast.success('Copied!', {
+                  position: 'bottom-center',
+                });
+              }}
+            >
+              {`https://${getDatastoreQuery?.data?.id}.${getRootDomain(
+                process.env.NEXT_PUBLIC_DASHBOARD_URL!
+              )}`}
+            </Alert>
+          </Stack>
+          <Stack gap={2} mt={2}>
             <Typography level="body2">ai-plugin.json</Typography>
-            <Alert color="neutral" sx={{ width: '100%' }}>
+            <Alert
+              color="neutral"
+              sx={{
+                width: '100%',
+                cursor: 'copy',
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `https://${getDatastoreQuery?.data?.id}.${getRootDomain(
+                    process.env.NEXT_PUBLIC_DASHBOARD_URL!
+                  )}/.well-known/ai-plugin.json`
+                );
+                toast.success('Copied!', {
+                  position: 'bottom-center',
+                });
+              }}
+            >
               {`https://${getDatastoreQuery?.data?.id}.${getRootDomain(
                 process.env.NEXT_PUBLIC_DASHBOARD_URL!
               )}/.well-known/ai-plugin.json`}
@@ -174,7 +228,23 @@ function DatastoreSettings() {
           </Stack>
           <Stack gap={2} mt={2}>
             <Typography level="body2">openapi.yaml</Typography>
-            <Alert color="neutral" sx={{ width: '100%' }}>
+            <Alert
+              color="neutral"
+              sx={{
+                width: '100%',
+                cursor: 'copy',
+              }}
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `https://${getDatastoreQuery?.data?.id}.${getRootDomain(
+                    process.env.NEXT_PUBLIC_DASHBOARD_URL!
+                  )}/.well-known/openapi.yaml`
+                );
+                toast.success('Copied!', {
+                  position: 'bottom-center',
+                });
+              }}
+            >
               {`https://${getDatastoreQuery?.data?.id}.${getRootDomain(
                 process.env.NEXT_PUBLIC_DASHBOARD_URL!
               )}/.well-known/openapi.yaml`}
