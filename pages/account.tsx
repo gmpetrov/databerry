@@ -29,6 +29,8 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import Layout from '@app/components/Layout';
+import UserFree from '@app/components/UserFree';
+import UserPremium from '@app/components/UserPremium';
 import useStateReducer from '@app/hooks/useStateReducer';
 import accountConfig from '@app/utils/account-config';
 import { fetcher } from '@app/utils/swr-fetcher';
@@ -226,7 +228,7 @@ export default function AccountPage() {
           mx: 'auto',
         })}
       >
-        {currentPlan?.type === SubscriptionPlan?.level_0 && (
+        <UserFree>
           <Card variant="outlined" sx={{ bgcolor: 'black' }}>
             <stripe-pricing-table
               pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
@@ -235,7 +237,7 @@ export default function AccountPage() {
               customer-email={session?.user?.email}
             ></stripe-pricing-table>
           </Card>
-        )}
+        </UserFree>
 
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
@@ -362,21 +364,16 @@ export default function AccountPage() {
               </Link>
             )} */}
 
-            {currentPlan?.type &&
-              currentPlan?.type !== SubscriptionPlan?.level_0 && (
-                // <a
-                //   href={`https://billing.stripe.com/p/login/test_dR67ufbBYa6Ig8waEE?prefilled_email=${session?.user?.email}`}
-                // >
-                <Button
-                  onClick={handleClickManageSubscription}
-                  endDecorator={<ArrowForwardRoundedIcon />}
-                  variant="plain"
-                  sx={{ ml: 'auto' }}
-                >
-                  Manage Subscription
-                </Button>
-                // </a>
-              )}
+            <UserPremium>
+              <Button
+                onClick={handleClickManageSubscription}
+                endDecorator={<ArrowForwardRoundedIcon />}
+                variant="plain"
+                sx={{ ml: 'auto' }}
+              >
+                Manage Subscription
+              </Button>
+            </UserPremium>
           </Card>
         </FormControl>
 
