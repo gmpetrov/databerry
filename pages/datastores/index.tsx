@@ -164,8 +164,10 @@ export default function DatasourcesPage() {
 
       <CreateDatastoreModal
         isOpen={state.isCreateDatastoreModalOpen}
-        onSubmitSuccess={() => {
+        onSubmitSuccess={(datastore) => {
           getDatastoresQuery.mutate();
+
+          router.push(`/datastores/${datastore.id}`);
         }}
         handleClose={() => {
           setState({ isCreateDatastoreModalOpen: false });

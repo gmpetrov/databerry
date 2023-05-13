@@ -70,14 +70,17 @@ model Datastore {
   id String @id @default(cuid())
 
   name        String
-  description String
+  description String?
   type        DatastoreType
   datasources AppDatasource[]
   visibility  DatastoreVisibility @default(private)
   apiKeys     DatastoreApiKey[]
   tool        Tool[]
 
-  pluginIconUrl String? @map("plugin_icon_url")
+  pluginIconUrl              String? @map("plugin_icon_url")
+  pluginName                 String? @map("plugin_name")
+  pluginDescriptionForHumans String? @map("plugin_description_for_humans")
+  pluginDescriptionForModel  String? @map("plugin_description_for_model")
 
   config Json?
 

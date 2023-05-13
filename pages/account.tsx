@@ -371,7 +371,7 @@ export default function AccountPage() {
                 variant="plain"
                 sx={{ ml: 'auto' }}
               >
-                Manage Subscription
+                Upgrade / Manage Subscription
               </Button>
             </UserPremium>
           </Card>

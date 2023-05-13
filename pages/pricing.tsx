@@ -64,7 +64,7 @@ const tiers = [
       }MB / month`,
       'Manual data synching',
       'Access to Databerry API',
-      'ChatGPT plugin',
+      // 'ChatGPT plugin',
     ],
     mostPopular: false,
   },
@@ -85,6 +85,7 @@ const tiers = [
         accountConfig['level_1'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'Manual data synching',
+      'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
       'Access to Crisp Plugin',
       'Access to Slack Bot',
@@ -108,6 +109,7 @@ const tiers = [
         accountConfig['level_2'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'auto synch datasources',
+      'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: true,
@@ -130,6 +132,7 @@ const tiers = [
         accountConfig['level_3'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'auto synch datasources',
+      'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: false,

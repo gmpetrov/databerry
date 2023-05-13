@@ -24,7 +24,7 @@ export const UpsertDatastoreSchema = z.object({
   type: z.nativeEnum(DatastoreType),
   config: z.object({}).optional(),
   name: z.string().trim().optional(),
-  description: z.string().trim().min(1),
+  description: z.string().trim().optional(),
   isPublic: z.boolean().optional(),
 });
 
@@ -102,12 +102,12 @@ export default function BaseForm(props: Props) {
           {...register('name')}
         />
 
-        <Input
+        {/* <Input
           label="Description"
           helperText="Will be used to generate the ChatGPT plugin file"
           control={control as any}
           {...register('description')}
-        />
+        /> */}
 
         {props.children}
 
@@ -121,7 +121,10 @@ export default function BaseForm(props: Props) {
               <FormLabel>Public</FormLabel>
               <Typography level="body3">
                 When activated, your datastore will be available by anyone on
-                the internet.
+                the internet.{' '}
+                <Typography fontWeight={'bold'} color="primary">
+                  Required for a public ChatGPT plugin.
+                </Typography>
               </Typography>
             </div>
           </FormControl>

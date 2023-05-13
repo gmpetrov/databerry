@@ -14,12 +14,21 @@ const cors = Cors({
   methods: ['POST', 'HEAD', 'GET'],
 });
 
+const safePluginName = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\s/g, '_');
+
 export const generateAiPluginJson = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
   const host = req?.headers?.['host'];
   const subdomain = getSubdomain(host!);
+  const proto = req.headers['x-forwarded-proto'] ? 'https' : 'http';
 
   if (!subdomain) {
     return res.status(400).send('Missing subdomain');
@@ -37,10 +46,12 @@ export const generateAiPluginJson = async (
 
   const config = {
     schema_version: 'v1',
-    name_for_model: datastore.name?.split(' ').join('_'),
-    name_for_human: datastore.name,
-    description_for_model: `Plugin for searching informations about: ${datastore.description}`,
-    description_for_human: datastore.description,
+    name_for_model: `${safePluginName(
+      datastore.pluginName || datastore.name?.substring(0, 20)
+    )}_${datastore.id}`,
+    name_for_human: datastore.pluginName || datastore.name?.substring(0, 20),
+    description_for_model: datastore.pluginDescriptionForModel,
+    description_for_human: datastore.pluginDescriptionForHumans,
     ...(datastore.visibility === DatastoreVisibility.public
       ? {
           auth: {
@@ -55,10 +66,11 @@ export const generateAiPluginJson = async (
         }),
     api: {
       type: 'openapi',
-      url: `https://${host}/.well-known/openapi.yaml`,
+      url: `${proto}://${host}/.well-known/openapi.yaml`,
       has_user_authentication: false,
     },
-    logo_url: datastore.pluginIconUrl || `https://${host}/.well-known/logo.png`,
+    logo_url:
+      datastore.pluginIconUrl || `${proto}://${host}/.well-known/logo.png`,
     contact_email: 'support@databerry.ai',
     legal_info_url: 'support@databerry.ai',
   };

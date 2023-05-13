@@ -39,6 +39,7 @@ components:
           type: string
         top_k:
           title: Top K
+          description: The number of text 256 tokens large chunks to return
           type: integer
           default: 3
     QueryResponse:

@@ -19,9 +19,9 @@ const Input = forwardRef((props: Props, ref) => {
 
   const errorMsg = get(errors, `${props?.name}.message`) as string;
 
-  const { label, ...rest } = props;
+  const { label, helperText, ...rest } = props;
 
-  const helperText = errorMsg ? errorMsg : props.helperText;
+  const helper = errorMsg ? errorMsg : helperText;
 
   return (
     <FormControl error={!!errorMsg}>
@@ -40,7 +40,7 @@ const Input = forwardRef((props: Props, ref) => {
         //   : {})}
       />
 
-      {helperText && <FormHelperText>{helperText}</FormHelperText>}
+      {helper && <FormHelperText>{helper}</FormHelperText>}
     </FormControl>
   );
 });
