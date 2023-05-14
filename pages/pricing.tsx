@@ -4,6 +4,7 @@ import { useColorScheme } from '@mui/joy/styles';
 import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { Footer } from "@app/components/landing-page/Footer";
@@ -14,7 +15,7 @@ import OpenGraph from "../components/OpenGraph";
 import { absUrl } from "../core/helpers";
 import useOpenGraph from "../hooks/useOpenGraph";
 
-export default function Home() {
+export default function Pricing() {
   const ogProperties = useOpenGraph({
     url: absUrl("/pricing"),
     title: "GriotAI Pricing - Plans for Teams of All Sizes", // Add you homepage title
@@ -73,9 +74,9 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_0"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      "Manual data synching",
-      "Access to GriotAI API",
-      "ChatGPT plugin",
+      'Manual data synching',
+      'Access to GriotAI API',
+      // 'ChatGPT plugin',
     ],
     mostPopular: false,
   },
@@ -95,19 +96,20 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_1"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      "Manual data synching",
-      `Website loader limited to  ${accountConfig["level_1"].limits.maxWebsiteURL} Pages`,
-      "Access to Crisp Plugin",
-      "Access to Slack Bot",
+      'Manual data synching',
+      'ChatGPT plugin',
+      `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
+      'Access to Crisp Plugin',
+      'Access to Slack Bot',
     ],
     mostPopular: false,
   },
   {
-    name: "Pro",
-    id: "tier-enterprise",
-    href: "/signin",
-    price: { monthly: "$99", annually: "$990" },
-    description: "Dedicated support and for your company.",
+    name: 'Pro',
+    id: 'tier-pro',
+    href: '/signin',
+    price: { monthly: '$99', annually: '$990' },
+    description: 'Dedicated support and for your company.',
     features: [
       `${accountConfig["level_2"].limits.maxAgents} agent(s)`,
       `${accountConfig["level_2"].limits.maxDatastores} datastore(s)`,
@@ -118,8 +120,9 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_2"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      "auto synch datasources",
-      `Website loader limited to  ${accountConfig["level_2"].limits.maxWebsiteURL} Pages`,
+      'auto synch datasources',
+      'ChatGPT plugin',
+      `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: true,
   },
@@ -140,8 +143,9 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_3"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      "auto synch datasources",
-      `Website loader limited to  ${accountConfig["level_3"].limits.maxWebsiteURL} Pages`,
+      'auto synch datasources',
+      'ChatGPT plugin',
+      `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: false,
   },
@@ -151,18 +155,40 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-function Example() {
-  const [frequency] = useState(frequencies[0]);
-
+const ForceDarkMode = () => {
   const { setMode } = useColorScheme();
 
   useEffect(() => {
-    // Force dark mode on the landing page
+    setMode('dark');
+  }, []);
+
+  return null;
+};
+
+function Example() {
+  const { setMode } = useColorScheme();
+  const router = useRouter();
+  const [frequency] = useState(frequencies[0]);
+
+  useEffect(() => {
+    const handleRouteChange = (newPath: string) => {
+      window.location.href = router.basePath + newPath;
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
     setMode('dark');
   }, []);
 
   return (
     <div className="py-24 bg-black sm:py-32">
+      {/* <ForceDarkMode key={Date.now()} /> */}
       <div className="px-6 mx-auto max-w-[1500px] lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-400">

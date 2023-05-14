@@ -1,27 +1,29 @@
-import AddIcon from "@mui/icons-material/Add";
-import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import SettingsIcon from "@mui/icons-material/Settings";
-import type { ColorPaletteProp } from "@mui/joy";
-import Box from "@mui/joy/Box";
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
-import Button from "@mui/joy/Button";
-import Chip from "@mui/joy/Chip";
-import Divider from "@mui/joy/Divider";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import Tab from "@mui/joy/Tab";
-import TabList from "@mui/joy/TabList";
-import Tabs from "@mui/joy/Tabs";
-import Typography from "@mui/joy/Typography";
-import { Prisma } from "@prisma/client";
-import dynamic from "next/dynamic";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next/types";
-import { useSession } from "next-auth/react";
-import { ReactElement } from "react";
-import * as React from "react";
+import AddIcon from '@mui/icons-material/Add';
+import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
+import SettingsIcon from '@mui/icons-material/Settings';
+import type { ColorPaletteProp } from '@mui/joy';
+import Box from '@mui/joy/Box';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Button from '@mui/joy/Button';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Tab from '@mui/joy/Tab';
+import TabList from '@mui/joy/TabList';
+import Tabs from '@mui/joy/Tabs';
+import Typography from '@mui/joy/Typography';
+import Stack from '@mui/material/Stack';
+import { Prisma } from '@prisma/client';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
+import { ReactElement } from 'react';
+import * as React from 'react';
 
 import Layout from "@app/components/Layout";
 import UsageLimitModal from "@app/components/UsageLimitModal";
@@ -209,35 +211,51 @@ export default function DatastorePage() {
           </Box>
         </Box>
 
-        <Tabs
-          aria-label="Icon tabs"
-          defaultValue={(router.query.tab as string) || "datasources"}
-          size="md"
-          sx={{
-            borderRadius: "lg",
-            display: "inline-flex",
-            mr: "auto",
-            //   mt: 4,
-          }}
-          onChange={(event, value) => {
-            handleChangeTab(value as string);
-          }}
-        >
-          <TabList size="sm">
-            <Tab value={"datasources"}>
-              <ListItemDecorator>
-                <AutoGraphRoundedIcon />
-              </ListItemDecorator>
-              Datasources
-            </Tab>
-            <Tab value={"settings"}>
-              <ListItemDecorator>
-                <SettingsIcon />
-              </ListItemDecorator>
-              Settings
-            </Tab>
-          </TabList>
-        </Tabs>
+        <Stack direction={'row'} alignItems={'center'} gap={2}>
+          <Tabs
+            aria-label="Icon tabs"
+            value={(router.query.tab as string) || 'datasources'}
+            size="md"
+            sx={{
+              borderRadius: 'lg',
+              display: 'inline-flex',
+            }}
+            onChange={(event, value) => {
+              handleChangeTab(value as string);
+            }}
+          >
+            <TabList size="sm">
+              <Tab value={'datasources'}>
+                <ListItemDecorator>
+                  <AutoGraphRoundedIcon />
+                </ListItemDecorator>
+                Datasources
+              </Tab>
+              <Tab value={'settings'}>
+                <ListItemDecorator>
+                  <SettingsIcon />
+                </ListItemDecorator>
+                Settings
+              </Tab>
+            </TabList>
+          </Tabs>
+
+          {/* <Link href="#chatgpt-plugin"> */}
+          <Button
+            onClick={() => {
+              handleChangeTab('settings');
+              setTimeout(() => {
+                window.location.hash = '#chatgpt-plugin';
+              }, 100);
+            }}
+            size="sm"
+            variant="plain"
+            startDecorator={<LinkRoundedIcon />}
+          >
+            ChatGPT Plugin
+          </Button>
+          {/* </Link> */}
+        </Stack>
 
         <Divider sx={{ my: 4 }} />
 

@@ -14,7 +14,12 @@ function DashboardThemeProvider(props: any) {
   return (
     <StyledEngineProvider injectFirst>
       <CacheProvider value={emotionCache}>
-        <CssVarsProvider theme={theme} defaultMode="dark">
+        <CssVarsProvider
+          theme={theme}
+          defaultMode="dark"
+          modeStorageKey="databerry-dashboard-mode"
+          colorSchemeStorageKey="databerry-dashboard-color-scheme"
+        >
           <CssBaseline enableColorScheme />
           {props.children}
         </CssVarsProvider>

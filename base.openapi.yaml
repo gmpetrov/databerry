@@ -6,7 +6,7 @@ info:
   servers:
     - url: https://your-app-url.com
 paths:
-  /query:
+  /DATASTORE_QUERY_PATH:
     post:
       summary: Query
       description: Accepts search query objects array each with query and optional filter. Break down complex questions into sub-questions. Refine results by criteria, e.g. time / source, don't do this often. Split queries if ResponseTooLargeError occurs.
@@ -24,93 +24,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/QueryResponse"
-        "422":
-          description: Validation Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/HTTPValidationError"
       security:
         - HTTPBearer: []
 components:
   schemas:
-    DocumentChunkMetadata:
-      title: DocumentChunkMetadata
-      type: object
-      properties:
-        source:
-          $ref: "#/components/schemas/Source"
-        source_id:
-          title: Source Id
-          type: string
-        url:
-          title: Url
-          type: string
-        created_at:
-          title: Created At
-          type: string
-        author:
-          title: Author
-          type: string
-        document_id:
-          title: Document Id
-          type: string
-    DocumentChunkWithScore:
-      title: DocumentChunkWithScore
-      required:
-        - text
-        - metadata
-        - score
-      type: object
-      properties:
-        id:
-          title: Id
-          type: string
-        text:
-          title: Text
-          type: string
-        metadata:
-          $ref: "#/components/schemas/DocumentChunkMetadata"
-        embedding:
-          title: Embedding
-          type: array
-          items:
-            type: number
-        score:
-          title: Score
-          type: number
-    DocumentMetadataFilter:
-      title: DocumentMetadataFilter
-      type: object
-      properties:
-        document_id:
-          title: Document Id
-          type: string
-        source:
-          $ref: "#/components/schemas/Source"
-        source_id:
-          title: Source Id
-          type: string
-        author:
-          title: Author
-          type: string
-        start_date:
-          title: Start Date
-          type: string
-        end_date:
-          title: End Date
-          type: string
-    HTTPValidationError:
-      title: HTTPValidationError
-      type: object
-      properties:
-        detail:
-          title: Detail
-          type: array
-          items:
-            $ref: "#/components/schemas/ValidationError"
-    Query:
-      title: Query
+    QueryRequest:
+      title: QueryRequest
       required:
         - query
       type: object
@@ -118,23 +37,11 @@ components:
         query:
           title: Query
           type: string
-        filter:
-          $ref: "#/components/schemas/DocumentMetadataFilter"
         top_k:
           title: Top K
+          description: The number of text 256 tokens large chunks to return
           type: integer
           default: 3
-    QueryRequest:
-      title: QueryRequest
-      required:
-        - queries
-      type: object
-      properties:
-        queries:
-          title: Queries
-          type: array
-          items:
-            $ref: "#/components/schemas/Query"
     QueryResponse:
       title: QueryResponse
       required:
@@ -149,47 +56,18 @@ components:
     QueryResult:
       title: QueryResult
       required:
-        - query
-        - results
+        - text
       type: object
       properties:
-        query:
-          title: Query
+        text:
+          title: Text
           type: string
-        results:
-          title: Results
-          type: array
-          items:
-            $ref: "#/components/schemas/DocumentChunkWithScore"
-    Source:
-      title: Source
-      enum:
-        - email
-        - file
-        - chat
-      type: string
-      description: An enumeration.
-    ValidationError:
-      title: ValidationError
-      required:
-        - loc
-        - msg
-        - type
-      type: object
-      properties:
-        loc:
-          title: Location
-          type: array
-          items:
-            anyOf:
-              - type: string
-              - type: integer
-        msg:
-          title: Message
+        source:
+          title: Source
           type: string
-        type:
-          title: Error Type
-          type: string
+        score:
+          title: Score
+          type: number
   securitySchemes:
     HTTPBearer:
       type: http
