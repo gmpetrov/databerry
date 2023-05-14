@@ -1,38 +1,42 @@
-import AddIcon from "@mui/icons-material/Add";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import DeleteIcon from "@mui/icons-material/Delete";
-import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
-import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
-import Alert from "@mui/joy/Alert";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import Divider from "@mui/joy/Divider";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import IconButton from "@mui/joy/IconButton";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
-import { Prisma, SubscriptionPlan } from "@prisma/client";
-import axios from "axios";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next/types";
-import { useSession } from "next-auth/react";
-import { ReactElement } from "react";
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import useSWR from "swr";
-import { z } from "zod";
+import AddIcon from '@mui/icons-material/Add';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import DeleteIcon from '@mui/icons-material/Delete';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
+import Alert from '@mui/joy/Alert';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import IconButton from '@mui/joy/IconButton';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import { Prisma, SubscriptionPlan } from '@prisma/client';
+import axios from 'axios';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
+import { ReactElement } from 'react';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import useSWR from 'swr';
+import { z } from 'zod';
 
-import Layout from "@app/components/Layout";
-import useStateReducer from "@app/hooks/useStateReducer";
-import accountConfig from "@app/utils/account-config";
-import { fetcher } from "@app/utils/swr-fetcher";
-import { withAuth } from "@app/utils/withAuth";
+import Layout from '@app/components/Layout';
+import UserFree from '@app/components/UserFree';
+import UserPremium from '@app/components/UserPremium';
+import useStateReducer from '@app/hooks/useStateReducer';
+import accountConfig from '@app/utils/account-config';
+import { fetcher } from '@app/utils/swr-fetcher';
+import { withAuth } from '@app/utils/withAuth';
 
-import { getApiKeys } from "./api/accounts/api-keys";
+import { getApiKeys } from './api/accounts/api-keys';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -43,8 +47,11 @@ export default function AccountPage() {
   });
 
   const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-    "/api/accounts/api-keys",
-    fetcher
+    '/api/accounts/api-keys',
+    fetcher,
+    {
+      refreshInterval: 5000,
+    }
   );
 
   const handleClickManageSubscription = async () => {
@@ -129,8 +136,8 @@ export default function AccountPage() {
         })
         .catch(console.log);
 
-      // delete router.query.checkout_session_id;
-      // router.replace(router, undefined, { shallow: true });
+      delete router.query.checkout_session_id;
+      router.replace(router, undefined, { shallow: true });
     })();
   }, []);
 
@@ -167,9 +174,13 @@ export default function AccountPage() {
         gap: 1,
       })}
     >
-      {/* <Head>
-        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-      </Head> */}
+      <Head>
+        <script
+          id="stripe-pricing-table"
+          async
+          src="https://js.stripe.com/v3/pricing-table.js"
+        ></script>
+      </Head>
 
       <Box
         sx={{
@@ -209,20 +220,27 @@ export default function AccountPage() {
 
       <Divider sx={{ mt: 2, mb: 4 }} />
 
-      <Box
+      <Box mb={4}>
+        <UserFree>
+          <Card variant="outlined" sx={{ bgcolor: 'black' }}>
+            <stripe-pricing-table
+              pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
+              publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+              client-reference-id={session?.user?.id}
+              customer-email={session?.user?.email}
+            ></stripe-pricing-table>
+          </Card>
+        </UserFree>
+      </Box>
+
+      <Stack
+        gap={4}
         sx={(theme) => ({
           maxWidth: "100%",
           width: theme.breakpoints.values.md,
           mx: "auto",
         })}
       >
-        {/* <stripe-pricing-table
-          pricing-table-id="prctbl_1MzJqKIDmvRZDzsDjQUfIE8Z"
-          publishable-key="pk_live_51N41cNHQFS2NgY7DReNorltREsO8N8KN7Y2wNmrVDxzpwzIuzYMM8cOH1CggkHLd25uoZWg3PXJMcLCYX8t09Epg00J0jbi1D4"
-          client-reference-id={session?.user?.id}
-          customer-email={session?.user?.email}
-        ></stripe-pricing-table> */}
-
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
           {/* <Typography level="body3">
@@ -330,7 +348,7 @@ export default function AccountPage() {
 
             <Divider sx={{ my: 2 }} />
 
-            {currentPlan?.type === SubscriptionPlan?.level_0 && (
+            {/* {currentPlan?.type === SubscriptionPlan?.level_0 && (
               <Link
                 href={`${process.env
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
@@ -346,23 +364,18 @@ export default function AccountPage() {
                   Subscribe
                 </Button>
               </Link>
-            )}
+            )} */}
 
-            {currentPlan?.type &&
-              currentPlan?.type !== SubscriptionPlan?.level_0 && (
-                // <a
-                //   href={`https://billing.stripe.com/p/login/test_dR67ufbBYa6Ig8waEE?prefilled_email=${session?.user?.email}`}
-                // >
-                <Button
-                  onClick={handleClickManageSubscription}
-                  endDecorator={<ArrowForwardRoundedIcon />}
-                  variant="plain"
-                  sx={{ ml: "auto" }}
-                >
-                  Manage Subscription
-                </Button>
-                // </a>
-              )}
+            <UserPremium>
+              <Button
+                onClick={handleClickManageSubscription}
+                endDecorator={<ArrowForwardRoundedIcon />}
+                variant="plain"
+                sx={{ ml: 'auto' }}
+              >
+                Upgrade / Manage Subscription
+              </Button>
+            </UserPremium>
           </Card>
         </FormControl>
 
@@ -399,8 +412,26 @@ export default function AccountPage() {
               </Alert>
               {getApiKeysQuery?.data?.map((each) => (
                 <>
-                  <Stack key={each.id} direction={"row"} gap={2}>
-                    <Alert color="neutral" sx={{ width: "100%" }}>
+                  <Stack
+                    key={each.id}
+                    direction={'row'}
+                    gap={2}
+                    onClick={() => {
+                      navigator.clipboard.writeText(each.key);
+                      toast.success('Copied!', {
+                        position: 'bottom-center',
+                      });
+                    }}
+                  >
+                    <Alert
+                      color="neutral"
+                      sx={{
+                        width: '100%',
+                        ':hover': {
+                          cursor: 'copy',
+                        },
+                      }}
+                    >
                       {each.key}
                     </Alert>
 
@@ -442,7 +473,7 @@ export default function AccountPage() {
             Delete
           </Button>
         </FormControl> */}
-      </Box>
+      </Stack>
     </Box>
   );
 }

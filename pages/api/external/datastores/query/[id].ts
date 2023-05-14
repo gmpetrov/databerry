@@ -1,15 +1,21 @@
-import { DatastoreVisibility } from "@prisma/client";
-import { NextApiResponse } from "next";
+import { DatastoreVisibility } from '@prisma/client';
+import Cors from 'cors';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-import { SearchRequestSchema } from "@app/types/dtos";
-import { AppNextApiRequest } from "@app/types/index";
-import { ApiError, ApiErrorType } from "@app/utils/api-error";
-import { createApiHandler, respond } from "@app/utils/createa-api-handler";
-import { DatastoreManager } from "@app/utils/datastores";
-import prisma from "@app/utils/prisma-client";
-import validate from "@app/utils/validate";
+import { SearchRequestSchema } from '@app/types/dtos';
+import { AppNextApiRequest } from '@app/types/index';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
+import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import { DatastoreManager } from '@app/utils/datastores';
+import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
+import validate from '@app/utils/validate';
 
 const handler = createApiHandler();
+
+const cors = Cors({
+  methods: ['POST', 'HEAD'],
+});
 
 export const queryURL = async (
   req: AppNextApiRequest,
@@ -79,4 +85,11 @@ handler.post(
   })
 );
 
-export default handler;
+export default async function wrapper(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

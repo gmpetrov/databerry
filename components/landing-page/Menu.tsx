@@ -15,8 +15,8 @@ const solutions = [
   {
     name: "Embed Agent on your website",
     description:
-      "Automate customer support with a ChatGPT Bot trained on your data",
-    href: "#for-customer-support",
+      'Automate customer support with a ChatGPT Bot trained on your data',
+    href: '/#for-customer-support',
     icon: ChatBubbleLeftEllipsisIcon,
   },
   {

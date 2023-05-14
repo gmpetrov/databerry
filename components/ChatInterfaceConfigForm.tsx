@@ -1,39 +1,40 @@
-import createCache from "@emotion/cache";
-import { CacheProvider, ThemeProvider } from "@emotion/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Alert from "@mui/joy/Alert";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Checkbox from "@mui/joy/Checkbox";
-import CssBaseline from "@mui/joy/CssBaseline";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Input from "@mui/joy/Input";
-import Radio from "@mui/joy/Radio";
-import RadioGroup from "@mui/joy/RadioGroup";
-import Stack from "@mui/joy/Stack";
-import { CssVarsProvider, StyledEngineProvider } from "@mui/joy/styles";
-import Textarea from "@mui/joy/Textarea";
-import Typography from "@mui/joy/Typography";
-import { Prisma } from "@prisma/client";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import Frame, { FrameContextConsumer } from "react-frame-component";
-import { Controller, useForm } from "react-hook-form";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import html from "react-syntax-highlighter/dist/esm/languages/hljs/htmlbars";
-import docco from "react-syntax-highlighter/dist/esm/styles/hljs/vs2015";
-import useSWR from "swr";
+import createCache from '@emotion/cache';
+import { CacheProvider, ThemeProvider } from '@emotion/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Alert from '@mui/joy/Alert';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Checkbox from '@mui/joy/Checkbox';
+import CssBaseline from '@mui/joy/CssBaseline';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Radio from '@mui/joy/Radio';
+import RadioGroup from '@mui/joy/RadioGroup';
+import Stack from '@mui/joy/Stack';
+import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
+import Textarea from '@mui/joy/Textarea';
+import Typography from '@mui/joy/Typography';
+import { Prisma } from '@prisma/client';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
+import { Controller, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
+import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
+import useSWR from 'swr';
 
-import { getAgent } from "@app/pages/api/agents/[id]";
-import { AgentInterfaceConfig } from "@app/types/models";
-import { fetcher } from "@app/utils/swr-fetcher";
+import { getAgent } from '@app/pages/api/agents/[id]';
+import { AgentInterfaceConfig } from '@app/types/models';
+import { fetcher } from '@app/utils/swr-fetcher';
 
-import ChatBoxFrame from "./ChatBoxFrame";
-import ChatBubble, { theme } from "./ChatBubble";
+import ChatBoxFrame from './ChatBoxFrame';
+import ChatBubble, { theme } from './ChatBubble';
 
-if (typeof window !== "undefined") {
-  SyntaxHighlighter.registerLanguage("htmlbars", html);
+if (typeof window !== 'undefined') {
+  SyntaxHighlighter.registerLanguage('htmlbars', html);
 }
 
 type Props = {
@@ -62,10 +63,17 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
 
       console.log("values", values);
 
-      await axios.post("/api/agents", {
-        ...getAgentQuery?.data,
-        interfaceConfig: values,
-      });
+      await toast.promise(
+        axios.post('/api/agents', {
+          ...getAgentQuery?.data,
+          interfaceConfig: values,
+        }),
+        {
+          loading: 'Updating...',
+          success: 'Updated!',
+          error: 'Something went wrong',
+        }
+      );
 
       getAgentQuery.mutate();
     } catch (err) {
