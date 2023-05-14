@@ -421,11 +421,14 @@ function DatastoreSettings() {
           <FormControl sx={{ gap: 1 }}>
             <FormLabel>ChatGPT Plugin</FormLabel>
 
-            {/* <Alert
+            <Alert
               color="info"
               startDecorator={<HelpOutlineRoundedIcon />}
               endDecorator={
-                <Link href="https://docs.databerry.ai" target="_blank">
+                <Link
+                  href="https://docs.databerry.ai/integrations/chatgpt-plugin"
+                  target="_blank"
+                >
                   <Button
                     variant="plain"
                     size="sm"
@@ -437,7 +440,7 @@ function DatastoreSettings() {
               }
             >
               Learn more about the ChatGPT plugin installation
-            </Alert> */}
+            </Alert>
 
             <UserFree>
               <UsageLimitCard

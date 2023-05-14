@@ -11,12 +11,14 @@ import { useEffect } from 'react';
 import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
 import { Hero } from '@app/components/landing-page/Hero';
+import { HeroChatGPTPlugin } from '@app/components/landing-page/HeroChatGPTPlugin';
 // import { Pricing } from '@app/landing-page/components/Pricing';
 import { PrimaryFeatures } from '@app/components/landing-page/PrimaryFeatures';
 
 import ChatBotBenefits from './ChatBotBenefits';
 import Cta from './Cta';
 import FAQ from './FAQ';
+import FeaturesForChatGPTPlugin from './FeaturesForChatGPTPlugin';
 import FeaturesForCustomerSupport from './FeaturesForCustomerSupport';
 import FeaturesForDevs from './FeaturesForDevs';
 import FeaturesForInfluencers from './FeaturesForInfluencers';
@@ -60,7 +62,7 @@ export default function Home() {
         />
         <meta
           name="keywords"
-          content="AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, Databerry"
+          content="AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, Databerry, ChatGPT Plugin"
         />
         <meta
           property="og:title"
@@ -84,7 +86,8 @@ export default function Home() {
       ></script>
 
       <main className="bg-black min-heigh-full">
-        <Hero />
+        {/* <Hero /> */}
+        <HeroChatGPTPlugin />
         {/* <Image
           src="/features.png"
           alt="features"
@@ -100,6 +103,7 @@ export default function Home() {
         <Pricing />
         <Faqs /> */}
         <FeaturesForDevs />
+        <FeaturesForChatGPTPlugin />
         <FeaturesForCustomerSupport />
         <FeaturesForSlack />
         {/* <FeaturesForInfluencers /> */}
