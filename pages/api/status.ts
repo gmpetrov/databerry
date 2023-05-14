@@ -5,6 +5,8 @@ import { AppNextApiRequest, AppStatus } from "@app/types";
 import { createApiHandler, respond } from "@app/utils/createa-api-handler";
 import prisma from "@app/utils/prisma-client";
 
+import { getLogger } from "../../logging/log-util";
+
 const handler = createApiHandler();
 
 export const getStatus = async (
@@ -13,6 +15,7 @@ export const getStatus = async (
 ) => {
   let dbCheck = AppStatus.OK;
   let vectorDbCheck = AppStatus.OK;
+  const logger = getLogger('hello');
 
   try {
     await prisma.user.count();
@@ -41,6 +44,11 @@ export const getStatus = async (
   if (dbCheck === AppStatus.KO && vectorDbCheck === AppStatus.KO) {
     status = AppStatus.KO;
   }
+  logger.warn({
+    status,
+    db: dbCheck,
+    vectorDb: vectorDbCheck,
+  })
 
   return {
     status,
