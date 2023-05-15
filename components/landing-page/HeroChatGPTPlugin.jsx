@@ -22,8 +22,35 @@ export function HeroChatGPTPlugin() {
       />
       <div className="relative z-10">
         <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full">
-        <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
-          <span>New</span></span>Build a ChatGPT Plugin in minutes!<Link href="/#chatgpt-plugin"  style={{background: 'none'}} className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline">Learn More <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-arrow-narrow-right" width="20" height="20" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="5" y1="12" x2="19" y2="12"></line><line x1="15" y1="16" x2="19" y2="12"></line><line x1="15" y1="8" x2="19" y2="12"></line></svg></Link></div>
+          <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
+            <span>New</span>
+          </span>
+          Build a ChatGPT Plugin in minutes!
+          <Link
+            href="/#chatgpt-plugin"
+            style={{ background: 'none' }}
+            className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
+          >
+            Learn More{' '}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="icon icon-tabler icon-tabler-arrow-narrow-right"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <line x1="15" y1="16" x2="19" y2="12"></line>
+              <line x1="15" y1="8" x2="19" y2="12"></line>
+            </svg>
+          </Link>
+        </div>
 
         <Link href={RouteNames.CHAT_SITE}>
           {/* <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button> */}
@@ -91,6 +118,24 @@ export function HeroChatGPTPlugin() {
           {`ChatGPT Agent\nTrained On\nYour Custom Data`}
           {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
         </h1>
+
+        <a
+          href="https://www.producthunt.com/posts/databerry-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-databerry&#0045;ai"
+          target="_blank"
+        >
+          <img
+            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=394302&theme=light"
+            alt="Databerry&#0046;ai - Build&#0032;a&#0032;ChatGPT&#0032;plugin&#0032;in&#0032;minutes | Product Hunt"
+            style={{
+              width: '250px',
+              height: '54px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              marginTop: '1rem',
+              marginBottom: '2rem',
+            }}
+          />
+        </a>
 
         {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
 
