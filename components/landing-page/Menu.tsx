@@ -13,7 +13,20 @@ import { Fragment } from "react";
 
 const solutions = [
   {
-    name: "Embed Agent on your website",
+    name: 'ChatGPT Plugin',
+    description:
+      'Build your own ChatGPT Plugin to connect custom data to your ChatGPT',
+    href: '/#chatgpt-plugin',
+    icon: (props: any) => (
+      <img
+        {...props}
+        src="https://static.vecteezy.com/system/resources/previews/021/495/996/original/chatgpt-openai-logo-icon-free-png.png"
+        alt="OpenAI Logo"
+      />
+    ),
+  },
+  {
+    name: 'Embed Agent on your website',
     description:
       'Automate customer support with a ChatGPT Bot trained on your data',
     href: '/#for-customer-support',
