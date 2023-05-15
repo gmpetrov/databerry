@@ -1,29 +1,29 @@
 import { useColorScheme } from '@mui/joy/styles';
+import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
-import Script from 'next/script';
 import { useEffect } from 'react';
 
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
-import { Footer } from "@app/components/landing-page/Footer";
-import { Header } from "@app/components/landing-page/Header";
-import { Hero } from "@app/components/landing-page/Hero";
+import { Footer } from '@app/components/landing-page/Footer';
+import { Header } from '@app/components/landing-page/Header';
+import { HeroChatGPTPlugin } from '@app/components/landing-page/HeroChatGPTPlugin';
+
 // import { Pricing } from '@app/landing-page/components/Pricing';
-import { PrimaryFeatures } from "@app/components/landing-page/PrimaryFeatures";
-
 import OpenGraph from "../components/OpenGraph";
-import { absUrl } from "../core/helpers";
-import useOpenGraph from "../hooks/useOpenGraph";
+import { absUrl } from '../core/helpers';
+import useOpenGraph from '../hooks/useOpenGraph';
 
-import ChatBotBenefits from "./ChatBotBenefits";
-import Cta from "./Cta";
+import ChatBotBenefits from './ChatBotBenefits';
+import Cta from './Cta';
 import FAQ from "./FAQ";
+import FeaturesForChatGPTPlugin from './FeaturesForChatGPTPlugin';
 import FeaturesForCustomerSupport from "./FeaturesForCustomerSupport";
-import FeaturesForDevs from "./FeaturesForDevs";
-import FeaturesForSlack from "./FeaturesForSlack";
+import FeaturesForDevs from './FeaturesForDevs';
+import FeaturesForSlack from './FeaturesForSlack';
 
 export default function Home() {
   const router = useRouter();
@@ -45,11 +45,23 @@ export default function Home() {
   useEffect(() => {
     setMode('dark');
   }, []);
-
+  const ogProperties = useOpenGraph({
+    url: absUrl("/home"),
+    title: "GriotAI Pricing - Plans for Teams of All Sizes", // Add you homepage title
+    image: {
+      // some default image preview for your website
+      type: "image/png",
+      url: "/og-image.png",
+      alt: "GriotAI Logo",
+    },
+    description:
+      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
+    type: "website",
+  });
   return (
     <>
       <Head>
-        <title>{t("title")}</title>
+        <title>GriotAI - Build your ChatGPT Agent Trained on your own data</title>
         <meta
           name="description"
           content="GriotAI offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
@@ -70,7 +82,8 @@ export default function Home() {
       ></script>
 
       <main className="bg-black min-heigh-full">
-        <Hero />
+        {/* <Hero /> */}
+        <HeroChatGPTPlugin />
         {/* <Image
           src="/features.png"
           alt="features"
@@ -86,6 +99,7 @@ export default function Home() {
         <Pricing />
         <Faqs /> */}
         <FeaturesForDevs />
+        <FeaturesForChatGPTPlugin />
         <FeaturesForCustomerSupport />
         <FeaturesForSlack />
         {/* <FeaturesForInfluencers /> */}
