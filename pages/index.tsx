@@ -58,19 +58,6 @@ export default function Home() {
   useEffect(() => {
     setMode('dark');
   }, []);
-  const ogProperties = useOpenGraph({
-    url: absUrl("/home"),
-    title: "GriotAI Pricing - Plans for Teams of All Sizes", // Add you homepage title
-    image: {
-      // some default image preview for your website
-      type: "image/png",
-      url: "/og-image.png",
-      alt: "GriotAI Logo",
-    },
-    description:
-      "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
-    type: "website",
-  });
   return (
     <>
       <Head>
