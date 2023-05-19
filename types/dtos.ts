@@ -135,7 +135,7 @@ export const UpsertAgentSchema = z.object({
         id: z.string().cuid(),
         type: z.nativeEnum(ToolType),
         name: z.string().trim().optional(),
-        description: z.string().trim().optional(),
+        description: z.string().trim().optional().nullable(),
       })
     )
     .optional(),
