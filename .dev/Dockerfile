@@ -3,8 +3,7 @@ ARG UID
 
 WORKDIR /app
 
-RUN useradd -u $UID -s /bin/bash -d /app databerry-user \
-    && chown -R databerry-user: /app
-USER databerry-user
+USER node
 
+ENV PATH="/home/node/.config/yarn/global/node_modules/.bin/:${PATH}"
 ENTRYPOINT []
