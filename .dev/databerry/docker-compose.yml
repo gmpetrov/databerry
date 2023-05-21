@@ -9,7 +9,10 @@ services:
       context: ..
       dockerfile: Dockerfile
       args:
-        UID: ${UID}
+        DBUSER: ${DBUSER}
+        DBPASS: ${DBPASS}
+        DBHOST: ${DBHOST}
+        DBNAME: ${DBNAME}
     volumes:
       - ../..:/app/workspace
     command: /bin/sh "/app/workspace/.dev/init.sh"
@@ -54,8 +57,6 @@ services:
   redis:
     image: "redis:6"
     user: "999:999"
-    profiles:
-      - redis
     command: redis-server --requirepass ${REDIS_PASSWORD}
     ports:
       - "127.0.0.1:${REDIS_PORT}:6379"
@@ -65,8 +66,6 @@ services:
 
   redis-ui:
     image: patrikx3/p3x-redis-ui:latest
-    profiles:
-      - redis
     depends_on:
       - redis
     ports:

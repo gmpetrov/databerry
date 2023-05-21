@@ -1,5 +1,11 @@
 FROM node:20-bullseye
-ARG UID
+
+ARG DBUSER
+ARG DBPASS
+ARG DBNAME
+
+ENV DATABASE_URL=postgresql://${DBUSER}:${DBPASS}@pgdb14:5432/${DBNAME}
+ENV REDIS_URL=redis://redis:6379
 
 WORKDIR /app
 
