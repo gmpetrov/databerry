@@ -3,6 +3,10 @@ version: "3"
 services:
 
   base-api:
+    depends_on:
+      - qdrant
+      - pgdb14
+      - redis
     env_file:
       - app.env
     build:
