@@ -57,6 +57,9 @@
 Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-retrieval-plugin).
 
 ### Run the project locally
+
+#### Without docker compose
+
 Minimum requirements to run the projects locally
 - Node.js v18
 - Postgres Database
@@ -82,4 +85,18 @@ pnpm dev
 
 # Run worker process
 pnpm worker:datasource-loader
+```
+
+#### With docker compose
+
+First `cd .dev/databerry` then run the compose command:
+
+```shell
+docker compose --env-file docker.env up
+```
+
+You can fully rebuild dockers with :
+
+```shell
+docker compose --env-file docker.env up --build
 ```
