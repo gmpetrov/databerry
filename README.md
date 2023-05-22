@@ -89,7 +89,7 @@ pnpm worker:datasource-loader
 
 #### With docker compose
 
-First `cd .dev/databerry` then run the compose command:
+First `cd .dev/databerry` then populate the config files `app.env` and `docker.env` as needed, then run the compose command:
 
 ```shell
 docker compose --env-file docker.env up
