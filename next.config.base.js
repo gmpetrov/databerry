@@ -55,6 +55,10 @@ const nextConfig = {
         destination: '/api/external/datastores/upsert/:path*',
       },
       {
+        source: '/datastores/file-upload/:path*',
+        destination: '/api/external/datastores/file-upload/:path*',
+      },
+      {
         source: '/agents/query/:id',
         destination: '/api/external/agents/:id/query',
       },

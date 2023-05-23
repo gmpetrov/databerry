@@ -94,7 +94,7 @@ export const generateLink = async (
     ContentType: data.type,
   };
 
-  const link = s3.getSignedUrlPromise('putObject', param);
+  const link = await s3.getSignedUrlPromise('putObject', param);
 
   return {
     id,
