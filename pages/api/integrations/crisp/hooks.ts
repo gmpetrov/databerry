@@ -200,6 +200,7 @@ const handleQuery = async (
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   try {
+    res.status(200).send('Handling...');
     const host = req?.headers?.['host'];
     const subdomain = getSubdomain(host!);
     const body = req.body as HookBody;
@@ -234,11 +235,8 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
 
     if (req.headers['x-delivery-attempt-count'] !== '1') {
-      return res.status(200).json({
-        hello: 'world',
-      });
+      return "Not the first attempt, don't handle.";
     }
-
     switch (body.event) {
       case 'message:send':
         if (
@@ -287,20 +285,17 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   } catch (err) {
     console.log('ERROR', err);
   } finally {
-    res.status(200).json({
-      hello: 'world',
-    });
-
-    return;
+    return 'Success';
   }
 };
 
 handler.post(
-  validate({
-    // body: SearchManyRequestSchema,
-    // handler: respond(hook),
-    handler: hook,
-  })
+  hook
+  // validate({
+  // body: SearchManyRequestSchema,
+  // handler: respond(hook),
+  // handler: hook,
+  // })
 );
 
 export default handler;
