@@ -41,3 +41,7 @@ migration.ts
 
 dist
 packages/chat-bubble/chat-bubble*
+
+.dev/databerry/data/*
+
+.pnpm-store/
