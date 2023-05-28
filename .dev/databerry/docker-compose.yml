@@ -5,7 +5,7 @@ services:
   base-api:
     depends_on:
       - qdrant
-      - pgdb14
+      - pgdb
       - redis
     env_file:
       - app.env
@@ -15,7 +15,6 @@ services:
       args:
         DBUSER: ${DBUSER}
         DBPASS: ${DBPASS}
-        DBHOST: ${DBHOST}
         DBNAME: ${DBNAME}
     volumes:
       - ../..:/app/workspace
@@ -31,13 +30,15 @@ services:
     volumes:
       - ./data/qdrant_storage:/qdrant/storage
 
-  pgdb14:
+  pgdb:
     image: postgres:12
     restart: unless-stopped
     volumes:
       - type: volume
-        source: pgdb14-data
+        source: pgdb-data
         target: "/var/lib/postgresql/data"
+    ports:
+      - "127.0.0.1:${DBPORT}:5432"
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: ${DBUSER}
@@ -78,7 +79,7 @@ services:
       - p3x-redis-ui-settings:/settings
 
 volumes:
-  pgdb14-data:
+  pgdb-data:
   pgadmin-data:
   redis-data:
   redis-conf:
