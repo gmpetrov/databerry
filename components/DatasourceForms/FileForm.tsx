@@ -62,6 +62,14 @@ function Nested() {
       return;
     }
 
+    if (
+      file.size >
+      accountConfig[session?.user?.currentPlan!]?.limits?.maxFileSize
+    ) {
+      setState({ isUsageLimitModalOpen: true });
+      return;
+    }
+
     setState({
       file,
     });
