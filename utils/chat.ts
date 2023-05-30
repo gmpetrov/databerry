@@ -1,4 +1,4 @@
-import { Datastore } from '@prisma/client';
+import { Datastore, PromptType } from '@prisma/client';
 import { OpenAI } from 'langchain/llms/openai';
 
 import { ChatResponse } from '@app/types';
@@ -6,18 +6,72 @@ import { ChatResponse } from '@app/types';
 import { DatastoreManager } from './datastores';
 import { CUSTOMER_SUPPORT } from './prompt-templates';
 
+const getCustomerSupportPrompt = ({
+  prompt,
+  query,
+  context,
+}: {
+  prompt?: string;
+  query: string;
+  context: string;
+}) => {
+  return `${prompt || CUSTOMER_SUPPORT}
+You must answer questions accurately and truthfully, using the language in which the question is asked.
+You are not allowed to use the provided few-shot examples as direct answers. Instead, use your extensive knowledge and understanding of the context to address each inquiry in the most helpful and informative way possible.
+Please assist customers with their questions and concerns related to the specific context provided
+Ensure that your responses are clear, detailed, and do not reiterate the same information. Create a final answer with references ("SOURCE") if any.
+
+few-shot examples:
+
+START_CONTEXT:
+CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
+SOURCE: https://www.spotify.com/us/premium
+CHUNK: ...
+SOURCE: ...
+END_CONTEXT
+
+START_QUESTION:
+What is the cost of the Premium plan and what features does it include?
+END_QUESTION
+
+Answer:
+The cost of the Premium plan is $9.99 per month. The features included in this plan are:
+
+- Ad-free streaming
+- Unlimited streaming hours
+- Ability to download songs for offline listening
+
+SOURCE: https://www.spotify.com/us/premium
+
+end few-shot examples.
+
+START_CONTEXT:
+${context}
+END_CONTEXT
+
+START_QUESTION:
+${query}
+END_QUESTION
+
+Answer (never translate SOURCES and ulrs):`;
+};
+
 const chat = async ({
   datastore,
   query,
   topK,
   prompt,
+  promptType,
   stream,
+  temperature,
 }: {
   datastore: Datastore;
   query: string;
   prompt?: string;
+  promptType?: PromptType;
   topK?: number;
   stream?: any;
+  temperature?: number;
 }) => {
   let results = [] as {
     text: string;
@@ -45,42 +99,28 @@ const chat = async ({
   // const instruct = `You are an AI assistant providing helpful advice, given the following extracted parts of a long document and a question.
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
 
-  const finalPrompt = `${prompt || CUSTOMER_SUPPORT}
-Ensure that your responses are clear, concise, and do not reiterate the same information. Create a final answer with references ("SOURCE") if relevant.
+  let finalPrompt = prompt || '';
 
-START_CONTEXT:
-CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
-SOURCE: https://www.spotify.com/us/premium
-CHUNK: ...
-SOURCE: ...
-END_CONTEXT
-
-START_QUERY:
-What is the cost of the Premium plan and what features does it include?
-END_QUERY
-
-Answer:
-The cost of the Premium plan is $9.99 per month. The features included in this plan are:
-
-- Ad-free streaming
-- Unlimited streaming hours
-- Ability to download songs for offline listening
-
-SOURCE: https://www.spotify.com/us/premium
-
-START_CONTEXT:
-${context}
-END_CONTEXT
-
-START_QUERY (this is the last query):
-${query}
-END_QUERY
-
-Answer (use same language as the query, the text between START_QUERY and END_QUERY, but never translate SOURCES and ulrs):`;
+  switch (promptType) {
+    case PromptType.customer_support:
+      finalPrompt = getCustomerSupportPrompt({
+        prompt: finalPrompt,
+        query,
+        context,
+      });
+      break;
+    case PromptType.raw:
+      finalPrompt = finalPrompt
+        ?.replace('{query}', query)
+        ?.replace('{context}', context);
+      break;
+    default:
+      break;
+  }
 
   const model = new OpenAI({
     modelName: 'gpt-3.5-turbo',
-    temperature: 0,
+    temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [
       {
@@ -91,15 +131,15 @@ Answer (use same language as the query, the text between START_QUERY and END_QUE
 
   const output = await model.call(finalPrompt);
 
-  const regex = /SOURCE:\s*(.+)/;
-  const match = output?.trim()?.match(regex);
-  const source = match?.[1]?.replace('N/A', '')?.replace('None', '')?.trim();
+  // const regex = /SOURCE:\s*(.+)/;
+  // const match = output?.trim()?.match(regex);
+  // const source = match?.[1]?.replace('N/A', '')?.replace('None', '')?.trim();
 
-  let answer = output?.trim()?.replace(regex, '')?.trim();
-  answer = source ? `${answer}\n\n${source}` : answer;
+  // let answer = output?.trim()?.replace(regex, '')?.trim();
+  // answer = source ? `${answer}\n\n${source}` : answer;
 
   return {
-    answer,
+    answer: output?.trim?.(),
   } as ChatResponse;
 };
 

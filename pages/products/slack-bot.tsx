@@ -16,10 +16,19 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>SlackBot by Databerry</title>
+        <title>Databerry - Slack Bot</title>
+
+        <meta
+          name="title"
+          content="Slack Bot by Databerry - Train a Chatbot on Your Company Data"
+        />
         <meta
           name="description"
-          content="A ChatGPT Bot trained on your company data."
+          content="Databerry's Slack Bot makes it easy to train a chatbot on your company data. Just paste your website URL, we process your data and train your bot quickly. The bot is kept up-to-date with your data automatically. Other data sources like PDF, Gdoc, Sheets, Notion, Airtable, and more are also supported."
+        />
+        <meta
+          name="keywords"
+          content="Databerry, Slack Bot, AI chatbot, company data, chatbot training, automatic data sync, Slack plugin"
         />
       </Head>
       <Header />

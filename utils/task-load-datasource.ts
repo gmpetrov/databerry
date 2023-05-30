@@ -93,7 +93,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
         nestedSitemaps = sitemaps;
       } else {
         // Fallback to recursive search
-        urls = await findDomainPages((data as any).config.source);
+        urls = await findDomainPages(source);
       }
     } else {
       return;
@@ -141,6 +141,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
 
     await triggerTaskLoadDatasource(
       [...ids, ...idsSitemaps].map((each) => ({
+        userId: datasource?.ownerId!,
         datasourceId: each,
         priority: 10,
       }))
@@ -192,6 +193,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
         //
         await triggerTaskLoadDatasource([
           {
+            userId: datasource.ownerId!,
             datasourceId: datasource.id,
             priority: 2,
           },

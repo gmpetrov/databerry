@@ -70,12 +70,17 @@ model Datastore {
   id String @id @default(cuid())
 
   name        String
-  description String
+  description String?
   type        DatastoreType
   datasources AppDatasource[]
   visibility  DatastoreVisibility @default(private)
   apiKeys     DatastoreApiKey[]
   tool        Tool[]
+
+  pluginIconUrl              String? @map("plugin_icon_url")
+  pluginName                 String? @map("plugin_name")
+  pluginDescriptionForHumans String? @map("plugin_description_for_humans")
+  pluginDescriptionForModel  String? @map("plugin_description_for_model")
 
   config Json?
 
@@ -148,6 +153,8 @@ model Agent {
   name        String
   description String
   prompt      String?
+  promptType  PromptType @default(customer_support) @map("prompt_type")
+  temperature Float      @default(0.0)
 
   visibility AgentVisibility @default(private)
 
@@ -372,4 +379,9 @@ enum PriceInterval {
   month
   week
   year
+}
+
+enum PromptType {
+  raw
+  customer_support
 }

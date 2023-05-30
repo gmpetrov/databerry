@@ -5,7 +5,7 @@
   <br>
   Databerry
   <br>
-    <h3 align="center">Connect your data to large language models!</h3>
+    <h3 align="center">The no-code platform for building custom LLM Agents</h3>
   <br>
   
 </h1>
@@ -15,9 +15,8 @@
 
 
 <h2 align="center">
-<img src="public/features.png" alt="WebTorrent" width="700" style="max-width: 100%;">
+<img src="public/og-image.png" alt="Databerry" width="1000" style="max-width: 100%;">
 </h2>
-
 
 **[Databerry](https://databerry.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
 
@@ -58,6 +57,9 @@
 Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-retrieval-plugin).
 
 ### Run the project locally
+
+#### Without docker compose
+
 Minimum requirements to run the projects locally
 - Node.js v18
 - Postgres Database
@@ -83,4 +85,18 @@ pnpm dev
 
 # Run worker process
 pnpm worker:datasource-loader
+```
+
+#### With docker compose
+
+First `cd .dev/databerry` then populate the config files `app.env` and `docker.env` as needed, then run the compose command:
+
+```shell
+docker compose --env-file docker.env up
+```
+
+You can fully rebuild dockers with :
+
+```shell
+docker compose --env-file docker.env up --build
 ```

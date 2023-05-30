@@ -88,6 +88,9 @@ function MobileNavigation() {
             <MobileNavLink href="https://docs.databerry.ai/">
               Docs
             </MobileNavLink>
+            <MobileNavLink href="https://databerry.getrewardful.com/">
+              Affiliates
+            </MobileNavLink>
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
@@ -132,6 +135,9 @@ export function Header() {
               </NavLink>
               <NavLink href="https://docs.databerry.ai/">
                 Docs
+              </NavLink>
+              <NavLink href="https://databerry.getrewardful.com/" target={"_blank"}>
+                Affiliates
               </NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               {/* <NavLink href="#pricing">Pricing</NavLink> */}

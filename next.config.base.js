@@ -8,6 +8,10 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  eslint: {
+    dirs: ['pages', 'utils', 'components', 'hooks', 'types', 'widgets'],
+  },
+
   reactStrictMode: true,
   async redirects() {
     return [];
@@ -49,6 +53,10 @@ const nextConfig = {
       {
         source: '/datastores/upsert/:path*',
         destination: '/api/external/datastores/upsert/:path*',
+      },
+      {
+        source: '/datastores/file-upload/:path*',
+        destination: '/api/external/datastores/file-upload/:path*',
       },
       {
         source: '/agents/query/:id',

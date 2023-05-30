@@ -83,6 +83,8 @@ export const upsertAgent = async (
       name: data.name || generateFunId(),
       description: data.description,
       prompt: data.prompt,
+      promptType: data.promptType,
+      temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
       owner: {
         connect: {
@@ -108,6 +110,8 @@ export const upsertAgent = async (
       description: data.description,
       visibility: data.visibility || AgentVisibility.private,
       prompt: data.prompt,
+      promptType: data.promptType,
+      temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
       tools: {
         createMany: {

@@ -32,7 +32,12 @@ if (typeof window !== 'undefined') {
         <StyledEngineProvider injectFirst>
           <CacheProvider value={cache}>
             <ThemeProvider theme={theme}>
-              <CssVarsProvider theme={theme} defaultMode="light">
+              <CssVarsProvider
+                theme={theme}
+                defaultMode="light"
+                modeStorageKey="databerry-chat-bubble"
+                colorSchemeStorageKey="databerry-chat-bubble-scheme"
+              >
                 <ChatBubble agentId={me.id} />
                 {/* <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} /> */}
               </CssVarsProvider>

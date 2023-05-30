@@ -86,6 +86,7 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
     });
     await triggerTaskLoadDatasource([
       {
+        userId: datastore.ownerId!,
         datasourceId: data.id,
         isUpdateText: true,
         priority: 1,

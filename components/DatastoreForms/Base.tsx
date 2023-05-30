@@ -8,6 +8,7 @@ import Typography from '@mui/joy/Typography';
 import { DatastoreType, Prisma } from '@prisma/client';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
@@ -23,7 +24,7 @@ export const UpsertDatastoreSchema = z.object({
   type: z.nativeEnum(DatastoreType),
   config: z.object({}).optional(),
   name: z.string().trim().optional(),
-  description: z.string().trim().min(1),
+  description: z.string().trim().optional(),
   isPublic: z.boolean().optional(),
 });
 
@@ -59,7 +60,14 @@ export default function BaseForm(props: Props) {
 
   const onSubmit = async (values: Schema) => {
     try {
-      const datastore = await upsertDatastoreMutation.trigger(values as any);
+      const datastore = await toast.promise(
+        upsertDatastoreMutation.trigger(values as any),
+        {
+          loading: 'Updating...',
+          success: 'Updated!',
+          error: 'Something went wrong',
+        }
+      );
 
       if (datastore) {
         props?.onSubmitSuccess?.(datastore);
@@ -67,6 +75,12 @@ export default function BaseForm(props: Props) {
     } catch (err) {
       console.log('error', err);
     }
+  };
+
+  const onSubmitWrapper = (e: any) => {
+    e.stopPropagation();
+
+    methods.handleSubmit(onSubmit)(e);
   };
 
   const networkError = upsertDatastoreMutation.error?.message;
@@ -77,7 +91,7 @@ export default function BaseForm(props: Props) {
     <FormProvider {...methods}>
       <form
         className="flex flex-col w-full space-y-8"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={onSubmitWrapper}
       >
         {networkError && <Alert color="danger">{networkError}</Alert>}
 
@@ -88,12 +102,12 @@ export default function BaseForm(props: Props) {
           {...register('name')}
         />
 
-        <Input
+        {/* <Input
           label="Description"
           helperText="Will be used to generate the ChatGPT plugin file"
           control={control as any}
           {...register('description')}
-        />
+        /> */}
 
         {props.children}
 
@@ -107,7 +121,10 @@ export default function BaseForm(props: Props) {
               <FormLabel>Public</FormLabel>
               <Typography level="body3">
                 When activated, your datastore will be available by anyone on
-                the internet.
+                the internet.{' '}
+                <Typography fontWeight={'bold'} color="primary">
+                  Required for a public ChatGPT plugin.
+                </Typography>
               </Typography>
             </div>
           </FormControl>

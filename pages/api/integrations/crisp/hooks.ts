@@ -128,7 +128,7 @@ const handleSendInput = async ({
     from: 'operator',
     origin: 'chat',
     user: {
-      type: 'website',
+      type: 'participant',
       nickname: agentName || 'Databerry.ai',
       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
@@ -167,6 +167,11 @@ const handleQuery = async (
         from: 'operator',
         origin: 'chat',
         content: 'Usage limit reached.',
+        user: {
+          type: 'participant',
+          nickname: agent?.name || 'Databerry.ai',
+          avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+        },
       }
     );
   }
@@ -178,6 +183,11 @@ const handleQuery = async (
     from: 'operator',
     origin: 'chat',
     content: answer,
+    user: {
+      type: 'participant',
+      nickname: agent?.name || 'Databerry.ai',
+      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+    },
   });
 
   return new Promise((resolve, reject) => {
@@ -189,104 +199,103 @@ const handleQuery = async (
 };
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
-  const host = req?.headers?.['host'];
-  const subdomain = getSubdomain(host!);
-  const body = req.body as HookBody;
+  try {
+    res.status(200).send('Handling...');
+    const host = req?.headers?.['host'];
+    const subdomain = getSubdomain(host!);
+    const body = req.body as HookBody;
 
-  console.log('BODY', body);
+    console.log('BODY', body);
 
-  const _timestamp = req.headers['x-crisp-request-timestamp'];
-  const _signature = req.headers['x-crisp-signature'];
+    const _timestamp = req.headers['x-crisp-request-timestamp'];
+    const _signature = req.headers['x-crisp-signature'];
 
-  const verified = CrispClient.verifyHook(
-    process.env.CRISP_HOOK_SECRET!,
-    body,
-    _timestamp as any,
-    _signature as any
-  );
+    const verified = CrispClient.verifyHook(
+      process.env.CRISP_HOOK_SECRET!,
+      body,
+      _timestamp as any,
+      _signature as any
+    );
 
-  if (!verified) {
-    // TODO
-    // ATM verifyHook() always returns false 🤔
-  }
+    if (!verified) {
+      // TODO
+      // ATM verifyHook() always returns false 🤔
+    }
 
-  const messages = await CrispClient.website.getMessagesInConversation(
-    body.website_id,
-    body.data.session_id,
-    body.timestamp
-  );
+    const messages = await CrispClient.website.getMessagesInConversation(
+      body.website_id,
+      body.data.session_id,
+      body.timestamp
+    );
 
-  const hasSentDataberryInputOnce = !!messages?.find((msg: any) =>
-    msg?.content?.id?.startsWith?.('databerry-query')
-  );
-  //   const nbUserMsg =
-  //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
+    const hasSentDataberryInputOnce = !!messages?.find((msg: any) =>
+      msg?.content?.id?.startsWith?.('databerry-query')
+    );
+    //   const nbUserMsg =
+    //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
 
-  if (req.headers['x-delivery-attempt-count'] !== '1') {
-    return res.status(200).json({
-      hello: 'world',
-    });
-  }
+    if (req.headers['x-delivery-attempt-count'] !== '1') {
+      return "Not the first attempt, don't handle.";
+    }
+    switch (body.event) {
+      case 'message:send':
+        if (
+          body.data.origin === 'chat' &&
+          body.data.from === 'user' &&
+          body.data.type === 'text'
+        ) {
+          if (!hasSentDataberryInputOnce) {
+            const agent = await getAgent(body.website_id);
 
-  switch (body.event) {
-    case 'message:send':
-      if (
-        body.data.origin === 'chat' &&
-        body.data.from === 'user' &&
-        body.data.type === 'text'
-      ) {
-        if (!hasSentDataberryInputOnce) {
-          const agent = await getAgent(body.website_id);
+            await handleSendInput({
+              websiteId: body.website_id,
+              sessionId: body.data.session_id,
+              value: body.data.content,
+              agentName: agent?.name,
+            });
 
-          await handleSendInput({
-            websiteId: body.website_id,
-            sessionId: body.data.session_id,
-            value: body.data.content,
-            agentName: agent?.name,
-          });
+            await handleQuery(
+              body.website_id,
+              body.data.session_id,
+              body.data.content
+            );
+            break;
+          }
+        }
+
+        break;
+      case 'message:updated':
+        if (
+          body.data.content.id?.startsWith?.('databerry-query') &&
+          body.data.content.value
+        ) {
+          // x-delivery-attempt-count
 
           await handleQuery(
             body.website_id,
             body.data.session_id,
-            body.data.content
+            body.data.content.value
           );
-          break;
         }
-      }
 
-      break;
-    case 'message:updated':
-      if (
-        body.data.content.id?.startsWith?.('databerry-query') &&
-        body.data.content.value
-      ) {
-        // x-delivery-attempt-count
-
-        await handleQuery(
-          body.website_id,
-          body.data.session_id,
-          body.data.content.value
-        );
-      }
-
-      break;
-    default:
-      break;
+        break;
+      default:
+        break;
+    }
+  } catch (err) {
+    console.log('ERROR', err);
+  } finally {
+    return 'Success';
   }
-
-  res.status(200).json({
-    hello: 'world',
-  });
-
-  return;
 };
 
 handler.post(
-  validate({
-    // body: SearchManyRequestSchema,
-    // handler: respond(hook),
-    handler: hook,
-  })
+  hook
+  // validate({
+  // body: SearchManyRequestSchema,
+  // handler: respond(hook),
+  // handler: hook,
+  // })
 );
 
 export default handler;

@@ -60,6 +60,7 @@ export const createDatastore = async (
   }
 
   const id = data?.id || cuid();
+  const name = data.name || generateFunId();
 
   const datastore = await prisma.datastore.upsert({
     where: {
@@ -67,7 +68,7 @@ export const createDatastore = async (
     },
     create: {
       type: data.type,
-      name: data.name || generateFunId(),
+      name,
       description: data.description,
       visibility: data.isPublic
         ? DatastoreVisibility.public
@@ -87,11 +88,20 @@ export const createDatastore = async (
       //   apiKey: process.env.QDRANT_API_KEY,
       //   apiURL: process.env.QDRANT_API_URL,
       // } as z.infer<typeof QdrantConfigSchema>,
+      pluginName: data.pluginName || name?.substring(0, 20),
+      pluginDescriptionForHumans: `About ${
+        data.pluginDescriptionForHumans || name?.substring(0, 90)
+      }`,
+      pluginDescriptionForModel: `Plugin for searching informations about ${name} to find answers to questions and retrieve relevant information. Use it whenever a user asks something that might be related to ${name}.`,
     },
     update: {
       type: data.type,
       name: data.name,
       description: data.description,
+      pluginIconUrl: data.pluginIconUrl,
+      pluginName: data.pluginName,
+      pluginDescriptionForHumans: data.pluginDescriptionForHumans,
+      pluginDescriptionForModel: data.pluginDescriptionForModel,
       visibility: data.isPublic
         ? DatastoreVisibility.public
         : DatastoreVisibility.private,

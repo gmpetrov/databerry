@@ -40,7 +40,7 @@ const config: {
     label: 'Growth',
     limits: {
       maxAgents: 2,
-      maxAgentsQueries: 100,
+      maxAgentsQueries: 1000,
       maxDatastores: 2,
       maxDatasources: 100, // per datastore
       maxFileSize: 5000000, // 5 MB

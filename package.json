@@ -22,10 +22,11 @@
   "alias": {
     "@app/components": "./components",
     "@app/utils": "./utils",
-    "@app/types": "./types"
+    "@app/types": "./types",
+    "@app/hooks": "./hooks"
   },
   "dependencies": {
-    "@dqbd/tiktoken": "^1.0.2",
+    "@dqbd/tiktoken": "^1.0.7",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
@@ -50,7 +51,7 @@
     "@xmldom/xmldom": "^0.8.7",
     "aws-sdk": "^2.1343.0",
     "axios": "^1.3.4",
-    "bullmq": "^3.10.4",
+    "bullmq": "^3.13.3",
     "cheerio": "1.0.0-rc.12",
     "clsx": "^1.2.1",
     "cors": "^2.8.5",
@@ -85,7 +86,11 @@
     "react-dom": "18.2.0",
     "react-frame-component": "^5.2.6",
     "react-hook-form": "^7.43.8",
+    "react-hot-toast": "^2.4.1",
+    "react-markdown": "^8.0.7",
     "react-syntax-highlighter": "^15.5.0",
+    "remark-gfm": "^3.0.1",
+    "rxjs": "^7.8.1",
     "sharp": "^0.32.1",
     "stripe": "^11.17.0",
     "superjson": "^1.12.2",

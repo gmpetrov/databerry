@@ -16,6 +16,7 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { Prisma, SubscriptionPlan } from '@prisma/client';
 import axios from 'axios';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -23,10 +24,13 @@ import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import { z } from 'zod';
 
 import Layout from '@app/components/Layout';
+import UserFree from '@app/components/UserFree';
+import UserPremium from '@app/components/UserPremium';
 import useStateReducer from '@app/hooks/useStateReducer';
 import accountConfig from '@app/utils/account-config';
 import { fetcher } from '@app/utils/swr-fetcher';
@@ -44,7 +48,10 @@ export default function AccountPage() {
 
   const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
     '/api/accounts/api-keys',
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 5000,
+    }
   );
 
   const handleClickManageSubscription = async () => {
@@ -107,6 +114,33 @@ export default function AccountPage() {
     }
   };
 
+  React.useEffect(() => {
+    function getClientReferenceId() {
+      return (
+        ((window as any)?.Rewardful && (window as any)?.Rewardful?.referral) ||
+        'checkout_' + new Date().getTime()
+      );
+    }
+
+    (async () => {
+      const checkoutSessionId = router.query?.checkout_session_id;
+
+      if (!checkoutSessionId) {
+        return;
+      }
+
+      await axios
+        .post('/api/stripe/referral', {
+          checkoutSessionId,
+          referralId: getClientReferenceId(),
+        })
+        .catch(console.log);
+
+      delete router.query.checkout_session_id;
+      router.replace(router, undefined, { shallow: true });
+    })();
+  }, []);
+
   const currentPlan = accountConfig[session?.user?.currentPlan!];
 
   if (!session?.user) {
@@ -140,9 +174,13 @@ export default function AccountPage() {
         gap: 1,
       })}
     >
-      {/* <Head>
-        <script async src="https://js.stripe.com/v3/pricing-table.js"></script>
-      </Head> */}
+      <Head>
+        <script
+          id="stripe-pricing-table"
+          async
+          src="https://js.stripe.com/v3/pricing-table.js"
+        ></script>
+      </Head>
 
       <Box
         sx={{
@@ -182,20 +220,27 @@ export default function AccountPage() {
 
       <Divider sx={{ mt: 2, mb: 4 }} />
 
-      <Box
+      <Box mb={4}>
+        <UserFree>
+          <Card variant="outlined" sx={{ bgcolor: 'black' }}>
+            <stripe-pricing-table
+              pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
+              publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+              client-reference-id={session?.user?.id}
+              customer-email={session?.user?.email}
+            ></stripe-pricing-table>
+          </Card>
+        </UserFree>
+      </Box>
+
+      <Stack
+        gap={4}
         sx={(theme) => ({
           maxWidth: '100%',
           width: theme.breakpoints.values.md,
           mx: 'auto',
         })}
       >
-        {/* <stripe-pricing-table
-          pricing-table-id="prctbl_1MzJqKIDmvRZDzsDjQUfIE8Z"
-          publishable-key="pk_test_51MsM5yIDmvRZDzsDxkUmQWtyG0gzpBQTkVTJSpcKXl5wnlSnizkCPLSEHoD1izTYfbaZQ0X1By3uKOQa1zA37GcS00lWvBPQHt"
-          client-reference-id={session?.user?.id}
-          customer-email={session?.user?.email}
-        ></stripe-pricing-table> */}
-
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
           {/* <Typography level="body3">
@@ -303,7 +348,7 @@ export default function AccountPage() {
 
             <Divider sx={{ my: 2 }} />
 
-            {currentPlan?.type === SubscriptionPlan?.level_0 && (
+            {/* {currentPlan?.type === SubscriptionPlan?.level_0 && (
               <Link
                 href={`${process.env
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
@@ -319,23 +364,18 @@ export default function AccountPage() {
                   Subscribe
                 </Button>
               </Link>
-            )}
+            )} */}
 
-            {currentPlan?.type &&
-              currentPlan?.type !== SubscriptionPlan?.level_0 && (
-                // <a
-                //   href={`https://billing.stripe.com/p/login/test_dR67ufbBYa6Ig8waEE?prefilled_email=${session?.user?.email}`}
-                // >
-                <Button
-                  onClick={handleClickManageSubscription}
-                  endDecorator={<ArrowForwardRoundedIcon />}
-                  variant="plain"
-                  sx={{ ml: 'auto' }}
-                >
-                  Manage Subscription
-                </Button>
-                // </a>
-              )}
+            <UserPremium>
+              <Button
+                onClick={handleClickManageSubscription}
+                endDecorator={<ArrowForwardRoundedIcon />}
+                variant="plain"
+                sx={{ ml: 'auto' }}
+              >
+                Upgrade / Manage Subscription
+              </Button>
+            </UserPremium>
           </Card>
         </FormControl>
 
@@ -369,8 +409,26 @@ export default function AccountPage() {
               </Alert>
               {getApiKeysQuery?.data?.map((each) => (
                 <>
-                  <Stack key={each.id} direction={'row'} gap={2}>
-                    <Alert color="neutral" sx={{ width: '100%' }}>
+                  <Stack
+                    key={each.id}
+                    direction={'row'}
+                    gap={2}
+                    onClick={() => {
+                      navigator.clipboard.writeText(each.key);
+                      toast.success('Copied!', {
+                        position: 'bottom-center',
+                      });
+                    }}
+                  >
+                    <Alert
+                      color="neutral"
+                      sx={{
+                        width: '100%',
+                        ':hover': {
+                          cursor: 'copy',
+                        },
+                      }}
+                    >
                       {each.key}
                     </Alert>
 
@@ -412,7 +470,7 @@ export default function AccountPage() {
             Delete
           </Button>
         </FormControl> */}
-      </Box>
+      </Stack>
     </Box>
   );
 }

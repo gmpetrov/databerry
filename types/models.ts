@@ -19,7 +19,11 @@ export const DatastoreSchema = z.object({
   type: z.nativeEnum(DatastoreType),
   config: z.object({}).optional(),
   name: z.string().trim().optional(),
-  description: z.string().trim().min(1),
+  description: z.string().trim().optional().nullable(),
+  pluginIconUrl: z.string().trim().optional().nullable(),
+  pluginName: z.string().trim().max(20).optional().nullable(),
+  pluginDescriptionForHumans: z.string().trim().max(100).optional().nullable(),
+  pluginDescriptionForModel: z.string().trim().max(8000).optional().nullable(),
   // datasources: z.array(DatasourceSchema).optional(),
   isPublic: z.boolean().optional(),
   // config: z.union([PineconeConfigSchema]),
@@ -68,6 +72,8 @@ export const AgentInterfaceConfig = z.object({
   messageTemplates: z.array(z.string()).optional(),
   position: z.enum(['left', 'right']).optional(),
   authorizedDomains: z.array(z.string()).optional(),
+  theme: z.enum(['light', 'dark']).optional(),
+  isBgTransparent: z.boolean().optional(),
 });
 
 export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig>;

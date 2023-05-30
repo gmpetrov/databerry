@@ -1,24 +1,36 @@
 import { CheckIcon } from '@heroicons/react/20/solid';
 import Card from '@mui/joy/Card';
+import { useColorScheme } from '@mui/joy/styles';
 import clsx from 'clsx';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
 import { Hero } from '@app/components/landing-page/Hero';
 import accountConfig from '@app/utils/account-config';
 
-export default function Home() {
+export default function Pricing() {
   return (
     <>
       <Head>
-        <title>Databerry - Pricing</title>
+        <title>Databerry Pricing - Plans for Teams of All Sizes</title>
+
+        <meta
+          name="title"
+          content="Databerry Pricing - Plans for Teams of All Sizes"
+        />
         <meta
           name="description"
-          content="Simple Pricing. No hidden fees. No credit card required."
+          content="Choose an affordable plan with Databerry. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
         />
+        <meta
+          name="keywords"
+          content="Databerry, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
+        />
+        <meta name="robots" content="index, follow" />
       </Head>
       <Header />
       <main className="flex flex-col min-h-full mb-auto bg-black">
@@ -52,7 +64,7 @@ const tiers = [
       }MB / month`,
       'Manual data synching',
       'Access to Databerry API',
-      'ChatGPT plugin',
+      // 'ChatGPT plugin',
     ],
     mostPopular: false,
   },
@@ -73,6 +85,7 @@ const tiers = [
         accountConfig['level_1'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'Manual data synching',
+      'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
       'Access to Crisp Plugin',
       'Access to Slack Bot',
@@ -81,7 +94,7 @@ const tiers = [
   },
   {
     name: 'Pro',
-    id: 'tier-enterprise',
+    id: 'tier-pro',
     href: '/signin',
     price: { monthly: '$99', annually: '$990' },
     description: 'Dedicated support and for your company.',
@@ -96,6 +109,7 @@ const tiers = [
         accountConfig['level_2'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'auto synch datasources',
+      'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: true,
@@ -118,6 +132,7 @@ const tiers = [
         accountConfig['level_3'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'auto synch datasources',
+      'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: false,
@@ -128,11 +143,40 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ');
 }
 
+const ForceDarkMode = () => {
+  const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    setMode('dark');
+  }, []);
+
+  return null;
+};
+
 function Example() {
-  const [frequency, setFrequency] = useState(frequencies[0]);
+  const { setMode } = useColorScheme();
+  const router = useRouter();
+  const [frequency] = useState(frequencies[0]);
+
+  useEffect(() => {
+    const handleRouteChange = (newPath: string) => {
+      window.location.href = router.basePath + newPath;
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    setMode('dark');
+  }, []);
 
   return (
     <div className="py-24 bg-black sm:py-32">
+      {/* <ForceDarkMode key={Date.now()} /> */}
       <div className="px-6 mx-auto max-w-[1500px] lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-400">
