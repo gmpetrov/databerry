@@ -1,6 +1,7 @@
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import GoogleIcon from '@mui/icons-material/Google';
 import { Box, Button, Divider, Typography } from '@mui/joy';
 import CircularProgress from '@mui/joy/CircularProgress';
 import { useRouter } from 'next/router';
@@ -134,6 +135,16 @@ export default function SignInPage() {
                   </div>
 
                   <div className="grid grid-cols-1 gap-3 mt-6 cursor-pointer">
+                    <Button
+                      size="lg"
+                      onClick={() => signIn('google')}
+                      // className="bg-white"
+                      variant="outlined"
+                      color="neutral"
+                    >
+                      <GoogleIcon />
+                    </Button>
+
                     <Button
                       size="lg"
                       onClick={() => signIn('github')}
