@@ -23,7 +23,8 @@
     "@app/components": "./components",
     "@app/utils": "./utils",
     "@app/types": "./types",
-    "@app/hooks": "./hooks"
+    "@app/hooks": "./hooks",
+    "buffer": false
   },
   "dependencies": {
     "@dqbd/tiktoken": "^1.0.7",

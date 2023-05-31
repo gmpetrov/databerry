@@ -2,8 +2,7 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
-import { ConversationChannel, Prisma } from '@prisma/client';
-import { useEffect } from 'react';
+import type { ConversationChannel, Prisma } from '@prisma/client';
 import useSWR from 'swr';
 
 import { getHistory } from '@app/pages/api/agents/[id]/history/[sessionId]';

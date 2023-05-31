@@ -9,7 +9,7 @@ import IconButton from '@mui/joy/IconButton';
 import { extendTheme, useColorScheme } from '@mui/joy/styles';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/material/Stack';
-import { Agent, ConversationChannel } from '@prisma/client';
+import type { Agent } from '@prisma/client';
 import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
@@ -56,7 +56,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: `${API_URL}/api/external/agents/${props.agentId}/query`,
-    channel: ConversationChannel.website,
+    channel: 'website',
+    // channel: ConversationChannel.website // not working with bundler parcel,
     // queryHistoryURL: visitorId
     //   ? `${API_URL}/api/external/agents/${props.agentId}/history/${visitorId}`
     //   : undefined,
