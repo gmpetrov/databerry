@@ -125,7 +125,6 @@ export default function LogsPage() {
       variant="outlined"
       sx={(theme) => ({
         height: '100%',
-        bgcolor: theme.palette.background.surface,
         borderRadius: 10,
       })}
     >
