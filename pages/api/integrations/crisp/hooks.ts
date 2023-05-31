@@ -1,10 +1,15 @@
-import { SubscriptionPlan } from '@prisma/client';
+import {
+  ConversationChannel,
+  MessageFrom,
+  SubscriptionPlan,
+} from '@prisma/client';
 import Crisp from 'crisp-api';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
 import AgentManager from '@app/utils/agent';
+import ConversationManager from '@app/utils/conversation';
 import { createApiHandler } from '@app/utils/createa-api-handler';
 import getSubdomain from '@app/utils/get-subdomain';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
@@ -50,7 +55,7 @@ type HookBodyMessageSent = HookBodyBase & {
     type: HookDataType;
     origin: string;
     content: string;
-    fingerprint: number;
+    visitorId: number;
     from: HookFrom;
     user: {
       nickname: string;
@@ -71,7 +76,7 @@ type HookBodyMessageUpdated = HookBodyBase & {
       explain: string;
       value?: string;
     };
-    fingerprint: number;
+    visitorId: number;
     session_id: string;
     website_id: string;
   };
@@ -176,7 +181,29 @@ const handleQuery = async (
     );
   }
 
-  const answer = await new AgentManager({ agent }).query(query);
+  const conversation = await prisma.conversation.findFirst({
+    where: {
+      AND: [{ agentId: agent?.id }, { visitorId: sessionId }],
+    },
+  });
+
+  const conversationId = conversation?.id || cuid();
+
+  const conversationManager = new ConversationManager({
+    channel: ConversationChannel.crisp,
+    agentId: agent?.id!,
+    visitorId: sessionId,
+    conversationId,
+  });
+
+  conversationManager.push({
+    from: MessageFrom.human,
+    text: query,
+  });
+
+  const answer = await new AgentManager({ agent }).query({
+    input: query,
+  });
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
     type: 'text',
@@ -189,6 +216,13 @@ const handleQuery = async (
       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
   });
+
+  conversationManager.push({
+    from: MessageFrom.agent,
+    text: answer,
+  });
+
+  conversationManager.save();
 
   return new Promise((resolve, reject) => {
     setTimeout(async () => {

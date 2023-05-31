@@ -1,9 +1,11 @@
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
+import Badge from '@mui/joy/Badge';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import Divider from '@mui/joy/Divider';
@@ -20,6 +22,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import useSWR from 'swr';
 
+import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getStatus } from '@app/pages/api/status';
 import { AppStatus, RouteNames } from '@app/types';
 import { fetcher } from '@app/utils/swr-fetcher';
@@ -29,6 +32,14 @@ export default function Navigation() {
 
   const getDatastoresQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
+    fetcher,
+    {
+      refreshInterval: 60000,
+    }
+  );
+
+  const countUnreadQuery = useSWR<Prisma.PromiseReturnType<typeof countUnread>>(
+    '/api/logs/count-unread',
     fetcher,
     {
       refreshInterval: 60000,
@@ -50,6 +61,21 @@ export default function Navigation() {
         route: RouteNames.DATASTORES,
         icon: <StorageRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.DATASTORES,
+      },
+      {
+        label: 'Logs',
+        route: RouteNames.LOGS,
+        icon: (
+          <Badge
+            badgeContent={countUnreadQuery?.data}
+            size="sm"
+            color="danger"
+            invisible={!countUnreadQuery?.data || countUnreadQuery?.data <= 0}
+          >
+            <InboxRoundedIcon fontSize="small" />
+          </Badge>
+        ),
+        active: router.route === RouteNames.LOGS,
       },
       // {
       //   label: 'Chat',
@@ -75,7 +101,7 @@ export default function Navigation() {
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];
-  }, [router.route]);
+  }, [router.route, countUnreadQuery?.data]);
 
   return (
     <Stack sx={{ height: '100%' }}>

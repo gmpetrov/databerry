@@ -1,4 +1,4 @@
-import { Agent, Datastore, Tool, ToolType } from '@prisma/client';
+import { Agent, Datastore, MessageFrom, Tool, ToolType } from '@prisma/client';
 import { AgentExecutor, ZeroShotAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
@@ -28,7 +28,15 @@ export default class AgentManager {
     this.topK = topK;
   }
 
-  async query(input: string, stream?: any) {
+  async query({
+    input,
+    stream,
+    history,
+  }: {
+    input: string;
+    stream?: any;
+    history?: { from: MessageFrom; message: string }[] | undefined;
+  }) {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
         prompt: this.agent.prompt as string,
@@ -38,6 +46,7 @@ export default class AgentManager {
         topK: this.topK,
         temperature: this.agent.temperature,
         stream,
+        history,
       });
 
       return answer;

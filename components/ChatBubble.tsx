@@ -9,11 +9,12 @@ import IconButton from '@mui/joy/IconButton';
 import { extendTheme, useColorScheme } from '@mui/joy/styles';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/material/Stack';
-import { Agent } from '@prisma/client';
+import { Agent, ConversationChannel } from '@prisma/client';
 import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import useAgentChat from '@app/hooks/useAgentChat';
+import useVisitorId from '@app/hooks/useVisitorId';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 
@@ -47,6 +48,7 @@ const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   // const { setMode } = useColorScheme();
   const [isOpen, setIsOpen] = React.useState(false);
+  const { visitorId } = useVisitorId();
   const [agent, setAgent] = React.useState<Agent | undefined>();
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
@@ -54,6 +56,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: `${API_URL}/api/external/agents/${props.agentId}/query`,
+    channel: ConversationChannel.website,
+    // queryHistoryURL: visitorId
+    //   ? `${API_URL}/api/external/agents/${props.agentId}/history/${visitorId}`
+    //   : undefined,
   });
 
   const textColor = useMemo(() => {
