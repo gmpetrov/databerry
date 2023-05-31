@@ -1,3 +1,4 @@
+import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Badge from '@mui/joy/Badge';
@@ -37,6 +38,7 @@ const getKey = (pageIndex: number, previousPageData: any) => {
 };
 
 export default function LogsPage() {
+  const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
     currentCursor: undefined as string | undefined,
@@ -61,10 +63,6 @@ export default function LogsPage() {
       : null,
     fetcher
   );
-  const parentRef = React.useRef();
-  // const count = (getConversationsQuery.data || [])?.reduce((acc, each) => {
-  //   return acc + each.length;
-  // }, 0);
 
   const allRows = getConversationsQuery?.data?.flatMap((d) => d) || [];
 
@@ -102,13 +100,28 @@ export default function LogsPage() {
     rowVirtualizer.getVirtualItems(),
   ]);
 
-  if (
-    !getConversationsQuery.isLoading &&
-    getConversationsQuery?.data?.length === 0
-  ) {
+  if (!getConversationsQuery.isLoading && allRows?.length === 0) {
     return (
-      <Alert>
-        <Typography>No Data</Typography>
+      <Alert
+        variant="outlined"
+        sx={{
+          textAlign: 'center',
+          justifyContent: 'center',
+          maxWidth: 'sm',
+          mx: 'auto',
+        }}
+      >
+        <Stack justifyContent={'center'} alignItems={'center'} gap={1}>
+          <Typography level="h4" color="primary">
+            <InboxRoundedIcon />
+          </Typography>
+          <Stack>
+            <Typography level="body1">No Data</Typography>
+            <Typography level="body2">
+              All conversations with your agents will be visible here
+            </Typography>
+          </Stack>
+        </Stack>
       </Alert>
     );
   }
@@ -188,14 +201,16 @@ export default function LogsPage() {
                         {each?._count?.messages > 0 && (
                           <Chip
                             // variant="soft"
-                            color="info"
+                            color="danger"
                             size="sm"
                             sx={{
                               borderRadius: '100%',
                               // p: 1,
                             }}
                           >
-                            <Typography>{each?._count?.messages}</Typography>
+                            <Typography textColor={'common.white'}>
+                              {each?._count?.messages}
+                            </Typography>
                           </Chip>
                         )}
                       </Stack>
