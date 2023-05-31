@@ -32,18 +32,12 @@ import { withAuth } from '@app/utils/withAuth';
 import { getLogs } from '../api/logs';
 import { getMessages } from '../api/logs/[id]';
 
-const getKey = (pageIndex: number, previousPageData: any) => {
-  if (previousPageData && !previousPageData.length) return null; // reached the end
-  return `/api/logs?page=${pageIndex}&limit=${1}`;
-};
+const LIMIT = 20;
 
 export default function LogsPage() {
   const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
-    currentCursor: undefined as string | undefined,
-    page: 0,
-    limit: 1,
     hasReachedEnd: false,
   });
   const getConversationsQuery = useSWRInfinite<
@@ -55,7 +49,7 @@ export default function LogsPage() {
       });
       return null; // reached the end
     }
-    return `/api/logs?page=${pageIndex}&limit=${1}`;
+    return `/api/logs?page=${pageIndex}&limit=${LIMIT}`;
   }, fetcher);
   const getMessagesQuery = useSWR<Prisma.PromiseReturnType<typeof getMessages>>(
     state.currentConversationId
