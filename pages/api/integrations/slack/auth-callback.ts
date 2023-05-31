@@ -78,7 +78,7 @@ export const authCallback = async (
     },
   });
 
-  return res.redirect(307, `/apps`);
+  return res.redirect(307, `/account`);
 };
 
 handler.get(authCallback);

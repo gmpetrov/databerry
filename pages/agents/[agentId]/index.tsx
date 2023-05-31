@@ -6,10 +6,13 @@ import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
 import IntegrationInstructionsRoundedIcon from '@mui/icons-material/IntegrationInstructionsRounded';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
+import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
-import type { ColorPaletteProp } from '@mui/joy';
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
+import { ColorPaletteProp, List, ListItem, ListItemButton } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
@@ -28,6 +31,7 @@ import Typography from '@mui/joy/Typography';
 import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
 import axios, { AxiosError } from 'axios';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -41,6 +45,7 @@ import AgentForm from '@app/components/AgentForm';
 import ChatBox from '@app/components/ChatBox';
 import ChatBubble from '@app/components/ChatBubble';
 import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgentChat from '@app/hooks/useAgentChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
@@ -56,9 +61,20 @@ const ChatInterfaceConfigForm = dynamic(
   }
 );
 
+const SlackBotModal = dynamic(
+  () => import('@app/components/SlackBotSettingsModal'),
+  {
+    ssr: false,
+  }
+);
+
 export default function AgentPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [state, setState] = useStateReducer({
+    isSlackModalOpen: false,
+    isUsageModalOpen: false,
+  });
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
     `/api/agents/${router.query?.agentId}`,
@@ -199,7 +215,7 @@ export default function AgentPage() {
             <Stack direction={'row'} gap={2} alignItems={'center'}>
               <Tabs
                 aria-label="Icon tabs"
-                defaultValue={(router.query.tab as string) || 'chat'}
+                value={(router.query.tab as string) || 'chat'}
                 size="md"
                 sx={{
                   borderRadius: 'lg',
@@ -216,6 +232,12 @@ export default function AgentPage() {
                       <MessageRoundedIcon />
                     </ListItemDecorator>
                     Chat
+                  </Tab>
+                  <Tab value={'deploy'}>
+                    <ListItemDecorator>
+                      <RocketLaunchRoundedIcon />
+                    </ListItemDecorator>
+                    Deploy
                   </Tab>
                   <Tab value={'settings'}>
                     <ListItemDecorator>
@@ -279,6 +301,107 @@ export default function AgentPage() {
               mx: 'auto',
             })}
           >
+            {router.query.tab === 'deploy' && (
+              <>
+                <Typography level="h5">
+                  Deploy Agent to the following services
+                </Typography>
+
+                <List variant="outlined" sx={{ mt: 2 }}>
+                  {[
+                    {
+                      name: 'Website',
+                      icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
+                      action: () => {
+                        router.query.tab = 'settings';
+                        (router as any).hash = 'chat-interface-config';
+                        router.replace(router, undefined, { shallow: true });
+                      },
+                    },
+                    {
+                      name: 'Slack',
+                      icon: (
+                        <Image
+                          className="w-8"
+                          src="/slack-logo.png"
+                          width={100}
+                          height={100}
+                          alt="slack logo"
+                        ></Image>
+                      ),
+                      action: () => {
+                        setState({ isSlackModalOpen: true });
+                      },
+                    },
+                    {
+                      name: 'Crisp',
+                      isPremium: true,
+                      icon: (
+                        <Image
+                          className="w-20"
+                          src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg"
+                          width={20}
+                          height={20}
+                          alt="crisp logo"
+                        ></Image>
+                      ),
+                      action: () => {
+                        window.open(
+                          'https://blog.databerry.ai/chat-site',
+                          '_blank'
+                        );
+                      },
+                    },
+                  ].map((each, index, arr) => (
+                    <ListItem
+                      key={index}
+                      sx={(theme) => ({
+                        borderBottomWidth: index < arr.length - 1 ? 0.1 : 0,
+                        borderBottomColor: theme.palette.divider,
+                      })}
+                    >
+                      {/* <ListItemButton> */}
+                      <Stack direction="row" gap={2} alignItems={'center'}>
+                        {each.icon}
+                        <Typography fontWeight={'bold'}>{each.name}</Typography>
+
+                        {each.isPremium && (
+                          <Chip color="warning" size="sm" variant="soft">
+                            premium
+                          </Chip>
+                        )}
+                      </Stack>
+
+                      {(!each?.isPremium ||
+                        (each.isPremium && session?.user?.isPremium)) && (
+                        <Button
+                          size="sm"
+                          variant="outlined"
+                          startDecorator={<TuneRoundedIcon />}
+                          sx={{ ml: 'auto' }}
+                          onClick={each.action}
+                        >
+                          Settings
+                        </Button>
+                      )}
+
+                      {each.isPremium && !session?.user?.isPremium && (
+                        <Button
+                          size="sm"
+                          variant="outlined"
+                          color="warning"
+                          sx={{ ml: 'auto' }}
+                          onClick={() => setState({ isUsageModalOpen: true })}
+                        >
+                          Subscribe
+                        </Button>
+                      )}
+                    </ListItem>
+                  ))}
+                </List>
+              </>
+            )}
+
             {router.query.tab === 'settings' && (
               <>
                 <AgentForm
@@ -363,21 +486,28 @@ export default function AgentPage() {
                   <Typography level="body3">
                     It will delete the agent permanently
                   </Typography>
-
-                  <Button
-                    color="danger"
-                    sx={{ mr: 'auto', mt: 2 }}
-                    startDecorator={<DeleteIcon />}
-                    onClick={handleDeleteAgent}
-                  >
-                    Delete
-                  </Button>
                 </FormControl>
               </>
             )}
           </Box>
         }
       </>
+
+      <SlackBotModal
+        isOpen={state.isSlackModalOpen}
+        handleCloseModal={() => setState({ isSlackModalOpen: false })}
+      />
+
+      <UsageLimitModal
+        title="Upgrade to premium to use this feature"
+        description="This feature is restricted to premium users only"
+        isOpen={state.isUsageModalOpen}
+        handleClose={() => {
+          setState({
+            isUsageModalOpen: false,
+          });
+        }}
+      />
     </Box>
   );
 }

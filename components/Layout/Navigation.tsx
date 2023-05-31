@@ -83,12 +83,12 @@ export default function Navigation() {
       //   icon: <ChatBubbleIcon fontSize="small" />,
       //   active: router.route === RouteNames.CHAT,
       // },
-      {
-        label: 'Apps',
-        route: RouteNames.APPS,
-        icon: <AutoFixHighRoundedIcon fontSize="small" />,
-        active: router.route === RouteNames.APPS,
-      },
+      // {
+      //   label: 'Apps',
+      //   route: RouteNames.APPS,
+      //   icon: <AutoFixHighRoundedIcon fontSize="small" />,
+      //   active: router.route === RouteNames.APPS,
+      // },
       {
         label: 'Account',
         route: RouteNames.ACCOUNT,
