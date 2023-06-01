@@ -1,0 +1,34 @@
+name: databerry Push Image to SWR
+on:
+  push:
+    branches:
+       develop
+env:
+  REGION_ID: 'cn-east-3'   # example: cn-north-4
+  SWR_ORGANIZATION:  'mricode'   # SWR 组织名
+  IMAGE_NAME: 'databerry'     # 镜像名称
+  DOCKER_FILE: 'Dockerfile'  # Docker file 路径
+jobs:
+  swr-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Log in to Huawei Cloud SWR
+        uses: huaweicloud/swr-login@v2.1.0
+        with:
+          access-key-id: ${{ secrets.ACCESSKEYID }}
+          access-key-secret: ${{ secrets.SECRETACCESSKEY }}
+          region: ${{ env.REGION_ID }}
+
+      - name: Build, Tag, and Push Image to Huawei Cloud SWR
+        id: push-image
+        env:
+          SWR_REGISTRY: swr.${{ env.REGION_ID }}.myhuaweicloud.com
+          SWR_ORGANIZATION: ${{ env.SWR_ORGANIZATION }}
+          IMAGE_TAG: 'dev' # ${{ github.sha }}镜像版本,这里是使用代码commitid sha值， 用户可以修改成自己需要的。
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+        run: |
+          docker build -f $DOCKER_FILE -t $SWR_REGISTRY/$SWR_ORGANIZATION/$IMAGE_NAME:$IMAGE_TAG .
+          docker push $SWR_REGISTRY/$SWR_ORGANIZATION/$IMAGE_NAME:$IMAGE_TAG
+          echo "::set-output name=image::$SWR_REGISTRY/$SWR_ORGANIZATION/$IMAGE_NAME:$IMAGE_TAG"
