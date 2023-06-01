@@ -494,6 +494,7 @@ export default function AgentPage() {
       </>
 
       <SlackBotModal
+        agentId={getAgentQuery?.data?.id!}
         isOpen={state.isSlackModalOpen}
         handleCloseModal={() => setState({ isSlackModalOpen: false })}
       />

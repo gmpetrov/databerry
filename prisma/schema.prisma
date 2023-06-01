@@ -281,6 +281,8 @@ model ExternalIntegration {
   apiKeyId String?          @map("api_key_id")
   apiKey   DatastoreApiKey? @relation(fields: [apiKeyId], references: [id])
 
+  metadata Json?
+
   @@map("external_integrations")
 }
 

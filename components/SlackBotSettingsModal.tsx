@@ -1,14 +1,16 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {
+  Alert,
   Button,
   Card,
   CircularProgress,
   Divider,
   FormControl,
   FormLabel,
+  IconButton,
+  List,
+  ListItem,
   Modal,
   Option,
   Select,
@@ -33,6 +35,7 @@ import { fetcher } from '@app/utils/swr-fetcher';
 type Props = {
   isOpen: boolean;
   handleCloseModal: () => any;
+  agentId: string;
 };
 
 const Schema = z.object({ agentId: z.string().min(1) });
@@ -53,15 +56,7 @@ export default function SlackBotSettingsModal(props: Props) {
     fetcher
   );
 
-  const methods = useForm<z.infer<typeof Schema>>({
-    resolver: zodResolver(Schema),
-  });
-
-  const methodsUpdate = useForm<z.infer<typeof Schema>>({
-    resolver: zodResolver(Schema),
-  });
-
-  const onSubmit = (values: z.infer<typeof Schema>) => {
+  const onSubmit = () => {
     router.push(
       `https://slack.com/oauth/v2/authorize?client_id=${
         process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
@@ -69,34 +64,18 @@ export default function SlackBotSettingsModal(props: Props) {
         process.env.NEXT_PUBLIC_DASHBOARD_URL
       }/api/integrations/slack/auth-callback&state=${JSON.stringify({
         userId: session?.user.id,
-        agentId: values.agentId,
+        agentId: props.agentId,
       })}`
     ),
       '_blank';
   };
 
-  const handleUpdate = async (values: z.infer<typeof Schema>) => {
-    try {
-      setState({ isUpdateLoading: true });
-      await axios.put(`/api/integrations/slack/integrations`, {
-        id: integration?.id,
-        agentId: values.agentId,
-      });
-
-      getSlackIntegrationsQuery.mutate();
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setState({ isUpdateLoading: false });
-    }
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     try {
       setState({ isDeleteLoading: true });
       await axios.delete(`/api/integrations/slack/integrations`, {
         data: {
-          id: integration?.id,
+          id,
         },
       });
       getSlackIntegrationsQuery.mutate();
@@ -107,18 +86,12 @@ export default function SlackBotSettingsModal(props: Props) {
     }
   };
 
-  const integration = getSlackIntegrationsQuery.data?.[0];
-
-  useEffect(() => {
-    if (integration) {
-      methodsUpdate.setValue('agentId', integration?.agentId as string, {
-        shouldDirty: false,
-      });
-    }
-  }, [integration, methodsUpdate]);
-
   const isLoading =
     getAgentsQuery.isLoading || getSlackIntegrationsQuery.isLoading;
+
+  if (!props.agentId) {
+    return null;
+  }
 
   return (
     <Modal
@@ -139,86 +112,57 @@ export default function SlackBotSettingsModal(props: Props) {
         <Divider sx={{ my: 2 }}></Divider>
 
         {isLoading ? (
-          <CircularProgress size="sm" sx={{ mx: 'auto', my: 4 }} />
+          <CircularProgress size="sm" sx={{ mx: 'auto' }} />
         ) : (
           <>
-            {integration ? (
-              <form className="flex flex-col">
-                <Stack direction={'column'}>
-                  <FormControl>
-                    <FormLabel>Connected Agent</FormLabel>
-                    <Select
-                      defaultValue={integration?.agentId}
-                      onChange={(_, value) => {
-                        methodsUpdate.setValue('agentId', value as string, {
-                          shouldValidate: true,
-                        });
-                      }}
+            <FormLabel>Active connections</FormLabel>
+            {getSlackIntegrationsQuery?.data?.length ? (
+              <List>
+                {getSlackIntegrationsQuery.data?.map((each, index) => (
+                  <ListItem key={index}>
+                    <Typography className="truncate">
+                      {(each?.metadata as any)?.team?.name ||
+                        each.integrationId}
+                    </Typography>
+
+                    <IconButton
+                      sx={{ ml: 2 }}
+                      color="danger"
+                      size="sm"
+                      onClick={() => handleDelete(each.id)}
+                      disabled={state.isDeleteLoading}
                     >
-                      {getAgentsQuery?.data?.map((agent) => (
-                        <Option key={agent.id} value={agent.id}>
-                          {agent.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Stack>
-
-                <Stack sx={{ mt: 4, ml: 'auto' }} direction={'row'} gap={1}>
-                  <Button
-                    startDecorator={<DeleteRoundedIcon />}
-                    color="danger"
-                    variant="plain"
-                    loading={state.isDeleteLoading}
-                    disabled={state.isUpdateLoading}
-                    onClick={methodsUpdate.handleSubmit(handleDelete)}
-                  >
-                    Disconnect
-                  </Button>
-                  <Button
-                    loading={state.isUpdateLoading}
-                    disabled={
-                      !methodsUpdate.formState.isValid || state.isDeleteLoading
-                    }
-                    startDecorator={<SaveRoundedIcon />}
-                    onClick={methodsUpdate.handleSubmit(handleUpdate)}
-                  >
-                    Update
-                  </Button>
-                </Stack>
-              </form>
+                      {state.isDeleteLoading ? (
+                        <CircularProgress
+                          color="neutral"
+                          variant="soft"
+                          size="sm"
+                        />
+                      ) : (
+                        <CloseRoundedIcon />
+                      )}
+                    </IconButton>
+                  </ListItem>
+                ))}
+              </List>
             ) : (
-              <form
-                onSubmit={methods.handleSubmit(onSubmit)}
-                className="flex flex-col"
-              >
-                <Stack direction={'column'}>
-                  <Select
-                    placeholder="Agent to connect to Slack"
-                    onChange={(_, value) => {
-                      methods.setValue('agentId', value as string, {
-                        shouldValidate: true,
-                      });
-                    }}
-                  >
-                    {getAgentsQuery?.data?.map((agent) => (
-                      <Option key={agent.id} value={agent.id}>
-                        {agent.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Stack>
+              <Alert variant="outlined">
+                Not connected to any Slack workspace
+              </Alert>
+            )}
 
+            <form className="flex flex-col">
+              <Stack sx={{ ml: 'auto' }} direction={'row'} gap={1}>
                 <Button
-                  type="submit"
+                  onClick={() => onSubmit()}
                   endDecorator={<ArrowForwardRoundedIcon />}
                   sx={{ mt: 4, ml: 'auto' }}
-                  disabled={!methods.formState.isValid}
+                  // disabled={!methods.formState.isValid}
                 >
                   Connect to Slack
                 </Button>
-              </form>
-            )}
+              </Stack>
+            </form>
           </>
         )}
       </Card>
