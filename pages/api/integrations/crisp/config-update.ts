@@ -29,8 +29,7 @@ export const updateCrispConfig = async (
   let metadata = {} as any;
 
   try {
-    const response = await client.website.getWebsite(data.website_id);
-    metadata = response?.data;
+    metadata = await client.website.getWebsite(data.website_id);
   } catch (err) {
     console.log('err getting website', err);
   }
