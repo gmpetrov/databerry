@@ -33,6 +33,12 @@ export function Footer() {
               <NavLink href="https://databerry.getrewardful.com/" target={"_blank"}>
                 Affiliates
               </NavLink>
+              <NavLink href="/privacy" target={"_blank"}>
+                Privacy Policy
+              </NavLink>
+              <NavLink href="/terms" target={"_blank"}>
+                Terms of Service
+              </NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
           </nav>
