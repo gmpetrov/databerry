@@ -274,10 +274,10 @@ export default function DatasourcesPage() {
         </Card>
       </Stack>
 
-      <SlackBotModal
+      {/* <SlackBotModal
         isOpen={state.isSlackModalOpen}
         handleCloseModal={() => setState({ isSlackModalOpen: false })}
-      />
+      /> */}
     </Box>
   );
 }
