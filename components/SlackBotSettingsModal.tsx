@@ -49,7 +49,7 @@ export default function SlackBotSettingsModal(props: Props) {
   const router = useRouter();
   const getSlackIntegrationsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getSlackIntegrations>
-  >('/api/integrations/slack/integrations', fetcher);
+  >(`/api/integrations/slack/integrations/${props.agentId}`, fetcher);
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
     '/api/agents',
