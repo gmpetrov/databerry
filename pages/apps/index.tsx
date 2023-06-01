@@ -39,7 +39,7 @@ import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
 const SlackBotModal = dynamic(
-  () => import('@app/components/SlackBotSettingsModal'),
+  () => import('@app/components/SlackSettingsModal'),
   {
     ssr: false,
   }

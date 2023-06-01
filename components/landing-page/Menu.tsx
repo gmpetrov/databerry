@@ -51,7 +51,7 @@ const solutions = [
     ),
   },
   {
-    name: 'Slack Bot',
+    name: 'Slack',
     description: 'Deploy an Agent trained on your data to Slack',
     href: 'https://www.databerry.ai/products/slack-bot',
     icon: (props: any) => (

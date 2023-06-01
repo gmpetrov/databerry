@@ -28,7 +28,6 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getAgents } from '@app/pages/api/agents';
 import { getSlackIntegrations } from '@app/pages/api/integrations/slack/integrations';
 import { fetcher } from '@app/utils/swr-fetcher';
 
@@ -40,7 +39,7 @@ type Props = {
 
 const Schema = z.object({ agentId: z.string().min(1) });
 
-export default function SlackBotSettingsModal(props: Props) {
+export default function SlackSettingsModal(props: Props) {
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isUpdateLoading: false,
@@ -50,11 +49,6 @@ export default function SlackBotSettingsModal(props: Props) {
   const getSlackIntegrationsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getSlackIntegrations>
   >(`/api/integrations/slack/integrations/${props.agentId}`, fetcher);
-
-  const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
-    '/api/agents',
-    fetcher
-  );
 
   const onSubmit = () => {
     router.push(
@@ -86,8 +80,7 @@ export default function SlackBotSettingsModal(props: Props) {
     }
   };
 
-  const isLoading =
-    getAgentsQuery.isLoading || getSlackIntegrationsQuery.isLoading;
+  const isLoading = getSlackIntegrationsQuery.isLoading;
 
   if (!props.agentId) {
     return null;

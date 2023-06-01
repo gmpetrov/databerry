@@ -62,7 +62,14 @@ const ChatInterfaceConfigForm = dynamic(
 );
 
 const SlackBotModal = dynamic(
-  () => import('@app/components/SlackBotSettingsModal'),
+  () => import('@app/components/SlackSettingsModal'),
+  {
+    ssr: false,
+  }
+);
+
+const CrispSettingsModal = dynamic(
+  () => import('@app/components/CrispSettingsModal'),
   {
     ssr: false,
   }
@@ -74,6 +81,7 @@ export default function AgentPage() {
   const [state, setState] = useStateReducer({
     isSlackModalOpen: false,
     isUsageModalOpen: false,
+    isCrispModalOpen: false,
   });
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
@@ -346,10 +354,7 @@ export default function AgentPage() {
                         ></Image>
                       ),
                       action: () => {
-                        window.open(
-                          'https://blog.databerry.ai/chat-site',
-                          '_blank'
-                        );
+                        setState({ isCrispModalOpen: true });
                       },
                     },
                   ].map((each, index, arr) => (
@@ -497,6 +502,12 @@ export default function AgentPage() {
         agentId={getAgentQuery?.data?.id!}
         isOpen={state.isSlackModalOpen}
         handleCloseModal={() => setState({ isSlackModalOpen: false })}
+      />
+
+      <CrispSettingsModal
+        agentId={getAgentQuery?.data?.id!}
+        isOpen={state.isCrispModalOpen}
+        handleCloseModal={() => setState({ isCrispModalOpen: false })}
       />
 
       <UsageLimitModal
