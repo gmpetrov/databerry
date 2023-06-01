@@ -84,7 +84,7 @@ export const authCallback = async (
     },
   });
 
-  return res.redirect(307, `/account`);
+  return res.redirect(307, `/agents/${metadata.agentId}?tab=deploy`);
 };
 
 handler.get(authCallback);
