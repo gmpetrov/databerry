@@ -2,6 +2,10 @@ version: "3"
 
 services:
 
+  maildev:
+    image: maildev/maildev
+    ports: 
+      - "1080:1080"
   base-api:
     depends_on:
       - qdrant
