@@ -15,7 +15,6 @@ import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import superjson from 'superjson';
 
@@ -24,7 +23,6 @@ import { getConnectedWebsites } from '@app/utils/crisp';
 import prisma from '@app/utils/prisma-client';
 
 export default function CrispConfig(props: { agent: Agent }) {
-  const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
@@ -43,8 +41,6 @@ export default function CrispConfig(props: { agent: Agent }) {
   const [isPremium, setIsPremium] = useState(
     subscription?.plan && subscription?.plan !== 'level_0'
   );
-
-  const user = session?.data?.user;
 
   const handleFetchAgents = async (apiKey: string) => {
     try {
@@ -131,106 +127,97 @@ export default function CrispConfig(props: { agent: Agent }) {
             </Alert>
           )}
 
-          {user && (
-            <Alert color="success" variant="outlined">
-              Crisp integration is now configured for this website. You can now
-              close this window.
-            </Alert>
-          )}
-
-          {!user && (
-            <Card variant="outlined">
-              <Logo className="w-20 mx-auto mb-5" />
-              <form className="flex flex-col">
-                <Stack spacing={2}>
-                  <FormControl>
-                    <FormLabel>Databerry API Key</FormLabel>
-                    <Alert variant="outlined" sx={{ mb: 2 }}>
-                      <Stack>
-                        You can find your API Key in your Databerry{' '}
-                        <Link
-                          href={'https://app.databerry.ai/account'}
-                          target="_blank"
-                        >
-                          <Typography color="primary">
-                            account settings.
-                          </Typography>
-                        </Link>
-                      </Stack>
-                    </Alert>
-                    <Input
-                      value={inputValue}
-                      placeholder="Your Databerry API Key here"
-                      onChange={(e) => setInputValue(e.currentTarget.value)}
-                    />
-                  </FormControl>
-
-                  {!isPremium && isApiKeyValid && (
-                    <Alert color="warning">
-                      This is a premium feature. Please upgrade your plan to use
-                      the Crisp integration.
-                    </Alert>
-                  )}
-
-                  {isPremium && isApiKeyValid && (
-                    <FormControl>
-                      <FormLabel>Agent to connect to Crisp</FormLabel>
-                      <Select
-                        placeholder="Choose an Agent"
-                        defaultValue={props?.agent?.id}
-                        onChange={(_, value) => {
-                          const agent = agents?.find((one) => one.id === value);
-
-                          if (agent) {
-                            setCurrentAgent(agent);
-                          }
-                        }}
+          <Card variant="outlined">
+            <Logo className="w-20 mx-auto mb-5" />
+            <form className="flex flex-col">
+              <Stack spacing={2}>
+                <FormControl>
+                  <FormLabel>Databerry API Key</FormLabel>
+                  <Alert variant="outlined" sx={{ mb: 2 }}>
+                    <Stack>
+                      You can find your API Key in your Databerry{' '}
+                      <Link
+                        href={'https://app.databerry.ai/account'}
+                        target="_blank"
                       >
-                        {agents?.map((agent) => (
-                          <Option key={agent.id} value={agent.id}>
-                            {agent.name}
-                          </Option>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  )}
-                </Stack>
-                <Divider className="my-8" />
+                        <Typography color="primary">
+                          account settings.
+                        </Typography>
+                      </Link>
+                    </Stack>
+                  </Alert>
+                  <Input
+                    value={inputValue}
+                    placeholder="Your Databerry API Key here"
+                    onChange={(e) => setInputValue(e.currentTarget.value)}
+                  />
+                </FormControl>
 
-                {!currentAgent && (
-                  <Button
-                    loading={isFetchAgentsLoading}
-                    className="ml-auto"
-                    size="md"
-                    onClick={() => handleFetchAgents(inputValue)}
-                  >
-                    Continue
-                  </Button>
+                {!isPremium && isApiKeyValid && (
+                  <Alert color="warning">
+                    This is a premium feature. Please upgrade your plan to use
+                    the Crisp integration.
+                  </Alert>
                 )}
-                {currentAgent && (
-                  <Stack direction={'row'} spacing={1} ml="auto">
-                    <Button
-                      size="md"
-                      onClick={() => {
-                        setAgents([]);
-                        setInputValue('');
-                        setIsApiKeyValid(false);
-                        setCurrentAgent(undefined);
-                        setShowSuccessAlert(false);
+
+                {isPremium && isApiKeyValid && (
+                  <FormControl>
+                    <FormLabel>Agent to connect to Crisp</FormLabel>
+                    <Select
+                      placeholder="Choose an Agent"
+                      defaultValue={props?.agent?.id}
+                      onChange={(_, value) => {
+                        const agent = agents?.find((one) => one.id === value);
+
+                        if (agent) {
+                          setCurrentAgent(agent);
+                        }
                       }}
-                      variant="plain"
                     >
-                      Reset
-                    </Button>
-
-                    <Button loading={isLoading} size="md" onClick={sendConfig}>
-                      Save Settings
-                    </Button>
-                  </Stack>
+                      {agents?.map((agent) => (
+                        <Option key={agent.id} value={agent.id}>
+                          {agent.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormControl>
                 )}
-              </form>
-            </Card>
-          )}
+              </Stack>
+              <Divider className="my-8" />
+
+              {!currentAgent && (
+                <Button
+                  loading={isFetchAgentsLoading}
+                  className="ml-auto"
+                  size="md"
+                  onClick={() => handleFetchAgents(inputValue)}
+                >
+                  Continue
+                </Button>
+              )}
+              {currentAgent && (
+                <Stack direction={'row'} spacing={1} ml="auto">
+                  <Button
+                    size="md"
+                    onClick={() => {
+                      setAgents([]);
+                      setInputValue('');
+                      setIsApiKeyValid(false);
+                      setCurrentAgent(undefined);
+                      setShowSuccessAlert(false);
+                    }}
+                    variant="plain"
+                  >
+                    Reset
+                  </Button>
+
+                  <Button loading={isLoading} size="md" onClick={sendConfig}>
+                    Save Settings
+                  </Button>
+                </Stack>
+              )}
+            </form>
+          </Card>
         </Stack>
       </Box>
     </>
