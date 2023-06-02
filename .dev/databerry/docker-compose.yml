@@ -3,6 +3,9 @@ version: "3"
 services:
 
   maildev:
+# Can be access in browser at localhost:1080.
+# Signin mail can be show at this adress.
+# Server is accessible at localhost:1025, using app.env default config.
     image: maildev/maildev
     ports: 
       - "1080:1080"
