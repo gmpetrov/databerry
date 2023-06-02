@@ -383,20 +383,18 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       default:
         break;
     }
+
+    CrispClient.website.composeMessageInConversation(
+      body.website_id,
+      body.data.session_id,
+      {
+        type: 'stop',
+        from: 'operator',
+      }
+    );
   } catch (err) {
     console.log('ERROR', err);
   } finally {
-    if (body?.website_id) {
-      CrispClient.website.composeMessageInConversation(
-        body.website_id,
-        body.data.session_id,
-        {
-          type: 'stop',
-          from: 'operator',
-        }
-      );
-    }
-
     return 'Success';
   }
 };
