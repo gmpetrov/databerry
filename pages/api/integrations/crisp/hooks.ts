@@ -274,18 +274,6 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       // ATM verifyHook() always returns false 🤔
     }
 
-    const messages = await CrispClient.website.getMessagesInConversation(
-      body.website_id,
-      body.data.session_id,
-      body.timestamp
-    );
-
-    const hasSentDataberryInputOnce = !!messages?.find((msg: any) =>
-      msg?.content?.id?.startsWith?.('databerry-query')
-    );
-    //   const nbUserMsg =
-    //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
-
     if (req.headers['x-delivery-attempt-count'] !== '1') {
       return "Not the first attempt, don't handle.";
     }
