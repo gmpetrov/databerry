@@ -54,6 +54,7 @@ export default function CrispConfig(props: { agent: Agent }) {
           const { data } = await axios.get('/api/agents');
 
           const apiKey = apiKeys.data[0]?.key;
+          setIsPremium(user?.isPremium);
           setAgents(data);
           setApiKey(apiKey);
           setIsApiKeyValid(!!apiKey);
