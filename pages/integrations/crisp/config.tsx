@@ -53,8 +53,10 @@ export default function CrispConfig(props: { agent: Agent }) {
           const apiKeys = await axios.get('/api/accounts/api-keys');
           const { data } = await axios.get('/api/agents');
 
+          const apiKey = apiKeys.data[0]?.key;
           setAgents(data);
-          setApiKey(apiKeys.data[0]?.key);
+          setApiKey(apiKey);
+          setIsApiKeyValid(!!apiKey);
         }
       }
     })();
