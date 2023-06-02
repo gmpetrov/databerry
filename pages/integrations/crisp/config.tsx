@@ -9,7 +9,7 @@ import Input from '@mui/joy/Input';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
-import { Agent } from '@prisma/client';
+import { Agent, Subscription } from '@prisma/client';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
@@ -34,6 +34,10 @@ export default function CrispConfig(props: { agent: Agent }) {
   const [currentAgent, setCurrentAgent] = useState<Agent | undefined>(
     props.agent
   );
+
+  const subscription = (props as any).agent?.owner
+    ?.subscriptions?.[0] as Subscription;
+  const isPremium = subscription?.plan && subscription?.plan !== 'level_0';
 
   const handleFetchAgents = async (apiKey: string) => {
     try {
@@ -130,7 +134,14 @@ export default function CrispConfig(props: { agent: Agent }) {
                   />
                 </FormControl>
 
-                {isApiKeyValid && (
+                {!isPremium && (
+                  <Alert color="warning">
+                    This is a premium feature. Please upgrade your plan to use
+                    the Crisp integration.
+                  </Alert>
+                )}
+
+                {isPremium && isApiKeyValid && (
                   <FormControl>
                     <FormLabel>Agent to connect to Crisp</FormLabel>
                     <Select
@@ -223,6 +234,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         include: {
           owner: {
             include: {
+              subscriptions: true,
               apiKeys: true,
             },
           },

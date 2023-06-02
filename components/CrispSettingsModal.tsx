@@ -53,7 +53,7 @@ export default function CrispSettingsModal(props: Props) {
 
   const onSubmit = () => {
     router.push(
-      `https://app.crisp.chat/initiate/plugin/a52b874e-489f-40f1-a00a-1b1f4bdad545/`
+      `https://app.crisp.chat/initiate/plugin/${process.env.NEXT_PUBLIC_CRISP_PLUGIN_ID}/`
     ),
       '_blank';
   };
