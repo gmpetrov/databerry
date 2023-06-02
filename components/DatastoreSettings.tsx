@@ -426,7 +426,7 @@ function DatastoreSettings() {
               startDecorator={<HelpOutlineRoundedIcon />}
               endDecorator={
                 <Link
-                  href="https://docs.databerry.ai/integrations/chatgpt-plugin"
+                  href="https://docs.griotai.kasetolabs.xyz/integrations/chatgpt-plugin"
                   target="_blank"
                 >
                   <Button

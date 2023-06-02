@@ -46,9 +46,9 @@ const solutions = [
     ),
   },
   {
-    name: "Slack Bot",
-    description: "Deploy an Agent trained on your data to Slack",
-    href: "https://www.griotai.kasetolabs.xyz/products/slack-bot",
+    name: 'Slack',
+    description: 'Deploy an Agent trained on your data to Slack',
+    href: 'https://www.griotai.kasetolabs.xyz/products/slack-bot',
     icon: (props: any) => (
       <img
         {...props}

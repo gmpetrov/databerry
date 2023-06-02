@@ -19,6 +19,22 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/privacy',
+        destination: '/privacy.pdf',
+      },
+      {
+        source: '/terms',
+        destination: '/terms.pdf',
+      },
+      {
+        source: '/privacy',
+        destination: '/privacy.pdf',
+      },
+      {
+        source: '/terms',
+        destination: '/terms.pdf',
+      },
+      {
         source: "/.well-known/ai-plugin.json",
         destination: "/api/openai/plugin/ai-plugin-json",
       },
@@ -53,6 +69,14 @@ const nextConfig = {
       {
         source: "/datastores/upsert/:path*",
         destination: "/api/external/datastores/upsert/:path*",
+      },
+      {
+        source: '/datastores/file-upload/:path*',
+        destination: '/api/external/datastores/file-upload/:path*',
+      },
+      {
+        source: '/datastores/file-upload/:path*',
+        destination: '/api/external/datastores/file-upload/:path*',
       },
       {
         source: "/agents/query/:id",

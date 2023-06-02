@@ -420,6 +420,7 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
   src="https://app.griotai.kasetolabs.xyz/agents/${getAgentQuery?.data?.id}/iframe"
   width="100%"
   height="100%"
+  frameborder="0"
 ></iframe>
 
 `}

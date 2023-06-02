@@ -58,6 +58,8 @@ Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-ret
 
 ### Run the project locally
 
+#### Without docker compose
+
 Minimum requirements to run the projects locally
 
 - Node.js v18
@@ -84,4 +86,18 @@ pnpm dev
 
 # Run worker process
 pnpm worker:datasource-loader
+```
+
+#### With docker compose
+
+First `cd .dev/griotai` then populate the config files `app.env` and `docker.env` as needed, then run the compose command:
+
+```shell
+docker compose --env-file docker.env up
+```
+
+You can fully rebuild dockers with :
+
+```shell
+docker compose --env-file docker.env up --build
 ```

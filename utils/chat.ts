@@ -1,5 +1,7 @@
-import { Datastore, PromptType } from "@prisma/client";
-import { OpenAI } from "langchain/llms/openai";
+import { Datastore, MessageFrom, PromptType } from '@prisma/client';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { OpenAI } from 'langchain/llms/openai';
+import { AIChatMessage, HumanChatMessage } from 'langchain/schema';
 
 import { ChatResponse } from "@app/types";
 
@@ -64,6 +66,7 @@ const chat = async ({
   promptType,
   stream,
   temperature,
+  history,
 }: {
   datastore: Datastore;
   query: string;
@@ -72,6 +75,7 @@ const chat = async ({
   topK?: number;
   stream?: any;
   temperature?: number;
+  history?: { from: MessageFrom; message: string }[];
 }) => {
   let results = [] as {
     text: string;
@@ -118,8 +122,8 @@ const chat = async ({
       break;
   }
 
-  const model = new OpenAI({
-    modelName: "gpt-3.5-turbo",
+  const model = new ChatOpenAI({
+    modelName: 'gpt-3.5-turbo',
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [
@@ -129,7 +133,19 @@ const chat = async ({
     ],
   });
 
-  const output = await model.call(finalPrompt);
+  // Disable conversation history for now as it conflict with wrapped prompt
+  // const messages = (history || [])?.map((each) => {
+  //   if (each.from === MessageFrom.human) {
+  //     return new HumanChatMessage(each.message);
+  //   }
+  //   return new AIChatMessage(each.message);
+  // });
+
+  const output = await model.call([
+    // ...messages,
+    // new HumanChatMessage(query),
+    new HumanChatMessage(finalPrompt),
+  ]);
 
   // const regex = /SOURCE:\s*(.+)/;
   // const match = output?.trim()?.match(regex);
@@ -139,7 +155,7 @@ const chat = async ({
   // answer = source ? `${answer}\n\n${source}` : answer;
 
   return {
-    answer: output?.trim?.(),
+    answer: output?.text?.trim?.(),
   } as ChatResponse;
 };
 
