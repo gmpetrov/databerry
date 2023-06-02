@@ -9,10 +9,12 @@ import Input from '@mui/joy/Input';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 import { Agent, Subscription } from '@prisma/client';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import superjson from 'superjson';
 
@@ -34,10 +36,11 @@ export default function CrispConfig(props: { agent: Agent }) {
   const [currentAgent, setCurrentAgent] = useState<Agent | undefined>(
     props.agent
   );
-
-  const subscription = (props as any).agent?.owner
+  const subscription = (props?.agent as any)?.owner
     ?.subscriptions?.[0] as Subscription;
-  const isPremium = subscription?.plan && subscription?.plan !== 'level_0';
+  const [isPremium, setIsPremium] = useState(
+    subscription?.plan && subscription?.plan !== 'level_0'
+  );
 
   const handleFetchAgents = async (apiKey: string) => {
     try {
@@ -50,6 +53,9 @@ export default function CrispConfig(props: { agent: Agent }) {
 
       setAgents(data);
       setIsApiKeyValid(true);
+      const plan = data?.[0]?.owner?.subscriptions?.[0]?.plan;
+      const premium = plan && plan !== 'level_0';
+      setIsPremium(premium);
 
       console.log('agents', agents);
     } catch (err) {
@@ -127,6 +133,19 @@ export default function CrispConfig(props: { agent: Agent }) {
               <Stack spacing={2}>
                 <FormControl>
                   <FormLabel>Databerry API Key</FormLabel>
+                  <Alert variant="outlined" sx={{ mb: 2 }}>
+                    <Stack>
+                      You can find your API Key in your Databerry{' '}
+                      <Link
+                        href={'https://app.databerry.ai/account'}
+                        target="_blank"
+                      >
+                        <Typography color="primary">
+                          account settings.
+                        </Typography>
+                      </Link>
+                    </Stack>
+                  </Alert>
                   <Input
                     value={inputValue}
                     placeholder="Your Databerry API Key here"
@@ -134,7 +153,7 @@ export default function CrispConfig(props: { agent: Agent }) {
                   />
                 </FormControl>
 
-                {!isPremium && (
+                {!isPremium && isApiKeyValid && (
                   <Alert color="warning">
                     This is a premium feature. Please upgrade your plan to use
                     the Crisp integration.
