@@ -7,17 +7,23 @@
 //  + I think it's better to minimize dependency with other providers if we want to work on a full onpremise solution in the future
 // ATM Dockerizing the app and host it on Fly.io for handling that type of use-cases
 
-import { SubscriptionPlan } from "@prisma/client";
-import { WebClient } from "@slack/web-api";
-import axios from "axios";
-import { NextApiResponse } from "next";
+import {
+  ConversationChannel,
+  MessageFrom,
+  SubscriptionPlan,
+} from '@prisma/client';
+import { WebClient } from '@slack/web-api';
+import axios from 'axios';
+import cuid from 'cuid';
+import { NextApiResponse } from 'next';
 
-import { AppNextApiRequest } from "@app/types/index";
-import AgentManager from "@app/utils/agent";
-import { createApiHandler, respond } from "@app/utils/createa-api-handler";
-import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
-import prisma from "@app/utils/prisma-client";
-import slackAgent from "@app/utils/slack-agent";
+import { AppNextApiRequest } from '@app/types/index';
+import AgentManager from '@app/utils/agent';
+import ConversationManager from '@app/utils/conversation';
+import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
+import prisma from '@app/utils/prisma-client';
+import slackAgent from '@app/utils/slack-agent';
 
 const handler = createApiHandler();
 
@@ -203,7 +209,36 @@ const handleAsk = async (payload: CommandEvent) => {
   const integration = await getIntegrationByTeamId(payload.team_id);
   const agent = integration?.agent!;
 
-  const answer = await new AgentManager({ agent }).query(payload.text);
+  const conversation = await prisma.conversation.findFirst({
+    where: {
+      AND: [{ agentId: agent?.id }, { visitorId: payload.user_id }],
+    },
+  });
+
+  const conversationId = conversation?.id;
+
+  const conversationManager = new ConversationManager({
+    conversationId,
+    agentId: agent?.id!,
+    visitorId: payload.user_id,
+    channel: ConversationChannel.slack,
+  });
+
+  conversationManager.push({
+    from: MessageFrom.human,
+    text: payload.text,
+  });
+
+  const answer = await new AgentManager({ agent }).query({
+    input: payload.text,
+  });
+
+  conversationManager.push({
+    from: MessageFrom.agent,
+    text: answer,
+  });
+
+  conversationManager.save();
 
   return axios.post(payload.response_url, {
     text: `${payload.text}\n\n${answer}`,

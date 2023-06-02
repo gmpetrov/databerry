@@ -1,10 +1,11 @@
-import { Transition } from "@headlessui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import { Box, Button, Divider, Typography } from "@mui/joy";
-import CircularProgress from "@mui/joy/CircularProgress";
-import { useRouter } from "next/router";
-import { signIn, useSession } from "next-auth/react";
+import { Transition } from '@headlessui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Box, Button, Divider, Typography } from '@mui/joy';
+import CircularProgress from '@mui/joy/CircularProgress';
+import { useRouter } from 'next/router';
+import { signIn, useSession } from 'next-auth/react';
 // import { parseCookies } from 'nookies';
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -136,7 +137,17 @@ export default function SignInPage() {
                   <div className="grid grid-cols-1 gap-3 mt-6 cursor-pointer">
                     <Button
                       size="lg"
-                      onClick={() => signIn("github")}
+                      onClick={() => signIn('google')}
+                      // className="bg-white"
+                      variant="outlined"
+                      color="neutral"
+                    >
+                      <GoogleIcon />
+                    </Button>
+
+                    <Button
+                      size="lg"
+                      onClick={() => signIn('github')}
                       // className="bg-white"
                       variant="outlined"
                       color="neutral"

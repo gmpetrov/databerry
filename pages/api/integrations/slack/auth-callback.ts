@@ -65,6 +65,9 @@ export const authCallback = async (
           id: metadata.agentId,
         },
       },
+      metadata: {
+        team: data?.team,
+      },
     },
     create: {
       type: IntegrationType.slack,
@@ -75,10 +78,13 @@ export const authCallback = async (
       },
       integrationId: `sl_${teamId}`,
       integrationToken: accessToken,
+      metadata: {
+        team: data?.team,
+      },
     },
   });
 
-  return res.redirect(307, `/apps`);
+  return res.redirect(307, `/agents/${metadata.agentId}?tab=deploy`);
 };
 
 handler.get(authCallback);

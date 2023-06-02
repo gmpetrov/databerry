@@ -41,5 +41,7 @@ migration.ts
 
 dist
 packages/chat-bubble/chat-bubble*
-# Sentry Auth Token
-.sentryclirc
+
+.dev/griotai/data/*
+
+.pnpm-store/
