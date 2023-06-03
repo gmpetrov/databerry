@@ -76,7 +76,7 @@ type HookBodyMessageUpdated = HookBodyBase & {
       explain: string;
       value?: string;
       choices?: {
-        value: 'resolved' | 'request_human';
+        value: 'resolved' | 'request_human' | 'enable_ai';
         icon: string;
         label: string;
         selected: boolean;
@@ -285,7 +285,14 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       )
     )?.data;
 
-    if (metadata?.choice === 'request_human') {
+    const newChoice = body?.data?.content?.choices?.find(
+      (one: any) => one.selected
+    );
+
+    if (
+      metadata?.choice === 'request_human' &&
+      newChoice?.value !== 'enable_ai'
+    ) {
       return 'User has requested a human operator, do not handle.';
     }
 
@@ -337,21 +344,44 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             //     body.website_id
             //   );
 
+            // await CrispClient.website.sendMessageInConversation(
+            //   body.website_id,
+            //   body.data.session_id,
+            //   {
+            //     type: 'text',
+            //     from: 'operator',
+            //     origin: 'chat',
+
+            //     content: 'An operator will get back to you shortly.',
+            //     user: {
+            //       type: 'participant',
+            //       // nickname: agent?.name || 'Databerry.ai',
+            //       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+            //     },
+            //     // mentions: [data?.[0]?.user_id],
+            //   }
+            // );
+
             await CrispClient.website.sendMessageInConversation(
               body.website_id,
               body.data.session_id,
               {
-                type: 'text',
+                type: 'picker',
                 from: 'operator',
                 origin: 'chat',
 
-                content: 'An operator will get back to you shortly.',
-                user: {
-                  type: 'participant',
-                  // nickname: agent?.name || 'Databerry.ai',
-                  avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+                content: {
+                  id: 'databerry-enable',
+                  text: 'An operator will get back to you shortly.',
+                  choices: [
+                    {
+                      value: 'enable_ai',
+                      icon: '▶️',
+                      label: 'Re-enable AI',
+                      selected: false,
+                    },
+                  ],
                 },
-                // mentions: [data?.[0]?.user_id],
               }
             );
 
@@ -361,6 +391,17 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               body.website_id,
               body.data.session_id,
               'resolved'
+            );
+            break;
+          case 'enable_ai':
+            await CrispClient.website.updateConversationMetas(
+              body.website_id,
+              body.data.session_id,
+              {
+                data: {
+                  choice: 'enable_ai',
+                },
+              }
             );
             break;
           default:
