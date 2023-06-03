@@ -33,7 +33,7 @@ export const generateUploadLink = async (
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
     Key: `datastores/${datastore.id}/${data.fileName}`,
     Expires: 900,
-    ACL: 'public-read',
+    // ACL: 'public-read',
     ContentType: data.type,
   };
 

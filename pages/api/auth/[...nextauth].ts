@@ -89,10 +89,10 @@ export const authOptions = {
           nbAgents: (user as any)?.['_count']?.agents as number,
           nbDatastores: (user as any)?.['_count']?.datastores as number,
           id: user.id,
-          currentPlan:
-            (user as any)?.subscriptions?.[0]?.plan ||
-            (SubscriptionPlan.level_0 as SubscriptionPlan),
-          isPremium: (user as any)?.subscriptions?.length > 0,
+          currentPlan: "level_3",
+          // (user as any)?.subscriptions?.[0]?.plan ||
+          // (SubscriptionPlan.level_0 as SubscriptionPlan),
+          isPremium: true,//(user as any)?.subscriptions?.length > 0,
           customerId: (user as any)?.subscriptions?.[0]?.customerId as string,
         },
       };

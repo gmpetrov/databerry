@@ -36,7 +36,7 @@ const DatasourceText = (props: {
 
   const query = useSWR(
     props?.datasourceId
-      ? `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.amazonaws.com/datastores/${props?.datastoreId}/${props?.datasourceId}.json`
+      ? `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.cos.ap-shanghai.myqcloud.com/datastores/${props?.datastoreId}/${props?.datasourceId}.json`
       : null,
     fetcher
   );
