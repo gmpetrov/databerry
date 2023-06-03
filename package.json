@@ -12,7 +12,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "dotenv -e .env.local -- prisma migrate dev",
     "prisma:migrate:prod": "dotenv -e .env.local -- prisma migrate deploy",
-    "worker:datasource-loader": "dotenv -e .env.local -- npx tsx --watch workers/datasource-loader.ts",
+    "worker:datasource-loader": "dotenv -e .env.local -- npx tsx workers/datasource-loader.ts",
     "dotenv": "dotenv -e .env.local",
     "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set"
   },
