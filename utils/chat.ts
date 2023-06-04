@@ -85,11 +85,19 @@ const chat = async ({
 
   if (datastore) {
     const store = new DatastoreManager(datastore);
+    console.log('\n-----------')
+    console.log('store search...')
+    console.log('-----------\n')
+
     results = await store.search({
       query: query,
       topK: topK || 3,
       tags: [],
     });
+
+    console.log('\n-----------')
+    console.log('search results:', results)
+    console.log('-----------\n')
   }
 
   const context = results
