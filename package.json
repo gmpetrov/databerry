@@ -14,7 +14,8 @@
     "prisma:migrate:prod": "dotenv -e .env.local -- prisma migrate deploy",
     "worker:datasource-loader": "dotenv -e .env.local -- npx tsx workers/datasource-loader.ts",
     "dotenv": "dotenv -e .env.local",
-    "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set"
+    "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set",
+    "seed": "dotenv -e .env.local -- npx tsx prisma/seed.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
