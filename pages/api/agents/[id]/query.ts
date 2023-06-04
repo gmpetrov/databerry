@@ -82,8 +82,8 @@ export const chatAgentRequest = async (
 
   const conversationId = agent?.owner?.conversations?.[0]?.id;
 
-  if (!conversationId)
-    throw new Error('agent.owner.conversations[0].id is undefined');
+  // if (!conversationId)
+  //   throw new Error('agent.owner.conversations[0].id is undefined');
 
   const conversationManager = new ConversationManager({
     channel: ConversationChannel.dashboard,
