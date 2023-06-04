@@ -19,6 +19,7 @@ import { upsertDatasource } from '@app/pages/api/datasources';
 import { GenerateUploadLinkRequest } from '@app/types/dtos';
 import { UpsertDatasourceSchema } from '@app/types/models';
 import cuid from '@app/utils/cuid';
+import getS3RootDomain from '@app/utils/get-s3-root-domain';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 
 import type { DatasourceFormProps } from './types';
@@ -36,7 +37,9 @@ const DatasourceText = (props: {
 
   const query = useSWR(
     props?.datasourceId
-      ? `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.amazonaws.com/datastores/${props?.datastoreId}/${props?.datasourceId}.json`
+      ? `${getS3RootDomain()}/datastores/${props?.datastoreId}/${
+          props?.datasourceId
+        }.json`
       : null,
     fetcher
   );
