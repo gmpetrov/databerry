@@ -1,0 +1,11 @@
+### chat
+curl https://api.openai.com/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer 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"   -d '{ "model": "gpt-3.5-turbo",    "messages": [{"role": "user", "content": "Hello!"}]  }'
+curl https://api.openai-proxy.com/v1/chat/completions   -H "Content-Type: application/json"   -H "Authorization: Bearer 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"   -d '{ "model": "gpt-3.5-turbo",    "messages": [{"role": "user", "content": "Hello!"}]  }'
+
+### embeddings
+curl https://api.openai.com/v1/embeddings -H "Authorization: Bearer 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" -d '{"model":"text-embedding-ada-002","input":["你是谁"]}' -H "Content-Type: application/json"
+
+### 123
+curl https://chat-gpt-next-web-rosy-omega-63.vercel.app/api/openai/v1/embeddings -H "Authorization: Bearer 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" -d '{"model":"text-embedding-ada-002","input":["你是谁"]}' -H "Content-Type: application/json"
+
+

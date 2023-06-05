@@ -30,7 +30,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
   constructor(datastore: DatastoreType) {
     super(datastore);
 
-    this.embeddings = new OpenAIEmbeddings();
+    this.embeddings = new OpenAIEmbeddings({}, { basePath: process.env.OPENAI_API_BASE });
 
     this.client = axios.create({
       baseURL: process.env.QDRANT_API_URL,
@@ -93,20 +93,20 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     const documentIds = ids == null ? documents.map(() => uuidv4()) : ids;
     const qdrantVectors = vectors.map(
       (vector, idx) =>
-        ({
-          id: documentIds[idx],
-          payload: {
-            datastore_id: this.datastore.id,
-            text: documents[idx].pageContent,
-            source: documents[idx].metadata.source,
-            tags: documents[idx].metadata.tags,
-            chunk_hash: documents[idx].metadata.chunk_hash,
-            chunk_offset: documents[idx].metadata.chunk_offset,
-            datasource_hash: documents[idx].metadata.datasource_hash,
-            datasource_id: documents[idx].metadata.datasource_id,
-          },
-          vector,
-        } as Point)
+      ({
+        id: documentIds[idx],
+        payload: {
+          datastore_id: this.datastore.id,
+          text: documents[idx].pageContent,
+          source: documents[idx].metadata.source,
+          tags: documents[idx].metadata.tags,
+          chunk_hash: documents[idx].metadata.chunk_hash,
+          chunk_offset: documents[idx].metadata.chunk_offset,
+          datasource_hash: documents[idx].metadata.datasource_hash,
+          datasource_id: documents[idx].metadata.datasource_id,
+        },
+        vector,
+      } as Point)
     );
 
     const chunkSize = 50;
