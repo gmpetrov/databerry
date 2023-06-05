@@ -9,6 +9,7 @@ import Typography from "@mui/joy/Typography";
 import Image from "next/image";
 import Link from "next/link";
 
+
 import { Container } from "@app/components/landing-page/Container";
 import { RouteNames } from "@app/types";
 
@@ -21,7 +22,7 @@ export function HeroChatGPTPlugin() {
         alt=""
       />
       <div className="relative z-10">
-        <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full">
+        {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full">
           <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
             <span>New</span>
           </span>
@@ -50,7 +51,7 @@ export function HeroChatGPTPlugin() {
               <line x1="15" y1="8" x2="19" y2="12"></line>
             </svg>
           </Link>
-        </div>
+        </div> */}
 
         <Link href={RouteNames.CHAT_SITE}>
           {/* <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button> */}
@@ -120,6 +121,7 @@ export function HeroChatGPTPlugin() {
         </h1>
         {/* 
         <a
+
           href="https://www.producthunt.com/posts/databerry-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-databerry&#0045;ai"
           target="_blank"
         >
@@ -137,7 +139,7 @@ export function HeroChatGPTPlugin() {
           />
         </a> */}
 
-        {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
+            {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
 
         <p className="max-w-sm mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:max-w-lg">
           With our <strong className="text-violet-300">no-code platform</strong>
@@ -146,10 +148,11 @@ export function HeroChatGPTPlugin() {
           on your data in seconds. Streamline customer support, onboard new team
           members, and more!
           {/* <ul className='mx-auto text-left list-disc'>
+
             <li>Connect custom data to ChatGPT</li>
             <li>Connect custom data to ChatGPT</li>
           </ul> */}
-        </p>
+            </p>
 
         <Stack
           direction={{
@@ -177,11 +180,89 @@ export function HeroChatGPTPlugin() {
               size="lg"
               startDecorator={<PhoneRoundedIcon />}
               sx={{ borderRadius: 100 }}
+
             >
-              Book a Call
-            </Button>
-          </Link>
-        </Stack>
+              <Stack gap={1}>
+                <Stack direction="row" gap={1}>
+                  {/* <AvatarGroup size="lg">
+                  <Avatar />
+                  <Avatar />
+                  <Avatar />
+                </AvatarGroup> */}
+
+                  <Typography
+                    className="w-full text-center sm:text-left"
+                    fontSize="xl"
+                    fontWeight="md"
+                    // startDecorator={
+
+                    // }
+                  >
+                    <React.Fragment>
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                    </React.Fragment>
+                  </Typography>
+                </Stack>
+                <Typography textColor="text.secondary">
+                  <b>+3.5K</b> companies have successfully <br></br>built their
+                  custom AI Agent with Databerry.ai
+                </Typography>
+              </Stack>
+            </Box>
+
+            <Stack
+              direction={{
+                xs: 'column',
+                sm: 'row',
+              }}
+              gap={2}
+              mt={6}
+              className="justify-center sm:justify-start"
+            >
+              <Link target="_blank" href={'https://app.databerry.ai/signin'}>
+                <Button
+                  variant="solid"
+                  size="lg"
+                  // startDecorator={<RocketLaunchRounded />}
+                  sx={{ borderRadius: 100 }}
+                >{`⚡️ Get Started Now`}</Button>
+              </Link>
+              <Link
+                target="_blank"
+                href={'https://calendly.com/databerry-georges/15min'}
+              >
+                <Button
+                  variant="outlined"
+                  size="lg"
+                  startDecorator={<PhoneRoundedIcon />}
+                  sx={{ borderRadius: 100 }}
+                >
+                  Book a Call
+                </Button>
+              </Link>
+            </Stack>
+          </Stack>
+
+          <div className="w-full sm:w-2/3">
+            <Image src="/landing-page/inputs.png" width="500" height="150" className='w-full' />
+            <div className='w-full h-[500px] overflow-hidden rounded-3xl bg-white'>
+
+            <iframe
+              src="https://app.databerry.ai/agents/clgtujkqh022j0u0zw3ut8vk3/iframe"
+              width="100%"
+              height="100%"
+              frameborder="0"
+              ></iframe>
+              </div>
+
+              {/* <Image src="/landing-page/outputs.png" width="500" height="150" className='w-full' /> */}
+          </div>
+        </div>
+
         <div className="flex justify-center mt-10 gap-x-6">
           {/* <Button target="_blank" href="https://griotai.kasetolabs.xyz/signin">Start Building</Button> */}
           {/* <Button
@@ -233,7 +314,13 @@ export function HeroChatGPTPlugin() {
         </ul>
       </div> */}
 
-        <div className="relative pt-16 overflow-hidden">
+        {/* <div className="relative pt-16 overflow-hidden">
+
+        <h2 className="mb-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Build in minutes <br />
+            Deploy anywhere
+          </h2>
+
           <div className="px-6 mx-auto max-w-7xl lg:px-8">
             <iframe
               //   className="w-full h-[300px] rounded-2xl"
@@ -245,7 +332,7 @@ export function HeroChatGPTPlugin() {
               allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             ></iframe>
           </div>
-        </div>
+        </div> */}
       </div>
     </Container>
   );

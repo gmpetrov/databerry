@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:all": "npm-run-all --parallel dev worker:datasource-loader",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,7 +17,10 @@
     "worker:datasource-loader": "dotenv -e .env.local -- npx tsx --watch workers/datasource-loader.ts",
     "dotenv": "dotenv -e .env.local",
     "postinstall": "prisma generate",
-    "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set"
+    "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set",
+    "docker:compose": "docker compose -f .dev/databerry/docker-compose.yml --env-file .dev/databerry/docker.env",
+    "docker:compose:deps": "docker compose -f .dev/databerry/docker-compose.deps.yml --env-file .dev/databerry/docker.env",
+    "docker:compose:app": "docker compose -f .dev/databerry/docker-compose.app.yml --env-file .dev/databerry/docker.env"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -74,6 +78,7 @@
     "langchain": "^0.0.64",
     "mammoth": "^1.5.1",
     "mime-types": "^2.1.35",
+    "msgpackr": "^1.9.3",
     "nanoid": "^4.0.2",
     "next": "13.2.4",
     "next-auth": "^4.20.1",
@@ -85,6 +90,7 @@
     "p-map": "^5.5.0",
     "p-timeout": "^6.1.1",
     "pdfjs-dist": "3.4.120",
+    "perf_hooks": "^0.0.1",
     "pino": "^8.11.0",
     "pino-pretty": "^10.0.0",
     "playwright": "^1.32.3",
@@ -118,6 +124,7 @@
     "autoprefixer": "^10.4.14",
     "dotenv-cli": "^7.1.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.21",
     "prisma": "^4.12.0",
     "tailwindcss": "^3.2.7"

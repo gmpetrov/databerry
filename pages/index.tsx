@@ -5,9 +5,13 @@ import { useRouter } from "next/router";
 import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 
-import { Footer } from "@app/components/landing-page/Footer";
-import { Header } from "@app/components/landing-page/Header";
-import { HeroChatGPTPlugin } from "@app/components/landing-page/HeroChatGPTPlugin";
+
+import CompanyLogos from '@app/components/landing-page/CompanyLogos';
+// import { CallToAction } from '@app/landing-page/components/CallToAction';
+// import { Faqs } from '@app/landing-page/components/Faqs';
+import { Footer } from '@app/components/landing-page/Footer';
+import { Header } from '@app/components/landing-page/Header';
+import { HeroChatGPTPlugin } from '@app/components/landing-page/HeroChatGPTPlugin';
 
 import OpenGraph from "../components/OpenGraph";
 import { absUrl } from "../core/helpers";
@@ -83,6 +87,7 @@ export default function Home() {
       <main className="bg-black min-heigh-full">
         {/* <Hero /> */}
         <HeroChatGPTPlugin />
+        {/* <CompanyLogos /> */}
         {/* <Image
           src="/features.png"
           alt="features"
@@ -98,11 +103,11 @@ export default function Home() {
         <Pricing />
         <Faqs /> */}
         <FeaturesForDevs />
-        <FeaturesForChatGPTPlugin />
         <FeaturesForCustomerSupport />
-        <FeaturesForSlack />
+        {/* <FeaturesForChatGPTPlugin /> */}
+        {/* <FeaturesForSlack /> */}
         {/* <FeaturesForInfluencers /> */}
-        <ChatBotBenefits />
+        {/* <ChatBotBenefits /> */}
         <FAQ />
         <Cta />
       </main>

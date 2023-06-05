@@ -25,6 +25,7 @@ const solutions = [
       />
     ),
   },
+
   {
     name: "Embed Agent on your website",
     description:

@@ -396,6 +396,7 @@ enum SubscriptionPlan {
 }
 
 enum IntegrationType {
+  website
   crisp
   slack
 }
