@@ -108,7 +108,8 @@ export default function CrispSettingsModal(props: Props) {
                 {getCrispIntegrationsQuery.data?.map((each, index) => (
                   <ListItem key={index}>
                     <Typography className="truncate">
-                      {(each?.metadata as any)?.domain || each.integrationId}
+                      {((each as any)?.metadata as any)?.domain ||
+                        each.integrationId}
                     </Typography>
 
                     <IconButton
