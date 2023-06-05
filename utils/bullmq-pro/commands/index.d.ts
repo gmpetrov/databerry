@@ -1,1 +1,6 @@
-export { ScriptLoader, scriptLoader, ScriptLoaderError, ScriptMetadata, } from 'bullmq';
+export {
+  ScriptLoader,
+  scriptLoader,
+  ScriptLoaderError,
+  ScriptMetadata,
+} from "bullmq";

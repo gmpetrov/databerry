@@ -142,8 +142,8 @@ end
 return 0
 `;
 export const retryJobs = {
-    name: 'retryJobs',
-    content,
-    keys: 6,
+  name: "retryJobs",
+  content,
+  keys: 6,
 };
 //# sourceMappingURL=retryJobs-6.js.map

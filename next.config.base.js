@@ -9,7 +9,7 @@ const nextConfig = {
     appDir: true,
   },
   eslint: {
-    dirs: ['pages', 'utils', 'components', 'hooks', 'types', 'widgets'],
+    dirs: ["pages", "utils", "components", "hooks", "types", "widgets"],
   },
 
   reactStrictMode: true,
@@ -19,20 +19,20 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/privacy',
-        destination: '/privacy.pdf',
+        source: "/privacy",
+        destination: "/privacy.pdf",
       },
       {
-        source: '/terms',
-        destination: '/terms.pdf',
+        source: "/terms",
+        destination: "/terms.pdf",
       },
       {
-        source: '/privacy',
-        destination: '/privacy.pdf',
+        source: "/privacy",
+        destination: "/privacy.pdf",
       },
       {
-        source: '/terms',
-        destination: '/terms.pdf',
+        source: "/terms",
+        destination: "/terms.pdf",
       },
       {
         source: "/.well-known/ai-plugin.json",
@@ -71,12 +71,12 @@ const nextConfig = {
         destination: "/api/external/datastores/upsert/:path*",
       },
       {
-        source: '/datastores/file-upload/:path*',
-        destination: '/api/external/datastores/file-upload/:path*',
+        source: "/datastores/file-upload/:path*",
+        destination: "/api/external/datastores/file-upload/:path*",
       },
       {
-        source: '/datastores/file-upload/:path*',
-        destination: '/api/external/datastores/file-upload/:path*',
+        source: "/datastores/file-upload/:path*",
+        destination: "/api/external/datastores/file-upload/:path*",
       },
       {
         source: "/agents/query/:id",

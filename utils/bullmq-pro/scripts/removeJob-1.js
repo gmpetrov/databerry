@@ -246,8 +246,8 @@ end
 return 0
 `;
 export const removeJob = {
-    name: 'removeJob',
-    content,
-    keys: 1,
+  name: "removeJob",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=removeJob-1.js.map

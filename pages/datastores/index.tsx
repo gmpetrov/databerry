@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 import useSWR from "swr";
@@ -46,6 +47,7 @@ export default function DatasourcesPage() {
     currentDatastoreId: undefined as string | undefined,
     isUsageModalOpen: false,
   });
+  const t = useTranslations("datastores");
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
@@ -188,8 +190,12 @@ DatasourcesPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/datastores/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

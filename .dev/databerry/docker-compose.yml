@@ -2,6 +2,7 @@ version: "3"
 
 services:
 
+
   maildev:
 # Can be access in browser at localhost:1080.
 # Signin mail can be show at this adress.

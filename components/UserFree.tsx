@@ -1,8 +1,8 @@
-import { SubscriptionPlan } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import React from 'react';
+import { SubscriptionPlan } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import React from "react";
 
-import accountConfig from '@app/utils/account-config';
+import accountConfig from "@app/utils/account-config";
 
 type Props = {
   children?: any;

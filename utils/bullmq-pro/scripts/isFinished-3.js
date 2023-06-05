@@ -39,8 +39,8 @@ end
 return 0
 `;
 export const isFinished = {
-    name: 'isFinished',
-    content,
-    keys: 3,
+  name: "isFinished",
+  content,
+  keys: 3,
 };
 //# sourceMappingURL=isFinished-3.js.map

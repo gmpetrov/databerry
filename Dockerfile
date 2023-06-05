@@ -13,9 +13,9 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
+    if [ -f yarn.lock ]; then yarn add prisma && yarn --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then npm i -g prisma && npm ci; \
+    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i prisma ; \
     else echo "Lockfile not found." && exit 1; \
     fi
 RUN rm -rf node_modules/.pnpm/canvas@2.11.0
@@ -68,9 +68,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # TODO: Improve this. Output file tracing is removing modules needed for workers
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
+    if [ -f yarn.lock ]; then yarn add prisma && yarn --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then npm i -g prisma && npm ci; \
+    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i prisma ; \
     else echo "Lockfile not found." && exit 1; \
     fi
 RUN rm -rf node_modules/.pnpm/canvas@2.11.0

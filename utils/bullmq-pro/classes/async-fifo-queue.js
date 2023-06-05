@@ -1,2 +1,2 @@
-export { AsyncFifoQueue } from 'bullmq';
+export { AsyncFifoQueue } from "bullmq";
 //# sourceMappingURL=async-fifo-queue.js.map

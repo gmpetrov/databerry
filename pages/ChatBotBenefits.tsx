@@ -1,13 +1,10 @@
 import {
   BoltIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
   CurrencyDollarIcon,
-  HeartIcon,
-  PencilSquareIcon,
   SparklesIcon,
   SwatchIcon,
-  TrashIcon,
 } from "@heroicons/react/24/outline";
+import { useTranslations } from "next-intl";
 
 const features = [
   {
@@ -37,6 +34,8 @@ const features = [
 ];
 
 export default function Example() {
+  const t = useTranslations("chatbots");
+
   return (
     <div className="py-24 bg-black sm:py-32">
       <div className="px-6 mx-auto max-w-7xl lg:px-8">
@@ -67,3 +66,13 @@ export default function Example() {
     </div>
   );
 }
+
+
+export const getStaticProps = ({ locale, locales }) => {
+  return {
+    props: {
+      locale,
+      locales
+    }
+  }
+};

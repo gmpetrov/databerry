@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function Cta() {
+  const t = useTranslations("cta");
+
   return (
     <div className="relative overflow-hidden bg-black isolate">
       <div className="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
@@ -48,3 +51,12 @@ export default function Cta() {
     </div>
   );
 }
+
+export const getStaticProps = ({ locale, locales }) => {
+  return {
+    props: {
+      locale,
+      locales
+    }
+  }
+};

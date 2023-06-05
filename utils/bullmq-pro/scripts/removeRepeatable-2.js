@@ -26,8 +26,8 @@ end
 return 1
 `;
 export const removeRepeatable = {
-    name: 'removeRepeatable',
-    content,
-    keys: 2,
+  name: "removeRepeatable",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=removeRepeatable-2.js.map

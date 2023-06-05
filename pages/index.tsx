@@ -1,10 +1,10 @@
-import { useColorScheme } from '@mui/joy/styles';
-import { GetStaticPropsContext } from 'next';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-// import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
-// import { Testimonials } from '@app/landing-page/components/Testimonials';
-import { useEffect } from 'react';
+import { useColorScheme } from "@mui/joy/styles";
+import { GetStaticPropsContext } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+
 
 import CompanyLogos from '@app/components/landing-page/CompanyLogos';
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
@@ -13,18 +13,17 @@ import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
 import { HeroChatGPTPlugin } from '@app/components/landing-page/HeroChatGPTPlugin';
 
-// import { Pricing } from '@app/landing-page/components/Pricing';
 import OpenGraph from "../components/OpenGraph";
-import { absUrl } from '../core/helpers';
-import useOpenGraph from '../hooks/useOpenGraph';
+import { absUrl } from "../core/helpers";
+import useOpenGraph from "../hooks/useOpenGraph";
 
-import ChatBotBenefits from './ChatBotBenefits';
-import Cta from './Cta';
+import ChatBotBenefits from "./ChatBotBenefits";
+import Cta from "./Cta";
 import FAQ from "./FAQ";
-import FeaturesForChatGPTPlugin from './FeaturesForChatGPTPlugin';
+import FeaturesForChatGPTPlugin from "./FeaturesForChatGPTPlugin";
 import FeaturesForCustomerSupport from "./FeaturesForCustomerSupport";
-import FeaturesForDevs from './FeaturesForDevs';
-import FeaturesForSlack from './FeaturesForSlack';
+import FeaturesForDevs from "./FeaturesForDevs";
+import FeaturesForSlack from "./FeaturesForSlack";
 
 export default function Home() {
   const ogProperties = useOpenGraph({
@@ -42,6 +41,7 @@ export default function Home() {
   });
   const router = useRouter();
   const { setMode } = useColorScheme();
+  const t = useTranslations("home");
 
   useEffect(() => {
     // Force dark mode on the landing page
@@ -49,20 +49,22 @@ export default function Home() {
       window.location.href = router.basePath + newPath;
     };
 
-    router.events.on('routeChangeStart', handleRouteChange);
+    router.events.on("routeChangeStart", handleRouteChange);
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
+      router.events.off("routeChangeStart", handleRouteChange);
     };
   }, [router]);
 
   useEffect(() => {
-    setMode('dark');
+    setMode("dark");
   }, []);
   return (
     <>
       <Head>
-        <title>GriotAI - Build your ChatGPT Agent Trained on your own data</title>
+        <title>
+          GriotAI - Build your ChatGPT Agent Trained on your own data
+        </title>
         <meta
           name="description"
           content="GriotAI offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
@@ -114,3 +116,12 @@ export default function Home() {
   );
 }
 
+
+export const getStaticProps = ({ locale, locales }) => {
+  return {
+    props: {
+      locale,
+      locales
+    }
+  }
+};

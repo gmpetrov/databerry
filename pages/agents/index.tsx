@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 import useSWR from "swr";
@@ -52,6 +53,7 @@ export default function AgentsPage() {
     isAgentModalOpen: false,
     isUsageLimitModalOpen: false,
   });
+  const t = useTranslations("agents");
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
     "/api/agents",
@@ -207,8 +209,12 @@ AgentsPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/agents/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

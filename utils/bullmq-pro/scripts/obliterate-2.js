@@ -227,8 +227,8 @@ else
 end
 `;
 export const obliterate = {
-    name: 'obliterate',
-    content,
-    keys: 2,
+  name: "obliterate",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=obliterate-2.js.map

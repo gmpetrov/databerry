@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -54,6 +55,7 @@ export default function DatasourcesPage() {
   const [state, setState] = useStateReducer({
     isSlackModalOpen: false,
   });
+  const t = useTranslations("datasources");
 
   return (
     <Box
@@ -143,8 +145,9 @@ export default function DatasourcesPage() {
                   alt="crisp logo"
                   style={{
                     maxWidth: "100%",
-                    height: "auto"
-                  }}></Image>
+                    height: "auto",
+                  }}
+                ></Image>
               </Link>
             </Stack>
           </Box>
@@ -227,8 +230,9 @@ export default function DatasourcesPage() {
                 alt="slack logo"
                 style={{
                   maxWidth: "100%",
-                  height: "auto"
-                }}></Image>
+                  height: "auto",
+                }}
+              ></Image>
             </Stack>
           </Box>
 
@@ -294,8 +298,12 @@ DatasourcesPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/datasources/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

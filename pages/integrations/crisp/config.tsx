@@ -1,27 +1,28 @@
-import Alert from '@mui/joy/Alert';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Option from '@mui/joy/Option';
-import Select from '@mui/joy/Select';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { Agent, Subscription } from '@prisma/client';
-import axios from 'axios';
-import { GetServerSidePropsContext } from 'next';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
-import superjson from 'superjson';
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
+import Option from "@mui/joy/Option";
+import Select from "@mui/joy/Select";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { Agent, Subscription } from "@prisma/client";
+import axios from "axios";
+import { GetServerSidePropsContext } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
+import superjson from "superjson";
 
-import Logo from '@app/components/Logo';
-import { getConnectedWebsites } from '@app/utils/crisp';
-import prisma from '@app/utils/prisma-client';
+import Logo from "@app/components/Logo";
+import { getConnectedWebsites } from "@app/utils/crisp";
+import prisma from "@app/utils/prisma-client";
 
 export default function CrispConfig(props: { agent: Agent }) {
   const session = useSession();
@@ -33,6 +34,8 @@ export default function CrispConfig(props: { agent: Agent }) {
   const [inputValue, setInputValue] = useState(
     (props as any)?.agent?.owner?.apiKeys?.[0]?.key || ""
   );
+  const t = useTranslations("crisp");
+
   const [submitError, setSubmitError] = useState("");
   const [agents, setAgents] = useState<Agent[]>([]);
   const [currentAgent, setCurrentAgent] = useState<Agent | undefined>(
@@ -41,17 +44,17 @@ export default function CrispConfig(props: { agent: Agent }) {
   const subscription = (props?.agent as any)?.owner
     ?.subscriptions?.[0] as Subscription;
   const [isPremium, setIsPremium] = useState(
-    subscription?.plan && subscription?.plan !== 'level_0'
+    subscription?.plan && subscription?.plan !== "level_0"
   );
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState("");
   const user = session?.data?.user;
 
   useEffect(() => {
     (async () => {
       {
         if (user) {
-          const apiKeys = await axios.get('/api/accounts/api-keys');
-          const { data } = await axios.get('/api/agents');
+          const apiKeys = await axios.get("/api/accounts/api-keys");
+          const { data } = await axios.get("/api/agents");
 
           const apiKey = apiKeys.data[0]?.key;
           setIsPremium(user?.isPremium);
@@ -75,7 +78,7 @@ export default function CrispConfig(props: { agent: Agent }) {
       setAgents(data);
       setIsApiKeyValid(true);
       const plan = data?.[0]?.owner?.subscriptions?.[0]?.plan;
-      const premium = plan && plan !== 'level_0';
+      const premium = plan && plan !== "level_0";
       setIsPremium(premium);
 
       console.log("agents", agents);
@@ -101,8 +104,8 @@ export default function CrispConfig(props: { agent: Agent }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          website_id: _urlParams.get('website_id'),
-          token: _urlParams.get('token'),
+          website_id: _urlParams.get("website_id"),
+          token: _urlParams.get("token"),
           apiKey: apiKey || inputValue,
           agentId: currentAgent?.id,
         }),
@@ -157,9 +160,9 @@ export default function CrispConfig(props: { agent: Agent }) {
                     <FormLabel>GriotAI API Key</FormLabel>
                     <Alert variant="outlined" sx={{ mb: 2 }}>
                       <Stack>
-                        You can find your API Key in your GriotAI{' '}
+                        You can find your API Key in your GriotAI{" "}
                         <Link
-                          href={'https://griotai.kasetolabs.xyz/account'}
+                          href={"https://griotai.kasetolabs.xyz/account"}
                           target="_blank"
                         >
                           <Typography color="primary">
@@ -219,7 +222,7 @@ export default function CrispConfig(props: { agent: Agent }) {
                 </Button>
               )}
               {isPremium && currentAgent && (
-                <Stack direction={'row'} spacing={1} ml="auto">
+                <Stack direction={"row"} spacing={1} ml="auto">
                   <Button
                     size="md"
                     onClick={() => {

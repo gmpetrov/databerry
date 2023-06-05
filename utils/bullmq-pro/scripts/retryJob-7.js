@@ -128,8 +128,8 @@ else
 end
 `;
 export const retryJob = {
-    name: 'retryJob',
-    content,
-    keys: 7,
+  name: "retryJob",
+  content,
+  keys: 7,
 };
 //# sourceMappingURL=retryJob-7.js.map

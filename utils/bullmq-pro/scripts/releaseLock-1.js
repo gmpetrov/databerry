@@ -15,8 +15,8 @@ else
 end
 `;
 export const releaseLock = {
-    name: 'releaseLock',
-    content,
-    keys: 1,
+  name: "releaseLock",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=releaseLock-1.js.map

@@ -1,42 +1,40 @@
-import AddIcon from '@mui/icons-material/Add';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
-import Alert from '@mui/joy/Alert';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { Prisma, SubscriptionPlan } from '@prisma/client';
-import axios from 'axios';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import useSWR from 'swr';
-import { z } from 'zod';
+import AddIcon from "@mui/icons-material/Add";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { Prisma, SubscriptionPlan } from "@prisma/client";
+import axios from "axios";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { ReactElement } from "react";
+import * as React from "react";
+import useSWR from "swr";
 
-import Layout from '@app/components/Layout';
-import UserFree from '@app/components/UserFree';
-import UserPremium from '@app/components/UserPremium';
-import useStateReducer from '@app/hooks/useStateReducer';
-import accountConfig from '@app/utils/account-config';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import Layout from "@app/components/Layout";
+import UserFree from "@app/components/UserFree";
+import UserPremium from "@app/components/UserPremium";
+import useStateReducer from "@app/hooks/useStateReducer";
+import accountConfig from "@app/utils/account-config";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
-import { getApiKeys } from './api/accounts/api-keys';
+import { getApiKeys } from "./api/accounts/api-keys";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -45,9 +43,10 @@ export default function AccountPage() {
     isLoadingCreateApiKey: false,
     isLoadingDeleteApiKey: false,
   });
+  const t = useTranslations("accounts");
 
   const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-    '/api/accounts/api-keys',
+    "/api/accounts/api-keys",
     fetcher,
     {
       refreshInterval: 5000,
@@ -222,7 +221,7 @@ export default function AccountPage() {
 
       <Box mb={4}>
         <UserFree>
-          <Card variant="outlined" sx={{ bgcolor: 'black' }}>
+          <Card variant="outlined" sx={{ bgcolor: "black" }}>
             <stripe-pricing-table
               pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
               publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
@@ -334,7 +333,7 @@ export default function AccountPage() {
               >
                 <Typography>{`${
                   currentPlan?.limits?.maxFileSize / 1000000
-                }MB File upload limit`}</Typography>
+                } MB File upload limit`}</Typography>
               </Typography>
               <Typography
                 level="h6"
@@ -342,7 +341,7 @@ export default function AccountPage() {
               >
                 <Typography>{`${
                   currentPlan?.limits?.maxDataProcessing / 1000000
-                }MB Data processing (embeddings) / month`}</Typography>
+                } MB Data processing (embeddings) / month`}</Typography>
               </Typography>
             </Stack>
 
@@ -371,7 +370,7 @@ export default function AccountPage() {
                 onClick={handleClickManageSubscription}
                 endDecorator={<ArrowForwardRoundedIcon />}
                 variant="plain"
-                sx={{ ml: 'auto' }}
+                sx={{ ml: "auto" }}
               >
                 Upgrade / Manage Subscription
               </Button>
@@ -414,21 +413,21 @@ export default function AccountPage() {
                 <>
                   <Stack
                     key={each.id}
-                    direction={'row'}
+                    direction={"row"}
                     gap={2}
                     onClick={() => {
                       navigator.clipboard.writeText(each.key);
-                      toast.success('Copied!', {
-                        position: 'bottom-center',
+                      toast.success("Copied!", {
+                        position: "bottom-center",
                       });
                     }}
                   >
                     <Alert
                       color="neutral"
                       sx={{
-                        width: '100%',
-                        ':hover': {
-                          cursor: 'copy',
+                        width: "100%",
+                        ":hover": {
+                          cursor: "copy",
                         },
                       }}
                     >
@@ -484,8 +483,12 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/accounts/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

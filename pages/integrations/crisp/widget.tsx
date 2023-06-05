@@ -13,6 +13,7 @@ import axios from "axios";
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import Logo from "@app/components/Logo";
@@ -26,6 +27,7 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
   // const [inputValue, setInputValue] = useState(props.apiKey);
   const [submitError, setSubmitError] = useState("");
   const router = useRouter();
+  const t = useTranslations("crisp");
 
   // const sendConfig = async (e: any) => {
   //   e.stopPropagation();

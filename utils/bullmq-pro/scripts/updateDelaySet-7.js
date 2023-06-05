@@ -119,8 +119,8 @@ end
 return {nextTimestamp, id}
 `;
 export const updateDelaySet = {
-    name: 'updateDelaySet',
-    content,
-    keys: 7,
+  name: "updateDelaySet",
+  content,
+  keys: 7,
 };
 //# sourceMappingURL=updateDelaySet-7.js.map

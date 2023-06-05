@@ -3,12 +3,13 @@ import "@app/styles/globals.css";
 import "@app/styles/preflight.css";
 import "@app/styles/nprogress.css";
 
-import type { AppProps } from 'next/app';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { SessionProvider } from 'next-auth/react';
-import { useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
+import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { SessionProvider } from "next-auth/react";
+import { NextIntlProvider } from "next-intl";
+import { useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 import DashboardThemeProvider from "@app/components/DashboardThemeProvider";
 import { NextPageWithLayout, RouteNames } from "@app/types";
@@ -50,12 +51,14 @@ export default function App({
   }
 
   return (
-    <DashboardThemeProvider {...otherProps}>
-      <TopProgressBar />
-      <SessionProvider>
-        <Toaster />
-        {getLayout(<Component {...pageProps} />)}
-      </SessionProvider>
-    </DashboardThemeProvider>
+    <NextIntlProvider messages={pageProps.messages}>
+      <DashboardThemeProvider {...otherProps}>
+        <TopProgressBar />
+        <SessionProvider>
+          <Toaster />
+          {getLayout(<Component {...pageProps} />)}
+        </SessionProvider>
+      </DashboardThemeProvider>
+    </NextIntlProvider>
   );
 }

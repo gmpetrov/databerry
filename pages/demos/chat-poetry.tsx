@@ -22,6 +22,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -44,6 +45,7 @@ export default function DatasourcesPage() {
     history: [] as { from: "human" | "agent"; message: string }[],
     loading: false,
   });
+  const t = useTranslations("poetry");
 
   const methods = useForm<z.infer<typeof Schema>>({
     resolver: zodResolver(Schema),

@@ -167,8 +167,8 @@ end
 rcall("DEL", KEYS[4])
 `;
 export const drain = {
-    name: 'drain',
-    content,
-    keys: 4,
+  name: "drain",
+  content,
+  keys: 4,
 };
 //# sourceMappingURL=drain-4.js.map

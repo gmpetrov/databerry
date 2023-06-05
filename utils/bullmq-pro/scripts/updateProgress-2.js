@@ -18,8 +18,8 @@ else
 end
 `;
 export const updateProgress = {
-    name: 'updateProgress',
-    content,
-    keys: 2,
+  name: "updateProgress",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=updateProgress-2.js.map

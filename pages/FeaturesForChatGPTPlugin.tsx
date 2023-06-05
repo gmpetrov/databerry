@@ -10,21 +10,21 @@ import {
   ServerIcon,
   SparklesIcon,
   StarIcon,
-} from '@heroicons/react/20/solid';
+} from "@heroicons/react/20/solid";
 
 const features = [
   {
-    name: 'Talk to your data with ChatGPT',
+    name: "Talk to your data with ChatGPT",
     description: `Imagine the sheer power of conversing with personal documents through ChatGPT.`,
     icon: ArrowDownOnSquareStackIcon,
   },
   {
-    name: 'Brand Awareness',
+    name: "Brand Awareness",
     description: `Leverage the Plugin Store to captivate users and skyrocket your brand awareness. `,
     icon: StarIcon,
   },
   {
-    name: 'Stats (Coming soon)',
+    name: "Stats (Coming soon)",
     description: `Get insights and statistics on how users are interacting with your Plugin!`,
     icon: ChartPieIcon,
   },

@@ -1,11 +1,12 @@
-import { CheckIcon } from '@heroicons/react/20/solid';
-import Card from '@mui/joy/Card';
-import { useColorScheme } from '@mui/joy/styles';
-import clsx from 'clsx';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { CheckIcon } from "@heroicons/react/20/solid";
+import Card from "@mui/joy/Card";
+import { useColorScheme } from "@mui/joy/styles";
+import clsx from "clsx";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 import { Footer } from "@app/components/landing-page/Footer";
 import { Header } from "@app/components/landing-page/Header";
@@ -29,6 +30,8 @@ export default function Pricing() {
       "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
     type: "website",
   });
+  const t = useTranslations("pricing");
+
   return (
     <>
       <Head>
@@ -74,8 +77,8 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_0"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'Manual data synching',
-      'Access to GriotAI API',
+      "Manual data synching",
+      "Access to GriotAI API",
       // 'ChatGPT plugin',
     ],
     mostPopular: false,
@@ -96,20 +99,20 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_1"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'Manual data synching',
-      'ChatGPT plugin',
-      `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
-      'Access to Crisp Plugin',
-      'Access to Slack Bot',
+      "Manual data synching",
+      "ChatGPT plugin",
+      `Website loader limited to  ${accountConfig["level_1"].limits.maxWebsiteURL} Pages`,
+      "Access to Crisp Plugin",
+      "Access to Slack Bot",
     ],
     mostPopular: false,
   },
   {
-    name: 'Pro',
-    id: 'tier-pro',
-    href: '/signin',
-    price: { monthly: '$99', annually: '$990' },
-    description: 'Dedicated support and for your company.',
+    name: "Pro",
+    id: "tier-pro",
+    href: "/signin",
+    price: { monthly: "$99", annually: "$990" },
+    description: "Dedicated support and for your company.",
     features: [
       `${accountConfig["level_2"].limits.maxAgents} agent(s)`,
       `${accountConfig["level_2"].limits.maxDatastores} datastore(s)`,
@@ -120,9 +123,9 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_2"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'auto synch datasources',
-      'ChatGPT plugin',
-      `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
+      "auto synch datasources",
+      "ChatGPT plugin",
+      `Website loader limited to  ${accountConfig["level_2"].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: true,
   },
@@ -143,9 +146,9 @@ const tiers = [
       `Data processing limited to ${
         accountConfig["level_3"].limits.maxDataProcessing / 1000000
       }MB / month`,
-      'auto synch datasources',
-      'ChatGPT plugin',
-      `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
+      "auto synch datasources",
+      "ChatGPT plugin",
+      `Website loader limited to  ${accountConfig["level_3"].limits.maxWebsiteURL} Pages`,
     ],
     mostPopular: false,
   },
@@ -159,7 +162,7 @@ const ForceDarkMode = () => {
   const { setMode } = useColorScheme();
 
   useEffect(() => {
-    setMode('dark');
+    setMode("dark");
   }, []);
 
   return null;
@@ -169,21 +172,22 @@ function Example() {
   const { setMode } = useColorScheme();
   const router = useRouter();
   const [frequency] = useState(frequencies[0]);
+  const t = useTranslations("pricing");
 
   useEffect(() => {
     const handleRouteChange = (newPath: string) => {
       window.location.href = router.basePath + newPath;
     };
 
-    router.events.on('routeChangeStart', handleRouteChange);
+    router.events.on("routeChangeStart", handleRouteChange);
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
+      router.events.off("routeChangeStart", handleRouteChange);
     };
   }, [router]);
 
   useEffect(() => {
-    setMode('dark');
+    setMode("dark");
   }, []);
 
   return (
@@ -308,3 +312,13 @@ function Example() {
     </div>
   );
 }
+
+
+export const getStaticProps = ({ locale, locales }) => {
+  return {
+    props: {
+      locale,
+      locales
+    }
+  }
+};

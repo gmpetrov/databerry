@@ -1,18 +1,18 @@
-import { MessageFrom, SubscriptionPlan, Usage } from '@prisma/client';
-import Cors from 'cors';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { MessageFrom, SubscriptionPlan, Usage } from "@prisma/client";
+import Cors from "cors";
+import { NextApiRequest, NextApiResponse } from "next";
 
-import { ChatRequest } from '@app/types/dtos';
-import { AppNextApiRequest } from '@app/types/index';
-import accountConfig from '@app/utils/account-config';
-import AgentManager from '@app/utils/agent';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import ConversationManager from '@app/utils/conversation';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import prisma from '@app/utils/prisma-client';
-import runMiddleware from '@app/utils/run-middleware';
-import { validate } from '@app/utils/validate';
+import { ChatRequest } from "@app/types/dtos";
+import { AppNextApiRequest } from "@app/types/index";
+import accountConfig from "@app/utils/account-config";
+import AgentManager from "@app/utils/agent";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import ConversationManager from "@app/utils/conversation";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
+import prisma from "@app/utils/prisma-client";
+import runMiddleware from "@app/utils/run-middleware";
+import { validate } from "@app/utils/validate";
 
 const handler = createApiHandler();
 
@@ -59,7 +59,7 @@ export const queryAgent = async (
       conversations: {
         where: {
           agentId: agentId,
-          visitorId: data.visitorId || 'UNKNOWN',
+          visitorId: data.visitorId || "UNKNOWN",
         },
         take: 1,
         // include: {

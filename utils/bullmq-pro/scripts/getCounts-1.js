@@ -31,8 +31,8 @@ end
 return results
 `;
 export const getCounts = {
-    name: 'getCounts',
-    content,
-    keys: 1,
+  name: "getCounts",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=getCounts-1.js.map

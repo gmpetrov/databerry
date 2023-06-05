@@ -1,2 +1,2 @@
-export { UnrecoverableError } from 'bullmq';
+export { UnrecoverableError } from "bullmq";
 //# sourceMappingURL=unrecoverable-error.js.map

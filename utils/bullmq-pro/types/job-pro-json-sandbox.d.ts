@@ -1,4 +1,4 @@
-import { JobJsonSandbox } from 'bullmq';
+import { JobJsonSandbox } from "bullmq";
 export declare type JobProJsonSandbox = JobJsonSandbox & {
-    gid?: string | number;
+  gid?: string | number;
 };

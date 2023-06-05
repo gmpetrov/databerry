@@ -1,5 +1,5 @@
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import {
   Alert,
   Button,
@@ -16,20 +16,20 @@ import {
   Select,
   Stack,
   Typography,
-} from '@mui/joy';
-import { Prisma } from '@prisma/client';
-import axios from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import useSWR from 'swr';
-import { z } from 'zod';
+} from "@mui/joy";
+import { Prisma } from "@prisma/client";
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import useSWR from "swr";
+import { z } from "zod";
 
-import useStateReducer from '@app/hooks/useStateReducer';
-import { getSlackIntegrations } from '@app/pages/api/integrations/slack/integrations';
-import { fetcher } from '@app/utils/swr-fetcher';
+import useStateReducer from "@app/hooks/useStateReducer";
+import { getSlackIntegrations } from "@app/pages/api/integrations/slack/integrations";
+import { fetcher } from "@app/utils/swr-fetcher";
 
 type Props = {
   isOpen: boolean;
@@ -61,7 +61,7 @@ export default function SlackSettingsModal(props: Props) {
         agentId: props.agentId,
       })}`
     ),
-      '_blank';
+      "_blank";
   };
 
   const handleDelete = async (id: string) => {
@@ -91,13 +91,13 @@ export default function SlackSettingsModal(props: Props) {
       open={props.isOpen}
       onClose={props.handleCloseModal}
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         p: 2,
       }}
     >
-      <Card sx={{ width: '100%', maxWidth: 400 }}>
+      <Card sx={{ width: "100%", maxWidth: 400 }}>
         <Typography level="h4">Slack Bot</Typography>
         <Typography color="neutral" level="h6">
           Settings
@@ -105,7 +105,7 @@ export default function SlackSettingsModal(props: Props) {
         <Divider sx={{ my: 2 }}></Divider>
 
         {isLoading ? (
-          <CircularProgress size="sm" sx={{ mx: 'auto' }} />
+          <CircularProgress size="sm" sx={{ mx: "auto" }} />
         ) : (
           <>
             <FormLabel>Active connections</FormLabel>
@@ -145,11 +145,11 @@ export default function SlackSettingsModal(props: Props) {
             )}
 
             <form className="flex flex-col">
-              <Stack sx={{ ml: 'auto' }} direction={'row'} gap={1}>
+              <Stack sx={{ ml: "auto" }} direction={"row"} gap={1}>
                 <Button
                   onClick={() => onSubmit()}
                   endDecorator={<ArrowForwardRoundedIcon />}
-                  sx={{ mt: 4, ml: 'auto' }}
+                  sx={{ mt: 4, ml: "auto" }}
                   // disabled={!methods.formState.isValid}
                 >
                   Connect to Slack

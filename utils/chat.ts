@@ -1,7 +1,7 @@
-import { Datastore, MessageFrom, PromptType } from '@prisma/client';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { OpenAI } from 'langchain/llms/openai';
-import { AIChatMessage, HumanChatMessage } from 'langchain/schema';
+import { Datastore, MessageFrom, PromptType } from "@prisma/client";
+import { ChatOpenAI } from "langchain/chat_models/openai";
+import { OpenAI } from "langchain/llms/openai";
+import { AIChatMessage, HumanChatMessage } from "langchain/schema";
 
 import { ChatResponse } from "@app/types";
 
@@ -123,7 +123,7 @@ const chat = async ({
   }
 
   const model = new ChatOpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: "gpt-3.5-turbo",
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [

@@ -1,21 +1,17 @@
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
-import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
-import RocketLaunchRounded from '@mui/icons-material/RocketLaunchRounded';
-import Star from '@mui/icons-material/Star';
-import Alert from '@mui/joy/Alert';
-import Avatar from '@mui/joy/Avatar';
-import AvatarGroup from '@mui/joy/AvatarGroup';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react';
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import RocketLaunchRounded from "@mui/icons-material/RocketLaunchRounded";
+import Alert from "@mui/joy/Alert";
+import Button from "@mui/joy/Button";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Container } from '@app/components/landing-page/Container';
-import { RouteNames } from '@app/types';
+
+import { Container } from "@app/components/landing-page/Container";
+import { RouteNames } from "@app/types";
 
 export function HeroChatGPTPlugin() {
   return (
@@ -33,10 +29,10 @@ export function HeroChatGPTPlugin() {
           Build a ChatGPT Plugin in minutes!
           <Link
             href="/#chatgpt-plugin"
-            style={{ background: 'none' }}
+            style={{ background: "none" }}
             className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
           >
-            Learn More{' '}
+            Learn More{" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="icon icon-tabler icon-tabler-arrow-narrow-right"
@@ -114,19 +110,18 @@ export function HeroChatGPTPlugin() {
           </div>
         </Alert> */}
 
-        <div className="flex flex-col space-y-8 text-center sm:space-y-0 sm:flex-row sm:space-x-8 sm:text-left">
-          <Stack sx={{ width: '100%' }}>
-            <h2 className="mb-4 text-2xl font-bold text-violet-300">
-              Build Your Own
-            </h2>
-            <h1 className=" text-4xl font-bold !leading-snug tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl">
-              {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
-              {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}
-              {`ChatGPT Agent\nTrained On\nYour Custom Data`}
-              {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
-            </h1>
+        <h2 className="mb-4 text-2xl font-bold text-violet-300">
+          Build Your Own
+        </h2>
+        <h1 className="max-w-lg mx-auto text-4xl font-bold !leading-snug tracking-tight text-center text-white whitespace-pre-wrap font-display sm:text-5xl sm:text-center">
+          {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
+          {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}
+          {`ChatGPT Agent\nTrained On\nYour Custom Data`}
+          {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
+        </h1>
+        {/* 
+        <a
 
-            {/* <a
           href="https://www.producthunt.com/posts/databerry-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-databerry&#0045;ai"
           target="_blank"
         >
@@ -146,31 +141,46 @@ export function HeroChatGPTPlugin() {
 
             {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
 
-            <p className="max-w-md mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:mx-0 sm:max-w-lg">
-              With our{' '}
-              <strong className="text-violet-300">no-code platform</strong>, you
-              can create a{' '}
-              <strong className="text-violet-300">custom AI chatbot</strong>{' '}
-              trained on your data in seconds. Streamline customer support,
-              onboard new team members, and more!
-              {/* <ul className='mx-auto text-left list-disc'>
+        <p className="max-w-sm mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:max-w-lg">
+          With our <strong className="text-violet-300">no-code platform</strong>
+          , you can create a{" "}
+          <strong className="text-violet-300">custom AI chatbot</strong> trained
+          on your data in seconds. Streamline customer support, onboard new team
+          members, and more!
+          {/* <ul className='mx-auto text-left list-disc'>
+
             <li>Connect custom data to ChatGPT</li>
             <li>Connect custom data to ChatGPT</li>
           </ul> */}
             </p>
 
-            <Box
-              className="justify-center sm:justify-start"
-              sx={(theme) => ({
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 2,
-                mt: 4,
-                // textAlign: 'left',
-                '& > *': {
-                  flexShrink: 0,
-                },
-              })}
+        <Stack
+          direction={{
+            xs: "column",
+            sm: "row",
+          }}
+          justifyContent={"center"}
+          gap={2}
+          mt={6}
+        >
+          <Link target="_blank" href={"https://griotai.kasetolabs.xyz/signin"}>
+            <Button
+              variant="solid"
+              size="lg"
+              // startDecorator={<RocketLaunchRounded />}
+              sx={{ borderRadius: 100 }}
+            >{`⚡️ Get Started Now`}</Button>
+          </Link>
+          <Link
+            target="_blank"
+            href={"https://calendly.com/databerry-georges/15min"}
+          >
+            <Button
+              variant="outlined"
+              size="lg"
+              startDecorator={<PhoneRoundedIcon />}
+              sx={{ borderRadius: 100 }}
+
             >
               <Stack gap={1}>
                 <Stack direction="row" gap={1}>

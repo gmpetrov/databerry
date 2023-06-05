@@ -28,8 +28,8 @@ else
 end
 `;
 export const getGroupsByKey = {
-    name: 'getGroupsByKey',
-    content,
-    keys: 1,
+  name: "getGroupsByKey",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=getGroupsByKey-1.js.map

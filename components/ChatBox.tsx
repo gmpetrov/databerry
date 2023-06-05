@@ -1,18 +1,18 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import CircularProgress from '@mui/joy/CircularProgress';
-import IconButton from '@mui/joy/IconButton';
-import Input from '@mui/joy/Input';
-import Stack from '@mui/joy/Stack';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import CircularProgress from "@mui/joy/CircularProgress";
+import IconButton from "@mui/joy/IconButton";
+import Input from "@mui/joy/Input";
+import Stack from "@mui/joy/Stack";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { z } from "zod";
 
-type Message = { from: 'human' | 'agent'; message: string; createdAt?: Date };
+type Message = { from: "human" | "agent"; message: string; createdAt?: Date };
 
 type Props = {
   messages: Message[];
@@ -121,34 +121,34 @@ function ChatBox({
           <Stack
             key={index}
             sx={{
-              mr: each.from === 'agent' ? 'auto' : 'none',
-              ml: each.from === 'human' ? 'auto' : 'none',
+              mr: each.from === "agent" ? "auto" : "none",
+              ml: each.from === "human" ? "auto" : "none",
             }}
           >
             <Card
               size="sm"
-              variant={'outlined'}
+              variant={"outlined"}
               className={
-                each.from === 'agent' ? 'message-agent' : 'message-human'
+                each.from === "agent" ? "message-agent" : "message-human"
               }
-              color={each.from === 'agent' ? 'primary' : 'neutral'}
+              color={each.from === "agent" ? "primary" : "neutral"}
               sx={{
-                whiteSpace: 'pre-wrap',
-                'ul, ol': {
-                  listStyleType: 'disc',
+                whiteSpace: "pre-wrap",
+                "ul, ol": {
+                  listStyleType: "disc",
                   pl: 2,
                   gap: 1,
                 },
                 a: {
-                  textDecoration: 'underline',
+                  textDecoration: "underline",
                 },
-                ['& p']: {
+                ["& p"]: {
                   m: 0,
                 },
                 gap: 2,
               }}
             >
-              <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget={'_blank'}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget={"_blank"}>
                 {each.message}
               </ReactMarkdown>
             </Card>
@@ -170,17 +170,17 @@ function ChatBox({
       {!readOnly && (
         <form
           style={{
-            maxWidth: '100%',
-            width: '100%',
-            position: 'relative',
-            display: 'flex',
+            maxWidth: "100%",
+            width: "100%",
+            position: "relative",
+            display: "flex",
 
-            marginTop: 'auto',
-            overflow: 'visible',
-            background: 'none',
-            justifyContent: 'center',
-            marginLeft: 'auto',
-            marginRight: 'auto',
+            marginTop: "auto",
+            overflow: "visible",
+            background: "none",
+            justifyContent: "center",
+            marginLeft: "auto",
+            marginRight: "auto",
             // paddingLeft: 'inherit',
             // paddingRight: 'inherit',
           }}
@@ -195,12 +195,12 @@ function ChatBox({
               direction="row"
               gap={1}
               sx={{
-                position: 'absolute',
+                position: "absolute",
                 zIndex: 1,
-                transform: 'translateY(-100%)',
-                flexWrap: 'wrap',
+                transform: "translateY(-100%)",
+                flexWrap: "wrap",
                 mt: -1,
-                left: '0',
+                left: "0",
               }}
             >
               {messageTemplates?.map((each, idx) => (
@@ -217,7 +217,7 @@ function ChatBox({
           )}
 
           <Input
-            sx={{ width: '100%' }}
+            sx={{ width: "100%" }}
             // disabled={!state.currentDatastoreId || state.loading}
             variant="outlined"
             endDecorator={
@@ -225,7 +225,7 @@ function ChatBox({
                 <SendRoundedIcon />
               </IconButton>
             }
-            {...methods.register('query')}
+            {...methods.register("query")}
           />
         </form>
       )}

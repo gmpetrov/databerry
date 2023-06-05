@@ -46,8 +46,8 @@ else
 end
 `;
 export const reprocessJob = {
-    name: 'reprocessJob',
-    content,
-    keys: 6,
+  name: "reprocessJob",
+  content,
+  keys: 6,
 };
 //# sourceMappingURL=reprocessJob-6.js.map

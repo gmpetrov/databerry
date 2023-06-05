@@ -62,8 +62,8 @@ end
 return results
 `;
 export const getRanges = {
-    name: 'getRanges',
-    content,
-    keys: 1,
+  name: "getRanges",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=getRanges-1.js.map
