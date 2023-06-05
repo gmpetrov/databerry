@@ -55,7 +55,7 @@ export default class AgentManager {
     return this.runChain(input);
   }
 
-  async getSingleDatastoreChain() {}
+  async getSingleDatastoreChain() { }
 
   async runChain(query: string) {
     const { OpenAI } = await import('langchain/llms/openai');
@@ -70,9 +70,8 @@ export default class AgentManager {
       if (tool.type === ToolType.datastore) {
         const t = new DynamicTool({
           name: tool?.datastore?.name!,
-          description: `QA - useful for when you need to ask questions about: ${
-            tool?.datastore?.name
-          } - ${tool?.datastore?.description!}}}`,
+          description: `QA - useful for when you need to ask questions about: ${tool?.datastore?.name
+            } - ${tool?.datastore?.description!}}}`,
           func: async () => {
             const { answer } = await chat({
               datastore: tool.datastore as any,
@@ -113,7 +112,7 @@ export default class AgentManager {
   {agent_scratchpad}`),
     ]);
 
-    const llm = new ChatOpenAI({});
+    const llm = new ChatOpenAI({}, { basePath: process.env.OPENAI_API_BASE });
 
     const llmChain = new LLMChain({
       prompt: chatPrompt,
