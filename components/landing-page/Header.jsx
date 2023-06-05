@@ -126,15 +126,13 @@ export function Header() {
               <Menu />
 
               <NavLink href="/pricing">Pricing</NavLink>
-              <NavLink href="https://github.com/SergeWilfried/griotai">
+              <NavLink href="https://github.com/SergeWilfried/griotai" target={'_blank'}>
                 GitHub
               </NavLink>
-              <NavLink href="#">Docs</NavLink>
-
-              <NavLink
-                href="https://griotai.getrewardful.com/signup"
-                target={"_blank"}
-              >
+              <NavLink href="#" target={'_blank'}>
+                Docs
+              </NavLink>
+              <NavLink href="https://griotai.getrewardful.com/signup" target={"_blank"}>
                 Affiliates
               </NavLink>
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
@@ -150,6 +148,7 @@ export function Header() {
                 Sign In
               </span>
             </Button> */}
+            {/* Change following link href with /signin for local signin */}
             <Link href="https://griotai.kasetolabs.xyz/signin">
               <Button variant="outlined" sx={{ borderRadius: 100 }}>
                 Sign In

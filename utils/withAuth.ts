@@ -12,7 +12,12 @@ export const withAuth: (fn: any) => GetServerSideProps = (gssp) => {
       return {
         redirect: {
           statusCode: 302,
-          destination: RouteNames.SIGN_IN,
+          destination: `${RouteNames.SIGN_IN}?redirect=${encodeURIComponent(
+            (ctx as any)?.req?.url
+          )}`,
+          //       ctx.req.url
+          //     )}`,
+          // destination: RouteNames.SIGN_IN,
           // destination: ctx.req.url.includes('_next')
           //   ? RouteNames.SIGN_IN
           //   : `${RouteNames.SIGN_IN}?redirect=${encodeURIComponent(
@@ -21,6 +26,8 @@ export const withAuth: (fn: any) => GetServerSideProps = (gssp) => {
         },
       };
     }
+
+    (ctx as any).req.session = session;
 
     return await gssp(ctx);
   };

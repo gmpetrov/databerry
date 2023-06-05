@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
 import { useEffect } from 'react';
 
+import CompanyLogos from '@app/components/landing-page/CompanyLogos';
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
 import { Footer } from '@app/components/landing-page/Footer';
@@ -84,6 +85,7 @@ export default function Home() {
       <main className="bg-black min-heigh-full">
         {/* <Hero /> */}
         <HeroChatGPTPlugin />
+        {/* <CompanyLogos /> */}
         {/* <Image
           src="/features.png"
           alt="features"
@@ -99,11 +101,11 @@ export default function Home() {
         <Pricing />
         <Faqs /> */}
         <FeaturesForDevs />
-        <FeaturesForChatGPTPlugin />
         <FeaturesForCustomerSupport />
-        <FeaturesForSlack />
+        {/* <FeaturesForChatGPTPlugin /> */}
+        {/* <FeaturesForSlack /> */}
         {/* <FeaturesForInfluencers /> */}
-        <ChatBotBenefits />
+        {/* <ChatBotBenefits /> */}
         <FAQ />
         <Cta />
       </main>

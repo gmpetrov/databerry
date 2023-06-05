@@ -5,6 +5,12 @@ export const s3 = new S3({
   accessKeyId: process.env.APP_AWS_ACCESS_KEY,
   secretAccessKey: process.env.APP_AWS_SECRET_KEY,
   region: process.env.APP_AWS_REGION,
+  ...(process.env.NEXT_PUBLIC_AWS_ENDPOINT
+    ? {
+        endpoint: process.env.NEXT_PUBLIC_AWS_ENDPOINT,
+        s3ForcePathStyle: true,
+      }
+    : {}),
 });
 
 export async function deleteFolderFromS3Bucket(

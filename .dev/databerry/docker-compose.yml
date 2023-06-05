@@ -2,25 +2,23 @@ version: "3"
 
 services:
 
+  maildev:
+# Can be access in browser at localhost:1080.
+# Signin mail can be show at this adress.
+# Server is accessible at localhost:1025, using app.env default config.
+    image: maildev/maildev
+    ports: 
+      - "1080:1080"
+      - "${MAILDEV_PORT}:1025"
   base-api:
+    extends:
+      file: docker-compose.app.yml
+      service: base-api
     depends_on:
       - qdrant
       - pgdb
       - redis
-    env_file:
-      - app.env
-    build:
-      context: ..
-      dockerfile: Dockerfile
-      args:
-        DBUSER: ${DBUSER}
-        DBPASS: ${DBPASS}
-        DBNAME: ${DBNAME}
-    volumes:
-      - ../..:/app/workspace
-    command: /bin/sh "/app/workspace/.dev/init.sh"
-    ports:
-      - "127.0.0.1:${PORT}:3000"
+      - minio
 
   qdrant:
     image: qdrant/qdrant:v1.1.3
@@ -62,7 +60,7 @@ services:
   redis:
     image: "redis:6"
     user: "999:999"
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+    # command: redis-server --requirepass ${REDIS_PASSWORD}
     ports:
       - "127.0.0.1:${REDIS_PORT}:6379"
     volumes:
@@ -78,9 +76,23 @@ services:
     volumes:
       - p3x-redis-ui-settings:/settings
 
+  # Use minio to mock s3
+  minio:
+    image: 'minio/minio:latest'
+    ports:
+      - '9000:9000'
+      - '9090:9090'
+    environment:
+      MINIO_ROOT_USER: 'root'
+      MINIO_ROOT_PASSWORD: 'password'
+    volumes:
+      - 'minio:/data/minio'
+    command: minio server /data/minio --console-address ":9090"
+
 volumes:
   pgdb-data:
   pgadmin-data:
   redis-data:
   redis-conf:
   p3x-redis-ui-settings:
+  minio:
