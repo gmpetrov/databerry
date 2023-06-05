@@ -139,7 +139,7 @@ const chat = async ({
         handleLLMNewToken: stream,
       },
     ],
-  });
+  }, { basePath: process.env.OPENAI_API_BASE });
 
   // Disable conversation history for now as it conflict with wrapped prompt
   // const messages = (history || [])?.map((each) => {
