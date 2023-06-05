@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+
+  maildev:
+    extends:
+      file: docker-compose.yml
+      service: maildev
+  qdrant:
+    extends:
+      file: docker-compose.yml
+      service: qdrant
+  pgdb:
+    extends:
+      file: docker-compose.yml
+      service: pgdb
+  pgadmin:
+    extends:
+      file: docker-compose.yml
+      service: pgadmin
+  redis:
+    extends:
+      file: docker-compose.yml
+      service: redis
+  redis-ui:
+    extends:
+      file: docker-compose.yml
+      service: redis-ui
+  minio:
+    extends:
+      file: docker-compose.yml
+      service: minio
+
+volumes:
+  pgdb-data:
+  pgadmin-data:
+  redis-data:
+  redis-conf:
+  p3x-redis-ui-settings:
+  minio:

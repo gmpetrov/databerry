@@ -23,14 +23,9 @@ export function Footer() {
                 </Button>
               </Link> */}
               <NavLink href="/pricing">Pricing</NavLink>
-              <NavLink href="https://github.com/SergeWilfried/griotai">
-                GitHub
-              </NavLink>
-              <NavLink href="#">Docs</NavLink>
-              <NavLink
-                href="https://griotai.getrewardful.com/signup"
-                target={"_blank"}
-              >
+              <NavLink href="https://github.com/SergeWilfried/griotai"></NavLink>
+              <NavLink href="#" target={"_blank"}>Docs</NavLink>
+              <NavLink href="https://griotai.getrewardful.com/signup" target={"_blank"}>
                 Affiliates
               </NavLink>
               <NavLink href="/privacy" target={"_blank"}>

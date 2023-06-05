@@ -86,6 +86,8 @@ pnpm dev
 
 # Run worker process
 pnpm worker:datasource-loader
+
+# or pnpm dev:all
 ```
 
 #### With docker compose
@@ -93,11 +95,22 @@ pnpm worker:datasource-loader
 First `cd .dev/griotai` then populate the config files `app.env` and `docker.env` as needed, then run the compose command:
 
 ```shell
-docker compose --env-file docker.env up
+pnpm docker:compose up
+
+# create .dev/databerry/app.env
+cp .dev/databerry/app.env.example .dev/databerry/app.env
+
+# create s3 dev bucker
+# go to http://localhost:9090 and create bucket databerry-dev
+# set bucket access policy to public
+# might need to add 127.0.0.1 minio to /etc/hosts in order to access public s3 files through http://minio...
 ```
 
 You can fully rebuild dockers with :
 
 ```shell
-docker compose --env-file docker.env up --build
+pnpm docker:compose up --build
+
+# Dev emails inbox (maildev)
+# visit http://localhost:1080
 ```
