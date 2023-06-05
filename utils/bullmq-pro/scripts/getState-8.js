@@ -66,8 +66,8 @@ end
 return "unknown"
 `;
 export const getState = {
-    name: 'getState',
-    content,
-    keys: 8,
+  name: "getState",
+  content,
+  keys: 8,
 };
 //# sourceMappingURL=getState-8.js.map

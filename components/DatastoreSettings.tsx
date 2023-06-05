@@ -1,47 +1,47 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import AddIcon from '@mui/icons-material/Add';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import Alert from '@mui/joy/Alert';
-import Avatar from '@mui/joy/Avatar';
-import AvatarGroup from '@mui/joy/AvatarGroup';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormHelperText from '@mui/joy/FormHelperText';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
-import Stack from '@mui/joy/Stack';
-import Textarea from '@mui/joy/Textarea';
-import Typography from '@mui/joy/Typography';
-import { Datastore, DatastoreVisibility, Prisma } from '@prisma/client';
-import axios from 'axios';
-import mime from 'mime-types';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import useSWRMutation from 'swr/mutation';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import Alert from "@mui/joy/Alert";
+import Avatar from "@mui/joy/Avatar";
+import AvatarGroup from "@mui/joy/AvatarGroup";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormHelperText from "@mui/joy/FormHelperText";
+import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
+import Stack from "@mui/joy/Stack";
+import Textarea from "@mui/joy/Textarea";
+import Typography from "@mui/joy/Typography";
+import { Datastore, DatastoreVisibility, Prisma } from "@prisma/client";
+import axios from "axios";
+import mime from "mime-types";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import useSWRMutation from "swr/mutation";
+import { z } from "zod";
 
-import { DatastoreFormsMap } from '@app/components/DatastoreForms';
-import Input from '@app/components/Input';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
-import useStateReducer from '@app/hooks/useStateReducer';
-import { createDatastore } from '@app/pages/api/datastores';
-import { GenerateUploadLinkRequest, RouteNames } from '@app/types';
-import { QdrantSchema as Schema } from '@app/types/models';
-import getDatastoreS3Url from '@app/utils/get-datastore-s3-url';
-import getRootDomain from '@app/utils/get-root-domain';
-import { postFetcher } from '@app/utils/swr-fetcher';
+import { DatastoreFormsMap } from "@app/components/DatastoreForms";
+import Input from "@app/components/Input";
+import useGetDatastoreQuery from "@app/hooks/useGetDatastoreQuery";
+import useStateReducer from "@app/hooks/useStateReducer";
+import { createDatastore } from "@app/pages/api/datastores";
+import { GenerateUploadLinkRequest, RouteNames } from "@app/types";
+import { QdrantSchema as Schema } from "@app/types/models";
+import getDatastoreS3Url from "@app/utils/get-datastore-s3-url";
+import getRootDomain from "@app/utils/get-root-domain";
+import { postFetcher } from "@app/utils/swr-fetcher";
 
-import UsageLimitCard from './UsageLimitCard';
-import UserFree from './UserFree';
-import UserPremium from './UserPremium';
+import UsageLimitCard from "./UsageLimitCard";
+import UserFree from "./UserFree";
+import UserPremium from "./UserPremium";
 
 type Props = {
   datastoreId: string;
@@ -88,7 +88,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
       await axios.put(uploadLinkRes.data, file, {
         headers: {
-          'Content-Type': file.type,
+          "Content-Type": file.type,
         },
       });
 
@@ -101,7 +101,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
       await getDatastoreQuery.mutate();
 
-      toast.success('Plugin icon updated successfully!');
+      toast.success("Plugin icon updated successfully!");
     } catch (err) {
       console.log(err, err);
     } finally {
@@ -115,7 +115,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
       await upsertDatastoreMutation.trigger({
         ...datastore,
-        pluginIconUrl: '',
+        pluginIconUrl: "",
       } as any);
 
       await getDatastoreQuery.mutate();
@@ -136,7 +136,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
       await getDatastoreQuery.mutate();
 
-      toast.success('Plugin updated successfully!');
+      toast.success("Plugin updated successfully!");
     } catch (err) {
     } finally {
       setState({ isUpdatingPlugin: false });
@@ -152,7 +152,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <input
             type="file"
             hidden
-            accept={'image/*'}
+            accept={"image/*"}
             // {...register('config.source')}
             // value={datastore?.pluginIconUrl || ''}
             onChange={handleUploadPluginIcon}
@@ -165,7 +165,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
                 size="lg"
                 variant="outlined"
                 src={`${
-                  datastore?.pluginIconUrl || '/.well-known/logo.png'
+                  datastore?.pluginIconUrl || "/.well-known/logo.png"
                 }?timestamp=${Date.now()}`}
               />
             </AvatarGroup>
@@ -202,7 +202,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <Input
             control={methods.control as any}
             placeholder="e.g. Databerry"
-            {...methods.register('pluginName')}
+            {...methods.register("pluginName")}
           />
         </FormControl>
         <FormControl>
@@ -212,7 +212,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <Input
             control={methods.control as any}
             placeholder="e.g. Databerry is a no-code platform for building AI apps..."
-            {...methods.register('pluginDescriptionForHumans')}
+            {...methods.register("pluginDescriptionForHumans")}
           />
         </FormControl>
         <FormControl>
@@ -224,7 +224,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
             maxRows={21}
             minRows={4}
             placeholder={`Plugin for searching informations about ${datastore?.name} to find answers to questions and retrieve relevant information. Use it whenever a user asks something that might be related to ${datastore?.name}.`}
-            {...methods.register('pluginDescriptionForModel')}
+            {...methods.register("pluginDescriptionForModel")}
           />
           <FormHelperText>
             <Link
@@ -243,7 +243,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
         <Button
           variant="outlined"
-          sx={{ ml: 'auto' }}
+          sx={{ ml: "auto" }}
           loading={state.isUpdatingPlugin}
           type="submit"
         >
@@ -256,8 +256,8 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <Alert
             color="neutral"
             sx={{
-              width: '100%',
-              cursor: 'copy',
+              width: "100%",
+              cursor: "copy",
             }}
             onClick={() => {
               navigator.clipboard.writeText(
@@ -265,8 +265,8 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
                   process.env.NEXT_PUBLIC_DASHBOARD_URL!
                 )}`
               );
-              toast.success('Copied!', {
-                position: 'bottom-center',
+              toast.success("Copied!", {
+                position: "bottom-center",
               });
             }}
           >
@@ -280,8 +280,8 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <Alert
             color="neutral"
             sx={{
-              width: '100%',
-              cursor: 'copy',
+              width: "100%",
+              cursor: "copy",
             }}
             onClick={() => {
               navigator.clipboard.writeText(
@@ -289,8 +289,8 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
                   process.env.NEXT_PUBLIC_DASHBOARD_URL!
                 )}/.well-known/ai-plugin.json`
               );
-              toast.success('Copied!', {
-                position: 'bottom-center',
+              toast.success("Copied!", {
+                position: "bottom-center",
               });
             }}
           >
@@ -304,8 +304,8 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <Alert
             color="neutral"
             sx={{
-              width: '100%',
-              cursor: 'copy',
+              width: "100%",
+              cursor: "copy",
             }}
             onClick={() => {
               navigator.clipboard.writeText(
@@ -313,8 +313,8 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
                   process.env.NEXT_PUBLIC_DASHBOARD_URL!
                 )}/.well-known/openapi.yaml`
               );
-              toast.success('Copied!', {
-                position: 'bottom-center',
+              toast.success("Copied!", {
+                position: "bottom-center",
               });
             }}
           >
@@ -400,12 +400,12 @@ function DatastoreSettings() {
           <Alert
             color="neutral"
             sx={{
-              cursor: 'copy',
+              cursor: "copy",
             }}
             onClick={() => {
               navigator.clipboard.writeText(getDatastoreQuery?.data?.id!);
-              toast.success('Copied!', {
-                position: 'bottom-center',
+              toast.success("Copied!", {
+                position: "bottom-center",
               });
             }}
           >

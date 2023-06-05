@@ -1,29 +1,30 @@
-import AddIcon from '@mui/icons-material/Add';
-import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
-import SettingsIcon from '@mui/icons-material/Settings';
-import type { ColorPaletteProp } from '@mui/joy';
-import Box from '@mui/joy/Box';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Button from '@mui/joy/Button';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Tab from '@mui/joy/Tab';
-import TabList from '@mui/joy/TabList';
-import Tabs from '@mui/joy/Tabs';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/material/Stack';
-import { Prisma } from '@prisma/client';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
+import AddIcon from "@mui/icons-material/Add";
+import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
+import SettingsIcon from "@mui/icons-material/Settings";
+import type { ColorPaletteProp } from "@mui/joy";
+import Box from "@mui/joy/Box";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import Button from "@mui/joy/Button";
+import Chip from "@mui/joy/Chip";
+import Divider from "@mui/joy/Divider";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Tab from "@mui/joy/Tab";
+import TabList from "@mui/joy/TabList";
+import Tabs from "@mui/joy/Tabs";
+import Typography from "@mui/joy/Typography";
+import Stack from "@mui/material/Stack";
+import { Prisma } from "@prisma/client";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { ReactElement } from "react";
+import * as React from "react";
 
 import Layout from "@app/components/Layout";
 import UsageLimitModal from "@app/components/UsageLimitModal";
@@ -53,6 +54,7 @@ const Datasources = dynamic(() => import("@app/components/Datasources"), {
 
 export default function DatastorePage() {
   const router = useRouter();
+  const t = useTranslations("datastores");
 
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
@@ -211,27 +213,27 @@ export default function DatastorePage() {
           </Box>
         </Box>
 
-        <Stack direction={'row'} alignItems={'center'} gap={2}>
+        <Stack direction={"row"} alignItems={"center"} gap={2}>
           <Tabs
             aria-label="Icon tabs"
-            value={(router.query.tab as string) || 'datasources'}
+            value={(router.query.tab as string) || "datasources"}
             size="md"
             sx={{
-              borderRadius: 'lg',
-              display: 'inline-flex',
+              borderRadius: "lg",
+              display: "inline-flex",
             }}
             onChange={(event, value) => {
               handleChangeTab(value as string);
             }}
           >
             <TabList size="sm">
-              <Tab value={'datasources'}>
+              <Tab value={"datasources"}>
                 <ListItemDecorator>
                   <AutoGraphRoundedIcon />
                 </ListItemDecorator>
                 Datasources
               </Tab>
-              <Tab value={'settings'}>
+              <Tab value={"settings"}>
                 <ListItemDecorator>
                   <SettingsIcon />
                 </ListItemDecorator>
@@ -243,9 +245,9 @@ export default function DatastorePage() {
           {/* <Link href="#chatgpt-plugin"> */}
           <Button
             onClick={() => {
-              handleChangeTab('settings');
+              handleChangeTab("settings");
               setTimeout(() => {
-                window.location.hash = '#chatgpt-plugin';
+                window.location.hash = "#chatgpt-plugin";
               }, 100);
             }}
             size="sm"
@@ -300,8 +302,12 @@ DatastorePage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/datastores/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

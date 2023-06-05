@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 const faqs = [
   {
     id: 1,
@@ -28,6 +30,8 @@ const faqs = [
 ];
 
 export default function FAQ() {
+  const t = useTranslations("faq");
+
   return (
     <div className="bg-black">
       <div className="px-6 py-16 mx-auto max-w-7xl sm:py-24 lg:px-8">
@@ -63,3 +67,13 @@ export default function FAQ() {
     </div>
   );
 }
+
+
+export const getStaticProps = ({ locale, locales }) => {
+  return {
+    props: {
+      locale,
+      locales
+    }
+  }
+};

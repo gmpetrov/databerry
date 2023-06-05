@@ -1,9 +1,9 @@
-import { NextApiResponse } from 'next';
-import { z } from 'zod';
+import { NextApiResponse } from "next";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest } from "@app/types/index";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createApiHandler();
 
@@ -37,7 +37,7 @@ export const getHistory = async (
             }
           : {}),
         orderBy: {
-          createdAt: 'asc',
+          createdAt: "asc",
         },
       },
     },

@@ -150,8 +150,8 @@ else
 end
 `;
 export const rateLimitGroup = {
-    name: 'rateLimitGroup',
-    content,
-    keys: 9,
+  name: "rateLimitGroup",
+  content,
+  keys: 9,
 };
 //# sourceMappingURL=rateLimitGroup-9.js.map

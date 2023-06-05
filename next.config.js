@@ -2,11 +2,14 @@ const baseConfig = require("./next.config.base");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  ...baseConfig
+  ...baseConfig,
+  i18n: {
+    locales: ["en-US", "fr"],
+    defaultLocale: "en-US",
+  },
 };
 
 module.exports = nextConfig;
-
 
 // Injected content via Sentry wizard below
 

@@ -32,8 +32,8 @@ if activeCount < expectedActiveCount then
 end
 `;
 export const repairMaxedGroup = {
-    name: 'repairMaxedGroup',
-    content,
-    keys: 4,
+  name: "repairMaxedGroup",
+  content,
+  keys: 4,
 };
 //# sourceMappingURL=repairMaxedGroup-4.js.map

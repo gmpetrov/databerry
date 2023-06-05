@@ -1,16 +1,16 @@
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
-import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
-import RocketLaunchRounded from '@mui/icons-material/RocketLaunchRounded';
-import Alert from '@mui/joy/Alert';
-import Button from '@mui/joy/Button';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import Image from 'next/image';
-import Link from 'next/link';
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
+import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import RocketLaunchRounded from "@mui/icons-material/RocketLaunchRounded";
+import Alert from "@mui/joy/Alert";
+import Button from "@mui/joy/Button";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Container } from '@app/components/landing-page/Container';
-import { RouteNames } from '@app/types';
+import { Container } from "@app/components/landing-page/Container";
+import { RouteNames } from "@app/types";
 
 export function HeroChatGPTPlugin() {
   return (
@@ -28,10 +28,10 @@ export function HeroChatGPTPlugin() {
           Build a ChatGPT Plugin in minutes!
           <Link
             href="/#chatgpt-plugin"
-            style={{ background: 'none' }}
+            style={{ background: "none" }}
             className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
           >
-            Learn More{' '}
+            Learn More{" "}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="icon icon-tabler icon-tabler-arrow-narrow-right"
@@ -118,7 +118,7 @@ export function HeroChatGPTPlugin() {
           {`ChatGPT Agent\nTrained On\nYour Custom Data`}
           {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
         </h1>
-{/* 
+        {/* 
         <a
           href="https://www.producthunt.com/posts/databerry-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-databerry&#0045;ai"
           target="_blank"
@@ -141,7 +141,7 @@ export function HeroChatGPTPlugin() {
 
         <p className="max-w-sm mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:max-w-lg">
           With our <strong className="text-violet-300">no-code platform</strong>
-          , you can create a{' '}
+          , you can create a{" "}
           <strong className="text-violet-300">custom AI chatbot</strong> trained
           on your data in seconds. Streamline customer support, onboard new team
           members, and more!
@@ -153,14 +153,14 @@ export function HeroChatGPTPlugin() {
 
         <Stack
           direction={{
-            xs: 'column',
-            sm: 'row',
+            xs: "column",
+            sm: "row",
           }}
-          justifyContent={'center'}
+          justifyContent={"center"}
           gap={2}
           mt={6}
         >
-          <Link target="_blank" href={'https://griotai.kasetolabs.xyz/signin'}>
+          <Link target="_blank" href={"https://griotai.kasetolabs.xyz/signin"}>
             <Button
               variant="solid"
               size="lg"
@@ -170,7 +170,7 @@ export function HeroChatGPTPlugin() {
           </Link>
           <Link
             target="_blank"
-            href={'https://calendly.com/databerry-georges/15min'}
+            href={"https://calendly.com/databerry-georges/15min"}
           >
             <Button
               variant="outlined"

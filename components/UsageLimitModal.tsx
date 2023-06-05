@@ -1,7 +1,7 @@
-import Modal from '@mui/joy/Modal';
-import React from 'react';
+import Modal from "@mui/joy/Modal";
+import React from "react";
 
-import UsageLimitCard from './UsageLimitCard';
+import UsageLimitCard from "./UsageLimitCard";
 
 type Props = {
   title?: string;

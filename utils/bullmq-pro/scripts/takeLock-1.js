@@ -14,8 +14,8 @@ else
 end
 `;
 export const takeLock = {
-    name: 'takeLock',
-    content,
-    keys: 1,
+  name: "takeLock",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=takeLock-1.js.map

@@ -304,8 +304,8 @@ end
 return jobId .. "" -- convert to string
 `;
 export const addJob = {
-    name: 'addJob',
-    content,
-    keys: 8,
+  name: "addJob",
+  content,
+  keys: 8,
 };
 //# sourceMappingURL=addJob-8.js.map

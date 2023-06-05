@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -39,7 +40,7 @@ import { fetcher } from "@app/utils/swr-fetcher";
 import { withAuth } from "@app/utils/withAuth";
 
 const SlackBotModal = dynamic(
-  () => import('@app/components/SlackSettingsModal'),
+  () => import("@app/components/SlackSettingsModal"),
   {
     ssr: false,
   }
@@ -49,6 +50,8 @@ const Schema = z.object({ query: z.string().min(1) });
 
 export default function DatasourcesPage() {
   const router = useRouter();
+  const t = useTranslations("datasources");
+
   const { data: session, status } = useSession();
 
   const [state, setState] = useStateReducer({
@@ -143,8 +146,9 @@ export default function DatasourcesPage() {
                   alt="crisp logo"
                   style={{
                     maxWidth: "100%",
-                    height: "auto"
-                  }}></Image>
+                    height: "auto",
+                  }}
+                ></Image>
               </Link>
             </Stack>
           </Box>
@@ -227,8 +231,9 @@ export default function DatasourcesPage() {
                 alt="slack logo"
                 style={{
                   maxWidth: "100%",
-                  height: "auto"
-                }}></Image>
+                  height: "auto",
+                }}
+              ></Image>
             </Stack>
           </Box>
 
@@ -294,8 +299,12 @@ DatasourcesPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/datasources/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

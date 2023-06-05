@@ -6,7 +6,7 @@ import { DatasourceType } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React from "react";
 
-import UsageLimitModal from '../UsageLimitModal';
+import UsageLimitModal from "../UsageLimitModal";
 
 type Props = {
   onSelect: (type: DatasourceType) => any;

@@ -25,8 +25,8 @@ end
 return 0
 `;
 export const extendLock = {
-    name: 'extendLock',
-    content,
-    keys: 2,
+  name: "extendLock",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=extendLock-2.js.map

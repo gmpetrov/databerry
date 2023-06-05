@@ -1,7 +1,7 @@
-import { Agent, Datastore, MessageFrom, Tool, ToolType } from '@prisma/client';
-import { AgentExecutor, ZeroShotAgent } from 'langchain/agents';
-import { LLMChain } from 'langchain/chains';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { Agent, Datastore, MessageFrom, Tool, ToolType } from "@prisma/client";
+import { AgentExecutor, ZeroShotAgent } from "langchain/agents";
+import { LLMChain } from "langchain/chains";
+import { ChatOpenAI } from "langchain/chat_models/openai";
 import {
   ChatPromptTemplate,
   HumanMessagePromptTemplate,

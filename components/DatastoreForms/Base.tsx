@@ -1,23 +1,23 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import Alert from '@mui/joy/Alert';
-import Button from '@mui/joy/Button';
-import Checkbox from '@mui/joy/Checkbox';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Typography from '@mui/joy/Typography';
-import { DatastoreType, Prisma } from '@prisma/client';
-import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import useSWRMutation from 'swr/mutation';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import Alert from "@mui/joy/Alert";
+import Button from "@mui/joy/Button";
+import Checkbox from "@mui/joy/Checkbox";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Typography from "@mui/joy/Typography";
+import { DatastoreType, Prisma } from "@prisma/client";
+import React from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import useSWRMutation from "swr/mutation";
+import { z } from "zod";
 
-import Input from '@app/components/Input';
-import { createDatastore } from '@app/pages/api/datastores';
-import { QdrantSchema as Schema } from '@app/types/models';
-import { postFetcher } from '@app/utils/swr-fetcher';
+import Input from "@app/components/Input";
+import { createDatastore } from "@app/pages/api/datastores";
+import { QdrantSchema as Schema } from "@app/types/models";
+import { postFetcher } from "@app/utils/swr-fetcher";
 
-import { DatastoreFormProps } from './types';
+import { DatastoreFormProps } from "./types";
 
 export const UpsertDatastoreSchema = z.object({
   id: z.string().trim().optional(),
@@ -63,9 +63,9 @@ export default function BaseForm(props: Props) {
       const datastore = await toast.promise(
         upsertDatastoreMutation.trigger(values as any),
         {
-          loading: 'Updating...',
-          success: 'Updated!',
-          error: 'Something went wrong',
+          loading: "Updating...",
+          success: "Updated!",
+          error: "Something went wrong",
         }
       );
 
@@ -121,8 +121,8 @@ export default function BaseForm(props: Props) {
               <FormLabel>Public</FormLabel>
               <Typography level="body3">
                 When activated, your datastore will be available by anyone on
-                the internet.{' '}
-                <Typography fontWeight={'bold'} color="primary">
+                the internet.{" "}
+                <Typography fontWeight={"bold"} color="primary">
                   Required for a public ChatGPT plugin.
                 </Typography>
               </Typography>

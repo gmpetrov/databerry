@@ -1,22 +1,22 @@
-import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
-import Box from '@mui/joy/Box';
-import Card from '@mui/joy/Card';
-import colors from '@mui/joy/colors';
-import Divider from '@mui/joy/Divider';
-import IconButton from '@mui/joy/IconButton';
-import { extendTheme, useColorScheme } from '@mui/joy/styles';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/material/Stack';
-import type { Agent } from '@prisma/client';
-import React, { useEffect, useMemo } from 'react';
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded";
+import Box from "@mui/joy/Box";
+import Card from "@mui/joy/Card";
+import colors from "@mui/joy/colors";
+import Divider from "@mui/joy/Divider";
+import IconButton from "@mui/joy/IconButton";
+import { extendTheme, useColorScheme } from "@mui/joy/styles";
+import Typography from "@mui/joy/Typography";
+import Stack from "@mui/material/Stack";
+import type { Agent } from "@prisma/client";
+import React, { useEffect, useMemo } from "react";
 
-import ChatBox from '@app/components/ChatBox';
-import useAgentChat from '@app/hooks/useAgentChat';
-import useVisitorId from '@app/hooks/useVisitorId';
-import { AgentInterfaceConfig } from '@app/types/models';
-import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
+import ChatBox from "@app/components/ChatBox";
+import useAgentChat from "@app/hooks/useAgentChat";
+import useVisitorId from "@app/hooks/useVisitorId";
+import { AgentInterfaceConfig } from "@app/types/models";
+import pickColorBasedOnBgColor from "@app/utils/pick-color-based-on-bgcolor";
 
 export const theme = extendTheme({
   cssVarPrefix: "databerry-chat-bubble",
@@ -56,7 +56,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: `${API_URL}/api/external/agents/${props.agentId}/query`,
-    channel: 'website',
+    channel: "website",
     // channel: ConversationChannel.website // not working with bundler parcel,
     // queryHistoryURL: visitorId
     //   ? `${API_URL}/api/external/agents/${props.agentId}/history/${visitorId}`
@@ -232,7 +232,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           >
             <Box sx={{ mt: 1 }}>
               <Typography level="body3">
-                Powered by {" "}
+                Powered by{" "}
                 <Typography color="primary" fontWeight={"bold"}>
                   GriotAI
                 </Typography>

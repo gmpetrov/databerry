@@ -7,18 +7,18 @@ import type { Document } from "@app/utils/datastores/base";
 export * from "./dtos";
 
 export enum RouteNames {
-  HOME = '/agents',
-  SIGN_IN = '/signin',
-  SIGN_UP = '/signup',
-  AGENTS = '/agents',
-  DATASTORES = '/datastores',
-  LOGS = '/logs',
-  CHAT = '/chat',
-  MAINTENANCE = '/maintenance',
-  ACCOUNT = '/account',
-  APPS = '/apps',
-  CHAT_SITE = '/products/crisp-plugin',
-  SLACK_BOT = '/products/slack-bot',
+  HOME = "/agents",
+  SIGN_IN = "/signin",
+  SIGN_UP = "/signup",
+  AGENTS = "/agents",
+  DATASTORES = "/datastores",
+  LOGS = "/logs",
+  CHAT = "/chat",
+  MAINTENANCE = "/maintenance",
+  ACCOUNT = "/account",
+  APPS = "/apps",
+  CHAT_SITE = "/products/crisp-plugin",
+  SLACK_BOT = "/products/slack-bot",
 }
 
 export type AppNextApiRequest = NextApiRequest & {

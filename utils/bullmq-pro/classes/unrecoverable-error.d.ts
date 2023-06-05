@@ -1,1 +1,1 @@
-export { UnrecoverableError } from 'bullmq';
+export { UnrecoverableError } from "bullmq";

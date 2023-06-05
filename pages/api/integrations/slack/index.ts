@@ -11,19 +11,19 @@ import {
   ConversationChannel,
   MessageFrom,
   SubscriptionPlan,
-} from '@prisma/client';
-import { WebClient } from '@slack/web-api';
-import axios from 'axios';
-import cuid from 'cuid';
-import { NextApiResponse } from 'next';
+} from "@prisma/client";
+import { WebClient } from "@slack/web-api";
+import axios from "axios";
+import cuid from "cuid";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import AgentManager from '@app/utils/agent';
-import ConversationManager from '@app/utils/conversation';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import prisma from '@app/utils/prisma-client';
-import slackAgent from '@app/utils/slack-agent';
+import { AppNextApiRequest } from "@app/types/index";
+import AgentManager from "@app/utils/agent";
+import ConversationManager from "@app/utils/conversation";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
+import prisma from "@app/utils/prisma-client";
+import slackAgent from "@app/utils/slack-agent";
 
 const handler = createApiHandler();
 

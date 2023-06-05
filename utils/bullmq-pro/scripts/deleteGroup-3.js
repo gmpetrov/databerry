@@ -155,8 +155,8 @@ local removedJobs, jobsLeft = deleteGroup(KEYS[2], KEYS[1], KEYS[3], ARGV[2], AR
 return jobsLeft
 `;
 export const deleteGroup = {
-    name: 'deleteGroup',
-    content,
-    keys: 3,
+  name: "deleteGroup",
+  content,
+  keys: 3,
 };
 //# sourceMappingURL=deleteGroup-3.js.map

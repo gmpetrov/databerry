@@ -2,12 +2,12 @@ import { IntegrationType } from "@prisma/client";
 import { NextApiResponse } from "next";
 import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import { client } from '@app/utils/crisp';
-import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import { client } from "@app/utils/crisp";
+import prisma from "@app/utils/prisma-client";
+import validate from "@app/utils/validate";
 
 const handler = createApiHandler();
 
@@ -31,7 +31,7 @@ export const updateCrispConfig = async (
   try {
     metadata = await client.website.getWebsite(data.website_id);
   } catch (err) {
-    console.log('err getting website', err);
+    console.log("err getting website", err);
   }
 
   // if (data.token !== websites[data.website_id]?.token) {

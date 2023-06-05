@@ -12,14 +12,14 @@ import { ApiError, ApiErrorType } from "../api-error";
 import { DatasourceLoaderBase } from "./base";
 
 const getTextFromHTML = async (html: string) => {
-  const { load } = await import('cheerio');
+  const { load } = await import("cheerio");
 
   const $ = load(html);
-  $('script').remove();
-  $('style').remove();
-  $('link').remove();
-  $('svg').remove();
-  const text = $('body').text();
+  $("script").remove();
+  $("style").remove();
+  $("link").remove();
+  $("svg").remove();
+  const text = $("body").text();
 
   return text;
 };
@@ -37,7 +37,7 @@ const loadPageContent = async (url: string) => {
     const text = await getTextFromHTML(data);
 
     if (!text) {
-      throw new Error('Empty body');
+      throw new Error("Empty body");
     }
 
     return data as string;
@@ -75,7 +75,7 @@ const loadPageContent = async (url: string) => {
     content = await page.content();
     text = await getTextFromHTML(content);
 
-    console.log('content', content);
+    console.log("content", content);
 
     await context.close();
     await browser.close();

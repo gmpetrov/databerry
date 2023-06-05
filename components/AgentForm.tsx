@@ -34,26 +34,26 @@ import {
   Prisma,
   PromptType,
   ToolType,
-} from '@prisma/client';
-import axios from 'axios';
-import mime from 'mime-types';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { signIn } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import useSWR from 'swr';
-import useSWRMutation from 'swr/mutation';
-import { z } from 'zod';
+} from "@prisma/client";
+import axios from "axios";
+import mime from "mime-types";
+import dynamic from "next/dynamic";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import toast from "react-hot-toast";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
+import { z } from "zod";
 
-import Input from '@app/components/Input';
-import { getDatastores } from '@app/pages/api/datastores';
-import { RouteNames } from '@app/types';
-import { UpsertAgentSchema } from '@app/types/dtos';
-import cuid from '@app/utils/cuid';
-import { CUSTOMER_SUPPORT } from '@app/utils/prompt-templates';
-import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
+import Input from "@app/components/Input";
+import { getDatastores } from "@app/pages/api/datastores";
+import { RouteNames } from "@app/types";
+import { UpsertAgentSchema } from "@app/types/dtos";
+import cuid from "@app/utils/cuid";
+import { CUSTOMER_SUPPORT } from "@app/utils/prompt-templates";
+import { fetcher, postFetcher } from "@app/utils/swr-fetcher";
 
 const CreateDatastoreModal = dynamic(
   () => import("@app/components/CreateDatastoreModal"),
@@ -169,14 +169,14 @@ export default function BaseForm(props: Props) {
   const onSubmit = async (values: UpsertAgentSchema) => {
     try {
       setIsLoading(true);
-      console.log('values', values);
-      const { data } = await toast.promise(axios.post('/api/agents', values), {
-        loading: 'Updating...',
-        success: 'Updated!',
-        error: 'Something went wrong',
+      console.log("values", values);
+      const { data } = await toast.promise(axios.post("/api/agents", values), {
+        loading: "Updating...",
+        success: "Updated!",
+        error: "Something went wrong",
       });
 
-      console.log('DATA', data);
+      console.log("DATA", data);
       props?.onSubmitSucces?.(data as Agent);
     } catch (err) {
       console.log("error", err);

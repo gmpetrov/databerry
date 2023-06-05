@@ -108,8 +108,8 @@ else
   return -3
 end`;
 export const promote = {
-    name: 'promote',
-    content,
-    keys: 6,
+  name: "promote",
+  content,
+  keys: 6,
 };
 //# sourceMappingURL=promote-6.js.map

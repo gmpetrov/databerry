@@ -348,8 +348,8 @@ end
 return {failed, stalled}
 `;
 export const moveStalledJobsToWait = {
-    name: 'moveStalledJobsToWait',
-    content,
-    keys: 8,
+  name: "moveStalledJobsToWait",
+  content,
+  keys: 8,
 };
 //# sourceMappingURL=moveStalledJobsToWait-8.js.map

@@ -1,58 +1,59 @@
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
-import IntegrationInstructionsRoundedIcon from '@mui/icons-material/IntegrationInstructionsRounded';
-import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
-import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
-import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
-import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
-import SettingsIcon from '@mui/icons-material/Settings';
-import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
-import { ColorPaletteProp, List, ListItem, ListItemButton } from '@mui/joy';
-import Alert from '@mui/joy/Alert';
-import Box from '@mui/joy/Box';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Button from '@mui/joy/Button';
-import Chip from '@mui/joy/Chip';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Stack from '@mui/joy/Stack';
-import Tab from '@mui/joy/Tab';
-import TabList from '@mui/joy/TabList';
-import Tabs from '@mui/joy/Tabs';
-import Typography from '@mui/joy/Typography';
-import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
-import axios, { AxiosError } from 'axios';
-import dynamic from 'next/dynamic';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import toast from 'react-hot-toast';
-import useSWR from 'swr';
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
+import IntegrationInstructionsRoundedIcon from "@mui/icons-material/IntegrationInstructionsRounded";
+import LanguageRoundedIcon from "@mui/icons-material/LanguageRounded";
+import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
+import PaletteRoundedIcon from "@mui/icons-material/PaletteRounded";
+import RocketLaunchRoundedIcon from "@mui/icons-material/RocketLaunchRounded";
+import SettingsIcon from "@mui/icons-material/Settings";
+import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
+import { ColorPaletteProp, List, ListItem, ListItemButton } from "@mui/joy";
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import Button from "@mui/joy/Button";
+import Chip from "@mui/joy/Chip";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import Input from "@mui/joy/Input";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Stack from "@mui/joy/Stack";
+import Tab from "@mui/joy/Tab";
+import TabList from "@mui/joy/TabList";
+import Tabs from "@mui/joy/Tabs";
+import Typography from "@mui/joy/Typography";
+import { DatastoreVisibility, Prisma, ToolType } from "@prisma/client";
+import axios, { AxiosError } from "axios";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { ReactElement } from "react";
+import * as React from "react";
+import toast from "react-hot-toast";
+import useSWR from "swr";
 
-import AgentForm from '@app/components/AgentForm';
-import ChatBox from '@app/components/ChatBox';
-import ChatBubble from '@app/components/ChatBubble';
-import Layout from '@app/components/Layout';
-import UsageLimitModal from '@app/components/UsageLimitModal';
-import useAgentChat from '@app/hooks/useAgentChat';
-import useStateReducer from '@app/hooks/useStateReducer';
-import { getAgent } from '@app/pages/api/agents/[id]';
-import { RouteNames } from '@app/types';
-import agentToolFormat from '@app/utils/agent-tool-format';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import AgentForm from "@app/components/AgentForm";
+import ChatBox from "@app/components/ChatBox";
+import ChatBubble from "@app/components/ChatBubble";
+import Layout from "@app/components/Layout";
+import UsageLimitModal from "@app/components/UsageLimitModal";
+import useAgentChat from "@app/hooks/useAgentChat";
+import useStateReducer from "@app/hooks/useStateReducer";
+import { getAgent } from "@app/pages/api/agents/[id]";
+import { RouteNames } from "@app/types";
+import agentToolFormat from "@app/utils/agent-tool-format";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
 const ChatInterfaceConfigForm = dynamic(
   () => import("@app/components/ChatInterfaceConfigForm"),
@@ -62,14 +63,14 @@ const ChatInterfaceConfigForm = dynamic(
 );
 
 const SlackBotModal = dynamic(
-  () => import('@app/components/SlackSettingsModal'),
+  () => import("@app/components/SlackSettingsModal"),
   {
     ssr: false,
   }
 );
 
 const CrispSettingsModal = dynamic(
-  () => import('@app/components/CrispSettingsModal'),
+  () => import("@app/components/CrispSettingsModal"),
   {
     ssr: false,
   }
@@ -83,6 +84,7 @@ export default function AgentPage() {
     isUsageModalOpen: false,
     isCrispModalOpen: false,
   });
+  const t = useTranslations("agents");
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
     `/api/agents/${router.query?.agentId}`,
@@ -223,7 +225,7 @@ export default function AgentPage() {
             <Stack direction={"row"} gap={2} alignItems={"center"}>
               <Tabs
                 aria-label="Icon tabs"
-                value={(router.query.tab as string) || 'chat'}
+                value={(router.query.tab as string) || "chat"}
                 size="md"
                 sx={{
                   borderRadius: "lg",
@@ -241,13 +243,13 @@ export default function AgentPage() {
                     </ListItemDecorator>
                     Chat
                   </Tab>
-                  <Tab value={'deploy'}>
+                  <Tab value={"deploy"}>
                     <ListItemDecorator>
                       <RocketLaunchRoundedIcon />
                     </ListItemDecorator>
                     Deploy
                   </Tab>
-                  <Tab value={'settings'}>
+                  <Tab value={"settings"}>
                     <ListItemDecorator>
                       <SettingsIcon />
                     </ListItemDecorator>
@@ -309,7 +311,7 @@ export default function AgentPage() {
               mx: "auto",
             })}
           >
-            {router.query.tab === 'deploy' && (
+            {router.query.tab === "deploy" && (
               <>
                 <Typography level="h5">
                   Deploy Agent to the following services
@@ -318,16 +320,16 @@ export default function AgentPage() {
                 <List variant="outlined" sx={{ mt: 2 }}>
                   {[
                     {
-                      name: 'Website',
+                      name: "Website",
                       icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
                       action: () => {
-                        router.query.tab = 'settings';
-                        (router as any).hash = 'chat-interface-config';
+                        router.query.tab = "settings";
+                        (router as any).hash = "chat-interface-config";
                         router.replace(router, undefined, { shallow: true });
                       },
                     },
                     {
-                      name: 'Slack',
+                      name: "Slack",
                       icon: (
                         <Image
                           className="w-8"
@@ -342,7 +344,7 @@ export default function AgentPage() {
                       },
                     },
                     {
-                      name: 'Crisp',
+                      name: "Crisp",
                       isPremium: true,
                       icon: (
                         <Image
@@ -366,9 +368,9 @@ export default function AgentPage() {
                       })}
                     >
                       {/* <ListItemButton> */}
-                      <Stack direction="row" gap={2} alignItems={'center'}>
+                      <Stack direction="row" gap={2} alignItems={"center"}>
                         {each.icon}
-                        <Typography fontWeight={'bold'}>{each.name}</Typography>
+                        <Typography fontWeight={"bold"}>{each.name}</Typography>
 
                         {each.isPremium && (
                           <Chip color="warning" size="sm" variant="soft">
@@ -383,7 +385,7 @@ export default function AgentPage() {
                           size="sm"
                           variant="outlined"
                           startDecorator={<TuneRoundedIcon />}
-                          sx={{ ml: 'auto' }}
+                          sx={{ ml: "auto" }}
                           onClick={each.action}
                         >
                           Settings
@@ -395,7 +397,7 @@ export default function AgentPage() {
                           size="sm"
                           variant="outlined"
                           color="warning"
-                          sx={{ ml: 'auto' }}
+                          sx={{ ml: "auto" }}
                           onClick={() => setState({ isUsageModalOpen: true })}
                         >
                           Subscribe
@@ -407,7 +409,7 @@ export default function AgentPage() {
               </>
             )}
 
-            {router.query.tab === 'settings' && (
+            {router.query.tab === "settings" && (
               <>
                 <AgentForm
                   onSubmitSucces={() => getAgentQuery.mutate()}
@@ -453,12 +455,12 @@ export default function AgentPage() {
                     <Alert
                       color="neutral"
                       sx={{
-                        cursor: 'copy',
+                        cursor: "copy",
                       }}
                       onClick={() => {
                         navigator.clipboard.writeText(getAgentQuery?.data?.id!);
-                        toast.success('Copied!', {
-                          position: 'bottom-center',
+                        toast.success("Copied!", {
+                          position: "bottom-center",
                         });
                       }}
                     >
@@ -533,8 +535,12 @@ AgentPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/agents/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

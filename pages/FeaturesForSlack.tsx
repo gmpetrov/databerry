@@ -11,12 +11,12 @@ const features = [
     icon: UsersIcon,
   },
   {
-    name: 'Efficient Communication',
+    name: "Efficient Communication",
     description: `Your AI chat bot can provide fast, efficient communication between team members, streamlining your team's productivity.`,
     icon: ChatBubbleLeftRightIcon,
   },
   {
-    name: 'Automate Tasks (Coming soon)',
+    name: "Automate Tasks (Coming soon)",
     description: `Your AI chat bot can simplify your team's workflow by automating repetitive tasks, freeing up time for more meaningful work.`,
     icon: SparklesIcon,
   },

@@ -87,8 +87,8 @@ end
 return -1
 `;
 export const moveToWaitingChildren = {
-    name: 'moveToWaitingChildren',
-    content,
-    keys: 6,
+  name: "moveToWaitingChildren",
+  content,
+  keys: 6,
 };
 //# sourceMappingURL=moveToWaitingChildren-6.js.map

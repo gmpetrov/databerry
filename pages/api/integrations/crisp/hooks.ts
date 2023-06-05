@@ -2,19 +2,19 @@ import {
   ConversationChannel,
   MessageFrom,
   SubscriptionPlan,
-} from '@prisma/client';
-import Crisp from 'crisp-api';
-import cuid from 'cuid';
-import { NextApiResponse } from 'next';
+} from "@prisma/client";
+import Crisp from "crisp-api";
+import cuid from "cuid";
+import { NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import AgentManager from '@app/utils/agent';
-import ConversationManager from '@app/utils/conversation';
-import { createApiHandler } from '@app/utils/createa-api-handler';
-import getSubdomain from '@app/utils/get-subdomain';
-import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
-import prisma from '@app/utils/prisma-client';
-import validate from '@app/utils/validate';
+import { AppNextApiRequest } from "@app/types/index";
+import AgentManager from "@app/utils/agent";
+import ConversationManager from "@app/utils/conversation";
+import { createApiHandler } from "@app/utils/createa-api-handler";
+import getSubdomain from "@app/utils/get-subdomain";
+import guardAgentQueryUsage from "@app/utils/guard-agent-query-usage";
+import prisma from "@app/utils/prisma-client";
+import validate from "@app/utils/validate";
 
 const handler = createApiHandler();
 
@@ -76,7 +76,7 @@ type HookBodyMessageUpdated = HookBodyBase & {
       explain: string;
       value?: string;
       choices?: {
-        value: 'resolved' | 'request_human';
+        value: "resolved" | "request_human";
         icon: string;
         label: string;
         selected: boolean;
@@ -213,24 +213,24 @@ const handleQuery = async (
   });
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
-    type: 'picker',
-    from: 'operator',
-    origin: 'chat',
+    type: "picker",
+    from: "operator",
+    origin: "chat",
 
     content: {
-      id: 'databerry-answer',
+      id: "databerry-answer",
       text: answer,
       choices: [
         {
-          value: 'resolved',
-          icon: '✅',
-          label: 'Mark as resolved',
+          value: "resolved",
+          icon: "✅",
+          label: "Mark as resolved",
           selected: false,
         },
         {
-          value: 'request_human',
-          icon: '💬',
-          label: 'Request a human operator',
+          value: "request_human",
+          icon: "💬",
+          label: "Request a human operator",
           selected: false,
         },
       ],
@@ -253,15 +253,15 @@ const handleQuery = async (
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   let body = {} as HookBody;
   try {
-    res.status(200).send('Handling...');
-    const host = req?.headers?.['host'];
+    res.status(200).send("Handling...");
+    const host = req?.headers?.["host"];
     const subdomain = getSubdomain(host!);
     body = req.body as HookBody;
 
-    console.log('BODY', body);
+    console.log("BODY", body);
 
-    const _timestamp = req.headers['x-crisp-request-timestamp'];
-    const _signature = req.headers['x-crisp-signature'];
+    const _timestamp = req.headers["x-crisp-request-timestamp"];
+    const _signature = req.headers["x-crisp-signature"];
 
     const verified = CrispClient.verifyHook(
       process.env.CRISP_HOOK_SECRET!,
@@ -282,12 +282,12 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     );
 
     const hasSentDataberryInputOnce = !!messages?.find((msg: any) =>
-      msg?.content?.id?.startsWith?.('databerry-query')
+      msg?.content?.id?.startsWith?.("databerry-query")
     );
     //   const nbUserMsg =
     //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
 
-    if (req.headers['x-delivery-attempt-count'] !== '1') {
+    if (req.headers["x-delivery-attempt-count"] !== "1") {
       return "Not the first attempt, don't handle.";
     }
 
@@ -298,26 +298,26 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       )
     )?.data;
 
-    if (metadata?.choice === 'request_human') {
-      return 'User has requested a human operator, do not handle.';
+    if (metadata?.choice === "request_human") {
+      return "User has requested a human operator, do not handle.";
     }
 
     CrispClient.website.composeMessageInConversation(
       body.website_id,
       body.data.session_id,
       {
-        type: 'start',
-        from: 'operator',
+        type: "start",
+        from: "operator",
       }
     );
 
     switch (body.event) {
-      case 'message:send':
+      case "message:send":
         if (
-          body.data.origin === 'chat' &&
-          body.data.from === 'user' &&
-          body.data.type === 'text' &&
-          metadata?.choice !== 'request_human'
+          body.data.origin === "chat" &&
+          body.data.from === "user" &&
+          body.data.type === "text" &&
+          metadata?.choice !== "request_human"
         ) {
           await handleQuery(
             body.website_id,
@@ -327,20 +327,20 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         }
 
         break;
-      case 'message:updated':
+      case "message:updated":
         console.log(body.data.content?.choices);
         const choices = body.data.content
-          ?.choices as HookBodyMessageUpdated['data']['content']['choices'];
+          ?.choices as HookBodyMessageUpdated["data"]["content"]["choices"];
         const selected = choices?.find((one) => one.selected);
 
         switch (selected?.value) {
-          case 'request_human':
+          case "request_human":
             await CrispClient.website.updateConversationMetas(
               body.website_id,
               body.data.session_id,
               {
                 data: {
-                  choice: 'request_human',
+                  choice: "request_human",
                 },
               }
             );
@@ -354,26 +354,27 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               body.website_id,
               body.data.session_id,
               {
-                type: 'text',
-                from: 'operator',
-                origin: 'chat',
+                type: "text",
+                from: "operator",
+                origin: "chat",
 
-                content: 'An operator will get back to you shortly.',
+                content: "An operator will get back to you shortly.",
                 user: {
-                  type: 'participant',
+                  type: "participant",
                   // nickname: agent?.name || 'Databerry.ai',
-                  avatar: 'https://griotai.kasetolabs.xyz/databerry-rounded-bg-white.png',
+                  avatar:
+                    "https://griotai.kasetolabs.xyz/databerry-rounded-bg-white.png",
                 },
                 // mentions: [data?.[0]?.user_id],
               }
             );
 
             break;
-          case 'resolved':
+          case "resolved":
             await CrispClient.website.changeConversationState(
               body.website_id,
               body.data.session_id,
-              'resolved'
+              "resolved"
             );
             break;
           default:
@@ -385,20 +386,20 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         break;
     }
   } catch (err) {
-    console.log('ERROR', err);
+    console.log("ERROR", err);
   } finally {
     if (body?.website_id) {
       CrispClient.website.composeMessageInConversation(
         body.website_id,
         body.data.session_id,
         {
-          type: 'stop',
-          from: 'operator',
+          type: "stop",
+          from: "operator",
         }
       );
     }
 
-    return 'Success';
+    return "Success";
   }
 };
 
