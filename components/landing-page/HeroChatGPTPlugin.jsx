@@ -21,7 +21,7 @@ export function HeroChatGPTPlugin() {
         alt=""
       />
       <div className="relative z-10">
-        <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full">
+        {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full">
           <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
             <span>New</span>
           </span>
@@ -50,7 +50,7 @@ export function HeroChatGPTPlugin() {
               <line x1="15" y1="8" x2="19" y2="12"></line>
             </svg>
           </Link>
-        </div>
+        </div> */}
 
         <Link href={RouteNames.CHAT_SITE}>
           {/* <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button> */}
@@ -119,7 +119,7 @@ export function HeroChatGPTPlugin() {
           {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
         </h1>
 
-        <a
+        {/* <a
           href="https://www.producthunt.com/posts/databerry-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-databerry&#0045;ai"
           target="_blank"
         >
@@ -135,7 +135,7 @@ export function HeroChatGPTPlugin() {
               marginBottom: '2rem',
             }}
           />
-        </a>
+        </a> */}
 
         {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
 

@@ -75,6 +75,12 @@ type HookBodyMessageUpdated = HookBodyBase & {
       text: string;
       explain: string;
       value?: string;
+      choices?: {
+        value: 'resolved' | 'request_human' | 'enable_ai';
+        icon: string;
+        label: string;
+        selected: boolean;
+      }[];
     };
     visitorId: number;
     session_id: string;
@@ -117,35 +123,35 @@ const getAgent = async (websiteId: string) => {
   return agent;
 };
 
-const handleSendInput = async ({
-  websiteId,
-  sessionId,
-  value,
-  agentName,
-}: {
-  websiteId: string;
-  sessionId: string;
-  value?: string;
-  agentName?: string;
-}) => {
-  await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
-    type: 'field',
-    from: 'operator',
-    origin: 'chat',
-    user: {
-      type: 'participant',
-      nickname: agentName || 'Databerry.ai',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
-    },
+// const handleSendInput = async ({
+//   websiteId,
+//   sessionId,
+//   value,
+//   agentName,
+// }: {
+//   websiteId: string;
+//   sessionId: string;
+//   value?: string;
+//   agentName?: string;
+// }) => {
+//   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
+//     type: 'field',
+//     from: 'operator',
+//     origin: 'chat',
+//     user: {
+//       type: 'participant',
+//       nickname: agentName || 'Databerry.ai',
+//       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+//     },
 
-    content: {
-      id: `databerry-query-${cuid()}`,
-      text: `✨ Ask ${agentName || `Databerry.ai`}`,
-      explain: 'Query',
-      value,
-    },
-  });
-};
+//     content: {
+//       id: `databerry-query-${cuid()}`,
+//       text: `✨ Ask ${agentName || `Databerry.ai`}`,
+//       explain: 'Query',
+//       value,
+//     },
+//   });
+// };
 
 const handleQuery = async (
   websiteId: string,
@@ -206,10 +212,28 @@ const handleQuery = async (
   });
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
-    type: 'text',
+    type: 'picker',
     from: 'operator',
     origin: 'chat',
-    content: answer,
+
+    content: {
+      id: 'databerry-answer',
+      text: answer,
+      choices: [
+        {
+          value: 'resolved',
+          icon: '✅',
+          label: 'Mark as resolved',
+          selected: false,
+        },
+        {
+          value: 'request_human',
+          icon: '💬',
+          label: 'Request a human operator',
+          selected: false,
+        },
+      ],
+    },
     user: {
       type: 'participant',
       nickname: agent?.name || 'Databerry.ai',
@@ -223,21 +247,15 @@ const handleQuery = async (
   });
 
   conversationManager.save();
-
-  return new Promise((resolve, reject) => {
-    setTimeout(async () => {
-      await handleSendInput({ websiteId, sessionId, agentName: agent?.name });
-      resolve(42);
-    }, 300);
-  });
 };
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
+  let body = {} as HookBody;
   try {
     res.status(200).send('Handling...');
     const host = req?.headers?.['host'];
     const subdomain = getSubdomain(host!);
-    const body = req.body as HookBody;
+    body = req.body as HookBody;
 
     console.log('BODY', body);
 
@@ -256,66 +274,153 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       // ATM verifyHook() always returns false 🤔
     }
 
-    const messages = await CrispClient.website.getMessagesInConversation(
-      body.website_id,
-      body.data.session_id,
-      body.timestamp
-    );
-
-    const hasSentDataberryInputOnce = !!messages?.find((msg: any) =>
-      msg?.content?.id?.startsWith?.('databerry-query')
-    );
-    //   const nbUserMsg =
-    //     messages?.filter((msg: any) => msg?.from === 'user')?.length || 0;
-
     if (req.headers['x-delivery-attempt-count'] !== '1') {
       return "Not the first attempt, don't handle.";
     }
+
+    const metadata = (
+      await CrispClient.website.getConversationMetas(
+        body.website_id,
+        body.data.session_id
+      )
+    )?.data;
+
+    const newChoice = body?.data?.content?.choices?.find(
+      (one: any) => one.selected
+    );
+
+    if (
+      metadata?.choice === 'request_human' &&
+      newChoice?.value !== 'enable_ai'
+    ) {
+      return 'User has requested a human operator, do not handle.';
+    }
+
+    CrispClient.website.composeMessageInConversation(
+      body.website_id,
+      body.data.session_id,
+      {
+        type: 'start',
+        from: 'operator',
+      }
+    );
+
     switch (body.event) {
       case 'message:send':
         if (
           body.data.origin === 'chat' &&
           body.data.from === 'user' &&
-          body.data.type === 'text'
+          body.data.type === 'text' &&
+          metadata?.choice !== 'request_human'
         ) {
-          if (!hasSentDataberryInputOnce) {
-            const agent = await getAgent(body.website_id);
-
-            await handleSendInput({
-              websiteId: body.website_id,
-              sessionId: body.data.session_id,
-              value: body.data.content,
-              agentName: agent?.name,
-            });
-
-            await handleQuery(
-              body.website_id,
-              body.data.session_id,
-              body.data.content
-            );
-            break;
-          }
+          await handleQuery(
+            body.website_id,
+            body.data.session_id,
+            body.data.content
+          );
         }
 
         break;
       case 'message:updated':
-        if (
-          body.data.content.id?.startsWith?.('databerry-query') &&
-          body.data.content.value
-        ) {
-          // x-delivery-attempt-count
+        console.log(body.data.content?.choices);
+        const choices = body.data.content
+          ?.choices as HookBodyMessageUpdated['data']['content']['choices'];
+        const selected = choices?.find((one) => one.selected);
 
-          await handleQuery(
-            body.website_id,
-            body.data.session_id,
-            body.data.content.value
-          );
+        switch (selected?.value) {
+          case 'request_human':
+            await CrispClient.website.updateConversationMetas(
+              body.website_id,
+              body.data.session_id,
+              {
+                data: {
+                  choice: 'request_human',
+                },
+              }
+            );
+
+            // const data =
+            //   await CrispClient.website.listLastActiveWebsiteOperators(
+            //     body.website_id
+            //   );
+
+            // await CrispClient.website.sendMessageInConversation(
+            //   body.website_id,
+            //   body.data.session_id,
+            //   {
+            //     type: 'text',
+            //     from: 'operator',
+            //     origin: 'chat',
+
+            //     content: 'An operator will get back to you shortly.',
+            //     user: {
+            //       type: 'participant',
+            //       // nickname: agent?.name || 'Databerry.ai',
+            //       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+            //     },
+            //     // mentions: [data?.[0]?.user_id],
+            //   }
+            // );
+
+            await CrispClient.website.sendMessageInConversation(
+              body.website_id,
+              body.data.session_id,
+              {
+                type: 'picker',
+                from: 'operator',
+                origin: 'chat',
+
+                content: {
+                  id: 'databerry-enable',
+                  text: 'An operator will get back to you shortly.',
+                  choices: [
+                    {
+                      value: 'enable_ai',
+                      icon: '▶️',
+                      label: 'Re-enable AI',
+                      selected: false,
+                    },
+                  ],
+                },
+              }
+            );
+
+            break;
+          case 'resolved':
+            await CrispClient.website.changeConversationState(
+              body.website_id,
+              body.data.session_id,
+              'resolved'
+            );
+            break;
+          case 'enable_ai':
+            await CrispClient.website.updateConversationMetas(
+              body.website_id,
+              body.data.session_id,
+              {
+                data: {
+                  choice: 'enable_ai',
+                },
+              }
+            );
+            break;
+          default:
+            break;
         }
 
         break;
       default:
         break;
     }
+
+    CrispClient.website.composeMessageInConversation(
+      body.website_id,
+      body.data.session_id,
+      {
+        type: 'stop',
+        from: 'operator',
+      }
+    );
   } catch (err) {
     console.log('ERROR', err);
   } finally {

@@ -152,7 +152,7 @@ export function Header() {
                 Sign In
               </span>
             </Button> */}
-            {/* Change following link href with /signin for full local signin */}
+            {/* Change following link href with /signin for local signin */}
             <Link href="https://app.databerry.ai/signin">
               <Button variant="outlined" sx={{ borderRadius: 100 }}>
                 Sign In
