@@ -4,6 +4,7 @@ import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRou
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ConstructionOutlined from '@mui/icons-material/ConstructionOutlined';
+import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
@@ -51,6 +52,7 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { getAgents, upsertAgent } from '@app/pages/api/agents';
 import { createDatastore, getDatastores } from '@app/pages/api/datastores';
 import { RouteNames } from '@app/types';
 import { GenerateUploadLinkRequest, UpsertAgentSchema } from '@app/types/dtos';
@@ -144,20 +146,21 @@ const Tool = (props: {
 };
 
 export default function BaseForm(props: Props) {
+
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
     useState(false);
   const fileInputRef = useRef();
-
+  const [icon,setIcon] = useState(props.defaultValues?.pluginIconUrl ? props.defaultValues?.pluginIconUrl : '/.well-known/logo.png' )
   
   const [state, setState] = useStateReducer({
     isUploadingPluginIcon: false,
     isUpdatingPlugin: false,
   });
 
-  const upsertDatastoreMutation = useSWRMutation<
-  Prisma.PromiseReturnType<typeof createDatastore>
->(`/api/datastores`, postFetcher);
+  const upsertAgentMutation = useSWRMutation<
+  Prisma.PromiseReturnType<typeof upsertAgent>
+>(`/api/agents`, postFetcher);
 
   const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] =
     useState(false);
@@ -178,15 +181,15 @@ export default function BaseForm(props: Props) {
     formState: { errors, defaultValues, isDirty, dirtyFields },
   } = methods;
   
+  const [isIconDefined,setIsIconDefined] = useState(props.defaultValues?.pluginIconUrl ? true: false)
   const getDatastoresQuery = useSWR<
   Prisma.PromiseReturnType<typeof getDatastores>
-  >('/api/agents', fetcher);
+  >('/api/datastores', fetcher);
 
   const handleUploadPluginIcon = async (event: any) => {
     try {
       setState({ isUploadingPluginIcon: true });
       const file = event.target.files[0];
-
       const fileName = `plugin-icon.${mime.extension(file.type)}`;
 
       // upload text from file to AWS
@@ -205,24 +208,38 @@ export default function BaseForm(props: Props) {
         },
       });
 
-      const getAgentStoreS3Url = (datastoreId: string) => {
-        return `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.amazonaws.com/agents/${datastoreId}`;
+      const getAgentStoreS3Url = (agentId: string) => {
+        return `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.amazonaws.com/agents/${agentId}`;
       };
 
       const pluginIconUrl = `${getAgentStoreS3Url(defaultValues?.id!)}/${fileName}`;
-      console.log(pluginIconUrl);
-      
-
-      await upsertDatastoreMutation.trigger({
+      setIcon(pluginIconUrl)
+      await upsertAgentMutation.trigger({
         ...defaultValues,
         pluginIconUrl: pluginIconUrl,
       } as any);
 
-      await getDatastoresQuery.mutate();
-
       toast.success('Plugin icon updated successfully!');
+      setState({ isUploadingPluginIcon: false });
+      setIsIconDefined(true)
     } catch (err) {
       console.log(err, err);
+    } finally {
+    }
+  };
+
+  const handleDeletePluginIcon = async () => {
+    try {
+      setState({ isUploadingPluginIcon: true });
+
+      await upsertAgentMutation.trigger({
+        ...defaultValues,
+        pluginIconUrl: null,
+      } as any);
+      setIcon('/.well-known/logo.png')
+      setIsIconDefined(false)
+
+    } catch (err) {
     } finally {
       setState({ isUploadingPluginIcon: false });
     }
@@ -237,8 +254,6 @@ export default function BaseForm(props: Props) {
         success: 'Updated!',
         error: 'Something went wrong',
       });
-
-      console.log('DATA', data);
       props?.onSubmitSucces?.(data as Agent);
     } catch (err) {
       console.log('error', err);
@@ -253,8 +268,8 @@ export default function BaseForm(props: Props) {
   const tools = methods.watch('tools') || [];
   const prompt = methods.watch('prompt');
 
-  console.log('validation errors', methods.formState.errors);
-  console.log('CONTROLS',control);
+  // Is this log usefull ?
+  // console.log('validation errors', methods.formState.errors);
   
   return (
     <FormProvider {...methods}>
@@ -265,7 +280,6 @@ export default function BaseForm(props: Props) {
         {networkError && <Alert color="danger">{networkError}</Alert>}
         <Stack gap={1}>
           <Typography level="body2">Plugin Icon</Typography>
-
           <input
             type="file"
             hidden
@@ -282,7 +296,7 @@ export default function BaseForm(props: Props) {
                 size="lg"
                 variant="outlined"
                 src={`${
-                  defaultValues?.pluginIconUrl || '/.well-known/logo.png'
+                  icon
                 }?timestamp=${Date.now()}`}
               />
             </AvatarGroup>
@@ -299,6 +313,17 @@ export default function BaseForm(props: Props) {
               >
                 Replace
               </Button>
+              {isIconDefined && (
+                <Button
+                  variant="outlined"
+                  color="danger"
+                  onClick={handleDeletePluginIcon}
+                  size="sm"
+                  startDecorator={<DeleteIcon />}
+                >
+                  Delete
+                </Button>
+              )}
               {/* {defaultValues?.pluginIconUrl && (
                 <Button
                   variant="outlined"
