@@ -12,7 +12,6 @@ import { z } from 'zod';
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import generateFunId from '@app/utils/generate-fun-id';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
@@ -34,7 +33,9 @@ export const fileUpload = async (
   res: NextApiResponse
 ) => {
   const datastoreId = req.query.id as string;
+
   const data = req.body as z.infer<typeof Schema>;
+  const datasourceId = data?.id;
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
@@ -44,12 +45,12 @@ export const fileUpload = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  const datastore = await prisma.datastore.findUnique({
+  const datasource = await prisma.appDatasource.findUnique({
     where: {
-      id: datastoreId,
+      id: datasourceId,
     },
     include: {
-      apiKeys: true,
+      datastore: true,
       owner: {
         include: {
           usage: true,
@@ -64,54 +65,29 @@ export const fileUpload = async (
     },
   });
 
-  if (!datastore) {
+  if (!datasource) {
     throw new ApiError(ApiErrorType.NOT_FOUND);
   }
 
   if (
-    datastore.visibility === DatastoreVisibility.private &&
-    (!token ||
-      !(
-        datastore?.owner?.apiKeys.find((each) => each.key === token) ||
-        // TODO REMOVE AFTER MIGRATION
-        datastore.apiKeys.find((each) => each.key === token)
-      ))
+    datasource?.datastoreId !== datastoreId ||
+    (datasource?.datastore?.visibility === DatastoreVisibility.private &&
+      (!token ||
+        !datasource?.owner?.apiKeys.find((each) => each.key === token)))
   ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   guardDataProcessingUsage({
-    usage: datastore?.owner?.usage as Usage,
+    usage: datasource?.owner?.usage as Usage,
     plan:
-      datastore?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0,
-  });
-
-  const id = data?.id;
-
-  const datasource = await prisma.appDatasource.create({
-    data: {
-      id,
-      type: DatasourceType.file,
-      name: generateFunId(),
-      config: {},
-      status: DatasourceStatus.pending,
-      owner: {
-        connect: {
-          id: datastore?.ownerId!,
-        },
-      },
-      datastore: {
-        connect: {
-          id: datastoreId,
-        },
-      },
-    },
+      datasource?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0,
   });
 
   await triggerTaskLoadDatasource([
     {
       userId: datasource.ownerId!,
-      datasourceId: id,
+      datasourceId,
       priority: 1,
     },
   ]);

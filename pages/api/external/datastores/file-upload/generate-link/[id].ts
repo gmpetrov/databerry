@@ -1,4 +1,10 @@
-import { DatastoreVisibility, SubscriptionPlan, Usage } from '@prisma/client';
+import {
+  DatasourceStatus,
+  DatasourceType,
+  DatastoreVisibility,
+  SubscriptionPlan,
+  Usage,
+} from '@prisma/client';
 import Cors from 'cors';
 import cuid from 'cuid';
 import mime from 'mime-types';
@@ -10,6 +16,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { s3 } from '@app/utils/aws';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import generateFunId from '@app/utils/generate-fun-id';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
@@ -21,8 +28,8 @@ const cors = Cors({
 
 const handler = createApiHandler();
 
-const Schema = GenerateUploadLinkRequest.omit({
-  fileName: true,
+const Schema = GenerateUploadLinkRequest.extend({
+  fileName: z.string().optional().nullable(),
 });
 
 export const generateLink = async (
@@ -95,6 +102,28 @@ export const generateLink = async (
   };
 
   const link = await s3.getSignedUrlPromise('putObject', param);
+
+  await prisma.appDatasource.create({
+    data: {
+      id,
+      type: DatasourceType.file,
+      name: data.fileName || generateFunId(),
+      config: {
+        type: data.type,
+      },
+      status: DatasourceStatus.pending,
+      owner: {
+        connect: {
+          id: datastore?.ownerId!,
+        },
+      },
+      datastore: {
+        connect: {
+          id: datastoreId,
+        },
+      },
+    },
+  });
 
   return {
     id,

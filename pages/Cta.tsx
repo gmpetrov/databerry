@@ -6,11 +6,11 @@ export default function Cta() {
       <div className="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Join the Future of Communication
+            Join the Generative AI Revolution
           </h2>
           <p className="max-w-xl mx-auto mt-6 text-lg leading-8 text-gray-300">
-            {`Join the thousands of businesses worldwide using AI chatbots to
-            streamline communication and automate processes. Don't get left
+            {`Thousands of businesses worldwide are using Databerry Generative AI platform to
+            solve business specific use-cases. Don't get left
             behind - start building your own custom AI chatbot today!`}
           </p>
           <div className="flex items-center justify-center mt-10 gap-x-6">
