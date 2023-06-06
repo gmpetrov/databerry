@@ -106,7 +106,7 @@ export default function Home() {
         <Faqs /> */}
         <FeaturesForDevs />
         <FeaturesForCustomerSupport />
-        {/* <FeaturesForChatGPTPlugin /> */}
+        <FeaturesForChatGPTPlugin />
         {/* <FeaturesForSlack /> */}
         {/* <FeaturesForInfluencers /> */}
         {/* <ChatBotBenefits /> */}
