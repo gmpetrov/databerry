@@ -2,11 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ConstructionOutlined from '@mui/icons-material/ConstructionOutlined';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import { AvatarGroup } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -40,7 +42,7 @@ import mime from 'mime-types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
@@ -48,10 +50,12 @@ import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
 import Input from '@app/components/Input';
-import { getDatastores } from '@app/pages/api/datastores';
+import useStateReducer from '@app/hooks/useStateReducer';
+import { createDatastore, getDatastores } from '@app/pages/api/datastores';
 import { RouteNames } from '@app/types';
-import { UpsertAgentSchema } from '@app/types/dtos';
+import { GenerateUploadLinkRequest, UpsertAgentSchema } from '@app/types/dtos';
 import cuid from '@app/utils/cuid';
+import getDatastoreS3Url from '@app/utils/get-datastore-s3-url';
 import { CUSTOMER_SUPPORT } from '@app/utils/prompt-templates';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 
@@ -143,6 +147,17 @@ export default function BaseForm(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
     useState(false);
+  const fileInputRef = useRef();
+
+  
+  const [state, setState] = useStateReducer({
+    isUploadingPluginIcon: false,
+    isUpdatingPlugin: false,
+  });
+
+  const upsertDatastoreMutation = useSWRMutation<
+  Prisma.PromiseReturnType<typeof createDatastore>
+>(`/api/datastores`, postFetcher);
 
   const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] =
     useState(false);
@@ -154,6 +169,7 @@ export default function BaseForm(props: Props) {
     },
   });
 
+  
   const {
     register,
     control,
@@ -161,10 +177,56 @@ export default function BaseForm(props: Props) {
     reset,
     formState: { errors, defaultValues, isDirty, dirtyFields },
   } = methods;
-
+  
   const getDatastoresQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getDatastores>
-  >('/api/datastores', fetcher);
+  Prisma.PromiseReturnType<typeof getDatastores>
+  >('/api/agents', fetcher);
+
+  const handleUploadPluginIcon = async (event: any) => {
+    try {
+      setState({ isUploadingPluginIcon: true });
+      const file = event.target.files[0];
+
+      const fileName = `plugin-icon.${mime.extension(file.type)}`;
+
+      // upload text from file to AWS
+      const uploadLinkRes = await axios.post(
+        `/api/agents/${defaultValues?.id}/generate-upload-link`,
+        {
+          fileName,
+          type: file.type,
+          folderName: 'agents'
+        } as GenerateUploadLinkRequest
+      );
+
+      await axios.put(uploadLinkRes.data, file, {
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+
+      const getAgentStoreS3Url = (datastoreId: string) => {
+        return `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.amazonaws.com/agents/${datastoreId}`;
+      };
+
+      const pluginIconUrl = `${getAgentStoreS3Url(defaultValues?.id!)}/${fileName}`;
+      console.log(pluginIconUrl);
+      
+
+      await upsertDatastoreMutation.trigger({
+        ...defaultValues,
+        pluginIconUrl: pluginIconUrl,
+      } as any);
+
+      await getDatastoresQuery.mutate();
+
+      toast.success('Plugin icon updated successfully!');
+    } catch (err) {
+      console.log(err, err);
+    } finally {
+      setState({ isUploadingPluginIcon: false });
+    }
+  };
 
   const onSubmit = async (values: UpsertAgentSchema) => {
     try {
@@ -192,7 +254,8 @@ export default function BaseForm(props: Props) {
   const prompt = methods.watch('prompt');
 
   console.log('validation errors', methods.formState.errors);
-
+  console.log('CONTROLS',control);
+  
   return (
     <FormProvider {...methods}>
       <form
@@ -200,7 +263,56 @@ export default function BaseForm(props: Props) {
         onSubmit={handleSubmit(onSubmit)}
       >
         {networkError && <Alert color="danger">{networkError}</Alert>}
+        <Stack gap={1}>
+          <Typography level="body2">Plugin Icon</Typography>
 
+          <input
+            type="file"
+            hidden
+            accept={'image/*'}
+            // {...register('config.source')}
+            // value={datastore?.pluginIconUrl || ''}
+            onChange={handleUploadPluginIcon}
+            ref={fileInputRef as any}
+          />
+
+          <Stack gap={1}>
+            <AvatarGroup>
+              <Avatar
+                size="lg"
+                variant="outlined"
+                src={`${
+                  defaultValues?.pluginIconUrl || '/.well-known/logo.png'
+                }?timestamp=${Date.now()}`}
+              />
+            </AvatarGroup>
+            <Stack direction="row" gap={1}>
+              <Button
+                variant="outlined"
+                color="neutral"
+                size="sm"
+                onClick={() => {
+                  (fileInputRef as any).current?.click?.();
+                }}
+                startDecorator={<AutorenewIcon />}
+                loading={state.isUploadingPluginIcon}
+              >
+                Replace
+              </Button>
+              {/* {defaultValues?.pluginIconUrl && (
+                <Button
+                  variant="outlined"
+                  color="danger"
+                  onClick={handleDeletePluginIcon}
+                  size="sm"
+                  startDecorator={<DeleteIcon />}
+                >
+                  Delete
+                </Button>
+              )} */}
+            </Stack>
+          </Stack>
+        </Stack>
         <Input
           label="Name (optional)"
           control={control as any}
