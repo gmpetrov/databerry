@@ -181,7 +181,7 @@ const handleQuery = async (
         user: {
           type: 'participant',
           nickname: agent?.name || 'Databerry.ai',
-          avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+          avatar: agent.pluginIconUrl ? agent.pluginIconUrl : 'https://databerry.ai/databerry-rounded-bg-white.png',
         },
       }
     );
@@ -237,7 +237,7 @@ const handleQuery = async (
     user: {
       type: 'participant',
       nickname: agent?.name || 'Databerry.ai',
-      avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+      avatar: agent.pluginIconUrl ? agent.pluginIconUrl : 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
   });
 
