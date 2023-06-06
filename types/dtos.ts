@@ -133,6 +133,7 @@ export const UpsertAgentSchema = z.object({
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
   temperature: z.number().default(0.0),
+  pluginIconUrl: z.string().trim().optional().nullable(),
   promptType: z.nativeEnum(PromptType).default('customer_support'),
   visibility: z.nativeEnum(AgentVisibility).default('private'),
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
@@ -154,6 +155,7 @@ export type UpsertAgentSchema = z.infer<typeof UpsertAgentSchema>;
 export const GenerateUploadLinkRequest = z.object({
   fileName: z.string(),
   type: z.string(),
+  folderName: z.string().optional().nullable()
 });
 
 export type GenerateUploadLinkRequest = z.infer<
