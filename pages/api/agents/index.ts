@@ -91,6 +91,7 @@ export const upsertAgent = async (
           id: session?.user?.id,
         },
       },
+      pluginIconUrl: data.pluginIconUrl,
       visibility: data.visibility || AgentVisibility.private,
       tools: {
         createMany: {
@@ -113,6 +114,7 @@ export const upsertAgent = async (
       promptType: data.promptType,
       temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
+      pluginIconUrl: data.pluginIconUrl,
       tools: {
         createMany: {
           data: newTools.map((tool) => ({
