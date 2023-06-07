@@ -133,6 +133,7 @@ export const UpsertAgentSchema = z.object({
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
   temperature: z.number().default(0.0),
+  iconUrl: z.string().trim().optional().nullable(),
   promptType: z.nativeEnum(PromptType).default('customer_support'),
   visibility: z.nativeEnum(AgentVisibility).default('private'),
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),

@@ -2,11 +2,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ConstructionOutlined from '@mui/icons-material/ConstructionOutlined';
+import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
+import { AvatarGroup } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -40,7 +43,7 @@ import mime from 'mime-types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
@@ -48,10 +51,14 @@ import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
 import Input from '@app/components/Input';
-import { getDatastores } from '@app/pages/api/datastores';
+import useStateReducer from '@app/hooks/useStateReducer';
+import { getAgents, upsertAgent } from '@app/pages/api/agents';
+import { createDatastore, getDatastores } from '@app/pages/api/datastores';
 import { RouteNames } from '@app/types';
-import { UpsertAgentSchema } from '@app/types/dtos';
+import { GenerateUploadLinkRequest, UpsertAgentSchema } from '@app/types/dtos';
 import cuid from '@app/utils/cuid';
+import getDatastoreS3Url from '@app/utils/get-datastore-s3-url';
+import getS3RootDomain from '@app/utils/get-s3-root-domain';
 import { CUSTOMER_SUPPORT } from '@app/utils/prompt-templates';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 
@@ -140,9 +147,21 @@ const Tool = (props: {
 };
 
 export default function BaseForm(props: Props) {
-  const [isLoading, setIsLoading] = useState(false);
+  const defaultIconUrl = '/.well-known/logo.png';
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
     useState(false);
+  const fileInputRef = useRef();
+
+  const [state, setState] = useStateReducer({
+    isLoading: false,
+    isUploadingAgentIcon: false,
+    isUpdatingPlugin: false,
+    iconUrl: props?.defaultValues?.iconUrl || defaultIconUrl,
+  });
+
+  const upsertAgentMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof upsertAgent>
+  >(`/api/agents`, postFetcher);
 
   const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] =
     useState(false);
@@ -166,22 +185,81 @@ export default function BaseForm(props: Props) {
     Prisma.PromiseReturnType<typeof getDatastores>
   >('/api/datastores', fetcher);
 
+  const handleUploadAgentIcon = async (event: any) => {
+    try {
+      setState({ isUploadingAgentIcon: true });
+      const file = event.target.files[0];
+      const fileName = `agent-icon.${mime.extension(file.type)}`;
+
+      // upload text from file to AWS
+      const uploadLinkRes = await axios.post(
+        `/api/agents/${defaultValues?.id}/generate-upload-link`,
+        {
+          fileName,
+          type: file.type,
+        } as GenerateUploadLinkRequest
+      );
+
+      await axios.put(uploadLinkRes.data, file, {
+        headers: {
+          'Content-Type': file.type,
+        },
+      });
+
+      const getAgentStoreS3Url = (agentId: string) => {
+        return `${getS3RootDomain()}/agents/${agentId}`;
+      };
+
+      const iconUrl = `${getS3RootDomain()}/agents/${
+        defaultValues?.id
+      }/${fileName}`;
+
+      setState({
+        iconUrl: iconUrl,
+      });
+
+      await upsertAgentMutation.trigger({
+        ...defaultValues,
+        iconUrl,
+      } as any);
+
+      toast.success('Agent icon updated successfully!');
+      setState({ isUploadingAgentIcon: false });
+    } catch (err) {
+      console.log(err, err);
+    } finally {
+    }
+  };
+
+  const handleDeleteAgentIcon = async () => {
+    try {
+      setState({ isUploadingAgentIcon: true });
+
+      await upsertAgentMutation.trigger({
+        ...defaultValues,
+        iconUrl: null,
+      } as any);
+      setState({ iconUrl: defaultIconUrl });
+    } catch (err) {
+    } finally {
+      setState({ isUploadingAgentIcon: false });
+    }
+  };
+
   const onSubmit = async (values: UpsertAgentSchema) => {
     try {
-      setIsLoading(true);
+      setState({ isLoading: true });
       console.log('values', values);
       const { data } = await toast.promise(axios.post('/api/agents', values), {
         loading: 'Updating...',
         success: 'Updated!',
         error: 'Something went wrong',
       });
-
-      console.log('DATA', data);
       props?.onSubmitSucces?.(data as Agent);
     } catch (err) {
       console.log('error', err);
     } finally {
-      setIsLoading(false);
+      setState({ isLoading: false });
     }
   };
 
@@ -191,7 +269,8 @@ export default function BaseForm(props: Props) {
   const tools = methods.watch('tools') || [];
   const prompt = methods.watch('prompt');
 
-  console.log('validation errors', methods.formState.errors);
+  // Is this log usefull ?
+  // console.log('validation errors', methods.formState.errors);
 
   return (
     <FormProvider {...methods}>
@@ -200,7 +279,62 @@ export default function BaseForm(props: Props) {
         onSubmit={handleSubmit(onSubmit)}
       >
         {networkError && <Alert color="danger">{networkError}</Alert>}
+        <Stack gap={1}>
+          <Typography level="body2">Icon</Typography>
+          <input
+            type="file"
+            hidden
+            accept={'image/*'}
+            onChange={handleUploadAgentIcon}
+            ref={fileInputRef as any}
+          />
 
+          <Stack gap={1}>
+            <AvatarGroup>
+              <Avatar
+                size="lg"
+                variant="outlined"
+                src={`${state?.iconUrl}?timestamp=${Date.now()}`}
+              />
+            </AvatarGroup>
+            <Stack direction="row" gap={1}>
+              <Button
+                variant="outlined"
+                color="neutral"
+                size="sm"
+                onClick={() => {
+                  (fileInputRef as any).current?.click?.();
+                }}
+                startDecorator={<AutorenewIcon />}
+                loading={state.isUploadingAgentIcon}
+              >
+                Replace
+              </Button>
+              {state?.iconUrl && state?.iconUrl !== defaultIconUrl && (
+                <Button
+                  variant="outlined"
+                  color="danger"
+                  onClick={handleDeleteAgentIcon}
+                  size="sm"
+                  startDecorator={<DeleteIcon />}
+                >
+                  Delete
+                </Button>
+              )}
+              {/* {defaultValues?.pluginIconUrl && (
+                <Button
+                  variant="outlined"
+                  color="danger"
+                  onClick={handleDeleteAgentIcon}
+                  size="sm"
+                  startDecorator={<DeleteIcon />}
+                >
+                  Delete
+                </Button>
+              )} */}
+            </Stack>
+          </Stack>
+        </Stack>
         <Input
           label="Name (optional)"
           control={control as any}
@@ -526,7 +660,7 @@ export default function BaseForm(props: Props) {
           type="submit"
           variant="solid"
           color="primary"
-          loading={isLoading}
+          loading={state.isLoading}
           sx={{ ml: 'auto', mt: 2 }}
           // disabled={!methods.formState.isValid}
           // startDecorator={<SaveRoundedIcon />}
