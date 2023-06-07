@@ -83,7 +83,9 @@ export default function SignInPage() {
               // leaveTo="opacity-0"
             >
               <div className="flex flex-col items-center justify-center">
-                <Logo className="w-14" />
+                <a href="https://databerry.ai">
+                  <Logo className="cursor-pointer w-14" />
+                </a>
                 {/* <span className="w-8 h-8 mx-auto text-xl font-extrabold text-transparent rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></span> */}
                 <Typography className="mt-2 text-3xl font-extrabold text-center">
                   Sign in
