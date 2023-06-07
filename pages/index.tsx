@@ -20,6 +20,7 @@ import ChatBotBenefits from './ChatBotBenefits';
 import Cta from './Cta';
 import FAQ from './FAQ';
 import FeaturesForChatGPTPlugin from './FeaturesForChatGPTPlugin';
+import FeaturesForChatWithData from './FeaturesForChatWithData';
 import FeaturesForCustomerSupport from './FeaturesForCustomerSupport';
 import FeaturesForDevs from './FeaturesForDevs';
 import FeaturesForInfluencers from './FeaturesForInfluencers';
@@ -104,8 +105,9 @@ export default function Home() {
         <Testimonials />
         <Pricing />
         <Faqs /> */}
-        <FeaturesForDevs />
+        <FeaturesForChatWithData />
         <FeaturesForCustomerSupport />
+        <FeaturesForDevs />
         <FeaturesForChatGPTPlugin />
         {/* <FeaturesForSlack /> */}
         {/* <FeaturesForInfluencers /> */}
