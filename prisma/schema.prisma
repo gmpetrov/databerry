@@ -155,7 +155,7 @@ model Agent {
   description String
   prompt      String?
   promptType  PromptType @default(customer_support) @map("prompt_type")
-  pluginIconUrl   String? @map("plugin_icon_url")
+  iconUrl     String?    @map("icon_url")
   temperature Float      @default(0.0)
 
   visibility    AgentVisibility @default(private)
