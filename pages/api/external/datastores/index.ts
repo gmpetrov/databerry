@@ -49,9 +49,7 @@ export const getDatastores = async (
     },
   });
 
-  return {
-    results: key?.user?.datastores || [],
-  };
+  return key?.user?.datastores || [];
 };
 
 handler.get(respond(getDatastores));
