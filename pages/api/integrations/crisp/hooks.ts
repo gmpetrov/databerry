@@ -170,21 +170,24 @@ const handleQuery = async (
       plan,
     });
   } catch {
-    return await CrispClient.website.sendMessageInConversation(
-      websiteId,
-      sessionId,
-      {
-        type: 'text',
-        from: 'operator',
-        origin: 'chat',
-        content: 'Usage limit reached.',
-        user: {
-          type: 'participant',
-          nickname: agent?.name || 'Databerry.ai',
-          avatar: agent.pluginIconUrl ? agent.pluginIconUrl : 'https://databerry.ai/databerry-rounded-bg-white.png',
-        },
-      }
-    );
+    return;
+    // return await CrispClient.website.sendMessageInConversation(
+    //   websiteId,
+    //   sessionId,
+    //   {
+    //     type: 'text',
+    //     from: 'operator',
+    //     origin: 'chat',
+    //     content: 'Usage limit reached.',
+    //     user: {
+    //       type: 'participant',
+    //       nickname: agent?.name || 'Databerry.ai',
+    //       avatar:
+    //         agent.iconUrl ||
+    //         'https://databerry.ai/databerry-rounded-bg-white.png',
+    //     },
+    //   }
+    // );
   }
 
   const conversation = await prisma.conversation.findFirst({
@@ -237,7 +240,8 @@ const handleQuery = async (
     user: {
       type: 'participant',
       nickname: agent?.name || 'Databerry.ai',
-      avatar: agent.pluginIconUrl ? agent.pluginIconUrl : 'https://databerry.ai/databerry-rounded-bg-white.png',
+      avatar:
+        agent.iconUrl || 'https://databerry.ai/databerry-rounded-bg-white.png',
     },
   });
 

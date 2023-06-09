@@ -17,6 +17,7 @@ import ListItem from '@mui/material/ListItem';
 import { Prisma } from '@prisma/client';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { GetServerSidePropsContext } from 'next/types';
+import { getServerSession } from 'next-auth/next';
 import { ReactElement } from 'react';
 import React from 'react';
 import useSWR from 'swr';
@@ -25,6 +26,7 @@ import useSWRInfinite from 'swr/infinite';
 import ChatBox from '@app/components/ChatBox';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { authOptions } from '@app/pages/api/auth/[...nextauth]';
 import relativeDate from '@app/utils/relative-date';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
@@ -254,10 +256,29 @@ LogsPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export const getServerSideProps = withAuth(
-  async (ctx: GetServerSidePropsContext) => {
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {},
+//     };
+//   }
+// );
+// Patch for PH Launch
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+
+  if (!session) {
     return {
-      props: {},
+      redirect: {
+        statusCode: 302,
+        destination: `https://databerry.ai`,
+      },
     };
   }
-);
+
+  (ctx as any).req.session = session;
+
+  return {
+    props: {},
+  };
+};

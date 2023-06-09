@@ -57,7 +57,6 @@ import { createDatastore, getDatastores } from '@app/pages/api/datastores';
 import { RouteNames } from '@app/types';
 import { GenerateUploadLinkRequest, UpsertAgentSchema } from '@app/types/dtos';
 import cuid from '@app/utils/cuid';
-import getDatastoreS3Url from '@app/utils/get-datastore-s3-url';
 import { CUSTOMER_SUPPORT } from '@app/utils/prompt-templates';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 
@@ -146,21 +145,9 @@ const Tool = (props: {
 };
 
 export default function BaseForm(props: Props) {
-
   const [isLoading, setIsLoading] = useState(false);
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
     useState(false);
-  const fileInputRef = useRef();
-  const [icon,setIcon] = useState(props.defaultValues?.pluginIconUrl ? props.defaultValues?.pluginIconUrl : '/.well-known/logo.png' )
-  
-  const [state, setState] = useStateReducer({
-    isUploadingPluginIcon: false,
-    isUpdatingPlugin: false,
-  });
-
-  const upsertAgentMutation = useSWRMutation<
-  Prisma.PromiseReturnType<typeof upsertAgent>
->(`/api/agents`, postFetcher);
 
   const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] =
     useState(false);
@@ -186,68 +173,9 @@ export default function BaseForm(props: Props) {
   Prisma.PromiseReturnType<typeof getDatastores>
   >('/api/datastores', fetcher);
 
-  const handleUploadPluginIcon = async (event: any) => {
-    try {
-      setState({ isUploadingPluginIcon: true });
-      const file = event.target.files[0];
-      const fileName = `plugin-icon.${mime.extension(file.type)}`;
-
-      // upload text from file to AWS
-      const uploadLinkRes = await axios.post(
-        `/api/agents/${defaultValues?.id}/generate-upload-link`,
-        {
-          fileName,
-          type: file.type,
-          folderName: 'agents'
-        } as GenerateUploadLinkRequest
-      );
-
-      await axios.put(uploadLinkRes.data, file, {
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-
-      const getAgentStoreS3Url = (agentId: string) => {
-        return `https://${process.env.NEXT_PUBLIC_S3_BUCKET_NAME}.s3.amazonaws.com/agents/${agentId}`;
-      };
-
-      const pluginIconUrl = `${getAgentStoreS3Url(defaultValues?.id!)}/${fileName}`;
-      setIcon(pluginIconUrl)
-      await upsertAgentMutation.trigger({
-        ...defaultValues,
-        pluginIconUrl: pluginIconUrl,
-      } as any);
-
-      toast.success('Plugin icon updated successfully!');
-      setState({ isUploadingPluginIcon: false });
-      setIsIconDefined(true)
-    } catch (err) {
-      console.log(err, err);
-    } finally {
-    }
-  };
-
-  const handleDeletePluginIcon = async () => {
-    try {
-      setState({ isUploadingPluginIcon: true });
-
-      await upsertAgentMutation.trigger({
-        ...defaultValues,
-        pluginIconUrl: null,
-      } as any);
-      setIcon('/.well-known/logo.png')
-      setIsIconDefined(false)
-
-    } catch (err) {
-    } finally {
-      setState({ isUploadingPluginIcon: false });
-    }
-  };
-
   const onSubmit = async (values: UpsertAgentSchema) => {
     try {
-      setIsLoading(true);
+      setState({ isLoading: true });
       console.log('values', values);
       const { data } = await toast.promise(axios.post('/api/agents', values), {
         loading: 'Updating...',
@@ -258,7 +186,7 @@ export default function BaseForm(props: Props) {
     } catch (err) {
       console.log('error', err);
     } finally {
-      setIsLoading(false);
+      setState({ isLoading: false });
     }
   };
 
@@ -268,9 +196,8 @@ export default function BaseForm(props: Props) {
   const tools = methods.watch('tools') || [];
   const prompt = methods.watch('prompt');
 
-  // Is this log usefull ?
-  // console.log('validation errors', methods.formState.errors);
-  
+  console.log('validation errors', methods.formState.errors);
+
   return (
     <FormProvider {...methods}>
       <form
@@ -278,66 +205,7 @@ export default function BaseForm(props: Props) {
         onSubmit={handleSubmit(onSubmit)}
       >
         {networkError && <Alert color="danger">{networkError}</Alert>}
-        <Stack gap={1}>
-          <Typography level="body2">Plugin Icon</Typography>
-          <input
-            type="file"
-            hidden
-            accept={'image/*'}
-            // {...register('config.source')}
-            // value={datastore?.pluginIconUrl || ''}
-            onChange={handleUploadPluginIcon}
-            ref={fileInputRef as any}
-          />
 
-          <Stack gap={1}>
-            <AvatarGroup>
-              <Avatar
-                size="lg"
-                variant="outlined"
-                src={`${
-                  icon
-                }?timestamp=${Date.now()}`}
-              />
-            </AvatarGroup>
-            <Stack direction="row" gap={1}>
-              <Button
-                variant="outlined"
-                color="neutral"
-                size="sm"
-                onClick={() => {
-                  (fileInputRef as any).current?.click?.();
-                }}
-                startDecorator={<AutorenewIcon />}
-                loading={state.isUploadingPluginIcon}
-              >
-                Replace
-              </Button>
-              {isIconDefined && (
-                <Button
-                  variant="outlined"
-                  color="danger"
-                  onClick={handleDeletePluginIcon}
-                  size="sm"
-                  startDecorator={<DeleteIcon />}
-                >
-                  Delete
-                </Button>
-              )}
-              {/* {defaultValues?.pluginIconUrl && (
-                <Button
-                  variant="outlined"
-                  color="danger"
-                  onClick={handleDeletePluginIcon}
-                  size="sm"
-                  startDecorator={<DeleteIcon />}
-                >
-                  Delete
-                </Button>
-              )} */}
-            </Stack>
-          </Stack>
-        </Stack>
         <Input
           label="Name (optional)"
           control={control as any}
@@ -663,7 +531,7 @@ export default function BaseForm(props: Props) {
           type="submit"
           variant="solid"
           color="primary"
-          loading={isLoading}
+          loading={state.isLoading}
           sx={{ ml: 'auto', mt: 2 }}
           // disabled={!methods.formState.isValid}
           // startDecorator={<SaveRoundedIcon />}

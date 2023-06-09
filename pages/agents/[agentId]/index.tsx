@@ -491,6 +491,15 @@ export default function AgentPage() {
                   <Typography level="body3">
                     It will delete the agent permanently
                   </Typography>
+
+                  <Button
+                    color="danger"
+                    sx={{ mr: 'auto', mt: 2 }}
+                    startDecorator={<DeleteIcon />}
+                    onClick={handleDeleteAgent}
+                  >
+                    Delete
+                  </Button>
                 </FormControl>
               </>
             )}
