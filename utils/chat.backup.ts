@@ -67,7 +67,7 @@ class DataberryRetriever {
 
     const res = results.data as SearchSimpleResponseSchema;
 
-    const docs = res.results.map((each) => ({
+    const docs = res?.map((each) => ({
       metadata: {
         source: each?.source,
         score: each?.score,

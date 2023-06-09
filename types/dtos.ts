@@ -70,22 +70,18 @@ const SearchResultsSchema = z.array(
   })
 );
 
-export const SearchSimpleResponseSchema = z.object({
-  results: SearchResultsSchema,
-});
+export const SearchSimpleResponseSchema = SearchResultsSchema;
 
 export type SearchSimpleResponseSchema = z.infer<
   typeof SearchSimpleResponseSchema
 >;
 
-export const SearchResponseSchema = z.object({
-  results: z.array(
-    z.object({
-      query: z.string(),
-      results: SearchResultsSchema,
-    })
-  ),
-});
+export const SearchResponseSchema = z.array(
+  z.object({
+    query: z.string(),
+    results: SearchResultsSchema,
+  })
+);
 export type SearchResponseSchema = z.infer<typeof SearchResponseSchema>;
 
 export const UpsertRequestSchema = z.object({
