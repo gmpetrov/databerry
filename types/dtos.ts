@@ -163,7 +163,6 @@ export const GenerateUploadLinkRequest = z.object({
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   ]),
-  folderName: z.string().optional().nullable()
 });
 
 export type GenerateUploadLinkRequest = z.infer<

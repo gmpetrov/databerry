@@ -173,7 +173,6 @@ export default function BaseForm(props: Props) {
     },
   });
 
-  
   const {
     register,
     control,
@@ -181,10 +180,9 @@ export default function BaseForm(props: Props) {
     reset,
     formState: { errors, defaultValues, isDirty, dirtyFields },
   } = methods;
-  
-  const [isIconDefined,setIsIconDefined] = useState(props.defaultValues?.pluginIconUrl ? true: false)
+
   const getDatastoresQuery = useSWR<
-  Prisma.PromiseReturnType<typeof getDatastores>
+    Prisma.PromiseReturnType<typeof getDatastores>
   >('/api/datastores', fetcher);
 
   const handleUploadAgentIcon = async (event: any) => {
