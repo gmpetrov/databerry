@@ -188,6 +188,7 @@ const handleQuery = async (
     //     },
     //   }
     // );
+  }
 
   const conversation = await prisma.conversation.findFirst({
     where: {
