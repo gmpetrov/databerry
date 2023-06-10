@@ -41,6 +41,7 @@ const FileSchema = z.object({
 
 export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const file = (req as any).file as z.infer<typeof FileSchema>;
+  const fileName = (req as any)?.body?.fileName as string;
 
   try {
     await FileSchema.parseAsync(file);
@@ -106,7 +107,7 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const datasource = await prisma.appDatasource.create({
     data: {
       type: DatasourceType.file,
-      name: file.originalname || generateFunId(),
+      name: fileName || generateFunId(),
       config: {
         type: file.mimetype,
       },
@@ -126,11 +127,11 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
   // Add to S3
   const fileExt = mime.extension(file.mimetype);
-  const fileName = `${datasource.id}${fileExt ? `.${fileExt}` : ''}`;
+  const s3FileName = `${datasource.id}${fileExt ? `.${fileExt}` : ''}`;
 
   const params = {
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-    Key: `datastores/${datastore.id}/${fileName}`,
+    Key: `datastores/${datastore.id}/${s3FileName}`,
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: 'public-read',
