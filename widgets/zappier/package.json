@@ -1,0 +1,25 @@
+{
+  "name": "databerry",
+  "version": "1.0.5",
+  "description": "Databerry is a no-code platform for building custom ChatGTP agents trained on custom data.\\nUse Databerry API to query an Agent, Upload a document to a datastore, query a datastore (semantic search)",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive -t 10000"
+  },
+  "engines": {
+    "node": ">=v16",
+    "npm": ">=5.6.0"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "zapier-platform-core": "14.1.2"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "should": "^13.2.0"
+  },
+  "private": true,
+  "zapier": {
+    "convertedByCLIVersion": "14.1.1"
+  }
+}
