@@ -357,6 +357,23 @@ export default function AgentPage() {
                         setState({ isCrispModalOpen: true });
                       },
                     },
+                    {
+                      name: 'Zapier',
+                      isPremium: false,
+                      icon: (
+                        <img
+                          className="w-8"
+                          src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
+                          alt="zapier logo"
+                        ></img>
+                      ),
+                      action: () => {
+                        window.open(
+                          'https://zapier.com/developer/public-invite/185359/33516107006cd86154d2b3a0b75ab370/',
+                          '_blank'
+                        );
+                      },
+                    },
                   ].map((each, index, arr) => (
                     <ListItem
                       key={index}
