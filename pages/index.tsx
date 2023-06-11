@@ -109,7 +109,7 @@ export default function Home() {
 }
 
 
-export const getStaticProps = ({ locale, locales }) => {
+export const getStaticProps = (locale:any, locales: any) => {
   return {
     props: {
       locale,

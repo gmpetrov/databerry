@@ -46,7 +46,7 @@ export default function MaintenancePage() {
 }
 
 
-export const getStaticProps = ({ locale, locales }) => {
+export const getStaticProps = (locale:any, locales: any) => {
   return {
     props: {
       locale,
