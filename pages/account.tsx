@@ -489,8 +489,9 @@ export const getServerSideProps = withAuth(
     const { locale } = ctx;
     return {
       props: {
-        ...require(`..public/locales/accounts/${locale}.json`),
-        ...require(`..public/locales/navbar.json`),
+        ...require(`../public/locales/accounts/${locale}.json`),
+        ...require(`../public/locales/navbar/${locale}.json`),
+
       },
     };
   }
