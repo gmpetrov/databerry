@@ -26,8 +26,8 @@ end
 rcall("HSET", jobIdKey, "returnvalue", ARGV[2])
 return 1`;
 export const storeResult = {
-    name: 'storeResult',
-    content,
-    keys: 2,
+  name: "storeResult",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=storeResult-2.js.map

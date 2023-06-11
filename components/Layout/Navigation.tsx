@@ -1,31 +1,31 @@
-import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
-import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
-import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
-import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
-import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
-import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
-import Badge from '@mui/joy/Badge';
-import Box from '@mui/joy/Box';
-import Card from '@mui/joy/Card';
-import Divider from '@mui/joy/Divider';
-import List from '@mui/joy/List';
-import ListItem from '@mui/joy/ListItem';
-import ListItemButton from '@mui/joy/ListItemButton';
-import ListItemContent from '@mui/joy/ListItemContent';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { Prisma } from '@prisma/client';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import * as React from 'react';
-import useSWR from 'swr';
+import AutoFixHighRoundedIcon from "@mui/icons-material/AutoFixHighRounded";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
+import InboxRoundedIcon from "@mui/icons-material/InboxRounded";
+import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
+import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
+import SmartToyRoundedIcon from "@mui/icons-material/SmartToyRounded"; // Icons import
+import StorageRoundedIcon from "@mui/icons-material/StorageRounded";
+import Badge from "@mui/joy/Badge";
+import Box from "@mui/joy/Box";
+import Card from "@mui/joy/Card";
+import Divider from "@mui/joy/Divider";
+import List from "@mui/joy/List";
+import ListItem from "@mui/joy/ListItem";
+import ListItemButton from "@mui/joy/ListItemButton";
+import ListItemContent from "@mui/joy/ListItemContent";
+import ListItemDecorator from "@mui/joy/ListItemDecorator";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { Prisma } from "@prisma/client";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import * as React from "react";
+import useSWR from "swr";
 
-import { countUnread } from '@app/pages/api/logs/count-unread';
-import { getStatus } from '@app/pages/api/status';
-import { AppStatus, RouteNames } from '@app/types';
-import { fetcher } from '@app/utils/swr-fetcher';
+import { countUnread } from "@app/pages/api/logs/count-unread";
+import { getStatus } from "@app/pages/api/status";
+import { AppStatus, RouteNames } from "@app/types";
+import { fetcher } from "@app/utils/swr-fetcher";
 
 export default function Navigation() {
   const router = useRouter();
@@ -39,7 +39,7 @@ export default function Navigation() {
   );
 
   const countUnreadQuery = useSWR<Prisma.PromiseReturnType<typeof countUnread>>(
-    '/api/logs/count-unread',
+    "/api/logs/count-unread",
     fetcher,
     {
       refreshInterval: 60000,
@@ -63,7 +63,7 @@ export default function Navigation() {
         active: router.route === RouteNames.DATASTORES,
       },
       {
-        label: 'Logs',
+        label: "Logs",
         route: RouteNames.LOGS,
         icon: (
           <Badge

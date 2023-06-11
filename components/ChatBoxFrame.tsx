@@ -1,14 +1,14 @@
-import Box from '@mui/joy/Box';
-import { useColorScheme } from '@mui/joy/styles';
-import { Agent, ConversationChannel } from '@prisma/client';
-import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import Box from "@mui/joy/Box";
+import { useColorScheme } from "@mui/joy/styles";
+import { Agent, ConversationChannel } from "@prisma/client";
+import { useRouter } from "next/router";
+import React, { useEffect, useMemo } from "react";
 
-import ChatBox from '@app/components/ChatBox';
-import useAgentChat from '@app/hooks/useAgentChat';
-import useVisitorId from '@app/hooks/useVisitorId';
-import { AgentInterfaceConfig } from '@app/types/models';
-import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
+import ChatBox from "@app/components/ChatBox";
+import useAgentChat from "@app/hooks/useAgentChat";
+import useVisitorId from "@app/hooks/useVisitorId";
+import { AgentInterfaceConfig } from "@app/types/models";
+import pickColorBasedOnBgColor from "@app/utils/pick-color-based-on-bgcolor";
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',

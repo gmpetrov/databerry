@@ -1,10 +1,10 @@
-import { IntegrationType } from '@prisma/client';
-import { NextApiResponse } from 'next';
-import { z } from 'zod';
+import { IntegrationType } from "@prisma/client";
+import { NextApiResponse } from "next";
+import { z } from "zod";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import prisma from '@app/utils/prisma-client';
+import { AppNextApiRequest } from "@app/types/index";
+import { createAuthApiHandler, respond } from "@app/utils/createa-api-handler";
+import prisma from "@app/utils/prisma-client";
 
 const handler = createAuthApiHandler();
 
@@ -54,7 +54,7 @@ export const deleteCrispIntegration = async (
   });
 
   if (integration?.agent?.ownerId !== session.user.id) {
-    throw new Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
   const deleted = await prisma.externalIntegration.delete({

@@ -1,10 +1,8 @@
-
 // file: logging/log-util.ts
 
 import pino, { Logger } from "pino";
 
 import logLevelData from "./log-level";
-
 
 const logLevels = new Map<string, string>(Object.entries(logLevelData));
 

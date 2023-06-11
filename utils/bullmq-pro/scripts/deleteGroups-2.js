@@ -184,8 +184,8 @@ end
 return deleteGroups(KEYS[1], KEYS[2], ARGV[1], tonumber(ARGV[2]))
 `;
 export const deleteGroups = {
-    name: 'deleteGroups',
-    content,
-    keys: 2,
+  name: "deleteGroups",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=deleteGroups-2.js.map

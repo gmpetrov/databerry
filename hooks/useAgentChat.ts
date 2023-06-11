@@ -1,16 +1,16 @@
 import {
   EventStreamContentType,
   fetchEventSource,
-} from '@microsoft/fetch-event-source';
-import type { ConversationChannel, Prisma } from '@prisma/client';
-import useSWR from 'swr';
+} from "@microsoft/fetch-event-source";
+import type { ConversationChannel, Prisma } from "@prisma/client";
+import useSWR from "swr";
 
-import { getHistory } from '@app/pages/api/agents/[id]/history/[sessionId]';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { fetcher } from '@app/utils/swr-fetcher';
+import { getHistory } from "@app/pages/api/agents/[id]/history/[sessionId]";
+import { ApiError, ApiErrorType } from "@app/utils/api-error";
+import { fetcher } from "@app/utils/swr-fetcher";
 
-import useStateReducer from './useStateReducer';
-import useVisitorId from './useVisitorId';
+import useStateReducer from "./useStateReducer";
+import useVisitorId from "./useVisitorId";
 
 type Props = {
   queryAgentURL: string;
@@ -20,7 +20,7 @@ type Props = {
 
 const useAgentChat = ({ queryAgentURL, queryHistoryURL, channel }: Props) => {
   const [state, setState] = useStateReducer({
-    history: [] as { from: 'human' | 'agent'; message: string; id?: string }[],
+    history: [] as { from: "human" | "agent"; message: string; id?: string }[],
   });
 
   const { visitorId } = useVisitorId();

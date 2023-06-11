@@ -1,9 +1,12 @@
-# fly.toml file generated for databerry on 2023-04-05T19:24:27+02:00
+# fly.toml app configuration file generated for griotai on 2023-06-02T13:11:46Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "griot"
+app = "griotai"
+primary_region = "jnb"
 kill_signal = "SIGINT"
 kill_timeout = 5
-primary_region = "iad"
 
 [processes]
 web = "node server.js"
@@ -36,21 +39,3 @@ worker = "node --max-old-space-size=1536 workers/datasource-loader.js"
   auto_stop_machines = true
   auto_start_machines = true
 
-# [[services]]
-#   # processes = ["app"]
-#   processes = ["web"]
-#   protocol = "tcp"
-#   internal_port = 3000
-
-#   [[services.ports]]
-#     port = 80
-#     handlers = ["http"]
-#     force_https = true
-
-#   [[services.ports]]
-#     port = 443
-#     handlers = ["tls", "http"]
-#   [services.concurrency]
-#     type = "connections"
-#     hard_limit = 25
-#     soft_limit = 20

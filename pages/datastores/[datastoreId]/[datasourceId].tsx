@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 import useSWR, { useSWRConfig } from "swr";
@@ -41,6 +42,7 @@ export default function DatasourcePage() {
     isCreateDatasourceModalOpen: false,
     currentDatastoreId: undefined as string | undefined,
   });
+  const t = useTranslations("datastores");
 
   const getDatasourceQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatasource>
@@ -114,7 +116,7 @@ export default function DatasourcePage() {
               color="neutral"
               className="hover:underline"
             >
-              Datastores
+              {t("datastores")}
             </Typography>
           </Link>
           <Link href={`${RouteNames.DATASTORES}/${router.query.datastoreId}`}>
@@ -230,7 +232,7 @@ export default function DatasourcePage() {
           <FormControl sx={{ gap: 1 }}>
             <FormLabel>Delete Datasource</FormLabel>
             <Typography level="body3">
-              It will remove all its data from the datastore.
+              {t(`delete_datasource_confirmation`)}
             </Typography>
             <Button
               color="danger"
@@ -240,7 +242,7 @@ export default function DatasourcePage() {
                 handleDeleteDatasource(getDatasourceQuery?.data?.id!)
               }
             >
-              Delete
+              {t("delete_datasource")}
             </Button>
           </FormControl>
         </Box>
@@ -285,8 +287,12 @@ DatasourcePage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/datastores/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

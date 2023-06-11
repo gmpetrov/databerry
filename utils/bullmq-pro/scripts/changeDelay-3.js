@@ -31,8 +31,8 @@ else
   return -1
 end`;
 export const changeDelay = {
-    name: 'changeDelay',
-    content,
-    keys: 3,
+  name: "changeDelay",
+  content,
+  keys: 3,
 };
 //# sourceMappingURL=changeDelay-3.js.map

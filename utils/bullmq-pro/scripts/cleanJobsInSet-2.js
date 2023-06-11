@@ -250,8 +250,8 @@ rcall("XADD", KEYS[2], "*", "event", "cleaned", "count", result[2])
 return result[1]
 `;
 export const cleanJobsInSet = {
-    name: 'cleanJobsInSet',
-    content,
-    keys: 2,
+  name: "cleanJobsInSet",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=cleanJobsInSet-2.js.map

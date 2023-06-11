@@ -896,8 +896,8 @@ else
 end
 `;
 export const moveToFinished = {
-    name: 'moveToFinished',
-    content,
-    keys: 12,
+  name: "moveToFinished",
+  content,
+  keys: 12,
 };
 //# sourceMappingURL=moveToFinished-12.js.map

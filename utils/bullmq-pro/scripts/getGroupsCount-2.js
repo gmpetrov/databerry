@@ -42,8 +42,8 @@ else
 end
 `;
 export const getGroupsCount = {
-    name: 'getGroupsCount',
-    content,
-    keys: 2,
+  name: "getGroupsCount",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=getGroupsCount-2.js.map

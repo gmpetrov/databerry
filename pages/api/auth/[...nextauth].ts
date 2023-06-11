@@ -72,9 +72,9 @@ export const authOptions = {
         params: {
           // scope:
           //   'https://www.googleapis.com/auth/calendar.readonly openid email profile',
-          prompt: 'consent',
-          access_type: 'offline',
-          response_type: 'code',
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
         },
       },
     }),

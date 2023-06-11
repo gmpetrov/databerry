@@ -1,36 +1,33 @@
-import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
-import Alert from '@mui/joy/Alert';
-import Avatar from '@mui/joy/Avatar';
-import Badge from '@mui/joy/Badge';
-import Box from '@mui/joy/Box';
-import Chip from '@mui/joy/Chip';
-import CircularProgress from '@mui/joy/CircularProgress';
-import Divider from '@mui/joy/Divider';
-import List from '@mui/joy/List';
-import ListDivider from '@mui/joy/ListDivider';
-import ListItemContent from '@mui/joy/ListItemContent';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Sheet from '@mui/joy/Sheet';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import ListItem from '@mui/material/ListItem';
-import { Prisma } from '@prisma/client';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement } from 'react';
-import React from 'react';
-import useSWR from 'swr';
-import useSWRInfinite from 'swr/infinite';
+import InboxRoundedIcon from "@mui/icons-material/InboxRounded";
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Chip from "@mui/joy/Chip";
+import CircularProgress from "@mui/joy/CircularProgress";
+import Divider from "@mui/joy/Divider";
+import List from "@mui/joy/List";
+import ListItemContent from "@mui/joy/ListItemContent";
+import Sheet from "@mui/joy/Sheet";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import ListItem from "@mui/material/ListItem";
+import { Prisma } from "@prisma/client";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { GetServerSidePropsContext } from "next/types";
+import { useTranslations } from "next-intl";
+import { ReactElement } from "react";
+import React from "react";
+import useSWR from "swr";
+import useSWRInfinite from "swr/infinite";
 
-import ChatBox from '@app/components/ChatBox';
-import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
-import relativeDate from '@app/utils/relative-date';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import ChatBox from "@app/components/ChatBox";
+import Layout from "@app/components/Layout";
+import useStateReducer from "@app/hooks/useStateReducer";
+import relativeDate from "@app/utils/relative-date";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
-import { getLogs } from '../api/logs';
-import { getMessages } from '../api/logs/[id]';
+import { getLogs } from "../api/logs";
+import { getMessages } from "../api/logs/[id]";
 
 const LIMIT = 20;
 
@@ -40,6 +37,8 @@ export default function LogsPage() {
     currentConversationId: undefined as string | undefined,
     hasReachedEnd: false,
   });
+  const t = useTranslations("logs");
+
   const getConversationsQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getLogs>
   >((pageIndex, previousPageData) => {
@@ -99,20 +98,20 @@ export default function LogsPage() {
       <Alert
         variant="outlined"
         sx={{
-          textAlign: 'center',
-          justifyContent: 'center',
-          maxWidth: 'sm',
-          mx: 'auto',
+          textAlign: "center",
+          justifyContent: "center",
+          maxWidth: "sm",
+          mx: "auto",
         }}
       >
-        <Stack justifyContent={'center'} alignItems={'center'} gap={1}>
+        <Stack justifyContent={"center"} alignItems={"center"} gap={1}>
           <Typography level="h4" color="primary">
             <InboxRoundedIcon />
           </Typography>
           <Stack>
-            <Typography level="body1">No Data</Typography>
+            <Typography level="body1">{t(`no_data`)}</Typography>
             <Typography level="body2">
-              All conversations with your agents will be visible here
+              {t(`no_data_description`)}
             </Typography>
           </Stack>
         </Stack>
@@ -124,20 +123,20 @@ export default function LogsPage() {
     <Sheet
       variant="outlined"
       sx={(theme) => ({
-        height: '100%',
+        height: "100%",
         borderRadius: 10,
       })}
     >
-      <Stack direction={'row'} sx={{ height: '100%' }}>
+      <Stack direction={"row"} sx={{ height: "100%" }}>
         <List
           // aria-labelledby="ellipsis-list-demo"
           // sx={{ '--ListItemDecorator-size': '56px' }}
           ref={parentRef as any}
           sx={{
-            width: 'sm',
-            maxWidth: '30%',
-            height: '100%',
-            overflowY: 'auto',
+            width: "sm",
+            maxWidth: "30%",
+            height: "100%",
+            overflowY: "auto",
           }}
         >
           {rowVirtualizer.getVirtualItems().map((row) => {
@@ -153,8 +152,8 @@ export default function LogsPage() {
                 <ListItem
                   sx={(theme) => ({
                     py: 1,
-                    '&:hover': {
-                      cursor: 'pointer',
+                    "&:hover": {
+                      cursor: "pointer",
                       backgroundColor: theme.palette.action.hover,
                     },
                     ...(state.currentConversationId === each.id && {
@@ -174,7 +173,7 @@ export default function LogsPage() {
   </ListItemDecorator> */}
                   <ListItemContent>
                     <Stack>
-                      <Stack direction="row" justifyContent={'space-between'}>
+                      <Stack direction="row" justifyContent={"space-between"}>
                         <Typography>{each?.agent?.name}</Typography>
 
                         <Typography level="body3">
@@ -183,8 +182,8 @@ export default function LogsPage() {
                       </Stack>
                       <Stack
                         direction="row"
-                        justifyContent={'space-between'}
-                        alignItems={'start'}
+                        justifyContent={"space-between"}
+                        alignItems={"start"}
                         gap={1}
                       >
                         <Typography level="body2" noWrap>
@@ -197,11 +196,11 @@ export default function LogsPage() {
                             color="danger"
                             size="sm"
                             sx={{
-                              borderRadius: '100%',
+                              borderRadius: "100%",
                               // p: 1,
                             }}
                           >
-                            <Typography textColor={'common.white'}>
+                            <Typography textColor={"common.white"}>
                               {each?._count?.messages}
                             </Typography>
                           </Chip>
@@ -212,7 +211,7 @@ export default function LogsPage() {
                         color="neutral"
                         variant="outlined"
                         sx={{
-                          mr: 'auto',
+                          mr: "auto",
                           mt: 1,
                         }}
                       >
@@ -224,14 +223,14 @@ export default function LogsPage() {
                 {/* <ListDivider /> */}
 
                 {getConversationsQuery.isLoading && (
-                  <CircularProgress size="sm" sx={{ mx: 'auto', my: 2 }} />
+                  <CircularProgress size="sm" sx={{ mx: "auto", my: 2 }} />
                 )}
               </React.Fragment>
             );
           })}
         </List>
         <Divider orientation="vertical" />
-        <Box sx={{ width: '100%', paddingX: 2 }}>
+        <Box sx={{ width: "100%", paddingX: 2 }}>
           <ChatBox
             messages={
               getMessagesQuery?.data?.map((each) => ({
@@ -256,8 +255,12 @@ LogsPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/logs/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

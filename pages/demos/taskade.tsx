@@ -1,5 +1,6 @@
 import { Box, Divider, Typography } from "@mui/joy";
 import { GetServerSidePropsContext } from "next/types";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 
@@ -12,6 +13,7 @@ export default function DatasourcesPage() {
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: `https://app.griotai.kasetolabs.xyz/api/external/agents/${agentId}/query`,
   });
+  const t = useTranslations("taskade");
 
   return (
     <Box

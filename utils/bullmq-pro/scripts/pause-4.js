@@ -21,8 +21,8 @@ end
 rcall("XADD", KEYS[4], "*", "event", ARGV[1]);
 `;
 export const pause = {
-    name: 'pause',
-    content,
-    keys: 4,
+  name: "pause",
+  content,
+  keys: 4,
 };
 //# sourceMappingURL=pause-4.js.map

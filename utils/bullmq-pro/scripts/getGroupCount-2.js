@@ -30,8 +30,8 @@ end
 return getGroupCount(KEYS[1], KEYS[2], ARGV[2], ARGV[1])
 `;
 export const getGroupCount = {
-    name: 'getGroupCount',
-    content,
-    keys: 2,
+  name: "getGroupCount",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=getGroupCount-2.js.map

@@ -1,26 +1,26 @@
-import { DatastoreVisibility } from '@prisma/client';
-import Cors from 'cors';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { DatastoreVisibility } from "@prisma/client";
+import Cors from "cors";
+import { NextApiRequest, NextApiResponse } from "next";
 
-import { AppNextApiRequest } from '@app/types/index';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import getSubdomain from '@app/utils/get-subdomain';
-import prisma from '@app/utils/prisma-client';
-import runMiddleware from '@app/utils/run-middleware';
+import { AppNextApiRequest } from "@app/types/index";
+import { createApiHandler, respond } from "@app/utils/createa-api-handler";
+import getSubdomain from "@app/utils/get-subdomain";
+import prisma from "@app/utils/prisma-client";
+import runMiddleware from "@app/utils/run-middleware";
 
 const handler = createApiHandler();
 
 const cors = Cors({
-  methods: ['POST', 'HEAD', 'GET'],
+  methods: ["POST", "HEAD", "GET"],
 });
 
 const safePluginName = (str: string) =>
   str
     .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, ' ')
-    .replace(/\s+/g, ' ')
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
     .trim()
-    .replace(/\s/g, '_');
+    .replace(/\s/g, "_");
 
 export const generateAiPluginJson = async (
   req: AppNextApiRequest,
@@ -28,7 +28,7 @@ export const generateAiPluginJson = async (
 ) => {
   const host = req?.headers?.["host"];
   const subdomain = getSubdomain(host!);
-  const proto = req.headers['x-forwarded-proto'] ? 'https' : 'http';
+  const proto = req.headers["x-forwarded-proto"] ? "https" : "http";
 
   if (!subdomain) {
     return res.status(400).send("Missing subdomain");
@@ -45,7 +45,7 @@ export const generateAiPluginJson = async (
   }
 
   const config = {
-    schema_version: 'v1',
+    schema_version: "v1",
     name_for_model: `${safePluginName(
       datastore.pluginName || datastore.name?.substring(0, 20)
     )}_${datastore.id}`,
@@ -55,7 +55,7 @@ export const generateAiPluginJson = async (
     ...(datastore.visibility === DatastoreVisibility.public
       ? {
           auth: {
-            type: 'none',
+            type: "none",
           },
         }
       : {
@@ -65,14 +65,14 @@ export const generateAiPluginJson = async (
           },
         }),
     api: {
-      type: 'openapi',
+      type: "openapi",
       url: `${proto}://${host}/.well-known/openapi.yaml`,
       has_user_authentication: false,
     },
     logo_url:
       datastore.pluginIconUrl || `${proto}://${host}/.well-known/logo.png`,
-      contact_email: "hello@kasetolabs.xyz",
-      legal_info_url: "hello@kasetolabs.xyz",
+    contact_email: "hello@kasetolabs.xyz",
+    legal_info_url: "hello@kasetolabs.xyz",
   };
 
   return res.json(config);

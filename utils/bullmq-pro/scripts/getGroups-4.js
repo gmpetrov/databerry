@@ -62,8 +62,8 @@ end
 return {groups, rateLimitedGroups, maxConcurrencyGroups, pausedGroups}
 `;
 export const getGroups = {
-    name: 'getGroups',
-    content,
-    keys: 4,
+  name: "getGroups",
+  content,
+  keys: 4,
 };
 //# sourceMappingURL=getGroups-4.js.map

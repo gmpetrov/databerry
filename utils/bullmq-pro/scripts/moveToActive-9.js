@@ -498,8 +498,8 @@ end
 return result
 `;
 export const moveToActive = {
-    name: 'moveToActive',
-    content,
-    keys: 9,
+  name: "moveToActive",
+  content,
+  keys: 9,
 };
 //# sourceMappingURL=moveToActive-9.js.map

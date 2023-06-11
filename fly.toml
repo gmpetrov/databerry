@@ -1,0 +1,31 @@
+# fly.toml app configuration file generated for griotai on 2023-06-02T13:32:54Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "griotai"
+primary_region = "jnb"
+kill_signal = "SIGINT"
+kill_timeout = "5s"
+
+[processes]
+  web = "node server.js"
+  worker = "node --max-old-space-size=1536 workers/datasource-loader.js"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  processes = ["web"]
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 550
+    soft_limit = 500
+
+[[services]]
+  protocol = ""
+  internal_port = 0
+  auto_stop_machines = true
+  auto_start_machines = true
+  processes = ["worker"]

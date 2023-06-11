@@ -35,8 +35,8 @@ end
 return getGroup(KEYS[1], KEYS[2], ARGV[2], ARGV[1], ARGV[3], ARGV[4])
 `;
 export const getGroup = {
-    name: 'getGroup',
-    content,
-    keys: 2,
+  name: "getGroup",
+  content,
+  keys: 2,
 };
 //# sourceMappingURL=getGroup-2.js.map

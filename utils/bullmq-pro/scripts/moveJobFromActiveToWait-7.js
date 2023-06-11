@@ -41,8 +41,8 @@ if lockToken == token then
 end
 `;
 export const moveJobFromActiveToWait = {
-    name: 'moveJobFromActiveToWait',
-    content,
-    keys: 7,
+  name: "moveJobFromActiveToWait",
+  content,
+  keys: 7,
 };
 //# sourceMappingURL=moveJobFromActiveToWait-7.js.map

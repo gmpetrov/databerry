@@ -1,9 +1,12 @@
 import WarningRounded from "@mui/icons-material/WarningRounded";
 import { Alert, Box, Card, Typography } from "@mui/joy";
+import { useTranslations } from "next-intl";
 
 import Logo from "@app/components/Logo";
 
 export default function MaintenancePage() {
+  const t = useTranslations("maintenance");
+
   return (
     <>
       <Box
@@ -24,7 +27,7 @@ export default function MaintenancePage() {
           size="lg"
           startDecorator={<WarningRounded />}
         >
-          Maintenance in progress
+          {t("warning")}
         </Alert>
 
         <Card
@@ -34,10 +37,20 @@ export default function MaintenancePage() {
           <Logo className="w-24" />
 
           <Typography level="h4" fontWeight={"bold"}>
-            Coming back soon
+           {t("title")}
           </Typography>
         </Card>
       </Box>
     </>
   );
 }
+
+
+export const getStaticProps = ({ locale, locales }) => {
+  return {
+    props: {
+      locale,
+      locales
+    }
+  }
+};

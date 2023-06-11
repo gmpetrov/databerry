@@ -17,8 +17,8 @@ else
 end
 `;
 export const saveStacktrace = {
-    name: 'saveStacktrace',
-    content,
-    keys: 1,
+  name: "saveStacktrace",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=saveStacktrace-1.js.map

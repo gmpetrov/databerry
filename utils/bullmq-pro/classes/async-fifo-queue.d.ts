@@ -1,1 +1,1 @@
-export { AsyncFifoQueue } from 'bullmq';
+export { AsyncFifoQueue } from "bullmq";

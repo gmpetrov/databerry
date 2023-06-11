@@ -22,8 +22,8 @@ local items = redis.call("LRANGE", KEYS[1] , 0, -1)
 return checkItemInList(items, ARGV[1])
 `;
 export const isJobInList = {
-    name: 'isJobInList',
-    content,
-    keys: 1,
+  name: "isJobInList",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=isJobInList-1.js.map

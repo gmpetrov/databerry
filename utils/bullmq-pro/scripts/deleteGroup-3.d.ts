@@ -1,5 +1,5 @@
 export declare const deleteGroup: {
-    name: string;
-    content: string;
-    keys: number;
+  name: string;
+  content: string;
+  keys: number;
 };

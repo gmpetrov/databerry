@@ -1,0 +1,9 @@
+{
+    "datastores": "Datastores",
+    "new_datastore": "New Datastore",
+    "create_datasource": "Add new datasource",
+    "datasources": "Datasources",
+    "chatgpt_plugin": "ChatGPT Plugin",
+    "delete_datasource_confirmation": "It will remove all its data from the datastore.",
+    "delete_datasource": "Delete"
+}

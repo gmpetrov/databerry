@@ -1,11 +1,12 @@
-import { Transition } from '@headlessui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import GoogleIcon from '@mui/icons-material/Google';
-import { Box, Button, Divider, Typography } from '@mui/joy';
-import CircularProgress from '@mui/joy/CircularProgress';
-import { useRouter } from 'next/router';
-import { signIn, useSession } from 'next-auth/react';
+import { Transition } from "@headlessui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import GoogleIcon from "@mui/icons-material/Google";
+import { Box, Button, Divider, Typography } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+import { useRouter } from "next/router";
+import { signIn, useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 // import { parseCookies } from 'nookies';
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,12 +32,12 @@ const Schema = z.object({
 type Schema = z.infer<typeof Schema>;
 
 export default function SignInPage() {
-  // const { handleRedirects, handleSignInSuccess } = useAuth();
   const [globalFormError, setGlobalFormError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();
+  const t = useTranslations("signin");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -86,7 +87,7 @@ export default function SignInPage() {
                 <Logo className="w-14" />
                 {/* <span className="w-8 h-8 mx-auto text-xl font-extrabold text-transparent rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></span> */}
                 <Typography className="mt-2 text-3xl font-extrabold text-center">
-                  Sign in
+                  {t("title")}
                 </Typography>
               </div>
 
@@ -111,7 +112,7 @@ export default function SignInPage() {
                       size="lg"
                       loading={isLoading}
                     >
-                      Sign in
+                      {t("submit")}
                     </Button>
                   </form>
                 </div>
@@ -129,7 +130,7 @@ export default function SignInPage() {
                         className="px-2"
                         sx={{ backgroundColor: "background.surface" }}
                       >
-                        Or continue with
+                        {t("or")}
                       </Typography>
                     </div>
                   </div>
@@ -137,8 +138,7 @@ export default function SignInPage() {
                   <div className="grid grid-cols-1 gap-3 mt-6 cursor-pointer">
                     <Button
                       size="lg"
-                      onClick={() => signIn('google')}
-                      // className="bg-white"
+                      onClick={() => signIn("google")}
                       variant="outlined"
                       color="neutral"
                     >
@@ -147,7 +147,7 @@ export default function SignInPage() {
 
                     <Button
                       size="lg"
-                      onClick={() => signIn('github')}
+                      onClick={() => signIn("github")}
                       // className="bg-white"
                       variant="outlined"
                       color="neutral"
@@ -164,3 +164,13 @@ export default function SignInPage() {
     </Box>
   );
 }
+
+
+export const getStaticProps = ({ locale, locales }) => {
+  return {
+    props: {
+      locale,
+      locales
+    }
+  }
+};

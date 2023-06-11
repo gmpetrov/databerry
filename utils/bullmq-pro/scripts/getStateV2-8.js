@@ -50,8 +50,8 @@ end
 return "unknown"
 `;
 export const getStateV2 = {
-    name: 'getStateV2',
-    content,
-    keys: 8,
+  name: "getStateV2",
+  content,
+  keys: 8,
 };
 //# sourceMappingURL=getStateV2-8.js.map

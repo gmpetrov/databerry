@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { ReactElement } from "react";
 import * as React from "react";
 import useSWR from "swr";
@@ -46,6 +47,7 @@ export default function DatasourcesPage() {
     currentDatastoreId: undefined as string | undefined,
     isUsageModalOpen: false,
   });
+  const t = useTranslations("datastores");
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
@@ -106,7 +108,7 @@ export default function DatasourcesPage() {
           <HomeRoundedIcon />
         </Link>
         <Typography fontSize="inherit" color="neutral">
-          Datastores
+          {t("datastores")}
         </Typography>
         {/* <JoyLink
           underline="hover"
@@ -128,15 +130,11 @@ export default function DatasourcesPage() {
           justifyContent: "space-between",
           my: 1,
           gap: 1,
-          flexWrap: "wrap",
-          // '& > *': {
-          //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
-          //   flexGrow: 1,
-          // },
+          flexWrap: "wrap"
         }}
       >
         <Typography level="h1" fontSize="xl4">
-          Datastores
+          {t("datastores")}
         </Typography>
         {/* <Box sx={{ flex: 999999 }} /> */}
         <Box sx={{ display: "flex", gap: 1, "& > *": { flexGrow: 1 } }}>
@@ -153,7 +151,7 @@ export default function DatasourcesPage() {
             startDecorator={<AddIcon />}
             onClick={handleClickNewDatastore}
           >
-            New Datastore
+            {t("new_datastore")}
           </Button>
         </Box>
       </Box>
@@ -188,8 +186,12 @@ DatasourcesPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/datastores/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

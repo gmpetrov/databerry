@@ -4,11 +4,11 @@ import {
   Datastore,
   Message,
   Tool,
-} from '@prisma/client';
+} from "@prisma/client";
 
-import prisma from '@app/utils/prisma-client';
+import prisma from "@app/utils/prisma-client";
 
-import cuid from './cuid';
+import cuid from "./cuid";
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -23,7 +23,7 @@ export default class ConversationManager {
   visitorId?: string;
   conversationId?: string;
   channel: ConversationChannel;
-  messages: Pick<Message, 'from' | 'text' | 'createdAt'>[] = [];
+  messages: Pick<Message, "from" | "text" | "createdAt">[] = [];
   agentId: string;
   metadata?: Record<string, any> = {};
 
@@ -52,7 +52,7 @@ export default class ConversationManager {
   }
 
   push(
-    message: Pick<Message, 'from' | 'text'> & {
+    message: Pick<Message, "from" | "text"> & {
       createdAt?: Date;
     }
   ) {

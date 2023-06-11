@@ -13,8 +13,8 @@ else
 end
 `;
 export const updateData = {
-    name: 'updateData',
-    content,
-    keys: 1,
+  name: "updateData",
+  content,
+  keys: 1,
 };
 //# sourceMappingURL=updateData-1.js.map

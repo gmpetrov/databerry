@@ -86,8 +86,8 @@ if ARGV[2] == '0' then
 end
 `;
 export const pauseGroup = {
-    name: 'pauseGroup',
-    content,
-    keys: 10,
+  name: "pauseGroup",
+  content,
+  keys: 10,
 };
 //# sourceMappingURL=pauseGroup-10.js.map

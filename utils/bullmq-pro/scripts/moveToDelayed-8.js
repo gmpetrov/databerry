@@ -212,8 +212,8 @@ else
 end
 `;
 export const moveToDelayed = {
-    name: 'moveToDelayed',
-    content,
-    keys: 8,
+  name: "moveToDelayed",
+  content,
+  keys: 8,
 };
 //# sourceMappingURL=moveToDelayed-8.js.map

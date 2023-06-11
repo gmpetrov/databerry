@@ -1,1 +1,1 @@
-export { delay, getParentKey, removeAllQueueData } from 'bullmq';
+export { delay, getParentKey, removeAllQueueData } from "bullmq";

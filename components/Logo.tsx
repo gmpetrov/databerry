@@ -18,8 +18,9 @@ const Logo = forwardRef<HTMLImageElement, Props>(
         alt="GriotAI"
         style={{
           maxWidth: "50%",
-          height: "auto"
-        }} />
+          height: "auto",
+        }}
+      />
     );
   }
 );

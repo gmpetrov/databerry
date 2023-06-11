@@ -1,42 +1,40 @@
-import AddIcon from '@mui/icons-material/Add';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
-import Alert from '@mui/joy/Alert';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
-import Stack from '@mui/joy/Stack';
-import Typography from '@mui/joy/Typography';
-import { Prisma, SubscriptionPlan } from '@prisma/client';
-import axios from 'axios';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import { useSession } from 'next-auth/react';
-import { ReactElement } from 'react';
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import useSWR from 'swr';
-import { z } from 'zod';
+import AddIcon from "@mui/icons-material/Add";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
+import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
+import DeleteIcon from "@mui/icons-material/Delete";
+import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
+import Alert from "@mui/joy/Alert";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Card from "@mui/joy/Card";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
+import Stack from "@mui/joy/Stack";
+import Typography from "@mui/joy/Typography";
+import { Prisma, SubscriptionPlan } from "@prisma/client";
+import axios from "axios";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
+import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { ReactElement } from "react";
+import * as React from "react";
+import useSWR from "swr";
 
-import Layout from '@app/components/Layout';
-import UserFree from '@app/components/UserFree';
-import UserPremium from '@app/components/UserPremium';
-import useStateReducer from '@app/hooks/useStateReducer';
-import accountConfig from '@app/utils/account-config';
-import { fetcher } from '@app/utils/swr-fetcher';
-import { withAuth } from '@app/utils/withAuth';
+import Layout from "@app/components/Layout";
+import UserFree from "@app/components/UserFree";
+import UserPremium from "@app/components/UserPremium";
+import useStateReducer from "@app/hooks/useStateReducer";
+import accountConfig from "@app/utils/account-config";
+import { fetcher } from "@app/utils/swr-fetcher";
+import { withAuth } from "@app/utils/withAuth";
 
-import { getApiKeys } from './api/accounts/api-keys';
+import { getApiKeys } from "./api/accounts/api-keys";
 
 export default function AccountPage() {
   const router = useRouter();
@@ -45,9 +43,10 @@ export default function AccountPage() {
     isLoadingCreateApiKey: false,
     isLoadingDeleteApiKey: false,
   });
+  const t = useTranslations("accounts");
 
   const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-    '/api/accounts/api-keys',
+    "/api/accounts/api-keys",
     fetcher,
     {
       refreshInterval: 5000,
@@ -87,10 +86,10 @@ export default function AccountPage() {
   const handleDeleteApiKey = async (id: string) => {
     try {
       if (getApiKeysQuery?.data?.length === 1) {
-        return alert("You must have at least one api key");
+        return alert(t(`deletion_alert_msg`));
       }
 
-      if (window.confirm("Are you sure you want to delete this api key?")) {
+      if (window.confirm(t(`deletion_confirm_msg`))) {
         setState({
           isLoadingDeleteApiKey: true,
         });
@@ -193,7 +192,7 @@ export default function AccountPage() {
         }}
       >
         <Typography level="h1" fontSize="xl4">
-          Account
+          {t(`account`)}
         </Typography>
       </Box>
 
@@ -204,7 +203,7 @@ export default function AccountPage() {
             variant="plain"
             startDecorator={<LinkRoundedIcon />}
           >
-            Subscription
+            {t(`subscription`)}
           </Button>
         </Link>
         <Link href={`#api-keys`}>
@@ -213,7 +212,7 @@ export default function AccountPage() {
             variant="plain"
             startDecorator={<LinkRoundedIcon />}
           >
-            API Keys
+            {t(`api_keys`)}
           </Button>
         </Link>
       </Stack>
@@ -222,7 +221,7 @@ export default function AccountPage() {
 
       <Box mb={4}>
         <UserFree>
-          <Card variant="outlined" sx={{ bgcolor: 'black' }}>
+          <Card variant="outlined" sx={{ bgcolor: "black" }}>
             <stripe-pricing-table
               pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
               publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
@@ -334,7 +333,7 @@ export default function AccountPage() {
               >
                 <Typography>{`${
                   currentPlan?.limits?.maxFileSize / 1000000
-                }MB File upload limit`}</Typography>
+                } MB File upload limit`}</Typography>
               </Typography>
               <Typography
                 level="h6"
@@ -342,7 +341,7 @@ export default function AccountPage() {
               >
                 <Typography>{`${
                   currentPlan?.limits?.maxDataProcessing / 1000000
-                }MB Data processing (embeddings) / month`}</Typography>
+                } MB Data processing (embeddings) / month`}</Typography>
               </Typography>
             </Stack>
 
@@ -371,9 +370,9 @@ export default function AccountPage() {
                 onClick={handleClickManageSubscription}
                 endDecorator={<ArrowForwardRoundedIcon />}
                 variant="plain"
-                sx={{ ml: 'auto' }}
+                sx={{ ml: "auto" }}
               >
-                Upgrade / Manage Subscription
+                {t(`manage_subscription`)}
               </Button>
             </UserPremium>
           </Card>
@@ -383,10 +382,10 @@ export default function AccountPage() {
 
         <Box id="api-keys">
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel>API Keys</FormLabel>
+            <FormLabel>{t(`api_keys`)}</FormLabel>
 
             <Typography level="body3">
-              Use the api key to access the GriotAI API
+              {t(`api_keys_description`)}
             </Typography>
 
             <Stack direction={"column"} gap={2} mt={2}>
@@ -403,32 +402,34 @@ export default function AccountPage() {
                       size="sm"
                       endDecorator={<ArrowForwardRoundedIcon />}
                     >
-                      Documentation
+                      {t(`docs`)}
                     </Button>
                   </Link>
                 }
               >
-                Learn more about the GriotAI API
+                
+                {t(`learn_more`)}
+             
               </Alert>
               {getApiKeysQuery?.data?.map((each) => (
                 <>
                   <Stack
                     key={each.id}
-                    direction={'row'}
+                    direction={"row"}
                     gap={2}
                     onClick={() => {
                       navigator.clipboard.writeText(each.key);
-                      toast.success('Copied!', {
-                        position: 'bottom-center',
+                      toast.success("Copied!", {
+                        position: "bottom-center",
                       });
                     }}
                   >
                     <Alert
                       color="neutral"
                       sx={{
-                        width: '100%',
-                        ':hover': {
-                          cursor: 'copy',
+                        width: "100%",
+                        ":hover": {
+                          cursor: "copy",
                         },
                       }}
                     >
@@ -453,7 +454,7 @@ export default function AccountPage() {
               variant="outlined"
               onClick={handleCreatApiKey}
             >
-              Create API Key
+              {t(`create_api_key`)}
             </Button>
           </FormControl>
         </Box>
@@ -484,8 +485,12 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
+    const { locale } = ctx;
     return {
-      props: {},
+      props: {
+        ...require(`..public/locales/accounts/${locale}.json`),
+        ...require(`..public/locales/navbar.json`),
+      },
     };
   }
 );

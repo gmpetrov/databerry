@@ -15,7 +15,7 @@ export const getStatus = async (
 ) => {
   let dbCheck = AppStatus.OK;
   let vectorDbCheck = AppStatus.OK;
-  const logger = getLogger('hello');
+  const logger = getLogger("hello");
 
   try {
     await prisma.user.count();
@@ -48,7 +48,7 @@ export const getStatus = async (
     status,
     db: dbCheck,
     vectorDb: vectorDbCheck,
-  })
+  });
 
   return {
     status,
