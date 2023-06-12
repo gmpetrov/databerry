@@ -369,7 +369,7 @@ export default function AgentPage() {
                       ),
                       action: () => {
                         window.open(
-                          'https://zapier.com/developer/public-invite/185359/33516107006cd86154d2b3a0b75ab370/',
+                          'https://zapier.com/apps/databerry/integrations',
                           '_blank'
                         );
                       },
