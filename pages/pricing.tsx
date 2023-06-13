@@ -49,7 +49,7 @@ const tiers = [
   {
     name: 'Discover',
     id: 'tier-free',
-    href: '/signin',
+    href: 'https://app.databerry.ai/account',
     price: { monthly: '$0', annually: '$0' },
     description: 'The essentials to get started quickly.',
     features: [
@@ -71,7 +71,7 @@ const tiers = [
   {
     name: 'Startup',
     id: 'tier-startup',
-    href: '/signin',
+    href: 'https://app.databerry.ai/account',
     price: { monthly: '$25', annually: '$250' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
@@ -95,7 +95,7 @@ const tiers = [
   {
     name: 'Pro',
     id: 'tier-pro',
-    href: '/signin',
+    href: 'https://app.databerry.ai/account',
     price: { monthly: '$99', annually: '$990' },
     description: 'Dedicated support and for your company.',
     features: [
@@ -117,7 +117,7 @@ const tiers = [
   {
     name: 'Enterprise',
     id: 'tier-enterprise',
-    href: '/signin',
+    href: 'https://app.databerry.ai/account',
     price: { monthly: '$499', annually: '$4990' },
     description:
       'You’ve got a huge amount of assets but it’s not enough. To the moon.',
