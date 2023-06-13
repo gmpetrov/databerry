@@ -23,7 +23,7 @@ export default class ConversationManager {
   visitorId?: string;
   conversationId?: string;
   channel: ConversationChannel;
-  messages: Pick<Message, 'from' | 'text' | 'createdAt'>[] = [];
+  messages: Pick<Message,'id' | 'from' | 'text' | 'createdAt'>[] = [];
   agentId: string;
   metadata?: Record<string, any> = {};
 
@@ -52,7 +52,7 @@ export default class ConversationManager {
   }
 
   push(
-    message: Pick<Message, 'from' | 'text'> & {
+    message: Pick<Message,'id' | 'from' | 'text'> & {
       createdAt?: Date;
     }
   ) {
