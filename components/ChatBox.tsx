@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import ThumbUp from '@mui/icons-material/ThumbUp';
 import ThumbDown from '@mui/icons-material/ThumbDown';
+import ThumbUp from '@mui/icons-material/ThumbUp';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
@@ -14,7 +14,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { z } from 'zod';
 
-type Message = { from: 'human' | 'agent'; message: string; createdAt?: Date };
+type Message = { from: 'human' | 'agent'; message: string; createdAt?: Date; eval?: boolean; id?: string };
 
 type Props = {
   messages: Message[];
@@ -54,6 +54,11 @@ function ChatBox({
       setIsLoading(false);
     }
   };
+
+const evalAgentAnswer = (message: Message,index: number, evalValue: boolean) => {
+  console.log(message,message.id);
+  message.eval = evalValue
+}
 
   React.useEffect(() => {
     if (!scrollableRef.current) {
@@ -132,14 +137,18 @@ function ChatBox({
               <Button startDecorator={<ThumbUp />} aria-label="Like" color="success"
                 sx={{
                   height: 'fit-content',
-                  alignSelf: 'center'
-                }}>
+                  alignSelf: 'center',
+                }}
+                onClick={() => evalAgentAnswer(each,index,true)}
+                >
               </Button>
               <Button aria-label="Dislike" color="danger"
                 sx={{
                   height: 'fit-content',
                   alignSelf: 'center'
-                }}>
+                }}
+                onClick={() => evalAgentAnswer(each,index,false)}
+                >
                   <ThumbDown />
               </Button>
               </>

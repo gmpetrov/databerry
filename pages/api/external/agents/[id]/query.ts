@@ -9,6 +9,7 @@ import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import ConversationManager from '@app/utils/conversation';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import cuid from '@app/utils/cuid';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
@@ -132,6 +133,7 @@ export const queryAgent = async (
   });
 
   conversationManager.push({
+    id: cuid(),
     text: data.query,
     from: MessageFrom.human,
   });
@@ -155,6 +157,7 @@ export const queryAgent = async (
   ]);
 
   conversationManager.push({
+    id: cuid(),
     text: answer,
     from: MessageFrom.agent,
   });

@@ -25,7 +25,7 @@ const useAgentChat = ({ queryAgentURL, queryHistoryURL, channel }: Props) => {
 
   const { visitorId } = useVisitorId();
 
-  const getHistoryQuery = useSWR<Prisma.PromiseReturnType<typeof getHistory>>(
+  useSWR<Prisma.PromiseReturnType<typeof getHistory>>(
     queryHistoryURL,
     fetcher,
     {
@@ -136,6 +136,7 @@ const useAgentChat = ({ queryAgentURL, queryHistoryURL, channel }: Props) => {
                 {
                   from: 'agent',
                   message: event.data.replace('[ERROR]', ''),
+                  id: event.id
                 } as any,
               ],
             });
