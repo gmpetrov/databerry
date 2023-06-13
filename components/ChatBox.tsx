@@ -8,6 +8,7 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
@@ -55,9 +56,13 @@ function ChatBox({
     }
   };
 
-const evalAgentAnswer = (message: Message,index: number, evalValue: boolean) => {
+const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
   console.log(message,message.id);
   message.eval = evalValue
+  await axios.put(
+    `/api/messages/${message.id}`,
+    message
+  );
 }
 
   React.useEffect(() => {
@@ -139,7 +144,7 @@ const evalAgentAnswer = (message: Message,index: number, evalValue: boolean) => 
                   height: 'fit-content',
                   alignSelf: 'center',
                 }}
-                onClick={() => evalAgentAnswer(each,index,true)}
+                onClick={() => EvalAgentAnswer(each,true)}
                 >
               </Button>
               <Button aria-label="Dislike" color="danger"
@@ -147,7 +152,7 @@ const evalAgentAnswer = (message: Message,index: number, evalValue: boolean) => 
                   height: 'fit-content',
                   alignSelf: 'center'
                 }}
-                onClick={() => evalAgentAnswer(each,index,false)}
+                onClick={() => EvalAgentAnswer(each,false)}
                 >
                   <ThumbDown />
               </Button>
