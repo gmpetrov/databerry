@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import ThumbUp from '@mui/icons-material/ThumbUp';
+import ThumbDown from '@mui/icons-material/ThumbDown';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
@@ -116,15 +118,32 @@ function ChatBox({
             {firstMsg?.message}
           </Card>
         )}
-
         {messages.map((each, index) => (
           <Stack
             key={index}
             sx={{
+              flexDirection: 'row',
               mr: each.from === 'agent' ? 'auto' : 'none',
               ml: each.from === 'human' ? 'auto' : 'none',
             }}
           >
+             {each.from === `agent` &&
+              <>
+              <Button startDecorator={<ThumbUp />} aria-label="Like" color="success"
+                sx={{
+                  height: 'fit-content',
+                  alignSelf: 'center'
+                }}>
+              </Button>
+              <Button aria-label="Dislike" color="danger"
+                sx={{
+                  height: 'fit-content',
+                  alignSelf: 'center'
+                }}>
+                  <ThumbDown />
+              </Button>
+              </>
+            }
             <Card
               size="sm"
               variant={'outlined'}
@@ -133,6 +152,7 @@ function ChatBox({
               }
               color={each.from === 'agent' ? 'primary' : 'neutral'}
               sx={{
+                // flexDirection: 'row',
                 whiteSpace: 'pre-wrap',
                 'ul, ol': {
                   listStyleType: 'disc',
