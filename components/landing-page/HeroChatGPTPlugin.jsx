@@ -2,12 +2,17 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
 import RocketLaunchRounded from '@mui/icons-material/RocketLaunchRounded';
+import Star from '@mui/icons-material/Star';
 import Alert from '@mui/joy/Alert';
+import Avatar from '@mui/joy/Avatar';
+import AvatarGroup from '@mui/joy/AvatarGroup';
+import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 
 import { Container } from '@app/components/landing-page/Container';
 import { RouteNames } from '@app/types';
@@ -21,36 +26,7 @@ export function HeroChatGPTPlugin() {
         alt=""
       />
       <div className="relative z-10">
-        {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full">
-          <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
-            <span>New</span>
-          </span>
-          Build a ChatGPT Plugin in minutes!
-          <Link
-            href="/#chatgpt-plugin"
-            style={{ background: 'none' }}
-            className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
-          >
-            Learn More{' '}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="icon icon-tabler icon-tabler-arrow-narrow-right"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              strokeWidth="2"
-              stroke="currentColor"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <line x1="15" y1="16" x2="19" y2="12"></line>
-              <line x1="15" y1="8" x2="19" y2="12"></line>
-            </svg>
-          </Link>
-        </div> */}
+
 
         <Link href={RouteNames.CHAT_SITE}>
           {/* <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button> */}
@@ -109,17 +85,53 @@ export function HeroChatGPTPlugin() {
           </div>
         </Alert> */}
 
-        <h2 className="mb-4 text-2xl font-bold text-violet-300">
-          Build Your Own
-        </h2>
-        <h1 className="max-w-lg mx-auto text-4xl font-bold !leading-snug tracking-tight text-center text-white whitespace-pre-wrap font-display sm:text-5xl sm:text-center">
-          {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
-          {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}
-          {`ChatGPT Agent\nTrained On\nYour Custom Data`}
-          {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
-        </h1>
+        <div className="flex flex-col space-y-8 text-center sm:space-y-0 sm:flex-row sm:space-x-8 sm:text-left">
 
-        {/* <a
+          <Stack sx={{ width: '100%' }}>
+
+          <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
+          <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
+            <span>New</span>
+          </span>
+          Build a ChatGPT Plugin in minutes!
+          <Link
+            href="/#chatgpt-plugin"
+            style={{ background: 'none' }}
+            className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
+          >
+            Learn More{' '}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="icon icon-tabler icon-tabler-arrow-narrow-right"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <line x1="15" y1="16" x2="19" y2="12"></line>
+              <line x1="15" y1="8" x2="19" y2="12"></line>
+            </svg>
+          </Link>
+        </div>
+
+
+            <h2 className="mb-4 text-2xl font-bold text-violet-300">
+              Build Your Own
+            </h2>
+            <h1 className=" text-4xl font-bold !leading-snug tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl">
+              {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
+              {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}
+              {`ChatGPT Agent\nTrained On\nYour Custom Data`}
+              {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
+            </h1>
+
+            {/* <a
           href="https://www.producthunt.com/posts/databerry-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-databerry&#0045;ai"
           target="_blank"
         >
@@ -137,51 +149,115 @@ export function HeroChatGPTPlugin() {
           />
         </a> */}
 
-        {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
+            {/* <h2 className='max-w-2xl mx-auto mt-4 text-3xl font-bold tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl'>No-code required!</h2> */}
 
-        <p className="max-w-sm mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:max-w-lg">
-          With our <strong className="text-violet-300">no-code platform</strong>
-          , you can create a{' '}
-          <strong className="text-violet-300">custom AI chatbot</strong> trained
-          on your data in seconds. Streamline customer support, onboard new team
-          members, and more!
-          {/* <ul className='mx-auto text-left list-disc'>
+            <p className="max-w-md mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:mx-0 sm:max-w-lg">
+              With our{' '}
+              <strong className="text-violet-300">no-code platform</strong>, you
+              can create a{' '}
+              <strong className="text-violet-300">custom AI chatbot</strong>{' '}
+              trained on your data in seconds. Streamline customer support,
+              onboard new team members, and more!
+              {/* <ul className='mx-auto text-left list-disc'>
             <li>Connect custom data to ChatGPT</li>
             <li>Connect custom data to ChatGPT</li>
           </ul> */}
-        </p>
+            </p>
 
-        <Stack
-          direction={{
-            xs: 'column',
-            sm: 'row',
-          }}
-          justifyContent={'center'}
-          gap={2}
-          mt={6}
-        >
-          <Link target="_blank" href={'https://app.databerry.ai/signin'}>
-            <Button
-              variant="solid"
-              size="lg"
-              // startDecorator={<RocketLaunchRounded />}
-              sx={{ borderRadius: 100 }}
-            >{`⚡️ Get Started Now`}</Button>
-          </Link>
-          <Link
-            target="_blank"
-            href={'https://calendly.com/databerry-georges/15min'}
-          >
-            <Button
-              variant="outlined"
-              size="lg"
-              startDecorator={<PhoneRoundedIcon />}
-              sx={{ borderRadius: 100 }}
+            <Box
+              className="justify-center sm:justify-start"
+              sx={(theme) => ({
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 2,
+                mt: 4,
+                // textAlign: 'left',
+                '& > *': {
+                  flexShrink: 0,
+                },
+              })}
             >
-              Book a Call
-            </Button>
-          </Link>
-        </Stack>
+              <Stack gap={1}>
+                <Stack direction="row" gap={1}>
+                  {/* <AvatarGroup size="lg">
+                  <Avatar />
+                  <Avatar />
+                  <Avatar />
+                </AvatarGroup> */}
+
+                  <Typography
+                    className="w-full text-center sm:text-left"
+                    fontSize="xl"
+                    fontWeight="md"
+                    // startDecorator={
+
+                    // }
+                  >
+                    <React.Fragment>
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                      <Star sx={{ color: 'warning.300' }} />
+                    </React.Fragment>
+                  </Typography>
+                </Stack>
+                <Typography textColor="text.secondary">
+                  <b>+3.5K</b> companies have successfully <br></br>built their
+                  custom AI Agent with Databerry.ai
+                </Typography>
+              </Stack>
+            </Box>
+
+            <Stack
+              direction={{
+                xs: 'column',
+                sm: 'row',
+              }}
+              gap={2}
+              mt={6}
+              className="justify-center sm:justify-start"
+            >
+              <Link target="_blank" href={'https://app.databerry.ai/signin'}>
+                <Button
+                  variant="solid"
+                  size="lg"
+                  // startDecorator={<RocketLaunchRounded />}
+                  sx={{ borderRadius: 100 }}
+                >{`⚡️ Get Started Now`}</Button>
+              </Link>
+              <Link
+                target="_blank"
+                href={'https://calendly.com/databerry-georges/15min'}
+              >
+                <Button
+                  variant="outlined"
+                  size="lg"
+                  startDecorator={<PhoneRoundedIcon />}
+                  sx={{ borderRadius: 100 }}
+                >
+                  Book a Call
+                </Button>
+              </Link>
+            </Stack>
+          </Stack>
+
+          <div className="w-full sm:w-2/3">
+            <Image src="/landing-page/inputs.png" width="500" height="150" className='w-full' />
+            <div className='w-full h-[500px] overflow-hidden rounded-3xl bg-white'>
+
+            <iframe
+              src="https://app.databerry.ai/agents/clgtujkqh022j0u0zw3ut8vk3/iframe"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              ></iframe>
+              </div>
+
+              {/* <Image src="/landing-page/outputs.png" width="500" height="150" className='w-full' /> */}
+          </div>
+        </div>
+
         <div className="flex justify-center mt-10 gap-x-6">
           {/* <Button target="_blank" href="https://app.databerry.ai/signin">Start Building</Button> */}
           {/* <Button
@@ -233,7 +309,13 @@ export function HeroChatGPTPlugin() {
         </ul>
       </div> */}
 
-        <div className="relative pt-16 overflow-hidden">
+        {/* <div className="relative pt-16 overflow-hidden">
+
+        <h2 className="mb-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Build in minutes <br />
+            Deploy anywhere
+          </h2>
+
           <div className="px-6 mx-auto max-w-7xl lg:px-8">
             <iframe
               //   className="w-full h-[300px] rounded-2xl"
@@ -245,7 +327,7 @@ export function HeroChatGPTPlugin() {
               allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             ></iframe>
           </div>
-        </div>
+        </div> */}
       </div>
     </Container>
   );

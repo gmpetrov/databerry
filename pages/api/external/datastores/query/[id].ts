@@ -73,9 +73,7 @@ export const queryURL = async (
     tags: [],
   });
 
-  return {
-    results,
-  };
+  return results || [];
 };
 
 handler.post(

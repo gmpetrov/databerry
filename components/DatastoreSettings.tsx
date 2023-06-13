@@ -443,6 +443,13 @@ function DatastoreSettings() {
             </Alert>
 
             <UserFree>
+              <Alert color="warning">
+                <a href="https://openai.com/waitlist/plugins" target="blank">
+                  ChatGPT developer access is required:{' '}
+                  <span className="underline">join the waitlist</span>
+                </a>
+              </Alert>
+
               <UsageLimitCard
                 title="Premium Feature"
                 description="Upgrade your plan to access this feature"

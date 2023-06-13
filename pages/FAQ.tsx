@@ -23,6 +23,18 @@ const faqs = [
     answer:
       'Yes, Databerry supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
   },
+  {
+    id: 5,
+    question: 'How can I add my chatbot to my website?',
+    answer:
+      'You can embed an iframe or add a chat bubble to the bottom right/left of your website.',
+  },
+  {
+    id: 6,
+    question: 'Can I give my chatbots instructions?',
+    answer:
+      'Yes, you can edit the base prompt and give your chatbot a name, personality traits and instructions on how to answer questions ex. (only answer in French).',
+  },
 
   // More questions...
 ];

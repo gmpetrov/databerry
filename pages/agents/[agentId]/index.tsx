@@ -357,6 +357,23 @@ export default function AgentPage() {
                         setState({ isCrispModalOpen: true });
                       },
                     },
+                    {
+                      name: 'Zapier',
+                      isPremium: false,
+                      icon: (
+                        <img
+                          className="w-8"
+                          src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
+                          alt="zapier logo"
+                        ></img>
+                      ),
+                      action: () => {
+                        window.open(
+                          'https://zapier.com/apps/databerry/integrations',
+                          '_blank'
+                        );
+                      },
+                    },
                   ].map((each, index, arr) => (
                     <ListItem
                       key={index}
@@ -491,6 +508,15 @@ export default function AgentPage() {
                   <Typography level="body3">
                     It will delete the agent permanently
                   </Typography>
+
+                  <Button
+                    color="danger"
+                    sx={{ mr: 'auto', mt: 2 }}
+                    startDecorator={<DeleteIcon />}
+                    onClick={handleDeleteAgent}
+                  >
+                    Delete
+                  </Button>
                 </FormControl>
               </>
             )}
