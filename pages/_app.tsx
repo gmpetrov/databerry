@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
+import useUTMTracking from '@app/hooks/useUTMTracking';
 import { NextPageWithLayout, RouteNames } from '@app/types';
 import createEmotionCache from '@app/utils/create-emotion-cache';
 
@@ -34,6 +35,8 @@ export default function App({
 }: AppPropsWithLayout) {
   const router = useRouter();
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  useUTMTracking();
 
   useEffect(() => {
     if (

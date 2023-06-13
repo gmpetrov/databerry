@@ -16,6 +16,7 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { Prisma, SubscriptionPlan } from '@prisma/client';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -129,10 +130,16 @@ export default function AccountPage() {
         return;
       }
 
+      let utmParams = {};
+      try {
+        utmParams = JSON.parse(Cookies.get('utmParams') || '{}');
+      } catch {}
+
       await axios
         .post('/api/stripe/referral', {
           checkoutSessionId,
           referralId: getClientReferenceId(),
+          utmParams,
         })
         .catch(console.log);
 
