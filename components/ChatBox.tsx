@@ -57,7 +57,6 @@ function ChatBox({
   };
 
 const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
-  console.log(message,message.id);
   message.eval = evalValue
   await axios.put(
     `/api/messages/${message.id}`,
@@ -165,7 +164,6 @@ const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
               }
               color={each.from === 'agent' ? 'primary' : 'neutral'}
               sx={{
-                // flexDirection: 'row',
                 whiteSpace: 'pre-wrap',
                 'ul, ol': {
                   listStyleType: 'disc',
