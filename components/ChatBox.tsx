@@ -139,22 +139,21 @@ const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
           >
              {each.from === `agent` &&
               <>
-              <Button startDecorator={<ThumbUp />} aria-label="Like" color="success"
+              <Button  aria-label="Like" color="success"
                 sx={{
                   height: 'fit-content',
                   alignSelf: 'center',
                 }}
-                onClick={() => evalAgentAnswer(each,true)}
-                >
+                onClick={() => evalAgentAnswer(each,true)}>
+                <ThumbUp />
               </Button>
               <Button aria-label="Dislike" color="danger"
                 sx={{
                   height: 'fit-content',
                   alignSelf: 'center'
                 }}
-                onClick={() => evalAgentAnswer(each,false)}
-                >
-                  <ThumbDown />
+                onClick={() => evalAgentAnswer(each,false)}>
+                <ThumbDown />
               </Button>
               </>
             }
