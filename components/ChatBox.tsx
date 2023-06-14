@@ -144,7 +144,7 @@ const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
                   height: 'fit-content',
                   alignSelf: 'center',
                 }}
-                onClick={() => EvalAgentAnswer(each,true)}
+                onClick={() => evalAgentAnswer(each,true)}
                 >
               </Button>
               <Button aria-label="Dislike" color="danger"
@@ -152,7 +152,7 @@ const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
                   height: 'fit-content',
                   alignSelf: 'center'
                 }}
-                onClick={() => EvalAgentAnswer(each,false)}
+                onClick={() => evalAgentAnswer(each,false)}
                 >
                   <ThumbDown />
               </Button>
