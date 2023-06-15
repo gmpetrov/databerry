@@ -15,6 +15,7 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import ListItem from '@mui/material/ListItem';
 import { Prisma } from '@prisma/client';
+import { Agent } from '@prisma/client';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
@@ -41,6 +42,7 @@ export default function LogsPage() {
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
     hasReachedEnd: false,
+    selectedConversationAgent: undefined as Agent | undefined 
   });
   const getConversationsQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getLogs>
@@ -167,6 +169,7 @@ export default function LogsPage() {
                   })}
                   onClick={() => {
                     setState({
+                      selectedConversationAgent: each.agent ?? undefined,
                       currentConversationId: each.id,
                     });
                   }}
@@ -243,6 +246,7 @@ export default function LogsPage() {
                 createdAt: each.createdAt,
               })) || []
             }
+            agent={state.selectedConversationAgent}
             onSubmit={async () => {}}
             readOnly={true}
           />

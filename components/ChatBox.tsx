@@ -25,6 +25,7 @@ type Props = {
   agent?: Agent;
   messageTemplates?: string[];
   initialMessage?: string;
+  isEvalActivated?: boolean;
   readOnly?: boolean;
 };
 
@@ -36,9 +37,9 @@ function ChatBox({
   messageTemplates,
   initialMessage,
   readOnly,
+  isEvalActivated,
   agent
 }: Props) {
-  const { data: session, status } = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<Message>();
