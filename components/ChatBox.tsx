@@ -145,7 +145,7 @@ const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
               ml: each.from === 'human' ? 'auto' : 'none',
             }}
           >
-             {each.from === `agent` &&
+             {(each.from === `agent` && isEvalActivated) &&
               <>
               <Button  aria-label="Like" color="success"
                 sx={{

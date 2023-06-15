@@ -246,6 +246,7 @@ export default function LogsPage() {
                 createdAt: each.createdAt,
               })) || []
             }
+            isEvalActivated={true}
             agent={state.selectedConversationAgent}
             onSubmit={async () => {}}
             readOnly={true}
