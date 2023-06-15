@@ -7,13 +7,26 @@ import prisma from '@app/utils/prisma-client';
 
 const handler = createAuthApiHandler();
 
-export const updateMessage = async (
+export const updateMessageEval = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
   const id = req.query.id as string;
   const rating = req.body.eval
+  const session = req.session;
+  const agent = req.body.agent;
 
+  const conversation = await prisma.conversation.findFirst({
+    where: {
+      agentId: agent.id,
+      userId: agent.ownerId
+    }
+  });
+
+  if (conversation?.userId !== session?.user?.id) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+  
   const updateEval = await prisma.message.update({
     where: {
       id,
@@ -26,6 +39,6 @@ export const updateMessage = async (
   return updateEval
 };
 
-handler.put(respond(updateMessage));
+handler.put(respond(updateMessageEval));
 
 export default handler;

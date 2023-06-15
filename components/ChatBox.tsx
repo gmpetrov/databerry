@@ -8,7 +8,9 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
+import { Agent } from '@prisma/client';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
@@ -20,6 +22,7 @@ type Message = { from: 'human' | 'agent'; message: string; createdAt?: Date; eva
 type Props = {
   messages: Message[];
   onSubmit: (message: string) => Promise<any>;
+  agent?: Agent;
   messageTemplates?: string[];
   initialMessage?: string;
   readOnly?: boolean;
@@ -33,7 +36,9 @@ function ChatBox({
   messageTemplates,
   initialMessage,
   readOnly,
+  agent
 }: Props) {
+  const { data: session, status } = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<Message>();
@@ -54,13 +59,16 @@ function ChatBox({
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
 const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
   message.eval = evalValue
   await axios.put(
     `/api/messages/${message.id}`,
-    message
+    {
+      message,
+      agent
+    }
   );
 }
 

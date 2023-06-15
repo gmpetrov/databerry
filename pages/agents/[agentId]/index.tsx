@@ -297,7 +297,7 @@ export default function AgentPage() {
               overflow: 'hidden',
             }}
           >
-            <ChatBox messages={history} onSubmit={handleChatSubmit} />
+            <ChatBox messages={history} agent={agent} onSubmit={handleChatSubmit} />
           </Box>
         )}
 
