@@ -25,7 +25,7 @@ const slackAgent = async ({
   const { initializeAgentExecutor } = await import('langchain/agents');
   const { DynamicTool, ChainTool } = await import('langchain/tools');
   const { PromptTemplate } = await import('langchain/prompts');
-  const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
+  const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-0613' });
 
   // const qaTool = new DynamicTool({
   //   name: datastore?.name!,

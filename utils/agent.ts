@@ -62,7 +62,10 @@ export default class AgentManager {
     const { initializeAgentExecutor } = await import('langchain/agents');
     const { DynamicTool, ChainTool, Tool } = await import('langchain/tools');
     const { PromptTemplate } = await import('langchain/prompts');
-    const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
+    const model = new OpenAI({
+      temperature: 0,
+      modelName: 'gpt-3.5-turbo-0613',
+    });
 
     const tools: LangchainTool[] = [];
 

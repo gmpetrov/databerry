@@ -123,7 +123,7 @@ const chat = async ({
   }
 
   const model = new ChatOpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: 'gpt-3.5-turbo-0613',
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [
