@@ -71,7 +71,7 @@ Minimum requirements to run the projects locally
 - OpenAI API Key
 - AWS S3 Credentials
 
-```bash
+<!-- ```bash
 # Create .env.local
 cp .env.example .env.local
 
@@ -88,29 +88,32 @@ pnpm dev
 pnpm worker:datasource-loader
 
 # or pnpm dev:all
-```
+``` -->
 
-#### With docker compose
+<!-- #### With docker compose -->
 
-First `cd .dev/databerry` then populate the config files `app.env` and `docker.env` as needed, then run the compose command:
-
+<!-- First `cd .dev/databerry` then populate the config files `app.env` and `docker.env` as needed, then run the compose command: -->
+### Run locally (Docker)
 ```shell
+cp .dev/databerry/app.env.example .dev/databerry/app.env
+# Add your own OPENAI_API_KEY
+
 pnpm docker:compose up
 
-# create .dev/databerry/app.env
-cp .dev/databerry/app.env.example .dev/databerry/app.env
+# Alternatively run app and services separately
+pnpm docker:compose:deps up
+pnpm docker:compose:app up
 
-# create s3 dev bucker
+# create s3 bucket
 # go to http://localhost:9090 and create bucket databerry-dev
 # set bucket access policy to public
 # might need to add 127.0.0.1 minio to /etc/hosts in order to access public s3 files through http://minio...
-```
-
-You can fully rebuild dockers with :
-
-```shell
-pnpm docker:compose up --build
 
 # Dev emails inbox (maildev)
 # visit http://localhost:1080
+```
+
+You can fully rebuild dockers with :
+```shell
+pnpm docker:compose up --build
 ```
