@@ -132,21 +132,38 @@ function ChatBox({
                 each.from === 'agent' ? 'message-agent' : 'message-human'
               }
               color={each.from === 'agent' ? 'primary' : 'neutral'}
-              sx={{
-                whiteSpace: 'pre-wrap',
-                'ul, ol': {
-                  listStyleType: 'disc',
+              sx={(theme) => ({
+                py: 1,
+                px: 2,
+                'ol,ul,p': {
+                  color: theme.palette.text.secondary,
+                },
+                'ol, ul': {
+                  my: 0,
                   pl: 2,
-                  gap: 1,
+                },
+                ol: {
+                  fontWeight: 'bold',
+                  listStyle: 'numeric',
+                },
+                ul: {
+                  listStyle: 'disc',
+                  mb: 2,
+                },
+                li: {
+                  my: 1,
+                },
+                'li::marker, ol::marker': {
+                  color: theme.palette.text.tertiary,
                 },
                 a: {
+                  color: theme.palette.text.primary,
                   textDecoration: 'underline',
                 },
-                ['& p']: {
-                  m: 0,
+                [' p ']: {
+                  py: 1,
                 },
-                gap: 2,
-              }}
+              })}
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget={'_blank'}>
                 {each.message}
