@@ -245,7 +245,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   // Add to S3
   const params = {
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-    Key: `datastores/${datasource.datastore?.id}/${datasource.id}.json`,
+    Key: `datastores/${datasource.datastore?.id}/${datasource.id}/data.json`,
     Body: Buffer.from(
       JSON.stringify({
         hash,
