@@ -39,7 +39,7 @@ const DatasourceText = (props: {
     props?.datasourceId
       ? `${getS3RootDomain()}/datastores/${props?.datastoreId}/${
           props?.datasourceId
-        }.json`
+        }/data.json`
       : null,
     fetcher
   );
@@ -112,7 +112,7 @@ export default function BaseForm(props: Props) {
 
         if (datasourceText || payload.type === DatasourceType.text) {
           type = 'text/plain';
-          fileName = `${payload.id}.txt`;
+          fileName = `${payload.id}/${payload.id}.txt`;
           file = new File([datasourceText!], fileName, { type });
 
           // Treat text as file
@@ -124,7 +124,7 @@ export default function BaseForm(props: Props) {
           };
         } else {
           type = (values as any).file.type as string;
-          fileName = `${payload.id}.${mime.extension(type)}`;
+          fileName = `${payload.id}/${payload.id}.${mime.extension(type)}`;
           file = (values as any)?.file as File;
         }
 
