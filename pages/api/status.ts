@@ -46,6 +46,7 @@ export const getStatus = async (
     status,
     db: dbCheck,
     vectorDb: vectorDbCheck,
+    isMaintenance: process.env.MAINTENANCE_MODE === 'true',
   };
 };
 

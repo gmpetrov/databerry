@@ -38,16 +38,6 @@ export default function App({
 
   useUTMTracking();
 
-  useEffect(() => {
-    if (
-      process.env.NEXT_PUBLIC_MAINTENANCE === 'true' &&
-      router.route !== RouteNames.MAINTENANCE &&
-      router.route !== '/'
-    ) {
-      router.push(RouteNames.MAINTENANCE);
-    }
-  }, []);
-
   if (router.pathname === '/agents/[agentId]/iframe') {
     return getLayout(<Component {...pageProps} />);
   }
