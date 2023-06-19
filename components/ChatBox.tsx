@@ -136,16 +136,18 @@ function ChatBox({
                 py: 1,
                 px: 2,
                 'ol,ul,p': {
-                  color: theme.palette.text.secondary,
+                  // color: theme.palette.text.secondary,
                 },
                 'ol, ul': {
                   my: 0,
                   pl: 2,
                 },
                 ol: {
-                  fontWeight: 'bold',
                   listStyle: 'numeric',
                 },
+                // 'ol > li > p': {
+                //   fontWeight: 'bold',
+                // },
                 ul: {
                   listStyle: 'disc',
                   mb: 2,
@@ -154,10 +156,10 @@ function ChatBox({
                   my: 1,
                 },
                 'li::marker, ol::marker': {
-                  color: theme.palette.text.tertiary,
+                  // color: theme.palette.text.tertiary,
                 },
                 a: {
-                  color: theme.palette.text.primary,
+                  // color: theme.palette.text.primary,
                   textDecoration: 'underline',
                 },
                 [' p ']: {
