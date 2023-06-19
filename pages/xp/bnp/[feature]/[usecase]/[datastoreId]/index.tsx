@@ -45,7 +45,7 @@ import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import ChatBox from '@app/components/ChatBox';
+import ChatBoxBNP from '@app/components/ChatBoxBNP';
 import CreateDatastoreModal from '@app/components/CreateDatastoreModal';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
@@ -222,7 +222,31 @@ const EvalModal = (props: {
   );
 };
 
-const SearchBNP = (props: { datastoreId: string }) => {
+const prompts = {
+  writing: {
+    libre: [],
+    auto: ['Ecrit un poème comme molière sur databerry'],
+    assisté: [
+      'Rédige un résumé de ... lignes sans aucun exemple du document ...',
+      'Rédige un résumé de ... du document ... Avec à la fin une réflexion sur un des sujets abordés',
+    ],
+  },
+  qa: {
+    libre: [],
+    auto: [],
+    assisté: [],
+  },
+  summary: {
+    libre: [],
+    auto: [],
+    assisté: [],
+  },
+};
+
+const SearchBNP = (props: {
+  datastoreId: string;
+  feature: 'writing' | 'qa';
+}) => {
   const router = useRouter();
   const [state, setState] = useStateReducer({
     isEvalModalOpen: false,
@@ -237,6 +261,11 @@ const SearchBNP = (props: { datastoreId: string }) => {
       datastoreId: props.datastoreId,
     },
   });
+
+  React.useEffect(() => {
+    if (state.prompt) {
+    }
+  }, [state.prompt]);
 
   return (
     <>
@@ -280,9 +309,12 @@ const SearchBNP = (props: { datastoreId: string }) => {
             maxHeight: '680px',
           }}
         >
-          <ChatBox
+          <ChatBoxBNP
+            promptType={state.promptType}
+            prompt={state.prompt}
             messages={history}
             onSubmit={handleChatSubmit}
+            multiline
             // messageTemplates={config.messageTemplates}
             // initialMessage={config.initialMessage}
           />
@@ -309,13 +341,21 @@ const SearchBNP = (props: { datastoreId: string }) => {
           })
         }
         open={!state.promptType}
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          py: 2,
+        }}
       >
         <Sheet
           variant="outlined"
           sx={{
             width: 600,
             maxWidth: '100%',
+            height: '100%',
+            overflowY: 'scroll',
+
             borderRadius: 'md',
             p: 3,
             boxShadow: 'lg',
@@ -339,39 +379,48 @@ const SearchBNP = (props: { datastoreId: string }) => {
               defaultValue="medium"
               name="radio-buttons-group"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                console.log('value', e.target.value);
+                const value = e.target.value;
+                const type = value?.split('_')?.[0];
+                const index = value?.split('_')?.[1];
+
+                const prompt =
+                  (prompts as any)?.[props.feature]?.[type]?.[index || 0] || '';
 
                 setState({
-                  promptType: e.target.value as any,
+                  promptType: type as any,
+                  prompt,
                 });
               }}
             >
               <Stack gap={2}>
-                {/* <Radio value="auto" label="Libre" size="lg" /> */}
-                {/* <Divider></Divider>
-                <Typography>Assisté</Typography>
-                <Stack gap={1}>
-                  <Radio
-                    value="assisté_1"
-                    label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                    size="lg"
-                  />
-                  <Radio
-                    value="assisté_2"
-                    label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                    size="lg"
-                  />
-                  <Radio
-                    value="assisté_3"
-                    label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-                    size="lg"
-                  />
-                </Stack>
+                {['writing'].includes(props.feature) && (
+                  <>
+                    <Radio value="auto" label="Auto" size="lg" />
+                    <Divider></Divider>
+                  </>
+                )}
 
-                <Divider></Divider>
+                {['writing'].includes(props.feature) && (
+                  <>
+                    <Typography>Assisté</Typography>
+                    <Stack gap={1}>
+                      {prompts['writing']['assisté'].map((each, index) => (
+                        <Radio
+                          key={index}
+                          value={`assisté_${index}`}
+                          label={each}
+                          size="lg"
+                        />
+                      ))}
+                    </Stack>
 
-                <Radio value="libre" label="Libre" size="lg" /> */}
-                <Radio value="libre" label="Libre" size="lg" />
+                    <Divider></Divider>
+                  </>
+                )}
+
+                {['qa', 'writing'].includes(props.feature) && (
+                  <Radio value="libre" label="Libre" size="lg" />
+                )}
               </Stack>
             </RadioGroup>
           </Stack>
@@ -401,8 +450,6 @@ export default function XPBNPFeature() {
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
   >(`/api/datastores/${datastoreId}`, fetcher);
-
-  React.useEffect(() => {}, []);
 
   return (
     <Box
@@ -449,7 +496,10 @@ export default function XPBNPFeature() {
           sx={{ p: 4, maxWidth: 'lg', minHeight: '500px', overflow: 'visible' }}
           variant="outlined"
         >
-          {feature === 'qa' && <SearchBNP datastoreId={datastoreId} />}
+          {feature === 'qa' ||
+            (feature === 'writing' && (
+              <SearchBNP feature={feature} datastoreId={datastoreId} />
+            ))}
         </Card>
       </Stack>
     </Box>
