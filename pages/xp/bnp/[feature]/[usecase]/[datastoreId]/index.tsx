@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import AddIcon from '@mui/icons-material/Add';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
@@ -22,6 +23,8 @@ import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Radio from '@mui/joy/Radio';
+import RadioGroup from '@mui/joy/RadioGroup';
 import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
@@ -90,6 +93,7 @@ const EvalModal = (props: {
   feature: string;
   prompt: string;
   promptType: string;
+  datastoreId: string;
 }) => {
   const [state, setState] = useStateReducer({
     isLoading: false,
@@ -118,12 +122,19 @@ const EvalModal = (props: {
 
     await axios.post(`/api/xp/bnp/eval`, payload);
 
+    await axios.delete(`/api/xp/bnp/history`),
+      {
+        datastoreId: props.datastoreId,
+      };
+
+    props?.handleClose();
+    methods?.reset();
+
     setState({
       isLoading: false,
     });
 
-    props?.handleClose();
-    methods?.reset();
+    window.location.reload();
   };
 
   console.log('methods', methods.formState.errors);
@@ -215,7 +226,7 @@ const SearchBNP = (props: { datastoreId: string }) => {
   const router = useRouter();
   const [state, setState] = useStateReducer({
     isEvalModalOpen: false,
-    promptType: 'libre',
+    promptType: undefined as 'libre' | 'auto' | 'assisté' | undefined,
     prompt: '',
   });
   const { history, handleChatSubmit } = useAgentChat({
@@ -230,23 +241,28 @@ const SearchBNP = (props: { datastoreId: string }) => {
   return (
     <>
       <Stack>
-        {history.length > 0 && (
-          <Stack direction="row">
-            <Button
-              sx={{ mr: 'auto' }}
-              color="warning"
-              variant="outlined"
-              onClick={async () => {
-                await axios.delete(`/api/xp/bnp/history`),
-                  {
-                    datastoreId: props.datastoreId,
-                  };
+        {state.promptType && (
+          <Chip sx={{ mr: 'auto' }} variant="outlined" color="neutral">
+            Type de prompt: <strong>{state.promptType}</strong>
+          </Chip>
+        )}
+        <Stack direction="row">
+          {/* <Button
+            sx={{ mr: 'auto' }}
+            color="warning"
+            variant="outlined"
+            onClick={async () => {
+              await axios.delete(`/api/xp/bnp/history`),
+                {
+                  datastoreId: props.datastoreId,
+                };
 
-                window.location.reload();
-              }}
-            >
-              Effacer messages
-            </Button>
+              window.location.reload();
+            }}
+          >
+            Reset Prompt
+          </Button> */}
+          {history.length > 0 && (
             <Button
               sx={{ ml: 'auto' }}
               onClick={() => {
@@ -255,8 +271,8 @@ const SearchBNP = (props: { datastoreId: string }) => {
             >
               Evaluer
             </Button>
-          </Stack>
-        )}
+          )}
+        </Stack>
 
         <Box
           sx={{
@@ -273,8 +289,9 @@ const SearchBNP = (props: { datastoreId: string }) => {
         </Box>
       </Stack>
       <EvalModal
+        datastoreId={props.datastoreId}
         prompt={state.prompt}
-        promptType={state.promptType}
+        promptType={state.promptType!}
         feature={router.query.feature as string}
         useCase={router.query.usecase as string}
         isOpen={state.isEvalModalOpen}
@@ -283,6 +300,83 @@ const SearchBNP = (props: { datastoreId: string }) => {
           ?.map((each) => `${each.from}: ${each.message}`)
           .join('\n')}
       />
+
+      <Modal
+        onClose={() =>
+          setState({
+            promptType: undefined,
+            prompt: '',
+          })
+        }
+        open={!state.promptType}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      >
+        <Sheet
+          variant="outlined"
+          sx={{
+            width: 600,
+            maxWidth: '100%',
+            borderRadius: 'md',
+            p: 3,
+            boxShadow: 'lg',
+          }}
+        >
+          <Button
+            color="warning"
+            startDecorator={<ArrowBackRoundedIcon />}
+            onClick={() => router.push('/xp/bnp')}
+          >
+            Nouvel Usage
+          </Button>
+
+          <Divider sx={{ my: 4 }}></Divider>
+
+          <Typography mb={4} level="h5">
+            Type de Prompt
+          </Typography>
+          <Stack>
+            <RadioGroup
+              defaultValue="medium"
+              name="radio-buttons-group"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                console.log('value', e.target.value);
+
+                setState({
+                  promptType: e.target.value as any,
+                });
+              }}
+            >
+              <Stack gap={2}>
+                {/* <Radio value="auto" label="Libre" size="lg" /> */}
+                {/* <Divider></Divider>
+                <Typography>Assisté</Typography>
+                <Stack gap={1}>
+                  <Radio
+                    value="assisté_1"
+                    label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    size="lg"
+                  />
+                  <Radio
+                    value="assisté_2"
+                    label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    size="lg"
+                  />
+                  <Radio
+                    value="assisté_3"
+                    label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    size="lg"
+                  />
+                </Stack>
+
+                <Divider></Divider>
+
+                <Radio value="libre" label="Libre" size="lg" /> */}
+                <Radio value="libre" label="Libre" size="lg" />
+              </Stack>
+            </RadioGroup>
+          </Stack>
+        </Sheet>
+      </Modal>
     </>
   );
 };
