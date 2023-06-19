@@ -301,15 +301,6 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       return 'User has requested a human operator, do not handle.';
     }
 
-    CrispClient.website.composeMessageInConversation(
-      body.website_id,
-      body.data.session_id,
-      {
-        type: 'start',
-        from: 'operator',
-      }
-    );
-
     switch (body.event) {
       case 'message:send':
         if (
@@ -318,6 +309,15 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           body.data.type === 'text' &&
           metadata?.choice !== 'request_human'
         ) {
+          CrispClient.website.composeMessageInConversation(
+            body.website_id,
+            body.data.session_id,
+            {
+              type: 'start',
+              from: 'operator',
+            }
+          );
+
           await handleQuery(
             body.website_id,
             body.data.session_id,

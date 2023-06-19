@@ -55,7 +55,7 @@ START_QUESTION:
 ${query}
 END_QUESTION
 
-Answer (never translate SOURCES and ulrs):`;
+Answer in markdown (never translate SOURCES and ulrs):`;
 };
 
 const chat = async ({
