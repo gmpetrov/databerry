@@ -238,14 +238,17 @@ const prompts = {
   },
   summary: {
     libre: [],
-    auto: [],
-    assisté: [],
+    auto: ['Ecrit un poème comme molière sur databerry'],
+    assisté: [
+      'Rédige un résumé de ... lignes sans aucun exemple du document ...',
+      'Rédige un résumé de ... du document ... Avec à la fin une réflexion sur un des sujets abordés',
+    ],
   },
 };
 
 const SearchBNP = (props: {
   datastoreId: string;
-  feature: 'writing' | 'qa';
+  feature: 'writing' | 'qa' | 'summary';
 }) => {
   const router = useRouter();
   const [state, setState] = useStateReducer({
@@ -393,18 +396,18 @@ const SearchBNP = (props: {
               }}
             >
               <Stack gap={2}>
-                {['writing'].includes(props.feature) && (
+                {['writing', 'summary'].includes(props.feature) && (
                   <>
                     <Radio value="auto" label="Auto" size="lg" />
                     <Divider></Divider>
                   </>
                 )}
 
-                {['writing'].includes(props.feature) && (
+                {['writing', 'summary'].includes(props.feature) && (
                   <>
                     <Typography>Assisté</Typography>
                     <Stack gap={1}>
-                      {prompts['writing']['assisté'].map((each, index) => (
+                      {prompts[props.feature]['assisté'].map((each, index) => (
                         <Radio
                           key={index}
                           value={`assisté_${index}`}
@@ -418,7 +421,7 @@ const SearchBNP = (props: {
                   </>
                 )}
 
-                {['qa', 'writing'].includes(props.feature) && (
+                {['qa', 'writing', 'summary'].includes(props.feature) && (
                   <Radio value="libre" label="Libre" size="lg" />
                 )}
               </Stack>
@@ -496,10 +499,7 @@ export default function XPBNPFeature() {
           sx={{ p: 4, maxWidth: 'lg', minHeight: '500px', overflow: 'visible' }}
           variant="outlined"
         >
-          {feature === 'qa' ||
-            (feature === 'writing' && (
-              <SearchBNP feature={feature} datastoreId={datastoreId} />
-            ))}
+          {feature && <SearchBNP feature={feature} datastoreId={datastoreId} />}
         </Card>
       </Stack>
     </Box>

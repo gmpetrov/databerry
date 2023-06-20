@@ -171,7 +171,7 @@ export default function XPBNPHome() {
                   {XPBNPLabels['writing']}
                 </Button>
               </Link>
-              <Link href="/xp/bnp/qa">
+              <Link href="/xp/bnp/summary">
                 <Button
                   endDecorator={<ArrowForwardRoundedIcon />}
                   variant="plain"
