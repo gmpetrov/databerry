@@ -1,41 +1,43 @@
-import AddIcon from "@mui/icons-material/Add";
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import CheckRoundedIcon from "@mui/icons-material/CheckRounded";
-import DeleteIcon from "@mui/icons-material/Delete";
-import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
-import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
-import Alert from "@mui/joy/Alert";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import Divider from "@mui/joy/Divider";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import IconButton from "@mui/joy/IconButton";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
-import { Prisma, SubscriptionPlan } from "@prisma/client";
-import axios from "axios";
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next/types";
-import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
-import { ReactElement } from "react";
-import * as React from "react";
-import toast from "react-hot-toast";
-import useSWR from "swr";
+import AddIcon from '@mui/icons-material/Add';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import DeleteIcon from '@mui/icons-material/Delete';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
+import Alert from '@mui/joy/Alert';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import IconButton from '@mui/joy/IconButton';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import { Prisma, SubscriptionPlan } from '@prisma/client';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
+import { ReactElement } from 'react';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import useSWR from 'swr';
+import { z } from 'zod';
 
-import Layout from "@app/components/Layout";
-import UserFree from "@app/components/UserFree";
-import UserPremium from "@app/components/UserPremium";
-import useStateReducer from "@app/hooks/useStateReducer";
-import accountConfig from "@app/utils/account-config";
-import { fetcher } from "@app/utils/swr-fetcher";
-import { withAuth } from "@app/utils/withAuth";
+import Layout from '@app/components/Layout';
+import UserFree from '@app/components/UserFree';
+import UserPremium from '@app/components/UserPremium';
+import useStateReducer from '@app/hooks/useStateReducer';
+import accountConfig from '@app/utils/account-config';
+import { fetcher } from '@app/utils/swr-fetcher';
+import { withAuth } from '@app/utils/withAuth';
 
-import { getApiKeys } from "./api/accounts/api-keys";
+import { getApiKeys } from './api/accounts/api-keys';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -129,10 +131,16 @@ export default function AccountPage() {
         return;
       }
 
+      let utmParams = {};
+      try {
+        utmParams = JSON.parse(Cookies.get('utmParams') || '{}');
+      } catch {}
+
       await axios
         .post("/api/stripe/referral", {
           checkoutSessionId,
           referralId: getClientReferenceId(),
+          utmParams,
         })
         .catch(console.log);
 

@@ -75,10 +75,16 @@ export default function CrispConfig(props: { agent: Agent }) {
         },
       });
 
+      const fetchedUser = await axios.get('/api/external/me', {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+        },
+      });
+
       setAgents(data);
       setIsApiKeyValid(true);
-      const plan = data?.[0]?.owner?.subscriptions?.[0]?.plan;
-      const premium = plan && plan !== "level_0";
+      const plan = fetchedUser?.data?.subscriptions?.[0]?.plan;
+      const premium = plan && plan !== 'level_0';
       setIsPremium(premium);
 
       console.log("agents", agents);

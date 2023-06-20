@@ -2,7 +2,11 @@
 
 cd /app/workspace
 
-yarn global add pnpm && pnpm i
+pwd
+ls
+
+yarn global add pnpm@7 && pnpm i
+
 pnpm prisma:migrate:dev
 
 # run server + worker

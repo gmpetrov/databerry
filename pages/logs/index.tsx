@@ -1,30 +1,35 @@
-import InboxRoundedIcon from "@mui/icons-material/InboxRounded";
-import Alert from "@mui/joy/Alert";
-import Box from "@mui/joy/Box";
-import Chip from "@mui/joy/Chip";
-import CircularProgress from "@mui/joy/CircularProgress";
-import Divider from "@mui/joy/Divider";
-import List from "@mui/joy/List";
-import ListItemContent from "@mui/joy/ListItemContent";
-import Sheet from "@mui/joy/Sheet";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
-import ListItem from "@mui/material/ListItem";
-import { Prisma } from "@prisma/client";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { GetServerSidePropsContext } from "next/types";
-import { useTranslations } from "next-intl";
-import { ReactElement } from "react";
-import React from "react";
-import useSWR from "swr";
-import useSWRInfinite from "swr/infinite";
+import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
+import Alert from '@mui/joy/Alert';
+import Avatar from '@mui/joy/Avatar';
+import Badge from '@mui/joy/Badge';
+import Box from '@mui/joy/Box';
+import Chip from '@mui/joy/Chip';
+import CircularProgress from '@mui/joy/CircularProgress';
+import Divider from '@mui/joy/Divider';
+import List from '@mui/joy/List';
+import ListDivider from '@mui/joy/ListDivider';
+import ListItemContent from '@mui/joy/ListItemContent';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Sheet from '@mui/joy/Sheet';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import ListItem from '@mui/material/ListItem';
+import { Prisma } from '@prisma/client';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { GetServerSidePropsContext } from 'next/types';
+import { getServerSession } from 'next-auth/next';
+import { ReactElement } from 'react';
+import React from 'react';
+import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 
-import ChatBox from "@app/components/ChatBox";
-import Layout from "@app/components/Layout";
-import useStateReducer from "@app/hooks/useStateReducer";
-import relativeDate from "@app/utils/relative-date";
-import { fetcher } from "@app/utils/swr-fetcher";
-import { withAuth } from "@app/utils/withAuth";
+import ChatBox from '@app/components/ChatBox';
+import Layout from '@app/components/Layout';
+import useStateReducer from '@app/hooks/useStateReducer';
+import { authOptions } from '@app/pages/api/auth/[...nextauth]';
+import relativeDate from '@app/utils/relative-date';
+import { fetcher } from '@app/utils/swr-fetcher';
+import { withAuth } from '@app/utils/withAuth';
 
 import { getLogs } from "../api/logs";
 import { getMessages } from "../api/logs/[id]";
@@ -253,14 +258,34 @@ LogsPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export const getServerSideProps = withAuth(
-  async (ctx: GetServerSidePropsContext) => {
-    const { locale } = ctx;
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {},
+//     };
+//   }
+// );
+// Patch for PH Launch
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+  const { locale } = ctx;
+
+  if (!session) {
     return {
+      redirect: {
+        statusCode: 302,
+        destination: `https://databerry.ai`,
+      },
       props: {
         ...require(`../../public/locales/logs/${locale}.json`),
                 ...require(`../../public/locales/navbar/${locale}.json`),
-      },
-    };
+    }
   }
-);
+}
+
+  (ctx as any).req.session = session;
+
+  return {
+    props: {},
+  };
+};

@@ -10,8 +10,8 @@ const summarize = async ({
   const { AnalyzeDocumentChain, loadSummarizationChain } = await import(
     "langchain/chains"
   );
-  const { OpenAI } = await import("langchain/llms/openai");
-  const model = new OpenAI({ temperature: 0, modelName: "gpt-3.5-turbo" });
+  const { OpenAI } = await import('langchain/llms/openai');
+  const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo-0613' });
   const combineDocsChain = loadSummarizationChain(model, {
     prompt,
     combineMapPrompt: prompt,

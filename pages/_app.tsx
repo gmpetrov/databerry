@@ -11,9 +11,10 @@ import { NextIntlProvider } from "next-intl";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
-import DashboardThemeProvider from "@app/components/DashboardThemeProvider";
-import { NextPageWithLayout, RouteNames } from "@app/types";
-import createEmotionCache from "@app/utils/create-emotion-cache";
+import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
+import useUTMTracking from '@app/hooks/useUTMTracking';
+import { NextPageWithLayout, RouteNames } from '@app/types';
+import createEmotionCache from '@app/utils/create-emotion-cache';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -36,15 +37,7 @@ export default function App({
   const router = useRouter();
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  useEffect(() => {
-    if (
-      process.env.NEXT_PUBLIC_MAINTENANCE === "true" &&
-      router.route !== RouteNames.MAINTENANCE &&
-      router.route !== "/"
-    ) {
-      router.push(RouteNames.MAINTENANCE);
-    }
-  }, []);
+  useUTMTracking();
 
   if (router.pathname === "/agents/[agentId]/iframe") {
     return getLayout(<Component {...pageProps} />);

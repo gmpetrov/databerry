@@ -47,6 +47,17 @@ export default function Navigation() {
   );
 
   const isStatusOK = getDatastoresQuery?.data?.status === AppStatus.OK;
+  const isMaintenance = !!getDatastoresQuery?.data?.isMaintenance;
+
+  React.useEffect(() => {
+    if (
+      isMaintenance &&
+      router.route !== RouteNames.MAINTENANCE &&
+      router.route !== '/'
+    ) {
+      router.push(RouteNames.MAINTENANCE);
+    }
+  }, [isMaintenance]);
 
   const items = React.useMemo(() => {
     return [

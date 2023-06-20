@@ -36,13 +36,15 @@ export enum AppStatus {
 }
 
 export enum MetadataFields {
-  datastore_id = "datastore_id",
-  datasource_id = "datasource_id",
-  tags = "tags",
-  text = "text",
-  chunk_hash = "chunk_hash",
-  datasource_hash = "datasource_hash",
-  chunk_offset = "chunk_offset",
+
+  datastore_id = 'datastore_id',
+  datasource_id = 'datasource_id',
+  tags = 'tags',
+  text = 'text',
+  chunk_hash = 'chunk_hash',
+  datasource_hash = 'datasource_hash',
+  chunk_offset = 'chunk_offset',
+  custom_id = 'custom_id',
 }
 
 export type DocumentMetadata = {

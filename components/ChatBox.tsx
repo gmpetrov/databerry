@@ -131,22 +131,41 @@ function ChatBox({
               className={
                 each.from === "agent" ? "message-agent" : "message-human"
               }
-              color={each.from === "agent" ? "primary" : "neutral"}
-              sx={{
-                whiteSpace: "pre-wrap",
-                "ul, ol": {
-                  listStyleType: "disc",
+              color={each.from === 'agent' ? 'primary' : 'neutral'}
+              sx={(theme) => ({
+                py: 1,
+                px: 2,
+                'ol,ul,p': {
+                  // color: theme.palette.text.secondary,
+                },
+                'ol, ul': {
+                  my: 0,
                   pl: 2,
-                  gap: 1,
+                },
+                ol: {
+                  listStyle: 'numeric',
+                },
+                // 'ol > li > p': {
+                //   fontWeight: 'bold',
+                // },
+                ul: {
+                  listStyle: 'disc',
+                  mb: 2,
+                },
+                li: {
+                  my: 1,
+                },
+                'li::marker, ol::marker': {
+                  // color: theme.palette.text.tertiary,
                 },
                 a: {
-                  textDecoration: "underline",
+                  // color: theme.palette.text.primary,
+                  textDecoration: 'underline',
                 },
-                ["& p"]: {
-                  m: 0,
+                [' p ']: {
+                  py: 1,
                 },
-                gap: 2,
-              }}
+              })}
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget={"_blank"}>
                 {each.message}
@@ -154,7 +173,6 @@ function ChatBox({
             </Card>
           </Stack>
         ))}
-
         {isLoading && (
           <CircularProgress
             variant="soft"

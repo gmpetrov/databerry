@@ -33,13 +33,14 @@ export const FileForm = UpsertDatasourceSchema.extend({
 });
 
 const acceptedFileTypes = [
-  "text/csv",
-  "text/plain",
-  "text/markdown",
-  "application/pdf",
-  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  'text/csv',
+  'text/plain',
+  'text/markdown',
+  'application/pdf',
+  'application/json',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ];
 
 function Nested() {

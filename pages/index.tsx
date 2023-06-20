@@ -14,8 +14,11 @@ import useOpenGraph from "../hooks/useOpenGraph";
 
 import Cta from "./Cta";
 import FAQ from "./FAQ";
-import FeaturesForCustomerSupport from "./FeaturesForCustomerSupport";
-import FeaturesForDevs from "./FeaturesForDevs";
+import FeaturesForChatGPTPlugin from './FeaturesForChatGPTPlugin';
+import FeaturesForChatWithData from './FeaturesForChatWithData';
+import FeaturesForCustomerSupport from './FeaturesForCustomerSupport';
+import FeaturesForDevs from './FeaturesForDevs';
+import FeaturesForSlack from './FeaturesForSlack';
 
 export default function Home() {
   const ogProperties = useOpenGraph({
@@ -71,7 +74,7 @@ export default function Home() {
 
       <script
         defer
-        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.17"
+        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.19"
         id="clgtujkqh022j0u0zw3ut8vk3"
         data-name="databerry-chat-bubble"
       ></script>
@@ -94,9 +97,10 @@ export default function Home() {
         <Testimonials />
         <Pricing />
         <Faqs /> */}
-        <FeaturesForDevs />
+        <FeaturesForChatWithData />
         <FeaturesForCustomerSupport />
-        {/* <FeaturesForChatGPTPlugin /> */}
+        <FeaturesForDevs />
+        <FeaturesForChatGPTPlugin />
         {/* <FeaturesForSlack /> */}
         {/* <FeaturesForInfluencers /> */}
         {/* <ChatBotBenefits /> */}
