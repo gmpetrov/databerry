@@ -18,6 +18,7 @@ import { Prisma } from '@prisma/client';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
+import { useTranslations } from 'next-intl';
 import { ReactElement } from 'react';
 import React from 'react';
 import useSWR from 'swr';

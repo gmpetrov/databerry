@@ -42,7 +42,7 @@ import { getApiKeys } from './api/accounts/api-keys';
 
 export default function AccountPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [state, setState] = useStateReducer({
     isLoadingCreateApiKey: false,
     isLoadingDeleteApiKey: false,
