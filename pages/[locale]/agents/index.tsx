@@ -32,8 +32,8 @@ import accountConfig from "@app/utils/account-config";
 import { fetcher } from "@app/utils/swr-fetcher";
 import { withAuth } from "@app/utils/withAuth";
 
-import { getAgents } from "../api/agents";
-import { getDatastores } from "../api/datastores";
+import { getAgents } from "../../api/agents";
+import { getDatastores } from "../../api/datastores";
 
 const CreateDatastoreModal = dynamic(
   () => import("@app/components/CreateDatastoreModal"),
