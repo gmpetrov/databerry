@@ -4,8 +4,8 @@ import { Embeddings } from "langchain/embeddings";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { z } from "zod";
 
-import { Chunk, MetadataFields } from "@app/types";
-import { QdrantConfigSchema } from "@app/types/models";
+import { Chunk, MetadataFields, SearchRequestSchema } from '@app/types';
+import { QdrantConfigSchema } from '@app/types/models';
 
 import uuidv4 from "../uuid";
 
@@ -71,6 +71,11 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       field_name: MetadataFields.tags,
       field_schema: "keyword",
     });
+
+    await this.client.put(`/collections/text-embedding-ada-002/index`, {
+      field_name: MetadataFields.custom_id,
+      field_schema: 'keyword',
+    });
   }
 
   private async addDocuments(
@@ -104,6 +109,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
             chunk_offset: documents[idx].metadata.chunk_offset,
             datasource_hash: documents[idx].metadata.datasource_hash,
             datasource_id: documents[idx].metadata.datasource_id,
+            custom_id: documents[idx].metadata.custom_id,
           },
           vector,
         } as Point)
@@ -177,7 +183,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     return documents;
   }
 
-  async search(props: any) {
+  async search(props: SearchRequestSchema) {
     const vectors = await this.embeddings.embedDocuments([props.query]);
 
     const results = await this.client.post(
@@ -193,6 +199,22 @@ export class QdrantManager extends ClientManager<DatastoreType> {
               key: MetadataFields.datastore_id,
               match: { value: this.datastore.id },
             },
+            ...(props.filters?.custom_id
+              ? [
+                  {
+                    key: MetadataFields.custom_id,
+                    match: { value: props.filters.custom_id },
+                  },
+                ]
+              : []),
+            ...(props.filters?.datasource_id
+              ? [
+                  {
+                    key: MetadataFields.datasource_id,
+                    match: { value: props.filters.datasource_id },
+                  },
+                ]
+              : []),
           ],
         },
       }

@@ -59,11 +59,12 @@ const frequencies = [
 ];
 const tiers = [
   {
-    name: "Discover",
-    id: "tier-free",
-    href: "/signin",
-    price: { monthly: "$0", annually: "$0" },
-    description: "The essentials to get started quickly.",
+
+    name: 'Discover',
+    id: 'tier-free',
+    href: 'https://app.databerry.ai/account',
+    price: { monthly: '$0', annually: '$0' },
+    description: 'The essentials to get started quickly.',
     features: [
       `${accountConfig["level_0"].limits.maxAgents} agent(s)`,
       `${accountConfig["level_0"].limits.maxDatastores} datastore(s)`,
@@ -81,11 +82,12 @@ const tiers = [
     mostPopular: false,
   },
   {
-    name: "Startup",
-    id: "tier-startup",
-    href: "/signin",
-    price: { monthly: "$25", annually: "$250" },
-    description: "A plan that scales with your rapidly growing business.",
+
+    name: 'Startup',
+    id: 'tier-startup',
+    href: 'https://app.databerry.ai/account',
+    price: { monthly: '$25', annually: '$250' },
+    description: 'A plan that scales with your rapidly growing business.',
     features: [
       `${accountConfig["level_1"].limits.maxAgents} agent(s)`,
       `${accountConfig["level_1"].limits.maxDatastores} datastore(s)`,
@@ -107,7 +109,7 @@ const tiers = [
   {
     name: 'Pro',
     id: 'tier-pro',
-    href: '/signin',
+    href: 'https://app.databerry.ai/account',
     price: { monthly: '$99', annually: '$990' },
     description: 'Dedicated support and for your company.',
     features: [
@@ -127,10 +129,11 @@ const tiers = [
     mostPopular: true,
   },
   {
-    name: "Enterprise",
-    id: "tier-enterprise",
-    href: "/signin",
-    price: { monthly: "$499", annually: "$4990" },
+
+    name: 'Enterprise',
+    id: 'tier-enterprise',
+    href: 'https://app.databerry.ai/account',
+    price: { monthly: '$499', annually: '$4990' },
     description:
       "You’ve got a huge amount of assets but it’s not enough. To the moon.",
     features: [

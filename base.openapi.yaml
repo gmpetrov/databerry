@@ -44,15 +44,9 @@ components:
           default: 3
     QueryResponse:
       title: QueryResponse
-      required:
-        - results
-      type: object
-      properties:
-        results:
-          title: Results
-          type: array
-          items:
-            $ref: "#/components/schemas/QueryResult"
+      type: array
+      items:
+        $ref: "#/components/schemas/QueryResult"
     QueryResult:
       title: QueryResult
       required:

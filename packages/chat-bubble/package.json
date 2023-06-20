@@ -1,6 +1,6 @@
 {
   "name": "@databerry/chat-bubble",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "description": "Databerry.ai Chat Bubble Widget",
   "main": "chat-bubble.js",
   "scripts": {
