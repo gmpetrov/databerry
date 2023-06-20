@@ -19,7 +19,7 @@ const datasourceExtended = Prisma.validator<Prisma.AppDatasourceArgs>()({
   },
 });
 
-type DatasourceExtended = Prisma.AppDatasourceGetPayload<
+export type DatasourceExtended = Prisma.AppDatasourceGetPayload<
   typeof datasourceExtended
 >;
 

@@ -471,6 +471,7 @@ enum DatasourceType {
   google_drive_folder
   notion
   qa
+  notion_page
 }
 
 enum ServiceProviderType {

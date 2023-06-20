@@ -53,7 +53,8 @@ const options: DatsourceOption[] = [
     label: 'Google Drive™',
     description: 'Talk to your Google Drive files',
     isPremium: true,
-    icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/1024px-Google_Drive_icon_%282020%29.svg.png?20221103153031',
+    icon:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/1024px-Google_Drive_icon_%282020%29.svg.png?20221103153031',
     // disabled: true,
   },
   {
@@ -63,11 +64,11 @@ const options: DatsourceOption[] = [
     disabled: false,
   },
   {
-    type: 'notion' as any,
+    type: DatasourceType.notion,
     label: 'Notion',
     description: 'Download a Notion notebook',
     icon: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg',
-    disabled: true,
+    disabled: false,
   },
 ];
 
