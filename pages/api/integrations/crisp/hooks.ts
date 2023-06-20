@@ -31,6 +31,7 @@ CrispClient.setRtmMode(Crisp.RTM_MODES.WebHooks);
 
 type HookEventType =
   | 'message:send'
+  | 'message:received'
   | 'message:updated'
   | 'message:compose:send'
   | 'message:notify:unread:send'
@@ -266,17 +267,17 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     const _timestamp = req.headers['x-crisp-request-timestamp'];
     const _signature = req.headers['x-crisp-signature'];
 
-    const verified = CrispClient.verifyHook(
-      process.env.CRISP_HOOK_SECRET!,
-      body,
-      _timestamp as any,
-      _signature as any
-    );
+    // const verified = CrispClient.verifyHook(
+    //   process.env.CRISP_HOOK_SECRET!,
+    //   body,
+    //   _timestamp as any,
+    //   _signature as any
+    // );
 
-    if (!verified) {
-      // TODO
-      // ATM verifyHook() always returns false 🤔
-    }
+    // if (!verified) {
+    // TODO
+    // ATM verifyHook() always returns false 🤔
+    // }
 
     if (req.headers['x-delivery-attempt-count'] !== '1') {
       return "Not the first attempt, don't handle.";
@@ -300,23 +301,23 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       return 'User has requested a human operator, do not handle.';
     }
 
-    CrispClient.website.composeMessageInConversation(
-      body.website_id,
-      body.data.session_id,
-      {
-        type: 'start',
-        from: 'operator',
-      }
-    );
-
     switch (body.event) {
       case 'message:send':
         if (
-          body.data.origin === 'chat' &&
+          // body.data.origin === 'chat' &&
           body.data.from === 'user' &&
           body.data.type === 'text' &&
           metadata?.choice !== 'request_human'
         ) {
+          CrispClient.website.composeMessageInConversation(
+            body.website_id,
+            body.data.session_id,
+            {
+              type: 'start',
+              from: 'operator',
+            }
+          );
+
           await handleQuery(
             body.website_id,
             body.data.session_id,
@@ -324,6 +325,23 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           );
         }
 
+        break;
+      case 'message:received':
+        if (
+          body.data.from === 'operator' &&
+          body.data.type === 'text' &&
+          metadata?.choice !== 'request_human'
+        ) {
+          await CrispClient.website.updateConversationMetas(
+            body.website_id,
+            body.data.session_id,
+            {
+              data: {
+                choice: 'request_human',
+              },
+            }
+          );
+        }
         break;
       case 'message:updated':
         console.log(body.data.content?.choices);

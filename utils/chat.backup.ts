@@ -98,7 +98,7 @@ export const loadDatastoreChain = async ({
   const { OpenAI } = await import('langchain/llms/openai');
   const retriever = new DataberryRetriever({ datastore, topK });
   const model = new OpenAI({
-    modelName: 'gpt-3.5-turbo',
+    modelName: 'gpt-3.5-turbo-0613',
   });
 
   //   const chain = ConversationalRetrievalQAChain.fromLLM(

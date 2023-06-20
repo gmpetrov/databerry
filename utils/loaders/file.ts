@@ -19,7 +19,7 @@ export class FileLoader extends DatasourceLoaderBase {
     const res = await s3
       .getObject({
         Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-        Key: `datastores/${this.datasource.datastoreId}/${
+        Key: `datastores/${this.datasource.datastoreId}/${this.datasource.id}/${
           this.datasource.id
         }.${mime.extension((this.datasource?.config as any)?.type)}`,
       })
@@ -32,6 +32,7 @@ export class FileLoader extends DatasourceLoaderBase {
     switch ((this.datasource.config as any).type) {
       case 'text/csv':
       case 'text/plain':
+      case 'application/json':
       case 'text/markdown':
         text = (res as any).Body.toString('utf-8');
         break;
@@ -58,6 +59,7 @@ export class FileLoader extends DatasourceLoaderBase {
         source_type: this.datasource.type,
         source: (this.datasource?.config as any)?.source,
         file_type: (this.datasource?.config as any)?.type,
+        custom_id: (this.datasource?.config as any)?.custom_id,
         tags: [],
       },
     });

@@ -51,7 +51,8 @@ export type TaskRemoveDatastoreSchema = z.infer<
 export const SearchRequestSchema = z.object({
   query: z.string(),
   topK: z.number().default(3).optional(),
-  filter: DocumentMetadataSchema.optional(),
+  tags: z.array(z.string()).optional(),
+  filters: DocumentMetadataSchema.optional(),
 });
 
 export type SearchRequestSchema = z.infer<typeof SearchRequestSchema>;
@@ -153,6 +154,7 @@ export const AcceptedDatasourceMimeTypes = [
   'text/plain',
   'text/markdown',
   'application/pdf',
+  'application/json',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

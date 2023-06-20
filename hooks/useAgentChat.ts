@@ -16,9 +16,15 @@ type Props = {
   queryAgentURL: string;
   queryHistoryURL?: string;
   channel?: ConversationChannel;
+  queryBody?: any;
 };
 
-const useAgentChat = ({ queryAgentURL, queryHistoryURL, channel }: Props) => {
+const useAgentChat = ({
+  queryAgentURL,
+  queryHistoryURL,
+  channel,
+  queryBody,
+}: Props) => {
   const [state, setState] = useStateReducer({
     history: [] as { from: 'human' | 'agent'; message: string; id?: string }[],
   });
@@ -79,6 +85,7 @@ const useAgentChat = ({ queryAgentURL, queryHistoryURL, channel }: Props) => {
           // Accept: 'text/event-stream',
         },
         body: JSON.stringify({
+          ...queryBody,
           streaming: true,
           query: message,
           visitorId: visitorId,

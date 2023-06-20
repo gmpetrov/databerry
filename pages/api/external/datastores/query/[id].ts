@@ -70,7 +70,7 @@ export const queryURL = async (
   const results = await store.search({
     query: data.query,
     topK: topK as number,
-    tags: [],
+    filters: data.filters,
   });
 
   return results || [];

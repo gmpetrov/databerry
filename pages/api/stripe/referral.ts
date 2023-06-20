@@ -11,6 +11,7 @@ const handler = createAuthApiHandler();
 const Schema = z.object({
   checkoutSessionId: z.string().min(1),
   referralId: z.string().min(1),
+  utmParams: z.any(),
 });
 
 export const referral = async (
@@ -19,6 +20,7 @@ export const referral = async (
 ) => {
   const checkoutSessionId = req.body.checkoutSessionId as string;
   const referralId = req.body.referralId as string;
+  const utmParams = (req.body.utmParams || {}) as any;
 
   console.log('payload', req.body);
 
@@ -28,6 +30,7 @@ export const referral = async (
 
   await stripe.customers.update(customerId, {
     metadata: {
+      ...utmParams,
       referral: referralId,
     },
   });

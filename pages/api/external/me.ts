@@ -21,7 +21,11 @@ export const me = async (req: AppNextApiRequest, res: NextApiResponse) => {
       key: apiKey,
     },
     include: {
-      user: true,
+      user: {
+        include: {
+          subscriptions: true,
+        },
+      },
     },
   });
 

@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import { Textarea } from '@mui/joy';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -20,6 +21,9 @@ type Props = {
   messageTemplates?: string[];
   initialMessage?: string;
   readOnly?: boolean;
+  prompt?: string;
+  multiline?: boolean;
+  promptType?: 'auto' | 'assisté' | 'libre';
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -30,6 +34,9 @@ function ChatBox({
   messageTemplates,
   initialMessage,
   readOnly,
+  prompt,
+  multiline,
+  promptType,
 }: Props) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,6 +75,17 @@ function ChatBox({
       );
     }, 0);
   }, [initialMessage]);
+
+  useEffect(() => {
+    if (prompt) {
+      console.log('prompt', prompt);
+      methods.setValue('query', prompt);
+
+      if (promptType === 'auto') {
+        submit(methods.getValues());
+      }
+    }
+  }, [prompt, promptType]);
 
   return (
     <Stack
@@ -235,17 +253,42 @@ function ChatBox({
             </Stack>
           )}
 
-          <Input
-            sx={{ width: '100%' }}
-            // disabled={!state.currentDatastoreId || state.loading}
-            variant="outlined"
-            endDecorator={
-              <IconButton type="submit" disabled={isLoading}>
-                <SendRoundedIcon />
-              </IconButton>
-            }
-            {...methods.register('query')}
-          />
+          {(promptType === 'assisté' || promptType === 'libre') &&
+            (multiline ? (
+              <Stack
+                direction={'row'}
+                sx={{ width: '100%', alignItems: 'flex-start' }}
+                gap={1}
+              >
+                <Textarea
+                  sx={{ width: '100%' }}
+                  // disabled={!state.currentDatastoreId || state.loading}
+                  minRows={1}
+                  variant="outlined"
+                  {...methods.register('query')}
+                />
+
+                <IconButton
+                  type="submit"
+                  disabled={isLoading}
+                  sx={{ ml: 'auto' }}
+                >
+                  <SendRoundedIcon />
+                </IconButton>
+              </Stack>
+            ) : (
+              <Input
+                sx={{ width: '100%' }}
+                // disabled={!state.currentDatastoreId || state.loading}
+                variant="outlined"
+                endDecorator={
+                  <IconButton type="submit" disabled={isLoading}>
+                    <SendRoundedIcon />
+                  </IconButton>
+                }
+                {...methods.register('query')}
+              />
+            ))}
         </form>
       )}
     </Stack>

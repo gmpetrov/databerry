@@ -91,6 +91,8 @@ model Datastore {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  messagesBNP MessageBNP[]
+
   @@map("data_stores")
 }
 
@@ -347,6 +349,43 @@ model Subscription {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("subscriptions")
+}
+
+model MessageBNP {
+  id   String      @id @default(cuid())
+  text String
+  from MessageFrom
+
+  datastoreId String?    @map("datastore_id")
+  datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+
+  read Boolean? @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("messages_bnp")
+}
+
+model XPBNPEval {
+  id         String  @id @default(cuid())
+  active     Boolean @default(false)
+  userName   String? @map("user_name")
+  feature    String?
+  usecase    String?
+  promptType String? @map("prompt_type")
+  prompt     String?
+  comment    String?
+  result     String?
+  score1     Int?    @map("score_1")
+  score2     Int?    @map("score_2")
+  score3     Int?    @map("score_3")
+  metadata   Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("xp_bnp_evals")
 }
 
 enum DatastoreVisibility {

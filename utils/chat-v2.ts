@@ -1,7 +1,11 @@
 import { Datastore, MessageFrom, PromptType } from '@prisma/client';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { OpenAI } from 'langchain/llms/openai';
-import { AIChatMessage, HumanChatMessage } from 'langchain/schema';
+import {
+  AIChatMessage,
+  HumanChatMessage,
+  SystemChatMessage,
+} from 'langchain/schema';
 
 import { ChatResponse } from '@app/types';
 
@@ -55,7 +59,60 @@ START_QUESTION:
 ${query}
 END_QUESTION
 
-Answer in markdown (never translate SOURCES and ulrs):`;
+Answer (never translate SOURCES and ulrs):`;
+};
+
+const getCustomerSupportPromptWithHistory = ({
+  prompt,
+  query,
+  context,
+  history,
+}: {
+  prompt?: string;
+  query: string;
+  context: string;
+  history: string;
+}) => {
+  return `${prompt || CUSTOMER_SUPPORT}
+You must answer questions accurately and truthfully, using the language in which the question is asked.
+You are not allowed to use the provided few-shot examples as direct answers. Instead, use your extensive knowledge and understanding of the context to address each inquiry in the most helpful and informative way possible.
+Please assist customers with their questions and concerns related to the specific context provided or the CONVESRATION HISTORY below.
+Ensure that your responses are clear, detailed, and do not reiterate the same information. Create a final answer with references ("SOURCE") if any.
+If the answer is not in the context, you can also try to use previous message in the conversation history.
+
+few-shot examples:
+
+START_CONTEXT:
+CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
+SOURCE: https://www.spotify.com/us/premium
+CHUNK: ...
+SOURCE: ...
+END_CONTEXT
+
+START_QUESTION:
+What is the cost of the Premium plan and what features does it include?
+END_QUESTION
+
+Answer:
+The cost of the Premium plan is $9.99 per month. The features included in this plan are:
+
+- Ad-free streaming
+- Unlimited streaming hours
+- Ability to download songs for offline listening
+
+SOURCE: https://www.spotify.com/us/premium
+
+end few-shot examples.
+
+START_CONTEXT:
+${context}
+END_CONTEXT
+
+START_QUESTION:
+${query}
+END_QUESTION
+
+Answer (never translate SOURCES and ulrs):`;
 };
 
 const chat = async ({
@@ -107,10 +164,17 @@ const chat = async ({
 
   switch (promptType) {
     case PromptType.customer_support:
-      finalPrompt = getCustomerSupportPrompt({
+      let getPrompt =
+        (history?.length || 0) > 0
+          ? getCustomerSupportPromptWithHistory
+          : getCustomerSupportPrompt;
+      finalPrompt = getPrompt({
         prompt: finalPrompt,
         query,
         context,
+        history: history
+          ?.map((each) => `${each.from}: ${each.message}`)
+          .join('\n') as string,
       });
       break;
     case PromptType.raw:
@@ -123,6 +187,7 @@ const chat = async ({
   }
 
   const model = new ChatOpenAI({
+    // modelName: 'gpt-3.5-turbo',
     modelName: 'gpt-3.5-turbo-0613',
     temperature: temperature || 0,
     streaming: Boolean(stream),
@@ -134,17 +199,18 @@ const chat = async ({
   });
 
   // Disable conversation history for now as it conflict with wrapped prompt
-  // const messages = (history || [])?.map((each) => {
-  //   if (each.from === MessageFrom.human) {
-  //     return new HumanChatMessage(each.message);
-  //   }
-  //   return new AIChatMessage(each.message);
-  // });
+  const messages = (history || [])?.map((each) => {
+    if (each.from === MessageFrom.human) {
+      return new HumanChatMessage(each.message);
+    }
+    return new AIChatMessage(each.message);
+  });
 
   const output = await model.call([
-    // ...messages,
-    // new HumanChatMessage(query),
-    new HumanChatMessage(finalPrompt),
+    new SystemChatMessage(finalPrompt),
+    ...messages,
+    new HumanChatMessage(query),
+    // new HumanChatMessage(finalPrompt),
   ]);
 
   // const regex = /SOURCE:\s*(.+)/;
