@@ -207,6 +207,14 @@ export class QdrantManager extends ClientManager<DatastoreType> {
                   },
                 ]
               : []),
+            ...(props.filters?.datasource_id
+              ? [
+                  {
+                    key: MetadataFields.datasource_id,
+                    match: { value: props.filters.datasource_id },
+                  },
+                ]
+              : []),
           ],
         },
       }
