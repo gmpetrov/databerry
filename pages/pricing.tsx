@@ -5,7 +5,6 @@ import clsx from "clsx";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { Footer } from "@app/components/landing-page/Footer";
@@ -316,11 +315,3 @@ function Example() {
 }
 
 
-export const getStaticProps = (locale:any, locales: any) => {
-  return {
-    props: {
-      locale,
-      locales
-    }
-  }
-};

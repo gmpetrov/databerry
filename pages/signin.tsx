@@ -6,7 +6,6 @@ import { Box, Button, Divider, Typography } from "@mui/joy";
 import CircularProgress from "@mui/joy/CircularProgress";
 import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
 // import { parseCookies } from 'nookies';
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -166,13 +165,3 @@ export default function SignInPage() {
     </Box>
   );
 }
-
-
-export const getStaticProps = (locale:any, locales: any) => {
-  return {
-    props: {
-      locale,
-      locales
-    }
-  }
-};

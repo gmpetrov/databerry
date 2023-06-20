@@ -1,7 +1,6 @@
 import { useColorScheme } from "@mui/joy/styles";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 
 import { Footer } from '@app/components/landing-page/Footer';
@@ -113,11 +112,3 @@ export default function Home() {
 }
 
 
-export const getStaticProps = (locale:any, locales: any) => {
-  return {
-    props: {
-      locale,
-      locales
-    }
-  }
-};

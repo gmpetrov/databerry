@@ -4,7 +4,7 @@ import {
   SparklesIcon,
   SwatchIcon,
 } from "@heroicons/react/24/outline";
-import { useTranslations } from "next-intl";
+
 
 const features = [
   {
@@ -68,11 +68,3 @@ export default function Example() {
 }
 
 
-export const getStaticProps = (locale:any, locales: any) => {
-  return {
-    props: {
-      locale,
-      locales
-    }
-  }
-};

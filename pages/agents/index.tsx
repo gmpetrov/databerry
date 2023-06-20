@@ -5,21 +5,25 @@ import {
   Box,
   Breadcrumbs,
   Button,
+  Divider,
   Link as JoyLink,
+  Modal,
+  Sheet,
   Typography,
 } from "@mui/joy";
-import { Prisma } from "@prisma/client";
+import { Agent, Prisma } from "@prisma/client";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+
 import { ReactElement } from "react";
 import * as React from "react";
 import useSWR from "swr";
 
-import DatastoreTable from "@app/components/DatastoreTable";
+import AgentForm from "@app/components/AgentForm";
+import AgentTable from "@app/components/AgentTable";
 import Layout from "@app/components/Layout";
 import UsageLimitModal from "@app/components/UsageLimitModal";
 import useStateReducer from "@app/hooks/useStateReducer";
@@ -28,7 +32,8 @@ import accountConfig from "@app/utils/account-config";
 import { fetcher } from "@app/utils/swr-fetcher";
 import { withAuth } from "@app/utils/withAuth";
 
-import { getDatastores } from "../../api/datastores";
+import { getAgents } from "../api/agents";
+import { getDatastores } from "../api/datastores";
 
 const CreateDatastoreModal = dynamic(
   () => import("@app/components/CreateDatastoreModal"),
@@ -37,7 +42,7 @@ const CreateDatastoreModal = dynamic(
   }
 );
 
-export default function DatasourcesPage() {
+export default function AgentsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -45,24 +50,15 @@ export default function DatasourcesPage() {
     isCreateDatastoreModalOpen: false,
     isCreateDatasourceModalV2Open: false,
     currentDatastoreId: undefined as string | undefined,
-    isUsageModalOpen: false,
+    isAgentModalOpen: false,
+    isUsageLimitModalOpen: false,
   });
-  const t = useTranslations("datastores");
+  const t = useTranslations("agents");
 
-  const getDatastoresQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getDatastores>
-  >("/api/datastores", fetcher);
-
-  const handleClickNewDatastore = () => {
-    if (
-      (getDatastoresQuery?.data?.length || 0) >=
-      accountConfig[session?.user?.currentPlan!]?.limits?.maxDatastores
-    ) {
-      setState({ isUsageModalOpen: true });
-    } else {
-      setState({ isCreateDatastoreModalOpen: true });
-    }
-  };
+  const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
+    "/api/agents",
+    fetcher
+  );
 
   return (
     <Box
@@ -108,19 +104,8 @@ export default function DatasourcesPage() {
           <HomeRoundedIcon />
         </Link>
         <Typography fontSize="inherit" color="neutral">
-          {t("datastores")}
+          Agents
         </Typography>
-        {/* <JoyLink
-          underline="hover"
-          color="neutral"
-          fontSize="inherit"
-          href="#some-link"
-        >
-          Datastores
-        </JoyLink> */}
-        {/* <Typography fontSize="inherit" variant="soft" color="primary">
-          Orders
-        </Typography> */}
       </Breadcrumbs>
 
       <Box
@@ -130,11 +115,15 @@ export default function DatasourcesPage() {
           justifyContent: "space-between",
           my: 1,
           gap: 1,
-          flexWrap: "wrap"
+          flexWrap: "wrap",
+          // '& > *': {
+          //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
+          //   flexGrow: 1,
+          // },
         }}
       >
         <Typography level="h1" fontSize="xl4">
-          {t("datastores")}
+          Agents
         </Typography>
         {/* <Box sx={{ flex: 999999 }} /> */}
         <Box sx={{ display: "flex", gap: 1, "& > *": { flexGrow: 1 } }}>
@@ -149,38 +138,72 @@ export default function DatasourcesPage() {
             variant="solid"
             color="primary"
             startDecorator={<AddIcon />}
-            onClick={handleClickNewDatastore}
+            onClick={() => {
+              if (
+                (getAgentsQuery?.data?.length || 0) >=
+                accountConfig[session?.user?.currentPlan!]?.limits?.maxAgents
+              ) {
+                return setState({
+                  isUsageLimitModalOpen: true,
+                });
+              }
+
+              setState({ isAgentModalOpen: true });
+            }}
           >
-            {t("new_datastore")}
+            New Agent
           </Button>
         </Box>
       </Box>
 
-      {getDatastoresQuery?.data && (
-        <DatastoreTable items={getDatastoresQuery.data} />
-      )}
+      {getAgentsQuery.data && <AgentTable items={getAgentsQuery.data} />}
 
-      <CreateDatastoreModal
-        isOpen={state.isCreateDatastoreModalOpen}
-        onSubmitSuccess={(datastore) => {
-          getDatastoresQuery.mutate();
-
-          router.push(`/datastores/${datastore.id}`);
+      <Modal
+        onClose={() => setState({ isAgentModalOpen: false })}
+        open={state.isAgentModalOpen}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-        handleClose={() => {
-          setState({ isCreateDatastoreModalOpen: false });
-        }}
-      />
-
+      >
+        <Sheet
+          variant="outlined"
+          sx={{
+            width: 600,
+            maxWidth: "100%",
+            borderRadius: "md",
+            p: 3,
+            boxShadow: "lg",
+            overflowY: "auto",
+            maxHeight: "95vh",
+          }}
+        >
+          <Typography level="h3">Agent</Typography>
+          <Divider sx={{ my: 4 }} />
+          <AgentForm
+            onSubmitSucces={(agent: Agent) => {
+              setState({ isAgentModalOpen: false });
+              if (agent?.id) {
+                router.push(`${RouteNames.AGENTS}/${agent.id}`);
+              }
+            }}
+          />
+        </Sheet>
+      </Modal>
       <UsageLimitModal
-        isOpen={state.isUsageModalOpen}
-        handleClose={() => setState({ isUsageModalOpen: false })}
+        isOpen={state.isUsageLimitModalOpen}
+        handleClose={() =>
+          setState({
+            isUsageLimitModalOpen: false,
+          })
+        }
       />
     </Box>
   );
 }
 
-DatasourcesPage.getLayout = function getLayout(page: ReactElement) {
+AgentsPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
@@ -189,7 +212,7 @@ export const getServerSideProps = withAuth(
     const { locale } = ctx;
     return {
       props: {
-        ...require(`../../public/locales/datastores/${locale}.json`),
+        ...require(`../../public/locales/agents/${locale}.json`),
                 ...require(`../../public/locales/navbar/${locale}.json`),
       },
     };

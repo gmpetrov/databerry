@@ -1,6 +1,5 @@
 import WarningRounded from "@mui/icons-material/WarningRounded";
 import { Alert, Box, Card, Typography } from "@mui/joy";
-import { useTranslations } from "next-intl";
 
 import Logo from "@app/components/Logo";
 
@@ -46,11 +45,3 @@ export default function MaintenancePage() {
 }
 
 
-export const getStaticProps = (locale:any, locales: any) => {
-  return {
-    props: {
-      locale,
-      locales
-    }
-  }
-};

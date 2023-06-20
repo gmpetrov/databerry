@@ -16,7 +16,7 @@ import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+
 import { useEffect, useState } from "react";
 import superjson from "superjson";
 

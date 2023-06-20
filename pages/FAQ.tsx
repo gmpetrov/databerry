@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+
 
 const faqs = [
   {
@@ -81,11 +81,3 @@ export default function FAQ() {
 }
 
 
-export const getStaticProps = (locale:any, locales: any) => {
-  return {
-    props: {
-      locale,
-      locales
-    }
-  }
-};

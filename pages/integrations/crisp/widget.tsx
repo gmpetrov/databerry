@@ -13,7 +13,7 @@ import axios from "axios";
 import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useTranslations } from "next-intl";
+
 import { useState } from "react";
 
 import Logo from "@app/components/Logo";

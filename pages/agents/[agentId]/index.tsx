@@ -36,7 +36,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+
 import { ReactElement } from "react";
 import * as React from "react";
 import toast from "react-hot-toast";

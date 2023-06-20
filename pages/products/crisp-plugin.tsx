@@ -7,7 +7,6 @@ import { Box, Button, Stack, Typography } from "@mui/joy";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
 
 import { Footer } from "@app/components/landing-page/Footer";
 import { Header } from "@app/components/landing-page/Header";

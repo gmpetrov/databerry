@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from "@mui/joy";
 import { GetServerSidePropsContext } from "next/types";
-import { useTranslations } from "next-intl";
+
 import { ReactElement } from "react";
 import * as React from "react";
 

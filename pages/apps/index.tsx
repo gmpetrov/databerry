@@ -26,7 +26,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
-import { useTranslations } from "next-intl";
+
 import { ReactElement } from "react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -40,7 +40,7 @@ import { fetcher } from "@app/utils/swr-fetcher";
 import { withAuth } from "@app/utils/withAuth";
 
 const SlackBotModal = dynamic(
-  () => import("@app/components/SlackBotSettingsModal"),
+  () => import("@app/components/SlackSettingsModal"),
   {
     ssr: false,
   }
@@ -50,12 +50,13 @@ const Schema = z.object({ query: z.string().min(1) });
 
 export default function DatasourcesPage() {
   const router = useRouter();
+  const t = useTranslations("datasources");
+
   const { data: session, status } = useSession();
 
   const [state, setState] = useStateReducer({
     isSlackModalOpen: false,
   });
-  const t = useTranslations("datasources");
 
   return (
     <Box
@@ -284,10 +285,10 @@ export default function DatasourcesPage() {
         </Card>
       </Stack>
 
-      <SlackBotModal
+      {/* <SlackBotModal
         isOpen={state.isSlackModalOpen}
         handleCloseModal={() => setState({ isSlackModalOpen: false })}
-      />
+      /> */}
     </Box>
   );
 }

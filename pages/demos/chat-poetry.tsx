@@ -22,7 +22,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
-import { useTranslations } from "next-intl";
+
 import { ReactElement } from "react";
 import * as React from "react";
 import { useForm } from "react-hook-form";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+
 
 export default function Cta() {
   const t = useTranslations("cta");
@@ -51,12 +51,3 @@ export default function Cta() {
     </div>
   );
 }
-
-export const getStaticProps = (locale:any, locales: any) => {
-  return {
-    props: {
-      locale,
-      locales
-    }
-  }
-};
