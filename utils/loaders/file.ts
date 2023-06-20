@@ -59,6 +59,7 @@ export class FileLoader extends DatasourceLoaderBase {
         source_type: this.datasource.type,
         source: (this.datasource?.config as any)?.source,
         file_type: (this.datasource?.config as any)?.type,
+        custom_id: (this.datasource?.config as any)?.custom_id,
         tags: [],
       },
     });

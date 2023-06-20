@@ -1,7 +1,7 @@
 import { Datastore, DatastoreType } from '@prisma/client';
 import { blake3, createBLAKE3 } from 'hash-wasm';
 
-import { Chunk } from '@app/types';
+import { Chunk, SearchRequestSchema } from '@app/types';
 import type { Document } from '@app/utils/datastores/base';
 
 import uuidv4 from '../uuid';
@@ -31,7 +31,7 @@ export class DatastoreManager {
     return this.manager.upload(chunks);
   }
 
-  search(props: { query: string; tags: string[]; topK: number }) {
+  search(props: SearchRequestSchema) {
     return this.manager.search(props);
   }
 
