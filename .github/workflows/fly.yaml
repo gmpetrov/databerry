@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - feature/slack-bot
+      - develop
 jobs:
   deploy:
     name: Deploy app
