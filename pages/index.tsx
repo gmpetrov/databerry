@@ -22,7 +22,7 @@ import FeaturesForSlack from './FeaturesForSlack';
 export default function Home() {
   const ogProperties = useOpenGraph({
     url: absUrl("/"),
-    title: "GriotAI - Build your ChatGPT Agent Trained on your own data", // Add you homepage title
+    title: "GriotAI - Construisez votre agent ChatGPT formé sur vos propres données", // Add you homepage title
     image: {
       // some default image preview for your website
       type: "image/png",

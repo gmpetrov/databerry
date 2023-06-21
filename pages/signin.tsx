@@ -87,7 +87,7 @@ export default function SignInPage() {
                 </a>
                 {/* <span className="w-8 h-8 mx-auto text-xl font-extrabold text-transparent rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></span> */}
                 <Typography className="mt-2 text-3xl font-extrabold text-center">
-                  Sign in
+                  Inscription
                 </Typography>
               </div>
 
@@ -112,7 +112,7 @@ export default function SignInPage() {
                       size="lg"
                       loading={isLoading}
                     >
-                     Submit
+                     Soumettre
                     </Button>
                   </form>
                 </div>
@@ -130,7 +130,7 @@ export default function SignInPage() {
                         className="px-2"
                         sx={{ backgroundColor: "background.surface" }}
                       >
-                        OR
+                        OU
                       </Typography>
                     </div>
                   </div>
