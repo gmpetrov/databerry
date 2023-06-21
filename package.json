@@ -86,7 +86,6 @@
     "next": "13.2.4",
     "next-auth": "^4.20.1",
     "next-connect": "^0.13.0",
-    "next-intl": "^2.14.6",
     "nodemailer": "^6.9.1",
     "nprogress": "^0.2.0",
     "p-debounce": "^4.0.0",

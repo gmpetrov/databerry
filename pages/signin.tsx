@@ -36,7 +36,6 @@ export default function SignInPage() {
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();
-  const t = useTranslations("signin");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -88,7 +87,7 @@ export default function SignInPage() {
                 </a>
                 {/* <span className="w-8 h-8 mx-auto text-xl font-extrabold text-transparent rounded-lg bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></span> */}
                 <Typography className="mt-2 text-3xl font-extrabold text-center">
-                  {t("title")}
+                  Sign in
                 </Typography>
               </div>
 
@@ -113,7 +112,7 @@ export default function SignInPage() {
                       size="lg"
                       loading={isLoading}
                     >
-                      {t("submit")}
+                     Submit
                     </Button>
                   </form>
                 </div>
@@ -131,7 +130,7 @@ export default function SignInPage() {
                         className="px-2"
                         sx={{ backgroundColor: "background.surface" }}
                       >
-                        {t("or")}
+                        OR
                       </Typography>
                     </div>
                   </div>

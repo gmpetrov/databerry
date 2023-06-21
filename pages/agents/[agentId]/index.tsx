@@ -1,76 +1,75 @@
-import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
-import AutoGraphRoundedIcon from "@mui/icons-material/AutoGraphRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import DeleteIcon from "@mui/icons-material/Delete";
-import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import InsertLinkRoundedIcon from "@mui/icons-material/InsertLinkRounded";
-import IntegrationInstructionsRoundedIcon from "@mui/icons-material/IntegrationInstructionsRounded";
-import LanguageRoundedIcon from "@mui/icons-material/LanguageRounded";
-import MessageRoundedIcon from "@mui/icons-material/MessageRounded";
-import PaletteRoundedIcon from "@mui/icons-material/PaletteRounded";
-import RocketLaunchRoundedIcon from "@mui/icons-material/RocketLaunchRounded";
-import SettingsIcon from "@mui/icons-material/Settings";
-import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
-import { ColorPaletteProp, List, ListItem, ListItemButton } from "@mui/joy";
-import Alert from "@mui/joy/Alert";
-import Box from "@mui/joy/Box";
-import Breadcrumbs from "@mui/joy/Breadcrumbs";
-import Button from "@mui/joy/Button";
-import Chip from "@mui/joy/Chip";
-import Divider from "@mui/joy/Divider";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Input from "@mui/joy/Input";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import Stack from "@mui/joy/Stack";
-import Tab from "@mui/joy/Tab";
-import TabList from "@mui/joy/TabList";
-import Tabs from "@mui/joy/Tabs";
-import Typography from "@mui/joy/Typography";
-import { DatastoreVisibility, Prisma, ToolType } from "@prisma/client";
-import axios, { AxiosError } from "axios";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next/types";
-import { useSession } from "next-auth/react";
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import DeleteIcon from '@mui/icons-material/Delete';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
+import IntegrationInstructionsRoundedIcon from '@mui/icons-material/IntegrationInstructionsRounded';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
+import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
+import SettingsIcon from '@mui/icons-material/Settings';
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
+import { ColorPaletteProp, List, ListItem, ListItemButton } from '@mui/joy';
+import Alert from '@mui/joy/Alert';
+import Box from '@mui/joy/Box';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Button from '@mui/joy/Button';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Stack from '@mui/joy/Stack';
+import Tab from '@mui/joy/Tab';
+import TabList from '@mui/joy/TabList';
+import Tabs from '@mui/joy/Tabs';
+import Typography from '@mui/joy/Typography';
+import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
+import axios, { AxiosError } from 'axios';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
+import { ReactElement } from 'react';
+import * as React from 'react';
+import toast from 'react-hot-toast';
+import useSWR from 'swr';
 
-import { ReactElement } from "react";
-import * as React from "react";
-import toast from "react-hot-toast";
-import useSWR from "swr";
-
-import AgentForm from "@app/components/AgentForm";
-import ChatBox from "@app/components/ChatBox";
-import ChatBubble from "@app/components/ChatBubble";
-import Layout from "@app/components/Layout";
-import UsageLimitModal from "@app/components/UsageLimitModal";
-import useAgentChat from "@app/hooks/useAgentChat";
-import useStateReducer from "@app/hooks/useStateReducer";
-import { getAgent } from "@app/pages/api/agents/[id]";
-import { RouteNames } from "@app/types";
-import agentToolFormat from "@app/utils/agent-tool-format";
-import { fetcher } from "@app/utils/swr-fetcher";
-import { withAuth } from "@app/utils/withAuth";
+import AgentForm from '@app/components/AgentForm';
+import ChatBox from '@app/components/ChatBox';
+import ChatBubble from '@app/components/ChatBubble';
+import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
+import useAgentChat from '@app/hooks/useAgentChat';
+import useStateReducer from '@app/hooks/useStateReducer';
+import { getAgent } from '@app/pages/api/agents/[id]';
+import { RouteNames } from '@app/types';
+import agentToolFormat from '@app/utils/agent-tool-format';
+import { fetcher } from '@app/utils/swr-fetcher';
+import { withAuth } from '@app/utils/withAuth';
 
 const ChatInterfaceConfigForm = dynamic(
-  () => import("@app/components/ChatInterfaceConfigForm"),
+  () => import('@app/components/ChatInterfaceConfigForm'),
   {
     ssr: false,
   }
 );
 
 const SlackBotModal = dynamic(
-  () => import("@app/components/SlackSettingsModal"),
+  () => import('@app/components/SlackSettingsModal'),
   {
     ssr: false,
   }
 );
 
 const CrispSettingsModal = dynamic(
-  () => import("@app/components/CrispSettingsModal"),
+  () => import('@app/components/CrispSettingsModal'),
   {
     ssr: false,
   }
@@ -84,7 +83,6 @@ export default function AgentPage() {
     isUsageModalOpen: false,
     isCrispModalOpen: false,
   });
-  const t = useTranslations("agents");
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
     `/api/agents/${router.query?.agentId}`,
@@ -99,7 +97,7 @@ export default function AgentPage() {
   const handleDeleteAgent = async () => {
     if (
       window.confirm(
-        "Are you sure you want to delete this agent? This action is irreversible."
+        'Are you sure you want to delete this agent? This action is irreversible.'
       )
     ) {
       await axios.delete(`/api/agents/${getAgentQuery?.data?.id}`);
@@ -114,8 +112,8 @@ export default function AgentPage() {
   };
 
   React.useEffect(() => {
-    if (typeof window !== "undefined" && !router.query.tab) {
-      handleChangeTab("chat");
+    if (typeof window !== 'undefined' && !router.query.tab) {
+      handleChangeTab('chat');
     }
   }, [router.query.tab]);
 
@@ -145,14 +143,14 @@ export default function AgentPage() {
           md: 3,
         },
         flex: 1,
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         minWidth: 0,
         // height: '100dvh',
-        width: "100%",
-        ...(router.query.tab === "chat"
+        width: '100%',
+        ...(router.query.tab === 'chat'
           ? {
-              height: "100%",
+              height: '100%',
             }
           : {}),
         gap: 1,
@@ -164,10 +162,10 @@ export default function AgentPage() {
           aria-label="breadcrumbs"
           separator={<ChevronRightRoundedIcon />}
           sx={{
-            "--Breadcrumbs-gap": "1rem",
-            "--Icon-fontSize": "16px",
-            fontWeight: "lg",
-            color: "neutral.400",
+            '--Breadcrumbs-gap': '1rem',
+            '--Icon-fontSize': '16px',
+            fontWeight: 'lg',
+            color: 'neutral.400',
             px: 0,
           }}
         >
@@ -191,12 +189,12 @@ export default function AgentPage() {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
+            display: 'flex',
+            alignItems: 'center',
             mt: 1,
             mb: 2,
             gap: 1,
-            flexWrap: "wrap",
+            flexWrap: 'wrap',
             // '& > *': {
             //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
             //   flexGrow: 1,
@@ -204,7 +202,7 @@ export default function AgentPage() {
           }}
         >
           <Stack gap={2}>
-            <Box sx={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
               <Typography level="h1" fontSize="xl4">
                 {getAgentQuery?.data?.name}
               </Typography>
@@ -213,8 +211,8 @@ export default function AgentPage() {
                 variant="soft"
                 color={
                   {
-                    public: "success",
-                    private: "neutral",
+                    public: 'success',
+                    private: 'neutral',
                   }[getAgentQuery?.data?.visibility!] as ColorPaletteProp
                 }
               >
@@ -222,14 +220,14 @@ export default function AgentPage() {
               </Chip>
             </Box>
 
-            <Stack direction={"row"} gap={2} alignItems={"center"}>
+            <Stack direction={'row'} gap={2} alignItems={'center'}>
               <Tabs
                 aria-label="Icon tabs"
-                value={(router.query.tab as string) || "chat"}
+                value={(router.query.tab as string) || 'chat'}
                 size="md"
                 sx={{
-                  borderRadius: "lg",
-                  display: "inline-flex",
+                  borderRadius: 'lg',
+                  display: 'inline-flex',
                   //   mt: 4,
                 }}
                 onChange={(event, value) => {
@@ -237,19 +235,19 @@ export default function AgentPage() {
                 }}
               >
                 <TabList size="sm">
-                  <Tab value={"chat"}>
+                  <Tab value={'chat'}>
                     <ListItemDecorator>
                       <MessageRoundedIcon />
                     </ListItemDecorator>
                     Chat
                   </Tab>
-                  <Tab value={"deploy"}>
+                  <Tab value={'deploy'}>
                     <ListItemDecorator>
                       <RocketLaunchRoundedIcon />
                     </ListItemDecorator>
                     Deploy
                   </Tab>
-                  <Tab value={"settings"}>
+                  <Tab value={'settings'}>
                     <ListItemDecorator>
                       <SettingsIcon />
                     </ListItemDecorator>
@@ -258,14 +256,14 @@ export default function AgentPage() {
                 </TabList>
               </Tabs>
 
-              {router.query.tab === "settings" && (
+              {router.query.tab === 'settings' && (
                 <>
                   <Link href={`#chat-interface-config`}>
                     <Button
                       size="sm"
                       variant="plain"
                       startDecorator={<PaletteRoundedIcon />}
-                      sx={{ mr: "auto" }}
+                      sx={{ mr: 'auto' }}
                     >
                       Customize interface
                     </Button>
@@ -276,7 +274,7 @@ export default function AgentPage() {
                       size="sm"
                       variant="plain"
                       startDecorator={<IntegrationInstructionsRoundedIcon />}
-                      sx={{ mr: "auto" }}
+                      sx={{ mr: 'auto' }}
                     >
                       Embed on website
                     </Button>
@@ -289,14 +287,14 @@ export default function AgentPage() {
 
         <Divider sx={{ mb: 4 }} />
 
-        {router.query.tab === "chat" && (
+        {router.query.tab === 'chat' && (
           <Box
             sx={{
-              position: "relative",
-              width: "100%",
-              height: "100%",
-              maxHeight: "100%",
-              overflow: "hidden",
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              maxHeight: '100%',
+              overflow: 'hidden',
             }}
           >
             <ChatBox messages={history} onSubmit={handleChatSubmit} />
@@ -306,12 +304,12 @@ export default function AgentPage() {
         {
           <Box
             sx={(theme) => ({
-              maxWidth: "100%",
+              maxWidth: '100%',
               width: theme.breakpoints.values.md,
-              mx: "auto",
+              mx: 'auto',
             })}
           >
-            {router.query.tab === "deploy" && (
+            {router.query.tab === 'deploy' && (
               <>
                 <Typography level="h5">
                   Deploy Agent to the following services
@@ -320,16 +318,16 @@ export default function AgentPage() {
                 <List variant="outlined" sx={{ mt: 2 }}>
                   {[
                     {
-                      name: "Website",
+                      name: 'Website',
                       icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
                       action: () => {
-                        router.query.tab = "settings";
-                        (router as any).hash = "chat-interface-config";
+                        router.query.tab = 'settings';
+                        (router as any).hash = 'chat-interface-config';
                         router.replace(router, undefined, { shallow: true });
                       },
                     },
                     {
-                      name: "Slack",
+                      name: 'Slack',
                       icon: (
                         <Image
                           className="w-8"
@@ -344,7 +342,7 @@ export default function AgentPage() {
                       },
                     },
                     {
-                      name: "Crisp",
+                      name: 'Crisp',
                       isPremium: true,
                       icon: (
                         <Image
@@ -385,9 +383,9 @@ export default function AgentPage() {
                       })}
                     >
                       {/* <ListItemButton> */}
-                      <Stack direction="row" gap={2} alignItems={"center"}>
+                      <Stack direction="row" gap={2} alignItems={'center'}>
                         {each.icon}
-                        <Typography fontWeight={"bold"}>{each.name}</Typography>
+                        <Typography fontWeight={'bold'}>{each.name}</Typography>
 
                         {each.isPremium && (
                           <Chip color="warning" size="sm" variant="soft">
@@ -402,7 +400,7 @@ export default function AgentPage() {
                           size="sm"
                           variant="outlined"
                           startDecorator={<TuneRoundedIcon />}
-                          sx={{ ml: "auto" }}
+                          sx={{ ml: 'auto' }}
                           onClick={each.action}
                         >
                           Settings
@@ -414,7 +412,7 @@ export default function AgentPage() {
                           size="sm"
                           variant="outlined"
                           color="warning"
-                          sx={{ ml: "auto" }}
+                          sx={{ ml: 'auto' }}
                           onClick={() => setState({ isUsageModalOpen: true })}
                         >
                           Subscribe
@@ -426,7 +424,7 @@ export default function AgentPage() {
               </>
             )}
 
-            {router.query.tab === "settings" && (
+            {router.query.tab === 'settings' && (
               <>
                 <AgentForm
                   onSubmitSucces={() => getAgentQuery.mutate()}
@@ -445,17 +443,14 @@ export default function AgentPage() {
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
                   <Typography level="body3" mb={2}>
-                    Use the Agent ID to query the agent through GriotAI API
+                    Use the Agent ID to query the agent through Databerry API
                   </Typography>
                   <Stack spacing={2}>
                     <Alert
                       color="info"
                       startDecorator={<HelpOutlineRoundedIcon />}
                       endDecorator={
-                        <Link
-                          href="https://docs.griotai.kasetolabs.xyz"
-                          target="_blank"
-                        >
+                        <Link href="https://docs.databerry.ai" target="_blank">
                           <Button
                             variant="plain"
                             size="sm"
@@ -472,12 +467,12 @@ export default function AgentPage() {
                     <Alert
                       color="neutral"
                       sx={{
-                        cursor: "copy",
+                        cursor: 'copy',
                       }}
                       onClick={() => {
                         navigator.clipboard.writeText(getAgentQuery?.data?.id!);
-                        toast.success("Copied!", {
-                          position: "bottom-center",
+                        toast.success('Copied!', {
+                          position: 'bottom-center',
                         });
                       }}
                     >
@@ -561,12 +556,8 @@ AgentPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
-    const { locale } = ctx;
     return {
-      props: {
-        ...require(`../../../public/locales/agents/${locale}.json`),
-                ...require(`../../../public/locales/navbar/${locale}.json`),
-      },
+      props: {},
     };
   }
 );

@@ -35,7 +35,6 @@ export default function Home() {
   });
   const router = useRouter();
   const { setMode } = useColorScheme();
-  const t = useTranslations("home");
 
   useEffect(() => {
     // Force dark mode on the landing page
@@ -56,9 +55,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>
-          {t("title")}
+      <title>
+        GriotAI - Build ChatGPT Agents trained on your custom data
         </title>
+
         <meta
           name="description"
           content="GriotAI offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."

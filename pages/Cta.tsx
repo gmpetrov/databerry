@@ -1,9 +1,6 @@
-import Link from "next/link";
-
+import Link from 'next/link';
 
 export default function Cta() {
-  const t = useTranslations("cta");
-
   return (
     <div className="relative overflow-hidden bg-black isolate">
       <div className="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
@@ -18,7 +15,7 @@ export default function Cta() {
           </p>
           <div className="flex items-center justify-center mt-10 gap-x-6">
             <a
-              href="https://griotai.kasetolabs.xyz/agents"
+              href="https://app.databerry.ai/agents"
               className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Get started Now! →

@@ -41,15 +41,14 @@ import { getApiKeys } from './api/accounts/api-keys';
 
 export default function AccountPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isLoadingCreateApiKey: false,
     isLoadingDeleteApiKey: false,
   });
-  const t = useTranslations("accounts");
 
   const getApiKeysQuery = useSWR<Prisma.PromiseReturnType<typeof getApiKeys>>(
-    "/api/accounts/api-keys",
+    '/api/accounts/api-keys',
     fetcher,
     {
       refreshInterval: 5000,
@@ -58,7 +57,7 @@ export default function AccountPage() {
 
   const handleClickManageSubscription = async () => {
     try {
-      const { data } = await axios.post("/api/stripe/customer-portal");
+      const { data } = await axios.post('/api/stripe/customer-portal');
 
       if (data) {
         router.push(data);
@@ -89,10 +88,10 @@ export default function AccountPage() {
   const handleDeleteApiKey = async (id: string) => {
     try {
       if (getApiKeysQuery?.data?.length === 1) {
-        return alert(t(`deletion_alert_msg`));
+        return alert('You must have at least one api key');
       }
 
-      if (window.confirm(t(`deletion_confirm_msg`))) {
+      if (window.confirm('Are you sure you want to delete this api key?')) {
         setState({
           isLoadingDeleteApiKey: true,
         });
@@ -120,7 +119,7 @@ export default function AccountPage() {
     function getClientReferenceId() {
       return (
         ((window as any)?.Rewardful && (window as any)?.Rewardful?.referral) ||
-        "checkout_" + new Date().getTime()
+        'checkout_' + new Date().getTime()
       );
     }
 
@@ -137,7 +136,7 @@ export default function AccountPage() {
       } catch {}
 
       await axios
-        .post("/api/stripe/referral", {
+        .post('/api/stripe/referral', {
           checkoutSessionId,
           referralId: getClientReferenceId(),
           utmParams,
@@ -160,11 +159,11 @@ export default function AccountPage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        maxHeight: "100%",
-        overflowY: "auto",
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        maxHeight: '100%',
+        overflowY: 'auto',
         px: {
           xs: 2,
           md: 6,
@@ -176,8 +175,8 @@ export default function AccountPage() {
           md: 3,
         },
         flex: 1,
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         minWidth: 0,
         gap: 1,
       })}
@@ -192,27 +191,27 @@ export default function AccountPage() {
 
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           my: 1,
           gap: 1,
-          flexWrap: "wrap",
+          flexWrap: 'wrap',
         }}
       >
         <Typography level="h1" fontSize="xl4">
-          {t(`account`)}
+          Account
         </Typography>
       </Box>
 
-      <Stack direction={"row"} gap={2}>
+      <Stack direction={'row'} gap={2}>
         <Link href={`#plan`}>
           <Button
             size="sm"
             variant="plain"
             startDecorator={<LinkRoundedIcon />}
           >
-            {t(`subscription`)}
+            Subscription
           </Button>
         </Link>
         <Link href={`#api-keys`}>
@@ -221,7 +220,7 @@ export default function AccountPage() {
             variant="plain"
             startDecorator={<LinkRoundedIcon />}
           >
-            {t(`api_keys`)}
+            API Keys
           </Button>
         </Link>
       </Stack>
@@ -230,7 +229,7 @@ export default function AccountPage() {
 
       <Box mb={4}>
         <UserFree>
-          <Card variant="outlined" sx={{ bgcolor: "black" }}>
+          <Card variant="outlined" sx={{ bgcolor: 'black' }}>
             <stripe-pricing-table
               pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
               publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
@@ -244,25 +243,25 @@ export default function AccountPage() {
       <Stack
         gap={4}
         sx={(theme) => ({
-          maxWidth: "100%",
+          maxWidth: '100%',
           width: theme.breakpoints.values.md,
-          mx: "auto",
+          mx: 'auto',
         })}
       >
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
           {/* <Typography level="body3">
-            Use the api key to access the GriotAI API
+            Use the api key to access the Databerry API
           </Typography> */}
 
           <Card variant="outlined">
             <Typography
               level="h4"
-              fontWeight={"bold"}
+              fontWeight={'bold'}
               color={
                 currentPlan?.type === SubscriptionPlan?.level_0
-                  ? "warning"
-                  : "success"
+                  ? 'warning'
+                  : 'success'
               }
             >{`${currentPlan?.label}`}</Typography>
 
@@ -270,14 +269,14 @@ export default function AccountPage() {
               <Stack spacing={1}>
                 <Typography level="body1">Current Usage</Typography>
                 <Typography level="h6">
-                  <Stack direction={"row"} spacing={1}>
+                  <Stack direction={'row'} spacing={1}>
                     <Typography color="neutral">Agents Responses:</Typography>
                     <Typography
                       color={
                         session?.user?.usage?.nbAgentQueries >=
                         currentPlan?.limits?.maxAgentsQueries
-                          ? "danger"
-                          : "success"
+                          ? 'danger'
+                          : 'success'
                       }
                     >
                       {`${session?.user?.usage?.nbAgentQueries}/${currentPlan?.limits?.maxAgentsQueries}`}
@@ -300,14 +299,14 @@ export default function AccountPage() {
                   </Stack>
                 </Typography> */}
                 <Typography level="h6">
-                  <Stack direction={"row"} spacing={1}>
+                  <Stack direction={'row'} spacing={1}>
                     <Typography color="neutral">Data Processing:</Typography>
                     <Typography
                       color={
                         session?.user?.usage?.nbDataProcessingBytes >=
                         currentPlan?.limits?.maxDataProcessing
-                          ? "danger"
-                          : "success"
+                          ? 'danger'
+                          : 'success'
                       }
                     >
                       {`${
@@ -342,7 +341,7 @@ export default function AccountPage() {
               >
                 <Typography>{`${
                   currentPlan?.limits?.maxFileSize / 1000000
-                } MB File upload limit`}</Typography>
+                }MB File upload limit`}</Typography>
               </Typography>
               <Typography
                 level="h6"
@@ -350,7 +349,7 @@ export default function AccountPage() {
               >
                 <Typography>{`${
                   currentPlan?.limits?.maxDataProcessing / 1000000
-                } MB Data processing (embeddings) / month`}</Typography>
+                }MB Data processing (embeddings) / month`}</Typography>
               </Typography>
             </Stack>
 
@@ -362,7 +361,7 @@ export default function AccountPage() {
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
                   session?.user?.id
                 }&prefilled_email=${session?.user?.email}`}
-                style={{ marginLeft: "auto" }}
+                style={{ marginLeft: 'auto' }}
               >
                 <Button
                   endDecorator={<ArrowForwardRoundedIcon />}
@@ -379,9 +378,9 @@ export default function AccountPage() {
                 onClick={handleClickManageSubscription}
                 endDecorator={<ArrowForwardRoundedIcon />}
                 variant="plain"
-                sx={{ ml: "auto" }}
+                sx={{ ml: 'auto' }}
               >
-                {t(`manage_subscription`)}
+                Upgrade / Manage Subscription
               </Button>
             </UserPremium>
           </Card>
@@ -391,54 +390,49 @@ export default function AccountPage() {
 
         <Box id="api-keys">
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel>{t(`api_keys`)}</FormLabel>
+            <FormLabel>API Keys</FormLabel>
 
             <Typography level="body3">
-              {t(`api_keys_description`)}
+              Use the api key to access the Databerry API
             </Typography>
 
-            <Stack direction={"column"} gap={2} mt={2}>
+            <Stack direction={'column'} gap={2} mt={2}>
               <Alert
                 color="info"
                 startDecorator={<HelpOutlineRoundedIcon />}
                 endDecorator={
-                  <Link
-                    href="https://docs.griotai.kasetolabs.xyz"
-                    target="_blank"
-                  >
+                  <Link href="https://docs.databerry.ai" target="_blank">
                     <Button
                       variant="plain"
                       size="sm"
                       endDecorator={<ArrowForwardRoundedIcon />}
                     >
-                      {t(`docs`)}
+                      Documentation
                     </Button>
                   </Link>
                 }
               >
-                
-                {t(`learn_more`)}
-             
+                Learn more about the Datatberry API
               </Alert>
               {getApiKeysQuery?.data?.map((each) => (
                 <>
                   <Stack
                     key={each.id}
-                    direction={"row"}
+                    direction={'row'}
                     gap={2}
                     onClick={() => {
                       navigator.clipboard.writeText(each.key);
-                      toast.success("Copied!", {
-                        position: "bottom-center",
+                      toast.success('Copied!', {
+                        position: 'bottom-center',
                       });
                     }}
                   >
                     <Alert
                       color="neutral"
                       sx={{
-                        width: "100%",
-                        ":hover": {
-                          cursor: "copy",
+                        width: '100%',
+                        ':hover': {
+                          cursor: 'copy',
                         },
                       }}
                     >
@@ -459,11 +453,11 @@ export default function AccountPage() {
 
             <Button
               startDecorator={<AddIcon />}
-              sx={{ mt: 3, ml: "auto" }}
+              sx={{ mt: 3, ml: 'auto' }}
               variant="outlined"
               onClick={handleCreatApiKey}
             >
-              {t(`create_api_key`)}
+              Create API Key
             </Button>
           </FormControl>
         </Box>
@@ -494,13 +488,8 @@ AccountPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
-    const { locale } = ctx;
     return {
-      props: {
-        ...require(`../public/locales/accounts/${locale}.json`),
-        ...require(`../public/locales/navbar/${locale}.json`),
-
-      },
+      props: {},
     };
   }
 );

@@ -29,7 +29,6 @@ export default function Pricing() {
       "GriotAI is a no-code document retrievial platform that connects your data to ChatGPT and other Language Models.",
     type: "website",
   });
-  const t = useTranslations("pricing");
 
   return (
     <>
@@ -174,7 +173,6 @@ function Example() {
   const { setMode } = useColorScheme();
   const router = useRouter();
   const [frequency] = useState(frequencies[0]);
-  const t = useTranslations("pricing");
 
   useEffect(() => {
     const handleRouteChange = (newPath: string) => {
@@ -198,14 +196,15 @@ function Example() {
       <div className="px-6 mx-auto max-w-[1500px] lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-400">
-            {t("title")}
+            Pricing
           </h2>
           <p className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            {t("subtitle")}
+          Pricing plans for teams of&nbsp;all&nbsp;sizes
           </p>
         </div>
         <p className="max-w-2xl mx-auto mt-6 text-lg leading-8 text-center text-gray-300">
-         {t("description")}
+          Choose an affordable plan that’s packed with the best features for
+          engaging your audience, creating customer loyalty, and driving sales.
         </p>
         {/* <div className="flex justify-center mt-16">
           <RadioGroup
@@ -252,7 +251,7 @@ function Example() {
                 </h3>
                 {tier.mostPopular ? (
                   <p className="rounded-full bg-indigo-500 px-2.5 py-1 text-xs font-semibold leading-5 text-white">
-                    {t("most_popular")}
+                    Most popular
                   </p>
                 ) : null}
               </div>

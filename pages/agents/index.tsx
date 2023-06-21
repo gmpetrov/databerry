@@ -1,6 +1,6 @@
-import AddIcon from "@mui/icons-material/Add";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import AddIcon from '@mui/icons-material/Add';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import {
   Box,
   Breadcrumbs,
@@ -10,33 +10,32 @@ import {
   Modal,
   Sheet,
   Typography,
-} from "@mui/joy";
-import { Agent, Prisma } from "@prisma/client";
-import dynamic from "next/dynamic";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next/types";
-import { useSession } from "next-auth/react";
+} from '@mui/joy';
+import { Agent, Prisma } from '@prisma/client';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
+import { ReactElement } from 'react';
+import * as React from 'react';
+import useSWR from 'swr';
 
-import { ReactElement } from "react";
-import * as React from "react";
-import useSWR from "swr";
+import AgentForm from '@app/components/AgentForm';
+import AgentTable from '@app/components/AgentTable';
+import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
+import useStateReducer from '@app/hooks/useStateReducer';
+import { RouteNames } from '@app/types';
+import accountConfig from '@app/utils/account-config';
+import { fetcher } from '@app/utils/swr-fetcher';
+import { withAuth } from '@app/utils/withAuth';
 
-import AgentForm from "@app/components/AgentForm";
-import AgentTable from "@app/components/AgentTable";
-import Layout from "@app/components/Layout";
-import UsageLimitModal from "@app/components/UsageLimitModal";
-import useStateReducer from "@app/hooks/useStateReducer";
-import { RouteNames } from "@app/types";
-import accountConfig from "@app/utils/account-config";
-import { fetcher } from "@app/utils/swr-fetcher";
-import { withAuth } from "@app/utils/withAuth";
-
-import { getAgents } from "../api/agents";
-import { getDatastores } from "../api/datastores";
+import { getAgents } from '../api/agents';
+import { getDatastores } from '../api/datastores';
 
 const CreateDatastoreModal = dynamic(
-  () => import("@app/components/CreateDatastoreModal"),
+  () => import('@app/components/CreateDatastoreModal'),
   {
     ssr: false,
   }
@@ -53,10 +52,9 @@ export default function AgentsPage() {
     isAgentModalOpen: false,
     isUsageLimitModalOpen: false,
   });
-  const t = useTranslations("agents");
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
-    "/api/agents",
+    '/api/agents',
     fetcher
   );
 
@@ -80,11 +78,11 @@ export default function AgentsPage() {
           md: 3,
         },
         flex: 1,
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         minWidth: 0,
         // height: '100dvh',
-        width: "100%",
+        width: '100%',
         gap: 1,
       })}
     >
@@ -93,10 +91,10 @@ export default function AgentsPage() {
         aria-label="breadcrumbs"
         separator={<ChevronRightRoundedIcon />}
         sx={{
-          "--Breadcrumbs-gap": "1rem",
-          "--Icon-fontSize": "16px",
-          fontWeight: "lg",
-          color: "neutral.400",
+          '--Breadcrumbs-gap': '1rem',
+          '--Icon-fontSize': '16px',
+          fontWeight: 'lg',
+          color: 'neutral.400',
           px: 0,
         }}
       >
@@ -110,12 +108,12 @@ export default function AgentsPage() {
 
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           my: 1,
           gap: 1,
-          flexWrap: "wrap",
+          flexWrap: 'wrap',
           // '& > *': {
           //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
           //   flexGrow: 1,
@@ -126,7 +124,7 @@ export default function AgentsPage() {
           Agents
         </Typography>
         {/* <Box sx={{ flex: 999999 }} /> */}
-        <Box sx={{ display: "flex", gap: 1, "& > *": { flexGrow: 1 } }}>
+        <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
           {/* <Button
             variant="outlined"
             color="neutral"
@@ -162,21 +160,21 @@ export default function AgentsPage() {
         onClose={() => setState({ isAgentModalOpen: false })}
         open={state.isAgentModalOpen}
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Sheet
           variant="outlined"
           sx={{
             width: 600,
-            maxWidth: "100%",
-            borderRadius: "md",
+            maxWidth: '100%',
+            borderRadius: 'md',
             p: 3,
-            boxShadow: "lg",
-            overflowY: "auto",
-            maxHeight: "95vh",
+            boxShadow: 'lg',
+            overflowY: 'auto',
+            maxHeight: '95vh',
           }}
         >
           <Typography level="h3">Agent</Typography>
@@ -209,12 +207,8 @@ AgentsPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
-    const { locale } = ctx;
     return {
-      props: {
-        ...require(`../../public/locales/agents/${locale}.json`),
-                ...require(`../../public/locales/navbar/${locale}.json`),
-      },
+      props: {},
     };
   }
 );

@@ -2,11 +2,7 @@ const baseConfig = require("./next.config.base");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  ...baseConfig,
-  i18n: {
-    locales: ["en-US", "fr"],
-    defaultLocale: "en-US",
-  },
+  ...baseConfig
 };
 
 module.exports = nextConfig;

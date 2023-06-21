@@ -1,29 +1,27 @@
-
-
 const faqs = [
   {
     id: 1,
-    question: "What should my data look like?",
+    question: 'What should my data look like?',
     answer:
-      "You can upload one or multiple files in 1 datastore (PDF, CSV, JSON, Text, PowerPoint, Word, Excel), or add a link to your website to be scraped. 1 chatbot is associated with 1 datastore.",
+      'You can upload one or multiple files in 1 datastore (PDF, CSV, JSON, Text, PowerPoint, Word, Excel), or add a link to your website to be scraped. 1 chatbot is associated with 1 datastore.',
   },
   {
     id: 2,
-    question: "Does it use ChatGPT ?",
+    question: 'Does it use ChatGPT ?',
     answer:
-      "Yes, your chatbot uses ChatGPT (gpt-3.5-turbo). We are planning to support other models in the future.",
+      'Yes, your chatbot uses ChatGPT (gpt-3.5-turbo). We are planning to support other models in the future.',
   },
   {
     id: 3,
-    question: "Where is my data stored ?",
+    question: 'Where is my data stored ?',
     answer:
-      "The content of the document is hosted on secure AWS servers in Europe.",
+      'The content of the document is hosted on secure AWS servers in Europe.',
   },
   {
     id: 4,
-    question: "Does it support other languages?",
+    question: 'Does it support other languages?',
     answer:
-      "Yes, GriotAI supports about 90 languages. You can have your sources in any language and ask it questions in any language.",
+      'Yes, Databerry supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
   },
   {
     id: 5,
@@ -42,8 +40,6 @@ const faqs = [
 ];
 
 export default function FAQ() {
-  const t = useTranslations("faq");
-
   return (
     <div className="bg-black">
       <div className="px-6 py-16 mx-auto max-w-7xl sm:py-24 lg:px-8">
@@ -52,13 +48,13 @@ export default function FAQ() {
         </h2>
         <p className="max-w-2xl mt-6 text-base leading-7 text-gray-300">
           Have a different question and can’t find the answer you’re looking
-          for? Reach out to our support team by{" "}
+          for? Reach out to our support team by{' '}
           <a
-            href="mailto:support@kasetolabs.xyz"
+            href="mailto:support@databerry.ai"
             className="font-semibold text-indigo-400 hover:text-indigo-300"
           >
             sending us an email
-          </a>{" "}
+          </a>{' '}
           and we’ll get back to you as soon as we can.
         </p>
         <div className="mt-20">
@@ -79,5 +75,3 @@ export default function FAQ() {
     </div>
   );
 }
-
-

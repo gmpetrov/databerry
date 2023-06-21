@@ -7,7 +7,6 @@ import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { SessionProvider } from "next-auth/react";
-import { NextIntlProvider } from "next-intl";
 import { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -44,7 +43,6 @@ export default function App({
   }
 
   return (
-    <NextIntlProvider messages={pageProps.messages}>
       <DashboardThemeProvider {...otherProps}>
         <TopProgressBar />
         <SessionProvider>
@@ -52,6 +50,5 @@ export default function App({
           {getLayout(<Component {...pageProps} />)}
         </SessionProvider>
       </DashboardThemeProvider>
-    </NextIntlProvider>
   );
 }

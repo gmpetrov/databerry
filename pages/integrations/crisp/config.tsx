@@ -1,28 +1,27 @@
-import Alert from "@mui/joy/Alert";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Card from "@mui/joy/Card";
-import Divider from "@mui/joy/Divider";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Input from "@mui/joy/Input";
-import Option from "@mui/joy/Option";
-import Select from "@mui/joy/Select";
-import Stack from "@mui/joy/Stack";
-import Typography from "@mui/joy/Typography";
-import { Agent, Subscription } from "@prisma/client";
-import axios from "axios";
-import { GetServerSidePropsContext } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
+import Alert from '@mui/joy/Alert';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
+import Divider from '@mui/joy/Divider';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
+import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
+import { Agent, Subscription } from '@prisma/client';
+import axios from 'axios';
+import { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import superjson from 'superjson';
 
-import { useEffect, useState } from "react";
-import superjson from "superjson";
-
-import Logo from "@app/components/Logo";
-import { getConnectedWebsites } from "@app/utils/crisp";
-import prisma from "@app/utils/prisma-client";
+import Logo from '@app/components/Logo';
+import { getConnectedWebsites } from '@app/utils/crisp';
+import prisma from '@app/utils/prisma-client';
 
 export default function CrispConfig(props: { agent: Agent }) {
   const session = useSession();
@@ -32,11 +31,9 @@ export default function CrispConfig(props: { agent: Agent }) {
   const [isApiKeyValid, setIsApiKeyValid] = useState(!!props.agent);
   const [isFetchAgentsLoading, setIsFetchAgentsLoading] = useState(false);
   const [inputValue, setInputValue] = useState(
-    (props as any)?.agent?.owner?.apiKeys?.[0]?.key || ""
+    (props as any)?.agent?.owner?.apiKeys?.[0]?.key || ''
   );
-  const t = useTranslations("crisp");
-
-  const [submitError, setSubmitError] = useState("");
+  const [submitError, setSubmitError] = useState('');
   const [agents, setAgents] = useState<Agent[]>([]);
   const [currentAgent, setCurrentAgent] = useState<Agent | undefined>(
     props.agent
@@ -44,17 +41,17 @@ export default function CrispConfig(props: { agent: Agent }) {
   const subscription = (props?.agent as any)?.owner
     ?.subscriptions?.[0] as Subscription;
   const [isPremium, setIsPremium] = useState(
-    subscription?.plan && subscription?.plan !== "level_0"
+    subscription?.plan && subscription?.plan !== 'level_0'
   );
-  const [apiKey, setApiKey] = useState("");
+  const [apiKey, setApiKey] = useState('');
   const user = session?.data?.user;
 
   useEffect(() => {
     (async () => {
       {
         if (user) {
-          const apiKeys = await axios.get("/api/accounts/api-keys");
-          const { data } = await axios.get("/api/agents");
+          const apiKeys = await axios.get('/api/accounts/api-keys');
+          const { data } = await axios.get('/api/agents');
 
           const apiKey = apiKeys.data[0]?.key;
           setIsPremium(user?.isPremium);
@@ -69,7 +66,7 @@ export default function CrispConfig(props: { agent: Agent }) {
   const handleFetchAgents = async (apiKey: string) => {
     try {
       setIsFetchAgentsLoading(true);
-      const { data } = await axios.get("/api/external/agents", {
+      const { data } = await axios.get('/api/external/agents', {
         headers: {
           Authorization: `Bearer ${apiKey}`,
         },
@@ -87,9 +84,9 @@ export default function CrispConfig(props: { agent: Agent }) {
       const premium = plan && plan !== 'level_0';
       setIsPremium(premium);
 
-      console.log("agents", agents);
+      console.log('agents', agents);
     } catch (err) {
-      console.log("err", err);
+      console.log('err', err);
       setSubmitError(JSON.stringify(err));
     } finally {
       setIsFetchAgentsLoading(false);
@@ -100,23 +97,23 @@ export default function CrispConfig(props: { agent: Agent }) {
     e.stopPropagation();
     try {
       setIsLoading(true);
-      setSubmitError("");
+      setSubmitError('');
 
       var _urlParams = new URLSearchParams(window.location.search);
 
-      fetch(window.location.origin + "/api/integrations/crisp/config-update", {
-        method: "POST",
+      fetch(window.location.origin + '/api/integrations/crisp/config-update', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          website_id: _urlParams.get("website_id"),
-          token: _urlParams.get("token"),
+          website_id: _urlParams.get('website_id'),
+          token: _urlParams.get('token'),
           apiKey: apiKey || inputValue,
           agentId: currentAgent?.id,
         }),
       }).then(() => {
-        console.log("worked");
+        console.log('worked');
         setShowSuccessAlert(true);
       });
     } catch (error) {
@@ -130,7 +127,7 @@ export default function CrispConfig(props: { agent: Agent }) {
   useEffect(() => {
     const apiKey = (props as any)?.agent?.owner?.apiKeys?.[0]?.key;
 
-    console.log("apiKey", apiKey);
+    console.log('apiKey', apiKey);
 
     if (apiKey) {
       handleFetchAgents(apiKey);
@@ -140,7 +137,7 @@ export default function CrispConfig(props: { agent: Agent }) {
   return (
     <>
       <Head>
-        <title>GriotAI - LLMs automation without code</title>
+        <title>Databerry - LLMs automation without code</title>
         <meta
           name="description"
           content="Most bookkeeping software is accurate, but hard to use. We make the opposite trade-off, and hope you don’t get audited."
@@ -163,12 +160,12 @@ export default function CrispConfig(props: { agent: Agent }) {
               <Stack spacing={2}>
                 {!user && (
                   <FormControl>
-                    <FormLabel>GriotAI API Key</FormLabel>
+                    <FormLabel>Databerry API Key</FormLabel>
                     <Alert variant="outlined" sx={{ mb: 2 }}>
                       <Stack>
-                        You can find your API Key in your GriotAI{" "}
+                        You can find your API Key in your Databerry{' '}
                         <Link
-                          href={"https://griotai.kasetolabs.xyz/account"}
+                          href={'https://app.databerry.ai/account'}
                           target="_blank"
                         >
                           <Typography color="primary">
@@ -179,7 +176,7 @@ export default function CrispConfig(props: { agent: Agent }) {
                     </Alert>
                     <Input
                       value={inputValue}
-                      placeholder="Your GriotAI API Key here"
+                      placeholder="Your Databerry API Key here"
                       onChange={(e) => setInputValue(e.currentTarget.value)}
                     />
                   </FormControl>
@@ -228,12 +225,12 @@ export default function CrispConfig(props: { agent: Agent }) {
                 </Button>
               )}
               {isPremium && currentAgent && (
-                <Stack direction={"row"} spacing={1} ml="auto">
+                <Stack direction={'row'} spacing={1} ml="auto">
                   <Button
                     size="md"
                     onClick={() => {
                       setAgents([]);
-                      setInputValue("");
+                      setInputValue('');
                       setIsApiKeyValid(false);
                       setCurrentAgent(undefined);
                       setShowSuccessAlert(false);
@@ -260,11 +257,11 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const websiteId = ctx.query.website_id as string;
   const token = ctx.query.token as string;
 
-  console.log("TOKEN", token);
+  console.log('TOKEN', token);
 
   const redirect = {
     redirect: {
-      destination: "/",
+      destination: '/',
       permanent: false,
     },
   };

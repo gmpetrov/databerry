@@ -26,7 +26,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useSession } from "next-auth/react";
-
 import { ReactElement } from "react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -50,7 +49,6 @@ const Schema = z.object({ query: z.string().min(1) });
 
 export default function DatasourcesPage() {
   const router = useRouter();
-  const t = useTranslations("datasources");
 
   const { data: session, status } = useSession();
 
