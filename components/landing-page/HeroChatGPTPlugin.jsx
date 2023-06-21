@@ -89,7 +89,7 @@ export function HeroChatGPTPlugin() {
 
           <Stack sx={{ width: '100%' }}>
 
-          <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
+          {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
           <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
             <span>New</span>
           </span>
@@ -118,7 +118,7 @@ export function HeroChatGPTPlugin() {
               <line x1="15" y1="8" x2="19" y2="12"></line>
             </svg>
           </Link>
-        </div>
+        </div> */}
 
 
             <h2 className="mb-4 text-2xl font-bold text-violet-300">
