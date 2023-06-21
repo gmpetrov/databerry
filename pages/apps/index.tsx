@@ -295,14 +295,3 @@ DatasourcesPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export const getServerSideProps = withAuth(
-  async (ctx: GetServerSidePropsContext) => {
-    const { locale } = ctx;
-    return {
-      props: {
-        ...require(`../../public/locales/datasources/${locale}.json`),
-                ...require(`../../public/locales/navbar/${locale}.json`),
-      },
-    };
-  }
-);
