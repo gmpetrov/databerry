@@ -77,7 +77,7 @@
     "js-cookie": "^3.0.5",
     "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
-    "langchain": "^0.0.64",
+    "langchain": "^0.0.96",
     "mammoth": "^1.5.1",
     "mime-types": "^2.1.35",
     "msgpackr": "^1.9.3",
