@@ -151,7 +151,7 @@ function ChatBox({
               }
               color={each.from === 'agent' ? 'primary' : 'neutral'}
               sx={(theme) => ({
-                py: 1,
+                py: 0,
                 px: 2,
                 'ol,ul,p': {
                   // color: theme.palette.text.secondary,

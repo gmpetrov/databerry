@@ -118,7 +118,7 @@ const chat = async ({
   temperature,
   history,
 }: {
-  datastore: Datastore;
+  datastore?: Datastore;
   query: string;
   prompt?: string;
   promptType?: PromptType;

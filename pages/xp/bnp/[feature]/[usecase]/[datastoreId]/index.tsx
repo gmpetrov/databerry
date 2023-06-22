@@ -238,7 +238,7 @@ const prompts = {
   },
   summary: {
     libre: [],
-    auto: ['Ecrit un poème comme molière sur databerry'],
+    auto: ['Fait un résumé'],
     assisté: [
       'Rédige un résumé de ... lignes sans aucun exemple du document ...',
       'Rédige un résumé de ... du document ... Avec à la fin une réflexion sur un des sujets abordés',
@@ -255,55 +255,114 @@ const SearchBNP = (props: {
     isEvalModalOpen: false,
     promptType: undefined as 'libre' | 'auto' | 'assisté' | undefined,
     prompt: '',
+    currentDatasourceId: undefined as string | undefined,
   });
+
+  let queryURL = `/api/xp/bnp/search`;
+
+  if (props.feature === 'summary') {
+    queryURL = `/api/xp/bnp/summary`;
+  }
+
+  const getDatastoreQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getDatastore>
+  >(
+    `/api/datastores/${router.query?.datastoreId}?offset=${0}&limit=${100}`,
+    fetcher
+  );
+
   const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `/api/xp/bnp/search`,
+    queryAgentURL: queryURL,
     queryHistoryURL: '/api/xp/bnp/history',
     channel: ConversationChannel.website,
     queryBody: {
       datastoreId: props.datastoreId,
+      datasourceId: state.currentDatasourceId,
     },
   });
 
-  React.useEffect(() => {
-    if (state.prompt) {
-    }
-  }, [state.prompt]);
+  let showChatBox = false;
+
+  switch (props.feature) {
+    case 'writing':
+    case 'qa':
+      showChatBox = true;
+      break;
+    case 'summary':
+      if (state.currentDatasourceId) {
+        showChatBox = true;
+      }
+      break;
+    default:
+      break;
+  }
 
   return (
     <>
       <Stack>
-        {state.promptType && (
-          <Chip sx={{ mr: 'auto', mb: 2 }} variant="outlined" color="neutral">
-            Type de prompt: <strong>{state.promptType}</strong>
-          </Chip>
-        )}
-        <Stack direction="row">
-          <Button
-            sx={{ mr: 'auto' }}
-            color="warning"
-            variant="outlined"
-            onClick={async () => {
-              await axios.delete(`/api/xp/bnp/history`),
-                {
-                  datastoreId: props.datastoreId,
-                };
+        <Stack direction={'row'} gap={2} sx={{ mb: 2 }}>
+          {state.promptType && (
+            <Chip sx={{}} variant="outlined" color="neutral">
+              Type de prompt: <strong>{state.promptType}</strong>
+            </Chip>
+          )}
 
-              window.location.reload();
-            }}
-          >
-            {`Supprimer l'historique`}
-          </Button>
-          {history.length > 0 && (
-            <Button
-              sx={{ ml: 'auto' }}
-              onClick={() => {
-                setState({ isEvalModalOpen: true });
+          {props.feature === 'summary' && (
+            <Select
+              placeholder="Selectionner une Datasource"
+              onChange={(_, value) => {
+                if (!state.currentDatasourceId) {
+                  setState({
+                    currentDatasourceId: value as string,
+                  });
+                } else {
+                  setState({
+                    currentDatasourceId: undefined,
+                  });
+
+                  setTimeout(() => {
+                    setState({
+                      currentDatasourceId: value as string,
+                    });
+                  }, 500);
+                }
               }}
             >
-              Evaluer
-            </Button>
+              {getDatastoreQuery?.data?.datasources?.map((datasource) => (
+                <Option key={datasource.id} value={datasource.id}>
+                  {datasource.name}
+                </Option>
+              ))}
+            </Select>
           )}
+
+          <Stack direction="row" gap={2} sx={{ ml: 'auto' }}>
+            <Button
+              sx={{ mr: 'auto' }}
+              color="warning"
+              variant="outlined"
+              onClick={async () => {
+                await axios.delete(`/api/xp/bnp/history`),
+                  {
+                    datastoreId: props.datastoreId,
+                  };
+
+                window.location.reload();
+              }}
+            >
+              {`Supprimer l'historique`}
+            </Button>
+            {history.length > 0 && (
+              <Button
+                sx={{ ml: 'auto' }}
+                onClick={() => {
+                  setState({ isEvalModalOpen: true });
+                }}
+              >
+                Evaluer
+              </Button>
+            )}
+          </Stack>
         </Stack>
 
         <Box
@@ -312,15 +371,17 @@ const SearchBNP = (props: {
             maxHeight: '680px',
           }}
         >
-          <ChatBoxBNP
-            promptType={state.promptType}
-            prompt={state.prompt}
-            messages={history}
-            onSubmit={handleChatSubmit}
-            multiline
-            // messageTemplates={config.messageTemplates}
-            // initialMessage={config.initialMessage}
-          />
+          {showChatBox && (
+            <ChatBoxBNP
+              promptType={state.promptType}
+              prompt={state.prompt}
+              messages={history}
+              onSubmit={handleChatSubmit}
+              multiline
+              // messageTemplates={config.messageTemplates}
+              // initialMessage={config.initialMessage}
+            />
+          )}
         </Box>
       </Stack>
       <EvalModal

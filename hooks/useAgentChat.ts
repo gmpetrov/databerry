@@ -17,6 +17,7 @@ type Props = {
   queryHistoryURL?: string;
   channel?: ConversationChannel;
   queryBody?: any;
+  datasourceId?: string;
 };
 
 const useAgentChat = ({
