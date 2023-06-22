@@ -6,7 +6,7 @@ import { AppNextApiRequest, ChatRequest } from '@app/types';
 import accountConfig from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import chat from '@app/utils/chat-v2';
+import chat from '@app/utils/chat';
 import ConversationManager from '@app/utils/conversation';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';

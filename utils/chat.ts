@@ -52,18 +52,26 @@ type GetPromptProps = {
   context: string;
   query: string;
   prompt?: string;
-  history?: any[];
+  history?: { from: MessageFrom; message: string }[];
 };
 
 const getCustomerSupportMessages = ({
   context,
   query,
   prompt,
+  history,
 }: GetPromptProps) => {
   const systemPrompt = getCustomerSupportPrompt({
     prompt,
     query,
     context,
+  });
+
+  const prevMessages = (history || [])?.map((each) => {
+    if (each.from === MessageFrom.human) {
+      return new HumanChatMessage(each.message);
+    }
+    return new AIChatMessage(each.message);
   });
 
   return [
@@ -75,16 +83,29 @@ const getCustomerSupportMessages = ({
     new AIChatMessage(
       'Sure! I will stick to all the information given in the system context. I won’t answer any question that is outside the context of information. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in the context of the information provided. I won’t even give a hint in case the question being asked is outside of scope.'
     ),
+    ...prevMessages,
     new HumanChatMessage(query),
   ];
 };
 
-const getRawMessages = ({ context, query, prompt }: GetPromptProps) => {
+const getRawMessages = ({
+  context,
+  query,
+  prompt,
+  history,
+}: GetPromptProps) => {
   const finalPrompt = prompt!
     ?.replace('{query}', query)
     ?.replace('{context}', context);
 
-  return [new HumanChatMessage(finalPrompt)];
+  const prevMessages = (history || [])?.map((each) => {
+    if (each.from === MessageFrom.human) {
+      return new HumanChatMessage(each.message);
+    }
+    return new AIChatMessage(each.message);
+  });
+
+  return [...prevMessages, new HumanChatMessage(finalPrompt)];
 };
 
 const chat = async ({
@@ -116,7 +137,7 @@ const chat = async ({
     const store = new DatastoreManager(datastore);
     results = await store.search({
       query: query,
-      topK: 5,
+      topK: topK || 3,
       tags: [],
     });
   }
@@ -140,6 +161,7 @@ const chat = async ({
         prompt,
         context,
         query,
+        history,
       });
       break;
     case PromptType.raw:
@@ -147,6 +169,7 @@ const chat = async ({
         prompt,
         context,
         query,
+        history,
       });
       break;
     default:

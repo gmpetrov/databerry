@@ -274,12 +274,12 @@ const SearchBNP = (props: {
     <>
       <Stack>
         {state.promptType && (
-          <Chip sx={{ mr: 'auto' }} variant="outlined" color="neutral">
+          <Chip sx={{ mr: 'auto', mb: 2 }} variant="outlined" color="neutral">
             Type de prompt: <strong>{state.promptType}</strong>
           </Chip>
         )}
         <Stack direction="row">
-          {/* <Button
+          <Button
             sx={{ mr: 'auto' }}
             color="warning"
             variant="outlined"
@@ -292,8 +292,8 @@ const SearchBNP = (props: {
               window.location.reload();
             }}
           >
-            Reset Prompt
-          </Button> */}
+            {`Supprimer l'historique`}
+          </Button>
           {history.length > 0 && (
             <Button
               sx={{ ml: 'auto' }}
