@@ -352,9 +352,10 @@ model Subscription {
 }
 
 model MessageBNP {
-  id   String      @id @default(cuid())
-  text String
-  from MessageFrom
+  id       String      @id @default(cuid())
+  text     String
+  from     MessageFrom
+  userName String?     @map("user_name")
 
   datastoreId String?    @map("datastore_id")
   datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)

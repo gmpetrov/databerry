@@ -23,6 +23,7 @@ export const XPBNPQuery = async (
   const id = req.query.id as string;
   const data = req.body as {
     datastoreId: string;
+    userName: string;
     datasourceId: string;
     query: string;
     streaming: boolean;
@@ -30,29 +31,43 @@ export const XPBNPQuery = async (
 
   const receivedDate = new Date();
 
-  if (!data.datasourceId || !data.datastoreId) {
-    throw new ApiError(ApiErrorType.INVALID_REQUEST);
-  }
+  let content = '';
 
-  const datastore = await prisma.datastore.findUnique({
-    where: {
-      id: data.datastoreId,
-    },
-    include: {
-      datasources: {
-        where: {
-          id: data.datasourceId,
+  if (data.datasourceId || data.datastoreId) {
+    if (!data.datasourceId || !data.datastoreId) {
+      throw new ApiError(ApiErrorType.INVALID_REQUEST);
+    }
+
+    const datastore = await prisma.datastore.findUnique({
+      where: {
+        id: data.datastoreId,
+      },
+      include: {
+        datasources: {
+          where: {
+            id: data.datasourceId,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (datastore?.ownerId !== session?.user?.id) {
-    throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  }
+    if (datastore?.ownerId !== session?.user?.id) {
+      throw new ApiError(ApiErrorType.UNAUTHORIZED);
+    }
 
-  if (!datastore?.datasources?.[0]) {
-    throw new ApiError(ApiErrorType.EMPTY_DATASOURCE);
+    if (!datastore?.datasources?.[0]) {
+      throw new ApiError(ApiErrorType.EMPTY_DATASOURCE);
+    }
+
+    const s3Response = await s3
+      .getObject({
+        Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+        Key: `datastores/${datastore.id}/${datastore?.datasources?.[0]?.id}/data.json`,
+      })
+      .promise();
+
+    content = JSON.parse(s3Response.Body?.toString('utf-8') || '{}')
+      ?.text as string;
   }
 
   if (data.streaming) {
@@ -68,22 +83,9 @@ export const XPBNPQuery = async (
     res.write(`data: ${input}\n\n`);
   };
 
-  const s3Response = await s3
-    .getObject({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-      Key: `datastores/${datastore.id}/${datastore?.datasources?.[0]?.id}/data.json`,
-    })
-    .promise();
-
-  const content = JSON.parse(s3Response.Body?.toString('utf-8') || '{}')
-    ?.text as string;
-
-  console.log('prompt', data.query);
-  console.log('content', content);
-
   const { answer } = await chat({
     promptType: 'raw',
-    prompt: `${data.query || 'Fait résumé de ce document: '} ${content}`,
+    prompt: `${data.query || 'Fait résumé de ce document: '} ${content || ''}`,
     // datastore: datastore as any,
     temperature: 0,
     query: data.query,
@@ -93,13 +95,13 @@ export const XPBNPQuery = async (
   await prisma.messageBNP.createMany({
     data: [
       {
-        datastoreId: datastore?.id,
+        userName: data.userName,
         text: data.query,
         from: MessageFrom.human,
         createdAt: receivedDate,
       },
       {
-        datastoreId: datastore?.id,
+        userName: data.userName,
         text: answer,
         from: MessageFrom.agent,
       },

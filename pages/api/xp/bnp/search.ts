@@ -22,6 +22,7 @@ export const XPBNPQuery = async (
   const id = req.query.id as string;
   const data = req.body as {
     datastoreId: string;
+    userName: string;
     query: string;
     streaming: boolean;
   };
@@ -152,12 +153,14 @@ export const XPBNPQuery = async (
     data: [
       {
         datastoreId: datastore?.id,
+        userName: data.userName,
         text: data.query,
         from: MessageFrom.human,
         createdAt: receivedDate,
       },
       {
         datastoreId: datastore?.id,
+        userName: data.userName,
         text: answer,
         from: MessageFrom.agent,
       },

@@ -1,0 +1,55 @@
+{
+  "qa": {
+    "score_1": "style redactionnelle adapté à la recherche",
+    "score_2": "respect du prompt",
+    "score_3": "exhaustivité de la reponse",
+    "prompts": {
+      "auto": [""],
+      "libre": [],
+      "assisté": [
+        {
+          "label": "LABEL Q&A 1",
+          "value": "recherche un article sur le sujet des mammouth avec un ton jovial en suivant le plan suivant : introduction, these, antithese et conclusion"
+        }
+      ]
+    }
+  },
+  "writing": {
+    "score_1": "style redactionnelle adapté à la recherche",
+    "score_2": "respect du prompt",
+    "score_3": "qualité des infos  exposées",
+    "prompts": {
+      "auto": [
+        {
+          "value": "Redige un article avec la methode FALK"
+        }
+      ],
+      "libre": true,
+      "assisté": [
+        {
+          "label": "LABEL REDACTION 1",
+          "value": "Redige un article sur le sujet ... avec un ton ... . En suivant le plan suivant : introduction, these, antithese et conclusion ; redige un article ..."
+        }
+      ]
+    }
+  },
+  "summary": {
+    "score_1": "style redactionnelle adapté à la recherche",
+    "score_2": "respect du prompt",
+    "score_3": "qualité des infos  exposées",
+    "prompts": {
+      "auto": [
+        {
+          "value": "Fait un resumé en francais"
+        }
+      ],
+      "libre": [],
+      "assisté": [
+        {
+          "label": "LABEL RESUMÉ 1",
+          "value": "résume l'article ….. En …. Mots facile à comprendre pour un débutant; résume l'article xxxx  avec une conclusion qui ouvre le debat"
+        }
+      ]
+    }
+  }
+}

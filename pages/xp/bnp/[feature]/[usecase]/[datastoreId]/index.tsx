@@ -59,6 +59,7 @@ import { XPBNPLabels } from '@app/utils/config';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
+import xpData from '@app/utils/xp-bnp-data.json';
 
 const CreateDatasourceModal = dynamic(
   () => import('@app/components/CreateDatasourceModal'),
@@ -93,7 +94,7 @@ const EvalModal = (props: {
   feature: string;
   prompt: string;
   promptType: string;
-  datastoreId: string;
+  datastoreId?: string;
 }) => {
   const [state, setState] = useStateReducer({
     isLoading: false,
@@ -122,10 +123,11 @@ const EvalModal = (props: {
 
     await axios.post(`/api/xp/bnp/eval`, payload);
 
-    await axios.delete(`/api/xp/bnp/history`),
-      {
-        datastoreId: props.datastoreId,
-      };
+    await axios.delete(`/api/xp/bnp/history`, {
+      data: {
+        userName: localStorage.getItem('userName'),
+      },
+    });
 
     props?.handleClose();
     methods?.reset();
@@ -247,7 +249,7 @@ const prompts = {
 };
 
 const SearchBNP = (props: {
-  datastoreId: string;
+  datastoreId?: string;
   feature: 'writing' | 'qa' | 'summary';
 }) => {
   const router = useRouter();
@@ -256,38 +258,57 @@ const SearchBNP = (props: {
     promptType: undefined as 'libre' | 'auto' | 'assisté' | undefined,
     prompt: '',
     currentDatasourceId: undefined as string | undefined,
+    userName: '',
   });
 
   let queryURL = `/api/xp/bnp/search`;
 
-  if (props.feature === 'summary') {
+  if (props.feature === 'summary' || props.feature === 'writing') {
     queryURL = `/api/xp/bnp/summary`;
   }
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
   >(
-    `/api/datastores/${router.query?.datastoreId}?offset=${0}&limit=${100}`,
+    props.datastoreId
+      ? `/api/datastores/${props.datastoreId}?offset=${0}&limit=${100}`
+      : null,
     fetcher
   );
 
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: queryURL,
-    queryHistoryURL: '/api/xp/bnp/history',
+    queryHistoryURL: state.userName
+      ? `/api/xp/bnp/history?userName=${state.userName}`
+      : undefined,
     channel: ConversationChannel.website,
     queryBody: {
       datastoreId: props.datastoreId,
       datasourceId: state.currentDatasourceId,
+      userName: state.userName,
     },
   });
+
+  React.useEffect(() => {
+    setState({
+      userName: localStorage.getItem('userName') || '',
+    });
+  }, []);
 
   let showChatBox = false;
 
   switch (props.feature) {
-    case 'writing':
     case 'qa':
       showChatBox = true;
       break;
+    case 'writing': {
+      if (!props.datastoreId) {
+        showChatBox = true;
+      } else if (props.datastoreId && state.currentDatasourceId) {
+        showChatBox = true;
+      }
+      break;
+    }
     case 'summary':
       if (state.currentDatasourceId) {
         showChatBox = true;
@@ -307,7 +328,8 @@ const SearchBNP = (props: {
             </Chip>
           )}
 
-          {props.feature === 'summary' && (
+          {(props.feature === 'summary' ||
+            (props.feature === 'writing' && props?.datastoreId)) && (
             <Select
               placeholder="Selectionner une Datasource"
               onChange={(_, value) => {
@@ -342,10 +364,11 @@ const SearchBNP = (props: {
               color="warning"
               variant="outlined"
               onClick={async () => {
-                await axios.delete(`/api/xp/bnp/history`),
-                  {
-                    datastoreId: props.datastoreId,
-                  };
+                await axios.delete(`/api/xp/bnp/history`, {
+                  data: {
+                    userName: state.userName,
+                  },
+                });
 
                 window.location.reload();
               }}
@@ -448,7 +471,10 @@ const SearchBNP = (props: {
                 const index = value?.split('_')?.[1];
 
                 const prompt =
-                  (prompts as any)?.[props.feature]?.[type]?.[index || 0] || '';
+                  (xpData as any)?.[props.feature]?.['prompts']?.[type]?.[
+                    index || 0
+                  ]?.value || '';
+                // (prompts as any)?.[props.feature]?.[type]?.[index || 0] || '';
 
                 setState({
                   promptType: type as any,
@@ -468,14 +494,16 @@ const SearchBNP = (props: {
                   <>
                     <Typography>Assisté</Typography>
                     <Stack gap={1}>
-                      {prompts[props.feature]['assisté'].map((each, index) => (
-                        <Radio
-                          key={index}
-                          value={`assisté_${index}`}
-                          label={each}
-                          size="lg"
-                        />
-                      ))}
+                      {xpData[props.feature]['prompts']['assisté'].map(
+                        (each, index) => (
+                          <Radio
+                            key={index}
+                            value={`assisté_${index}`}
+                            label={each?.label}
+                            size="lg"
+                          />
+                        )
+                      )}
                     </Stack>
 
                     <Divider></Divider>
@@ -497,7 +525,9 @@ const SearchBNP = (props: {
 export default function XPBNPFeature() {
   const router = useRouter();
   const useCase = router.query.usecase as string;
-  const datastoreId = router.query.datastoreId as string;
+  const datastoreId = (
+    router.query.datastoreId !== 'none' ? router.query.datastoreId : undefined
+  ) as string | undefined;
   const feature = router.query.feature as 'qa' | 'writing' | 'summary';
 
   const { data: session, status } = useSession();
@@ -513,7 +543,7 @@ export default function XPBNPFeature() {
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
-  >(`/api/datastores/${datastoreId}`, fetcher);
+  >(datastoreId ? `/api/datastores/${datastoreId}` : null, fetcher);
 
   return (
     <Box
@@ -552,7 +582,7 @@ export default function XPBNPFeature() {
             <Typography color="primary">{useCase}</Typography>
           </Link>
           <Typography>
-            {getDatastoreQuery?.data?.name || datastoreId}
+            {getDatastoreQuery?.data?.name || datastoreId || 'Sans Datastore'}
           </Typography>
         </Breadcrumbs>
 
