@@ -17,14 +17,15 @@ const notionHeader = {
         'Notion-Version': process.env.NOTION_VERSION
     }
 }
-const getNotionBasePages = async () => {
+const getNotionBasePages = async() => {
     const searchUrl = `${process.env.NOTION_BASE_URL}/search/`
     const basePages: Array<any> = (await axios.post(searchUrl,{},notionHeader)).data.results
     const filteredBasePages = (basePages).filter(val => val.parent.type === 'workspace')
     let sentencesList: Array<string> = []
-    const blocks: Array<any> = []
-   
-    await new Promise<Array<any>>((resolve) => {
+    const blocksList: Array<any> = []
+    let finalString = ""
+
+    return await new Promise<Array<any>>((resolve) => {
         filteredBasePages.map(async (page) => {
             const childBlocks: Array<any> = []
             const notionBlocks = await getNotionBlocks(page.id)
@@ -32,18 +33,34 @@ const getNotionBasePages = async () => {
                 if(block.has_children) {
                     childBlocks.push(block)
                 }
-                blocks.push(block)
+                blocksList.push(block)
             })
             resolve(childBlocks)
         })
-    }
-    )
+    })
     .then(async (blocks) => {
-        await flattenChildBlocks(blocks)
-        .then((flattens) => {
-            
+        return new Promise(async(resolve) =>{
+            await flattenChildBlocks(blocks)
+            .then((flattens) => {
+                flattens.map((block)=>{
+                    blocksList.push(block)
+                })
+                blocksList.map((block)=>{
+                    const sentences = getBlockContents(block)
+                    sentences.map((line) =>{
+                        sentencesList.push(line)
+                    })
+                })
+                sentencesList.map((line)=>{
+                    finalString = finalString.concat(line)
+                })
+                resolve(finalString)
+            })
         })
-    });
+    })
+    .then((str)=>{
+        return(str)
+    })
 }
 
 
@@ -67,7 +84,7 @@ const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
             if(childContainer.length > 0) {
                 await flattenChildBlocks(childContainer)
                 .then((newContainer) => {
-                    newContainer.forEach((val)=>{
+                    newContainer.forEach((val) => {
                         container.push(val)
                     })
                     childContainer = []
@@ -117,11 +134,14 @@ export class NotionLoader  extends DatasourceLoaderBase {
 
     async load() {
         const resp = await getNotionBasePages()
-    // const url: string = (
-    //   this.datasource.config as z.infer<typeof NotionBlock>['config']
-    // )['source'];
     return {
-
+        pageContent: resp,
+        metadata: {
+            source: 'notion',
+            datasource_id: this.datasource.id,
+            source_type: this.datasource.type,
+            tags: [],
+        },
     } as Document
     }
 }
