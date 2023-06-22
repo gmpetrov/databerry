@@ -5,6 +5,7 @@ import { Document } from '@app/utils/datastores/base';
 
 import { DatasourceLoaderBase } from './base';
 import { FileLoader } from './file';
+import { NotionLoader } from './notion';
 import { TextLoader } from './text';
 import { WebPageLoader } from './web-page';
 
@@ -19,6 +20,7 @@ export class DatasourceLoader {
     // Files are converted to text in the browser.
     // Just adding this type for typescript to be happy as there is a field 'file' in the DatasourceType enum
     [DatasourceType.file]: FileLoader,
+    [DatasourceType.notion]: NotionLoader
   };
 
   constructor(datasource: Datasource) {

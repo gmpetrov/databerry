@@ -412,9 +412,9 @@ enum DatasourceType {
   web_site
   text
   file
+  notion
   // html
   // pdf
-  // notion
 }
 
 enum DatastoreType {

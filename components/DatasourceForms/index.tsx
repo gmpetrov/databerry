@@ -18,11 +18,16 @@ const FileForm = dynamic(() => import('./FileForm'), {
   ssr: false,
 });
 
+const NotionForm = dynamic(() => import('./NotionForm'), {
+  ssr: false,
+});
+
 const DatasourceFormsMap = {
   [DatasourceType.web_page]: WebPageForm,
   [DatasourceType.text]: TextForm,
   [DatasourceType.file]: FileForm,
   [DatasourceType.web_site]: WebSiteForm,
+  [DatasourceType.notion]: NotionForm,
 };
 
 type Props = {
