@@ -1,5 +1,7 @@
+import { get_encoding } from '@dqbd/tiktoken';
 import { ConversationChannel, MessageFrom, Usage } from '@prisma/client';
 import cuid from 'cuid';
+import { TokenTextSplitter } from 'langchain/text_splitter';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest, ChatRequest } from '@app/types';
@@ -14,6 +16,8 @@ import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 
 const handler = createAuthApiHandler();
+
+const MAX_TOKENS = 12000;
 
 export const XPBNPQuery = async (
   req: AppNextApiRequest,
@@ -32,6 +36,7 @@ export const XPBNPQuery = async (
   const receivedDate = new Date();
 
   let content = '';
+  let nbTokens = 0;
 
   if (data.datasourceId || data.datastoreId) {
     if (!data.datasourceId || !data.datastoreId) {
@@ -68,6 +73,22 @@ export const XPBNPQuery = async (
 
     content = JSON.parse(s3Response.Body?.toString('utf-8') || '{}')
       ?.text as string;
+
+    const encoding = get_encoding('cl100k_base');
+    nbTokens = encoding.encode(content).length;
+    encoding.free();
+
+    if (nbTokens > MAX_TOKENS) {
+      const splitter = new TokenTextSplitter({
+        chunkSize: MAX_TOKENS,
+        chunkOverlap: 0,
+      });
+
+      const chunks = await splitter.splitText(content);
+      content = chunks[0];
+    }
+
+    console.log('nbTokens ------>', nbTokens);
   }
 
   if (data.streaming) {
@@ -90,6 +111,7 @@ export const XPBNPQuery = async (
     temperature: 0,
     query: data.query,
     stream: data.streaming ? streamData : undefined,
+    modelName: nbTokens > 3200 ? 'gpt-3.5-turbo-16k' : undefined,
   });
 
   await prisma.messageBNP.createMany({

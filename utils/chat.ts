@@ -117,6 +117,7 @@ const chat = async ({
   stream,
   temperature,
   history,
+  modelName,
 }: {
   datastore?: Datastore;
   query: string;
@@ -125,6 +126,7 @@ const chat = async ({
   topK?: number;
   stream?: any;
   temperature?: number;
+  modelName?: string;
   history?: { from: MessageFrom; message: string }[];
 }) => {
   let results = [] as {
@@ -177,7 +179,7 @@ const chat = async ({
   }
 
   const model = new ChatOpenAI({
-    modelName: 'gpt-3.5-turbo-0613',
+    modelName: modelName || 'gpt-3.5-turbo-0613',
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [
