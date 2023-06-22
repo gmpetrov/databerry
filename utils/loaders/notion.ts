@@ -21,7 +21,7 @@ const getNotionBasePages = async () => {
     const searchUrl = `${process.env.NOTION_BASE_URL}/search/`
     const basePages: Array<any> = (await axios.post(searchUrl,{},notionHeader)).data.results
     const filteredBasePages = (basePages).filter(val => val.parent.type === 'workspace')
-    const sentencesList: Array<string> = []
+    let sentencesList: Array<string> = []
     const blocks: Array<any> = []
    
     await new Promise<Array<any>>((resolve) => {
@@ -39,37 +39,11 @@ const getNotionBasePages = async () => {
     }
     )
     .then(async (blocks) => {
-        console.log("CHILD BLOCKS",blocks);
-        await flattenChildBlocks(blocks).then((flattens) => {
-            console.log("BLOCS",blocks.length,blocks);
-            console.log("FLATTENS",flattens.length);
-            flattens.forEach((val)=> {
-                if(val.has_children){
-                    // console.log("Flattens Has Children",val);
-                }
-            })
+        await flattenChildBlocks(blocks)
+        .then((flattens) => {
+            
         })
-        
     });
-    // filteredBasePages.map((page) => {
-    //     getNotionBlocks(page.id)
-    //     .then(async (blocks) => {
-    //         await flattenChildBlocks(blocks)
-    //         .then((blocks)=> {
-    //             const flattenBlocks = blocks ?? []
-    //             console.log('LENGTH',flattenBlocks.length);
-    //             if(flattenBlocks.length < 10) {
-    //                 console.log('FLATTEN BLOCKS',flattenBlocks);
-    //             }
-    //             flattenBlocks.map((block) => {
-    //                 const blockSentences = getBlockContents(block)
-    //                 blockSentences.map((sentence) => {
-    //                     sentencesList.push(sentence)
-    //                 })
-    //             })
-    //         })
-    //     })
-    // });
 }
 
 
@@ -83,29 +57,27 @@ const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
             container.push(block)
         })
     }))
-    .then(() => {
+    .then(async() => {
          container.forEach((val)=> {
             if(val.has_children){
                 childContainer.push(val)
             }
         })
-        return new Promise<Array<any>>(async (resolve)=> {
-            if(childContainer.length > 0){
+        return new Promise<Array<any>>(async(resolve) => {
+            if(childContainer.length > 0) {
                 await flattenChildBlocks(childContainer)
                 .then((newContainer) => {
-                    console.log("PREVIOUS LENGTH",container.length)
                     newContainer.forEach((val)=>{
                         container.push(val)
                     })
                     childContainer = []
-                    console.log("AFTER LENGTH",container.length)
                     resolve(container)
                 })
             } else {
                 resolve(container)
             }
         })
-        .then((container)=>{
+        .then((container) => {
             return container
         })
     })
@@ -113,7 +85,7 @@ const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
 
 const getNotionBlocks = async (id: string) => { 
     const blockUrl = `${process.env.NOTION_BASE_URL}/blocks/${id}/children/`
-    const blocks : Array<any> = (await axios.get(blockUrl,notionHeader)).data.results
+    const blocks: Array<any> = (await axios.get(blockUrl,notionHeader)).data.results
     return blocks
 }
 
@@ -128,8 +100,6 @@ const getBlockContents = (block: any) => {
         sentence = sentence.concat('\n')
         blockSentences.push(sentence)
     }
-    // console.log("----BLOCK SENTENCES",blockSentences);
-    
     return blockSentences
 }
 
