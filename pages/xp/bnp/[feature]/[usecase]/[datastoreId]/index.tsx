@@ -492,7 +492,7 @@ const SearchBNP = (props: {
               }}
             >
               <Stack gap={2}>
-                {['writing', 'summary'].includes(props.feature) && (
+                {['summary'].includes(props.feature) && (
                   <>
                     <Radio value="auto" label="Auto" size="lg" />
                     <Divider></Divider>

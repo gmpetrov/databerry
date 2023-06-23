@@ -19,11 +19,7 @@
     "score_2": "respect du prompt",
     "score_3": "qualité des infos  exposées",
     "prompts": {
-      "auto": [
-        {
-          "value": "Redige un article avec la methode FALK"
-        }
-      ],
+      "auto": [],
       "libre": [],
       "assisté": [
         {
