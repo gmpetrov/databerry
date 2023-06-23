@@ -1,6 +1,6 @@
 FROM node:18-bullseye
 
-WORKDIR /app
+WORKDIR /home/node
 
 USER node
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-cd /app/workspace
+cd /home/node
+echo "###### INITIALIZING PROJECT"
 
-pwd
-ls
-
-yarn global add pnpm@7 && pnpm i
+yarn global add pnpm@7 && \
+pnpm config set store-dir /home/node/.local/share/pnpm/store && \
+pnpm i 
 
 pnpm prisma:migrate:dev
 
