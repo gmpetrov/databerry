@@ -6,16 +6,11 @@
     "prompts": {
       "auto": [],
       "libre": [],
-      "assisté": [
-        {
-          "label": "LABEL Q&A 1",
-          "value": "recherche un article sur le sujet des mammouth avec un ton jovial en suivant le plan suivant : introduction, these, antithese et conclusion"
-        }
-      ]
+      "assisté": []
     }
   },
   "writing": {
-    "score_1": "style redactionnelle adapté à la recherche",
+    "score_1": "qualité redactionnelle - forme",
     "score_2": "respect du prompt",
     "score_3": "qualité des infos  exposées",
     "prompts": {
