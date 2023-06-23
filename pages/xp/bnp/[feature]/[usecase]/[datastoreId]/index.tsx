@@ -160,7 +160,10 @@ const EvalModal = (props: {
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack gap={2}>
             <FormControl>
-              <FormLabel>Score 1 (0-5)</FormLabel>
+              <FormLabel>
+                {`${(xpData as any)[props.feature]?.score_1 || 'Score 1'}`}
+                (0-5)
+              </FormLabel>
               <Input
                 {...methods.register('score_1')}
                 type="number"
@@ -173,7 +176,10 @@ const EvalModal = (props: {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Score 2 (0-5)</FormLabel>
+              <FormLabel>
+                {`${(xpData as any)[props.feature]?.score_2 || 'Score 2'}`}
+                (0-5)
+              </FormLabel>
               <Input
                 {...methods.register('score_2')}
                 type="number"
@@ -186,7 +192,10 @@ const EvalModal = (props: {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Score 3 (0-5)</FormLabel>
+              <FormLabel>
+                {`${(xpData as any)[props.feature]?.score_3 || 'Score 3'}`}
+                (0-5)
+              </FormLabel>
               <Input
                 {...methods.register('score_3')}
                 type="number"
