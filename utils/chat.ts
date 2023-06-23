@@ -76,7 +76,6 @@ const getCustomerSupportMessages = ({
 
   return [
     new SystemChatMessage(systemPrompt),
-    // ...messages,
     new HumanChatMessage(
       'Don’t justify your answers. Don’t give information not mentioned in the CONTEXT INFORMATION. Don’t make up URLs):'
     ),

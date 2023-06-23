@@ -195,6 +195,14 @@ const handleQuery = async (
     where: {
       AND: [{ agentId: agent?.id }, { visitorId: sessionId }],
     },
+    include: {
+      messages: {
+        take: -4,
+        orderBy: {
+          createdAt: 'asc',
+        },
+      },
+    },
   });
 
   const conversationId = conversation?.id || cuid();
@@ -213,6 +221,10 @@ const handleQuery = async (
 
   const answer = await new AgentManager({ agent }).query({
     input: query,
+    history: conversation?.messages?.map((message) => ({
+      from: message.from,
+      message: message.text,
+    })),
   });
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {

@@ -62,14 +62,14 @@ export const queryAgent = async (
           visitorId: data.visitorId || 'UNKNOWN',
         },
         take: 1,
-        // include: {
-        //   messages: {
-        //     take: -100,
-        //     orderBy: {
-        //       createdAt: 'asc',
-        //     },
-        //   },
-        // },
+        include: {
+          messages: {
+            take: -4,
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+        },
       },
     },
   });
@@ -142,7 +142,10 @@ export const queryAgent = async (
     manager.query({
       input: data.query,
       stream: data.streaming ? streamData : undefined,
-      history: [],
+      history: agent?.conversations?.[0]?.messages?.map((each) => ({
+        from: each.from,
+        message: each.text,
+      })),
     }),
     prisma.usage.update({
       where: {
