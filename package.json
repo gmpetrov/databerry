@@ -84,6 +84,7 @@
     "next-connect": "^0.13.0",
     "nodemailer": "^6.9.1",
     "nprogress": "^0.2.0",
+    "openai": "^3.3.0",
     "p-debounce": "^4.0.0",
     "p-map": "^5.5.0",
     "p-timeout": "^6.1.1",
