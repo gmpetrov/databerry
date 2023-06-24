@@ -13,7 +13,11 @@ services:
         DBNAME: ${DBNAME}
     volumes:
       - ../..:/home/node
+      - node_modules:/home/node/node_modules
     command: /bin/sh "/home/node/.dev/init.sh"
     ports:
       - "127.0.0.1:${PORT}:3000"
+volumes:
+  node_modules:
+  # pnpm-store:
 
