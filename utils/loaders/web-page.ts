@@ -75,8 +75,6 @@ const loadPageContent = async (url: string) => {
     content = await page.content();
     text = await getTextFromHTML(content);
 
-    console.log('content', content);
-
     await context.close();
     await browser.close();
 

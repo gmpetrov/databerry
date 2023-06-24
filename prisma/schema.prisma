@@ -33,6 +33,8 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  serviceProviders ServiceProvider[]
+
   @@map("users")
 }
 
@@ -121,6 +123,13 @@ model AppDatasource {
   lastSynch DateTime? @map("last_synch")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  groupId  String?         @map("group_id")
+  group    AppDatasource?  @relation(name: "group", fields: [groupId], references: [id], onDelete: Cascade)
+  children AppDatasource[] @relation("group")
+
+  serviceProviderId String?          @map("service_provider_id")
+  serviceProvider   ServiceProvider? @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade)
 
   @@map("data_sources")
 }
@@ -351,6 +360,27 @@ model Subscription {
   @@map("subscriptions")
 }
 
+model ServiceProvider {
+  id   String              @id @default(cuid())
+  type ServiceProviderType
+
+  name         String?
+  refreshToken String? @map("refresh_token")
+  accessToken  String? @map("access_token")
+
+  config Json?
+
+  ownerId String @map("user_id")
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  appDatasources AppDatasource[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("service_providers")
+}
+
 model MessageBNP {
   id       String      @id @default(cuid())
   text     String
@@ -415,9 +445,14 @@ enum DatasourceType {
   web_site
   text
   file
-  // html
-  // pdf
-  // notion
+  google_drive_file
+  google_drive_folder
+  notion
+}
+
+enum ServiceProviderType {
+  google_drive
+  notion
 }
 
 enum DatastoreType {

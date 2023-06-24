@@ -1,11 +1,33 @@
-import { AppDatasource as Datasource } from '@prisma/client';
+import { AppDatasource as Datasource, Prisma } from '@prisma/client';
 
 import { Document } from '@app/utils/datastores/base';
 
-export abstract class DatasourceLoaderBase {
-  datasource: Datasource;
+const datasourceExtended = Prisma.validator<Prisma.AppDatasourceArgs>()({
+  include: {
+    datastore: true,
+    serviceProvider: true,
+    owner: {
+      include: {
+        usage: true,
+        subscriptions: {
+          where: {
+            status: 'active',
+          },
+        },
+      },
+    },
+  },
+});
 
-  constructor(datasource: Datasource) {
+type DatasourceExtended = Prisma.AppDatasourceGetPayload<
+  typeof datasourceExtended
+>;
+
+export abstract class DatasourceLoaderBase {
+  isGroup?: boolean;
+  datasource: DatasourceExtended;
+
+  constructor(datasource: DatasourceExtended) {
     this.datasource = datasource;
   }
 
@@ -14,5 +36,5 @@ export abstract class DatasourceLoaderBase {
   }
 
   abstract getSize(param?: any): Promise<number>;
-  abstract load(file?: any): Promise<Document>;
+  abstract load(file?: any): Promise<Document | undefined>;
 }

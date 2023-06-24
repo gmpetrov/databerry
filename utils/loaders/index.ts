@@ -5,25 +5,33 @@ import { Document } from '@app/utils/datastores/base';
 
 import { DatasourceLoaderBase } from './base';
 import { FileLoader } from './file';
+import { GoogleDriveFileLoader } from './google-drive-file';
+import { GoogleDriveFolderLoader } from './google-drive-folder';
 import { TextLoader } from './text';
 import { WebPageLoader } from './web-page';
+import { WebSiteLoader } from './web-site';
 
 export class DatasourceLoader {
   datasource: Datasource;
   manager: DatasourceLoaderBase;
+  isGroup?: boolean;
 
   loadersMap = {
     [DatasourceType.web_page]: WebPageLoader,
-    [DatasourceType.web_site]: undefined as any,
+    [DatasourceType.web_site]: WebSiteLoader,
     [DatasourceType.text]: TextLoader,
     // Files are converted to text in the browser.
     // Just adding this type for typescript to be happy as there is a field 'file' in the DatasourceType enum
     [DatasourceType.file]: FileLoader,
+    [DatasourceType.google_drive_file]: GoogleDriveFileLoader,
+    [DatasourceType.google_drive_folder]: GoogleDriveFolderLoader,
+    [DatasourceType.notion]: undefined as any,
   };
 
   constructor(datasource: Datasource) {
     this.datasource = datasource;
     this.manager = new this.loadersMap[this.datasource.type](this.datasource);
+    this.isGroup = this.manager.isGroup;
   }
 
   load(file?: any) {

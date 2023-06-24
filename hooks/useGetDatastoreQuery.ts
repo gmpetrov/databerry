@@ -18,11 +18,12 @@ const useGetDatastoreQuery = (props: Props) => {
   const offset = Number(router.query.offset || 0);
   const search = router.query.search || '';
   const status = router.query.status || '';
+  const groupId = router.query.groupId || '';
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
   >(
-    `/api/datastores/${router.query?.datastoreId}?offset=${offset}&limit=${limit}&search=${search}&status=${status}`,
+    `/api/datastores/${router.query?.datastoreId}?offset=${offset}&limit=${limit}&search=${search}&status=${status}&groupId=${groupId}`,
     fetcher,
     {
       ...props.swrConfig,
@@ -35,6 +36,7 @@ const useGetDatastoreQuery = (props: Props) => {
     offset,
     search,
     status,
+    groupId,
   };
 };
 

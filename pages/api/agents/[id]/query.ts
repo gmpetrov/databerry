@@ -65,7 +65,7 @@ export const chatAgentRequest = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  const manager = new AgentManager({ agent, topK: 3 });
+  const manager = new AgentManager({ agent, topK: 5 });
 
   if (data.streaming) {
     res.writeHead(200, {

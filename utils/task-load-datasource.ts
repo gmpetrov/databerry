@@ -1,12 +1,12 @@
 import {
   DatasourceStatus,
   DatasourceType,
+  Prisma,
   SubscriptionPlan,
   Usage,
 } from '@prisma/client';
 
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
-import accountConfig from '@app/utils/account-config';
 import { s3 } from '@app/utils/aws';
 import { DatastoreManager } from '@app/utils/datastores';
 import type { Document } from '@app/utils/datastores/base';
@@ -15,11 +15,29 @@ import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
 
 import { ApiError, ApiErrorType } from './api-error';
-import cuid from './cuid';
-import findDomainPages, { getSitemapPages } from './find-domain-pages';
-import findSitemap from './find-sitemap';
 import guardDataProcessingUsage from './guard-data-processing-usage';
 import triggerTaskLoadDatasource from './trigger-task-load-datasource';
+
+export type DatasourceExtended = Prisma.AppDatasourceGetPayload<
+  typeof updateDatasourceArgs
+>;
+
+const updateDatasourceArgs = Prisma.validator<Prisma.AppDatasourceArgs>()({
+  include: {
+    datastore: true,
+    serviceProvider: true,
+    owner: {
+      include: {
+        usage: true,
+        subscriptions: {
+          where: {
+            status: 'active',
+          },
+        },
+      },
+    },
+  },
+});
 
 const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   logger.info(`${data.datasourceId}: fetching datasource`);
@@ -31,19 +49,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     data: {
       status: DatasourceStatus.running,
     },
-    include: {
-      datastore: true,
-      owner: {
-        include: {
-          usage: true,
-          subscriptions: {
-            where: {
-              status: 'active',
-            },
-          },
-        },
-      },
-    },
+    ...updateDatasourceArgs,
   });
 
   if (!datasource) {
@@ -72,101 +78,23 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     return;
   }
 
-  // TODO: find a better way to handle this
-  if (datasource.type === DatasourceType.web_site) {
-    let urls: string[] = [];
-    let nestedSitemaps: string[] = [];
-    const sitemap = (datasource.config as any).sitemap;
-    const source = (datasource.config as any).source;
+  const loader = new DatasourceLoader(datasource);
 
-    if (sitemap) {
-      const { pages, sitemaps } = await getSitemapPages(sitemap);
-      urls = pages;
-      nestedSitemaps = sitemaps;
-    } else if (source) {
-      // Try to find sitemap
-      const sitemapURL = await findSitemap(source);
-
-      if (sitemapURL) {
-        const { pages, sitemaps } = await getSitemapPages(sitemapURL);
-        urls = pages;
-        nestedSitemaps = sitemaps;
-      } else {
-        // Fallback to recursive search
-        urls = await findDomainPages(source);
-      }
-    } else {
-      return;
-    }
-
-    urls = urls.slice(
-      0,
-      accountConfig[currentPlan]?.limits?.maxWebsiteURL || 10
-    );
-
-    const ids = urls.map(() => cuid());
-    const idsSitemaps = nestedSitemaps.map(() => cuid());
-
-    if (ids.length > 0) {
-      await prisma.appDatasource.createMany({
-        data: urls.map((each, idx) => ({
-          id: ids[idx],
-          type: DatasourceType.web_page,
-          name: each,
-          config: {
-            ...(datasource.config as any),
-            source: each,
-          },
-          ownerId: datasource?.ownerId,
-          datastoreId: datasource?.datastoreId,
-        })),
-      });
-    }
-
-    if (idsSitemaps.length > 0) {
-      await prisma.appDatasource.createMany({
-        data: nestedSitemaps.map((each, idx) => ({
-          id: idsSitemaps[idx],
-          type: DatasourceType.web_site,
-          name: each,
-          config: {
-            ...(datasource.config as any),
-            sitemap: each,
-          },
-          ownerId: datasource?.ownerId,
-          datastoreId: datasource?.datastoreId,
-        })),
-      });
-    }
-
-    await triggerTaskLoadDatasource(
-      [...ids, ...idsSitemaps].map((each) => ({
-        userId: datasource?.ownerId!,
-        datasourceId: each,
-        priority: 10,
-      }))
-    );
-
-    await prisma.appDatasource.delete({
-      where: {
-        id: datasource.id,
-      },
-    });
+  if (loader.isGroup) {
+    await loader.load();
 
     logger.info(
-      `${datasource?.id}: datasource of type ${datasource?.type} runned successfully`
+      `${datasource?.id}: datasource group of type ${datasource?.type} runned successfully`
     );
 
     return;
   }
 
-  console.log('datasource', datasource);
   let document: Document;
-
   try {
-    document = data.isUpdateText
-      ? await new DatasourceLoader(datasource).loadText()
-      : await new DatasourceLoader(datasource).load();
+    document = (
+      data.isUpdateText ? await loader.loadText() : await loader.load()
+    )!;
   } catch (err) {
     if (err instanceof ApiError) {
       if (err.name === ApiErrorType.WEBPAGE_IS_SITEMAP) {
@@ -204,12 +132,25 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     throw err;
   }
 
-  // console.log('document', document);
+  const hash = await DatastoreManager.hash(document);
+
+  if (hash === datasource.hash) {
+    logger.info('No need to update, file has not changed');
+    await prisma.appDatasource.update({
+      where: {
+        id: datasource.id,
+      },
+      data: {
+        status: DatasourceStatus.synched,
+      },
+    });
+
+    return;
+  }
+
   const chunks = await new DatastoreManager(datasource.datastore!).upload(
     document
   );
-
-  const hash = chunks?.[0]?.metadata?.datasource_hash as string;
 
   logger.info(`${data.datasourceId}: loading finished`);
 

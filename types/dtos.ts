@@ -50,7 +50,7 @@ export type TaskRemoveDatastoreSchema = z.infer<
 
 export const SearchRequestSchema = z.object({
   query: z.string(),
-  topK: z.number().default(3).optional(),
+  topK: z.number().default(5).optional(),
   tags: z.array(z.string()).optional(),
   filters: DocumentMetadataSchema.optional(),
 });

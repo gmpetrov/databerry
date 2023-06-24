@@ -138,7 +138,7 @@ const chat = async ({
     const store = new DatastoreManager(datastore);
     results = await store.search({
       query: query,
-      topK: topK || 3,
+      topK: topK || 5,
       tags: [],
     });
   }
