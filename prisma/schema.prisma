@@ -369,19 +369,21 @@ model MessageBNP {
 }
 
 model XPBNPEval {
-  id         String  @id @default(cuid())
-  active     Boolean @default(false)
-  userName   String? @map("user_name")
-  feature    String?
-  usecase    String?
-  promptType String? @map("prompt_type")
-  prompt     String?
-  comment    String?
-  result     String?
-  score1     Int?    @map("score_1")
-  score2     Int?    @map("score_2")
-  score3     Int?    @map("score_3")
-  metadata   Json?
+  id             String  @id @default(cuid())
+  active         Boolean @default(false)
+  userName       String? @map("user_name")
+  feature        String?
+  usecase        String?
+  promptType     String? @map("prompt_type")
+  datasourceName String? @map("datasource_name")
+  datastoreName  String? @map("datastore_name")
+  prompt         String?
+  comment        String?
+  result         String?
+  score1         Int?    @map("score_1")
+  score2         Int?    @map("score_2")
+  score3         Int?    @map("score_3")
+  metadata       Json?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

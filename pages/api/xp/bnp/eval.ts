@@ -21,6 +21,8 @@ export const evalBNP = async (req: AppNextApiRequest, res: NextApiResponse) => {
     score_2: string;
     score_3: string;
     comment: string;
+    datastoreName?: string;
+    datasourceName?: string;
   };
 
   const newEval = await prisma.xPBNPEval.create({
@@ -35,6 +37,8 @@ export const evalBNP = async (req: AppNextApiRequest, res: NextApiResponse) => {
       usecase: data.useCase,
       userName: data.name,
       result: data.result,
+      datasourceName: data.datasourceName,
+      datastoreName: data.datastoreName,
     },
   });
 

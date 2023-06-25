@@ -95,6 +95,8 @@ const EvalModal = (props: {
   prompt: string;
   promptType: string;
   datastoreId?: string;
+  datasourceName?: string;
+  datastoreName?: string;
 }) => {
   const [state, setState] = useStateReducer({
     isLoading: false,
@@ -108,6 +110,8 @@ const EvalModal = (props: {
 
     const payload = {
       ...values,
+      datasourceName: props.datasourceName,
+      datastoreName: props.datastoreName,
       result: props.result,
       name: localStorage.getItem('userName'),
       useCase: props.useCase,
@@ -327,6 +331,19 @@ const SearchBNP = (props: {
       break;
   }
 
+  const datasourceName = React.useMemo(() => {
+    if (state.currentDatasourceId) {
+      const datasource = getDatastoreQuery?.data?.datasources?.find(
+        (each) => each.id === state.currentDatasourceId
+      );
+
+      return datasource?.name;
+    }
+    return undefined;
+  }, [state.currentDatasourceId, getDatastoreQuery?.data?.datasources]);
+
+  const datastoreName = getDatastoreQuery?.data?.name;
+
   return (
     <>
       <Stack>
@@ -340,7 +357,7 @@ const SearchBNP = (props: {
           {(props.feature === 'summary' ||
             (props.feature === 'writing' && props?.datastoreId)) && (
             <Select
-              placeholder="Selectionner une Datasource"
+              placeholder="Selectionner un Document"
               onChange={(_, value) => {
                 if (!state.currentDatasourceId) {
                   setState({
@@ -418,7 +435,9 @@ const SearchBNP = (props: {
       </Stack>
       <EvalModal
         datastoreId={props.datastoreId}
-        prompt={state.prompt}
+        datastoreName={datastoreName}
+        datasourceName={datasourceName}
+        prompt={state.prompt || history?.[0]?.message}
         promptType={state.promptType!}
         feature={router.query.feature as string}
         useCase={router.query.usecase as string}
