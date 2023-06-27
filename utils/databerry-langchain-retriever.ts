@@ -8,7 +8,7 @@ export default class DataberryRetriever {
 
   constructor({ datastore, topK }: { datastore: Datastore; topK?: number }) {
     this.datastore = datastore;
-    this.topK = topK || 3;
+    this.topK = topK || 5;
   }
 
   async getRelevantDocuments(query: string, topK?: number): Promise<any[]> {

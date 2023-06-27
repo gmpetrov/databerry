@@ -86,7 +86,7 @@ export const XPBNPQuery = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  //   const manager = new AgentManager({ agent, topK: 3 });
+  //   const manager = new AgentManager({ agent, topK: 5 });
 
   if (data.streaming) {
     res.writeHead(200, {
@@ -140,7 +140,7 @@ export const XPBNPQuery = async (
     promptType: 'customer_support',
     datastore: datastore as any,
     query: data.query,
-    topK: 3,
+    topK: 5,
     temperature: 0,
     stream: data.streaming ? streamData : undefined,
     history: datastore?.messagesBNP?.map((m) => ({

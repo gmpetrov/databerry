@@ -136,7 +136,7 @@ export const queryAgent = async (
     from: MessageFrom.human,
   });
 
-  const manager = new AgentManager({ agent, topK: 3 });
+  const manager = new AgentManager({ agent, topK: 5 });
 
   const [answer] = await Promise.all([
     manager.query({

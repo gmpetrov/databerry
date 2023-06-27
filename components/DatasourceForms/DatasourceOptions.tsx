@@ -48,10 +48,18 @@ const options: DatsourceOption[] = [
     disabled: false,
   },
   {
+    type: 'google_drive_folder' as any,
+    label: 'Google Drive',
+    description: 'Talk to your Google Drive files',
+    isPremium: true,
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/1024px-Google_Drive_icon_%282020%29.svg.png?20221103153031',
+    // disabled: true,
+  },
+  {
     type: 'notion' as any,
     label: 'Notion',
     description: 'Download a Notion notebook',
-    // icon: '/notion-logo.svg',
+    icon: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg',
     disabled: true,
   },
 ];
@@ -78,10 +86,9 @@ const DatasourceOptions = (props: Props) => {
                 : () => props.onSelect(each.type)
             }
           >
-            {each.icon && <img src={each.icon} className="w-16" alt="" />}
-
             <Stack gap={1}>
               <Stack gap={1} direction="row">
+                {each.icon && <img src={each.icon} className="h-4" alt="" />}
                 <Typography level="body1" fontWeight={'bold'}>
                   {each.label}
                 </Typography>

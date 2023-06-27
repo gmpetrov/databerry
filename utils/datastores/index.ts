@@ -45,21 +45,24 @@ export class DatastoreManager {
     return this.manager.remove(datasourceId);
   }
 
-  async handleSplitDocument(document: Document) {
-    const splitters = await this.importSplitters();
-
+  static async hash(document: Document) {
     const tags = document.metadata?.tags || ([] as string[]);
-
     const hasher = await createBLAKE3();
     hasher.init();
     hasher.update(document.metadata?.datasource_id);
     hasher.update(document.pageContent);
 
-    for (const tag of tags) {
+    for (const tag of tags || []) {
       hasher.update(tag);
     }
 
-    const datasource_hash = await hasher.digest('hex');
+    return hasher.digest('hex');
+  }
+
+  async handleSplitDocument(document: Document) {
+    const splitters = await this.importSplitters();
+
+    const datasource_hash = await DatastoreManager.hash(document);
 
     const docs = (await new splitters.TokenTextSplitter({
       chunkSize: this.chunkSize,
