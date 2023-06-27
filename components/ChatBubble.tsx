@@ -223,7 +223,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             />
           </Box>
           <a
-            href="https://databerry.ai"
+            href="https://chaindesk.ai"
             target="_blank"
             style={{
               textDecoration: 'none',
@@ -234,7 +234,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               <Typography level="body3">
                 Powered by{' '}
                 <Typography color="primary" fontWeight={'bold'}>
-                  Databerry
+                  Chaindesk
                 </Typography>
               </Typography>
             </Box>

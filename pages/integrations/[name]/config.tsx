@@ -121,7 +121,7 @@ export default function CrispConfig(props: { agent: Agent }) {
   return (
     <>
       <Head>
-        <title>Databerry - LLMs automation without code</title>
+        <title>Chaindesk - LLMs automation without code</title>
         <meta
           name="description"
           content="ChatGPT Bot trained on your data integrated on wordpress"

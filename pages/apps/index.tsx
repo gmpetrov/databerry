@@ -161,7 +161,7 @@ export default function DatasourcesPage() {
             {session?.user?.isPremium ? (
               <Link
                 target="_blank"
-                href={`https://blog.databerry.ai/chat-site`}
+                href={`https://blog.chaindesk.ai/chat-site`}
                 className="w-full"
               >
                 <Button

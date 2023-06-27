@@ -1,4 +1,4 @@
-.databerry-wrap {
+.chaindesk-wrap {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   position:absolute;
@@ -7,7 +7,7 @@
   height: 100%;
 }
 
-.databerry-modal {
+.chaindesk-modal {
   background-color: #fff;
   border: 1px solid #e8e8e8;
   width: 66.13%;
@@ -18,7 +18,7 @@
   box-shadow: 0 1px 0 rgba(0,0,0,.25);
 }
 
-.databerry-modal .databerry-button {
+.chaindesk-modal .chaindesk-button {
   border: 0 none;
   font-weight: bold;
   text-align: center;
@@ -34,46 +34,46 @@
   margin-bottom: 12px;
 }
 
-.databerry-modal .databerry-button.databerry-success {
+.chaindesk-modal .chaindesk-button.chaindesk-success {
   color: #fff;
   background: #2ab27b;
   text-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 
-.databerry-modal .databerry-button.databerry {
+.chaindesk-modal .chaindesk-button.chaindesk {
   color: #fff;
   background: #308AD6;
   text-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 
-.databerry-modal .databerry-button.databerry-neutral, .databerry-modal .databerry-button.databerry-error {
+.chaindesk-modal .chaindesk-button.chaindesk-neutral, .chaindesk-modal .chaindesk-button.chaindesk-error {
   color: #555459;
   border: 1px solid #C7CACD;
   background: #fbfbfa;
 }
 
-.databerry-title {
+.chaindesk-title {
   color: #555459;
   font-size: 22px;
   font-weight: bold;
   margin: 0;
 }
 
-.databerry-subtitle {
+.chaindesk-subtitle {
   color: #555459;
   font-size: 16px;
   font-weight: normal;
   margin: 12px 0 26px;
 }
 
-.databerry-subtitle {
+.chaindesk-subtitle {
   color: #555459;
   font-size: 16px;
   font-weight: normal;
   margin: 12px 0 26px;
 }
 
-.databerry-notice {
+.chaindesk-notice {
   font-size: 14px;
   margin: 12px 0 26px;
 }

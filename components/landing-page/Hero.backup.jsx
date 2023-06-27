@@ -53,7 +53,7 @@ export function Hero() {
       mt={6}
       >
 
-      <Link target='_blank' href={'https://app.databerry.ai/signin'}>
+      <Link target='_blank' href={'https://app.chaindesk.ai/signin'}>
         <Button variant="solid" size="lg"
           startDecorator={<RocketLaunchRounded />}
           sx={{borderRadius: 100}}
@@ -67,7 +67,7 @@ export function Hero() {
       </Link>
           </Stack>
       <div className="flex justify-center mt-10 gap-x-6">
-        {/* <Button target="_blank" href="https://app.databerry.ai/signin">Start Building</Button> */}
+        {/* <Button target="_blank" href="https://app.chaindesk.ai/signin">Start Building</Button> */}
         {/* <Button
           href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           variant="outline"

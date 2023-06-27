@@ -1,5 +1,5 @@
 // copilot
-// https://app.databerry.ai => databerry.ai
+// https://app.chaindesk.ai => chaindesk.ai
 export const getRootDomain = (url: string) => {
   const domain = url.split('/')[2];
   const parts = domain.split('.');

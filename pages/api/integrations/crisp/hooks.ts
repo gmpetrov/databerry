@@ -141,13 +141,13 @@ const getAgent = async (websiteId: string) => {
 //     origin: 'chat',
 //     user: {
 //       type: 'participant',
-//       nickname: agentName || 'Databerry.ai',
-//       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+//       nickname: agentName || 'Chaindesk.ai',
+//       avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
 //     },
 
 //     content: {
-//       id: `databerry-query-${cuid()}`,
-//       text: `✨ Ask ${agentName || `Databerry.ai`}`,
+//       id: `chaindesk-query-${cuid()}`,
+//       text: `✨ Ask ${agentName || `Chaindesk.ai`}`,
 //       explain: 'Query',
 //       value,
 //     },
@@ -182,10 +182,10 @@ const handleQuery = async (
     //     content: 'Usage limit reached.',
     //     user: {
     //       type: 'participant',
-    //       nickname: agent?.name || 'Databerry.ai',
+    //       nickname: agent?.name || 'Chaindesk.ai',
     //       avatar:
     //         agent.iconUrl ||
-    //         'https://databerry.ai/databerry-rounded-bg-white.png',
+    //         'https://chaindesk.ai/app-rounded-bg-white.png',
     //     },
     //   }
     // );
@@ -233,7 +233,7 @@ const handleQuery = async (
     origin: 'chat',
 
     content: {
-      id: 'databerry-answer',
+      id: 'chaindesk-answer',
       text: answer,
       choices: [
         {
@@ -252,9 +252,8 @@ const handleQuery = async (
     },
     user: {
       type: 'participant',
-      nickname: agent?.name || 'Databerry.ai',
-      avatar:
-        agent.iconUrl || 'https://databerry.ai/databerry-rounded-bg-white.png',
+      nickname: agent?.name || 'Chaindesk.ai',
+      avatar: agent.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
     },
   });
 
@@ -389,8 +388,8 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             //     content: 'An operator will get back to you shortly.',
             //     user: {
             //       type: 'participant',
-            //       // nickname: agent?.name || 'Databerry.ai',
-            //       avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+            //       // nickname: agent?.name || 'Chaindesk.ai',
+            //       avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
             //     },
             //     // mentions: [data?.[0]?.user_id],
             //   }
@@ -405,7 +404,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
                 origin: 'chat',
 
                 content: {
-                  id: 'databerry-enable',
+                  id: 'chaindesk-enable',
                   text: 'An operator will get back to you shortly.',
                   choices: [
                     {

@@ -1,4 +1,4 @@
-## Databerry Wordpress Plugin
+## Chaindesk Wordpress Plugin
 
 # Dev
 ```

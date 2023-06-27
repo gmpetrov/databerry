@@ -16,19 +16,19 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Databerry - Slack Bot</title>
+        <title>Chaindesk - Slack Bot</title>
 
         <meta
           name="title"
-          content="Slack Bot by Databerry - Train a Chatbot on Your Company Data"
+          content="Slack Bot by Chaindesk - Train a Chatbot on Your Company Data"
         />
         <meta
           name="description"
-          content="Databerry's Slack Bot makes it easy to train a chatbot on your company data. Just paste your website URL, we process your data and train your bot quickly. The bot is kept up-to-date with your data automatically. Other data sources like PDF, Gdoc, Sheets, Notion, Airtable, and more are also supported."
+          content="Chaindesk's Slack Bot makes it easy to train a chatbot on your company data. Just paste your website URL, we process your data and train your bot quickly. The bot is kept up-to-date with your data automatically. Other data sources like PDF, Gdoc, Sheets, Notion, Airtable, and more are also supported."
         />
         <meta
           name="keywords"
-          content="Databerry, Slack Bot, AI chatbot, company data, chatbot training, automatic data sync, Slack plugin"
+          content="Chaindesk, Slack Bot, AI chatbot, company data, chatbot training, automatic data sync, Slack plugin"
         />
       </Head>
       <Header />
@@ -138,7 +138,7 @@ const features = [
   {
     name: 'Install Slack plugin',
     description:
-      'The final step is to install Databerry Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
+      'The final step is to install Chaindesk Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
     icon: <Looks3RoundedIcon className="w-6 h-6" />,
   },
   {
@@ -161,7 +161,7 @@ export function PrimaryFeatures() {
             A chatbot train on your data in minutes
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-            SlackBot by Databerry, make it very easy to train a chatbot on your
+            SlackBot by Chaindesk, make it very easy to train a chatbot on your
             company data.
           </p>
         </div>

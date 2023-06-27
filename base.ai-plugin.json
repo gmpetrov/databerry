@@ -1,7 +1,7 @@
 {
   "schema_version": "v1",
-  "name_for_model": "databerry",
-  "name_for_human": "Databerry Plugin",
+  "name_for_model": "chaindesk",
+  "name_for_human": "Chaindesk Plugin",
   "description_for_model": "Plugin for searching through the user's documents (such as files, emails, and more) to find answers to questions and retrieve relevant information. Use it whenever a user asks something that might be found in their personal information.",
   "description_for_human": "Search through your documents.",
   "auth": {
@@ -10,10 +10,10 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://databerry.ai/.well-known/openapi.yaml",
+    "url": "https://chaindesk.ai/.well-known/openapi.yaml",
     "has_user_authentication": false
   },
-  "logo_url": "https://databerry.ai/.well-known/logo.png",
-  "contact_email": "hello@databerry.ai",
-  "legal_info_url": "hello@databerry.ai"
+  "logo_url": "https://chaindesk.ai/.well-known/logo.png",
+  "contact_email": "hello@chaindesk.ai",
+  "legal_info_url": "hello@chaindesk.ai"
 }

@@ -4,7 +4,7 @@ zapier.tools.env.inject();
 
 const baseApiUrl = process.env.API_URL
   ? process.env.API_URL
-  : 'https://api.databerry.ai';
+  : 'https://api.chaindesk.ai';
 
 module.exports = {
   operation: {

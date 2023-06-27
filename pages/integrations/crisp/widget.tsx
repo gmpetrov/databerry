@@ -44,7 +44,7 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
   //       body: JSON.stringify({
   //         website_id: _urlParams.get('website_id'),
   //         token: _urlParams.get('token'),
-  //         databerryApiKey: _message,
+  //         chaindeskApiKey: _message,
   //       }),
   //     }).then(() => {
   //       console.log('worked');
@@ -71,10 +71,10 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
   return (
     <>
       <Head>
-        <title>Databerry - Crisp Widget</title>
+        <title>Chaindesk - Crisp Widget</title>
         <meta
           name="description"
-          content="Databerry is the leading document retrievial platform"
+          content="Chaindesk is the leading document retrievial platform"
         />
       </Head>
       <Box
@@ -102,7 +102,7 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
           </Stack>
         ) : (
           <Alert color="warning" sx={{ m: 2 }}>
-            This feature is restricted to Databerry.ai premium users
+            This feature is restricted to Chaindesk.ai premium users
           </Alert>
         )}
       </Box>

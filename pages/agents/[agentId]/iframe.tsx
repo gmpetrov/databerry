@@ -12,7 +12,7 @@ import React, { ReactElement } from 'react';
 import ChatBoxFrame from '@app/components/ChatBoxFrame';
 
 export const theme = extendTheme({
-  cssVarPrefix: 'databerry-chat-iframe',
+  cssVarPrefix: 'chaindesk-chat-iframe',
   colorSchemes: {
     dark: {
       palette: {
@@ -28,7 +28,7 @@ export const theme = extendTheme({
 });
 
 const cache = createCache({
-  key: 'databerry-chat-iframe',
+  key: 'chaindesk-chat-iframe',
   prepend: true,
   speedy: true,
 });
@@ -41,7 +41,7 @@ const IframeTheme = (props: any) => {
           <CssVarsProvider
             theme={theme}
             defaultMode="light"
-            modeStorageKey="databerry-chat-iframe"
+            modeStorageKey="chaindesk-chat-iframe"
           >
             {props.children}
           </CssVarsProvider>

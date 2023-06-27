@@ -443,7 +443,7 @@ export default function AgentPage() {
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
                   <Typography level="body3" mb={2}>
-                    Use the Agent ID to query the agent through Databerry API
+                    Use the Agent ID to query the agent through Chaindesk API
                   </Typography>
                   <Stack spacing={2}>
                     <Alert

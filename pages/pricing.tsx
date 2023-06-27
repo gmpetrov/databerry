@@ -16,19 +16,19 @@ export default function Pricing() {
   return (
     <>
       <Head>
-        <title>Databerry Pricing - Plans for Teams of All Sizes</title>
+        <title>Chaindesk Pricing - Plans for Teams of All Sizes</title>
 
         <meta
           name="title"
-          content="Databerry Pricing - Plans for Teams of All Sizes"
+          content="Chaindesk Pricing - Plans for Teams of All Sizes"
         />
         <meta
           name="description"
-          content="Choose an affordable plan with Databerry. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
+          content="Choose an affordable plan with Chaindesk. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
         />
         <meta
           name="keywords"
-          content="Databerry, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
+          content="Chaindesk, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
         />
         <meta name="robots" content="index, follow" />
       </Head>
@@ -49,7 +49,7 @@ const tiers = [
   {
     name: 'Discover',
     id: 'tier-free',
-    href: 'https://app.databerry.ai/account',
+    href: 'https://app.chaindesk.ai/account',
     price: { monthly: '$0', annually: '$0' },
     description: 'The essentials to get started quickly.',
     features: [
@@ -63,7 +63,7 @@ const tiers = [
         accountConfig['level_0'].limits.maxDataProcessing / 1000000
       }MB / month`,
       'Manual data synching',
-      'Access to Databerry API',
+      'Access to Chaindesk API',
       // 'ChatGPT plugin',
     ],
     mostPopular: false,
@@ -71,7 +71,7 @@ const tiers = [
   {
     name: 'Startup',
     id: 'tier-startup',
-    href: 'https://app.databerry.ai/account',
+    href: 'https://app.chaindesk.ai/account',
     price: { monthly: '$25', annually: '$250' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
@@ -95,7 +95,7 @@ const tiers = [
   {
     name: 'Pro',
     id: 'tier-pro',
-    href: 'https://app.databerry.ai/account',
+    href: 'https://app.chaindesk.ai/account',
     price: { monthly: '$99', annually: '$990' },
     description: 'Dedicated support and for your company.',
     features: [
@@ -117,7 +117,7 @@ const tiers = [
   {
     name: 'Enterprise',
     id: 'tier-enterprise',
-    href: 'https://app.databerry.ai/account',
+    href: 'https://app.chaindesk.ai/account',
     price: { monthly: '$499', annually: '$4990' },
     description:
       'You’ve got a huge amount of assets but it’s not enough. To the moon.',

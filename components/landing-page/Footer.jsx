@@ -28,7 +28,7 @@ export function Footer() {
                 </Button>
               </Link> */}
               <NavLink href="/pricing">Pricing</NavLink>
-              <NavLink href="https://github.com/gmpetrov/databerry" target={"_blank"}>GitHub</NavLink>
+              <NavLink href="https://github.com/gmpetrov/chaindesk" target={"_blank"}>GitHub</NavLink>
               <NavLink href="https://docs.databerry.ai/" target={"_blank"}>Docs</NavLink>
               <NavLink href="https://databerry.getrewardful.com/" target={"_blank"}>
                 Affiliates
@@ -48,7 +48,7 @@ export function Footer() {
             {/* <Link
               href="https://twitter.com"
               className="group"
-              aria-label="Databerry on Twitter"
+              aria-label="Chaindesk on Twitter"
             >
               <svg
                 aria-hidden="true"
@@ -60,7 +60,7 @@ export function Footer() {
             {/* <Link
               href="https://github.com"
               className="group"
-              aria-label="Databerry on GitHub"
+              aria-label="Chaindesk on GitHub"
             >
               <svg
                 aria-hidden="true"
@@ -71,7 +71,7 @@ export function Footer() {
             </Link> */}
           </div>
           <p className="mt-6 text-sm text-slate-500 sm:mt-0">
-            Copyright &copy; {new Date().getFullYear()} Databerry. All rights
+            Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
             reserved.
           </p>
         </div>

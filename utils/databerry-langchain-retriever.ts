@@ -2,7 +2,7 @@ import { Datastore } from '@prisma/client';
 
 import { DatastoreManager } from './datastores';
 
-export default class DataberryRetriever {
+export default class ChaindeskRetriever {
   datastore: Datastore;
   topK: number;
 

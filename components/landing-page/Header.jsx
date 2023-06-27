@@ -82,7 +82,7 @@ function MobileNavigation() {
             className="absolute inset-x-0 flex flex-col p-4 mt-4 text-lg tracking-tight origin-top bg-white shadow-xl top-full rounded-2xl text-slate-900 ring-1 ring-slate-900/5"
           >
             <MobileNavLink href="/pricing">Pricing</MobileNavLink>
-            <MobileNavLink href="https://github.com/gmpetrov/databerry" target={'_blank'}>
+            <MobileNavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
               GitHub
             </MobileNavLink>
             <MobileNavLink href="https://docs.databerry.ai/" target={'_blank'}>
@@ -94,7 +94,7 @@ function MobileNavigation() {
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
-            <MobileNavLink href="https://app.databerry.ai">
+            <MobileNavLink href="https://app.chaindesk.ai">
               Sign in
             </MobileNavLink>
           </Popover.Panel>
@@ -130,7 +130,7 @@ export function Header() {
 <Menu />
 
               <NavLink href="/pricing">Pricing</NavLink>
-              <NavLink href="https://github.com/gmpetrov/databerry" target={'_blank'}>
+              <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
                 GitHub
               </NavLink>
               <NavLink href="https://docs.databerry.ai/" target={'_blank'}>
@@ -145,15 +145,15 @@ export function Header() {
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             {/* <div className="hidden md:block">
-              <NavLink href="https://app.databerry.ai">Sign in</NavLink>
+              <NavLink href="https://app.chaindesk.ai">Sign in</NavLink>
             </div> */}
-            {/* <Button target="_blank" href="https://app.databerry.ai/signin" color="blue">
+            {/* <Button target="_blank" href="https://app.chaindesk.ai/signin" color="blue">
               <span>
                 Sign In
               </span>
             </Button> */}
             {/* Change following link href with /signin for local signin */}
-            <Link href="https://app.databerry.ai/signin">
+            <Link href="https://app.chaindesk.ai/signin">
               <Button variant="outlined" sx={{ borderRadius: 100 }}>
                 Sign In
               </Button>

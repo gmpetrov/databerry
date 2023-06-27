@@ -240,7 +240,7 @@ const EvalModal = (props: {
 const prompts = {
   writing: {
     libre: [],
-    auto: ['Ecrit un poème comme molière sur databerry'],
+    auto: ['Ecrit un poème comme molière sur chaindesk'],
     assisté: [
       'Rédige un résumé de ... lignes sans aucun exemple du document ...',
       'Rédige un résumé de ... du document ... Avec à la fin une réflexion sur un des sujets abordés',

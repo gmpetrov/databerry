@@ -21,7 +21,7 @@ const faqs = [
     id: 4,
     question: 'Does it support other languages?',
     answer:
-      'Yes, Databerry supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
+      'Yes, Chaindesk supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
   },
   {
     id: 5,
@@ -50,7 +50,7 @@ export default function FAQ() {
           Have a different question and can’t find the answer you’re looking
           for? Reach out to our support team by{' '}
           <a
-            href="mailto:support@databerry.ai"
+            href="mailto:support@chaindesk.ai"
             className="font-semibold text-indigo-400 hover:text-indigo-300"
           >
             sending us an email
