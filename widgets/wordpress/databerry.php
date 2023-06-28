@@ -110,7 +110,7 @@ function chaindesk_hook_head() {
     data-cfasync='false' 
     data-name='databerry-chat-bubble'
     id='$agent_id'
-    src='https://cdn.jsdelivr.net/npm/@chaindesk/chat-bubble@latest'
+    src='https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest'
   >";
 
   $output .= "</script>";
