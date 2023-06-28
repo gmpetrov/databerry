@@ -108,7 +108,7 @@ export default function Navigation() {
       },
       {
         label: 'Documentation',
-        route: 'https://docs.databerry.ai/',
+        route: 'https://docs.chaindesk.ai/',
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];

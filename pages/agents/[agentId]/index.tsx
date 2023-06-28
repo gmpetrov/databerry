@@ -450,7 +450,7 @@ export default function AgentPage() {
                       color="info"
                       startDecorator={<HelpOutlineRoundedIcon />}
                       endDecorator={
-                        <Link href="https://docs.databerry.ai" target="_blank">
+                        <Link href="https://docs.chaindesk.ai" target="_blank">
                           <Button
                             variant="plain"
                             size="sm"

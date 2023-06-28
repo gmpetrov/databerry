@@ -17,7 +17,7 @@
 
 **[Chaindesk](https://chaindesk.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
 
-### [📄 Documentation](https://docs.databerry.ai/)
+### [📄 Documentation](https://docs.chaindesk.ai/)
 
 ### Features
 

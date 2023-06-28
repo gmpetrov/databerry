@@ -85,7 +85,7 @@ function MobileNavigation() {
             <MobileNavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
               GitHub
             </MobileNavLink>
-            <MobileNavLink href="https://docs.databerry.ai/" target={'_blank'}>
+            <MobileNavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
               Docs
             </MobileNavLink>
             <MobileNavLink href="https://databerry.getrewardful.com/" target={'_blank'}>
@@ -133,7 +133,7 @@ export function Header() {
               <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
                 GitHub
               </NavLink>
-              <NavLink href="https://docs.databerry.ai/" target={'_blank'}>
+              <NavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
                 Docs
               </NavLink>
               <NavLink href="https://databerry.getrewardful.com/" target={"_blank"}>

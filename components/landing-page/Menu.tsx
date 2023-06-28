@@ -65,7 +65,7 @@ const solutions = [
   {
     name: 'Datberry API',
     description: 'Document Retrieval as a service',
-    href: 'https://docs.databerry.ai/introduction',
+    href: 'https://docs.chaindesk.ai/introduction',
     icon: ServerIcon,
   },
   {
