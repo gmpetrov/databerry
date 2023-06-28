@@ -1,24 +1,31 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import ThumbDown from '@mui/icons-material/ThumbDown';
+import ThumbUp from '@mui/icons-material/ThumbUp';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
+import { Agent } from '@prisma/client';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { z } from 'zod';
 
-type Message = { from: 'human' | 'agent'; message: string; createdAt?: Date };
+type Message = { from: 'human' | 'agent'; message: string; createdAt?: Date; eval?: boolean; id?: string };
 
 type Props = {
   messages: Message[];
   onSubmit: (message: string) => Promise<any>;
+  agent?: Agent;
   messageTemplates?: string[];
   initialMessage?: string;
+  isEvalActivated?: boolean;
   readOnly?: boolean;
 };
 
@@ -30,6 +37,8 @@ function ChatBox({
   messageTemplates,
   initialMessage,
   readOnly,
+  isEvalActivated,
+  agent
 }: Props) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +60,18 @@ function ChatBox({
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
+
+const evalAgentAnswer = async (message: Message, evalValue: boolean) => {
+  message.eval = evalValue
+  await axios.put(
+    `/api/messages/${message.id}`,
+    {
+      message,
+      agent
+    }
+  );
+}
 
   React.useEffect(() => {
     if (!scrollableRef.current) {
@@ -116,15 +136,35 @@ function ChatBox({
             {firstMsg?.message}
           </Card>
         )}
-
         {messages.map((each, index) => (
           <Stack
             key={index}
             sx={{
+              flexDirection: 'row',
               mr: each.from === 'agent' ? 'auto' : 'none',
               ml: each.from === 'human' ? 'auto' : 'none',
             }}
           >
+             {(each.from === `agent` && isEvalActivated) &&
+              <>
+              <Button  aria-label="Like" color="success"
+                sx={{
+                  height: 'fit-content',
+                  alignSelf: 'center',
+                }}
+                onClick={() => evalAgentAnswer(each,true)}>
+                <ThumbUp />
+              </Button>
+              <Button aria-label="Dislike" color="danger"
+                sx={{
+                  height: 'fit-content',
+                  alignSelf: 'center'
+                }}
+                onClick={() => evalAgentAnswer(each,false)}>
+                <ThumbDown />
+              </Button>
+              </>
+            }
             <Card
               size="sm"
               variant={'outlined'}

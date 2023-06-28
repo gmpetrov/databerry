@@ -90,6 +90,7 @@ export const chatAgentRequest = async (
   });
 
   conversationManager.push({
+    id: cuid(),
     from: MessageFrom.human,
     text: data.query,
   });
@@ -114,6 +115,7 @@ export const chatAgentRequest = async (
   ]);
 
   conversationManager.push({
+    id: cuid(),
     from: MessageFrom.agent,
     text: answer,
   });
