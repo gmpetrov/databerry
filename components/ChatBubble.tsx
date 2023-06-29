@@ -148,11 +148,12 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         {(s) => (
           <Stack
             sx={{
-              position: 'absolute',
+              position: 'fixed',
               bottom: 100,
 
               transition: `opacity 300ms ease-in-out`,
               opacity: 0,
+              zIndex: 9999999998,
               ...(transitionStyles as any)[s],
 
               ...(state.config.position === 'left'
@@ -172,7 +173,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 width: '100%',
                 maxWidth: 1000,
                 display: 'flex',
-                boxShadow: 'xl',
+                boxShadow: 'md',
               }}
             >
               <Typography>{state.config?.initialMessage}</Typography>
@@ -214,7 +215,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 display: 'flex',
                 flexDirection: 'column',
                 boxSizing: 'border-box',
-                boxShadow: 'xl',
+                boxShadow: 'md',
 
                 transition: `opacity 150ms ease-in-out`,
                 opacity: 0,
@@ -338,7 +339,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             height: '60px',
             borderRadius: '100%',
             color: textColor,
-            boxShadow: 'xl',
             transition: 'all 100ms ease-in-out',
 
             '&:hover': {
