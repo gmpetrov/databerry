@@ -35,6 +35,10 @@ function ChatBox({
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<Message>();
   const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
+  const lastMessageLength =
+    messages?.length > 0
+      ? messages?.[messages?.length - 1]?.message?.length
+      : 0;
 
   const methods = useForm<z.infer<typeof Schema>>({
     resolver: zodResolver(Schema),
@@ -59,7 +63,7 @@ function ChatBox({
     }
 
     scrollableRef.current.scrollTo(0, scrollableRef.current.scrollHeight);
-  }, [messages?.length]);
+  }, [lastMessageLength]);
 
   React.useEffect(() => {
     setTimeout(() => {
