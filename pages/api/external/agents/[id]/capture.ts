@@ -142,19 +142,23 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
     <p>Conversation History:</p>
 
-    <div class="history">
+    <table class="history">
 
       ${agent?.conversations?.[0]?.messages
         ?.map(
           (message) => `
-      <div class="message ${message.from}">
-      <p>${message.text}</p>
-    </div>
+      <tr>
+        <td>
+        <div class="message ${message.from}">
+          <p>${message.text}</p>
+        </div>
+        </td>
+      </tr>
       `
         )
         .join('\n')}
 
-    </div>
+    </table>
 
     <a href="mailto:${data.visitorEmail}" class="reply">
       <div>Reply</div>
