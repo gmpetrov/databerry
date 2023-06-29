@@ -483,7 +483,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             borderRadius: '100%',
             color: textColor,
             transition: 'all 100ms ease-in-out',
-            boxShadow: 'md',
 
             '&:hover': {
               backgroundColor: state.config.primaryColor,
