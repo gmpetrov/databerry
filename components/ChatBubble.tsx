@@ -1,16 +1,23 @@
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ThreePRoundedIcon from '@mui/icons-material/ThreePRounded';
 import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
+import Chip from '@mui/joy/Chip';
+import CircularProgress from '@mui/joy/CircularProgress';
 import colors from '@mui/joy/colors';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
+import Input from '@mui/joy/Input';
 import { extendTheme, useColorScheme } from '@mui/joy/styles';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/material/Stack';
 import type { Agent } from '@prisma/client';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
@@ -49,6 +56,8 @@ const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   // const { setMode } = useColorScheme();
+  const initMessageRef = useRef(null);
+  const chatBoxRef = useRef(null);
   const { visitorId } = useVisitorId();
   const [state, setState] = useStateReducer({
     isOpen: false,
@@ -56,6 +65,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     config: props.initConfig || defaultChatBubbleConfig,
     hasOpenOnce: false,
     showInitialMessage: false,
+    showHelp: true,
+    showCaptureForm: false,
+    isCaptureLoading: false,
+    visitorEmail: '',
   });
 
   // const [show];
@@ -109,7 +122,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         setState({
           showInitialMessage: true,
         });
-      }, 3000);
+      }, 5000);
     }
   }, [state?.config?.initialMessage]);
 
@@ -121,32 +134,173 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     }
   }, [props.initConfig]);
 
+  useEffect(() => {
+    if (localStorage) {
+      const visitorEmail = localStorage.getItem('visitorEmail');
+
+      if (visitorEmail) {
+        setState({
+          visitorEmail,
+        });
+      }
+    }
+  }, []);
+
   // useEffect(() => {
   //   if (config?.theme) {
   //     setMode(config.theme!);
   //   }
   // }, [config.theme]);
 
+  const transitionStyles = {
+    entering: { opacity: 0 },
+    entered: { opacity: 1 },
+    exiting: { opacity: 0 },
+    exited: { opacity: 0 },
+  };
+
+  const Capture = useMemo(() => {
+    let Component = null;
+
+    if (state.showHelp || state.visitorEmail) {
+      Component = (
+        <Stack
+          sx={{
+            mb: -1,
+          }}
+        >
+          {state.visitorEmail && (
+            <Chip
+              size="sm"
+              color="success"
+              variant="soft"
+              sx={{ mr: 'auto' }}
+              endDecorator={<CheckRoundedIcon />}
+            >
+              help requested
+            </Chip>
+          )}
+
+          {!state.visitorEmail && !state.showCaptureForm && (
+            <Button
+              size="sm"
+              variant="plain"
+              color="neutral"
+              startDecorator={<ThreePRoundedIcon />}
+              sx={{ mr: 'auto' }}
+              onClick={() => setState({ showCaptureForm: true })}
+            >
+              Help
+            </Button>
+          )}
+
+          {!state.visitorEmail && state.showCaptureForm && (
+            <form
+              onSubmit={async (e) => {
+                console.log(e.target);
+                e.preventDefault();
+                e.stopPropagation();
+
+                const form = e.target as HTMLFormElement;
+
+                const email = form.email.value;
+
+                if (email) {
+                  setState({ isCaptureLoading: true });
+
+                  await fetch(
+                    `${API_URL}/api/external/agents/${props.agentId}/capture`,
+                    {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        visitorEmail: email,
+                        visitorId,
+                      }),
+                    }
+                  );
+
+                  setState({
+                    showHelp: false,
+                    isCaptureLoading: false,
+                    visitorEmail: email,
+                  });
+
+                  localStorage.setItem('visitorEmail', email);
+                }
+              }}
+            >
+              <Stack direction="row" gap={0.5} sx={{ width: '100%' }}>
+                <IconButton
+                  size="sm"
+                  variant="plain"
+                  onClick={() => {
+                    setState({
+                      showCaptureForm: false,
+                    });
+                  }}
+                >
+                  <ArrowBackRoundedIcon />
+                </IconButton>
+
+                <Input
+                  sx={{ width: '100%' }}
+                  size="sm"
+                  name="email"
+                  type="email"
+                  placeholder="Leave your email to get contacted by the team"
+                  required
+                  // startDecorator={<AlternateEmailRoundedIcon />}
+                  disabled={state.isCaptureLoading}
+                  endDecorator={
+                    <IconButton
+                      color="neutral"
+                      type="submit"
+                      disabled={state.isCaptureLoading}
+                    >
+                      {state.isCaptureLoading ? (
+                        <CircularProgress size="sm" variant="soft" />
+                      ) : (
+                        <CheckRoundedIcon />
+                      )}
+                    </IconButton>
+                  }
+                ></Input>
+              </Stack>
+            </form>
+          )}
+        </Stack>
+      );
+    }
+
+    return Component;
+  }, [
+    props.agentId,
+    state.isCaptureLoading,
+    state.showCaptureForm,
+    setState,
+    state.visitorEmail,
+    visitorId,
+  ]);
+
   if (!state.agent) {
     return null;
   }
 
-  const transitionStyles = {
-    entering: { opacity: 0 },
-    entered: { opacity: 1 },
-    exiting: { opacity: 1 },
-    exited: { opacity: 0 },
-  };
-
   return (
     <>
-      {/* {state.showInitialMessage && !state.hasOpenOnce && ( */}
       <Transition
+        nodeRef={initMessageRef}
         in={state.showInitialMessage && !state.hasOpenOnce}
         timeout={0}
+        mountOnEnter
+        unmountOnExit
       >
         {(s) => (
           <Stack
+            ref={initMessageRef}
             sx={{
               position: 'fixed',
               bottom: 100,
@@ -181,7 +335,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           </Stack>
         )}
       </Transition>
-      {/* )} */}
 
       <Box
         sx={{
@@ -204,9 +357,16 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             : {}),
         }}
       >
-        <Transition in={state.isOpen} timeout={0}>
+        <Transition
+          nodeRef={chatBoxRef}
+          in={state.isOpen}
+          timeout={0}
+          mountOnEnter
+          unmountOnExit
+        >
           {(s) => (
             <Card
+              ref={chatBoxRef}
               variant="outlined"
               sx={(theme) => ({
                 zIndex: 9999,
@@ -297,6 +457,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   onSubmit={handleChatSubmit}
                   messageTemplates={state.config.messageTemplates}
                   initialMessage={state.config.initialMessage}
+                  renderAfterMessages={Capture}
                 />
               </Box>
               <a
@@ -319,7 +480,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             </Card>
           )}
         </Transition>
-
         <IconButton
           // color={'neutral'}
           variant="solid"

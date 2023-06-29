@@ -82,7 +82,7 @@ export default function Home() {
 
       <script
         defer
-        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.26"
+        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.27"
         id="clgtujkqh022j0u0zw3ut8vk3"
         data-name="databerry-chat-bubble"
       ></script>

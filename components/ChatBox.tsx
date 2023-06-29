@@ -20,6 +20,7 @@ type Props = {
   messageTemplates?: string[];
   initialMessage?: string;
   readOnly?: boolean;
+  renderAfterMessages?: JSX.Element | null;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -30,6 +31,7 @@ function ChatBox({
   messageTemplates,
   initialMessage,
   readOnly,
+  renderAfterMessages,
 }: Props) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -188,6 +190,9 @@ function ChatBox({
           />
         )}
       </Stack>
+
+      {!!hideTemplateMessages && renderAfterMessages}
+
       {/* </Stack> */}
 
       {/* <div className="w-full h-12 -translate-y-1/2 pointer-events-none backdrop-blur-lg"></div> */}
