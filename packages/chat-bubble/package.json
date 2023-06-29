@@ -1,6 +1,6 @@
 {
-  "name": "@chaindesk/chat-bubble",
-  "version": "1.0.20",
+  "name": "@databerry/chat-bubble",
+  "version": "1.0.22",
   "description": "Chaindesk.ai Chat Bubble Widget",
   "main": "chat-bubble.js",
   "scripts": {
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gmpetrov/chaindesk.git"
+    "url": "git+https://github.com/gmpetrov/databerry.git"
   },
   "author": "Georges Petrov",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gmpetrov/chaindesk/issues"
+    "url": "https://github.com/gmpetrov/databerry/issues"
   },
-  "homepage": "https://github.com/gmpetrov/chaindesk#readme"
+  "homepage": "https://github.com/gmpetrov/databerry#readme"
 }

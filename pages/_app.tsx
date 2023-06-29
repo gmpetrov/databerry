@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { useEffect } from 'react';
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
@@ -37,6 +38,18 @@ export default function App({
   const getLayout = Component.getLayout ?? ((page) => page);
 
   useUTMTracking();
+
+  // Redirect to new domain on front side as DNS redirect breaks some features
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.host === 'app.databerry.ai') {
+        window.location.href = window.location.href.replace(
+          'app.databerry.ai',
+          'app.chaindesk.ai'
+        );
+      }
+    }
+  }, []);
 
   if (router.pathname === '/agents/[agentId]/iframe') {
     return getLayout(<Component {...pageProps} />);
