@@ -1,6 +1,6 @@
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import colors from '@mui/joy/colors';
@@ -11,9 +11,11 @@ import Typography from '@mui/joy/Typography';
 import Stack from '@mui/material/Stack';
 import type { Agent } from '@prisma/client';
 import React, { useEffect, useMemo } from 'react';
+import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
 import useAgentChat from '@app/hooks/useAgentChat';
+import useStateReducer from '@app/hooks/useStateReducer';
 import useVisitorId from '@app/hooks/useVisitorId';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
@@ -47,12 +49,16 @@ const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   // const { setMode } = useColorScheme();
-  const [isOpen, setIsOpen] = React.useState(false);
   const { visitorId } = useVisitorId();
-  const [agent, setAgent] = React.useState<Agent | undefined>();
-  const [config, setConfig] = React.useState<AgentInterfaceConfig>(
-    props.initConfig || defaultChatBubbleConfig
-  );
+  const [state, setState] = useStateReducer({
+    isOpen: false,
+    agent: undefined as Agent | undefined,
+    config: props.initConfig || defaultChatBubbleConfig,
+    hasOpenOnce: false,
+    showInitialMessage: false,
+  });
+
+  // const [show];
 
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: `${API_URL}/api/external/agents/${props.agentId}/query`,
@@ -65,11 +71,11 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(
-      config.primaryColor || '#ffffff',
+      state.config.primaryColor || '#ffffff',
       '#ffffff',
       '#000000'
     );
-  }, [config.primaryColor]);
+  }, [state.config.primaryColor]);
 
   const handleFetchAgent = async () => {
     try {
@@ -80,10 +86,12 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
 
-      setAgent(data);
-      setConfig({
-        ...defaultChatBubbleConfig,
-        ...agentConfig,
+      setState({
+        agent: data,
+        config: {
+          ...defaultChatBubbleConfig,
+          ...agentConfig,
+        },
       });
     } catch (err) {
       console.error(err);
@@ -96,8 +104,20 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   }, []);
 
   useEffect(() => {
+    if (state.config?.initialMessage) {
+      setTimeout(() => {
+        setState({
+          showInitialMessage: true,
+        });
+      }, 3000);
+    }
+  }, [state?.config?.initialMessage]);
+
+  useEffect(() => {
     if (props.initConfig) {
-      setConfig(props.initConfig);
+      setState({
+        config: props.initConfig,
+      });
     }
   }, [props.initConfig]);
 
@@ -107,160 +127,231 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   //   }
   // }, [config.theme]);
 
-  if (!agent) {
+  if (!state.agent) {
     return null;
   }
 
+  const transitionStyles = {
+    entering: { opacity: 0 },
+    entered: { opacity: 1 },
+    exiting: { opacity: 1 },
+    exited: { opacity: 0 },
+  };
+
   return (
-    <Box
-      sx={{
-        // bgcolor: 'red',
-        overflow: 'visible',
-        position: 'fixed',
-        height: '60px',
-        bottom: '20px',
-        zIndex: 9999999999,
+    <>
+      {/* {state.showInitialMessage && !state.hasOpenOnce && ( */}
+      <Transition
+        in={state.showInitialMessage && !state.hasOpenOnce}
+        timeout={0}
+      >
+        {(s) => (
+          <Stack
+            sx={{
+              position: 'absolute',
+              bottom: 100,
 
-        ...(config.position === 'left'
-          ? {
-              left: '20px',
-            }
-          : {}),
-        ...(config.position === 'right'
-          ? {
-              right: '20px',
-            }
-          : {}),
-      }}
-    >
-      {isOpen && (
-        <Card
-          variant="outlined"
+              transition: `opacity 300ms ease-in-out`,
+              opacity: 0,
+              ...(transitionStyles as any)[s],
+
+              ...(state.config.position === 'left'
+                ? {
+                    left: '20px',
+                  }
+                : {}),
+              ...(state.config.position === 'right'
+                ? {
+                    right: '20px',
+                  }
+                : {}),
+            }}
+          >
+            <Card
+              sx={{
+                width: '100%',
+                maxWidth: 1000,
+                display: 'flex',
+                boxShadow: 'xl',
+              }}
+            >
+              <Typography>{state.config?.initialMessage}</Typography>
+            </Card>
+          </Stack>
+        )}
+      </Transition>
+      {/* )} */}
+
+      <Box
+        sx={{
+          // bgcolor: 'red',
+          overflow: 'visible',
+          position: 'fixed',
+          height: '60px',
+          bottom: '20px',
+          zIndex: 9999999999,
+
+          ...(state.config.position === 'left'
+            ? {
+                left: '20px',
+              }
+            : {}),
+          ...(state.config.position === 'right'
+            ? {
+                right: '20px',
+              }
+            : {}),
+        }}
+      >
+        <Transition in={state.isOpen} timeout={0}>
+          {(s) => (
+            <Card
+              variant="outlined"
+              sx={(theme) => ({
+                zIndex: 9999,
+                position: 'absolute',
+                bottom: '80px',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+                boxShadow: 'xl',
+
+                transition: `opacity 150ms ease-in-out`,
+                opacity: 0,
+                ...(transitionStyles as any)[s],
+
+                ...(state.config.position === 'right'
+                  ? {
+                      transform: `translateX(${-400 + 50}px)`,
+                    }
+                  : {}),
+
+                width: '400px',
+                [theme.breakpoints.down('sm')]: {
+                  width: '100vw',
+                  maxWidth: '100vw',
+
+                  bottom: '-20px',
+
+                  ...(state.config.position === 'left'
+                    ? {
+                        left: '-20px',
+                      }
+                    : {}),
+                  ...(state.config.position === 'right'
+                    ? {
+                        transform: `translateX(0px)`,
+                        right: '-20px',
+                      }
+                    : {}),
+                },
+              })}
+            >
+              <Box sx={{ width: '100%', mt: -2, py: 1 }}>
+                <Stack direction="row" alignItems={'center'}>
+                  {state.config?.displayName && (
+                    <Typography>{state.config?.displayName}</Typography>
+                  )}
+
+                  <IconButton
+                    variant="plain"
+                    sx={{ ml: 'auto' }}
+                    size="sm"
+                    onClick={() => setState({ isOpen: false })}
+                  >
+                    <CloseRoundedIcon />
+                  </IconButton>
+                </Stack>
+              </Box>
+              <Divider />
+              <Box
+                sx={(theme) => ({
+                  // flex: 1,
+                  // display: 'flex',
+                  width: '100%',
+                  position: 'relative',
+
+                  height: 'calc(100vh - 200px)',
+                  maxHeight: '680px',
+
+                  [theme.breakpoints.down('sm')]: {
+                    height: '80vh',
+                    maxHeight: '80vh',
+                    maxWidth: '100vw',
+                  },
+
+                  '& .message-agent': {
+                    backgroundColor: state.config.primaryColor,
+                    borderColor: state.config.primaryColor,
+                    color: pickColorBasedOnBgColor(
+                      state.config?.primaryColor! || '#ffffff',
+                      '#ffffff',
+                      '#000000'
+                    ),
+                  },
+                })}
+              >
+                <ChatBox
+                  messages={history}
+                  onSubmit={handleChatSubmit}
+                  messageTemplates={state.config.messageTemplates}
+                  initialMessage={state.config.initialMessage}
+                />
+              </Box>
+              <a
+                href="https://chaindesk.ai"
+                target="_blank"
+                style={{
+                  textDecoration: 'none',
+                  marginLeft: 'auto',
+                }}
+              >
+                <Box sx={{ mt: 1 }}>
+                  <Typography level="body3">
+                    Powered by{' '}
+                    <Typography color="primary" fontWeight={'bold'}>
+                      Chaindesk
+                    </Typography>
+                  </Typography>
+                </Box>
+              </a>
+            </Card>
+          )}
+        </Transition>
+
+        <IconButton
+          // color={'neutral'}
+          variant="solid"
+          onClick={() =>
+            setState({
+              isOpen: !state.isOpen,
+              ...(!state.isOpen
+                ? {
+                    hasOpenOnce: true,
+                  }
+                : {}),
+            })
+          }
           sx={(theme) => ({
-            zIndex: 9999,
-            position: 'absolute',
-            bottom: '80px',
-            display: 'flex',
-            flexDirection: 'column',
-            boxSizing: 'border-box',
+            backgroundColor: state.config.primaryColor,
+            width: '60px',
+            height: '60px',
+            borderRadius: '100%',
+            color: textColor,
+            boxShadow: 'xl',
+            transition: 'all 100ms ease-in-out',
 
-            ...(config.position === 'right'
-              ? {
-                  transform: `translateX(${-400 + 50}px)`,
-                }
-              : {}),
-
-            width: '400px',
-            [theme.breakpoints.down('sm')]: {
-              width: '100vw',
-              maxWidth: '100vw',
-
-              bottom: '-20px',
-
-              ...(config.position === 'left'
-                ? {
-                    left: '-20px',
-                  }
-                : {}),
-              ...(config.position === 'right'
-                ? {
-                    transform: `translateX(0px)`,
-                    right: '-20px',
-                  }
-                : {}),
+            '&:hover': {
+              backgroundColor: state.config.primaryColor,
+              filter: 'brightness(0.9)',
+              transform: 'scale(1.05)',
             },
           })}
         >
-          <Box sx={{ width: '100%', mt: -2, py: 1 }}>
-            <Stack direction="row" alignItems={'center'}>
-              {config?.displayName && (
-                <Typography>{config?.displayName}</Typography>
-              )}
-
-              <IconButton
-                variant="plain"
-                sx={{ ml: 'auto' }}
-                size="sm"
-                onClick={() => setIsOpen(false)}
-              >
-                <CloseRoundedIcon />
-              </IconButton>
-            </Stack>
-          </Box>
-          <Divider />
-          <Box
-            sx={(theme) => ({
-              // flex: 1,
-              // display: 'flex',
-              width: '100%',
-              position: 'relative',
-
-              height: 'calc(100vh - 200px)',
-              maxHeight: '680px',
-
-              [theme.breakpoints.down('sm')]: {
-                height: '80vh',
-                maxHeight: '80vh',
-                maxWidth: '100vw',
-              },
-
-              '& .message-agent': {
-                backgroundColor: config.primaryColor,
-                borderColor: config.primaryColor,
-                color: pickColorBasedOnBgColor(
-                  config?.primaryColor! || '#ffffff',
-                  '#ffffff',
-                  '#000000'
-                ),
-              },
-            })}
-          >
-            <ChatBox
-              messages={history}
-              onSubmit={handleChatSubmit}
-              messageTemplates={config.messageTemplates}
-              initialMessage={config.initialMessage}
-            />
-          </Box>
-          <a
-            href="https://chaindesk.ai"
-            target="_blank"
-            style={{
-              textDecoration: 'none',
-              marginLeft: 'auto',
-            }}
-          >
-            <Box sx={{ mt: 1 }}>
-              <Typography level="body3">
-                Powered by{' '}
-                <Typography color="primary" fontWeight={'bold'}>
-                  Chaindesk
-                </Typography>
-              </Typography>
-            </Box>
-          </a>
-        </Card>
-      )}
-      <IconButton
-        // color={'neutral'}
-        variant="solid"
-        onClick={() => setIsOpen(!isOpen)}
-        sx={(theme) => ({
-          backgroundColor: config.primaryColor,
-          width: '60px',
-          height: '60px',
-          borderRadius: '100%',
-          color: textColor,
-
-          '&:hover': {
-            backgroundColor: config.primaryColor,
-            filter: 'brightness(0.9)',
-          },
-        })}
-      >
-        {isOpen ? <ClearRoundedIcon /> : <MessageRoundedIcon />}
-      </IconButton>
-    </Box>
+          {state.isOpen ? <ClearRoundedIcon /> : <AutoAwesomeIcon />}
+        </IconButton>
+      </Box>
+    </>
   );
 }
 

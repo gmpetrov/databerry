@@ -31,6 +31,7 @@ specifiers:
   '@types/react': 18.0.29
   '@types/react-dom': 18.0.11
   '@types/react-syntax-highlighter': ^15.5.6
+  '@types/react-transition-group': ^4.4.6
   '@types/uuid': ^9.0.1
   '@xmldom/xmldom': ^0.8.7
   autoprefixer: ^10.4.14
@@ -84,6 +85,7 @@ specifiers:
   react-hot-toast: ^2.4.1
   react-markdown: ^8.0.7
   react-syntax-highlighter: ^15.5.0
+  react-transition-group: ^4.4.5
   remark-gfm: ^3.0.1
   rxjs: ^7.8.1
   sharp: ^0.32.1
@@ -167,6 +169,7 @@ dependencies:
   react-hot-toast: 2.4.1_biqbaboplfbrettd7655fr4n2y
   react-markdown: 8.0.7_k4en7uapxoluuejoeg6o3ic2aa
   react-syntax-highlighter: 15.5.0_react@18.2.0
+  react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
   remark-gfm: 3.0.1
   rxjs: 7.8.1
   sharp: 0.32.1
@@ -187,6 +190,7 @@ devDependencies:
   '@types/multer': 1.4.7
   '@types/nprogress': 0.2.0
   '@types/react-syntax-highlighter': 15.5.6
+  '@types/react-transition-group': 4.4.6
   '@types/uuid': 9.0.1
   autoprefixer: 10.4.14_postcss@8.4.21
   dotenv-cli: 7.1.0
@@ -342,7 +346,7 @@ packages:
       '@emotion/memoize': 0.8.0
       '@emotion/unitless': 0.8.0
       '@emotion/utils': 1.2.0
-      csstype: 3.1.1
+      csstype: 3.1.2
     dev: false
 
   /@emotion/sheet/1.2.1:
@@ -698,7 +702,7 @@ packages:
       '@mui/types': 7.2.3_@types+react@18.0.29
       '@mui/utils': 5.11.13_react@18.2.0
       '@types/react': 18.0.29
-      '@types/react-transition-group': 4.4.5
+      '@types/react-transition-group': 4.4.6
       clsx: 1.2.1
       csstype: 3.1.1
       prop-types: 15.8.1
@@ -1384,11 +1388,10 @@ packages:
       '@types/react': 18.0.29
     dev: true
 
-  /@types/react-transition-group/4.4.5:
-    resolution: {integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==}
+  /@types/react-transition-group/4.4.6:
+    resolution: {integrity: sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==}
     dependencies:
       '@types/react': 18.0.29
-    dev: false
 
   /@types/react/18.0.29:
     resolution: {integrity: sha512-wXHktgUABxplw1+UnljseDq4+uztQyp2tlWZRIxHlpchsCFqiYkvaDS8JR7eKOQm8wziTH/el5qL7D6gYNkYcw==}
@@ -2473,7 +2476,7 @@ packages:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
     dependencies:
       '@babel/runtime': 7.21.0
-      csstype: 3.1.1
+      csstype: 3.1.2
     dev: false
 
   /dom-serializer/2.0.0:
@@ -4255,6 +4258,7 @@ packages:
 
   /loose-envify/1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
     dependencies:
       js-tokens: 4.0.0
     dev: false

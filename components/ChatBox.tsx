@@ -164,6 +164,7 @@ function ChatBox({
                 },
                 [' p ']: {
                   py: 1,
+                  m: 0,
                 },
               })}
             >
