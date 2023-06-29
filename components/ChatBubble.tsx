@@ -1,6 +1,6 @@
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import colors from '@mui/joy/colors';
@@ -258,7 +258,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           },
         })}
       >
-        {isOpen ? <ClearRoundedIcon /> : <SmartToyRoundedIcon />}
+        {isOpen ? <ClearRoundedIcon /> : <MessageRoundedIcon />}
       </IconButton>
     </Box>
   );

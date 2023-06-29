@@ -179,7 +179,11 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
 
         <FormControl>
           <FormLabel>Brand Color</FormLabel>
-          <Input placeholder="#000000" {...methods.register('primaryColor')} />
+          <Input
+            defaultValue={config?.primaryColor || '#000000'}
+            placeholder="#000000"
+            {...methods.register('primaryColor')}
+          />
         </FormControl>
 
         {/* <FormControl>
