@@ -443,7 +443,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
                   '& .message-agent': {
                     backgroundColor: state.config.primaryColor,
-                    borderColor: state.config.primaryColor,
+                    // borderColor: state.config.primaryColor,
                     color: pickColorBasedOnBgColor(
                       state.config?.primaryColor! || '#ffffff',
                       '#ffffff',
@@ -460,23 +460,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   renderAfterMessages={Capture}
                 />
               </Box>
-              <a
-                href="https://chaindesk.ai"
-                target="_blank"
-                style={{
-                  textDecoration: 'none',
-                  marginLeft: 'auto',
-                }}
-              >
-                <Box sx={{ mt: 1 }}>
-                  <Typography level="body3">
-                    Powered by{' '}
-                    <Typography color="primary" fontWeight={'bold'}>
-                      Chaindesk
-                    </Typography>
-                  </Typography>
-                </Box>
-              </a>
             </Card>
           )}
         </Transition>

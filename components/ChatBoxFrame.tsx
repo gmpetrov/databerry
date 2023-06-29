@@ -102,7 +102,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
 
         '& .message-agent': {
           backgroundColor: config.primaryColor,
-          borderColor: config.primaryColor,
+          // borderColor: config.primaryColor,
           color: textColor,
         },
       })}
@@ -112,6 +112,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         onSubmit={handleChatSubmit}
         messageTemplates={config.messageTemplates}
         initialMessage={config.initialMessage}
+        agentIconUrl={agent?.iconUrl!}
       />
     </Box>
   );
