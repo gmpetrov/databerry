@@ -14,7 +14,7 @@ export function Footer() {
         <div className="flex flex-col justify-center py-16">
           <Logo className="w-auto h-10 mx-auto" />
           <nav className="mt-10 text-sm" aria-label="quick links">
-            <div className="flex justify-center -my-1 gap-x-6">
+            <div className="flex flex-col items-center justify-center -my-1 sm:flex-row gap-x-6">
             {/* <Link href={RouteNames.CHAT_SITE}>
                 <Button
                   href="/products/crisp-plugin"
