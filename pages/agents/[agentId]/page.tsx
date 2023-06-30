@@ -1,6 +1,18 @@
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
-import { Box, Button, CircularProgress, Stack, Typography } from '@mui/joy';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import WebIcon from '@mui/icons-material/Language';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import YoutubeIcon from '@mui/icons-material/YouTube';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/joy';
 import colors from '@mui/joy/colors';
 import {
   CssVarsProvider,
@@ -135,6 +147,7 @@ function App() {
               sm: 'column',
             }}
             zIndex={3}
+            // height={'100%'}
           >
             <Avatar
               alt={agent?.name}
@@ -151,16 +164,160 @@ function App() {
                 },
               }}
             />
-            <Typography
-              level="h5"
-              fontWeight={'bold'}
+            <Stack
+              gap={0.5}
+              display={'flex'}
               sx={{
-                color: textColor,
-                // fontFamily: 'Pacifico',
+                textAlign: 'center',
               }}
             >
-              {agent?.name}
-            </Typography>
+              <Typography
+                level="h5"
+                fontWeight={'bold'}
+                sx={{
+                  color: textColor,
+                }}
+              >
+                {agent?.name}
+              </Typography>
+              <Typography
+                level="body2"
+                color="neutral"
+                sx={{
+                  color: textColor,
+                  display: {
+                    xs: 'none',
+                    sm: 'block',
+                  },
+                  // fontFamily: 'Pacifico',
+                }}
+              >
+                {/* {agent?.description} */}
+                Hello World I am the pbedf sdlkfj sldkfj sf lkjsfd
+              </Typography>
+            </Stack>
+
+            <Stack
+              direction="row"
+              gap={1}
+              sx={{
+                mt: {
+                  xs: 'auto',
+                  sm: 2,
+                },
+                ml: {
+                  xs: 'auto',
+                  sm: 0,
+                },
+              }}
+            >
+              {interfaceConfig?.instagramURL && (
+                <a href={`${interfaceConfig?.instagramURL}`} target="_blank">
+                  <IconButton
+                    size="sm"
+                    color="neutral"
+                    sx={{
+                      background: 'white',
+                      color: 'black',
+                      ['&:hover']: {
+                        background: '#000',
+                      },
+                    }}
+                  >
+                    <InstagramIcon />
+                  </IconButton>
+                </a>
+              )}
+              {interfaceConfig?.tiktokURL && (
+                <a href={`${interfaceConfig?.tiktokURL}`} target="_blank">
+                  <IconButton
+                    size="sm"
+                    color="neutral"
+                    sx={{
+                      background: 'white',
+                      color: 'black',
+                      ['&:hover']: {
+                        background: '#000',
+                      },
+                    }}
+                  >
+                    <img
+                      style={{ width: '20px', height: '20px' }}
+                      src="https://i.pinimg.com/originals/b6/c9/dd/b6c9dda4b3983c5ecba8cf867a01bc6f.png"
+                      alt=""
+                    />
+                  </IconButton>
+                </a>
+              )}
+              {interfaceConfig?.twitterURL && (
+                <a href={`${interfaceConfig?.twitterURL}`} target="_blank">
+                  <IconButton
+                    size="sm"
+                    color="neutral"
+                    sx={{
+                      background: 'white',
+                      color: 'black',
+                      ['&:hover']: {
+                        background: '#000',
+                      },
+                    }}
+                  >
+                    <TwitterIcon />
+                  </IconButton>
+                </a>
+              )}
+              {interfaceConfig?.youtubeURL && (
+                <a href={`${interfaceConfig?.youtubeURL}`} target="_blank">
+                  <IconButton
+                    size="sm"
+                    color="neutral"
+                    sx={{
+                      background: 'white',
+                      color: 'black',
+                      ['&:hover']: {
+                        background: '#000',
+                      },
+                    }}
+                  >
+                    <YoutubeIcon />
+                  </IconButton>
+                </a>
+              )}
+              {interfaceConfig?.githubURL && (
+                <a href={`${interfaceConfig?.githubURL}`} target="_blank">
+                  <IconButton
+                    size="sm"
+                    color="neutral"
+                    sx={{
+                      background: 'white',
+                      color: 'black',
+                      ['&:hover']: {
+                        background: '#000',
+                      },
+                    }}
+                  >
+                    <GitHubIcon />
+                  </IconButton>
+                </a>
+              )}
+              {interfaceConfig?.websiteURL && (
+                <a href={`${interfaceConfig?.websiteURL}`} target="_blank">
+                  <IconButton
+                    size="sm"
+                    color="neutral"
+                    sx={{
+                      background: 'white',
+                      color: 'black',
+                      ['&:hover']: {
+                        background: '#000',
+                      },
+                    }}
+                  >
+                    <WebIcon />
+                  </IconButton>
+                </a>
+              )}
+            </Stack>
           </Stack>
 
           <div

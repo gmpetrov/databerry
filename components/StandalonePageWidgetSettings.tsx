@@ -3,6 +3,11 @@ import { CacheProvider, ThemeProvider } from '@emotion/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import WebIcon from '@mui/icons-material/Language';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import YoutubeIcon from '@mui/icons-material/YouTube';
 import {
   Alert,
   Box,
@@ -150,6 +155,35 @@ export default function StandalonePageSettings(props: Props) {
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack gap={3}>
             <Stack gap={2} width="100%">
+              <Stack id="embed" gap={2} mt={4} mb={2}>
+                <Typography>Standalone Page URL</Typography>
+
+                <Alert color="warning">
+                  Anyone can access your agent from this URL
+                </Alert>
+
+                <Alert
+                  sx={{ cursor: 'copy' }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(pageURL);
+                    toast.success('Copied!', {
+                      position: 'bottom-center',
+                    });
+                  }}
+                >
+                  {pageURL}
+                </Alert>
+
+                <iframe
+                  style={{
+                    width: '100%',
+                    height: '500px',
+                    borderRadius: '15px',
+                  }}
+                  src={`/agents/${getAgentQuery?.data?.id}/page?counter=${state.counter}`}
+                  frameBorder="0"
+                ></iframe>
+              </Stack>
               <Stack width="100%" gap={3}>
                 <FormControl>
                   <FormLabel>Initial Message</FormLabel>
@@ -185,6 +219,69 @@ export default function StandalonePageSettings(props: Props) {
                   />
                 </FormControl>
 
+                <Stack gap={1}>
+                  <Typography>Social Links</Typography>
+                  <Stack gap={2} pl={2}>
+                    <FormControl>
+                      <FormLabel>Twitter</FormLabel>
+                      <Input
+                        startDecorator={<TwitterIcon />}
+                        placeholder="Twitter"
+                        {...methods.register('twitterURL')}
+                      />
+                    </FormControl>
+
+                    <FormControl>
+                      <FormLabel>Instagram</FormLabel>
+                      <Input
+                        startDecorator={<InstagramIcon />}
+                        placeholder="Instagram"
+                        {...methods.register('instagramURL')}
+                      />
+                    </FormControl>
+
+                    <FormControl>
+                      <FormLabel>TikTok</FormLabel>
+                      <Input
+                        startDecorator={
+                          <img
+                            style={{ width: '20px', height: '20px' }}
+                            src="https://i.pinimg.com/originals/b6/c9/dd/b6c9dda4b3983c5ecba8cf867a01bc6f.png"
+                            alt=""
+                          />
+                        }
+                        placeholder="TikTok"
+                        {...methods.register('tiktokURL')}
+                      />
+                    </FormControl>
+
+                    <FormControl>
+                      <FormLabel>Youtube</FormLabel>
+                      <Input
+                        startDecorator={<YoutubeIcon />}
+                        placeholder="Youtube"
+                        {...methods.register('youtubeURL')}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>GitHub</FormLabel>
+                      <Input
+                        startDecorator={<GitHubIcon />}
+                        placeholder="GitHub"
+                        {...methods.register('githubURL')}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Website</FormLabel>
+                      <Input
+                        startDecorator={<WebIcon />}
+                        placeholder="Website"
+                        {...methods.register('websiteURL')}
+                      />
+                    </FormControl>
+                  </Stack>
+                </Stack>
+
                 {/* <FormControl>
                   <FormLabel>Brand Color</FormLabel>
                   <Input
@@ -201,36 +298,6 @@ export default function StandalonePageSettings(props: Props) {
                 >
                   Update
                 </Button>
-              </Stack>
-
-              <Stack id="embed" gap={2} mt={4} mb={2}>
-                <Typography>Standalone Page URL</Typography>
-
-                <Alert color="warning">
-                  Anyone can access your agent from this URL
-                </Alert>
-
-                <Alert
-                  sx={{ cursor: 'copy' }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(pageURL);
-                    toast.success('Copied!', {
-                      position: 'bottom-center',
-                    });
-                  }}
-                >
-                  {pageURL}
-                </Alert>
-
-                <iframe
-                  style={{
-                    width: '100%',
-                    height: '500px',
-                    borderRadius: '15px',
-                  }}
-                  src={`/agents/${getAgentQuery?.data?.id}/page?counter=${state.counter}`}
-                  frameBorder="0"
-                ></iframe>
               </Stack>
             </Stack>
           </Stack>
