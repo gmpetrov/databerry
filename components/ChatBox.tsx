@@ -145,11 +145,17 @@ function ChatBox({
           <Stack
             key={index}
             sx={{
+              width: '100%',
+              maxWidth: '100%',
               mr: each.from === 'agent' ? 'auto' : 'none',
               ml: each.from === 'human' ? 'auto' : 'none',
             }}
           >
-            <Stack sx={{ width: '100%' }} direction={'row'} gap={1}>
+            <Stack
+              sx={{ width: '100%', maxWidth: '100%' }}
+              direction={'row'}
+              gap={1}
+            >
               {each.from === 'agent' && (
                 <Avatar
                   size="sm"
@@ -165,6 +171,16 @@ function ChatBox({
                 }
                 color={each.from === 'agent' ? 'primary' : 'neutral'}
                 sx={(theme) => ({
+                  overflow: 'hidden',
+                  maxWidth: '100%',
+                  '*': {
+                    maxWidth: '100%',
+                    wordBreak: 'break-word',
+                  },
+                  pre: {
+                    overflowX: 'scroll',
+                  },
+                  code: {},
                   py: 0,
                   px: 2,
                   'ol,ul,p': {
