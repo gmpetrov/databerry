@@ -192,8 +192,7 @@ function App() {
                   // fontFamily: 'Pacifico',
                 }}
               >
-                {/* {agent?.description} */}
-                Hello World I am the pbedf sdlkfj sldkfj sf lkjsfd
+                {agent?.description}
               </Typography>
             </Stack>
 
