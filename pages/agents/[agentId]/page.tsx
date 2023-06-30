@@ -12,7 +12,7 @@ import Avatar from '@mui/material/Avatar';
 import { Agent, Prisma } from '@prisma/client';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactElement, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -26,6 +26,7 @@ function App() {
   const agentId = router.query.agentId;
 
   const [state, setState] = useStateReducer({
+    isPageReady: false,
     agent: undefined as Agent | undefined,
     config: {},
   });
@@ -45,24 +46,17 @@ function App() {
     return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
   }, [primaryColor]);
 
-  const handleFetchAgent = async () => {
-    try {
-      const res = await fetch(`/api/external/agents/${agentId}`);
-      const data = (await res.json()) as Agent;
-
-      const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
-
-      setState({
-        agent: data,
-        config: agentConfig,
-      });
-    } catch (err) {
-      console.error(err);
-    } finally {
+  useEffect(() => {
+    if (getAgentConfigQuery?.isLoading) {
+      setTimeout(() => {
+        setState({
+          isPageReady: true,
+        });
+      }, 2000);
     }
-  };
+  }, [getAgentConfigQuery?.isLoading]);
 
-  if (!agent && getAgentConfigQuery?.isLoading) {
+  if (!agent || !state.isPageReady) {
     return (
       <Stack
         sx={{
