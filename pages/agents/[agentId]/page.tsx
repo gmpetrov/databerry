@@ -117,7 +117,11 @@ function App() {
           xs: 'column',
           sm: 'row',
         }}
-        sx={{ height: '100vh', width: '100vw' }}
+        sx={{
+          width: '100vw',
+          height: '100vh',
+          maxHeight: '-webkit-fill-available',
+        }}
       >
         <Stack
           sx={{
