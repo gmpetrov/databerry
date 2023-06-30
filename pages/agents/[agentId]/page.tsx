@@ -35,17 +35,15 @@ function App() {
     fetcher
   );
 
-  console.log('getAgentConfigQuery', getAgentConfigQuery.data);
   const agent = getAgentConfigQuery?.data;
   const interfaceConfig = agent?.interfaceConfig as AgentInterfaceConfig;
 
+  // const primaryColor = interfaceConfig?.primaryColor || '#ffffff';
+  const primaryColor = '#ffffff';
+
   const textColor = useMemo(() => {
-    return pickColorBasedOnBgColor(
-      interfaceConfig?.primaryColor || '#ffffff',
-      '#ffffff',
-      '#000000'
-    );
-  }, [interfaceConfig?.primaryColor]);
+    return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
+  }, [primaryColor]);
 
   const handleFetchAgent = async () => {
     try {
@@ -124,7 +122,7 @@ function App() {
             },
             maxWidth: '100%',
             minWidth: 300,
-            backgroundColor: interfaceConfig?.primaryColor || '#000',
+            backgroundColor: primaryColor || '#000',
             alignItems: {
               sm: 'center',
             },
@@ -203,8 +201,8 @@ function App() {
                     values="0%;3%;0%"
                     repeatCount="indefinite"
                   ></animate>
-                  <stop offset="0%" stop-color="rgba(255, 0, 255, 1)"></stop>
-                  <stop offset="100%" stop-color="rgba(255, 0, 255, 0)"></stop>
+                  <stop offset="0%" stopColor="rgba(255, 0, 255, 1)"></stop>
+                  <stop offset="100%" stopColor="rgba(255, 0, 255, 0)"></stop>
                 </radialGradient>
                 <radialGradient
                   id="Gradient2"
@@ -220,8 +218,8 @@ function App() {
                     values="0%;3%;0%"
                     repeatCount="indefinite"
                   ></animate>
-                  <stop offset="0%" stop-color="rgba(255, 255, 0, 1)"></stop>
-                  <stop offset="100%" stop-color="rgba(255, 255, 0, 0)"></stop>
+                  <stop offset="0%" stopColor="rgba(255, 255, 0, 1)"></stop>
+                  <stop offset="100%" stopColor="rgba(255, 255, 0, 0)"></stop>
                 </radialGradient>
                 <radialGradient
                   id="Gradient3"
@@ -237,8 +235,8 @@ function App() {
                     values="0%;3%;0%"
                     repeatCount="indefinite"
                   ></animate>
-                  <stop offset="0%" stop-color="rgba(0, 255, 255, 1)"></stop>
-                  <stop offset="100%" stop-color="rgba(0, 255, 255, 0)"></stop>
+                  <stop offset="0%" stopColor="rgba(0, 255, 255, 1)"></stop>
+                  <stop offset="100%" stopColor="rgba(0, 255, 255, 0)"></stop>
                 </radialGradient>
                 <radialGradient
                   id="Gradient4"
@@ -254,8 +252,8 @@ function App() {
                     values="0%;5%;0%"
                     repeatCount="indefinite"
                   ></animate>
-                  <stop offset="0%" stop-color="rgba(0, 255, 0, 1)"></stop>
-                  <stop offset="100%" stop-color="rgba(0, 255, 0, 0)"></stop>
+                  <stop offset="0%" stopColor="rgba(0, 255, 0, 1)"></stop>
+                  <stop offset="100%" stopColor="rgba(0, 255, 0, 0)"></stop>
                 </radialGradient>
                 <radialGradient
                   id="Gradient5"
@@ -271,8 +269,8 @@ function App() {
                     values="0%;5%;0%"
                     repeatCount="indefinite"
                   ></animate>
-                  <stop offset="0%" stop-color="rgba(0,0,255, 1)"></stop>
-                  <stop offset="100%" stop-color="rgba(0,0,255, 0)"></stop>
+                  <stop offset="0%" stopColor="rgba(0,0,255, 1)"></stop>
+                  <stop offset="100%" stopColor="rgba(0,0,255, 0)"></stop>
                 </radialGradient>
                 <radialGradient
                   id="Gradient6"
@@ -288,8 +286,8 @@ function App() {
                     values="0%;5%;0%"
                     repeatCount="indefinite"
                   ></animate>
-                  <stop offset="0%" stop-color="rgba(255,0,0, 1)"></stop>
-                  <stop offset="100%" stop-color="rgba(255,0,0, 0)"></stop>
+                  <stop offset="0%" stopColor="rgba(255,0,0, 1)"></stop>
+                  <stop offset="100%" stopColor="rgba(255,0,0, 0)"></stop>
                 </radialGradient>
               </defs>
               {/* <!--<rect x="0" y="0" width="100%" height="100%" fill="url(#Gradient4)">
@@ -408,7 +406,7 @@ function App() {
               width: '100%',
               height: '100%',
             }}
-            src={`/agents/${agentId}/iframe`}
+            src={`/agents/${agentId}/iframe?primaryColor="#ffffff"`}
             frameBorder="0"
           />
         </Stack>
