@@ -218,6 +218,8 @@ export default function BaseForm(props: Props) {
         iconUrl: iconUrl,
       });
 
+      methods.setValue('iconUrl', iconUrl);
+
       await upsertAgentMutation.trigger({
         ...defaultValues,
         iconUrl,
