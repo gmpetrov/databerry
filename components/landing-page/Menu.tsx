@@ -13,23 +13,11 @@ import {
   FingerPrintIcon,
   ServerIcon,
   SquaresPlusIcon,
+  UserPlusIcon,
 } from '@heroicons/react/24/outline';
 import { Fragment } from 'react';
 
 const solutions = [
-  {
-    name: 'ChatGPT Plugin',
-    description:
-      'Build your own ChatGPT Plugin to connect custom data to your ChatGPT',
-    href: '/#chatgpt-plugin',
-    icon: (props: any) => (
-      <img
-        {...props}
-        src="https://static.vecteezy.com/system/resources/previews/021/495/996/original/chatgpt-openai-logo-icon-free-png.png"
-        alt="OpenAI Logo"
-      />
-    ),
-  },
   {
     name: 'Embed Agent on your website',
     description:
@@ -62,6 +50,39 @@ const solutions = [
       />
     ),
   },
+  {
+    name: 'ChatGPT Plugin',
+    description:
+      'Build your own ChatGPT Plugin to connect custom data to your ChatGPT',
+    href: '/#chatgpt-plugin',
+    icon: (props: any) => (
+      <img
+        {...props}
+        src="https://static.vecteezy.com/system/resources/previews/021/495/996/original/chatgpt-openai-logo-icon-free-png.png"
+        alt="OpenAI Logo"
+      />
+    ),
+  },
+  // {
+  //   name: 'Create your digital self chatbot',
+  //   description:
+  //     'Automate customer support with a ChatGPT Bot trained on your data',
+  //   href: '/products/clone',
+  //   icon: UserPlusIcon,
+  // },
+  // {
+  //   name: 'ChatGPT Plugin',
+  //   description:
+  //     'Build your own ChatGPT Plugin to connect custom data to your ChatGPT',
+  //   href: '/#chatgpt-plugin',
+  //   icon: (props: any) => (
+  //     <img
+  //       {...props}
+  //       src="https://static.vecteezy.com/system/resources/previews/021/495/996/original/chatgpt-openai-logo-icon-free-png.png"
+  //       alt="OpenAI Logo"
+  //     />
+  //   ),
+  // },
   {
     name: 'Datberry API',
     description: 'Document Retrieval as a service',
