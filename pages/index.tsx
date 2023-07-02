@@ -78,6 +78,12 @@ export default function Home() {
         <meta property="og:site_name" content="Chaindesk" />
         <meta property="og:type" content="website" />
       </Head>
+      <div className="w-full p-2 text-center bg-indigo-500">
+        <h2>
+          🔔 Rebranding Alert - Databerry.ai is now ⛓️{' '}
+          <strong>Chaindesk.ai</strong>
+        </h2>
+      </div>
       <Header />
 
       <script
