@@ -62,6 +62,11 @@ export default function AgentTable({ items }: { items: Agent[] }) {
                         fontWeight={'bold'}
                         color="primary"
                         // fontSize={'md'}
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
                       >
                         {agent.name}
                       </Typography>
@@ -69,7 +74,15 @@ export default function AgentTable({ items }: { items: Agent[] }) {
                   </div>
                 </td>
                 <td>
-                  <Typography>{agent.description}</Typography>
+                  <Typography
+                    sx={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {agent.description}
+                  </Typography>
                 </td>
 
                 <td>

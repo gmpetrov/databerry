@@ -150,6 +150,10 @@ function App() {
               xs: 'row',
               sm: 'column',
             }}
+            maxWidth={{
+              xs: '100%',
+              sm: 500,
+            }}
             zIndex={3}
             // height={'100%'}
           >
@@ -157,6 +161,7 @@ function App() {
               alt={agent?.name}
               src={agent?.iconUrl || '/app-rounded-bg-white.png'}
               sx={{
+                bgcolor: 'white',
                 boxShadow: 'sm',
                 width: {
                   xs: 34,

@@ -458,6 +458,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   messageTemplates={state.config.messageTemplates}
                   initialMessage={state.config.initialMessage}
                   renderAfterMessages={Capture}
+                  agentIconUrl={state.agent?.iconUrl!}
                 />
               </Box>
             </Card>

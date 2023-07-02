@@ -329,7 +329,11 @@ export default function AgentPage() {
               overflow: 'hidden',
             }}
           >
-            <ChatBox messages={history} onSubmit={handleChatSubmit} />
+            <ChatBox
+              messages={history}
+              onSubmit={handleChatSubmit}
+              agentIconUrl={getAgentQuery?.data?.iconUrl!}
+            />
           </Box>
         )}
 
