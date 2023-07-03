@@ -56,7 +56,7 @@ const tiers = [
       `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_0'].limits.maxAgentsQueries} agents queries / month`,
-      `File uplpoad limited to ${
+      `File upload limited to ${
         accountConfig['level_0'].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
@@ -78,7 +78,7 @@ const tiers = [
       `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_1'].limits.maxAgentsQueries} agents queries / month`,
-      `File uplpoad limited to ${
+      `File upload limited to ${
         accountConfig['level_1'].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
@@ -102,7 +102,7 @@ const tiers = [
       `${accountConfig['level_2'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_2'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_2'].limits.maxAgentsQueries} agents queries / month`,
-      `File uplpoad limited to ${
+      `File upload limited to ${
         accountConfig['level_2'].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
@@ -125,7 +125,7 @@ const tiers = [
       `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_3'].limits.maxAgentsQueries} agents queries / month`,
-      `File uplpoad limited to ${
+      `File upload limited to ${
         accountConfig['level_3'].limits.maxFileSize / 1000000
       }MB / file`,
       `Data processing limited to ${
