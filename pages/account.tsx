@@ -329,12 +329,25 @@ export default function AccountPage() {
               >
                 <Typography>{`${currentPlan?.limits?.maxDatastores} Datastores`}</Typography>
               </Typography>
-              <Typography
-                level="h6"
-                startDecorator={<CheckRoundedIcon color="success" />}
-              >
-                <Typography>{`${currentPlan?.limits?.maxAgentsQueries} Agent responses / month`}</Typography>
-              </Typography>
+              {session?.user?.isPremium ? (
+                <Typography
+                  level="h6"
+                  startDecorator={<CheckRoundedIcon color="success" />}
+                >
+                  <Typography>{`${
+                    currentPlan?.limits?.maxAgentsQueries
+                  } GPT-3.5 or ${
+                    currentPlan?.limits?.maxAgentsQueries / 2
+                  } GPT-4 Agent responses / month`}</Typography>
+                </Typography>
+              ) : (
+                <Typography
+                  level="h6"
+                  startDecorator={<CheckRoundedIcon color="success" />}
+                >
+                  <Typography>{`${currentPlan?.limits?.maxAgentsQueries} GPT-3.5 responses / month`}</Typography>
+                </Typography>
+              )}
               <Typography
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}

@@ -55,7 +55,7 @@ const tiers = [
     features: [
       `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_0'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig['level_0'].limits.maxAgentsQueries} GPT-3.5 agents queries / month`,
       `File upload limited to ${
         accountConfig['level_0'].limits.maxFileSize / 1000000
       }MB / file`,
@@ -77,7 +77,9 @@ const tiers = [
     features: [
       `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_1'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig['level_1'].limits.maxAgentsQueries} GPT-3.5 or ${
+        accountConfig['level_1'].limits.maxAgentsQueries / 2
+      } GPT-4 agents queries / month`,
       `File upload limited to ${
         accountConfig['level_1'].limits.maxFileSize / 1000000
       }MB / file`,
@@ -101,7 +103,9 @@ const tiers = [
     features: [
       `${accountConfig['level_2'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_2'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_2'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig['level_2'].limits.maxAgentsQueries} GPT-3.5 or ${
+        accountConfig['level_2'].limits.maxAgentsQueries / 2
+      } GPT-4 agents queries / month`,
       `File upload limited to ${
         accountConfig['level_2'].limits.maxFileSize / 1000000
       }MB / file`,
@@ -124,7 +128,9 @@ const tiers = [
     features: [
       `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_3'].limits.maxAgentsQueries} agents queries / month`,
+      `${accountConfig['level_3'].limits.maxAgentsQueries} GPT-3.5 or ${
+        accountConfig['level_3'].limits.maxAgentsQueries / 2
+      } GPT-4 agents queries / month`,
       `File upload limited to ${
         accountConfig['level_3'].limits.maxFileSize / 1000000
       }MB / file`,

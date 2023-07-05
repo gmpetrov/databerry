@@ -54,7 +54,7 @@ export const widgetActions = async (
 
   const model = new OpenAI({
     temperature: 0,
-    modelName: 'gpt-3.5-turbo-0613',
+    modelName: 'gpt-3.5-turbo',
   });
 
   const prompt = `The following is conversation between a customer and a customer suport operator. Generate a summary of the conversation that would be useful to the operator.

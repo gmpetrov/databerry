@@ -3,7 +3,7 @@ import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest, ChatRequest } from '@app/types';
-import accountConfig from '@app/utils/account-config';
+import accountConfig, { queryCountConfig } from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import chat from '@app/utils/chat';
@@ -108,7 +108,9 @@ export const chatAgentRequest = async (
         id: agent?.owner?.usage?.id,
       },
       data: {
-        nbAgentQueries: (agent?.owner?.usage?.nbAgentQueries || 0) + 1,
+        nbAgentQueries:
+          (agent?.owner?.usage?.nbAgentQueries || 0) +
+          (queryCountConfig?.[agent?.modelName] || 1),
       },
     }),
   ]);

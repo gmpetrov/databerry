@@ -9,7 +9,7 @@ const faqs = [
     id: 2,
     question: 'Does it use ChatGPT ?',
     answer:
-      'Yes, your chatbot uses ChatGPT (gpt-3.5-turbo). We are planning to support other models in the future.',
+      'Yes, your chatbot uses ChatGPT (gpt-4). We are planning to support other models in the future.',
   },
   {
     id: 3,

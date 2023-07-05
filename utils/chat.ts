@@ -42,9 +42,6 @@ Answer: The cost of the Premium plan is $9.99 per month. The features included i
 
 SOURCE: https://www.spotify.com/us/premium
 =======
-
-CONTEXT INFOMATION:
-${context}
 `;
 };
 
@@ -83,7 +80,10 @@ const getCustomerSupportMessages = ({
       'Sure! I will stick to all the information given in the system context. I won’t answer any question that is outside the context of information. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in the context of the information provided. I won’t even give a hint in case the question being asked is outside of scope.'
     ),
     ...prevMessages,
-    new HumanChatMessage(query),
+    new HumanChatMessage(`CONTEXT INFOMATION:
+    ${context}
+
+    Question: ${query}`),
   ];
 };
 
@@ -178,7 +178,7 @@ const chat = async ({
   }
 
   const model = new ChatOpenAI({
-    modelName: modelName || 'gpt-3.5-turbo-0613',
+    modelName: modelName || 'gpt-3.5-turbo',
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [

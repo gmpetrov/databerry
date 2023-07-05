@@ -31,6 +31,7 @@ import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import {
   Agent,
+  AgentModelName,
   AgentVisibility,
   AppDatasource as Datasource,
   DatasourceType,
@@ -42,7 +43,7 @@ import axios from 'axios';
 import mime from 'mime-types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -147,6 +148,7 @@ const Tool = (props: {
 };
 
 export default function BaseForm(props: Props) {
+  const session = useSession();
   const defaultIconUrl = '/.well-known/logo.png';
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
     useState(false);
@@ -382,8 +384,24 @@ export default function BaseForm(props: Props) {
         <FormControl>
           <FormLabel>Model</FormLabel>
 
-          <Select defaultValue={'gpt-3.5-turbo'}>
-            <Option value="gpt-3.5-turbo">OpenAI gpt-3.5-turbo</Option>
+          <Select
+            {...register('modelName')}
+            defaultValue={
+              defaultValues?.modelName || AgentModelName.gpt_3_5_turbo
+            }
+            onChange={(_, value) => {
+              methods.setValue('modelName', value as AgentModelName);
+            }}
+          >
+            <Option value={AgentModelName.gpt_3_5_turbo}>
+              OpenAI gpt-3.5-turbo
+            </Option>
+            <Option
+              value={AgentModelName.gpt_4}
+              disabled={!session?.data?.user?.isPremium}
+            >
+              OpenAI gpt-4 (premium)
+            </Option>
           </Select>
         </FormControl>
 

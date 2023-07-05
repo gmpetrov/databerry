@@ -10,6 +10,7 @@ import {
 import { Tool as LangchainTool } from 'langchain/tools';
 
 import chat from './chat';
+import { ModelNameConfig } from './config';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -39,6 +40,7 @@ export default class AgentManager {
   }) {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
+        modelName: ModelNameConfig[this.agent.modelName],
         prompt: this.agent.prompt as string,
         promptType: this.agent.promptType,
         datastore: this.agent?.tools[0]?.datastore as any,
@@ -64,7 +66,7 @@ export default class AgentManager {
     const { PromptTemplate } = await import('langchain/prompts');
     const model = new OpenAI({
       temperature: 0,
-      modelName: 'gpt-3.5-turbo-0613',
+      modelName: 'gpt-3.5-turbo',
     });
 
     const tools: LangchainTool[] = [];

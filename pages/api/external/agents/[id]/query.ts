@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { ChatRequest } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
-import accountConfig from '@app/utils/account-config';
+import accountConfig, { queryCountConfig } from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import ConversationManager from '@app/utils/conversation';
@@ -152,7 +152,9 @@ export const queryAgent = async (
         id: agent?.owner?.usage?.id,
       },
       data: {
-        nbAgentQueries: (agent?.owner?.usage?.nbAgentQueries || 0) + 1,
+        nbAgentQueries:
+          (agent?.owner?.usage?.nbAgentQueries || 0) +
+          (queryCountConfig?.[agent?.modelName] || 1),
       },
     }),
   ]);

@@ -165,9 +165,10 @@ model Agent {
   name        String
   description String
   prompt      String?
-  promptType  PromptType @default(customer_support) @map("prompt_type")
-  iconUrl     String?    @map("icon_url")
-  temperature Float      @default(0.0)
+  promptType  PromptType     @default(customer_support) @map("prompt_type")
+  iconUrl     String?        @map("icon_url")
+  temperature Float          @default(0.0)
+  modelName   AgentModelName @default(gpt_3_5_turbo) @map("model_name")
 
   visibility    AgentVisibility @default(private)
   conversations Conversation[]
@@ -515,4 +516,9 @@ enum ConversationChannel {
   website
   slack
   crisp
+}
+
+enum AgentModelName {
+  gpt_3_5_turbo
+  gpt_4
 }

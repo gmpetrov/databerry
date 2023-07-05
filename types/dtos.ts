@@ -1,4 +1,5 @@
 import {
+  AgentModelName,
   AgentVisibility,
   ConversationChannel,
   PromptType,
@@ -129,6 +130,10 @@ export const UpsertAgentSchema = z.object({
   name: z.string().trim().optional(),
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
+  modelName: z
+    .nativeEnum(AgentModelName)
+    .default(AgentModelName.gpt_3_5_turbo)
+    .optional(),
   temperature: z.number().default(0.0),
   iconUrl: z.string().trim().optional().nullable(),
   promptType: z.nativeEnum(PromptType).default('customer_support'),
