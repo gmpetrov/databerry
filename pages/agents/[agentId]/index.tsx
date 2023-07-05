@@ -333,6 +333,7 @@ export default function AgentPage() {
               messages={history}
               onSubmit={handleChatSubmit}
               agentIconUrl={getAgentQuery?.data?.iconUrl!}
+              disableWatermark
             />
           </Box>
         )}
