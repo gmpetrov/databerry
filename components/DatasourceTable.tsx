@@ -1,11 +1,13 @@
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutorenewRounded from '@mui/icons-material/AutorenewRounded';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { Checkbox } from '@mui/joy';
+import SourceRoundedIcon from '@mui/icons-material/SourceRounded';
+import { Badge, Checkbox } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
@@ -35,12 +37,9 @@ import useSWR from 'swr';
 
 import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
-import config from '@app/utils/config';
 import pagination from '@app/utils/pagination';
 import relativeDate from '@app/utils/relative-date';
-import { fetcher } from '@app/utils/swr-fetcher';
 
 const SynchButton = ({
   datasource,
@@ -62,7 +61,8 @@ const SynchButton = ({
 
     if (
       datasource.status === DatasourceStatus.running ||
-      datasource.status === DatasourceStatus.pending
+      datasource.status === DatasourceStatus.pending ||
+      !!(datasource as any)?.children?.[0]
     ) {
       loading = true;
     }
@@ -94,9 +94,12 @@ const SynchButton = ({
   }, [datasource?.status]);
 
   if (
-    ![DatasourceType.web_page, DatasourceType.web_site].includes(
-      datasource.type as any
-    )
+    ![
+      DatasourceType.web_page,
+      DatasourceType.web_site,
+      DatasourceType.google_drive_folder,
+      DatasourceType.google_drive_file,
+    ].includes(datasource.type as any)
   ) {
     return null;
   }
@@ -134,7 +137,7 @@ export default function DatasourceTable({
 }) {
   const router = useRouter();
 
-  const { getDatastoreQuery, offset, limit, search, status } =
+  const { getDatastoreQuery, offset, limit, search, status, groupId } =
     useGetDatastoreQuery({
       swrConfig: {
         refreshInterval: 5000,
@@ -197,6 +200,25 @@ export default function DatasourceTable({
           }}
         >
           Delete Selection
+        </Button>
+      )}
+
+      {groupId && (
+        <Button
+          startDecorator={<CloseRounded />}
+          variant="outlined"
+          color="primary"
+          size="sm"
+          sx={{
+            mr: 'auto',
+            mb: 1,
+          }}
+          onClick={() => {
+            router.query.groupId = undefined;
+            router.replace(router, undefined, { shallow: true });
+          }}
+        >
+          {router.query.groupName || groupId}
         </Button>
       )}
 
@@ -406,13 +428,48 @@ export default function DatasourceTable({
                 </td>
                 <td>
                   <div className="flex flex-col">
-                    <Link
-                      href={`${RouteNames.DATASTORES}/${datasource.datastoreId}/${datasource.id}`}
+                    <Stack
+                      direction="row"
+                      alignItems={'center'}
+                      spacing={2}
+                      className="max-w-full"
                     >
-                      <Typography className="truncate" fontWeight={'bold'}>
-                        {datasource.name}
-                      </Typography>
-                    </Link>
+                      {datasource?._count?.children > 0 && (
+                        <Badge
+                          badgeContent={datasource?._count?.children}
+                          max={9999}
+                          size="sm"
+                          badgeInset={3}
+                        >
+                          <IconButton
+                            size="sm"
+                            variant="soft"
+                            color="primary"
+                            onClick={() => {
+                              router.query.offset = '0';
+                              router.query.groupId = datasource.id;
+                              router.query.groupName = datasource.name;
+                              router.replace(router, undefined, {
+                                shallow: true,
+                              });
+
+                              setSelected([]);
+                            }}
+                          >
+                            <ChevronRightIcon />
+                          </IconButton>
+                        </Badge>
+                        // </Link>
+                      )}
+                      <Link
+                        href={`${RouteNames.DATASTORES}/${datasource.datastoreId}/${datasource.id}`}
+                        className="truncate hover:underline"
+                      >
+                        <Typography className="truncate" fontWeight={'bold'}>
+                          {datasource.name}
+                        </Typography>
+                      </Link>
+                    </Stack>
                     {/* <Typography color="neutral" className="truncate">
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                       Iste sapiente aliquid ab iure laboriosam fuga! Magnam
@@ -445,9 +502,11 @@ export default function DatasourceTable({
                   </Chip>
                 </td>
                 <td>
-                  <Typography>{`${Math.floor(
-                    (datasource.textSize || 0) / 1024
-                  )}kb / ${datasource.nbChunks} chunks`}</Typography>
+                  {datasource?._count?.children <= 0 && (
+                    <Typography>{`${Math.floor(
+                      (datasource.textSize || 0) / 1024
+                    )}kb / ${datasource.nbChunks} chunks`}</Typography>
+                  )}
                 </td>
                 {/* <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -495,10 +554,16 @@ export default function DatasourceTable({
                         synched: 'success',
                         error: 'danger',
                         usage_limit_reached: 'warning',
-                      }[datasource.status] as ColorPaletteProp
+                      }[
+                        datasource?.children?.[0]
+                          ? DatasourceStatus.running
+                          : datasource.status
+                      ] as ColorPaletteProp
                     }
                   >
-                    {datasource.status}
+                    {datasource?.children?.[0]
+                      ? DatasourceStatus.running
+                      : datasource.status}
                   </Chip>
                 </td>
                 <td className="space-x-2">

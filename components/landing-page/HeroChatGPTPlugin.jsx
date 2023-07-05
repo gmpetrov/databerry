@@ -89,7 +89,7 @@ export function HeroChatGPTPlugin() {
 
           <Stack sx={{ width: '100%' }}>
 
-          <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
+          {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
           <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
             <span>New</span>
           </span>
@@ -118,7 +118,7 @@ export function HeroChatGPTPlugin() {
               <line x1="15" y1="8" x2="19" y2="12"></line>
             </svg>
           </Link>
-        </div>
+        </div> */}
 
 
             <h2 className="mb-4 text-2xl font-bold text-violet-300">
@@ -132,12 +132,12 @@ export function HeroChatGPTPlugin() {
             </h1>
 
             {/* <a
-          href="https://www.producthunt.com/posts/databerry-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-databerry&#0045;ai"
+          href="https://www.producthunt.com/posts/chaindesk-ai?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-chaindesk&#0045;ai"
           target="_blank"
         >
           <img
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=394302&theme=light"
-            alt="Databerry&#0046;ai - Build&#0032;a&#0032;ChatGPT&#0032;plugin&#0032;in&#0032;minutes | Product Hunt"
+            alt="Chaindesk&#0046;ai - Build&#0032;a&#0032;ChatGPT&#0032;plugin&#0032;in&#0032;minutes | Product Hunt"
             style={{
               width: '250px',
               height: '54px',
@@ -204,7 +204,7 @@ export function HeroChatGPTPlugin() {
                 </Stack>
                 <Typography textColor="text.secondary">
                   <b>+3.5K</b> companies have successfully <br></br>built their
-                  custom AI Agent with Databerry.ai
+                  custom AI Agent with Chaindesk.ai
                 </Typography>
               </Stack>
             </Box>
@@ -218,7 +218,7 @@ export function HeroChatGPTPlugin() {
               mt={6}
               className="justify-center sm:justify-start"
             >
-              <Link target="_blank" href={'https://app.databerry.ai/signin'}>
+              <Link target="_blank" href={'https://app.chaindesk.ai/signin'}>
                 <Button
                   variant="solid"
                   size="lg"
@@ -247,7 +247,7 @@ export function HeroChatGPTPlugin() {
             <div className='w-full h-[500px] overflow-hidden rounded-3xl bg-white'>
 
             <iframe
-              src="https://app.databerry.ai/agents/clgtujkqh022j0u0zw3ut8vk3/iframe"
+              src="https://app.chaindesk.ai/agents/clgtujkqh022j0u0zw3ut8vk3/iframe"
               width="100%"
               height="100%"
               frameBorder="0"
@@ -259,7 +259,7 @@ export function HeroChatGPTPlugin() {
         </div>
 
         <div className="flex justify-center mt-10 gap-x-6">
-          {/* <Button target="_blank" href="https://app.databerry.ai/signin">Start Building</Button> */}
+          {/* <Button target="_blank" href="https://app.chaindesk.ai/signin">Start Building</Button> */}
           {/* <Button
           href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           variant="outline"

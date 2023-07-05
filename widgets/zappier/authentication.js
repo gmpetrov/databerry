@@ -1,6 +1,6 @@
 const baseApiUrl = process.env.API_URL
   ? process.env.API_URL
-  : 'https://api.databerry.ai';
+  : 'https://api.chaindesk.ai';
 
 module.exports = {
   type: 'custom',
@@ -18,10 +18,10 @@ module.exports = {
       computed: false,
       key: 'api_key',
       required: false,
-      label: 'Databerry API Key',
+      label: 'Chaindesk API Key',
       type: 'password',
       helpText:
-        'Your Databerry API Key can be found here https://app.databerry.ai/account',
+        'Your Chaindesk API Key can be found here https://app.chaindesk.ai/account',
     },
   ],
   customConfig: {},

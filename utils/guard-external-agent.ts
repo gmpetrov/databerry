@@ -24,7 +24,7 @@ const guardExternalAgent = ({ agent, apiKey, hostname }: Props) => {
   const config = agent?.interfaceConfig as AgentInterfaceConfig;
   const authrorizedDomains = [
     ...(config?.authorizedDomains || []),
-    // Include Databerry dashboard domain
+    // Include Chaindesk dashboard domain
     new URL(process.env.NEXT_PUBLIC_DASHBOARD_URL!).host,
   ];
 

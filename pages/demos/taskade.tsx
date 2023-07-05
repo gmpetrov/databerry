@@ -10,7 +10,7 @@ import useAgentChat from '@app/hooks/useAgentChat';
 export default function DatasourcesPage() {
   const agentId = 'clh9ldhip0000e9ogeunjdqhd';
   const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `https://app.databerry.ai/api/external/agents/${agentId}/query`,
+    queryAgentURL: `https://app.chaindesk.ai/api/external/agents/${agentId}/query`,
   });
 
   return (

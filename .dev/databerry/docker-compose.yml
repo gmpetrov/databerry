@@ -96,3 +96,4 @@ volumes:
   redis-conf:
   p3x-redis-ui-settings:
   minio:
+  node_modules:

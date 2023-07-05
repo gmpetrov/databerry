@@ -1,8 +1,11 @@
 #!/bin/bash
 
-cd /app/workspace
 
-yarn global add pnpm && pnpm i
+cd /home/node
+echo "###### INITIALIZING PROJECT"
+
+pnpm i 
+
 pnpm prisma:migrate:dev
 
 # run server + worker

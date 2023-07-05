@@ -1,4 +1,5 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -12,7 +13,14 @@ import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
-import { ColorPaletteProp, List, ListItem, ListItemButton } from '@mui/joy';
+import {
+  Avatar,
+  ColorPaletteProp,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+} from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
@@ -75,6 +83,27 @@ const CrispSettingsModal = dynamic(
   }
 );
 
+const IFrameWidgetSettingsModal = dynamic(
+  () => import('@app/components/IFrameWidgetSettings'),
+  {
+    ssr: false,
+  }
+);
+
+const BubbleWidgetSettingsModal = dynamic(
+  () => import('@app/components/BubbleWidgetSettings'),
+  {
+    ssr: false,
+  }
+);
+
+const StandalonePageWidgetSettingsModal = dynamic(
+  () => import('@app/components/StandalonePageWidgetSettings'),
+  {
+    ssr: false,
+  }
+);
+
 export default function AgentPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -82,6 +111,9 @@ export default function AgentPage() {
     isSlackModalOpen: false,
     isUsageModalOpen: false,
     isCrispModalOpen: false,
+    isBubbleWidgetModalOpen: false,
+    isIFrameWidgetModalOpen: false,
+    isStandalonePageWidgetModalOpen: false,
   });
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
@@ -256,7 +288,7 @@ export default function AgentPage() {
                 </TabList>
               </Tabs>
 
-              {router.query.tab === 'settings' && (
+              {/* {router.query.tab === 'settings' && (
                 <>
                   <Link href={`#chat-interface-config`}>
                     <Button
@@ -280,7 +312,7 @@ export default function AgentPage() {
                     </Button>
                   </Link>
                 </>
-              )}
+              )} */}
             </Stack>
           </Stack>
         </Box>
@@ -297,7 +329,11 @@ export default function AgentPage() {
               overflow: 'hidden',
             }}
           >
-            <ChatBox messages={history} onSubmit={handleChatSubmit} />
+            <ChatBox
+              messages={history}
+              onSubmit={handleChatSubmit}
+              agentIconUrl={getAgentQuery?.data?.iconUrl!}
+            />
           </Box>
         )}
 
@@ -318,12 +354,42 @@ export default function AgentPage() {
                 <List variant="outlined" sx={{ mt: 2 }}>
                   {[
                     {
-                      name: 'Website',
-                      icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
+                      name: 'Website (bubble widget)',
+                      // icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
+                      icon: (
+                        <IconButton
+                          size="sm"
+                          variant="solid"
+                          sx={(theme) => ({
+                            // backgroundColor: state.config.primaryColor,
+                            borderRadius: '100%',
+                          })}
+                        >
+                          <AutoAwesomeIcon />
+                        </IconButton>
+                      ),
                       action: () => {
-                        router.query.tab = 'settings';
-                        (router as any).hash = 'chat-interface-config';
-                        router.replace(router, undefined, { shallow: true });
+                        setState({
+                          isBubbleWidgetModalOpen: true,
+                        });
+                      },
+                    },
+                    {
+                      name: 'Standalone WebPage',
+                      icon: <Typography sx={{ fontSize: 32 }}>💅</Typography>,
+                      action: () => {
+                        setState({
+                          isStandalonePageWidgetModalOpen: true,
+                        });
+                      },
+                    },
+                    {
+                      name: 'iFrame',
+                      icon: <Typography sx={{ fontSize: 32 }}>📺</Typography>,
+                      action: () => {
+                        setState({
+                          isIFrameWidgetModalOpen: true,
+                        });
                       },
                     },
                     {
@@ -443,14 +509,14 @@ export default function AgentPage() {
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
                   <Typography level="body3" mb={2}>
-                    Use the Agent ID to query the agent through Databerry API
+                    Use the Agent ID to query the agent through Chaindesk API
                   </Typography>
                   <Stack spacing={2}>
                     <Alert
                       color="info"
                       startDecorator={<HelpOutlineRoundedIcon />}
                       endDecorator={
-                        <Link href="https://docs.databerry.ai" target="_blank">
+                        <Link href="https://docs.chaindesk.ai" target="_blank">
                           <Button
                             variant="plain"
                             size="sm"
@@ -482,26 +548,6 @@ export default function AgentPage() {
                 </FormControl>
 
                 <Divider sx={{ my: 4 }} />
-                <FormControl>
-                  <Typography id="chat-interface-config" level="h5">
-                    Embedded Chat Settings
-                  </Typography>
-                  <Typography level="body2" mb={2}>
-                    Customize the chat interface to match your brand when
-                    embedding the Agent on your website
-                  </Typography>
-
-                  {getAgentQuery?.data?.id && (
-                    <ChatInterfaceConfigForm
-                      agentId={getAgentQuery?.data?.id}
-                    />
-                  )}
-
-                  {/* <Box sx={{ position: 'relative' }}>
-                    <ChatBubble agentId={getAgentQuery?.data?.id}></ChatBubble>
-                  </Box> */}
-                </FormControl>
-                <Divider sx={{ my: 4 }} />
 
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Delete Agent</FormLabel>
@@ -524,17 +570,45 @@ export default function AgentPage() {
         }
       </>
 
-      <SlackBotModal
-        agentId={getAgentQuery?.data?.id!}
-        isOpen={state.isSlackModalOpen}
-        handleCloseModal={() => setState({ isSlackModalOpen: false })}
-      />
+      {getAgentQuery?.data?.id! && (
+        <>
+          <SlackBotModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isSlackModalOpen}
+            handleCloseModal={() => setState({ isSlackModalOpen: false })}
+          />
 
-      <CrispSettingsModal
-        agentId={getAgentQuery?.data?.id!}
-        isOpen={state.isCrispModalOpen}
-        handleCloseModal={() => setState({ isCrispModalOpen: false })}
-      />
+          <CrispSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isCrispModalOpen}
+            handleCloseModal={() => setState({ isCrispModalOpen: false })}
+          />
+
+          <BubbleWidgetSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isBubbleWidgetModalOpen}
+            handleCloseModal={() =>
+              setState({ isBubbleWidgetModalOpen: false })
+            }
+          />
+
+          <IFrameWidgetSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isIFrameWidgetModalOpen}
+            handleCloseModal={() =>
+              setState({ isIFrameWidgetModalOpen: false })
+            }
+          />
+
+          <StandalonePageWidgetSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isStandalonePageWidgetModalOpen}
+            handleCloseModal={() =>
+              setState({ isStandalonePageWidgetModalOpen: false })
+            }
+          />
+        </>
+      )}
 
       <UsageLimitModal
         title="Upgrade to premium to use this feature"

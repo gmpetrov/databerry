@@ -1,7 +1,11 @@
 import { Datastore, MessageFrom, PromptType } from '@prisma/client';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { OpenAI } from 'langchain/llms/openai';
-import { AIChatMessage, HumanChatMessage } from 'langchain/schema';
+import {
+  AIChatMessage,
+  HumanChatMessage,
+  SystemChatMessage,
+} from 'langchain/schema';
 
 import { ChatResponse } from '@app/types';
 
@@ -17,45 +21,90 @@ const getCustomerSupportPrompt = ({
   query: string;
   context: string;
 }) => {
-  return `${prompt || CUSTOMER_SUPPORT}
-You must answer questions accurately and truthfully, using the language in which the question is asked.
-You are not allowed to use the provided few-shot examples as direct answers. Instead, use your extensive knowledge and understanding of the context to address each inquiry in the most helpful and informative way possible.
-Please assist customers with their questions and concerns related to the specific context provided
-Ensure that your responses are clear, detailed, and do not reiterate the same information. Create a final answer with references ("SOURCE") if any.
+  return `Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked, with references ("SOURCES"). 
+If you don't know the answer, politely say that you don't know. Don't try to make up an answer.
+Create a final answer with references ("SOURCE") if any, never translate SOURCES and ulrs.
 
-few-shot examples:
+${prompt || CUSTOMER_SUPPORT}
 
-START_CONTEXT:
+Example:
+=======
+CONTEXT INFOMATION:
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
 SOURCE: https://www.spotify.com/us/premium
-CHUNK: ...
-SOURCE: ...
-END_CONTEXT
 
-START_QUESTION:
-What is the cost of the Premium plan and what features does it include?
-END_QUESTION
+Question: What is the cost of the Premium plan and what features does it include?
 
-Answer:
-The cost of the Premium plan is $9.99 per month. The features included in this plan are:
-
+Answer: The cost of the Premium plan is $9.99 per month. The features included in this plan are:
 - Ad-free streaming
 - Unlimited streaming hours
 - Ability to download songs for offline listening
 
 SOURCE: https://www.spotify.com/us/premium
+=======
 
-end few-shot examples.
-
-START_CONTEXT:
+CONTEXT INFOMATION:
 ${context}
-END_CONTEXT
+`;
+};
 
-START_QUESTION:
-${query}
-END_QUESTION
+type GetPromptProps = {
+  context: string;
+  query: string;
+  prompt?: string;
+  history?: { from: MessageFrom; message: string }[];
+};
 
-Answer in markdown (never translate SOURCES and ulrs):`;
+const getCustomerSupportMessages = ({
+  context,
+  query,
+  prompt,
+  history,
+}: GetPromptProps) => {
+  const systemPrompt = getCustomerSupportPrompt({
+    prompt,
+    query,
+    context,
+  });
+
+  const prevMessages = (history || [])?.map((each) => {
+    if (each.from === MessageFrom.human) {
+      return new HumanChatMessage(each.message);
+    }
+    return new AIChatMessage(each.message);
+  });
+
+  return [
+    new SystemChatMessage(systemPrompt),
+    new HumanChatMessage(
+      'Don’t justify your answers. Don’t give information not mentioned in the CONTEXT INFORMATION. Don’t make up URLs):'
+    ),
+    new AIChatMessage(
+      'Sure! I will stick to all the information given in the system context. I won’t answer any question that is outside the context of information. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in the context of the information provided. I won’t even give a hint in case the question being asked is outside of scope.'
+    ),
+    ...prevMessages,
+    new HumanChatMessage(query),
+  ];
+};
+
+const getRawMessages = ({
+  context,
+  query,
+  prompt,
+  history,
+}: GetPromptProps) => {
+  const finalPrompt = prompt!
+    ?.replace('{query}', query)
+    ?.replace('{context}', context);
+
+  const prevMessages = (history || [])?.map((each) => {
+    if (each.from === MessageFrom.human) {
+      return new HumanChatMessage(each.message);
+    }
+    return new AIChatMessage(each.message);
+  });
+
+  return [...prevMessages, new HumanChatMessage(finalPrompt)];
 };
 
 const chat = async ({
@@ -67,14 +116,16 @@ const chat = async ({
   stream,
   temperature,
   history,
+  modelName,
 }: {
-  datastore: Datastore;
+  datastore?: Datastore;
   query: string;
   prompt?: string;
   promptType?: PromptType;
   topK?: number;
   stream?: any;
   temperature?: number;
+  modelName?: string;
   history?: { from: MessageFrom; message: string }[];
 }) => {
   let results = [] as {
@@ -87,7 +138,7 @@ const chat = async ({
     const store = new DatastoreManager(datastore);
     results = await store.search({
       query: query,
-      topK: topK || 3,
+      topK: topK || 5,
       tags: [],
     });
   }
@@ -103,27 +154,31 @@ const chat = async ({
   // const instruct = `You are an AI assistant providing helpful advice, given the following extracted parts of a long document and a question.
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
 
-  let finalPrompt = prompt || '';
+  let messages = [] as (SystemChatMessage | HumanChatMessage | AIChatMessage)[];
 
   switch (promptType) {
     case PromptType.customer_support:
-      finalPrompt = getCustomerSupportPrompt({
-        prompt: finalPrompt,
-        query,
+      messages = getCustomerSupportMessages({
+        prompt,
         context,
+        query,
+        history,
       });
       break;
     case PromptType.raw:
-      finalPrompt = finalPrompt
-        ?.replace('{query}', query)
-        ?.replace('{context}', context);
+      messages = getRawMessages({
+        prompt,
+        context,
+        query,
+        history,
+      });
       break;
     default:
       break;
   }
 
   const model = new ChatOpenAI({
-    modelName: 'gpt-3.5-turbo-0613',
+    modelName: modelName || 'gpt-3.5-turbo-0613',
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [
@@ -141,18 +196,7 @@ const chat = async ({
   //   return new AIChatMessage(each.message);
   // });
 
-  const output = await model.call([
-    // ...messages,
-    // new HumanChatMessage(query),
-    new HumanChatMessage(finalPrompt),
-  ]);
-
-  // const regex = /SOURCE:\s*(.+)/;
-  // const match = output?.trim()?.match(regex);
-  // const source = match?.[1]?.replace('N/A', '')?.replace('None', '')?.trim();
-
-  // let answer = output?.trim()?.replace(regex, '')?.trim();
-  // answer = source ? `${answer}\n\n${source}` : answer;
+  const output = await model.call(messages);
 
   return {
     answer: output?.text?.trim?.(),

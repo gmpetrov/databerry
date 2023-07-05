@@ -1,4 +1,41 @@
-// SELECT user_name, created_at, feature, usecase, comment, prompt_type, prompt, result FROM xp_bnp_evals
+// SELECT user_name, created_at, feature, usecase, datastore_name, datasource_name, comment, prompt_type, prompt, result,
+//        CASE
+//     WHEN feature = 'qa' THEN score_1
+//     ELSE NULL
+//   END AS "style redactionnelle adapté à la recherche",
+//   CASE
+//     WHEN feature = 'qa' THEN score_2
+//     ELSE NULL
+//   END AS "respect du prompt",
+//   CASE
+//     WHEN feature = 'qa' THEN score_3
+//     ELSE NULL
+//   END AS "exhaustivité de la reponse",
+//   CASE
+//     WHEN feature = 'writing' THEN score_1
+//     ELSE NULL
+//   END AS "qualité redactionnelle - forme",
+//   CASE
+//     WHEN feature = 'writing' THEN score_2
+//     ELSE NULL
+//   END AS "respect du prompt",
+//   CASE
+//     WHEN feature = 'writing' THEN score_3
+//     ELSE NULL
+//   END AS "qualité des infos  exposées",
+//   CASE
+//     WHEN feature = 'summary' THEN score_1
+//     ELSE NULL
+//   END AS "qualité redactionnelle - forme",
+//   CASE
+//     WHEN feature = 'summary' THEN score_2
+//     ELSE NULL
+//   END AS "completude par rapport au prompt",
+//   CASE
+//     WHEN feature = 'summary' THEN score_3
+//     ELSE NULL
+//   END AS "pertinence de la réponse - fond"
+// FROM xp_bnp_evals
 
 import { NextApiResponse } from 'next';
 
@@ -21,6 +58,8 @@ export const evalBNP = async (req: AppNextApiRequest, res: NextApiResponse) => {
     score_2: string;
     score_3: string;
     comment: string;
+    datastoreName?: string;
+    datasourceName?: string;
   };
 
   const newEval = await prisma.xPBNPEval.create({
@@ -35,6 +74,8 @@ export const evalBNP = async (req: AppNextApiRequest, res: NextApiResponse) => {
       usecase: data.useCase,
       userName: data.name,
       result: data.result,
+      datasourceName: data.datasourceName,
+      datastoreName: data.datastoreName,
     },
   });
 

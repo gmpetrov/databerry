@@ -177,14 +177,17 @@ export default function XPBNPFeature() {
               </Stack>
             </form>
 
-            {state.currentDatastore && (
+            {(state.currentDatastore ||
+              (!state.currentDatastore && feature === 'writing')) && (
               <Button
                 endDecorator={<ArrowForwardRoundedIcon />}
                 sx={{ ml: 'auto' }}
                 variant="outlined"
                 onClick={() => {
                   router.push(
-                    `/xp/bnp/${feature}/${useCase}/${state.currentDatastore?.id}`
+                    `/xp/bnp/${feature}/${useCase}/${
+                      state.currentDatastore?.id || 'none'
+                    }`
                   );
                 }}
               >

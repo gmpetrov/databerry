@@ -9,13 +9,13 @@ export default function Cta() {
             Join the Generative AI Revolution
           </h2>
           <p className="max-w-xl mx-auto mt-6 text-lg leading-8 text-gray-300">
-            {`Thousands of businesses worldwide are using Databerry Generative AI platform to
+            {`Thousands of businesses worldwide are using Chaindesk Generative AI platform to
             solve business specific use-cases. Don't get left
             behind - start building your own custom AI chatbot today!`}
           </p>
           <div className="flex items-center justify-center mt-10 gap-x-6">
             <a
-              href="https://app.databerry.ai/agents"
+              href="https://app.chaindesk.ai/agents"
               className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Get started Now! →

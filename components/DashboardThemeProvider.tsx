@@ -17,8 +17,8 @@ function DashboardThemeProvider(props: any) {
         <CssVarsProvider
           theme={theme}
           defaultMode="dark"
-          modeStorageKey="databerry-dashboard-mode"
-          colorSchemeStorageKey="databerry-dashboard-color-scheme"
+          modeStorageKey="chaindesk-dashboard-mode"
+          colorSchemeStorageKey="chaindesk-dashboard-color-scheme"
         >
           <CssBaseline enableColorScheme />
           {props.children}

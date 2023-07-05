@@ -108,7 +108,7 @@ export default function Navigation() {
       },
       {
         label: 'Documentation',
-        route: 'https://docs.databerry.ai/',
+        route: 'https://docs.chaindesk.ai/',
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];
@@ -270,9 +270,9 @@ export default function Navigation() {
         </Stack>
       </Card>
       <Divider sx={{ my: 2 }}></Divider>
-      <Link href="mailto:support@databerry.ai" className="mx-auto">
+      <Link href="mailto:support@chaindesk.ai" className="mx-auto">
         <Typography level="body2" mx={'auto'}>
-          support@databerry.ai
+          support@chaindesk.ai
         </Typography>
       </Link>
     </Stack>

@@ -59,6 +59,7 @@ import { XPBNPLabels } from '@app/utils/config';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
+import xpData from '@app/utils/xp-bnp-data.json';
 
 const CreateDatasourceModal = dynamic(
   () => import('@app/components/CreateDatasourceModal'),
@@ -93,7 +94,9 @@ const EvalModal = (props: {
   feature: string;
   prompt: string;
   promptType: string;
-  datastoreId: string;
+  datastoreId?: string;
+  datasourceName?: string;
+  datastoreName?: string;
 }) => {
   const [state, setState] = useStateReducer({
     isLoading: false,
@@ -107,6 +110,8 @@ const EvalModal = (props: {
 
     const payload = {
       ...values,
+      datasourceName: props.datasourceName,
+      datastoreName: props.datastoreName,
       result: props.result,
       name: localStorage.getItem('userName'),
       useCase: props.useCase,
@@ -122,10 +127,11 @@ const EvalModal = (props: {
 
     await axios.post(`/api/xp/bnp/eval`, payload);
 
-    await axios.delete(`/api/xp/bnp/history`),
-      {
-        datastoreId: props.datastoreId,
-      };
+    await axios.delete(`/api/xp/bnp/history`, {
+      data: {
+        userName: localStorage.getItem('userName'),
+      },
+    });
 
     props?.handleClose();
     methods?.reset();
@@ -158,7 +164,10 @@ const EvalModal = (props: {
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack gap={2}>
             <FormControl>
-              <FormLabel>Score 1 (0-5)</FormLabel>
+              <FormLabel>
+                {`${(xpData as any)[props.feature]?.score_1 || 'Score 1'}`}
+                (0-5)
+              </FormLabel>
               <Input
                 {...methods.register('score_1')}
                 type="number"
@@ -171,7 +180,10 @@ const EvalModal = (props: {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Score 2 (0-5)</FormLabel>
+              <FormLabel>
+                {`${(xpData as any)[props.feature]?.score_2 || 'Score 2'}`}
+                (0-5)
+              </FormLabel>
               <Input
                 {...methods.register('score_2')}
                 type="number"
@@ -184,7 +196,10 @@ const EvalModal = (props: {
               />
             </FormControl>
             <FormControl>
-              <FormLabel>Score 3 (0-5)</FormLabel>
+              <FormLabel>
+                {`${(xpData as any)[props.feature]?.score_3 || 'Score 3'}`}
+                (0-5)
+              </FormLabel>
               <Input
                 {...methods.register('score_3')}
                 type="number"
@@ -225,7 +240,7 @@ const EvalModal = (props: {
 const prompts = {
   writing: {
     libre: [],
-    auto: ['Ecrit un poème comme molière sur databerry'],
+    auto: ['Ecrit un poème comme molière sur chaindesk'],
     assisté: [
       'Rédige un résumé de ... lignes sans aucun exemple du document ...',
       'Rédige un résumé de ... du document ... Avec à la fin une réflexion sur un des sujets abordés',
@@ -238,7 +253,7 @@ const prompts = {
   },
   summary: {
     libre: [],
-    auto: ['Ecrit un poème comme molière sur databerry'],
+    auto: ['Fait un résumé'],
     assisté: [
       'Rédige un résumé de ... lignes sans aucun exemple du document ...',
       'Rédige un résumé de ... du document ... Avec à la fin une réflexion sur un des sujets abordés',
@@ -247,7 +262,7 @@ const prompts = {
 };
 
 const SearchBNP = (props: {
-  datastoreId: string;
+  datastoreId?: string;
   feature: 'writing' | 'qa' | 'summary';
 }) => {
   const router = useRouter();
@@ -255,55 +270,148 @@ const SearchBNP = (props: {
     isEvalModalOpen: false,
     promptType: undefined as 'libre' | 'auto' | 'assisté' | undefined,
     prompt: '',
+    currentDatasourceId: undefined as string | undefined,
+    userName: '',
   });
+
+  let queryURL = `/api/xp/bnp/search`;
+
+  if (props.feature === 'summary' || props.feature === 'writing') {
+    queryURL = `/api/xp/bnp/summary`;
+  }
+
+  const getDatastoreQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getDatastore>
+  >(
+    props.datastoreId
+      ? `/api/datastores/${props.datastoreId}?offset=${0}&limit=${100}`
+      : null,
+    fetcher
+  );
+
   const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `/api/xp/bnp/search`,
-    queryHistoryURL: '/api/xp/bnp/history',
+    queryAgentURL: queryURL,
+    queryHistoryURL: state.userName
+      ? `/api/xp/bnp/history?userName=${state.userName}`
+      : undefined,
     channel: ConversationChannel.website,
     queryBody: {
       datastoreId: props.datastoreId,
+      datasourceId: state.currentDatasourceId,
+      userName: state.userName,
     },
   });
 
   React.useEffect(() => {
-    if (state.prompt) {
+    setState({
+      userName: localStorage.getItem('userName') || '',
+    });
+  }, []);
+
+  let showChatBox = false;
+
+  switch (props.feature) {
+    case 'qa':
+      showChatBox = true;
+      break;
+    case 'writing': {
+      if (!props.datastoreId) {
+        showChatBox = true;
+      } else if (props.datastoreId && state.currentDatasourceId) {
+        showChatBox = true;
+      }
+      break;
     }
-  }, [state.prompt]);
+    case 'summary':
+      if (state.currentDatasourceId) {
+        showChatBox = true;
+      }
+      break;
+    default:
+      break;
+  }
+
+  const datasourceName = React.useMemo(() => {
+    if (state.currentDatasourceId) {
+      const datasource = getDatastoreQuery?.data?.datasources?.find(
+        (each) => each.id === state.currentDatasourceId
+      );
+
+      return datasource?.name;
+    }
+    return undefined;
+  }, [state.currentDatasourceId, getDatastoreQuery?.data?.datasources]);
+
+  const datastoreName = getDatastoreQuery?.data?.name;
 
   return (
     <>
       <Stack>
-        {state.promptType && (
-          <Chip sx={{ mr: 'auto' }} variant="outlined" color="neutral">
-            Type de prompt: <strong>{state.promptType}</strong>
-          </Chip>
-        )}
-        <Stack direction="row">
-          {/* <Button
-            sx={{ mr: 'auto' }}
-            color="warning"
-            variant="outlined"
-            onClick={async () => {
-              await axios.delete(`/api/xp/bnp/history`),
-                {
-                  datastoreId: props.datastoreId,
-                };
+        <Stack direction={'row'} gap={2} sx={{ mb: 2 }}>
+          {state.promptType && (
+            <Chip sx={{}} variant="outlined" color="neutral">
+              Type de prompt: <strong>{state.promptType}</strong>
+            </Chip>
+          )}
 
-              window.location.reload();
-            }}
-          >
-            Reset Prompt
-          </Button> */}
-          {history.length > 0 && (
-            <Button
-              sx={{ ml: 'auto' }}
-              onClick={() => {
-                setState({ isEvalModalOpen: true });
+          {(props.feature === 'summary' ||
+            (props.feature === 'writing' && props?.datastoreId)) && (
+            <Select
+              placeholder="Selectionner un Document"
+              onChange={(_, value) => {
+                if (!state.currentDatasourceId) {
+                  setState({
+                    currentDatasourceId: value as string,
+                  });
+                } else {
+                  setState({
+                    currentDatasourceId: undefined,
+                  });
+
+                  setTimeout(() => {
+                    setState({
+                      currentDatasourceId: value as string,
+                    });
+                  }, 500);
+                }
               }}
             >
-              Evaluer
-            </Button>
+              {getDatastoreQuery?.data?.datasources?.map((datasource) => (
+                <Option key={datasource.id} value={datasource.id}>
+                  {datasource.name}
+                </Option>
+              ))}
+            </Select>
           )}
+
+          <Stack direction="row" gap={2} sx={{ ml: 'auto' }}>
+            <Button
+              sx={{ mr: 'auto' }}
+              color="warning"
+              variant="outlined"
+              onClick={async () => {
+                await axios.delete(`/api/xp/bnp/history`, {
+                  data: {
+                    userName: state.userName,
+                  },
+                });
+
+                window.location.reload();
+              }}
+            >
+              {`Supprimer l'historique`}
+            </Button>
+            {history.length > 0 && (
+              <Button
+                sx={{ ml: 'auto' }}
+                onClick={() => {
+                  setState({ isEvalModalOpen: true });
+                }}
+              >
+                Evaluer
+              </Button>
+            )}
+          </Stack>
         </Stack>
 
         <Box
@@ -312,20 +420,24 @@ const SearchBNP = (props: {
             maxHeight: '680px',
           }}
         >
-          <ChatBoxBNP
-            promptType={state.promptType}
-            prompt={state.prompt}
-            messages={history}
-            onSubmit={handleChatSubmit}
-            multiline
-            // messageTemplates={config.messageTemplates}
-            // initialMessage={config.initialMessage}
-          />
+          {showChatBox && (
+            <ChatBoxBNP
+              promptType={state.promptType}
+              prompt={state.prompt}
+              messages={history}
+              onSubmit={handleChatSubmit}
+              multiline
+              // messageTemplates={config.messageTemplates}
+              // initialMessage={config.initialMessage}
+            />
+          )}
         </Box>
       </Stack>
       <EvalModal
         datastoreId={props.datastoreId}
-        prompt={state.prompt}
+        datastoreName={datastoreName}
+        datasourceName={datasourceName}
+        prompt={state.prompt || history?.[0]?.message}
         promptType={state.promptType!}
         feature={router.query.feature as string}
         useCase={router.query.usecase as string}
@@ -387,7 +499,10 @@ const SearchBNP = (props: {
                 const index = value?.split('_')?.[1];
 
                 const prompt =
-                  (prompts as any)?.[props.feature]?.[type]?.[index || 0] || '';
+                  (xpData as any)?.[props.feature]?.['prompts']?.[type]?.[
+                    index || 0
+                  ]?.value || '';
+                // (prompts as any)?.[props.feature]?.[type]?.[index || 0] || '';
 
                 setState({
                   promptType: type as any,
@@ -396,7 +511,7 @@ const SearchBNP = (props: {
               }}
             >
               <Stack gap={2}>
-                {['writing', 'summary'].includes(props.feature) && (
+                {['summary'].includes(props.feature) && (
                   <>
                     <Radio value="auto" label="Auto" size="lg" />
                     <Divider></Divider>
@@ -407,14 +522,16 @@ const SearchBNP = (props: {
                   <>
                     <Typography>Assisté</Typography>
                     <Stack gap={1}>
-                      {prompts[props.feature]['assisté'].map((each, index) => (
-                        <Radio
-                          key={index}
-                          value={`assisté_${index}`}
-                          label={each}
-                          size="lg"
-                        />
-                      ))}
+                      {xpData[props.feature]['prompts']['assisté'].map(
+                        (each, index) => (
+                          <Radio
+                            key={index}
+                            value={`assisté_${index}`}
+                            label={each?.label}
+                            size="lg"
+                          />
+                        )
+                      )}
                     </Stack>
 
                     <Divider></Divider>
@@ -436,7 +553,9 @@ const SearchBNP = (props: {
 export default function XPBNPFeature() {
   const router = useRouter();
   const useCase = router.query.usecase as string;
-  const datastoreId = router.query.datastoreId as string;
+  const datastoreId = (
+    router.query.datastoreId !== 'none' ? router.query.datastoreId : undefined
+  ) as string | undefined;
   const feature = router.query.feature as 'qa' | 'writing' | 'summary';
 
   const { data: session, status } = useSession();
@@ -452,7 +571,7 @@ export default function XPBNPFeature() {
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
-  >(`/api/datastores/${datastoreId}`, fetcher);
+  >(datastoreId ? `/api/datastores/${datastoreId}` : null, fetcher);
 
   return (
     <Box
@@ -491,7 +610,7 @@ export default function XPBNPFeature() {
             <Typography color="primary">{useCase}</Typography>
           </Link>
           <Typography>
-            {getDatastoreQuery?.data?.name || datastoreId}
+            {getDatastoreQuery?.data?.name || datastoreId || 'Sans Datastore'}
           </Typography>
         </Breadcrumbs>
 

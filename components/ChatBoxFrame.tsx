@@ -41,13 +41,12 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     //   : undefined,
   });
 
+  const primaryColor =
+    (router?.query?.primaryColor as string) || config.primaryColor || '#ffffff';
+
   const textColor = useMemo(() => {
-    return pickColorBasedOnBgColor(
-      config.primaryColor || '#ffffff',
-      '#ffffff',
-      '#000000'
-    );
-  }, [config.primaryColor]);
+    return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
+  }, [primaryColor]);
 
   const handleFetchAgent = async () => {
     try {
@@ -101,8 +100,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           : theme.palette.background.default,
 
         '& .message-agent': {
-          backgroundColor: config.primaryColor,
-          borderColor: config.primaryColor,
+          backgroundColor: primaryColor,
+          // borderColor: primaryColor,
           color: textColor,
         },
       })}
@@ -112,6 +111,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         onSubmit={handleChatSubmit}
         messageTemplates={config.messageTemplates}
         initialMessage={config.initialMessage}
+        agentIconUrl={agent?.iconUrl!}
       />
     </Box>
   );

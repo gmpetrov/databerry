@@ -35,14 +35,14 @@ export const chatAgentRequest = async (
               agentId: id,
               userId: session?.user?.id,
             },
-            // include: {
-            //   messages: {
-            //     take: -20,
-            //     orderBy: {
-            //       createdAt: 'asc',
-            //     },
-            //   },
-            // },
+            include: {
+              messages: {
+                take: -4,
+                orderBy: {
+                  createdAt: 'asc',
+                },
+              },
+            },
           },
         },
       },
@@ -65,7 +65,7 @@ export const chatAgentRequest = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  const manager = new AgentManager({ agent, topK: 3 });
+  const manager = new AgentManager({ agent, topK: 5 });
 
   if (data.streaming) {
     res.writeHead(200, {
@@ -98,10 +98,10 @@ export const chatAgentRequest = async (
     manager.query({
       input: data.query,
       stream: data.streaming ? streamData : undefined,
-      // history: agent?.owner?.conversations?.[0]?.messages?.map((m) => ({
-      //   from: m.from,
-      //   message: m.text,
-      // })),
+      history: agent?.owner?.conversations?.[0]?.messages?.map((m) => ({
+        from: m.from,
+        message: m.text,
+      })),
     }),
     prisma.usage.update({
       where: {

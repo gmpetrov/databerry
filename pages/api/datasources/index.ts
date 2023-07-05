@@ -137,6 +137,22 @@ export const upsertDatasource = async (
 
   const id = data?.id || cuid();
 
+  let serviceProvider = null;
+
+  if ((data.config as any)?.serviceProviderId) {
+    const provider = await prisma.serviceProvider.findUnique({
+      where: {
+        id: (data.config as any)?.serviceProviderId,
+      },
+    });
+
+    if (provider?.ownerId !== session?.user?.id) {
+      throw new ApiError(ApiErrorType.UNAUTHORIZED);
+    }
+
+    serviceProvider = provider;
+  }
+
   const datasource = await prisma.appDatasource.upsert({
     where: {
       id,
@@ -157,6 +173,15 @@ export const upsertDatasource = async (
           id: data.datastoreId,
         },
       },
+      ...(serviceProvider
+        ? {
+            serviceProvider: {
+              connect: {
+                id: serviceProvider.id,
+              },
+            },
+          }
+        : {}),
     },
     update: {
       name: data.name,

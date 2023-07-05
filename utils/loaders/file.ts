@@ -10,6 +10,38 @@ import wordToText from '../word-to-text';
 
 import { DatasourceLoaderBase } from './base';
 
+export const fileBufferToString = async (props: {
+  buffer: any;
+  mimeType: string;
+}) => {
+  let text = '';
+
+  switch (props.mimeType) {
+    case 'text/csv':
+    case 'text/plain':
+    case 'application/json':
+    case 'text/markdown':
+      text = new TextDecoder('utf-8').decode(props.buffer);
+      break;
+    case 'application/pdf':
+      text = await pdfToText(props.buffer);
+      break;
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+      text = await pptxToText(props.buffer);
+      break;
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+      text = await wordToText(props.buffer);
+      break;
+    case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      text = await excelToText(props.buffer);
+      break;
+    default:
+      break;
+  }
+
+  return text;
+};
+
 export class FileLoader extends DatasourceLoaderBase {
   async getSize(text: string) {
     return new Blob([text]).size;
@@ -27,30 +59,10 @@ export class FileLoader extends DatasourceLoaderBase {
 
     const buffer = (res as any).Body.buffer;
 
-    let text = '';
-
-    switch ((this.datasource.config as any).type) {
-      case 'text/csv':
-      case 'text/plain':
-      case 'application/json':
-      case 'text/markdown':
-        text = (res as any).Body.toString('utf-8');
-        break;
-      case 'application/pdf':
-        text = await pdfToText(buffer);
-        break;
-      case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-        text = await pptxToText(buffer);
-        break;
-      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-        text = await wordToText(buffer);
-        break;
-      case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-        text = await excelToText(buffer);
-        break;
-      default:
-        break;
-    }
+    const text = await fileBufferToString({
+      buffer,
+      mimeType: (this.datasource?.config as any)?.type,
+    });
 
     return new Document({
       pageContent: text,

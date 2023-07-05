@@ -1,3 +1,4 @@
+import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Modal from '@mui/joy/Modal';
@@ -12,6 +13,7 @@ import {
   DatasourceType,
   DatastoreType,
 } from '@prisma/client';
+import axios from 'axios';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -74,7 +76,7 @@ export default function CreateDatastoreModal(props: Props) {
       disableButtons: true,
       component: (
         <DatasourceOptions
-          onSelect={(value) => {
+          onSelect={async (value) => {
             setState({
               selectedSourceType: value,
             });
@@ -133,16 +135,23 @@ export default function CreateDatastoreModal(props: Props) {
     <Modal
       onClose={props.handleClose}
       open={props.isOpen!}
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // height: '100vh',
+      }}
     >
       <Sheet
         variant="outlined"
         sx={{
           width: 600,
           maxWidth: '100%',
+          maxHeight: '95vh',
+          overflowY: 'auto',
           borderRadius: 'md',
-          p: 3,
           boxShadow: 'lg',
+          p: 3,
         }}
       >
         {/* <Alert severity="info">
@@ -167,8 +176,14 @@ export default function CreateDatastoreModal(props: Props) {
                 <StepContent>
                   <div className="flex flex-col space-y-4">
                     <Typography>{step.description}</Typography>
-                    {step.component}
 
+                    <Alert color="primary">
+                      Chaindesk works best with unstructured data. Better
+                      support for tabular data (csv, spreadsheet, etc...) is
+                      coming soon 😉
+                    </Alert>
+
+                    {step.component}
                     {!step.disableButtons && (
                       <Box sx={{ mb: 2 }}>
                         <div>

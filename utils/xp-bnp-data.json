@@ -1,0 +1,66 @@
+{
+  "qa": {
+    "score_1": "style redactionnelle adapté à la recherche",
+    "score_2": "respect du prompt",
+    "score_3": "exhaustivité de la reponse",
+    "prompts": {
+      "auto": [],
+      "libre": [],
+      "assisté": []
+    }
+  },
+  "writing": {
+    "score_1": "qualité redactionnelle - forme",
+    "score_2": "respect du prompt",
+    "score_3": "qualité des infos  exposées",
+    "prompts": {
+      "auto": [],
+      "libre": [],
+      "assisté": [
+        {
+          "label": "Rédaction Template courrier",
+          "value": "En tant que responsable de la relation client d’une banque, rédige une lettre pour les clients de la banque. Objet de la lettre : « …………………………………………………………….». La lettre doit rassurer les clients et de le guider sur les mesures à prendre en respectant la charte édito courrier. Charte édito courrier : 1. Introduction engageante et chaleureuse pour capter l’attention du client. 2. Explication détaillée du sujet spécifique et de son importance pour les clients de la banque. 3. Conseils pratiques ou mesures à prendre pour faire face à la situation liée au sujet spécifique. 4. Réassurance concernant les mesures de sécurité et de confidentialité mises en place par la banque. 5. Invitation à contacter le service client pour toute question ou préoccupation supplémentaire. La lettre doit avoir en un ton professionnel, rassurant et convivial qui reflète L’image de la banque ; être clair et concis, utiliser un langage simple et accessible pour que tous les clients puissent comprendre facilement."
+        },
+        {
+          "label": "Récriture FALC",
+          "value": "Ré écrire le document pour la cible ....... selon les instructions suivantes. 1. Reformule les phrases trop longues afin de ne pas avoir de phrases qui dépassent les 30 mots.  2. Utilise des synonymes lorsque tu détectes des répétitions.  3. Ajoute des expressions de transition pour fluidifier la lecture et attirer l’attention. 4. Le texte doit être simple et compréhensible par tous.  5. Le vocabulaire utilisé doit être accessible pour les néophytes 6. Après avoir fourni le texte corrigé, donne le détail de toutes les corrections que tu as réalisées. "
+        },
+        {
+          "label": "Rédaction avis google",
+          "value": "En tant que conseiller bancaire, rédige une réponse au commentaire écrit par un client sur le store google en respectant la charte édito google.  Remarque du client :……………………………………………………………. La lettre doit respecter la charte édito commentaire google. Chartre édito commentaire google : Formalisme : Faites des réponses de trois lignes maximums. Commencez par « Bonjour » et enchaînez votre réponse sans sauter de ligne. Parlez au nom de l’équipe de l’agence. 2. Tonalité professionnelle et positive : Utilisez un langage formel et amical pour instaurer la confiance avec les clients. Soyez respectueux et évitez les formulations agressives, défensives ou les excuses à outrance. 3. Empathie et compréhension : Faites preuve d’empathie en reconnaissant les préoccupations et les expériences des clients. Montrez que vous comprenez leur point de vue et que vous êtes là pour les aider. 4. Personnalisation : Adaptez votre réponse à chaque client en utilisant leur nom si possible. Référez-vous aux détails spécifiques de leur avis pour montrer que vous avez pris le temps de les comprendre. 5. Solutions et actions concrètes : Proposez des solutions réfléchies et pratiques pour résoudre les problèmes des clients. Offrez des conseils, des alternatives ou des contacts appropriés au sein de la banque pour les aider à trouver une solution satisfaisante."
+        },
+        {
+          "label": "Rédaction à partir d’un document",
+          "value": "Écris un article de ..... Mots sur le sujet .......... à partir du document. L’objectif est de divertir, persuader, éduquer, former, avertir, .... . la cible est ........................ L’article doit être structuré en plusieurs parties. L’article doit comporter des exemples précis pour renforcer des arguments présentés"
+        },
+        {
+          "label": "Rédaction générique",
+          "value": "Écris un article de ...... mots sur le theme de ................................ . L’objectif est de divertir, persuader, éduquer, former, avertir, .... . la cible est ........................ L’article doit être structuré en plusieurs parties. L’article doit comporter des exemples précis pour renforcer des arguments présentés"
+        },
+        {
+          "label": "Optimisation SEO",
+          "value": "écris la liste 10 mots clés optimisés SEO  en lien sur le theme :  ......... . Réécris le document  de manière pertinente en utilisant  la liste des mots clé."
+        }
+      ]
+    }
+  },
+  "summary": {
+    "score_1": "qualité redactionnelle - forme",
+    "score_2": "completude par rapport au prompt",
+    "score_3": "pertinence de la réponse - fond",
+    "prompts": {
+      "auto": [
+        {
+          "value": "Fait un resumé en francais"
+        }
+      ],
+      "libre": [],
+      "assisté": [
+        {
+          "label": "Résumé",
+          "value": "Résume le document en ………… mots pour la cible ………………………………"
+        }
+      ]
+    }
+  }
+}

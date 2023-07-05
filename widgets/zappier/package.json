@@ -1,7 +1,7 @@
 {
-  "name": "databerry",
+  "name": "chaindesk",
   "version": "1.0.5",
-  "description": "Databerry is a no-code platform for building custom ChatGTP agents trained on custom data.\\nUse Databerry API to query an Agent, Upload a document to a datastore, query a datastore (semantic search)",
+  "description": "Chaindesk is a no-code platform for building custom ChatGTP agents trained on custom data.\\nUse Chaindesk API to query an Agent, Upload a document to a datastore, query a datastore (semantic search)",
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive -t 10000"

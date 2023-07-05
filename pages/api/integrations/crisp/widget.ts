@@ -14,7 +14,6 @@ const schema = z.object({
   session_id: z.string().min(1),
   token: z.string().min(1),
   locale: z.string().optional(),
-  //   databerryApiKey: z.string().min(1),
 });
 
 const CrispClient = new Crisp();
@@ -74,8 +73,8 @@ export const widgetActions = async (
       from: 'operator',
       origin: 'chat',
       user: {
-        nickname: 'Databerry.ai',
-        avatar: 'https://databerry.ai/databerry-rounded-bg-white.png',
+        nickname: 'Chaindesk.ai',
+        avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
       },
       stealth: true,
       content: `Summary:\n${output}`,

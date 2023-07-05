@@ -13,11 +13,11 @@ export const getHistoryBNP = async (
 ) => {
   const session = req.session;
 
-  const datastoreId = req.body.datastoreId as string;
+  const userName = req.query.userName as string;
 
   const messages = await prisma.messageBNP.findMany({
     where: {
-      datastoreId,
+      userName,
     },
     take: -20,
     orderBy: {
@@ -36,11 +36,13 @@ export const deleteHistoryBNP = async (
 ) => {
   const session = req.session;
 
-  const datastoreId = req.body.datastoreId as string;
+  const userName = req.body.userName as string;
 
   await prisma.messageBNP.deleteMany({
     where: {
-      datastoreId,
+      userName: {
+        equals: userName,
+      },
     },
   });
 

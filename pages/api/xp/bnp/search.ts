@@ -6,7 +6,7 @@ import { AppNextApiRequest, ChatRequest } from '@app/types';
 import accountConfig from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import chat from '@app/utils/chat-v2';
+import chat from '@app/utils/chat';
 import ConversationManager from '@app/utils/conversation';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
@@ -22,6 +22,7 @@ export const XPBNPQuery = async (
   const id = req.query.id as string;
   const data = req.body as {
     datastoreId: string;
+    userName: string;
     query: string;
     streaming: boolean;
   };
@@ -85,7 +86,7 @@ export const XPBNPQuery = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  //   const manager = new AgentManager({ agent, topK: 3 });
+  //   const manager = new AgentManager({ agent, topK: 5 });
 
   if (data.streaming) {
     res.writeHead(200, {
@@ -139,7 +140,7 @@ export const XPBNPQuery = async (
     promptType: 'customer_support',
     datastore: datastore as any,
     query: data.query,
-    topK: 3,
+    topK: 5,
     temperature: 0,
     stream: data.streaming ? streamData : undefined,
     history: datastore?.messagesBNP?.map((m) => ({
@@ -152,12 +153,14 @@ export const XPBNPQuery = async (
     data: [
       {
         datastoreId: datastore?.id,
+        userName: data.userName,
         text: data.query,
         from: MessageFrom.human,
         createdAt: receivedDate,
       },
       {
         datastoreId: datastore?.id,
+        userName: data.userName,
         text: answer,
         from: MessageFrom.agent,
       },

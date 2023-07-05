@@ -179,7 +179,11 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
 
         <FormControl>
           <FormLabel>Brand Color</FormLabel>
-          <Input placeholder="#000000" {...methods.register('primaryColor')} />
+          <Input
+            defaultValue={config?.primaryColor || '#000000'}
+            placeholder="#000000"
+            {...methods.register('primaryColor')}
+          />
         </FormControl>
 
         {/* <FormControl>
@@ -379,7 +383,7 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
                       <CssVarsProvider
                         theme={theme}
                         defaultMode="light"
-                        modeStorageKey="databerry-chat-iframe"
+                        modeStorageKey="chaindesk-chat-iframe"
                       >
                         <CssBaseline enableColorScheme />
                         <Box
@@ -417,7 +421,7 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
           }}
         >
           {`<iframe
-  src="https://app.databerry.ai/agents/${getAgentQuery?.data?.id}/iframe"
+  src="https://app.chaindesk.ai/agents/${getAgentQuery?.data?.id}/iframe"
   width="100%"
   height="100%"
   frameborder="0"

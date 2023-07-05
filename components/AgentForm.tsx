@@ -218,6 +218,8 @@ export default function BaseForm(props: Props) {
         iconUrl: iconUrl,
       });
 
+      methods.setValue('iconUrl', iconUrl);
+
       await upsertAgentMutation.trigger({
         ...defaultValues,
         iconUrl,
@@ -279,62 +281,64 @@ export default function BaseForm(props: Props) {
         onSubmit={handleSubmit(onSubmit)}
       >
         {networkError && <Alert color="danger">{networkError}</Alert>}
-        <Stack gap={1}>
-          <Typography level="body2">Icon</Typography>
-          <input
-            type="file"
-            hidden
-            accept={'image/*'}
-            onChange={handleUploadAgentIcon}
-            ref={fileInputRef as any}
-          />
-
+        {props.defaultValues?.id && (
           <Stack gap={1}>
-            <AvatarGroup>
-              <Avatar
-                size="lg"
-                variant="outlined"
-                src={`${state?.iconUrl}?timestamp=${Date.now()}`}
-              />
-            </AvatarGroup>
-            <Stack direction="row" gap={1}>
-              <Button
-                variant="outlined"
-                color="neutral"
-                size="sm"
-                onClick={() => {
-                  (fileInputRef as any).current?.click?.();
-                }}
-                startDecorator={<AutorenewIcon />}
-                loading={state.isUploadingAgentIcon}
-              >
-                Replace
-              </Button>
-              {state?.iconUrl && state?.iconUrl !== defaultIconUrl && (
+            <Typography level="body2">Icon</Typography>
+            <input
+              type="file"
+              hidden
+              accept={'image/*'}
+              onChange={handleUploadAgentIcon}
+              ref={fileInputRef as any}
+            />
+
+            <Stack gap={1}>
+              <AvatarGroup>
+                <Avatar
+                  size="lg"
+                  variant="outlined"
+                  src={`${state?.iconUrl}?timestamp=${Date.now()}`}
+                />
+              </AvatarGroup>
+              <Stack direction="row" gap={1}>
                 <Button
                   variant="outlined"
-                  color="danger"
-                  onClick={handleDeleteAgentIcon}
+                  color="neutral"
                   size="sm"
-                  startDecorator={<DeleteIcon />}
+                  onClick={() => {
+                    (fileInputRef as any).current?.click?.();
+                  }}
+                  startDecorator={<AutorenewIcon />}
+                  loading={state.isUploadingAgentIcon}
                 >
-                  Delete
+                  Replace
                 </Button>
-              )}
-              {/* {defaultValues?.pluginIconUrl && (
-                <Button
-                  variant="outlined"
-                  color="danger"
-                  onClick={handleDeleteAgentIcon}
-                  size="sm"
-                  startDecorator={<DeleteIcon />}
-                >
-                  Delete
-                </Button>
-              )} */}
+                {state?.iconUrl && state?.iconUrl !== defaultIconUrl && (
+                  <Button
+                    variant="outlined"
+                    color="danger"
+                    onClick={handleDeleteAgentIcon}
+                    size="sm"
+                    startDecorator={<DeleteIcon />}
+                  >
+                    Delete
+                  </Button>
+                )}
+                {/* {defaultValues?.pluginIconUrl && (
+                        <Button
+                          variant="outlined"
+                          color="danger"
+                          onClick={handleDeleteAgentIcon}
+                          size="sm"
+                          startDecorator={<DeleteIcon />}
+                        >
+                          Delete
+                        </Button>
+                      )} */}
+              </Stack>
             </Stack>
           </Stack>
-        </Stack>
+        )}
         <Input
           label="Name (optional)"
           control={control as any}

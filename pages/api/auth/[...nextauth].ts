@@ -70,8 +70,6 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
-          // scope:
-          //   'https://www.googleapis.com/auth/calendar.readonly openid email profile',
           prompt: 'consent',
           access_type: 'offline',
           response_type: 'code',

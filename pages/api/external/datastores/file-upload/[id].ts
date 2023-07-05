@@ -31,7 +31,10 @@ const cors = Cors({
 const handler = createApiHandler();
 
 const FileSchema = z.object({
-  mimetype: z.enum(AcceptedDatasourceMimeTypes),
+  mimetype: z.enum([
+    ...AcceptedDatasourceMimeTypes,
+    'application/octet-stream',
+  ]),
   fieldname: z.string(),
   originalname: z.string(),
   encoding: z.string(),
@@ -43,6 +46,18 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const file = (req as any).file as z.infer<typeof FileSchema>;
   const fileName = (req as any)?.body?.fileName as string;
   const custom_id = (req as any)?.body?.custom_id as string;
+
+  // Patch for mimetype 'application/octet-stream' as some http clients don't send the correct mimetype (e.g curl with json file)
+  if (file?.mimetype === 'application/octet-stream') {
+    let type = mime.contentType(file.originalname);
+
+    if (type) {
+      type = type.split(';')?.[0];
+      file.mimetype = type as any;
+    } else {
+      file.mimetype = 'octet' as any;
+    }
+  }
 
   try {
     await FileSchema.parseAsync(file);

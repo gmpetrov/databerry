@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: cURL request
-        run: curl -X GET https://app.databerry.ai/api/crons/reset-usage?secret=$NEXTAUTH_SECRET
+        run: curl -X GET https://app.chaindesk.ai/api/crons/reset-usage?secret=$NEXTAUTH_SECRET
         env:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}

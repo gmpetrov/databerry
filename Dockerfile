@@ -18,7 +18,7 @@ RUN \
     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
     else echo "Lockfile not found." && exit 1; \
     fi
-RUN rm -rf node_modules/.pnpm/canvas@2.11.0
+RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -73,7 +73,7 @@ RUN \
     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
     else echo "Lockfile not found." && exit 1; \
     fi
-RUN rm -rf node_modules/.pnpm/canvas@2.11.0
+RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 USER nextjs
 
