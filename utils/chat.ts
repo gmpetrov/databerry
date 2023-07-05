@@ -7,7 +7,7 @@ import {
   SystemChatMessage,
 } from 'langchain/schema';
 
-import { ChatResponse } from '@app/types';
+import { ChatResponse, SearchRequestSchema } from '@app/types';
 
 import { DatastoreManager } from './datastores';
 import { CUSTOMER_SUPPORT } from './prompt-templates';
@@ -117,6 +117,7 @@ const chat = async ({
   temperature,
   history,
   modelName,
+  filters,
 }: {
   datastore?: Datastore;
   query: string;
@@ -127,6 +128,7 @@ const chat = async ({
   temperature?: number;
   modelName?: string;
   history?: { from: MessageFrom; message: string }[];
+  filters?: SearchRequestSchema['filters'];
 }) => {
   let results = [] as {
     text: string;
@@ -140,6 +142,7 @@ const chat = async ({
       query: query,
       topK: topK || 5,
       tags: [],
+      filters,
     });
   }
 

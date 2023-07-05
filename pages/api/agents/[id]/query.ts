@@ -102,6 +102,7 @@ export const chatAgentRequest = async (
         from: m.from,
         message: m.text,
       })),
+      filters: data.filters,
     }),
     prisma.usage.update({
       where: {

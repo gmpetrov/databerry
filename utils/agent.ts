@@ -9,6 +9,8 @@ import {
 } from 'langchain/prompts';
 import { Tool as LangchainTool } from 'langchain/tools';
 
+import { SearchRequestSchema } from '@app/types/dtos';
+
 import chat from './chat';
 import { ModelNameConfig } from './config';
 
@@ -33,10 +35,12 @@ export default class AgentManager {
     input,
     stream,
     history,
+    filters,
   }: {
     input: string;
     stream?: any;
     history?: { from: MessageFrom; message: string }[] | undefined;
+    filters?: SearchRequestSchema['filters'];
   }) {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
@@ -49,6 +53,7 @@ export default class AgentManager {
         temperature: this.agent.temperature,
         stream,
         history,
+        filters,
       });
 
       return answer;

@@ -20,6 +20,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  Select,
 } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
@@ -31,6 +32,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Option from '@mui/joy/Option';
 import Stack from '@mui/joy/Stack';
 import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
@@ -44,6 +46,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+// import * as pdfjs from 'pdfjs-dist';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
@@ -57,10 +60,26 @@ import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgentChat from '@app/hooks/useAgentChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
+import { getDatasource } from '@app/pages/api/datasources/[id]';
+import { getDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
 import agentToolFormat from '@app/utils/agent-tool-format';
+import getS3RootDomain from '@app/utils/get-s3-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
+
+// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
+// pdfjs.GlobalWorkerOptions.workerPort = new Worker(
+//   'node_modules/pdfjs-dist/build/pdf.worker.entry.js'
+// );
+
+const DatasourceViewer = dynamic(
+  () => import('@app/components/DatasourceViewer'),
+  {
+    ssr: false,
+  }
+);
 
 const ChatInterfaceConfigForm = dynamic(
   () => import('@app/components/ChatInterfaceConfigForm'),
@@ -114,6 +133,7 @@ export default function AgentPage() {
     isBubbleWidgetModalOpen: false,
     isIFrameWidgetModalOpen: false,
     isStandalonePageWidgetModalOpen: false,
+    currentDatasourceId: undefined as string | undefined,
   });
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
@@ -121,8 +141,24 @@ export default function AgentPage() {
     fetcher
   );
 
+  const datastoreId = getAgentQuery?.data?.tools?.[0]?.datastoreId;
+
+  const getDatastoreQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getDatastore>
+  >(
+    datastoreId
+      ? `/api/datastores/${datastoreId}?offset=${0}&limit=${100}`
+      : null,
+    fetcher
+  );
+
   const { handleChatSubmit, history } = useAgentChat({
     queryAgentURL: `/api/agents/${router.query?.agentId}/query`,
+    queryBody: {
+      filters: {
+        datasource_id: state.currentDatasourceId,
+      },
+    },
     // queryHistoryURL: `/api/agents/${router.query?.agentId}/history/${session?.user?.id}`,
   });
 
@@ -320,7 +356,8 @@ export default function AgentPage() {
         <Divider sx={{ mb: 4 }} />
 
         {router.query.tab === 'chat' && (
-          <Box
+          <Stack
+            direction="row"
             sx={{
               position: 'relative',
               width: '100%',
@@ -329,13 +366,37 @@ export default function AgentPage() {
               overflow: 'hidden',
             }}
           >
+            <Stack minWidth={'50%'} maxWidth={'50%'}>
+              {getDatastoreQuery?.data && (
+                <Select
+                  placeholder="Selectionner un Document"
+                  onChange={(_, value) => {
+                    setState({
+                      currentDatasourceId: value as string,
+                    });
+                  }}
+                >
+                  {getDatastoreQuery?.data?.datasources?.map((datasource) => (
+                    <Option key={datasource.id} value={datasource.id}>
+                      {datasource.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+
+              {state.currentDatasourceId && (
+                <div className="w-full h-full">
+                  <DatasourceViewer datasourceId={state.currentDatasourceId} />
+                </div>
+              )}
+            </Stack>
             <ChatBox
               messages={history}
               onSubmit={handleChatSubmit}
               agentIconUrl={getAgentQuery?.data?.iconUrl!}
               disableWatermark
             />
-          </Box>
+          </Stack>
         )}
 
         {
