@@ -1,15 +1,16 @@
+import { DatasourceType } from '@prisma/client';
 import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios';
-import { map } from 'cheerio/lib/api/traversing';
-import { resolve } from 'path';
 import { z } from 'zod';
 
 import { NotionBlock, NotionMainPage } from '@app/types/notion-models';
 import type { Document } from '@app/utils/datastores/base';
 
-import { DatasourceLoaderBase } from './base';
+import cuid from '../cuid';
+import logger from '../logger';
+import prisma from '../prisma-client';
 
+import { DatasourceExtended, DatasourceLoaderBase } from './base';
 
-let parentsId : Array<string> = []
 
 const notionHeader = {
     headers:{
@@ -17,54 +18,112 @@ const notionHeader = {
         'Notion-Version': process.env.NOTION_VERSION
     }
 }
-const getNotionBasePages = async() => {
+
+
+const getNotionBasePages = async(datasource: DatasourceExtended) => {
     const searchUrl = `${process.env.NOTION_BASE_URL}/search/`
     const basePages: Array<any> = (await axios.post(searchUrl,{},notionHeader)).data.results
-    const filteredBasePages = (basePages).filter(val => val.parent.type === 'workspace')
+    const filteredBasePages = basePages.filter(val => val.parent.type === 'workspace')
+
     let sentencesList: Array<string> = []
     const blocksList: Array<any> = []
     let finalString = ""
-
-    return await new Promise<Array<any>>((resolve) => {
-        filteredBasePages.map(async (page) => {
-            const childBlocks: Array<any> = []
-            const notionBlocks = await getNotionBlocks(page.id)
-            notionBlocks.map((block) => {
-                if(block.has_children) {
-                    childBlocks.push(block)
-                }
-                blocksList.push(block)
-            })
-            resolve(childBlocks)
-        })
-    })
-    .then(async (blocks) => {
-        return new Promise(async(resolve) =>{
-            await flattenChildBlocks(blocks)
-            .then((flattens) => {
-                flattens.map((block)=>{
+    let stackedPromises:Array<any> = []
+    
+    filteredBasePages.map(async (page) => {
+        const childBlocks: Array<any> = []
+        const groupId = cuid()
+        // await prisma.appDatasource.create({
+        //     data: {
+        //         id: groupId,
+        //         name: page.properties.title.title.text.content,
+        //         type: DatasourceType.notion,
+        //         config: {
+        //             ...(datasource.config as any),
+        //             page_id: page.id
+        //         },
+        //         datastoreId: datasource.datastoreId
+        //     },
+        // });
+        stackedPromises.push(
+            new Promise<any>(async(resolve) => {
+                const notionBlocks = await getNotionBlocks(page.id)
+                notionBlocks.map((block) => {
+                    if(block.has_children) {
+                        childBlocks.push(block)
+                    }
                     blocksList.push(block)
                 })
-                blocksList.map((block)=>{
-                    const sentences = getBlockContents(block)
-                    sentences.map((line) =>{
-                        sentencesList.push(line)
-                    })
-                })
-                sentencesList.map((line)=>{
-                    finalString = finalString.concat(line)
-                })
-                resolve(finalString)
+                resolve({id:groupId,data:childBlocks})
             })
+        )
+    })
+    return await Promise.all(stackedPromises)
+    .then(async (blocks) => {
+        const promArr: Array<Promise<string>> = []
+        const flattenBlocksArray: Array<any> = []
+        const pageContent: Array<string> = []
+        blocks.map((el) => {
+            el.data.map((arr: any) => {
+                flattenBlocksArray.push(arr)
+            })
+            promArr.push(new Promise(async(resolve) => {
+                await flattenChildBlocks(flattenBlocksArray)
+                .then((flattens) => {
+                    flattens.map((block) => {
+                        blocksList.push(block)
+                    })
+                    blocksList.map((block) => {
+                        const sentences = getBlockContents(block)
+                        sentences.map((line) =>{
+                            sentencesList.push(line)
+                        })
+                    })
+                    sentencesList.map((line) => {
+                        finalString = finalString.concat(line)
+                    })
+                    resolve(finalString)
+                })
+            }))
         })
+        return Promise.all(promArr)
+        // return new Promise(async(resolve) => {
+        //     await flattenChildBlocks(flattenBlocksArray)
+        //     .then((flattens) => {
+        //         flattens.map((block) => {
+        //             blocksList.push(block)
+        //         })
+        //         blocksList.map((block) => {
+        //             const sentences = getBlockContents(block)
+        //             sentences.map((line) =>{
+        //                 sentencesList.push(line)
+        //             })
+        //         })
+        //         sentencesList.map((line) => {
+        //             finalString = finalString.concat(line)
+        //         })
+        //         resolve(finalString)
+        //     })
+        // })
     })
     .then((str)=>{
+        str.map(async()=>{
+            await prisma.appDatasource.create({
+                data: {
+                id: groupId,
+                name: page.properties.title.title.text.content,
+                type: DatasourceType.notion,
+                config: {
+                    ...(datasource.config as any),
+                    page_id: page.id
+                },
+                datastoreId: datasource.datastoreId
+                },
+            });
+        })
         return(str)
     })
 }
-
-
-
 const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
     const container: Array<any> = []
     let childContainer: Array<any> = []
@@ -123,7 +182,6 @@ const getBlockContents = (block: any) => {
 
 
 export class NotionLoader  extends DatasourceLoaderBase {
-    
     getSize = async () => {
         const url: string = (
           this.datasource.config as z.infer<typeof NotionBlock>['id']
@@ -133,15 +191,19 @@ export class NotionLoader  extends DatasourceLoaderBase {
     };
 
     async load() {
-        const resp = await getNotionBasePages()
-    return {
-        pageContent: resp,
-        metadata: {
-            source: 'notion',
-            datasource_id: this.datasource.id,
-            source_type: this.datasource.type,
-            tags: [],
-        },
-    } as Document
+        const resp = await getNotionBasePages(this.datasource)
+        return {
+            pageContent: resp[0],
+            metadata: {
+                source: 'notion',
+                datasource_id: this.datasource.id,
+                source_type: this.datasource.type,
+                tags: [],
+            },
+        } as Document
+    }
+
+    async recurs() {
+
     }
 }
