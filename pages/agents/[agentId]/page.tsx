@@ -1,5 +1,3 @@
-import createCache from '@emotion/cache';
-import { CacheProvider } from '@emotion/react';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import WebIcon from '@mui/icons-material/Language';
@@ -14,12 +12,6 @@ import {
   Typography,
 } from '@mui/joy';
 import colors from '@mui/joy/colors';
-import {
-  CssVarsProvider,
-  extendTheme,
-  StyledEngineProvider,
-  ThemeProvider,
-} from '@mui/joy/styles';
 import Avatar from '@mui/material/Avatar';
 import { Agent, Prisma } from '@prisma/client';
 import Head from 'next/head';
@@ -31,11 +23,12 @@ import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/external/agents/[id]';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
+import prisma from '@app/utils/prisma-client';
 import { fetcher } from '@app/utils/swr-fetcher';
 
-function App() {
+function App(props: { agentId: string }) {
   const router = useRouter();
-  const agentId = router.query.agentId;
+  const agentId = props.agentId;
 
   const [state, setState] = useStateReducer({
     isPageReady: false,
@@ -579,3 +572,51 @@ App.getLayout = function getLayout(page: ReactElement) {
 };
 
 export default App;
+
+export async function getStaticPaths() {
+  const all: string[] = [];
+
+  return {
+    paths: all.map((path) => {
+      return { params: { site: path } };
+    }),
+    fallback: 'blocking',
+  };
+}
+
+export async function getStaticProps({
+  params: { agentId },
+}: {
+  params: {
+    agentId: string;
+  };
+}) {
+  let id = agentId;
+
+  if (agentId.startsWith('@')) {
+    const handle = agentId.replace('@', '');
+
+    const agent = await prisma.agent.findUnique({
+      where: {
+        handle,
+      },
+    });
+
+    id = agent?.id as string;
+
+    if (!agent) {
+      return {
+        redirect: {
+          destination: `/`,
+        },
+      };
+    }
+  }
+
+  return {
+    props: {
+      agentId: id,
+    },
+    revalidate: 10,
+  };
+}

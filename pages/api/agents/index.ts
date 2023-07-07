@@ -87,6 +87,7 @@ export const upsertAgent = async (
       promptType: data.promptType,
       temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
+      handle: data.handle,
       owner: {
         connect: {
           id: session?.user?.id,
@@ -117,6 +118,7 @@ export const upsertAgent = async (
       temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
       iconUrl: data.iconUrl,
+      handle: data.handle,
       tools: {
         createMany: {
           data: newTools.map((tool) => ({

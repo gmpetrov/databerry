@@ -183,10 +183,25 @@ model Agent {
 
   tools Tool[]
 
+  handle  String?  @unique @map("handle")
+  domains Domain[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("agents")
+}
+
+model Domain {
+  id      String @id @default(cuid())
+  name    String @unique
+  agentId String @map("agent_id")
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("domains")
 }
 
 model Conversation {

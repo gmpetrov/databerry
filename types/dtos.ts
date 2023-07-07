@@ -150,6 +150,25 @@ export const UpsertAgentSchema = z.object({
     )
     .optional(),
   // .max(1),
+  handle: z
+    .string()
+    .trim()
+    .max(15)
+    .refine((val) => (!!val && val.length >= 4 ? true : false), {
+      message: 'String must contain at least 4 character(s)',
+    })
+    .refine((val) => /^[a-zA-Z0-9_]+$/.test(val), {
+      message: 'Must not contain special characters except for underscore _',
+    })
+    .refine((val) => !val.startsWith('_'), {
+      message: 'Cannot start with _',
+    })
+    .refine((val) => !val.endsWith('_'), {
+      message: 'Cannot end with _',
+    })
+    .transform((val) => val.toLowerCase())
+    .optional()
+    .nullable(),
 });
 
 export type UpsertAgentSchema = z.infer<typeof UpsertAgentSchema>;

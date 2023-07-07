@@ -1,8 +1,8 @@
-import createCache from '@emotion/cache';
-import { CacheProvider, ThemeProvider } from '@emotion/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import AlternateEmailRoundedIcon from '@mui/icons-material/AlternateEmailRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import WebIcon from '@mui/icons-material/Language';
@@ -14,10 +14,12 @@ import {
   Button,
   Card,
   Checkbox,
+  Chip,
   CircularProgress,
   CssBaseline,
   Divider,
   FormControl,
+  FormHelperText,
   FormLabel,
   IconButton,
   List,
@@ -38,23 +40,22 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import pDebounce from 'p-debounce';
 import React, { useEffect, useState } from 'react';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { Controller, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
-import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 import useSWR from 'swr';
 import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
+import { UpsertAgentSchema } from '@app/types/dtos';
 import { AgentInterfaceConfig } from '@app/types/models';
 import { fetcher } from '@app/utils/swr-fetcher';
-
-import ChatBoxFrame from './ChatBoxFrame';
-import ChatBubble, { theme } from './ChatBubble';
+import writeClipboard from '@app/utils/write-clipboard';
 
 if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
@@ -70,6 +71,7 @@ export default function StandalonePageSettings(props: Props) {
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     counter: 0,
+    isValidatingHandle: false,
   });
   const router = useRouter();
 
@@ -79,20 +81,27 @@ export default function StandalonePageSettings(props: Props) {
     fetcher
   );
 
-  const methods = useForm<AgentInterfaceConfig>({
-    resolver: zodResolver(AgentInterfaceConfig),
+  const methods = useForm<UpsertAgentSchema>({
+    resolver: zodResolver(UpsertAgentSchema),
+    defaultValues: getAgentQuery?.data as UpsertAgentSchema,
   });
 
-  const onSubmit = async (values: AgentInterfaceConfig) => {
+  const onSubmit = async (values: UpsertAgentSchema) => {
     try {
       setIsLoading(true);
+
+      const isHandleValid = await validateHandle(values.handle as string);
+
+      if (!isHandleValid) {
+        throw 'Handle not valid';
+      }
 
       console.log('values', values);
 
       await toast.promise(
         axios.post('/api/agents', {
           ...getAgentQuery?.data,
-          interfaceConfig: values,
+          ...values,
         }),
         {
           loading: 'Updating...',
@@ -113,9 +122,50 @@ export default function StandalonePageSettings(props: Props) {
     }
   };
 
+  const validateHandle = async (value?: string) => {
+    let isHandleValid = false;
+    try {
+      setState({
+        isValidatingHandle: true,
+      });
+
+      if (!value) {
+        throw '';
+      }
+
+      const isValid = await methods.trigger('handle');
+
+      if (!isValid) {
+        throw '';
+      }
+
+      const res = await axios.post(`/api/agents/check-handle-available`, {
+        handle: value,
+      });
+
+      if (
+        res.data.available ||
+        (!res.data.available && res.data?.agentId === getAgentQuery?.data?.id)
+      ) {
+        methods.setValue('handle', value);
+        isHandleValid = true;
+      } else {
+        methods.setError('handle', {
+          message: 'Handle already taken',
+        });
+      }
+    } catch (err) {
+    } finally {
+      setState({
+        isValidatingHandle: false,
+      });
+    }
+    return isHandleValid;
+  };
+
   useEffect(() => {
     if (getAgentQuery.data) {
-      methods.reset(getAgentQuery.data.interfaceConfig as AgentInterfaceConfig);
+      methods.reset(getAgentQuery.data as UpsertAgentSchema);
     }
   }, [getAgentQuery.data]);
 
@@ -123,7 +173,11 @@ export default function StandalonePageSettings(props: Props) {
 
   console.log('errors', methods.formState.errors);
 
-  const pageURL = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/${getAgentQuery?.data?.id}/page`;
+  const botHandle = methods.watch('handle');
+  const pageURL = `${process.env.NEXT_PUBLIC_DASHBOARD_URL?.replace(
+    'app.',
+    ''
+  )}/@${botHandle}`;
 
   return (
     <Modal
@@ -156,23 +210,68 @@ export default function StandalonePageSettings(props: Props) {
           <Stack gap={3}>
             <Stack gap={2} width="100%">
               <Stack id="embed" gap={2} mt={4} mb={2}>
-                <Typography>Standalone Page URL</Typography>
+                {/* <Typography>Standalone Page URL</Typography> */}
 
-                <Alert color="warning">
-                  Anyone can access your agent from this URL
-                </Alert>
+                <Stack gap={1}>
+                  <FormControl
+                    error={!!methods.formState.errors?.handle?.message}
+                  >
+                    <FormLabel>Bot Handle</FormLabel>
 
-                <Alert
-                  sx={{ cursor: 'copy' }}
-                  onClick={() => {
-                    navigator.clipboard.writeText(pageURL);
-                    toast.success('Copied!', {
-                      position: 'bottom-center',
-                    });
-                  }}
-                >
-                  {pageURL}
-                </Alert>
+                    <Input
+                      startDecorator={
+                        state?.isValidatingHandle ? (
+                          <CircularProgress size="sm" />
+                        ) : (
+                          <AlternateEmailRoundedIcon />
+                        )
+                      }
+                      placeholder="my_awesome_bot"
+                      {...methods.register('handle')}
+                      // disabled={state.isValidatingHandle}
+                      onChange={pDebounce(async (e) => {
+                        validateHandle(e.target.value?.toLowerCase());
+                      }, 1000)}
+                      endDecorator={
+                        <Button
+                          size="sm"
+                          type="submit"
+                          disabled={state.isValidatingHandle}
+                        >
+                          Update
+                        </Button>
+                      }
+                    />
+
+                    <FormHelperText>
+                      {methods.formState.errors?.handle?.message}
+                    </FormHelperText>
+                  </FormControl>
+                  {botHandle && !methods.formState.errors?.handle?.message && (
+                    <Stack direction="row" gap={2}>
+                      <Chip
+                        size="md"
+                        color="neutral"
+                        endDecorator={<ContentPasteRoundedIcon />}
+                        sx={{
+                          mr: 'auto',
+                          ':hover': {
+                            cursor: 'copy',
+                          },
+                        }}
+                        variant="outlined"
+                        onClick={() => {
+                          writeClipboard({ content: pageURL });
+                        }}
+                      >
+                        {`chaindesk.ai/@${botHandle}`}
+                      </Chip>
+                      <Alert color="warning" sx={{ width: '100%' }}>
+                        Anyone can access your agent from this URL
+                      </Alert>
+                    </Stack>
+                  )}
+                </Stack>
 
                 <iframe
                   style={{
@@ -189,7 +288,7 @@ export default function StandalonePageSettings(props: Props) {
                   <FormLabel>Initial Message</FormLabel>
                   <Input
                     placeholder="👋 Hi, How can I help you?"
-                    {...methods.register('initialMessage')}
+                    {...methods.register('interfaceConfig.initialMessage')}
                   />
                 </FormControl>
 
@@ -211,7 +310,10 @@ export default function StandalonePageSettings(props: Props) {
                           .map((each) => each.trim())
                           .filter((each) => !!each);
 
-                        methods.setValue('messageTemplates', domains);
+                        methods.setValue(
+                          'interfaceConfig.messageTemplates',
+                          domains
+                        );
                       } catch (err) {
                         console.log('err', err);
                       }
@@ -219,66 +321,68 @@ export default function StandalonePageSettings(props: Props) {
                   />
                 </FormControl>
 
-                <Stack gap={1}>
-                  <Typography>Social Links</Typography>
-                  <Stack gap={2} pl={2}>
-                    <FormControl>
-                      <FormLabel>Twitter</FormLabel>
-                      <Input
-                        startDecorator={<TwitterIcon />}
-                        placeholder="Twitter"
-                        {...methods.register('twitterURL')}
-                      />
-                    </FormControl>
+                <Stack gap={4}>
+                  <Stack gap={1}>
+                    <Typography>Social Links</Typography>
+                    <Stack gap={2} pl={2}>
+                      <FormControl>
+                        <FormLabel>Twitter</FormLabel>
+                        <Input
+                          startDecorator={<TwitterIcon />}
+                          placeholder="Twitter"
+                          {...methods.register('interfaceConfig.twitterURL')}
+                        />
+                      </FormControl>
 
-                    <FormControl>
-                      <FormLabel>Instagram</FormLabel>
-                      <Input
-                        startDecorator={<InstagramIcon />}
-                        placeholder="Instagram"
-                        {...methods.register('instagramURL')}
-                      />
-                    </FormControl>
+                      <FormControl>
+                        <FormLabel>Instagram</FormLabel>
+                        <Input
+                          startDecorator={<InstagramIcon />}
+                          placeholder="Instagram"
+                          {...methods.register('interfaceConfig.instagramURL')}
+                        />
+                      </FormControl>
 
-                    <FormControl>
-                      <FormLabel>TikTok</FormLabel>
-                      <Input
-                        startDecorator={
-                          <img
-                            style={{ width: '20px', height: '20px' }}
-                            src="https://i.pinimg.com/originals/b6/c9/dd/b6c9dda4b3983c5ecba8cf867a01bc6f.png"
-                            alt=""
-                          />
-                        }
-                        placeholder="TikTok"
-                        {...methods.register('tiktokURL')}
-                      />
-                    </FormControl>
+                      <FormControl>
+                        <FormLabel>TikTok</FormLabel>
+                        <Input
+                          startDecorator={
+                            <img
+                              style={{ width: '20px', height: '20px' }}
+                              src="https://i.pinimg.com/originals/b6/c9/dd/b6c9dda4b3983c5ecba8cf867a01bc6f.png"
+                              alt=""
+                            />
+                          }
+                          placeholder="TikTok"
+                          {...methods.register('interfaceConfig.tiktokURL')}
+                        />
+                      </FormControl>
 
-                    <FormControl>
-                      <FormLabel>Youtube</FormLabel>
-                      <Input
-                        startDecorator={<YoutubeIcon />}
-                        placeholder="Youtube"
-                        {...methods.register('youtubeURL')}
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>GitHub</FormLabel>
-                      <Input
-                        startDecorator={<GitHubIcon />}
-                        placeholder="GitHub"
-                        {...methods.register('githubURL')}
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Website</FormLabel>
-                      <Input
-                        startDecorator={<WebIcon />}
-                        placeholder="Website"
-                        {...methods.register('websiteURL')}
-                      />
-                    </FormControl>
+                      <FormControl>
+                        <FormLabel>Youtube</FormLabel>
+                        <Input
+                          startDecorator={<YoutubeIcon />}
+                          placeholder="Youtube"
+                          {...methods.register('interfaceConfig.youtubeURL')}
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>GitHub</FormLabel>
+                        <Input
+                          startDecorator={<GitHubIcon />}
+                          placeholder="GitHub"
+                          {...methods.register('interfaceConfig.githubURL')}
+                        />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>Website</FormLabel>
+                        <Input
+                          startDecorator={<WebIcon />}
+                          placeholder="Website"
+                          {...methods.register('interfaceConfig.websiteURL')}
+                        />
+                      </FormControl>
+                    </Stack>
                   </Stack>
                 </Stack>
 
@@ -287,7 +391,7 @@ export default function StandalonePageSettings(props: Props) {
                   <Input
                     defaultValue={config?.primaryColor || '#000000'}
                     placeholder="#000000"
-                    {...methods.register('primaryColor')}
+                    {...methods.register('interfaceConfig.primaryColor')}
                   />
                 </FormControl> */}
 
@@ -295,6 +399,7 @@ export default function StandalonePageSettings(props: Props) {
                   type="submit"
                   loading={isLoading}
                   sx={{ ml: 'auto', mt: 2 }}
+                  disabled={state.isValidatingHandle}
                 >
                   Update
                 </Button>

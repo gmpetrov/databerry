@@ -19,6 +19,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/@:path',
+        destination: '/agents/@:path/page',
+      },
+      {
         source: '/privacy',
         destination: '/privacy.pdf',
       },
