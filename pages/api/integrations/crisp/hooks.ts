@@ -315,7 +315,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     switch (body.event) {
       case 'message:send':
         if (
-          // body.data.origin === 'chat' &&
+          body.data.origin === 'chat' &&
           body.data.from === 'user' &&
           body.data.type === 'text' &&
           metadata?.choice !== 'request_human'
