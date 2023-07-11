@@ -8,12 +8,13 @@ import { UpsertDatasourceSchema } from '@app/types/models';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
+import { Alert } from '@mui/joy';
 
 type Props = DatasourceFormProps & {};
 
 export const NotionSourceSchema = UpsertDatasourceSchema.extend({
     config: z.object({
-        source: z.string().trim().url(),
+        integrationKey: z.string().trim(),
       }),
 });
 
@@ -24,11 +25,14 @@ function Nested() {
   return (
     <>
       <Input
-        label="Source (optional)"
+        label="Notion Integration API key"
         control={control as any}
         placeholder="https://news.ycombinator.com"
-        {...register('config.source')}
+        {...register('config.integrationKey')}
       />
+      <Alert color="danger">
+        All notebooks of workspaces for provided Notion integration will be processed.
+      </Alert>
     </>
   );
 }

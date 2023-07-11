@@ -1,13 +1,10 @@
 import { z } from 'zod';
 
-export const NotionMainPage = z.object({
-    id: z.string().trim(),
-    parent: z.object({
-        type: z.string().trim()
-    })
+export const NotionKeyConfig = z.object({
+    config: z.object({ integrationKey: z.string().trim() }),
 })
 
-export type NotionMainPage = z.infer<typeof NotionMainPage>
+export type NotionKeyConfig = z.infer<typeof NotionKeyConfig>
 
 export const NotionBlock = z.object({
     config: z.object({ pageId: z.string().trim() }),
