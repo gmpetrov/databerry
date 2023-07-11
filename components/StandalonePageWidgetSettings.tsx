@@ -279,7 +279,12 @@ export default function StandalonePageSettings(props: Props) {
                     height: '500px',
                     borderRadius: '15px',
                   }}
-                  src={`/agents/${getAgentQuery?.data?.id}/page?counter=${state.counter}`}
+                  src={`${process.env.NEXT_PUBLIC_DASHBOARD_URL?.replace(
+                    'app.',
+                    ''
+                  )}/agents/${getAgentQuery?.data?.id}/page?counter=${
+                    state.counter
+                  }`}
                   frameBorder="0"
                 ></iframe>
               </Stack>
