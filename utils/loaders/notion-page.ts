@@ -110,18 +110,12 @@ const getNotionPageContent = async (pageId: string) => {
     .then((str)=>{
         return str
     })
-
 }
 
 export class NotionPageLoader  extends DatasourceLoaderBase {
     getSize = async () => {
-        const url: string = (
-          this.datasource.config as z.infer<typeof NotionBlock>['id']
-        );
-        const res = await axios.head(url);
-        return (res?.headers['content-length'] as number) || 0;
+        return 0;
     };
-
     async load() {
         const url: string = (
             this.datasource.config as z.infer<typeof NotionBlock>['id']

@@ -1,3 +1,4 @@
+import { Alert } from '@mui/joy';
 import { DatasourceType } from '@prisma/client';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -8,7 +9,6 @@ import { UpsertDatasourceSchema } from '@app/types/models';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
-import { Alert } from '@mui/joy';
 
 type Props = DatasourceFormProps & {};
 
