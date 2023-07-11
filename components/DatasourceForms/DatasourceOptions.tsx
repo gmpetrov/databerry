@@ -49,7 +49,7 @@ const options: DatsourceOption[] = [
   },
   {
     type: 'google_drive_folder' as any,
-    label: 'Google Drive',
+    label: 'Google Drive™',
     description: 'Talk to your Google Drive files',
     isPremium: true,
     icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/1024px-Google_Drive_icon_%282020%29.svg.png?20221103153031',
