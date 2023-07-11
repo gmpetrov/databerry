@@ -14,10 +14,7 @@ const datasourceLoadQueue = new WorkerPro(
   async (job) => {
     const data = job?.data as TaskLoadDatasourceRequestSchema;
     try {
-      // console.log('JOB', data);
-
       await taskLoadDatasource(data);
-
       return;
     } catch (err) {
       // TODO: handle error
