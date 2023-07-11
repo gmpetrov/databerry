@@ -34,6 +34,7 @@ const DatasourceFormsMap = {
   [DatasourceType.google_drive_file]: GoogleDriveForm,
   [DatasourceType.google_drive_folder]: GoogleDriveForm,
   [DatasourceType.notion]: NotionForm,
+  [DatasourceType.notion_page]: NotionForm,
 };
 
 type Props = {

@@ -1,15 +1,11 @@
 import { DatasourceType } from '@prisma/client';
-import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { z } from 'zod';
 
-import { NotionBlock, NotionMainPage } from '@app/types/notion-models';
+import { NotionBlock } from '@app/types/notion-models';
 import type { Document } from '@app/utils/datastores/base';
 
-import cuid from '../cuid';
-import logger from '../logger';
-import prisma from '../prisma-client';
-
-import { DatasourceExtended, DatasourceLoaderBase } from './base';
+import { DatasourceLoaderBase } from './base';
 
 
 const notionHeader = {
@@ -19,6 +15,46 @@ const notionHeader = {
     }
 }
 
+const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
+    const container: Array<any> = []
+    let childContainer: Array<any> = []
+    return Promise.all(blocks.map(async (block)=>{
+        const childBlocks = await getNotionBlocks(block.id)
+        childBlocks.map((block)=>{
+            container.push(block)
+        })
+    }))
+    .then(async() => {
+         container.forEach((val)=> {
+            if(val.has_children){
+                childContainer.push(val)
+            }
+        })
+        return new Promise<Array<any>>(async(resolve) => {
+            if(childContainer.length > 0) {
+                await flattenChildBlocks(childContainer)
+                .then((newContainer) => {
+                    newContainer.forEach((val) => {
+                        container.push(val)
+                    })
+                    childContainer = []
+                    resolve(container)
+                })
+            } else {
+                resolve(container)
+            }
+        })
+        .then((container) => {
+            return container
+        })
+    })
+}
+
+const getNotionBlocks = async (id: string) => { 
+    const blockUrl = `${process.env.NOTION_BASE_URL}/blocks/${id}/children/`
+    const blocks: Array<any> = (await axios.get(blockUrl,notionHeader)).data.results
+    return blocks
+}
 
 const getBlockContents = (block: any) => {
     const blockSentences: Array<string> = []
@@ -34,9 +70,50 @@ const getBlockContents = (block: any) => {
     return blockSentences
 }
 
+const getNotionPageContent = async (pageId: string) => {
+    const childBlocks: Array<any> = []
+    const blocksList: Array<any> = []
+    let sentencesList: Array<string> = []
+    let finalString = ""
 
 
-export class NotionLoader  extends DatasourceLoaderBase {
+    return await new Promise<Array<any>>(async(resolve) => {
+        const notionBlocks = await getNotionBlocks(pageId)
+        notionBlocks.map((block) => {
+            if(block.has_children) {
+                childBlocks.push(block)
+            }
+            blocksList.push(block)
+        })
+        resolve(childBlocks)
+    })
+    .then(async (blocks) => {
+        return new Promise<string>(async(resolve) => {
+            await flattenChildBlocks(blocks)
+            .then((flattens) => {
+                flattens.map((block) => {
+                    blocksList.push(block)
+                })
+                blocksList.map((block) => {
+                    const sentences = getBlockContents(block)
+                    sentences.map((line) =>{
+                        sentencesList.push(line)
+                    })
+                })
+                sentencesList.map((line) => {
+                    finalString = finalString.concat(line)
+                })
+                resolve(finalString)
+            })
+        })
+    })
+    .then((str)=>{
+        return str
+    })
+
+}
+
+export class NotionPageLoader  extends DatasourceLoaderBase {
     getSize = async () => {
         const url: string = (
           this.datasource.config as z.infer<typeof NotionBlock>['id']
@@ -46,11 +123,17 @@ export class NotionLoader  extends DatasourceLoaderBase {
     };
 
     async load() {
-        const resp = await getNotionBasePages(this.datasource)
+        const url: string = (
+            this.datasource.config as z.infer<typeof NotionBlock>['id']
+          );
+        const pageId: string = (
+            this.datasource.config as z.infer<typeof NotionBlock>['config']
+          )['pageId'];
+        const resp = await getNotionPageContent(pageId)
         return {
             pageContent: resp,
             metadata: {
-                source: 'notion',
+                source: url,
                 datasource_id: this.datasource.id,
                 source_type: this.datasource.type,
                 tags: [],

@@ -10,9 +10,10 @@ export const NotionMainPage = z.object({
 export type NotionMainPage = z.infer<typeof NotionMainPage>
 
 export const NotionBlock = z.object({
+    config: z.object({ pageId: z.string().trim() }),
     id: z.string().trim(),
-    hasChildren: z.boolean(),
-    type: z.string().trim()
+    // hasChildren: z.boolean(),
+    // type: z.string().trim()
 })
 
 export type NotionBlock = z.infer<typeof NotionBlock>
