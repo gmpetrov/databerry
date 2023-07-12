@@ -56,11 +56,11 @@ const options: DatsourceOption[] = [
     // disabled: true,
   },
   {
-    type: 'notion' as any,
+    type: DatasourceType.notion,
     label: 'Notion',
     description: 'Download a Notion notebook',
     icon: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg',
-    disabled: true,
+    disabled: false,
   },
 ];
 

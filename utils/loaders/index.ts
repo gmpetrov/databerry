@@ -7,6 +7,8 @@ import { DatasourceLoaderBase } from './base';
 import { FileLoader } from './file';
 import { GoogleDriveFileLoader } from './google-drive-file';
 import { GoogleDriveFolderLoader } from './google-drive-folder';
+import { NotionLoader } from './notion';
+import { NotionPageLoader } from './notion-page';
 import { TextLoader } from './text';
 import { WebPageLoader } from './web-page';
 import { WebSiteLoader } from './web-site';
@@ -25,7 +27,8 @@ export class DatasourceLoader {
     [DatasourceType.file]: FileLoader,
     [DatasourceType.google_drive_file]: GoogleDriveFileLoader,
     [DatasourceType.google_drive_folder]: GoogleDriveFolderLoader,
-    [DatasourceType.notion]: undefined as any,
+    [DatasourceType.notion]: NotionLoader,
+    [DatasourceType.notion_page]: NotionPageLoader,
   };
 
   constructor(datasource: Datasource) {

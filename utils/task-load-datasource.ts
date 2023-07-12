@@ -82,7 +82,16 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
 
   if (loader.isGroup) {
     await loader.load();
-
+    if(datasource.type === DatasourceType.notion) {
+      await prisma.appDatasource.update({
+        where: {
+          id: datasource.id,
+        },
+        data: {
+          config: {}
+        },
+      });
+    }
     logger.info(
       `${datasource?.id}: datasource group of type ${datasource?.type} runned successfully`
     );

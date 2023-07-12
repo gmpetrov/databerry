@@ -22,6 +22,10 @@ const GoogleDriveForm = dynamic(() => import('./GoogleDriveForm'), {
   ssr: false,
 });
 
+const NotionForm = dynamic(() => import('./NotionForm'), {
+  ssr: false,
+});
+
 const DatasourceFormsMap = {
   [DatasourceType.web_page]: WebPageForm,
   [DatasourceType.text]: TextForm,
@@ -29,7 +33,8 @@ const DatasourceFormsMap = {
   [DatasourceType.web_site]: WebSiteForm,
   [DatasourceType.google_drive_file]: GoogleDriveForm,
   [DatasourceType.google_drive_folder]: GoogleDriveForm,
-  [DatasourceType.notion]: undefined as any,
+  [DatasourceType.notion]: NotionForm,
+  [DatasourceType.notion_page]: NotionForm,
 };
 
 type Props = {
