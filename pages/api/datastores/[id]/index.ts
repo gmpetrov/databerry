@@ -113,9 +113,6 @@ export const deleteDatastore = async (
     where: {
       id,
     },
-    include: {
-      datasources: true,
-    },
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
@@ -126,9 +123,6 @@ export const deleteDatastore = async (
     prisma.datastore.delete({
       where: {
         id,
-      },
-      include: {
-        datasources: true,
       },
     }),
 
