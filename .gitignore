@@ -45,3 +45,10 @@ packages/chat-bubble/chat-bubble*
 .dev/databerry/data/*
 
 .pnpm-store/
+
+.dev/databerry/app.env
+.config
+.cache
+.npm
+.yarn
+.local

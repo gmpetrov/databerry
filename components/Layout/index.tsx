@@ -81,7 +81,7 @@ export default function Layout(props: Props) {
             </IconButton> */}
             <Logo className="w-10" />
             <Typography component="h1" fontWeight="xl">
-              Databerry
+              Chaindesk
             </Typography>
 
             {session?.user?.isPremium && (
@@ -192,6 +192,8 @@ export default function Layout(props: Props) {
                 zIndex: theme.zIndex.tooltip,
               })}
             >
+              <MenuItem>{session?.user?.email}</MenuItem>
+              <Divider />
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu>
           </Box>

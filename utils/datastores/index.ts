@@ -1,7 +1,7 @@
 import { Datastore, DatastoreType } from '@prisma/client';
 import { blake3, createBLAKE3 } from 'hash-wasm';
 
-import { Chunk } from '@app/types';
+import { Chunk, SearchRequestSchema } from '@app/types';
 import type { Document } from '@app/utils/datastores/base';
 
 import uuidv4 from '../uuid';
@@ -31,7 +31,7 @@ export class DatastoreManager {
     return this.manager.upload(chunks);
   }
 
-  search(props: { query: string; tags: string[]; topK: number }) {
+  search(props: SearchRequestSchema) {
     return this.manager.search(props);
   }
 
@@ -45,21 +45,24 @@ export class DatastoreManager {
     return this.manager.remove(datasourceId);
   }
 
-  async handleSplitDocument(document: Document) {
-    const splitters = await this.importSplitters();
-
+  static async hash(document: Document) {
     const tags = document.metadata?.tags || ([] as string[]);
-
     const hasher = await createBLAKE3();
     hasher.init();
     hasher.update(document.metadata?.datasource_id);
     hasher.update(document.pageContent);
 
-    for (const tag of tags) {
+    for (const tag of tags || []) {
       hasher.update(tag);
     }
 
-    const datasource_hash = await hasher.digest('hex');
+    return hasher.digest('hex');
+  }
+
+  async handleSplitDocument(document: Document) {
+    const splitters = await this.importSplitters();
+
+    const datasource_hash = await DatastoreManager.hash(document);
 
     const docs = (await new splitters.TokenTextSplitter({
       chunkSize: this.chunkSize,

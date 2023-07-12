@@ -14,7 +14,7 @@ export function Footer() {
         <div className="flex flex-col justify-center py-16">
           <Logo className="w-auto h-10 mx-auto" />
           <nav className="mt-10 text-sm" aria-label="quick links">
-            <div className="flex justify-center -my-1 gap-x-6">
+            <div className="flex flex-col items-center justify-center -my-1 sm:flex-row gap-x-6">
             {/* <Link href={RouteNames.CHAT_SITE}>
                 <Button
                   href="/products/crisp-plugin"
@@ -28,10 +28,16 @@ export function Footer() {
                 </Button>
               </Link> */}
               <NavLink href="/pricing">Pricing</NavLink>
-              <NavLink href="https://github.com/gmpetrov/databerry">GitHub</NavLink>
-              <NavLink href="https://docs.databerry.ai/">Docs</NavLink>
+              <NavLink href="https://github.com/gmpetrov/chaindesk" target={"_blank"}>GitHub</NavLink>
+              <NavLink href="https://docs.chaindesk.ai/" target={"_blank"}>Docs</NavLink>
               <NavLink href="https://databerry.getrewardful.com/" target={"_blank"}>
                 Affiliates
+              </NavLink>
+              <NavLink href="/privacy" target={"_blank"}>
+                Privacy Policy
+              </NavLink>
+              <NavLink href="/terms" target={"_blank"}>
+                Terms of Service
               </NavLink>
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
@@ -42,7 +48,7 @@ export function Footer() {
             {/* <Link
               href="https://twitter.com"
               className="group"
-              aria-label="Databerry on Twitter"
+              aria-label="Chaindesk on Twitter"
             >
               <svg
                 aria-hidden="true"
@@ -54,7 +60,7 @@ export function Footer() {
             {/* <Link
               href="https://github.com"
               className="group"
-              aria-label="Databerry on GitHub"
+              aria-label="Chaindesk on GitHub"
             >
               <svg
                 aria-hidden="true"
@@ -65,7 +71,7 @@ export function Footer() {
             </Link> */}
           </div>
           <p className="mt-6 text-sm text-slate-500 sm:mt-0">
-            Copyright &copy; {new Date().getFullYear()} Databerry. All rights
+            Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
             reserved.
           </p>
         </div>

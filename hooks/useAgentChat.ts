@@ -2,19 +2,60 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
+import type { ConversationChannel, Prisma } from '@prisma/client';
+import useSWR from 'swr';
 
+import { getHistory } from '@app/pages/api/agents/[id]/history/[sessionId]';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
+import { fetcher } from '@app/utils/swr-fetcher';
 
 import useStateReducer from './useStateReducer';
+import useVisitorId from './useVisitorId';
 
 type Props = {
   queryAgentURL: string;
+  queryHistoryURL?: string;
+  channel?: ConversationChannel;
+  queryBody?: any;
+  datasourceId?: string;
 };
 
-const useAgentChat = ({ queryAgentURL }: Props) => {
+const useAgentChat = ({
+  queryAgentURL,
+  queryHistoryURL,
+  channel,
+  queryBody,
+}: Props) => {
   const [state, setState] = useStateReducer({
-    history: [] as { from: 'human' | 'agent'; message: string }[],
+    history: [] as { from: 'human' | 'agent'; message: string; id?: string }[],
   });
+
+  const { visitorId } = useVisitorId();
+
+  const getHistoryQuery = useSWR<Prisma.PromiseReturnType<typeof getHistory>>(
+    queryHistoryURL,
+    fetcher,
+    {
+      onSuccess: (data) => {
+        setState({
+          history: [
+            ...(data?.messages || [])?.map((message) => ({
+              id: message.id,
+              from: message.from,
+              message: message.text,
+              createdAt: message.createdAt,
+            })),
+            ...state.history.filter(
+              // Remove messages with undefined IDs + remove duplicates (messages coming from the API)
+              (message) =>
+                !!message.id &&
+                !data?.messages?.find((m) => m.id === message.id)
+            ),
+          ],
+        });
+      },
+    }
+  );
 
   const handleChatSubmit = async (message: string) => {
     if (!message) {
@@ -45,8 +86,11 @@ const useAgentChat = ({ queryAgentURL }: Props) => {
           // Accept: 'text/event-stream',
         },
         body: JSON.stringify({
+          ...queryBody,
           streaming: true,
           query: message,
+          visitorId: visitorId,
+          channel,
         }),
         signal: ctrl.signal,
 

@@ -1,4 +1,4 @@
-import { Agent, Datastore, Tool, ToolType } from '@prisma/client';
+import { Agent, Datastore, MessageFrom, Tool, ToolType } from '@prisma/client';
 import { AgentExecutor, ZeroShotAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
@@ -10,6 +10,7 @@ import {
 import { Tool as LangchainTool } from 'langchain/tools';
 
 import chat from './chat';
+import { ModelNameConfig } from './config';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -28,9 +29,18 @@ export default class AgentManager {
     this.topK = topK;
   }
 
-  async query(input: string, stream?: any) {
+  async query({
+    input,
+    stream,
+    history,
+  }: {
+    input: string;
+    stream?: any;
+    history?: { from: MessageFrom; message: string }[] | undefined;
+  }) {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
+        modelName: ModelNameConfig[this.agent.modelName],
         prompt: this.agent.prompt as string,
         promptType: this.agent.promptType,
         datastore: this.agent?.tools[0]?.datastore as any,
@@ -38,6 +48,7 @@ export default class AgentManager {
         topK: this.topK,
         temperature: this.agent.temperature,
         stream,
+        history,
       });
 
       return answer;
@@ -53,7 +64,10 @@ export default class AgentManager {
     const { initializeAgentExecutor } = await import('langchain/agents');
     const { DynamicTool, ChainTool, Tool } = await import('langchain/tools');
     const { PromptTemplate } = await import('langchain/prompts');
-    const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
+    const model = new OpenAI({
+      temperature: 0,
+      modelName: 'gpt-3.5-turbo',
+    });
 
     const tools: LangchainTool[] = [];
 

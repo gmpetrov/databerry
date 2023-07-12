@@ -201,7 +201,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <FormLabel>Name for humans (required, 20 character max)</FormLabel>
           <Input
             control={methods.control as any}
-            placeholder="e.g. Databerry"
+            placeholder="e.g. Chaindesk"
             {...methods.register('pluginName')}
           />
         </FormControl>
@@ -211,7 +211,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           </FormLabel>
           <Input
             control={methods.control as any}
-            placeholder="e.g. Databerry is a no-code platform for building AI apps..."
+            placeholder="e.g. Chaindesk is a no-code platform for building AI apps..."
             {...methods.register('pluginDescriptionForHumans')}
           />
         </FormControl>
@@ -383,7 +383,7 @@ function DatastoreSettings() {
             color="info"
             startDecorator={<HelpOutlineRoundedIcon />}
             endDecorator={
-              <Link href="https://docs.databerry.ai" target="_blank">
+              <Link href="https://docs.chaindesk.ai" target="_blank">
                 <Button
                   variant="plain"
                   size="sm"
@@ -426,7 +426,7 @@ function DatastoreSettings() {
               startDecorator={<HelpOutlineRoundedIcon />}
               endDecorator={
                 <Link
-                  href="https://docs.databerry.ai/integrations/chatgpt-plugin"
+                  href="https://docs.chaindesk.ai/integrations/chatgpt-plugin"
                   target="_blank"
                 >
                   <Button
@@ -443,6 +443,13 @@ function DatastoreSettings() {
             </Alert>
 
             <UserFree>
+              <Alert color="warning">
+                <a href="https://openai.com/waitlist/plugins" target="blank">
+                  ChatGPT developer access is required:{' '}
+                  <span className="underline">join the waitlist</span>
+                </a>
+              </Alert>
+
               <UsageLimitCard
                 title="Premium Feature"
                 description="Upgrade your plan to access this feature"

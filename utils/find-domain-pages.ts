@@ -103,9 +103,7 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
       // Check if link is internal
       if (href?.startsWith(startingUrl) || href?.startsWith('/')) {
         await crawl(
-          href?.startsWith('/')
-            ? path.join(new URL(startingUrl).origin, href)
-            : href
+          href?.startsWith('/') ? new URL(startingUrl).origin + href : href
         );
       }
     }

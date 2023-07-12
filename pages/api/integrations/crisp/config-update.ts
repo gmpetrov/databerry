@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
-import { getConnectedWebsites } from '@app/utils/crisp';
+import { client } from '@app/utils/crisp';
 import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
@@ -25,6 +25,14 @@ export const updateCrispConfig = async (
   const data = req.body as z.infer<typeof schema>;
 
   // const websites = await getConnectedWebsites();
+
+  let metadata = {} as any;
+
+  try {
+    metadata = await client.website.getWebsite(data.website_id);
+  } catch (err) {
+    console.log('err getting website', err);
+  }
 
   // if (data.token !== websites[data.website_id]?.token) {
   //   throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -59,12 +67,18 @@ export const updateCrispConfig = async (
           id: data.agentId,
         },
       },
+      metadata: {
+        ...metadata,
+      },
     },
     update: {
       agent: {
         connect: {
           id: data.agentId,
         },
+      },
+      metadata: {
+        ...metadata,
       },
     },
   });

@@ -8,9 +8,11 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
 import { useEffect } from 'react';
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
+import useUTMTracking from '@app/hooks/useUTMTracking';
 import { NextPageWithLayout, RouteNames } from '@app/types';
 import createEmotionCache from '@app/utils/create-emotion-cache';
 
@@ -35,13 +37,17 @@ export default function App({
   const router = useRouter();
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  useEffect(() => {
-    if (
-      process.env.NEXT_PUBLIC_MAINTENANCE === 'true' &&
-      router.route !== RouteNames.MAINTENANCE &&
-      router.route !== '/'
-    ) {
-      router.push(RouteNames.MAINTENANCE);
+  useUTMTracking();
+
+  // Redirect to new domain on front side as DNS redirect breaks some features
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.host === 'app.databerry.ai') {
+        window.location.href = window.location.href.replace(
+          'app.databerry.ai',
+          'app.chaindesk.ai'
+        );
+      }
     }
   }, []);
 

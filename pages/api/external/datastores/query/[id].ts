@@ -25,7 +25,7 @@ export const queryURL = async (
   console.log('REG QUERY', req.query);
   const datastoreId = req.query.id as string;
   const data = req.body as SearchRequestSchema;
-  const topK = data.topK || 3;
+  const topK = data.topK || 5;
 
   // get Bearer token from header
   const authHeader = req.headers.authorization;
@@ -70,12 +70,10 @@ export const queryURL = async (
   const results = await store.search({
     query: data.query,
     topK: topK as number,
-    tags: [],
+    filters: data.filters,
   });
 
-  return {
-    results,
-  };
+  return results || [];
 };
 
 handler.post(

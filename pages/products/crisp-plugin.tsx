@@ -17,8 +17,8 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Databerry - Crisp Plugin</title>
-        <meta name="title" content="Databerry - Crisp Plugin" />
+        <title>Chaindesk - Crisp Plugin</title>
+        <meta name="title" content="Chaindesk - Crisp Plugin" />
         {}
         <meta
           name="description"
@@ -26,7 +26,7 @@ export default function Home() {
         />
         <meta
           name="keywords"
-          content="Databerry, Crisp Plugin, AI chatbot, automatic data synchronization, custom data training, fast chatbot training, easy chatbot setup"
+          content="Chaindesk, Crisp Plugin, AI chatbot, automatic data synchronization, custom data training, fast chatbot training, easy chatbot setup"
         />
       </Head>
       <Header />
@@ -90,7 +90,7 @@ export default function Home() {
               //   className="w-full h-[300px] rounded-2xl"
               //   width="560"
               className="w-full aspect-video rounded-3xl"
-              src="https://www.youtube.com/embed/LPISZdaiDBM"
+              src="https://www.youtube.com/embed/rLgn1_MWGPM"
               title="YouTube video player"
               frameBorder="0"
               allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

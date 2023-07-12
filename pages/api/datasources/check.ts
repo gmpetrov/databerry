@@ -34,7 +34,7 @@ export const checkDatasource = async (
   if (!session.user?.isPremium && size / 1000000 > 1.1) {
     isValid = false;
     message =
-      'The maximum file size is 1MB on the free plan. Contact support@databerry.ai to upgrade your account';
+      'The maximum file size is 1MB on the free plan. Contact support@chaindesk.ai to upgrade your account';
   }
 
   return {

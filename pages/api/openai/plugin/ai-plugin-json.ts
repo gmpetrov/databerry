@@ -71,8 +71,8 @@ export const generateAiPluginJson = async (
     },
     logo_url:
       datastore.pluginIconUrl || `${proto}://${host}/.well-known/logo.png`,
-    contact_email: 'support@databerry.ai',
-    legal_info_url: 'support@databerry.ai',
+    contact_email: 'support@chaindesk.ai',
+    legal_info_url: 'support@chaindesk.ai',
   };
 
   return res.json(config);

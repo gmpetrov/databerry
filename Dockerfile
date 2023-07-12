@@ -1,11 +1,4 @@
 # FROM node:18-alpine AS base
-ARG NEXT_PUBLIC_S3_BUCKET_NAME
-ARG NEXT_PUBLIC_S3_BUCKET_NAME
-ARG NEXT_PUBLIC_DASHBOARD_URL
-ARG NEXT_PUBLIC_SLACK_CLIENT_ID
-ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-ARG NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1
-ARG NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID
 
 FROM mcr.microsoft.com/playwright:v1.32.0-focal as base
 
@@ -25,7 +18,7 @@ RUN \
     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
     else echo "Lockfile not found." && exit 1; \
     fi
-RUN rm -rf node_modules/.pnpm/canvas@2.11.0
+RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -41,12 +34,12 @@ RUN mv next.config.docker.js next.config.js
 RUN yarn prisma:generate
 
 ARG NEXT_PUBLIC_S3_BUCKET_NAME
-ARG NEXT_PUBLIC_S3_BUCKET_NAME
 ARG NEXT_PUBLIC_DASHBOARD_URL
 ARG NEXT_PUBLIC_SLACK_CLIENT_ID
 ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 ARG NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1
 ARG NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID
+ARG NEXT_PUBLIC_CRISP_PLUGIN_ID
 
 RUN NODE_OPTIONS="--max_old_space_size=4096" yarn build
 
@@ -80,7 +73,7 @@ RUN \
     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
     else echo "Lockfile not found." && exit 1; \
     fi
-RUN rm -rf node_modules/.pnpm/canvas@2.11.0
+RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 USER nextjs
 

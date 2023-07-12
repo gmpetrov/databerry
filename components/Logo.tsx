@@ -15,14 +15,14 @@ const Logo = forwardRef<HTMLImageElement, Props>(
         width="200"
         height="200"
         className={clsx('h-auto w-12', className)}
-        alt="Databerry"
+        alt="Chaindesk"
       />
     );
   }
 );
 
 Logo.defaultProps = {
-  src: '/databerry-logo-icon.png',
+  src: '/app-logo-icon.png',
 };
 
 export default Logo;

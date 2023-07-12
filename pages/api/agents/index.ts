@@ -82,15 +82,18 @@ export const upsertAgent = async (
       id,
       name: data.name || generateFunId(),
       description: data.description,
+      modelName: data.modelName!,
       prompt: data.prompt,
       promptType: data.promptType,
       temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
+      handle: data.handle,
       owner: {
         connect: {
           id: session?.user?.id,
         },
       },
+      iconUrl: data.iconUrl,
       visibility: data.visibility || AgentVisibility.private,
       tools: {
         createMany: {
@@ -109,10 +112,13 @@ export const upsertAgent = async (
       name: data.name || generateFunId(),
       description: data.description,
       visibility: data.visibility || AgentVisibility.private,
+      modelName: data.modelName,
       prompt: data.prompt,
       promptType: data.promptType,
       temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
+      iconUrl: data.iconUrl,
+      handle: data.handle,
       tools: {
         createMany: {
           data: newTools.map((tool) => ({

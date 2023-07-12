@@ -1,4 +1,10 @@
-import { AgentVisibility, PromptType, ToolType } from '@prisma/client';
+import {
+  AgentModelName,
+  AgentVisibility,
+  ConversationChannel,
+  PromptType,
+  ToolType,
+} from '@prisma/client';
 import { z } from 'zod';
 
 import {
@@ -45,8 +51,9 @@ export type TaskRemoveDatastoreSchema = z.infer<
 
 export const SearchRequestSchema = z.object({
   query: z.string(),
-  topK: z.number().default(3).optional(),
-  filter: DocumentMetadataSchema.optional(),
+  topK: z.number().default(5).optional(),
+  tags: z.array(z.string()).optional(),
+  filters: DocumentMetadataSchema.optional(),
 });
 
 export type SearchRequestSchema = z.infer<typeof SearchRequestSchema>;
@@ -65,22 +72,18 @@ const SearchResultsSchema = z.array(
   })
 );
 
-export const SearchSimpleResponseSchema = z.object({
-  results: SearchResultsSchema,
-});
+export const SearchSimpleResponseSchema = SearchResultsSchema;
 
 export type SearchSimpleResponseSchema = z.infer<
   typeof SearchSimpleResponseSchema
 >;
 
-export const SearchResponseSchema = z.object({
-  results: z.array(
-    z.object({
-      query: z.string(),
-      results: SearchResultsSchema,
-    })
-  ),
-});
+export const SearchResponseSchema = z.array(
+  z.object({
+    query: z.string(),
+    results: SearchResultsSchema,
+  })
+);
 export type SearchResponseSchema = z.infer<typeof SearchResponseSchema>;
 
 export const UpsertRequestSchema = z.object({
@@ -110,6 +113,8 @@ export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 export const ChatRequest = z.object({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
+  visitorId: z.string().optional(),
+  channel: z.nativeEnum(ConversationChannel).default('dashboard'),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;
@@ -125,7 +130,12 @@ export const UpsertAgentSchema = z.object({
   name: z.string().trim().optional(),
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
+  modelName: z
+    .nativeEnum(AgentModelName)
+    .default(AgentModelName.gpt_3_5_turbo)
+    .optional(),
   temperature: z.number().default(0.0),
+  iconUrl: z.string().trim().optional().nullable(),
   promptType: z.nativeEnum(PromptType).default('customer_support'),
   visibility: z.nativeEnum(AgentVisibility).default('private'),
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
@@ -140,13 +150,43 @@ export const UpsertAgentSchema = z.object({
     )
     .optional(),
   // .max(1),
+  handle: z
+    .string()
+    .trim()
+    .max(15)
+    .refine((val) => (!!val && val.length >= 4 ? true : false), {
+      message: 'String must contain at least 4 character(s)',
+    })
+    .refine((val) => /^[a-zA-Z0-9_]+$/.test(val), {
+      message: 'Must not contain special characters except for underscore _',
+    })
+    .refine((val) => !val.startsWith('_'), {
+      message: 'Cannot start with _',
+    })
+    .refine((val) => !val.endsWith('_'), {
+      message: 'Cannot end with _',
+    })
+    .transform((val) => val.toLowerCase())
+    .optional()
+    .nullable(),
 });
 
 export type UpsertAgentSchema = z.infer<typeof UpsertAgentSchema>;
 
+export const AcceptedDatasourceMimeTypes = [
+  'text/csv',
+  'text/plain',
+  'text/markdown',
+  'application/pdf',
+  'application/json',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+] as const;
+
 export const GenerateUploadLinkRequest = z.object({
   fileName: z.string(),
-  type: z.string(),
+  type: z.enum(AcceptedDatasourceMimeTypes),
 });
 
 export type GenerateUploadLinkRequest = z.infer<

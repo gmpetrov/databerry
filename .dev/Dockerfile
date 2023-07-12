@@ -1,15 +1,14 @@
 FROM node:18-bullseye
 
-ARG DBUSER
-ARG DBPASS
-ARG DBNAME
+WORKDIR /home/node
 
-ENV DATABASE_URL=postgresql://${DBUSER}:${DBPASS}@pgdb:5432/${DBNAME}
-ENV REDIS_URL=redis://redis:6379
+USER root
 
-WORKDIR /app
+# ENV PATH="/opt/node/.config/yarn/global/node_modules/.bin:${PATH}"
 
-USER node
+RUN npm install -g pnpm && \
+    pnpm config set store-dir /home/node/node_modules/.pnpm-store && \
+    mkdir -p node_modules/.pnpm && \
+    mkdir -p node_modules/.pnpm-store
 
-ENV PATH="/home/node/.config/yarn/global/node_modules/.bin/:${PATH}"
 ENTRYPOINT []

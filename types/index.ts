@@ -13,6 +13,7 @@ export enum RouteNames {
   SIGN_UP = '/signup',
   AGENTS = '/agents',
   DATASTORES = '/datastores',
+  LOGS = '/logs',
   CHAT = '/chat',
   MAINTENANCE = '/maintenance',
   ACCOUNT = '/account',
@@ -43,6 +44,7 @@ export enum MetadataFields {
   chunk_hash = 'chunk_hash',
   datasource_hash = 'datasource_hash',
   chunk_offset = 'chunk_offset',
+  custom_id = 'custom_id',
 }
 
 export type DocumentMetadata = {

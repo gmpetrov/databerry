@@ -1,7 +1,7 @@
 import type { Datastore } from '@prisma/client';
 import { Document as LangchainDocument } from 'langchain/document';
 
-import { Chunk, DocumentMetadata } from '@app/types';
+import { Chunk, DocumentMetadata, SearchRequestSchema } from '@app/types';
 
 export const INDEX_NAME = 'databerry';
 
@@ -23,11 +23,7 @@ export abstract class ClientManager<T extends Datastore> {
   abstract upload(documents: Document[]): Promise<Chunk[]>;
   abstract remove(datasourceId: string): Promise<any>;
   abstract delete(): Promise<any>;
-  abstract search(props: {
-    query: string;
-    tags: string[];
-    topK: number;
-  }): Promise<
+  abstract search(props: SearchRequestSchema): Promise<
     {
       text: string;
       source: string;

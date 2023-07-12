@@ -39,7 +39,7 @@ import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
 const SlackBotModal = dynamic(
-  () => import('@app/components/SlackBotSettingsModal'),
+  () => import('@app/components/SlackSettingsModal'),
   {
     ssr: false,
   }
@@ -161,7 +161,7 @@ export default function DatasourcesPage() {
             {session?.user?.isPremium ? (
               <Link
                 target="_blank"
-                href={`https://blog.databerry.ai/chat-site`}
+                href={`https://blog.chaindesk.ai/chat-site`}
                 className="w-full"
               >
                 <Button
@@ -274,10 +274,10 @@ export default function DatasourcesPage() {
         </Card>
       </Stack>
 
-      <SlackBotModal
+      {/* <SlackBotModal
         isOpen={state.isSlackModalOpen}
         handleCloseModal={() => setState({ isSlackModalOpen: false })}
-      />
+      /> */}
     </Box>
   );
 }

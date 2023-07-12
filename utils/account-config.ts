@@ -1,4 +1,4 @@
-import { SubscriptionPlan } from '@prisma/client';
+import { AgentModelName, SubscriptionPlan } from '@prisma/client';
 
 type Plan = {
   type: SubscriptionPlan;
@@ -16,6 +16,11 @@ type Plan = {
 
     maxWebsiteURL: number;
   };
+};
+
+export const queryCountConfig = {
+  [AgentModelName.gpt_3_5_turbo]: 1,
+  [AgentModelName.gpt_4]: 2,
 };
 
 const config: {

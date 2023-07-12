@@ -1,4 +1,5 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -6,10 +7,20 @@ import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InsertLinkRoundedIcon from '@mui/icons-material/InsertLinkRounded';
 import IntegrationInstructionsRoundedIcon from '@mui/icons-material/IntegrationInstructionsRounded';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
+import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
-import type { ColorPaletteProp } from '@mui/joy';
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
+import {
+  Avatar,
+  ColorPaletteProp,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+} from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
@@ -28,9 +39,11 @@ import Typography from '@mui/joy/Typography';
 import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
 import axios, { AxiosError } from 'axios';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
@@ -40,14 +53,12 @@ import AgentForm from '@app/components/AgentForm';
 import ChatBox from '@app/components/ChatBox';
 import ChatBubble from '@app/components/ChatBubble';
 import Layout from '@app/components/Layout';
+import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgentChat from '@app/hooks/useAgentChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
-import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
 import { RouteNames } from '@app/types';
 import agentToolFormat from '@app/utils/agent-tool-format';
-import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import getRootDomain from '@app/utils/get-root-domain';
 import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
@@ -58,8 +69,52 @@ const ChatInterfaceConfigForm = dynamic(
   }
 );
 
+const SlackBotModal = dynamic(
+  () => import('@app/components/SlackSettingsModal'),
+  {
+    ssr: false,
+  }
+);
+
+const CrispSettingsModal = dynamic(
+  () => import('@app/components/CrispSettingsModal'),
+  {
+    ssr: false,
+  }
+);
+
+const IFrameWidgetSettingsModal = dynamic(
+  () => import('@app/components/IFrameWidgetSettings'),
+  {
+    ssr: false,
+  }
+);
+
+const BubbleWidgetSettingsModal = dynamic(
+  () => import('@app/components/BubbleWidgetSettings'),
+  {
+    ssr: false,
+  }
+);
+
+const StandalonePageWidgetSettingsModal = dynamic(
+  () => import('@app/components/StandalonePageWidgetSettings'),
+  {
+    ssr: false,
+  }
+);
+
 export default function AgentPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const [state, setState] = useStateReducer({
+    isSlackModalOpen: false,
+    isUsageModalOpen: false,
+    isCrispModalOpen: false,
+    isBubbleWidgetModalOpen: false,
+    isIFrameWidgetModalOpen: false,
+    isStandalonePageWidgetModalOpen: false,
+  });
 
   const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
     `/api/agents/${router.query?.agentId}`,
@@ -67,7 +122,8 @@ export default function AgentPage() {
   );
 
   const { handleChatSubmit, history } = useAgentChat({
-    queryAgentURL: `/api/agents/${getAgentQuery?.data?.id}/query`,
+    queryAgentURL: `/api/agents/${router.query?.agentId}/query`,
+    // queryHistoryURL: `/api/agents/${router.query?.agentId}/history/${session?.user?.id}`,
   });
 
   const handleDeleteAgent = async () => {
@@ -199,7 +255,7 @@ export default function AgentPage() {
             <Stack direction={'row'} gap={2} alignItems={'center'}>
               <Tabs
                 aria-label="Icon tabs"
-                defaultValue={(router.query.tab as string) || 'chat'}
+                value={(router.query.tab as string) || 'chat'}
                 size="md"
                 sx={{
                   borderRadius: 'lg',
@@ -217,6 +273,12 @@ export default function AgentPage() {
                     </ListItemDecorator>
                     Chat
                   </Tab>
+                  <Tab value={'deploy'}>
+                    <ListItemDecorator>
+                      <RocketLaunchRoundedIcon />
+                    </ListItemDecorator>
+                    Deploy
+                  </Tab>
                   <Tab value={'settings'}>
                     <ListItemDecorator>
                       <SettingsIcon />
@@ -226,7 +288,7 @@ export default function AgentPage() {
                 </TabList>
               </Tabs>
 
-              {router.query.tab === 'settings' && (
+              {/* {router.query.tab === 'settings' && (
                 <>
                   <Link href={`#chat-interface-config`}>
                     <Button
@@ -250,7 +312,7 @@ export default function AgentPage() {
                     </Button>
                   </Link>
                 </>
-              )}
+              )} */}
             </Stack>
           </Stack>
         </Box>
@@ -267,7 +329,12 @@ export default function AgentPage() {
               overflow: 'hidden',
             }}
           >
-            <ChatBox messages={history} onSubmit={handleChatSubmit} />
+            <ChatBox
+              messages={history}
+              onSubmit={handleChatSubmit}
+              agentIconUrl={getAgentQuery?.data?.iconUrl!}
+              disableWatermark
+            />
           </Box>
         )}
 
@@ -279,6 +346,151 @@ export default function AgentPage() {
               mx: 'auto',
             })}
           >
+            {router.query.tab === 'deploy' && (
+              <>
+                <Typography level="h5">
+                  Deploy Agent to the following services
+                </Typography>
+
+                <List variant="outlined" sx={{ mt: 2 }}>
+                  {[
+                    {
+                      name: 'Website (bubble widget)',
+                      // icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
+                      icon: (
+                        <IconButton
+                          size="sm"
+                          variant="solid"
+                          sx={(theme) => ({
+                            // backgroundColor: state.config.primaryColor,
+                            borderRadius: '100%',
+                          })}
+                        >
+                          <AutoAwesomeIcon />
+                        </IconButton>
+                      ),
+                      action: () => {
+                        setState({
+                          isBubbleWidgetModalOpen: true,
+                        });
+                      },
+                    },
+                    {
+                      name: 'Standalone WebPage',
+                      icon: <Typography sx={{ fontSize: 32 }}>💅</Typography>,
+                      action: () => {
+                        setState({
+                          isStandalonePageWidgetModalOpen: true,
+                        });
+                      },
+                    },
+                    {
+                      name: 'iFrame',
+                      icon: <Typography sx={{ fontSize: 32 }}>📺</Typography>,
+                      action: () => {
+                        setState({
+                          isIFrameWidgetModalOpen: true,
+                        });
+                      },
+                    },
+                    {
+                      name: 'Slack',
+                      icon: (
+                        <Image
+                          className="w-8"
+                          src="/slack-logo.png"
+                          width={100}
+                          height={100}
+                          alt="slack logo"
+                        ></Image>
+                      ),
+                      action: () => {
+                        setState({ isSlackModalOpen: true });
+                      },
+                    },
+                    {
+                      name: 'Crisp',
+                      isPremium: true,
+                      icon: (
+                        <Image
+                          className="w-20"
+                          src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg"
+                          width={20}
+                          height={20}
+                          alt="crisp logo"
+                        ></Image>
+                      ),
+                      action: () => {
+                        setState({ isCrispModalOpen: true });
+                      },
+                    },
+                    {
+                      name: 'Zapier',
+                      isPremium: false,
+                      icon: (
+                        <img
+                          className="w-8"
+                          src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
+                          alt="zapier logo"
+                        ></img>
+                      ),
+                      action: () => {
+                        window.open(
+                          'https://zapier.com/apps/databerry/integrations',
+                          '_blank'
+                        );
+                      },
+                    },
+                  ].map((each, index, arr) => (
+                    <ListItem
+                      key={index}
+                      sx={(theme) => ({
+                        borderBottomWidth: index < arr.length - 1 ? 0.1 : 0,
+                        borderBottomColor: theme.palette.divider,
+                      })}
+                    >
+                      {/* <ListItemButton> */}
+                      <Stack direction="row" gap={2} alignItems={'center'}>
+                        {each.icon}
+                        <Typography fontWeight={'bold'}>{each.name}</Typography>
+
+                        {each.isPremium && (
+                          <Chip color="warning" size="sm" variant="soft">
+                            premium
+                          </Chip>
+                        )}
+                      </Stack>
+
+                      {(!each?.isPremium ||
+                        (each.isPremium && session?.user?.isPremium)) && (
+                        <Button
+                          size="sm"
+                          variant="outlined"
+                          startDecorator={<TuneRoundedIcon />}
+                          sx={{ ml: 'auto' }}
+                          onClick={each.action}
+                        >
+                          Settings
+                        </Button>
+                      )}
+
+                      {each.isPremium && !session?.user?.isPremium && (
+                        <Button
+                          size="sm"
+                          variant="outlined"
+                          color="warning"
+                          sx={{ ml: 'auto' }}
+                          onClick={() => setState({ isUsageModalOpen: true })}
+                        >
+                          Subscribe
+                        </Button>
+                      )}
+                    </ListItem>
+                  ))}
+                </List>
+              </>
+            )}
+
             {router.query.tab === 'settings' && (
               <>
                 <AgentForm
@@ -298,14 +510,14 @@ export default function AgentPage() {
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
                   <Typography level="body3" mb={2}>
-                    Use the Agent ID to query the agent through Databerry API
+                    Use the Agent ID to query the agent through Chaindesk API
                   </Typography>
                   <Stack spacing={2}>
                     <Alert
                       color="info"
                       startDecorator={<HelpOutlineRoundedIcon />}
                       endDecorator={
-                        <Link href="https://docs.databerry.ai" target="_blank">
+                        <Link href="https://docs.chaindesk.ai" target="_blank">
                           <Button
                             variant="plain"
                             size="sm"
@@ -337,26 +549,6 @@ export default function AgentPage() {
                 </FormControl>
 
                 <Divider sx={{ my: 4 }} />
-                <FormControl>
-                  <Typography id="chat-interface-config" level="h5">
-                    Embedded Chat Settings
-                  </Typography>
-                  <Typography level="body2" mb={2}>
-                    Customize the chat interface to match your brand when
-                    embedding the Agent on your website
-                  </Typography>
-
-                  {getAgentQuery?.data?.id && (
-                    <ChatInterfaceConfigForm
-                      agentId={getAgentQuery?.data?.id}
-                    />
-                  )}
-
-                  {/* <Box sx={{ position: 'relative' }}>
-                    <ChatBubble agentId={getAgentQuery?.data?.id}></ChatBubble>
-                  </Box> */}
-                </FormControl>
-                <Divider sx={{ my: 4 }} />
 
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Delete Agent</FormLabel>
@@ -378,6 +570,57 @@ export default function AgentPage() {
           </Box>
         }
       </>
+
+      {getAgentQuery?.data?.id! && (
+        <>
+          <SlackBotModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isSlackModalOpen}
+            handleCloseModal={() => setState({ isSlackModalOpen: false })}
+          />
+
+          <CrispSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isCrispModalOpen}
+            handleCloseModal={() => setState({ isCrispModalOpen: false })}
+          />
+
+          <BubbleWidgetSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isBubbleWidgetModalOpen}
+            handleCloseModal={() =>
+              setState({ isBubbleWidgetModalOpen: false })
+            }
+          />
+
+          <IFrameWidgetSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isIFrameWidgetModalOpen}
+            handleCloseModal={() =>
+              setState({ isIFrameWidgetModalOpen: false })
+            }
+          />
+
+          <StandalonePageWidgetSettingsModal
+            agentId={getAgentQuery?.data?.id!}
+            isOpen={state.isStandalonePageWidgetModalOpen}
+            handleCloseModal={() =>
+              setState({ isStandalonePageWidgetModalOpen: false })
+            }
+          />
+        </>
+      )}
+
+      <UsageLimitModal
+        title="Upgrade to premium to use this feature"
+        description="This feature is restricted to premium users only"
+        isOpen={state.isUsageModalOpen}
+        handleClose={() => {
+          setState({
+            isUsageModalOpen: false,
+          });
+        }}
+      />
     </Box>
   );
 }

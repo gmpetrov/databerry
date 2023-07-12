@@ -4,8 +4,10 @@
 // relativeDate(new Date('2021-01-01')) // '1 year ago'
 
 // Copilot
-const relativeDate = (date: Date) => {
+const relativeDate = (_date: Date | string) => {
+  const date = _date instanceof Date ? _date : new Date(_date);
   const now = new Date();
+
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   let interval = Math.floor(seconds / 31536000);
   if (interval > 1) {

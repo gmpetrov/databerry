@@ -1,12 +1,12 @@
 import Box from '@mui/joy/Box';
-import colors from '@mui/joy/colors';
 import { useColorScheme } from '@mui/joy/styles';
-import { Agent } from '@prisma/client';
+import { Agent, ConversationChannel } from '@prisma/client';
 import { useRouter } from 'next/router';
-import React, { ReactElement, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import useAgentChat from '@app/hooks/useAgentChat';
+import useVisitorId from '@app/hooks/useVisitorId';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 
@@ -31,18 +31,22 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
   );
+  const { visitorId } = useVisitorId();
 
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: `${API_URL}/api/external/agents/${agentId}/query`,
+    channel: ConversationChannel.website,
+    // queryHistoryURL: visitorId
+    //   ? `/api/external/agents/${router.query?.agentId}/history/${visitorId}`
+    //   : undefined,
   });
 
+  const primaryColor =
+    (router?.query?.primaryColor as string) || config.primaryColor || '#ffffff';
+
   const textColor = useMemo(() => {
-    return pickColorBasedOnBgColor(
-      config.primaryColor || '#ffffff',
-      '#ffffff',
-      '#000000'
-    );
-  }, [config.primaryColor]);
+    return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
+  }, [primaryColor]);
 
   const handleFetchAgent = async () => {
     try {
@@ -96,8 +100,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           : theme.palette.background.default,
 
         '& .message-agent': {
-          backgroundColor: config.primaryColor,
-          borderColor: config.primaryColor,
+          backgroundColor: primaryColor,
+          // borderColor: primaryColor,
           color: textColor,
         },
       })}
@@ -107,6 +111,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         onSubmit={handleChatSubmit}
         messageTemplates={config.messageTemplates}
         initialMessage={config.initialMessage}
+        agentIconUrl={agent?.iconUrl!}
       />
     </Box>
   );

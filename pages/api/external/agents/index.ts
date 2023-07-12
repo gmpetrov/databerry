@@ -36,6 +36,11 @@ export const getAgentsAPI = async (
       },
     },
     include: {
+      owner: {
+        include: {
+          subscriptions: true,
+        },
+      },
       tools: {
         select: {
           id: true,

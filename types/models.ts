@@ -44,6 +44,8 @@ export const DocumentMetadataSchema = z.object({
   author: z.string().optional(),
   start_date: z.string().optional(),
   end_date: z.string().optional(),
+  custom_id: z.string().optional(),
+  datasource_id: z.string().optional(),
 });
 
 export const DocumentSchema = z.object({
@@ -74,6 +76,12 @@ export const AgentInterfaceConfig = z.object({
   authorizedDomains: z.array(z.string()).optional(),
   theme: z.enum(['light', 'dark']).optional(),
   isBgTransparent: z.boolean().optional(),
+  twitterURL: z.string().optional(),
+  instagramURL: z.string().optional(),
+  youtubeURL: z.string().optional(),
+  tiktokURL: z.string().optional(),
+  githubURL: z.string().optional(),
+  websiteURL: z.string().optional(),
 });
 
 export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig>;

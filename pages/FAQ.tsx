@@ -9,7 +9,7 @@ const faqs = [
     id: 2,
     question: 'Does it use ChatGPT ?',
     answer:
-      'Yes, your chatbot uses ChatGPT (gpt-3.5-turbo). We are planning to support other models in the future.',
+      'Yes, your chatbot uses ChatGPT (gpt-4). We are planning to support other models in the future.',
   },
   {
     id: 3,
@@ -21,7 +21,19 @@ const faqs = [
     id: 4,
     question: 'Does it support other languages?',
     answer:
-      'Yes, Databerry supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
+      'Yes, Chaindesk supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
+  },
+  {
+    id: 5,
+    question: 'How can I add my chatbot to my website?',
+    answer:
+      'You can embed an iframe or add a chat bubble to the bottom right/left of your website.',
+  },
+  {
+    id: 6,
+    question: 'Can I give my chatbots instructions?',
+    answer:
+      'Yes, you can edit the base prompt and give your chatbot a name, personality traits and instructions on how to answer questions ex. (only answer in French).',
   },
 
   // More questions...
@@ -38,7 +50,7 @@ export default function FAQ() {
           Have a different question and can’t find the answer you’re looking
           for? Reach out to our support team by{' '}
           <a
-            href="mailto:support@databerry.ai"
+            href="mailto:support@chaindesk.ai"
             className="font-semibold text-indigo-400 hover:text-indigo-300"
           >
             sending us an email

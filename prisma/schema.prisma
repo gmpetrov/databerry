@@ -28,9 +28,12 @@ model User {
   subscriptions Subscription[]  @relation("user")
   apiKeys       UserApiKey[]
   usage         Usage?
+  conversations Conversation[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  serviceProviders ServiceProvider[]
 
   @@map("users")
 }
@@ -90,6 +93,8 @@ model Datastore {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
+  messagesBNP MessageBNP[]
+
   @@map("data_stores")
 }
 
@@ -118,6 +123,13 @@ model AppDatasource {
   lastSynch DateTime? @map("last_synch")
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  groupId  String?         @map("group_id")
+  group    AppDatasource?  @relation(name: "group", fields: [groupId], references: [id], onDelete: Cascade)
+  children AppDatasource[] @relation("group")
+
+  serviceProviderId String?          @map("service_provider_id")
+  serviceProvider   ServiceProvider? @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade)
 
   @@map("data_sources")
 }
@@ -153,10 +165,13 @@ model Agent {
   name        String
   description String
   prompt      String?
-  promptType  PromptType @default(customer_support) @map("prompt_type")
-  temperature Float      @default(0.0)
+  promptType  PromptType     @default(customer_support) @map("prompt_type")
+  iconUrl     String?        @map("icon_url")
+  temperature Float          @default(0.0)
+  modelName   AgentModelName @default(gpt_3_5_turbo) @map("model_name")
 
-  visibility AgentVisibility @default(private)
+  visibility    AgentVisibility @default(private)
+  conversations Conversation[]
 
   ownerId             String?               @map("owner_id")
   owner               User?                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -168,10 +183,61 @@ model Agent {
 
   tools Tool[]
 
+  handle  String?  @unique @map("handle")
+  domains Domain[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("agents")
+}
+
+model Domain {
+  id      String @id @default(cuid())
+  name    String @unique
+  agentId String @map("agent_id")
+  agent   Agent  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("domains")
+}
+
+model Conversation {
+  id        String  @id @default(cuid())
+  visitorId String? @map("visitor_id")
+  userId    String? @map("user_id")
+  user      User?   @relation(fields: [userId], references: [id])
+
+  agent    Agent?    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId  String?   @map("agent_id")
+  messages Message[]
+
+  channel ConversationChannel @default(dashboard)
+
+  metadata Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([visitorId], type: Hash)
+  @@map("conversations")
+}
+
+model Message {
+  id             String        @id @default(cuid())
+  text           String
+  from           MessageFrom
+  conversationId String?       @map("conversation_id")
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  read Boolean? @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("messages")
 }
 
 model Tool {
@@ -243,6 +309,8 @@ model ExternalIntegration {
   apiKeyId String?          @map("api_key_id")
   apiKey   DatastoreApiKey? @relation(fields: [apiKeyId], references: [id])
 
+  metadata Json?
+
   @@map("external_integrations")
 }
 
@@ -308,6 +376,67 @@ model Subscription {
   @@map("subscriptions")
 }
 
+model ServiceProvider {
+  id   String              @id @default(cuid())
+  type ServiceProviderType
+
+  name         String?
+  refreshToken String? @map("refresh_token")
+  accessToken  String? @map("access_token")
+
+  config Json?
+
+  ownerId String @map("user_id")
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  appDatasources AppDatasource[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("service_providers")
+}
+
+model MessageBNP {
+  id       String      @id @default(cuid())
+  text     String
+  from     MessageFrom
+  userName String?     @map("user_name")
+
+  datastoreId String?    @map("datastore_id")
+  datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+
+  read Boolean? @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("messages_bnp")
+}
+
+model XPBNPEval {
+  id             String  @id @default(cuid())
+  active         Boolean @default(false)
+  userName       String? @map("user_name")
+  feature        String?
+  usecase        String?
+  promptType     String? @map("prompt_type")
+  datasourceName String? @map("datasource_name")
+  datastoreName  String? @map("datastore_name")
+  prompt         String?
+  comment        String?
+  result         String?
+  score1         Int?    @map("score_1")
+  score2         Int?    @map("score_2")
+  score3         Int?    @map("score_3")
+  metadata       Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("xp_bnp_evals")
+}
+
 enum DatastoreVisibility {
   public
   private
@@ -332,9 +461,14 @@ enum DatasourceType {
   web_site
   text
   file
-  // html
-  // pdf
-  // notion
+  google_drive_file
+  google_drive_folder
+  notion
+}
+
+enum ServiceProviderType {
+  google_drive
+  notion
 }
 
 enum DatastoreType {
@@ -356,6 +490,7 @@ enum SubscriptionPlan {
 }
 
 enum IntegrationType {
+  website
   crisp
   slack
 }
@@ -384,4 +519,21 @@ enum PriceInterval {
 enum PromptType {
   raw
   customer_support
+}
+
+enum MessageFrom {
+  agent
+  human
+}
+
+enum ConversationChannel {
+  dashboard
+  website
+  slack
+  crisp
+}
+
+enum AgentModelName {
+  gpt_3_5_turbo
+  gpt_4
 }

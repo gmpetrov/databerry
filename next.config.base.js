@@ -19,6 +19,18 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/@:path',
+        destination: '/agents/@:path/page',
+      },
+      {
+        source: '/privacy',
+        destination: '/privacy.pdf',
+      },
+      {
+        source: '/terms',
+        destination: '/terms.pdf',
+      },
+      {
         source: '/.well-known/ai-plugin.json',
         destination: '/api/openai/plugin/ai-plugin-json',
       },

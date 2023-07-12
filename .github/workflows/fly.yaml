@@ -1,4 +1,4 @@
-name: Databerry on Fly.io
+name: Chaindesk on Fly.io
 on:
   push:
     branches:

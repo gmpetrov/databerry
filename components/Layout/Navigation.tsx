@@ -1,9 +1,11 @@
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
+import Badge from '@mui/joy/Badge';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
 import Divider from '@mui/joy/Divider';
@@ -20,6 +22,7 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import useSWR from 'swr';
 
+import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getStatus } from '@app/pages/api/status';
 import { AppStatus, RouteNames } from '@app/types';
 import { fetcher } from '@app/utils/swr-fetcher';
@@ -35,7 +38,26 @@ export default function Navigation() {
     }
   );
 
+  const countUnreadQuery = useSWR<Prisma.PromiseReturnType<typeof countUnread>>(
+    '/api/logs/count-unread',
+    fetcher,
+    {
+      refreshInterval: 60000,
+    }
+  );
+
   const isStatusOK = getDatastoresQuery?.data?.status === AppStatus.OK;
+  const isMaintenance = !!getDatastoresQuery?.data?.isMaintenance;
+
+  React.useEffect(() => {
+    if (
+      isMaintenance &&
+      router.route !== RouteNames.MAINTENANCE &&
+      router.route !== '/'
+    ) {
+      router.push(RouteNames.MAINTENANCE);
+    }
+  }, [isMaintenance]);
 
   const items = React.useMemo(() => {
     return [
@@ -51,18 +73,33 @@ export default function Navigation() {
         icon: <StorageRoundedIcon fontSize="small" />,
         active: router.route === RouteNames.DATASTORES,
       },
+      {
+        label: 'Logs',
+        route: RouteNames.LOGS,
+        icon: (
+          <Badge
+            badgeContent={countUnreadQuery?.data}
+            size="sm"
+            color="danger"
+            invisible={!countUnreadQuery?.data || countUnreadQuery?.data <= 0}
+          >
+            <InboxRoundedIcon fontSize="small" />
+          </Badge>
+        ),
+        active: router.route === RouteNames.LOGS,
+      },
       // {
       //   label: 'Chat',
       //   route: RouteNames.CHAT,
       //   icon: <ChatBubbleIcon fontSize="small" />,
       //   active: router.route === RouteNames.CHAT,
       // },
-      {
-        label: 'Apps',
-        route: RouteNames.APPS,
-        icon: <AutoFixHighRoundedIcon fontSize="small" />,
-        active: router.route === RouteNames.APPS,
-      },
+      // {
+      //   label: 'Apps',
+      //   route: RouteNames.APPS,
+      //   icon: <AutoFixHighRoundedIcon fontSize="small" />,
+      //   active: router.route === RouteNames.APPS,
+      // },
       {
         label: 'Account',
         route: RouteNames.ACCOUNT,
@@ -71,11 +108,11 @@ export default function Navigation() {
       },
       {
         label: 'Documentation',
-        route: 'https://docs.databerry.ai/',
+        route: 'https://docs.chaindesk.ai/',
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
       },
     ];
-  }, [router.route]);
+  }, [router.route, countUnreadQuery?.data]);
 
   return (
     <Stack sx={{ height: '100%' }}>
@@ -233,9 +270,9 @@ export default function Navigation() {
         </Stack>
       </Card>
       <Divider sx={{ my: 2 }}></Divider>
-      <Link href="mailto:support@databerry.ai" className="mx-auto">
+      <Link href="mailto:support@chaindesk.ai" className="mx-auto">
         <Typography level="body2" mx={'auto'}>
-          support@databerry.ai
+          support@chaindesk.ai
         </Typography>
       </Link>
     </Stack>
