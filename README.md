@@ -56,20 +56,45 @@
 
 Inspired by the [ChatGPT Retrieval Plugin](https://github.com/openai/chatgpt-retrieval-plugin).
 
-### Run the project locally
+### Run the project locally (Non-docker)
+##### P.S.: Docker is recommended either way for Qdrant. Qdrant is much easier to install using [Docker](https://github.com/rhijjawi/docker-installer)
+#### Minimum requirements:
 
-#### Without docker compose
+- [Node.js v18](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04#option-3-installing-node-using-the-node-version-manager)
+- [Postgres Database](https://www.digitalocean.com/community/tutorials/how-to-install-postgresql-on-ubuntu-20-04-quickstart)
+- [Redis](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-20-04)
+- [Qdrant](https://qdrant.tech/documentation/quick-start/#quickstart)
+- [GitHub App](https://github.com/settings/applications/) (NextAuth, easiest)
+- Email Provider (NextAuth, but not required for personal use)
+- [OpenAI API Key](https://platform.openai.com)
+- [AWS S3 Credentials](https://aws.amazon.com/s3/)
 
-Minimum requirements to run the projects locally
+#### Instructions:
+```bash
+git clone https://github.com/gmpetrov/databerry.git
+```
+```bash
+cd databerry/
+```
 
-- Node.js v18
-- Postgres Database
-- Redis
-- Qdrant
-- GitHub App (NextAuth)
-- Email Provider (NextAuth)
-- OpenAI API Key
-- AWS S3 Credentials
+```bash
+mv .env.example .env
+```
+1. After running the above commands, populate the .env file with the appropriate variables that you've obtatined
+2. [Generate]((https://generate-secret.vercel.app)) two secrets for the `NEXTAUTH_SECRET` and `QDRANT_API_KEY` environment variables
+```bash
+openssl rand -base64 32
+#returns something like: Ie2FR+o... (32 characters)
+```
+3. Run databerry using NPM and set hostname to your Machine/VM/Computer's IP 
+```bash
+#Local
+npx next dev
+#Virtual Machine or Remote Computer
+npx next dev -H MACHINE_IP
+```
+
+
 
 <!-- ```bash
 # Create .env.local
