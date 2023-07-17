@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { WebPageSourceSchema } from '@app/components/DatasourceForms/WebPageForm';
 import type { Document } from '@app/utils/datastores/base';
 
-import addSlashUrl from '../add-slash-url';
 import { ApiError, ApiErrorType } from '../api-error';
 
 import { DatasourceLoaderBase } from './base';
@@ -19,16 +18,15 @@ const getTextFromHTML = async (html: string) => {
   $('style').remove();
   $('link').remove();
   $('svg').remove();
+  $('img').remove();
   const text = $('body').text();
 
   return text;
 };
 
 const loadPageContent = async (url: string) => {
-  const urlWithSlash = addSlashUrl(url);
-
   try {
-    const { data } = await axios(urlWithSlash, {
+    const { data } = await axios(url, {
       headers: {
         'User-Agent': Date.now().toString(),
       },
@@ -57,7 +55,7 @@ const loadPageContent = async (url: string) => {
     });
 
     const page = await context.newPage();
-    await page.goto(urlWithSlash, {
+    await page.goto(url, {
       waitUntil: 'domcontentloaded',
       timeout: 100000,
     });
