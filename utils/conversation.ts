@@ -44,7 +44,7 @@ export default class ConversationManager {
   }) {
     this.messages = [];
     this.userId = userId;
-    this.visitorId = visitorId;
+    this.visitorId = visitorId || cuid();
     this.conversationId = conversationId || cuid();
     this.channel = channel;
     this.agentId = agentId;

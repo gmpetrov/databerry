@@ -44,8 +44,10 @@ export const DocumentMetadataSchema = z.object({
   author: z.string().optional(),
   start_date: z.string().optional(),
   end_date: z.string().optional(),
-  custom_id: z.string().optional(),
-  datasource_id: z.string().optional(),
+  custom_id: z.string().cuid().optional(),
+  datasource_id: z.string().cuid().optional(),
+  custom_ids: z.array(z.string().cuid()).optional(),
+  datasource_ids: z.array(z.string().cuid()).optional(),
 });
 
 export const DocumentSchema = z.object({

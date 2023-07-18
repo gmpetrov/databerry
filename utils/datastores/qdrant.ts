@@ -216,6 +216,16 @@ export class QdrantManager extends ClientManager<DatastoreType> {
                 ]
               : []),
           ],
+          should: [
+            ...(props.filters?.custom_ids || [])?.map((each) => ({
+              key: MetadataFields.custom_id,
+              match: { value: each },
+            })),
+            ...(props.filters?.datasource_ids || [])?.map((each) => ({
+              key: MetadataFields.datasource_id,
+              match: { value: each },
+            })),
+          ],
         },
       }
     );

@@ -9,6 +9,8 @@ import {
 } from 'langchain/prompts';
 import { Tool as LangchainTool } from 'langchain/tools';
 
+import { ChatRequest } from '@app/types/dtos';
+
 import chat from './chat';
 
 type ToolExtended = Tool & {
@@ -33,11 +35,15 @@ export default class AgentManager {
     stream,
     history,
     truncateQuery,
+    temperature,
+    filters,
   }: {
     input: string;
     stream?: any;
     history?: { from: MessageFrom; message: string }[] | undefined;
     truncateQuery?: boolean;
+    temperature?: ChatRequest['temperature'];
+    filters?: ChatRequest['filters'];
   }) {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
@@ -47,10 +53,11 @@ export default class AgentManager {
         datastore: this.agent?.tools[0]?.datastore as any,
         query: input,
         topK: this.topK,
-        temperature: this.agent.temperature,
+        temperature: temperature || this.agent.temperature,
         stream,
         history,
         truncateQuery,
+        filters,
       });
 
       return answer;

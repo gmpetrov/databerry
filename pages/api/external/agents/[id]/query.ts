@@ -58,8 +58,9 @@ export const queryAgent = async (
       },
       conversations: {
         where: {
-          agentId: agentId,
+          id: data.conversationId,
           visitorId: data.visitorId || 'UNKNOWN',
+          agentId: agentId,
         },
         take: 1,
         include: {
@@ -147,6 +148,8 @@ export const queryAgent = async (
         message: each.text,
       })),
       truncateQuery: data.truncateQuery,
+      temperature: data.temperature,
+      filters: data.filters,
     }),
     prisma.usage.update({
       where: {
@@ -172,6 +175,8 @@ export const queryAgent = async (
   } else {
     return {
       answer,
+      visitorId: conversationManager.visitorId,
+      conversationId: conversationManager.conversationId,
     };
   }
 };

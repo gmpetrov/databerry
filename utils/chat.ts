@@ -12,10 +12,9 @@ import {
   SystemChatMessage,
 } from 'langchain/schema';
 
-import { ChatResponse } from '@app/types';
+import { ChatRequest, ChatResponse } from '@app/types';
 
 import { ModelConfig } from './config';
-import countTokens from './count-tokens';
 import { DatastoreManager } from './datastores';
 import { CUSTOMER_SUPPORT } from './prompt-templates';
 import truncateByModel from './truncate-by-model';
@@ -126,6 +125,7 @@ const chat = async ({
   history,
   modelName = AgentModelName.gpt_3_5_turbo,
   truncateQuery,
+  filters,
 }: {
   datastore?: Datastore;
   query: string;
@@ -137,6 +137,7 @@ const chat = async ({
   modelName?: AgentModelName;
   history?: { from: MessageFrom; message: string }[];
   truncateQuery?: boolean;
+  filters?: ChatRequest['filters'];
 }) => {
   const _modelName = ModelConfig[modelName]?.name;
   const _query = truncateQuery
@@ -164,6 +165,7 @@ const chat = async ({
       query: _query,
       topK: topK || 5,
       tags: [],
+      filters,
     });
   }
 

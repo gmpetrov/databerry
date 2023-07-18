@@ -113,9 +113,12 @@ export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 export const ChatRequest = z.object({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
-  visitorId: z.string().optional(),
+  visitorId: z.string().cuid().optional(),
+  conversationId: z.string().cuid().optional(),
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional().default(false),
+  temperature: z.number().min(0.0).max(1.0).optional(),
+  filters: DocumentMetadataSchema.optional(),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;
