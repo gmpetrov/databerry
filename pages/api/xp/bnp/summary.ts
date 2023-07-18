@@ -1,5 +1,10 @@
 import { get_encoding } from '@dqbd/tiktoken';
-import { ConversationChannel, MessageFrom, Usage } from '@prisma/client';
+import {
+  AgentModelName,
+  ConversationChannel,
+  MessageFrom,
+  Usage,
+} from '@prisma/client';
 import cuid from 'cuid';
 import { TokenTextSplitter } from 'langchain/text_splitter';
 import { NextApiResponse } from 'next';
@@ -111,7 +116,7 @@ export const XPBNPQuery = async (
     temperature: 0,
     query: data.query,
     stream: data.streaming ? streamData : undefined,
-    modelName: nbTokens > 3200 ? 'gpt-3.5-turbo-16k' : undefined,
+    modelName: nbTokens > 3200 ? AgentModelName.gpt_3_5_turbo_16k : undefined,
   });
 
   await prisma.messageBNP.createMany({

@@ -146,6 +146,7 @@ export const queryAgent = async (
         from: each.from,
         message: each.text,
       })),
+      truncateQuery: data.truncateQuery,
     }),
     prisma.usage.update({
       where: {

@@ -10,7 +10,6 @@ import {
 import { Tool as LangchainTool } from 'langchain/tools';
 
 import chat from './chat';
-import { ModelNameConfig } from './config';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -33,14 +32,16 @@ export default class AgentManager {
     input,
     stream,
     history,
+    truncateQuery,
   }: {
     input: string;
     stream?: any;
     history?: { from: MessageFrom; message: string }[] | undefined;
+    truncateQuery?: boolean;
   }) {
     if (this.agent.tools.length <= 1) {
       const { answer } = await chat({
-        modelName: ModelNameConfig[this.agent.modelName],
+        modelName: this.agent.modelName,
         prompt: this.agent.prompt as string,
         promptType: this.agent.promptType,
         datastore: this.agent?.tools[0]?.datastore as any,
@@ -49,6 +50,7 @@ export default class AgentManager {
         temperature: this.agent.temperature,
         stream,
         history,
+        truncateQuery,
       });
 
       return answer;

@@ -35,6 +35,16 @@ module.exports = {
         list: false,
         altersDynamicFields: false,
       },
+      {
+        key: 'truncateQuery',
+        label: 'Query',
+        type: 'boolean',
+        helpText:
+          "Automatically truncate the query to fit Agent'model context size limit",
+        required: false,
+        list: false,
+        altersDynamicFields: false,
+      },
     ],
     perform: {
       body: { query: '{{bundle.inputData.query}}' },

@@ -1,4 +1,9 @@
-import { Datastore, MessageFrom, PromptType } from '@prisma/client';
+import {
+  AgentModelName,
+  Datastore,
+  MessageFrom,
+  PromptType,
+} from '@prisma/client';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { OpenAI } from 'langchain/llms/openai';
 import {
@@ -9,8 +14,11 @@ import {
 
 import { ChatResponse } from '@app/types';
 
+import { ModelConfig } from './config';
+import countTokens from './count-tokens';
 import { DatastoreManager } from './datastores';
 import { CUSTOMER_SUPPORT } from './prompt-templates';
+import truncateByModel from './truncate-by-model';
 
 const getCustomerSupportPrompt = ({
   prompt,
@@ -116,7 +124,8 @@ const chat = async ({
   stream,
   temperature,
   history,
-  modelName,
+  modelName = AgentModelName.gpt_3_5_turbo,
+  truncateQuery,
 }: {
   datastore?: Datastore;
   query: string;
@@ -125,19 +134,34 @@ const chat = async ({
   topK?: number;
   stream?: any;
   temperature?: number;
-  modelName?: string;
+  modelName?: AgentModelName;
   history?: { from: MessageFrom; message: string }[];
+  truncateQuery?: boolean;
 }) => {
+  const _modelName = ModelConfig[modelName]?.name;
+  const _query = truncateQuery
+    ? await truncateByModel({
+        text: query,
+        modelName,
+      })
+    : query;
+
   let results = [] as {
     text: string;
     source: string;
     score: number;
   }[];
 
-  if (datastore) {
+  const isSearchNeeded =
+    datastore &&
+    (promptType === PromptType.customer_support ||
+      // Don't use search for raw prompts that don't have {context} in them
+      (promptType === PromptType.raw && prompt?.includes('{context}')));
+
+  if (isSearchNeeded) {
     const store = new DatastoreManager(datastore);
     results = await store.search({
-      query: query,
+      query: _query,
       topK: topK || 5,
       tags: [],
     });
@@ -147,13 +171,6 @@ const chat = async ({
     ?.map((each) => `CHUNK: ${each.text}\nSOURCE: ${each.source}`)
     ?.join('\n\n');
 
-  // const finalPrompt = `As a customer support agent, channel the spirit of William Shakespeare, the renowned playwright and poet known for his eloquent and poetic language, use of iambic pentameter, and frequent use of metaphors and wordplay. Respond to the user's question or issue in the style of the Bard himself.
-  // const finalPrompt = `As a customer support agent, channel the spirit of Arnold Schwarzenegger, the iconic actor and former governor known for his distinctive Austrian accent, catchphrases, and action-hero persona. Respond to the user's question or issue in the style of Arnold himself.
-  // As a customer support agent, please provide a helpful and professional response to the user's question or issue.
-
-  // const instruct = `You are an AI assistant providing helpful advice, given the following extracted parts of a long document and a question.
-  // If you don't know the answer, just say that you don't know. Don't try to make up an answer.`;
-
   let messages = [] as (SystemChatMessage | HumanChatMessage | AIChatMessage)[];
 
   switch (promptType) {
@@ -161,7 +178,7 @@ const chat = async ({
       messages = getCustomerSupportMessages({
         prompt,
         context,
-        query,
+        query: _query,
         history,
       });
       break;
@@ -169,7 +186,7 @@ const chat = async ({
       messages = getRawMessages({
         prompt,
         context,
-        query,
+        query: _query,
         history,
       });
       break;
@@ -178,7 +195,7 @@ const chat = async ({
   }
 
   const model = new ChatOpenAI({
-    modelName: modelName || 'gpt-3.5-turbo',
+    modelName: _modelName,
     temperature: temperature || 0,
     streaming: Boolean(stream),
     callbacks: [
@@ -187,14 +204,6 @@ const chat = async ({
       },
     ],
   });
-
-  // Disable conversation history for now as it conflict with wrapped prompt
-  // const messages = (history || [])?.map((each) => {
-  //   if (each.from === MessageFrom.human) {
-  //     return new HumanChatMessage(each.message);
-  //   }
-  //   return new AIChatMessage(each.message);
-  // });
 
   const output = await model.call(messages);
 

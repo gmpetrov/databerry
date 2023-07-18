@@ -535,5 +535,7 @@ enum ConversationChannel {
 
 enum AgentModelName {
   gpt_3_5_turbo
+  gpt_3_5_turbo_16k
   gpt_4
+  gpt_4_32k
 }

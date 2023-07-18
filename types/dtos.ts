@@ -115,6 +115,7 @@ export const ChatRequest = z.object({
   streaming: z.boolean().optional().default(false),
   visitorId: z.string().optional(),
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
+  truncateQuery: z.boolean().optional().default(false),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;

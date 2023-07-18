@@ -397,6 +397,12 @@ export default function BaseForm(props: Props) {
               OpenAI gpt-3.5-turbo
             </Option>
             <Option
+              value={AgentModelName.gpt_3_5_turbo_16k}
+              disabled={!session?.data?.user?.isPremium}
+            >
+              OpenAI gpt-3.5-turbo 16k (premium)
+            </Option>
+            <Option
               value={AgentModelName.gpt_4}
               disabled={!session?.data?.user?.isPremium}
             >

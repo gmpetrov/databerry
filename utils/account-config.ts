@@ -20,7 +20,9 @@ type Plan = {
 
 export const queryCountConfig = {
   [AgentModelName.gpt_3_5_turbo]: 1,
+  [AgentModelName.gpt_3_5_turbo_16k]: 2,
   [AgentModelName.gpt_4]: 2,
+  [AgentModelName.gpt_4_32k]: 4,
 };
 
 const config: {
