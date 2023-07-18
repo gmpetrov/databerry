@@ -37,7 +37,7 @@ module.exports = {
       },
       {
         key: 'truncateQuery',
-        label: 'Query',
+        label: 'Truncate Query',
         type: 'boolean',
         helpText:
           "Automatically truncate the query to fit Agent'model context size limit",
@@ -47,7 +47,10 @@ module.exports = {
       },
     ],
     perform: {
-      body: { query: '{{bundle.inputData.query}}' },
+      body: {
+        query: '{{bundle.inputData.query}}',
+        truncateQuery: '{{bundle.inputData.truncateQuery}}',
+      },
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
