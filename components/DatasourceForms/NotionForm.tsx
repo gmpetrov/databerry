@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { UpsertDatasourceSchema } from '@app/types/models';
-import { NotionAuthManager } from '@app/utils/loaders/notion-manager';
+import logger from '@app/utils/logger';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
@@ -22,31 +22,31 @@ export const NotionSourceSchema = UpsertDatasourceSchema.extend({
       }),
 });
 
-// const params = {
-//   client_id: process.env.NOTION_CLIENT_ID,
-//   response_type: "code",
-//   owner: "user"
-// }
-
-
-
-
 function Nested() {
   const handleSignIn = async (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     const res = await axios.get('/api/integrations/notion/notion-auth');
-    const url = `https://api.notion.com/v1/oauth/authorize?owner=user&client_id=${res.data}&response_type=code`
+    console.log(res.data)
+    const url = `https://api.notion.com/v1/oauth/authorize?owner=user&client_id=${res.data.client_id}&response_type=code`
+    let code: string;
     window.open(url, 'authModal', 'width=800,height=800');
-    const doc = document.querySelector(
-      "a[target='authModal']",
-    );
-    const query = window.location.href
-    console.log(query)
+    const handleMessage = (event) => {
+      if(!code){
+        code = event.data;
+        window.removeEventListener("message",handleMessage,true)
+        notionAuth(code)
+      }
+    };
+    window.addEventListener('message', handleMessage);
   };
+  const notionAuth = async (code: string) => {
+    const res = await axios.post('/api/integrations/notion/get-token',{code:code});
+    console.log(res)
+  }
   const { control, register } =
     useFormContext<z.infer<typeof NotionSourceSchema>>();
-    
+
   return (
     <>
       <Input

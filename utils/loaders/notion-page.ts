@@ -117,9 +117,6 @@ export class NotionPageLoader  extends DatasourceLoaderBase {
         return 0;
     };
     async load() {
-        const url: string = (
-            this.datasource.config as z.infer<typeof NotionBlock>['id']
-          );
         const pageId: string = (
             this.datasource.config as z.infer<typeof NotionBlock>['config']
           )['pageId'];
@@ -127,7 +124,6 @@ export class NotionPageLoader  extends DatasourceLoaderBase {
         return {
             pageContent: resp,
             metadata: {
-                source: url,
                 datasource_id: this.datasource.id,
                 source_type: this.datasource.type,
                 tags: [],

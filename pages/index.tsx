@@ -29,8 +29,16 @@ import FeaturesForSlack from './FeaturesForSlack';
 export default function Home() {
   const router = useRouter();
   const { setMode } = useColorScheme();
-
+  
   useEffect(() => {
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    let code = urlParams.get('code')
+    if(code !== null){
+      window.opener.postMessage(code);
+      code = null
+      window.close()
+    }
     // Force dark mode on the landing page
     const handleRouteChange = (newPath: string) => {
       window.location.href = router.basePath + newPath;

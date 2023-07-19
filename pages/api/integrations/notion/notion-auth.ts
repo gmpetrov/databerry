@@ -13,7 +13,12 @@ export const auth = (req: AppNextApiRequest, res: NextApiResponse) => {
   
     // const authUrl = notionManager.auth
     // console.log(authUrl)
-    res.status(200).json( process.env.NOTION_CLIENT_ID );
+    const data = {
+      client_id: process.env.NOTION_CLIENT_ID,
+      client_secret: process.env.NOTION_CLIENT_SECRET,
+      notion_version: process.env.NOTION_VERSION
+    }
+    res.status(200).json( data );
   };
 handler.get(auth);
 
