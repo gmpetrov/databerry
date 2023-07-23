@@ -6,6 +6,7 @@ import {
   Tool,
 } from '@prisma/client';
 
+import { Source } from '@app/types/document';
 import prisma from '@app/utils/prisma-client';
 
 import cuid from './cuid';
@@ -18,12 +19,16 @@ export type AgentWithTools = Agent & {
   tools: ToolExtended[];
 };
 
+type MessageExtended = Pick<Message, 'from' | 'text' | 'sources'> & {
+  sources: Source[];
+};
+
 export default class ConversationManager {
   userId?: string;
   visitorId?: string;
   conversationId?: string;
   channel: ConversationChannel;
-  messages: Pick<Message, 'from' | 'text' | 'createdAt'>[] = [];
+  messages: MessageExtended[] = [];
   agentId: string;
   metadata?: Record<string, any> = {};
 
@@ -54,11 +59,13 @@ export default class ConversationManager {
   push(
     message: Pick<Message, 'from' | 'text'> & {
       createdAt?: Date;
+      sources?: Source[];
     }
   ) {
     this.messages.push({
       createdAt: new Date(),
       ...message,
+      sources: message.sources || [],
     });
   }
 

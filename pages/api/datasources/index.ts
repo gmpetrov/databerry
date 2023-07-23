@@ -69,7 +69,7 @@ export const upsertDatasource = async (
   // if (data.type === DatasourceType.web_site) {
   //   let urls: string[] = [];
   //   const sitemap = (data as any).config.sitemap;
-  //   const source = (data as any).config.source;
+  //   const source = (data as any).config.source_url;
 
   //   if (sitemap) {
   //     urls = await getSitemapPages(sitemap);
@@ -83,7 +83,7 @@ export const upsertDatasource = async (
   //       console.log('END--------->', urls);
   //     } else {
   //       // Fallback to recursive search
-  //       urls = await findDomainPages((data as any).config.source);
+  //       urls = await findDomainPages((data as any).config.source_url);
   //     }
   //   } else {
   //     return;

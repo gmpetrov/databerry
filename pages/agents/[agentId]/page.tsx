@@ -16,6 +16,7 @@ import Avatar from '@mui/material/Avatar';
 import { Agent, Prisma } from '@prisma/client';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { SessionProvider } from 'next-auth/react';
 import React, { ReactElement, useEffect, useMemo } from 'react';
 import superjson from 'superjson';
 import useSWR from 'swr';
@@ -596,7 +597,7 @@ function App(props: { agent: Agent }) {
 }
 
 App.getLayout = function getLayout(page: ReactElement) {
-  return page;
+  return <SessionProvider>{page}</SessionProvider>;
 };
 
 export default App;

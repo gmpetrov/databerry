@@ -1,6 +1,14 @@
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Chip, Divider, IconButton, Menu, MenuItem } from '@mui/joy';
+import {
+  Avatar,
+  Chip,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+  useColorScheme,
+} from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 import axios from 'axios';
@@ -24,10 +32,17 @@ type Props = {
 };
 
 export default function Layout(props: Props) {
+  const { mode, setMode } = useColorScheme();
   const { data: session, status } = useSession();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [userMenuElement, setUserMenuElement] =
     React.useState<null | HTMLElement>(null);
+
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isMenuOpen = Boolean(userMenuElement);
 
@@ -42,11 +57,15 @@ export default function Layout(props: Props) {
   return (
     <>
       {drawerOpen && (
-        <SideDrawer onClose={() => setDrawerOpen(false)}>
+        <SideDrawer
+          onClose={() => setDrawerOpen(false)}
+          className={mounted ? mode : ''}
+        >
           <Navigation />
         </SideDrawer>
       )}
       <Root
+        className={mounted ? mode : ''}
         sx={{
           ...(drawerOpen && {
             height: '100vh',

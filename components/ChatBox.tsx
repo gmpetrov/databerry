@@ -1,24 +1,34 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
+import Chip from '@mui/joy/Chip';
 import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
+import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
+import clsx from 'clsx';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { z } from 'zod';
 
+import type { Source } from '@app/types/document';
+
+import SourceComponent from './Source';
+
 type Message = {
   from: 'human' | 'agent';
   message: string;
   createdAt?: Date;
+  sources?: Source[];
 };
 
 type Props = {
@@ -44,6 +54,7 @@ function ChatBox({
   disableWatermark,
   agentIconUrl,
 }: Props) {
+  const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<Message>();
@@ -152,7 +163,10 @@ function ChatBox({
             }}
           >
             <Stack
-              sx={{ width: '100%', maxWidth: '100%' }}
+              sx={{
+                width: '100%',
+                maxWidth: '100%',
+              }}
               direction={'row'}
               gap={1}
             >
@@ -163,65 +177,102 @@ function ChatBox({
                   src={agentIconUrl || '/app-rounded-bg-white.png'}
                 ></Avatar>
               )}
+
+              {each.from === 'human' && (
+                <Avatar
+                  size="sm"
+                  variant="outlined"
+                  src={session?.data?.user?.image || undefined}
+                ></Avatar>
+              )}
+
               <Card
                 size="sm"
                 variant={'outlined'}
-                className={
+                className={clsx(
                   each.from === 'agent' ? 'message-agent' : 'message-human'
-                }
+                )}
                 color={each.from === 'agent' ? 'primary' : 'neutral'}
                 sx={(theme) => ({
-                  overflow: 'hidden',
+                  overflowY: 'hidden',
+                  overflowX: 'auto',
+                  marginRight: 'auto',
                   maxWidth: '100%',
-                  '*': {
-                    maxWidth: '100%',
-                    wordBreak: 'break-word',
-                  },
-                  pre: {
-                    overflowX: 'scroll',
-                  },
-                  code: {},
                   py: 0,
                   px: 2,
-                  'ol,ul,p': {
-                    // color: theme.palette.text.secondary,
-                  },
-                  'ol, ul': {
-                    my: 0,
-                    pl: 2,
-                  },
-                  ol: {
-                    listStyle: 'numeric',
-                  },
-                  // 'ol > li > p': {
-                  //   fontWeight: 'bold',
-                  // },
-                  ul: {
-                    listStyle: 'disc',
-                    mb: 2,
-                  },
-                  li: {
-                    my: 1,
-                  },
-                  'li::marker, ol::marker': {
-                    // color: theme.palette.text.tertiary,
-                  },
-                  a: {
-                    // color: theme.palette.text.primary,
-                    textDecoration: 'underline',
-                  },
                   [' p ']: {
-                    py: 1,
                     m: 0,
+                    py: 1,
+                    maxWidth: '100%',
+                    // wordBreak: 'break-word',
                   },
+                  table: {
+                    overflowX: 'auto',
+                  },
+                  // pre: {
+                  //   overflowX: 'scroll',
+                  // },
+                  // code: {},
+                  // 'ol,ul,p': {
+                  //   // color: theme.palette.text.secondary,
+                  // },
+                  // 'ol, ul': {
+                  //   my: 0,
+                  //   pl: 2,
+                  // },
+                  // ol: {
+                  //   listStyle: 'numeric',
+                  // },
+                  // // 'ol > li > p': {
+                  // //   fontWeight: 'bold',
+                  // // },
+                  // ul: {
+                  //   listStyle: 'disc',
+                  //   mb: 2,
+                  // },
+                  // li: {
+                  //   my: 1,
+                  // },
+                  // 'li::marker, ol::marker': {
+                  //   // color: theme.palette.text.tertiary,
+                  // },
+                  // a: {
+                  //   // color: theme.palette.text.primary,
+                  //   textDecoration: 'underline',
+                  // },
+                  // [' p ']: {
+                  // py: 1,
+                  // m: 0,
+                  // },
                 })}
               >
                 <ReactMarkdown
+                  className="prose dark:prose-invert"
                   remarkPlugins={[remarkGfm]}
                   linkTarget={'_blank'}
                 >
                   {each.message}
                 </ReactMarkdown>
+
+                {(each?.sources?.length || 0) > 0 && (
+                  <Box
+                    sx={{
+                      pb: 2,
+                    }}
+                  >
+                    <details>
+                      <summary>Sources</summary>
+                      <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
+                        {each?.sources?.map((source) => (
+                          <SourceComponent
+                            key={source.chunk_id}
+                            source={source}
+                          />
+                        ))}
+                      </Stack>
+                    </details>
+                  </Box>
+                )}
               </Card>
             </Stack>
           </Stack>
@@ -292,12 +343,32 @@ function ChatBox({
           )}
 
           <Stack width="100%">
-            <Input
-              sx={{ width: '100%' }}
+            <Textarea
+              maxRows={4}
+              minRows={1}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  methods.handleSubmit(submit)(e);
+                }
+              }}
+              sx={{
+                width: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                '.MuiTextarea-endDecorator': {
+                  'margin-block-start': 'auto',
+                },
+              }}
               // disabled={!state.currentDatastoreId || state.loading}
               variant="outlined"
               endDecorator={
-                <IconButton type="submit" disabled={isLoading}>
+                <IconButton
+                  size="sm"
+                  type="submit"
+                  disabled={isLoading}
+                  sx={{ maxHeight: '100%' }}
+                >
                   <SendRoundedIcon />
                 </IconButton>
               }

@@ -1,6 +1,6 @@
 import { AppDatasource as Datasource, Prisma } from '@prisma/client';
 
-import { Document } from '@app/utils/datastores/base';
+import { AppDocument } from '@app/types/document';
 
 const datasourceExtended = Prisma.validator<Prisma.AppDatasourceArgs>()({
   include: {
@@ -36,5 +36,5 @@ export abstract class DatasourceLoaderBase {
   }
 
   abstract getSize(param?: any): Promise<number>;
-  abstract load(file?: any): Promise<Document | undefined>;
+  abstract load(file?: any): Promise<AppDocument[] | undefined>;
 }

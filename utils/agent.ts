@@ -46,7 +46,7 @@ export default class AgentManager {
     filters?: ChatRequest['filters'];
   }) {
     if (this.agent.tools.length <= 1) {
-      const { answer } = await chat({
+      const { answer, sources } = await chat({
         modelName: this.agent.modelName,
         prompt: this.agent.prompt as string,
         promptType: this.agent.promptType,
@@ -60,10 +60,13 @@ export default class AgentManager {
         filters,
       });
 
-      return answer;
+      return { answer, sources };
     }
 
-    return this.runChain(input);
+    return {
+      answer: await this.runChain(input),
+      sources: [],
+    };
   }
 
   async getSingleDatastoreChain() {}

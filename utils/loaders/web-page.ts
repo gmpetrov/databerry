@@ -4,7 +4,7 @@ import playwright from 'playwright';
 import { z } from 'zod';
 
 import { WebPageSourceSchema } from '@app/components/DatasourceForms/WebPageForm';
-import type { Document } from '@app/utils/datastores/base';
+import { AppDocument } from '@app/types/document';
 
 import { ApiError, ApiErrorType } from '../api-error';
 
@@ -84,7 +84,7 @@ export class WebPageLoader extends DatasourceLoaderBase {
   getSize = async () => {
     const url: string = (
       this.datasource.config as z.infer<typeof WebPageSourceSchema>['config']
-    )['source'];
+    )['source_url'];
 
     const res = await axios.head(url);
 
@@ -94,7 +94,7 @@ export class WebPageLoader extends DatasourceLoaderBase {
   async load() {
     const url: string = (
       this.datasource.config as z.infer<typeof WebPageSourceSchema>['config']
-    )['source'];
+    )['source_url'];
 
     const content = await loadPageContent(url);
 
@@ -104,14 +104,18 @@ export class WebPageLoader extends DatasourceLoaderBase {
       throw new ApiError(ApiErrorType.EMPTY_DATASOURCE);
     }
 
-    return {
-      pageContent: text,
-      metadata: {
-        source: url,
-        datasource_id: this.datasource.id,
-        source_type: this.datasource.type,
-        tags: [],
-      },
-    } as Document;
+    return [
+      new AppDocument({
+        pageContent: text,
+        metadata: {
+          source_url: url,
+          datastore_id: this.datasource.datastoreId!,
+          datasource_id: this.datasource.id,
+          datasource_name: this.datasource.name,
+          datasource_type: this.datasource.type,
+          tags: [],
+        },
+      }),
+    ];
   }
 }

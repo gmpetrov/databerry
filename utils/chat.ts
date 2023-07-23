@@ -13,10 +13,16 @@ import {
 } from 'langchain/schema';
 
 import { ChatRequest, ChatResponse } from '@app/types';
+import {
+  AppDocument,
+  ChunkMetadataRetrieved,
+  Source,
+} from '@app/types/document';
 
 import { ModelConfig } from './config';
 import { DatastoreManager } from './datastores';
 import { CUSTOMER_SUPPORT } from './prompt-templates';
+import { EXTRACT_SOURCES } from './regexp';
 import truncateByModel from './truncate-by-model';
 
 const getCustomerSupportPrompt = ({
@@ -28,17 +34,22 @@ const getCustomerSupportPrompt = ({
   query: string;
   context: string;
 }) => {
-  return `Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked, with references ("SOURCES"). 
-If you don't know the answer, politely say that you don't know. Don't try to make up an answer.
-Create a final answer with references ("SOURCE") if any, never translate SOURCES and ulrs.
+  // Create a final answer with references named CHAINDESKSOURCES at the end of your answer, that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
+  return `${prompt || CUSTOMER_SUPPORT}
+Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked.
+If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
+Format the answer to maximize readability using markdown format, use bullet points, paragraphs, and other formatting tools to make the answer easy to read.
+If you find an answer from on of the chunks, inlcude after your answer, CHAINDESKSOURCES, a string array that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
+Don't include CHAINDESKSOURCES if you din't find an answer in the chunks.
 
-${prompt || CUSTOMER_SUPPORT}
 
-Example:
+Here's an example:
 =======
 CONTEXT INFOMATION:
+CHUNK_ID: 42
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
-SOURCE: https://www.spotify.com/us/premium
+CHUNK_ID: 21
+CHUNK: Not relevant piece of information
 
 Question: What is the cost of the Premium plan and what features does it include?
 
@@ -47,7 +58,7 @@ Answer: The cost of the Premium plan is $9.99 per month. The features included i
 - Unlimited streaming hours
 - Ability to download songs for offline listening
 
-SOURCE: https://www.spotify.com/us/premium
+CHAINDESKSOURCES: ["42"]
 =======
 `;
 };
@@ -81,7 +92,7 @@ const getCustomerSupportMessages = ({
   return [
     new SystemChatMessage(systemPrompt),
     new HumanChatMessage(
-      'Don’t justify your answers. Don’t give information not mentioned in the CONTEXT INFORMATION. Don’t make up URLs):'
+      'Don’t justify your answers. Don’t give information not mentioned in the CONTEXT INFORMATION. Don’t make up URLs.'
     ),
     new AIChatMessage(
       'Sure! I will stick to all the information given in the system context. I won’t answer any question that is outside the context of information. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in the context of the information provided. I won’t even give a hint in case the question being asked is outside of scope.'
@@ -147,11 +158,7 @@ const chat = async ({
       })
     : query;
 
-  let results = [] as {
-    text: string;
-    source: string;
-    score: number;
-  }[];
+  let results: AppDocument<ChunkMetadataRetrieved>[] = [];
 
   const isSearchNeeded =
     datastore &&
@@ -170,7 +177,10 @@ const chat = async ({
   }
 
   const context = results
-    ?.map((each) => `CHUNK: ${each.text}\nSOURCE: ${each.source}`)
+    ?.map(
+      (each) =>
+        `CHUNK_ID: ${each.metadata.chunk_id}\nCHUNK: ${each.pageContent}`
+    )
     ?.join('\n\n');
 
   let messages = [] as (SystemChatMessage | HumanChatMessage | AIChatMessage)[];
@@ -209,8 +219,78 @@ const chat = async ({
 
   const output = await model.call(messages);
 
+  const answer = output?.text?.trim?.()?.replace(EXTRACT_SOURCES, '');
+  let sources: Source[] = [];
+  try {
+    const ids: string[] = JSON.parse(
+      output?.text?.trim?.()?.match(EXTRACT_SOURCES)?.[1] || `[]`
+    );
+
+    const usedDatasourceIds = new Set();
+
+    results
+      .filter((each) => ids.includes(each.metadata.chunk_id!))
+      .forEach((each) => {
+        usedDatasourceIds.add(each.metadata.datasource_id!);
+      });
+
+    sources = Array.from(usedDatasourceIds)
+      .map(
+        (id) =>
+          results.find(
+            (one) => one.metadata.datasource_id === id
+          ) as AppDocument<ChunkMetadataRetrieved>
+      )
+      .map((each) => ({
+        chunk_id: each.metadata.chunk_id,
+        datasource_id: each.metadata.datasource_id!,
+        datasource_name: each.metadata.datasource_name!,
+        datasource_type: each.metadata.datasource_type!,
+        source_url: each.metadata.source_url!,
+        mime_type: each.metadata.mime_type!,
+        page_number: each.metadata.page_number!,
+        total_pages: each.metadata.total_pages!,
+        score: each.metadata.score!,
+      }));
+  } catch {}
+
+  // const sourceRequest = await model.call(
+  //   [
+  //     new HumanChatMessage(`QUERY: ${_query}\n\nCHUNKS: ${context}`),
+  //     new AIChatMessage(`${output.text}`),
+  //   ],
+  //   {
+  //     functions: [
+  //       {
+  //         name: 'getChunkIds',
+  //         description:
+  //           'Get context items which content is used to answer the query successfuly. If a chunk text content is not used to answer do not include it',
+  //         parameters: {
+  //           type: 'object',
+  //           properties: {
+  //             chunkIds: {
+  //               type: 'array',
+  //               items: {
+  //                 type: 'string',
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     ],
+  //   }
+  // );
+  // const sources = JSON.parse(
+  //   sourceRequest?.additional_kwargs?.function_call?.arguments ||
+  //     `{chunkIds: []}`
+  // );
+
+  // // console.log('OUTPUT', output);
+  // console.log('sourceRequest', sourceRequest);
+
   return {
-    answer: output?.text?.trim?.(),
+    answer,
+    sources,
   } as ChatResponse;
 };
 

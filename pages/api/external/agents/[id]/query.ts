@@ -12,6 +12,7 @@ import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
+import streamData from '@app/utils/stream-data';
 import { validate } from '@app/utils/validate';
 
 const handler = createApiHandler();
@@ -115,10 +116,11 @@ export const queryAgent = async (
     });
   }
 
-  const streamData = (data: string) => {
-    const input = data === '[DONE]' ? data : encodeURIComponent(data);
-    res.write(`data: ${input}\n\n`);
-  };
+  const handleStream = (data: string) =>
+    streamData({
+      data,
+      res,
+    });
 
   const conversationId = agent?.conversations?.[0]?.id;
 
@@ -139,10 +141,10 @@ export const queryAgent = async (
 
   const manager = new AgentManager({ agent, topK: 5 });
 
-  const [answer] = await Promise.all([
+  const [chatRes] = await Promise.all([
     manager.query({
       input: data.query,
-      stream: data.streaming ? streamData : undefined,
+      stream: data.streaming ? handleStream : undefined,
       history: agent?.conversations?.[0]?.messages?.map((each) => ({
         from: each.from,
         message: each.text,
@@ -164,17 +166,27 @@ export const queryAgent = async (
   ]);
 
   conversationManager.push({
-    text: answer,
+    text: chatRes.answer,
     from: MessageFrom.agent,
+    sources: chatRes.sources,
   });
 
   conversationManager.save();
 
   if (data.streaming) {
-    streamData('[DONE]');
+    streamData({
+      event: 'CHAINDESKSOURCES',
+      data: JSON.stringify(chatRes.sources),
+      res,
+    });
+
+    streamData({
+      data: '[DONE]',
+      res,
+    });
   } else {
     return {
-      answer,
+      answer: chatRes.answer,
       visitorId: conversationManager.visitorId,
       conversationId: conversationManager.conversationId,
     };

@@ -229,19 +229,19 @@ const handleAsk = async (payload: CommandEvent) => {
     text: payload.text,
   });
 
-  const answer = await new AgentManager({ agent }).query({
+  const chatRes = await new AgentManager({ agent }).query({
     input: payload.text,
   });
 
   conversationManager.push({
     from: MessageFrom.agent,
-    text: answer,
+    text: chatRes?.answer,
   });
 
   conversationManager.save();
 
   return axios.post(payload.response_url, {
-    text: `${payload.text}\n\n${answer}`,
+    text: `${payload.text}\n\n${chatRes?.answer}`,
     // response_type: 'in_channel',
     response_type: 'ephemeral',
   });

@@ -170,6 +170,9 @@ model Agent {
   temperature Float          @default(0.0)
   modelName   AgentModelName @default(gpt_3_5_turbo) @map("model_name")
 
+  // includeSources    Boolean? @default(true) @map("include_sources")
+  // restrictKnowledge Boolean? @default(true) @map("restrict_knowledge")
+
   visibility    AgentVisibility @default(private)
   conversations Conversation[]
 
@@ -231,6 +234,7 @@ model Message {
   from           MessageFrom
   conversationId String?       @map("conversation_id")
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sources        Json?
 
   read Boolean? @default(false)
 

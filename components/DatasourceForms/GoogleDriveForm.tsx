@@ -36,10 +36,10 @@ import { fetcher } from '@app/utils/swr-fetcher';
 
 export const GoogleDriveSourceSchema = UpsertDatasourceSchema.extend({
   config: z.object({
-    type: z.string().min(1),
+    mime_type: z.string().min(1),
     serviceProviderId: z.string().min(1),
     objectId: z.string().min(1),
-    source: z.string().trim().optional(),
+    source_url: z.string().trim().optional(),
   }),
 });
 
@@ -191,9 +191,9 @@ function Nested() {
                   }
                   onChange={(_, value) => {
                     setValue('name', value?.label! || '');
-                    setValue('config.source', value?.label! || '');
+                    setValue('config.source_url', value?.label! || '');
                     setValue('config.objectId', value?.id! || '');
-                    setValue('config.type', value?.mimeType! || '');
+                    setValue('config.mime_type', value?.mimeType! || '');
                     if (
                       value?.mimeType === 'application/vnd.google-apps.folder'
                     ) {

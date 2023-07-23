@@ -31,7 +31,7 @@ const cors = Cors({
 const handler = createApiHandler();
 
 const FileSchema = z.object({
-  mimetype: z.enum([
+  mime_type: z.enum([
     ...AcceptedDatasourceMimeTypes,
     'application/octet-stream',
   ]),
@@ -47,15 +47,15 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const fileName = (req as any)?.body?.fileName as string;
   const custom_id = (req as any)?.body?.custom_id as string;
 
-  // Patch for mimetype 'application/octet-stream' as some http clients don't send the correct mimetype (e.g curl with json file)
-  if (file?.mimetype === 'application/octet-stream') {
+  // Patch for mime_type 'application/octet-stream' as some http clients don't send the correct mime_type (e.g curl with json file)
+  if (file?.mime_type === 'application/octet-stream') {
     let type = mime.contentType(file.originalname);
 
     if (type) {
       type = type.split(';')?.[0];
-      file.mimetype = type as any;
+      file.mime_type = type as any;
     } else {
-      file.mimetype = 'octet' as any;
+      file.mime_type = 'octet' as any;
     }
   }
 
@@ -123,15 +123,15 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const name =
     fileName ||
     file?.originalname ||
-    `${generateFunId()}.${mime.extension(file.mimetype)}`;
+    `${generateFunId()}.${mime.extension(file.mime_type)}`;
 
   const datasource = await prisma.appDatasource.create({
     data: {
       name,
       type: DatasourceType.file,
       config: {
-        type: file.mimetype,
-        source: name,
+        type: file.mime_type,
+        datasource_name: name,
         custom_id,
       },
       status: DatasourceStatus.pending,
@@ -149,14 +149,14 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   });
 
   // Add to S3
-  const fileExt = mime.extension(file.mimetype);
+  const fileExt = mime.extension(file.mime_type);
   const s3FileName = `${datasource.id}${fileExt ? `.${fileExt}` : ''}`;
 
   const params = {
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
     Key: `datastores/${datastore.id}/${datasource.id}/${s3FileName}`,
     Body: file.buffer,
-    ContentType: file.mimetype,
+    ContentType: file.mime_type,
     ACL: 'public-read',
   };
 

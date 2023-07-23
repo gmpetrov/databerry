@@ -1,8 +1,8 @@
 import { Datastore, DatastoreType } from '@prisma/client';
 import { blake3, createBLAKE3 } from 'hash-wasm';
 
-import { Chunk, SearchRequestSchema } from '@app/types';
-import type { Document } from '@app/utils/datastores/base';
+import { SearchRequestSchema } from '@app/types';
+import { AppDocument, ChunkMetadata } from '@app/types/document';
 
 import uuidv4 from '../uuid';
 
@@ -25,8 +25,8 @@ export class DatastoreManager {
     ) as ClientManager<Datastore>;
   }
 
-  async upload(document: Document) {
-    const chunks = await this.handleSplitDocument(document);
+  async upload(documents: AppDocument[]) {
+    const chunks = await this.handleSplitDocs(documents);
 
     return this.manager.upload(chunks);
   }
@@ -45,12 +45,16 @@ export class DatastoreManager {
     return this.manager.remove(datasourceId);
   }
 
-  static async hash(document: Document) {
-    const tags = document.metadata?.tags || ([] as string[]);
+  // Documents represents multiple units (pages) from a single datasource
+  static async hash(documents: AppDocument[]) {
+    const document = documents?.[0];
+
+    const tags = document?.metadata?.tags || ([] as string[]);
     const hasher = await createBLAKE3();
+
     hasher.init();
-    hasher.update(document.metadata?.datasource_id);
-    hasher.update(document.pageContent);
+    hasher.update(document.metadata?.datasource_id!);
+    hasher.update(documents.map((each) => each.pageContent).join(''));
 
     for (const tag of tags || []) {
       hasher.update(tag);
@@ -59,18 +63,18 @@ export class DatastoreManager {
     return hasher.digest('hex');
   }
 
-  async handleSplitDocument(document: Document) {
+  async handleSplitDocs(documents: AppDocument[]) {
     const splitters = await this.importSplitters();
 
-    const datasource_hash = await DatastoreManager.hash(document);
+    const datasource_hash = await DatastoreManager.hash(documents);
 
-    const docs = (await new splitters.TokenTextSplitter({
+    const splits = (await new splitters.TokenTextSplitter({
       chunkSize: this.chunkSize,
-    }).splitDocuments([document])) as Document[];
+    }).splitDocuments(documents)) as AppDocument<any>[];
 
-    const chunks: Chunk[] = [];
+    const chunks: AppDocument<ChunkMetadata>[] = [];
 
-    for (const [index, each] of docs.entries()) {
+    for (const [index, each] of splits.entries()) {
       const chunk_hash = await blake3(each.pageContent);
 
       chunks.push({

@@ -1,10 +1,12 @@
+import { DatasourceType } from '@prisma/client';
+
+import { AppDocument, FileMetadataSchema } from '@app/types/document';
 import { AcceptedDatasourceMimeTypes } from '@app/types/dtos';
-import { Document } from '@app/utils/datastores/base';
 
 import { GoogleDriveManager } from '../google-drive-manager';
 
 import { DatasourceLoaderBase } from './base';
-import { fileBufferToString } from './file';
+import { fileBufferToDocs } from './file';
 
 export class GoogleDriveFileLoader extends DatasourceLoaderBase {
   async getSize(text: string) {
@@ -21,7 +23,6 @@ export class GoogleDriveFileLoader extends DatasourceLoaderBase {
     await driveManager.refreshAuth();
 
     const fileId = (this.datasource as any)?.config?.objectId as string;
-    const type = (this.datasource as any)?.config?.type as string;
 
     const result = await driveManager.drive.files.get(
       {
@@ -49,25 +50,39 @@ export class GoogleDriveFileLoader extends DatasourceLoaderBase {
 
     const fileContents = await p;
 
-    let text = '';
+    // Get google drive url for file
+    const {
+      data: { webViewLink },
+    } = await driveManager.drive.files.get({
+      fileId: fileId,
+      fields: 'webViewLink',
+    });
+
+    let docs: AppDocument[] = [];
     const mimeType = result?.headers?.['content-type'];
 
     if (AcceptedDatasourceMimeTypes.includes(mimeType!)) {
-      text = await fileBufferToString({
+      docs = await fileBufferToDocs({
         buffer: fileContents,
         mimeType,
       });
     }
 
-    return new Document({
-      pageContent: text,
-      metadata: {
-        datasource_id: this.datasource.id,
-        source_type: this.datasource.type,
-        source: (this.datasource?.config as any)?.source,
-        file_type: mimeType,
-        tags: [],
-      },
-    });
+    return docs.map(
+      (each) =>
+        new AppDocument<FileMetadataSchema>({
+          ...each,
+          metadata: {
+            ...each.metadata,
+            datastore_id: this.datasource.datastoreId!,
+            datasource_id: this.datasource.id,
+            datasource_name: this.datasource.name,
+            datasource_type: this.datasource.type as 'google_drive_file',
+            source_url: webViewLink as string,
+            mime_type: mimeType,
+            tags: [],
+          },
+        })
+    );
   }
 }

@@ -19,7 +19,7 @@ type Props = DatasourceFormProps & {};
 export const WebSiteSourceSchema = UpsertDatasourceSchema.extend({
   config: z
     .object({
-      source: z.string().trim().optional(),
+      source_url: z.string().trim().optional(),
       sitemap: z.string().trim().optional(),
     })
     .refine(
@@ -31,12 +31,12 @@ export const WebSiteSourceSchema = UpsertDatasourceSchema.extend({
             .parse(data.sitemap, {
               path: ['config.sitemap'],
             });
-        } else if (data.source) {
+        } else if (data.source_url) {
           return !!z
             .string()
             .url()
-            .parse(data.source, {
-              path: ['config.source'],
+            .parse(data.source_url, {
+              path: ['config.source_url'],
             });
         }
 
@@ -44,7 +44,7 @@ export const WebSiteSourceSchema = UpsertDatasourceSchema.extend({
       },
       {
         message: 'You must provide either a web site URL or a sitemap URL',
-        path: ['config.sitemap', 'config.source'],
+        path: ['config.sitemap', 'config.source_url'],
       }
     ),
 });
@@ -61,7 +61,7 @@ function Nested() {
           label="Web Site URL"
           helperText="e.g.: https://example.com/"
           control={control as any}
-          {...register('config.source')}
+          {...register('config.source_url')}
         />
         <Alert color="info">
           <Stack>
