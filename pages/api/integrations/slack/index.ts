@@ -240,8 +240,12 @@ const handleAsk = async (payload: CommandEvent) => {
 
   conversationManager.save();
 
+  const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
+    chatRes?.sources
+  )}`.trim();
+
   return axios.post(payload.response_url, {
-    text: `${payload.text}\n\n${chatRes?.answer}`,
+    text: `${payload.text}\n\n${finalAnser}`,
     // response_type: 'in_channel',
     response_type: 'ephemeral',
   });
@@ -275,6 +279,23 @@ handler.post(slack);
 
 export default handler;
 
+function formatSourcesRawText(
+  sources:
+    | {
+        datasource_id: string;
+        datasource_type: 'file' | 'google_drive_file';
+        datasource_name: string;
+        source_url: string;
+        mime_type: string;
+        chunk_id: string;
+        page_number?: number | undefined;
+        total_pages?: number | undefined;
+        score?: number | undefined;
+      }[]
+    | undefined
+) {
+  throw new Error('Function not implemented.');
+}
 // {
 //     token: '1XKAxGolQBBhlPy5aJUrZnf8',
 //     team_id: 'T0F2WGXSA',

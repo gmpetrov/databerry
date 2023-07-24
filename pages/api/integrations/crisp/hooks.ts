@@ -11,6 +11,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import AgentManager from '@app/utils/agent';
 import ConversationManager from '@app/utils/conversation';
 import { createApiHandler } from '@app/utils/createa-api-handler';
+import formatSourcesRawText from '@app/utils/form-sources-raw-text';
 import getSubdomain from '@app/utils/get-subdomain';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
@@ -219,13 +220,15 @@ const handleQuery = async (
     text: query,
   });
 
-  const { answer } = await new AgentManager({ agent }).query({
+  const { answer, sources } = await new AgentManager({ agent }).query({
     input: query,
     history: conversation?.messages?.map((message) => ({
       from: message.from,
       message: message.text,
     })),
   });
+
+  const finalAnser = `${answer}\n\n${formatSourcesRawText(sources!)}`.trim();
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
     type: 'picker',
@@ -234,7 +237,7 @@ const handleQuery = async (
 
     content: {
       id: 'chaindesk-answer',
-      text: answer,
+      text: finalAnser,
       choices: [
         {
           value: 'resolved',
