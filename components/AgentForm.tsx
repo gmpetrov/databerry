@@ -5,6 +5,7 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import ConstructionOutlined from '@mui/icons-material/ConstructionOutlined';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
@@ -493,52 +494,67 @@ export default function BaseForm(props: Props) {
             </Alert>
           )}
 
-          <Select
-            value={tools[0]?.id}
-            placeholder="Choose a Datastore"
-            onChange={(_, value) => {
-              const datastore = getDatastoresQuery?.data?.find(
-                (one) => one.id === value
-              );
+          <Stack direction="row" width="100%" gap={1}>
+            {tools?.length > 0 && (
+              <IconButton
+                color="neutral"
+                variant="outlined"
+                onClick={(e) => {
+                  methods.setValue('tools', []);
+                }}
+              >
+                <DeleteRoundedIcon />
+              </IconButton>
+            )}
 
-              if (datastore) {
-                methods.setValue('tools', [
-                  {
-                    id: datastore.id,
-                    type: ToolType.datastore,
-                  },
-                ]);
-              }
+            <Select
+              sx={{ width: '100%' }}
+              value={tools[0]?.id || ''}
+              placeholder="Choose a Datastore"
+              onChange={(_, value) => {
+                const datastore = getDatastoresQuery?.data?.find(
+                  (one) => one.id === value
+                );
 
-              // const isAgent = getAgentsQuery?.data?.find(
-              //   (one) => one.id === value
-              // );
-              // setState({
-              //   currentChatInstance: {
-              //     id: value as string,
-              //     type: isAgent ? 'agent' : 'datastore',
-              //   },
-              // });
-            }}
-          >
-            {/* <Typography level="body2" sx={{ pl: 1 }}>
+                if (datastore) {
+                  methods.setValue('tools', [
+                    {
+                      id: datastore.id,
+                      type: ToolType.datastore,
+                    },
+                  ]);
+                }
+
+                // const isAgent = getAgentsQuery?.data?.find(
+                //   (one) => one.id === value
+                // );
+                // setState({
+                //   currentChatInstance: {
+                //     id: value as string,
+                //     type: isAgent ? 'agent' : 'datastore',
+                //   },
+                // });
+              }}
+            >
+              {/* <Typography level="body2" sx={{ pl: 1 }}>
               Agents:
             </Typography> */}
-            {getDatastoresQuery.data?.map((datastore) => (
-              <Option key={datastore.id} value={datastore.id}>
-                {datastore.name}
-              </Option>
-            ))}
-            {/* <Divider sx={{ my: 2 }}></Divider>
+              {getDatastoresQuery.data?.map((datastore) => (
+                <Option key={datastore.id} value={datastore.id}>
+                  {datastore.name}
+                </Option>
+              ))}
+              {/* <Divider sx={{ my: 2 }}></Divider>
             <Typography level="body2" sx={{ pl: 1 }}>
               Datastores:
             </Typography>
             {getDatastoresQuery?.data?.map((datastore) => (
               <Option key={datastore.id} value={datastore.id}>
                 {datastore.name}
-              </Option>
-            ))} */}
-          </Select>
+                </Option>
+              ))} */}
+            </Select>
+          </Stack>
 
           {!tools[0]?.id && (
             <Stack direction={'column'} gap={1}>

@@ -37,26 +37,6 @@ export const QdrantSchema = DatastoreSchema.extend({
 
 export type DatastoreSchema = z.infer<typeof DatastoreSchema>;
 
-export const DocumentMetadataSchema = z.object({
-  document_id: z.string().optional(),
-  source: z.enum(['email', 'file', 'chat']).optional(),
-  source_id: z.string().optional(),
-  author: z.string().optional(),
-  start_date: z.string().optional(),
-  end_date: z.string().optional(),
-  custom_id: z.string().cuid().optional(),
-  datasource_id: z.string().cuid().optional(),
-  custom_ids: z.array(z.string().cuid()).optional(),
-  datasource_ids: z.array(z.string().cuid()).optional(),
-});
-
-export const DocumentSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
-  text: z.string().min(1),
-  metadata: DocumentMetadataSchema.optional(),
-});
-
 export const UpsertDatasourceSchema = z.object({
   id: z.string().trim().cuid().optional(),
   type: z.nativeEnum(DatasourceType),

@@ -25,8 +25,8 @@ type Props = DatasourceFormProps & {};
 export const FileForm = UpsertDatasourceSchema.extend({
   file: z.any(),
   config: z.object({
-    source: z.string(),
-    type: z.string().optional(),
+    source_url: z.string(),
+    mime_type: z.string().optional(),
     fileSize: z.number().optional(),
     fileUploadPath: z.string().optional(),
   }),
@@ -77,8 +77,8 @@ function Nested() {
 
     setValue('name', file?.name);
     setValue('file', file);
-    setValue('config.source', file?.name);
-    setValue('config.type', file?.type);
+    setValue('config.source_url', file?.name);
+    setValue('config.mime_type', file?.type);
     setValue('config.fileSize', file?.size);
   };
 
@@ -99,7 +99,7 @@ function Nested() {
   const handleRemoveFile = () => {
     setState({ file: null });
     setValue('name', '');
-    setValue('config.source', '');
+    setValue('config.source_url', '');
     setValue('datasourceText', '', { shouldDirty: false });
   };
 
@@ -117,7 +117,7 @@ function Nested() {
         type="file"
         hidden
         accept={acceptedFileTypes.join(',')}
-        {...register('config.source')}
+        {...register('config.source_url')}
         onChange={handleFileInputChange}
         ref={fileInputRef as any}
       />

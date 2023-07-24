@@ -1,3 +1,5 @@
+import '../styles/globals.css';
+
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import {
@@ -5,6 +7,7 @@ import {
   StyledEngineProvider,
   ThemeProvider,
 } from '@mui/joy/styles';
+import { SessionProvider } from 'next-auth/react';
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -29,21 +32,23 @@ if (typeof window !== 'undefined') {
     const root = createRoot(div);
     root.render(
       <StrictMode>
-        <StyledEngineProvider injectFirst>
-          <CacheProvider value={cache}>
-            <ThemeProvider theme={theme}>
-              <CssVarsProvider
-                theme={theme}
-                defaultMode="light"
-                modeStorageKey="databerry-chat-bubble"
-                colorSchemeStorageKey="databerry-chat-bubble-scheme"
-              >
-                <ChatBubble agentId={me.id} />
-                {/* <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} /> */}
-              </CssVarsProvider>
-            </ThemeProvider>
-          </CacheProvider>
-        </StyledEngineProvider>
+        <SessionProvider>
+          <StyledEngineProvider injectFirst>
+            <CacheProvider value={cache}>
+              <ThemeProvider theme={theme}>
+                <CssVarsProvider
+                  theme={theme}
+                  defaultMode="light"
+                  modeStorageKey="databerry-chat-bubble"
+                  colorSchemeStorageKey="databerry-chat-bubble-scheme"
+                >
+                  <ChatBubble agentId={me.id} />
+                  {/* <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} /> */}
+                </CssVarsProvider>
+              </ThemeProvider>
+            </CacheProvider>
+          </StyledEngineProvider>
+        </SessionProvider>
       </StrictMode>
     );
   });

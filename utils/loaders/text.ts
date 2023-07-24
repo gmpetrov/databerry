@@ -1,4 +1,4 @@
-import { Document } from '@app/utils/datastores/base';
+import { AppDocument } from '@app/types/document';
 
 import { DatasourceLoaderBase } from './base';
 
@@ -8,14 +8,18 @@ export class TextLoader extends DatasourceLoaderBase {
   }
 
   async load(text: string) {
-    return new Document({
-      pageContent: text,
-      metadata: {
-        datasource_id: this.datasource.id,
-        source_type: this.datasource.type,
-        source: (this.datasource?.config as any)?.source,
-        tags: [],
-      },
-    });
+    return [
+      new AppDocument({
+        pageContent: text,
+        metadata: {
+          datastore_id: this.datasource.datastoreId!,
+          datasource_id: this.datasource.id,
+          datasource_name: this.datasource.name,
+          datasource_type: this.datasource.type,
+          source_url: (this.datasource?.config as any)?.source_url,
+          tags: [],
+        },
+      }),
+    ];
   }
 }

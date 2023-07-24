@@ -4,7 +4,12 @@ import { Embeddings } from 'langchain/embeddings';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { z } from 'zod';
 
-import { Chunk, MetadataFields, SearchRequestSchema } from '@app/types';
+import { MetadataFields, SearchRequestSchema } from '@app/types';
+import {
+  AppDocument,
+  ChunkMetadata,
+  ChunkMetadataRetrieved,
+} from '@app/types/document';
 import { QdrantConfigSchema } from '@app/types/models';
 
 import uuidv4 from '../uuid';
@@ -15,10 +20,12 @@ type DatastoreType = Datastore & {
   config: z.infer<typeof QdrantConfigSchema>;
 };
 
-type Point = {
+export type Point = {
   id: string;
   vector: number[];
-  payload: Omit<Chunk['metadata'], 'chunk_id'> & {
+  score?: number;
+  // payload: Omit<DocumentSchema['metadata'], 'chunk_id'> & {
+  payload: ChunkMetadata & {
     text: string;
   };
 };
@@ -79,7 +86,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
   }
 
   private async addDocuments(
-    documents: Chunk[],
+    documents: AppDocument<ChunkMetadata>[],
     ids?: string[]
   ): Promise<void> {
     const texts = documents.map(({ pageContent }) => pageContent);
@@ -92,7 +99,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
 
   private async addVectors(
     vectors: number[][],
-    documents: Chunk[],
+    documents: AppDocument<ChunkMetadata>[],
     ids?: string[]
   ): Promise<void> {
     const documentIds = ids == null ? documents.map(() => uuidv4()) : ids;
@@ -103,13 +110,18 @@ export class QdrantManager extends ClientManager<DatastoreType> {
           payload: {
             datastore_id: this.datastore.id,
             text: documents[idx].pageContent,
-            source: documents[idx].metadata.source,
+            source_url: documents[idx].metadata.source_url,
+            datasource_type: documents[idx].metadata.datasource_type,
             tags: documents[idx].metadata.tags,
             chunk_hash: documents[idx].metadata.chunk_hash,
             chunk_offset: documents[idx].metadata.chunk_offset,
             datasource_hash: documents[idx].metadata.datasource_hash,
             datasource_id: documents[idx].metadata.datasource_id,
+            datasource_name: documents[idx].metadata.datasource_name,
             custom_id: documents[idx].metadata.custom_id,
+            mime_type: documents[idx].metadata.mime_type,
+            page_number: documents[idx].metadata.page_number,
+            total_pages: documents[idx].metadata.total_pages,
           },
           vector,
         } as Point)
@@ -160,12 +172,12 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     );
   }
 
-  async upload(documents: Chunk[]) {
-    const ids: string[] = documents.map((each) => each.metadata.chunk_id);
+  async upload(documents: AppDocument<ChunkMetadata>[]) {
+    const ids: string[] = documents.map((each) => each.metadata.chunk_id!);
     const datasourceId = documents[0].metadata.datasource_id;
 
     try {
-      await this.remove(datasourceId);
+      await this.remove(datasourceId!);
       await this.addDocuments(documents, ids);
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -230,10 +242,16 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       }
     );
 
-    return (results.data?.result || [])?.map((each: any) => ({
-      score: each?.score,
-      source: each?.payload?.source,
-      text: each?.payload?.text,
-    }));
+    return (results.data?.result || []).map((each: Point) => {
+      const { text, ...metadata } = each?.payload;
+      return new AppDocument<ChunkMetadataRetrieved>({
+        pageContent: text,
+        metadata: {
+          ...metadata,
+          chunk_id: each?.id,
+          score: each?.score!,
+        },
+      });
+    }) as AppDocument<ChunkMetadataRetrieved>[];
   }
 }

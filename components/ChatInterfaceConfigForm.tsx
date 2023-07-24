@@ -91,7 +91,7 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
 
   const config = getAgentQuery?.data?.interfaceConfig as AgentInterfaceConfig;
 
-  console.log('errors', methods.formState.errors);
+  console.debug('errors', methods.formState.errors);
 
   const values = methods.watch();
 

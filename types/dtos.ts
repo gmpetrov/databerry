@@ -8,11 +8,11 @@ import {
 import { z } from 'zod';
 
 import {
-  AgentInterfaceConfig,
-  DatastoreSchema,
-  DocumentMetadataSchema,
-  DocumentSchema,
-} from './models';
+  BaseDocumentMetadataSchema,
+  FileMetadataSchema,
+  Source,
+} from './document';
+import { AgentInterfaceConfig, DatastoreSchema } from './models';
 
 export const CreateDatastoreRequestSchema = DatastoreSchema.extend({
   id: z.string().trim().cuid().optional(),
@@ -49,11 +49,19 @@ export type TaskRemoveDatastoreSchema = z.infer<
   typeof TaskRemoveDatasourceRequestSchema
 >;
 
+export const FiltersSchema = BaseDocumentMetadataSchema.pick({
+  datasource_id: true,
+  custom_id: true,
+}).extend({
+  datasource_ids: z.array(z.string().cuid()).optional(),
+  custom_ids: z.array(z.string()).optional(),
+});
+
 export const SearchRequestSchema = z.object({
   query: z.string(),
   topK: z.number().default(5).optional(),
   tags: z.array(z.string()).optional(),
-  filters: DocumentMetadataSchema.optional(),
+  filters: FiltersSchema.optional(),
 });
 
 export type SearchRequestSchema = z.infer<typeof SearchRequestSchema>;
@@ -68,7 +76,7 @@ const SearchResultsSchema = z.array(
   z.object({
     text: z.string(),
     score: z.number(),
-    source: z.string().optional(),
+    source_url: z.string().optional(),
   })
 );
 
@@ -86,8 +94,17 @@ export const SearchResponseSchema = z.array(
 );
 export type SearchResponseSchema = z.infer<typeof SearchResponseSchema>;
 
+export const UpsertDocumentSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  text: z.string().min(1),
+  metadata: z
+    .union([BaseDocumentMetadataSchema, FileMetadataSchema])
+    .optional(),
+});
+
 export const UpsertRequestSchema = z.object({
-  documents: z.array(DocumentSchema),
+  documents: z.array(UpsertDocumentSchema),
 });
 
 export type UpsertRequestSchema = z.infer<typeof UpsertRequestSchema>;
@@ -98,7 +115,7 @@ export const UpsertResponseSchema = z.object({
 
 export type UpsertResponseSchema = z.infer<typeof UpsertResponseSchema>;
 
-export const UpdateRequestSchema = DocumentSchema.extend({
+export const UpdateRequestSchema = UpsertDocumentSchema.extend({
   id: z.string().min(1),
 });
 
@@ -118,13 +135,14 @@ export const ChatRequest = z.object({
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional().default(false),
   temperature: z.number().min(0.0).max(1.0).optional(),
-  filters: DocumentMetadataSchema.optional(),
+  filters: FiltersSchema.optional(),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;
 
 export const ChatResponse = z.object({
   answer: z.string(),
+  sources: z.array(Source).optional(),
 });
 
 export type ChatResponse = z.infer<typeof ChatResponse>;

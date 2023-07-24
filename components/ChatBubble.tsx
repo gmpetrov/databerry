@@ -383,28 +383,34 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
                 ...(state.config.position === 'right'
                   ? {
-                      transform: `translateX(${-400 + 50}px)`,
+                      transform: `translateX(${-500 + 50}px)`,
                     }
                   : {}),
 
-                width: '400px',
-                [theme.breakpoints.down('sm')]: {
+                [theme.breakpoints.up('sm')]: {
+                  width: '500px',
+                },
+                [theme.breakpoints.only('xs')]: {
                   width: '100vw',
+                  height: '100vh',
                   maxWidth: '100vw',
+                  position: 'fixed',
 
-                  bottom: '-20px',
+                  left: 0,
+                  top: 0,
+                  transform: `translateX(0px)`,
 
-                  ...(state.config.position === 'left'
-                    ? {
-                        left: '-20px',
-                      }
-                    : {}),
-                  ...(state.config.position === 'right'
-                    ? {
-                        transform: `translateX(0px)`,
-                        right: '-20px',
-                      }
-                    : {}),
+                  // ...(state.config.position === 'left'
+                  //   ? {
+                  //       left: '-20px',
+                  //     }
+                  //   : {}),
+                  // ...(state.config.position === 'right'
+                  //   ? {
+                  //       transform: `translateX(0px)`,
+                  //       right: '-20px',
+                  //     }
+                  //   : {}),
                 },
               })}
             >
@@ -433,11 +439,13 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   position: 'relative',
 
                   height: 'calc(100vh - 200px)',
-                  maxHeight: '680px',
 
-                  [theme.breakpoints.down('sm')]: {
-                    height: '80vh',
-                    maxHeight: '80vh',
+                  [theme.breakpoints.up('sm')]: {
+                    maxHeight: '680px',
+                  },
+                  [theme.breakpoints.only('xs')]: {
+                    height: 'calc(100vh - 100px)',
+                    // maxHeight: '100vh',
                     maxWidth: '100vw',
                   },
 

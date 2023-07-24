@@ -13,7 +13,7 @@ type Props = DatasourceFormProps & {};
 
 export const WebPageSourceSchema = UpsertDatasourceSchema.extend({
   config: z.object({
-    source: z.string().trim().url(),
+    source_url: z.string().trim().url(),
   }),
 });
 
@@ -26,7 +26,7 @@ function Nested() {
       label="Web Page URL"
       helperText="e.g.: https://en.wikipedia.org/wiki/Nuclear_fusion"
       control={control as any}
-      {...register('config.source')}
+      {...register('config.source_url')}
     />
   );
 }

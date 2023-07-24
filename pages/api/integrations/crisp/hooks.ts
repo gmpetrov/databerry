@@ -219,7 +219,7 @@ const handleQuery = async (
     text: query,
   });
 
-  const answer = await new AgentManager({ agent }).query({
+  const { answer } = await new AgentManager({ agent }).query({
     input: query,
     history: conversation?.messages?.map((message) => ({
       from: message.from,

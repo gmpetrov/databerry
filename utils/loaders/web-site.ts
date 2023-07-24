@@ -4,7 +4,7 @@ import {
   SubscriptionPlan,
 } from '@prisma/client';
 
-import type { Document } from '@app/utils/datastores/base';
+import { AppDocument } from '@app/types/document';
 import prisma from '@app/utils/prisma-client';
 
 import accountConfig from '../account-config';
@@ -26,7 +26,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
     let urls: string[] = [];
     let nestedSitemaps: string[] = [];
     const sitemap = (this.datasource.config as any).sitemap;
-    const source = (this.datasource.config as any).source;
+    const source = (this.datasource.config as any).source_url;
     const currentPlan =
       this.datasource?.owner?.subscriptions?.[0]?.plan ||
       SubscriptionPlan.level_0;
@@ -69,7 +69,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
 
     const ids = urls.map((u) => {
       const found = children.find(
-        (each) => (each as any)?.config?.source === u
+        (each) => (each as any)?.config?.source_url === u
       );
 
       if (found) {
@@ -88,7 +88,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
           name: each,
           config: {
             ...(this.datasource.config as any),
-            source: each,
+            source_url: each,
           },
           ownerId: this.datasource?.ownerId,
           datastoreId: this.datasource?.datastoreId,
@@ -141,6 +141,6 @@ export class WebSiteLoader extends DatasourceLoaderBase {
       });
     }
 
-    return {} as Document;
+    return [] as AppDocument[];
   }
 }

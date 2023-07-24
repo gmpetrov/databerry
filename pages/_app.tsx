@@ -52,7 +52,11 @@ export default function App({
   }, []);
 
   if (router.pathname === '/agents/[agentId]/iframe') {
-    return getLayout(<Component {...pageProps} />);
+    return getLayout(
+      <SessionProvider>
+        <Component {...pageProps} />
+      </SessionProvider>
+    );
   }
 
   return (

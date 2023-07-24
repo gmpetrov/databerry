@@ -17,7 +17,7 @@ type Props = DatasourceFormProps & {};
 export const TextSourceSchema = UpsertDatasourceSchema.extend({
   config: z
     .object({
-      source: z.string().trim().optional(),
+      source_url: z.string().trim().optional(),
     })
     .optional(),
 });
@@ -32,7 +32,7 @@ function Nested() {
         label="Source (optional)"
         control={control as any}
         placeholder="https://news.ycombinator.com"
-        {...register('config.source')}
+        {...register('config.source_url')}
       />
 
       <FormControl>

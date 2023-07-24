@@ -19,6 +19,7 @@ import ConversationManager from '@app/utils/conversation';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
+import streamData from '@app/utils/stream-data';
 
 const handler = createAuthApiHandler();
 
@@ -104,10 +105,11 @@ export const XPBNPQuery = async (
     });
   }
 
-  const streamData = (data: string) => {
-    const input = data === '[DONE]' ? data : encodeURIComponent(data);
-    res.write(`data: ${input}\n\n`);
-  };
+  const handleStream = (data: string) =>
+    streamData({
+      data,
+      res,
+    });
 
   const { answer } = await chat({
     promptType: 'raw',
@@ -115,7 +117,7 @@ export const XPBNPQuery = async (
     // datastore: datastore as any,
     temperature: 0,
     query: data.query,
-    stream: data.streaming ? streamData : undefined,
+    stream: data.streaming ? handleStream : undefined,
     modelName: nbTokens > 3200 ? AgentModelName.gpt_3_5_turbo_16k : undefined,
   });
 
@@ -143,7 +145,10 @@ export const XPBNPQuery = async (
   //   conversationManager.save();
 
   if (data.streaming) {
-    streamData('[DONE]');
+    streamData({
+      data: '[DONE]',
+      res,
+    });
   } else {
     return {
       answer,

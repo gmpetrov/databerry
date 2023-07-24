@@ -6,10 +6,10 @@ import {
   Usage,
 } from '@prisma/client';
 
+import { AppDocument } from '@app/types/document';
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
 import { s3 } from '@app/utils/aws';
 import { DatastoreManager } from '@app/utils/datastores';
-import type { Document } from '@app/utils/datastores/base';
 import { DatasourceLoader } from '@app/utils/loaders';
 import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
@@ -90,9 +90,9 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     return;
   }
 
-  let document: Document;
+  let documents: AppDocument[] = [];
   try {
-    document = (
+    documents = (
       data.isUpdateText ? await loader.loadText() : await loader.load()
     )!;
   } catch (err) {
@@ -113,7 +113,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
             status: DatasourceStatus.unsynched,
             config: {
               ...(datasource.config as any),
-              sitemap: (datasource?.config as any)?.source,
+              sitemap: (datasource?.config as any)?.source_url,
             },
           },
         });
@@ -132,7 +132,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     throw err;
   }
 
-  const hash = await DatastoreManager.hash(document);
+  const hash = await DatastoreManager.hash(documents);
 
   if (hash === datasource.hash) {
     logger.info('No need to update, file has not changed');
@@ -149,8 +149,11 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   }
 
   const chunks = await new DatastoreManager(datasource.datastore!).upload(
-    document
+    documents
   );
+
+  const text = documents?.map((each) => each.pageContent)?.join('');
+  const textSize = text?.length || 0;
 
   logger.info(`${data.datasourceId}: loading finished`);
 
@@ -160,7 +163,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     },
     data: {
       nbChunks: chunks.length,
-      textSize: document?.pageContent?.length || 0,
+      textSize: textSize,
       status: DatasourceStatus.synched,
       lastSynch: new Date(),
       nbSynch: datasource?.nbSynch! + 1,
@@ -172,7 +175,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
             update: {
               nbDataProcessingBytes:
                 (datasource?.owner?.usage?.nbDataProcessingBytes || 0) +
-                new TextEncoder().encode(document?.pageContent).length,
+                new TextEncoder().encode(text).length,
             },
           },
         },
@@ -190,7 +193,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     Body: Buffer.from(
       JSON.stringify({
         hash,
-        text: document.pageContent,
+        text,
       })
     ),
     CacheControl: 'no-cache',

@@ -153,7 +153,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
             type="file"
             hidden
             accept={'image/*'}
-            // {...register('config.source')}
+            // {...register('config.source_url')}
             // value={datastore?.pluginIconUrl || ''}
             onChange={handleUploadPluginIcon}
             ref={fileInputRef as any}

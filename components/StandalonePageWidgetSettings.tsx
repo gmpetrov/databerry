@@ -171,7 +171,7 @@ export default function StandalonePageSettings(props: Props) {
 
   const config = getAgentQuery?.data?.interfaceConfig as AgentInterfaceConfig;
 
-  console.log('errors', methods.formState.errors);
+  console.debug('errors', methods.formState.errors);
 
   const botHandle = methods.watch('handle');
   const pageURL = `${process.env.NEXT_PUBLIC_DASHBOARD_URL?.replace(

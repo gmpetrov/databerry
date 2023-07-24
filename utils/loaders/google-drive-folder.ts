@@ -4,8 +4,8 @@ import {
   SubscriptionPlan,
 } from '@prisma/client';
 
+import { AppDocument } from '@app/types/document';
 import { AcceptedDatasourceMimeTypes } from '@app/types/dtos';
-import { Document } from '@app/utils/datastores/base';
 import prisma from '@app/utils/prisma-client';
 
 import accountConfig from '../account-config';
@@ -15,7 +15,6 @@ import { GoogleDriveManager } from '../google-drive-manager';
 import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
 
 import { DatasourceLoaderBase } from './base';
-import { fileBufferToString } from './file';
 
 export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
   isGroup = true;
@@ -74,7 +73,6 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
         type: DatasourceType.google_drive_file,
         name: each?.name!,
         config: {
-          source: each?.name,
           objectId: each?.id,
         },
         ownerId: this.datasource?.ownerId,
@@ -102,6 +100,6 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
       },
     });
 
-    return {} as Document;
+    return [] as AppDocument[];
   }
 }
