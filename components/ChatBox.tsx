@@ -140,7 +140,7 @@ function ChatBox({
               size="sm"
               variant={'outlined'}
               color={'primary'}
-              className="message-agent"
+              className="message-agent message-content"
               sx={{
                 mr: 'auto',
                 ml: 'none',
@@ -247,7 +247,7 @@ function ChatBox({
                 })}
               >
                 <ReactMarkdown
-                  className="prose dark:prose-invert"
+                  className="prose dark:prose-invert message-content"
                   remarkPlugins={[remarkGfm]}
                   linkTarget={'_blank'}
                 >
@@ -262,7 +262,12 @@ function ChatBox({
                   >
                     <details>
                       <summary>Sources</summary>
-                      <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
+                      <Stack
+                        className="message-content"
+                        direction={'column'}
+                        gap={1}
+                        sx={{ pt: 1 }}
+                      >
                         {each?.sources?.map((source) => (
                           <SourceComponent
                             key={source.chunk_id}

@@ -451,7 +451,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
                   '& .message-agent': {
                     backgroundColor: state.config.primaryColor,
-                    // borderColor: state.config.primaryColor,
+                  },
+                  '& .message-content * ': {
                     color: pickColorBasedOnBgColor(
                       state.config?.primaryColor! || '#ffffff',
                       '#ffffff',
