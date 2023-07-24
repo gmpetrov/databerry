@@ -5,7 +5,6 @@ import {
   PromptType,
 } from '@prisma/client';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { OpenAI } from 'langchain/llms/openai';
 import {
   AIChatMessage,
   HumanChatMessage,
@@ -25,6 +24,32 @@ import { CUSTOMER_SUPPORT } from './prompt-templates';
 import { EXTRACT_SOURCES } from './regexp';
 import truncateByModel from './truncate-by-model';
 
+// `${prompt || CUSTOMER_SUPPORT}
+// Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked.
+// If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
+// Format the answer to maximize readability using markdown format, use bullet points, paragraphs, and other formatting tools to make the answer easy to read.
+// If you find an answer from on of the chunks, inlcude after your answer, CHAINDESKSOURCES, a string array that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
+// Don't include CHAINDESKSOURCES if you din't find an answer in the chunks.
+
+// Here's an example:
+// =======
+// CONTEXT INFOMATION:
+// CHUNK_ID: 42
+// CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
+// CHUNK_ID: 21
+// CHUNK: Not relevant piece of information
+
+// Question: What is the cost of the Premium plan and what features does it include?
+
+// Answer: The cost of the Premium plan is $9.99 per month. The features included in this plan are:
+// - Ad-free streaming
+// - Unlimited streaming hours
+// - Ability to download songs for offline listening
+
+// CHAINDESKSOURCES: ["42"]
+// =======
+// `;
+
 const getCustomerSupportPrompt = ({
   prompt,
   query,
@@ -39,16 +64,11 @@ const getCustomerSupportPrompt = ({
 Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked.
 If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
 Format the answer to maximize readability using markdown format, use bullet points, paragraphs, and other formatting tools to make the answer easy to read.
-If you find an answer from on of the chunks, inlcude after your answer, CHAINDESKSOURCES, a string array that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
-Don't include CHAINDESKSOURCES if you din't find an answer in the chunks.
-
 
 Here's an example:
 =======
 CONTEXT INFOMATION:
-CHUNK_ID: 42
 CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
-CHUNK_ID: 21
 CHUNK: Not relevant piece of information
 
 Question: What is the cost of the Premium plan and what features does it include?
@@ -57,8 +77,6 @@ Answer: The cost of the Premium plan is $9.99 per month. The features included i
 - Ad-free streaming
 - Unlimited streaming hours
 - Ability to download songs for offline listening
-
-CHAINDESKSOURCES: ["42"]
 =======
 `;
 };
@@ -179,6 +197,14 @@ const chat = async ({
   const context = results
     ?.map(
       (each) =>
+        // `CHUNK_ID: ${each.metadata.chunk_id}\nCHUNK: ${each.pageContent}`
+        `CHUNK: ${each.pageContent}`
+    )
+    ?.join('\n');
+
+  const contextForRef = results
+    ?.map(
+      (each) =>
         `CHUNK_ID: ${each.metadata.chunk_id}\nCHUNK: ${each.pageContent}`
     )
     ?.join('\n\n');
@@ -222,9 +248,71 @@ const chat = async ({
   const answer = output?.text?.trim?.()?.replace(EXTRACT_SOURCES, '');
   let sources: Source[] = [];
   try {
-    const ids: string[] = JSON.parse(
-      output?.text?.trim?.()?.match(EXTRACT_SOURCES)?.[1] || `[]`
+    // const ids: string[] = JSON.parse(
+    //   output?.text?.trim?.()?.match(EXTRACT_SOURCES)?.[1] || `[]`
+    // );
+    // const usedDatasourceIds = new Set();
+    // results
+    //   .filter((each) => ids.includes(each.metadata.chunk_id!))
+    //   .forEach((each) => {
+    //     usedDatasourceIds.add(each.metadata.datasource_id!);
+    //   });
+    // sources = Array.from(usedDatasourceIds)
+    //   .map(
+    //     (id) =>
+    //       results.find(
+    //         (one) => one.metadata.datasource_id === id
+    //       ) as AppDocument<ChunkMetadataRetrieved>
+    //   )
+    //   .map((each) => ({
+    //     chunk_id: each.metadata.chunk_id,
+    //     datasource_id: each.metadata.datasource_id!,
+    //     datasource_name: each.metadata.datasource_name!,
+    //     datasource_type: each.metadata.datasource_type!,
+    //     source_url: each.metadata.source_url!,
+    //     mime_type: each.metadata.mime_type!,
+    //     page_number: each.metadata.page_number!,
+    //     total_pages: each.metadata.total_pages!,
+    //     score: each.metadata.score!,
+    //   }));
+  } catch {}
+
+  try {
+    const sourceRequest = await model.call(
+      [
+        new HumanChatMessage(
+          `Question: ${_query}\n\nContext: ${contextForRef}`
+        ),
+        new AIChatMessage(`Answer: ${output.text}`),
+      ],
+      {
+        functions: [
+          {
+            name: 'getChunkIds',
+            description:
+              'Find the chunks that contains information from the AI Answer',
+            parameters: {
+              type: 'object',
+              properties: {
+                chunkIds: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        ],
+      }
     );
+
+    const json = JSON.parse(
+      sourceRequest?.additional_kwargs?.function_call?.arguments ||
+        `{chunkIds: []}`
+    );
+
+    const ids: string[] = json?.chunkIds || [];
 
     const usedDatasourceIds = new Set();
 
@@ -253,40 +341,6 @@ const chat = async ({
         score: each.metadata.score!,
       }));
   } catch {}
-
-  // const sourceRequest = await model.call(
-  //   [
-  //     new HumanChatMessage(`QUERY: ${_query}\n\nCHUNKS: ${context}`),
-  //     new AIChatMessage(`${output.text}`),
-  //   ],
-  //   {
-  //     functions: [
-  //       {
-  //         name: 'getChunkIds',
-  //         description:
-  //           'Get context items which content is used to answer the query successfuly. If a chunk text content is not used to answer do not include it',
-  //         parameters: {
-  //           type: 'object',
-  //           properties: {
-  //             chunkIds: {
-  //               type: 'array',
-  //               items: {
-  //                 type: 'string',
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     ],
-  //   }
-  // );
-  // const sources = JSON.parse(
-  //   sourceRequest?.additional_kwargs?.function_call?.arguments ||
-  //     `{chunkIds: []}`
-  // );
-
-  // // console.log('OUTPUT', output);
-  // console.log('sourceRequest', sourceRequest);
 
   return {
     answer,
