@@ -70,6 +70,7 @@ specifiers:
   openai: ^3.3.0
   p-debounce: ^4.0.0
   p-map: ^5.5.0
+  p-retry: ^5.1.2
   p-timeout: ^6.1.1
   pdfjs-dist: 3.4.120
   perf_hooks: ^0.0.1
@@ -157,6 +158,7 @@ dependencies:
   openai: 3.3.0
   p-debounce: 4.0.0
   p-map: 5.5.0
+  p-retry: 5.1.2
   p-timeout: 6.1.1
   pdfjs-dist: 3.4.120
   perf_hooks: 0.0.1
@@ -1410,6 +1412,10 @@ packages:
 
   /@types/retry/0.12.0:
     resolution: {integrity: sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==}
+    dev: false
+
+  /@types/retry/0.12.1:
+    resolution: {integrity: sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==}
     dev: false
 
   /@types/scheduler/0.16.3:
@@ -5298,6 +5304,14 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       '@types/retry': 0.12.0
+      retry: 0.13.1
+    dev: false
+
+  /p-retry/5.1.2:
+    resolution: {integrity: sha512-couX95waDu98NfNZV+i/iLt+fdVxmI7CbrrdC2uDWfPdUAApyxT4wmDlyOtR5KtTDmkDO0zDScDjDou9YHhd9g==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      '@types/retry': 0.12.1
       retry: 0.13.1
     dev: false
 

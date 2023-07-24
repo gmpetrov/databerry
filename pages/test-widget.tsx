@@ -1,4 +1,4 @@
-import '../widgets/chat-bubble';
+// import '../widgets/chat-bubble';
 
 import dynamic from 'next/dynamic';
 import { ReactElement, useState } from 'react';
