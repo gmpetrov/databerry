@@ -307,7 +307,7 @@ function ChatInterfaceConfigForm({ agentId }: Props) {
             {`<script 
   id="${getAgentQuery?.data?.id}"
   data-name="databerry-chat-bubble"
-  src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@1.0.39"
+  src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
 ></script>`}
           </SyntaxHighlighter>
         </Stack>
