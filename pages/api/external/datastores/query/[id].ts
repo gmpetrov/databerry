@@ -77,6 +77,7 @@ export const queryURL = async (
     text: each.pageContent,
     score: each.metadata.score || 0,
     source: each.metadata.source_url,
+    datasource_name: each.metadata.datasource_name,
   }));
 };
 
