@@ -278,30 +278,31 @@ const chat = async ({
   } catch {}
 
   try {
+    model.modelName = 'gpt-4';
     const sourceRequest = await model.call(
       [
         new HumanChatMessage(
-          `Context: ${contextForRef}\n\nQuestion: ${_query}\n\n`
+          `Chunks: ${contextForRef}\n\nQuestion: ${_query}\n\n`
         ),
-        new AIChatMessage(`Answer: ${output.text}`),
+        new AIChatMessage(`${output.text}`),
       ],
       {
         functions: [
           {
-            name: 'analyseConversationAnswer',
+            name: 'getChunkIdsUsedToAnswer',
             description:
-              'Analyse a conversation to identify and extract chunks used for the generated AI Answer if the AI has found an answer.',
+              'Get chunks where content information is part of the answer if any.',
             parameters: {
               type: 'object',
               properties: {
-                hasEnoughInformationToAnswer: {
-                  type: 'boolean',
-                  description:
-                    'tell is the AI has enough information to answer',
-                },
+                // hasEnoughInformationToAnswer: {
+                //   type: 'boolean',
+                //   description:
+                //     'tell is the AI has enough information to answer',
+                // },
                 chunkIds: {
                   type: 'array',
-                  desription: "IDs of the chunks used for the AI's answer.",
+                  // desription: "IDs of the chunks used for the AI's answer.",
                   items: {
                     type: 'string',
                   },
