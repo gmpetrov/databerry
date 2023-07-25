@@ -73,7 +73,11 @@ export const queryURL = async (
     filters: data.filters,
   });
 
-  return results || [];
+  return (results || []).map((each) => ({
+    text: each.pageContent,
+    score: each.metadata.score || 0,
+    source: each.metadata.source_url,
+  }));
 };
 
 handler.post(
