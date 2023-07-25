@@ -1,1 +1,1 @@
-export const EXTRACT_SOURCES = /CHAINDESKSOURCES: (\[.*?\])/;
+export const EXTRACT_SOURCES = /SOURCES: (\[.*?\])/;

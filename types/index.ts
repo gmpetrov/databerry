@@ -51,6 +51,6 @@ export enum TaskQueue {
 }
 
 export enum SSE_EVENT {
-  sources = 'CHAINDESKSOURCES',
+  sources = 'SOURCES',
   chat_config = 'CHAT_CONFIG',
 }

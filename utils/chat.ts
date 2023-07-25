@@ -28,8 +28,8 @@ import truncateByModel from './truncate-by-model';
 // Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked.
 // If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
 // Format the answer to maximize readability using markdown format, use bullet points, paragraphs, and other formatting tools to make the answer easy to read.
-// If you find an answer from on of the chunks, inlcude after your answer, CHAINDESKSOURCES, a string array that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
-// Don't include CHAINDESKSOURCES if you din't find an answer in the chunks.
+// If you find an answer from on of the chunks, inlcude after your answer, SOURCES, a string array that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
+// Don't include SOURCES if you din't find an answer in the chunks.
 
 // Here's an example:
 // =======
@@ -46,7 +46,7 @@ import truncateByModel from './truncate-by-model';
 // - Unlimited streaming hours
 // - Ability to download songs for offline listening
 
-// CHAINDESKSOURCES: ["42"]
+// SOURCES: ["42"]
 // =======
 // `;
 
@@ -59,7 +59,7 @@ const getCustomerSupportPrompt = ({
   query: string;
   context: string;
 }) => {
-  // Create a final answer with references named CHAINDESKSOURCES at the end of your answer, that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
+  // Create a final answer with references named SOURCES at the end of your answer, that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
   return `${prompt || CUSTOMER_SUPPORT}
 Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked.
 If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
