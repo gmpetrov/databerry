@@ -449,15 +449,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                     maxWidth: '100vw',
                   },
 
-                  '& .message-agent': {
+                  '& .message-agent': {},
+                  '& .message-human': {
                     backgroundColor: state.config.primaryColor,
-                  },
-                  '& .message-content * ': {
-                    color: pickColorBasedOnBgColor(
-                      state.config?.primaryColor! || '#ffffff',
-                      '#ffffff',
-                      '#000000'
-                    ),
+                    color: textColor,
                   },
                 })}
               >

@@ -290,7 +290,7 @@ const chat = async ({
           {
             name: 'getChunkIds',
             description:
-              'Find the chunks that contains information from the AI Answer',
+              'Analyse a conversation to identify and extract chunks used for the generated AI Answer. If the AI didn’t use any chunks, return an empty array.',
             parameters: {
               type: 'object',
               properties: {

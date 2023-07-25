@@ -140,7 +140,7 @@ function ChatBox({
               size="sm"
               variant={'outlined'}
               color={'primary'}
-              className="message-agent message-content"
+              className="message-agent"
               sx={{
                 mr: 'auto',
                 ml: 'none',
@@ -246,13 +246,17 @@ function ChatBox({
                   // },
                 })}
               >
-                <ReactMarkdown
-                  className="prose dark:prose-invert message-content"
-                  remarkPlugins={[remarkGfm]}
-                  linkTarget={'_blank'}
-                >
-                  {each.message}
-                </ReactMarkdown>
+                {each.from === 'agent' ? (
+                  <ReactMarkdown
+                    className="prose dark:prose-invert"
+                    remarkPlugins={[remarkGfm]}
+                    linkTarget={'_blank'}
+                  >
+                    {each.message}
+                  </ReactMarkdown>
+                ) : (
+                  <p>{each.message}</p>
+                )}
 
                 {(each?.sources?.length || 0) > 0 && (
                   <Box
@@ -262,12 +266,7 @@ function ChatBox({
                   >
                     <details>
                       <summary>Sources</summary>
-                      <Stack
-                        className="message-content"
-                        direction={'column'}
-                        gap={1}
-                        sx={{ pt: 1 }}
-                      >
+                      <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
                         {each?.sources?.map((source) => (
                           <SourceComponent
                             key={source.chunk_id}
