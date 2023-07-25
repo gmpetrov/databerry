@@ -99,9 +99,11 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           ? 'transparent'
           : theme.palette.background.default,
 
-        '& .message-agent': {
+        '& .message-agent': {},
+        '& .message-human': {
           backgroundColor: primaryColor,
-          // borderColor: primaryColor,
+        },
+        '& .message-human *': {
           color: textColor,
         },
       })}

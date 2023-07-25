@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import '../styles/preflight.css';
 
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
