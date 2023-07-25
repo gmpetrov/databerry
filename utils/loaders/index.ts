@@ -57,7 +57,7 @@ export class DatasourceLoader {
           datasource_id: this.datasource.id,
           datasource_type: this.datasource.type,
           source_url: (this.datasource?.config as any)?.source_url,
-          mime_type: (this.datasource?.config as any)?.type,
+          mime_type: (this.datasource?.config as any)?.mime_type,
           tags: [],
         },
       }),

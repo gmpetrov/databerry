@@ -54,11 +54,12 @@ export class FileLoader extends DatasourceLoaderBase {
   }
 
   async load() {
+    const mimeType =
+      (this.datasource?.config as any)?.type ||
+      (this.datasource?.config as any)?.mime_type;
     const s3Key = `datastores/${this.datasource.datastoreId}/${
       this.datasource.id
-    }/${this.datasource.id}.${mime.extension(
-      (this.datasource?.config as any)?.type
-    )}`;
+    }/${this.datasource.id}.${mime.extension(mimeType)}`;
 
     const res = await s3
       .getObject({
@@ -71,7 +72,7 @@ export class FileLoader extends DatasourceLoaderBase {
 
     const docs = await fileBufferToDocs({
       buffer,
-      mimeType: (this.datasource?.config as any)?.type,
+      mimeType: mimeType,
     });
 
     return docs.map(({ pageContent, metadata }) => ({
@@ -82,7 +83,7 @@ export class FileLoader extends DatasourceLoaderBase {
         datasource_name: this.datasource.name,
         datasource_type: this.datasource.type,
         source_url: `${getS3RootDomain()}/${s3Key}`,
-        mime_type: (this.datasource?.config as any)?.type,
+        mime_type: mimeType,
         custom_id: (this.datasource?.config as any)?.custom_id,
         tags: [],
       },
