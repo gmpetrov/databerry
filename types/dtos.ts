@@ -143,6 +143,8 @@ export type ChatRequest = z.infer<typeof ChatRequest>;
 export const ChatResponse = z.object({
   answer: z.string(),
   sources: z.array(Source).optional(),
+  conversationId: z.string().cuid(),
+  visitorId: z.string().optional(),
 });
 
 export type ChatResponse = z.infer<typeof ChatResponse>;

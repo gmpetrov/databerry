@@ -94,6 +94,7 @@ export const chatAgentRequest = async (
 
   const handleStream = (data: string) =>
     streamData({
+      event: SSE_EVENT.answer,
       data,
       res,
     });
@@ -129,14 +130,12 @@ export const chatAgentRequest = async (
 
   if (data.streaming) {
     streamData({
-      event: SSE_EVENT.sources,
-      data: JSON.stringify(chatRes.sources),
-      res,
-    });
-
-    streamData({
-      event: SSE_EVENT.chat_config,
-      data: JSON.stringify({ conversationId }),
+      event: SSE_EVENT.endpoint_response,
+      data: JSON.stringify({
+        answer: chatRes.answer,
+        sources: chatRes.sources,
+        conversationId,
+      }),
       res,
     });
 

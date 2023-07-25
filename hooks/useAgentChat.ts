@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { getHistory } from '@app/pages/api/agents/[id]/history/[conversationId]';
 import { SSE_EVENT } from '@app/types';
 import { Source } from '@app/types/document';
+import type { ChatResponse } from '@app/types/dtos';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { EXTRACT_SOURCES } from '@app/utils/regexp';
 import { fetcher } from '@app/utils/swr-fetcher';
@@ -87,10 +88,7 @@ const useAgentChat = ({
     try {
       const ctrl = new AbortController();
       let buffer = '';
-      let bufferSources = '';
-      let bufferChatConfig = '';
-      let sources = [] as Source[];
-
+      let bufferEndpointResponse = '';
       class RetriableError extends Error {}
       class FatalError extends Error {}
 
@@ -154,11 +152,12 @@ const useAgentChat = ({
             ctrl.abort();
 
             console.debug('[answer]', buffer);
-            console.debug('[sources]', bufferSources);
-            console.log('[chat_config]', bufferSources);
+            console.log('[response]', bufferEndpointResponse);
 
             try {
-              sources = JSON.parse(bufferSources) as Source[];
+              const { sources, conversationId, visitorId } = JSON.parse(
+                bufferEndpointResponse
+              ) as ChatResponse;
 
               const h = [...history];
 
@@ -172,13 +171,10 @@ const useAgentChat = ({
                 history: h as any,
               });
 
-              try {
-                const chatConfig = JSON.parse(
-                  bufferChatConfig
-                ) as ChatConfigProps;
-
-                setChatConfig(chatConfig);
-              } catch {}
+              setChatConfig({
+                conversationId,
+                visitorId,
+              });
             } catch {}
           } else if (event.data?.startsWith('[ERROR]')) {
             ctrl.abort();
@@ -192,11 +188,9 @@ const useAgentChat = ({
                 } as any,
               ],
             });
-          } else if (event.event === SSE_EVENT.sources) {
-            bufferSources += decodeURIComponent(event.data) as string;
-          } else if (event.event === SSE_EVENT.chat_config) {
-            bufferChatConfig += decodeURIComponent(event.data) as string;
-          } else {
+          } else if (event.event === SSE_EVENT.endpoint_response) {
+            bufferEndpointResponse += decodeURIComponent(event.data) as string;
+          } else if (event.event === SSE_EVENT.answer) {
             // const data = JSON.parse(event.data || `{}`);
             buffer += decodeURIComponent(event.data) as string;
             buffer = buffer?.replace(EXTRACT_SOURCES, '');
