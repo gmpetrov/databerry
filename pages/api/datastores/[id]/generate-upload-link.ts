@@ -3,7 +3,8 @@
 import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
-import { AppNextApiRequest, GenerateUploadLinkRequest } from '@app/types';
+import { AppNextApiRequest } from '@app/types';
+import { GenerateUploadLinkRequest } from '@app/types/dtos';
 import { s3 } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';

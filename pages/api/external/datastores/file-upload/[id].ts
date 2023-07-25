@@ -10,10 +10,8 @@ import multer from 'multer';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
-import {
-  AcceptedDatasourceMimeTypes,
-  AppNextApiRequest,
-} from '@app/types/index';
+import { AcceptedDatasourceMimeTypes } from '@app/types/dtos';
+import { AppNextApiRequest } from '@app/types/index';
 import accountConfig from '@app/utils/account-config';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { s3 } from '@app/utils/aws';

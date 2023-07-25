@@ -2,7 +2,8 @@
 
 import { NextApiResponse } from 'next';
 
-import { AppNextApiRequest, ChatRequest } from '@app/types';
+import { AppNextApiRequest } from '@app/types';
+import { ChatRequest } from '@app/types/dtos';
 import chat from '@app/utils/chat';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';

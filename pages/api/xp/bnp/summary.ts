@@ -9,7 +9,7 @@ import cuid from 'cuid';
 import { TokenTextSplitter } from 'langchain/text_splitter';
 import { NextApiResponse } from 'next';
 
-import { AppNextApiRequest, ChatRequest } from '@app/types';
+import { AppNextApiRequest } from '@app/types';
 import accountConfig from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';

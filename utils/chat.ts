@@ -11,12 +11,12 @@ import {
   SystemChatMessage,
 } from 'langchain/schema';
 
-import { ChatRequest, ChatResponse } from '@app/types';
 import {
   AppDocument,
   ChunkMetadataRetrieved,
   Source,
 } from '@app/types/document';
+import { ChatRequest, ChatResponse } from '@app/types/dtos';
 
 import { ModelConfig } from './config';
 import { DatastoreManager } from './datastores';

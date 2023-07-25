@@ -2,7 +2,8 @@ import { ConversationChannel, MessageFrom, Usage } from '@prisma/client';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 
-import { AppNextApiRequest, ChatRequest, SSE_EVENT } from '@app/types';
+import { AppNextApiRequest, SSE_EVENT } from '@app/types';
+import { ChatRequest } from '@app/types/dtos';
 import accountConfig, { queryCountConfig } from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';

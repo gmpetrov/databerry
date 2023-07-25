@@ -1,8 +1,8 @@
 import { Datastore, DatastoreType } from '@prisma/client';
 import { blake3, createBLAKE3 } from 'hash-wasm';
 
-import { SearchRequestSchema } from '@app/types';
 import { AppDocument, ChunkMetadata } from '@app/types/document';
+import { SearchRequestSchema } from '@app/types/dtos';
 
 import uuidv4 from '../uuid';
 

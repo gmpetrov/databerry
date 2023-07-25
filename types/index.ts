@@ -2,8 +2,6 @@ import { NextApiRequest, NextPage } from 'next/types';
 import { Session } from 'next-auth';
 import { ReactElement, ReactNode } from 'react';
 
-export * from './dtos';
-
 export enum RouteNames {
   HOME = '/agents',
   SIGN_IN = '/signin',

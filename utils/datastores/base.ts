@@ -1,11 +1,11 @@
 import type { Datastore } from '@prisma/client';
 
-import { SearchRequestSchema } from '@app/types';
 import {
   AppDocument,
   ChunkMetadata,
   ChunkMetadataRetrieved,
 } from '@app/types/document';
+import { SearchRequestSchema } from '@app/types/dtos';
 
 export const INDEX_NAME = 'databerry';
 

@@ -4,12 +4,13 @@ import { Embeddings } from 'langchain/embeddings';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { z } from 'zod';
 
-import { MetadataFields, SearchRequestSchema } from '@app/types';
+import { MetadataFields } from '@app/types';
 import {
   AppDocument,
   ChunkMetadata,
   ChunkMetadataRetrieved,
 } from '@app/types/document';
+import { SearchRequestSchema } from '@app/types/dtos';
 import { QdrantConfigSchema } from '@app/types/models';
 
 import uuidv4 from '../uuid';
