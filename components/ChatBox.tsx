@@ -140,7 +140,7 @@ function ChatBox({
               size="sm"
               variant={'outlined'}
               color={'primary'}
-              className="message-agent"
+              className="prose-sm message-agent"
               sx={{
                 mr: 'auto',
                 ml: 'none',
