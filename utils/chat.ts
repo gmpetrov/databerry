@@ -281,21 +281,27 @@ const chat = async ({
     const sourceRequest = await model.call(
       [
         new HumanChatMessage(
-          `Question: ${_query}\n\nContext: ${contextForRef}`
+          `Context: ${contextForRef}\n\nQuestion: ${_query}\n\n`
         ),
         new AIChatMessage(`Answer: ${output.text}`),
       ],
       {
         functions: [
           {
-            name: 'getChunkIds',
+            name: 'analyseConversationAnswer',
             description:
-              'Analyse a conversation to identify and extract chunks used for the generated AI Answer. If the AI didn’t use any chunks, return an empty array.',
+              'Analyse a conversation to identify and extract chunks used for the generated AI Answer if the AI has found an answer.',
             parameters: {
               type: 'object',
               properties: {
+                hasEnoughInformationToAnswer: {
+                  type: 'boolean',
+                  description:
+                    'tell is the AI has enough information to answer',
+                },
                 chunkIds: {
                   type: 'array',
+                  desription: "IDs of the chunks used for the AI's answer.",
                   items: {
                     type: 'string',
                   },
