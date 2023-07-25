@@ -248,14 +248,14 @@ function ChatBox({
               >
                 {each.from === 'agent' ? (
                   <ReactMarkdown
-                    className="prose dark:prose-invert"
+                    className="prose-sm prose dark:prose-invert"
                     remarkPlugins={[remarkGfm]}
                     linkTarget={'_blank'}
                   >
                     {each.message}
                   </ReactMarkdown>
                 ) : (
-                  <p>{each.message}</p>
+                  <p className="prose-sm ">{each.message}</p>
                 )}
 
                 {(each?.sources?.length || 0) > 0 && (
