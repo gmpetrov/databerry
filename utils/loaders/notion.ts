@@ -2,6 +2,7 @@ import { DatasourceStatus, DatasourceType } from '@prisma/client';
 import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios';
 import { z } from 'zod';
 
+import { NotionSourceSchema } from '@app/components/DatasourceForms/NotionForm';
 import { NotionBlock, NotionKeyConfig } from '@app/types/notion-models';
 import type { Document } from '@app/utils/datastores/base';
 import prisma from '@app/utils/prisma-client';
@@ -22,6 +23,10 @@ const getNotionBasePages = async(datasource: DatasourceExtended) => {
     }
 
     console.log("----NOTION VERSION----",process.env.NOTION_CLIENT_ID)
+    const config = (
+        datasource.config as z.infer<typeof NotionSourceSchema>['config']
+      )['notionIntegrationType'];
+    console.log(config)
     // await getAuth()
     
     const searchUrl = `${process.env.NOTION_BASE_URL}/search/`
