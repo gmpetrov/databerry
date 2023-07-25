@@ -21,7 +21,7 @@ const getTextFromHTML = async (html: string) => {
   $('img').remove();
   const text = $('body').text();
 
-  return text;
+  return text?.trim();
 };
 
 const loadPageContent = async (url: string) => {
@@ -56,12 +56,12 @@ const loadPageContent = async (url: string) => {
 
     const page = await context.newPage();
     await page.goto(url, {
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'networkidle',
       timeout: 100000,
     });
 
     let content = await page.content();
-    let text = await getTextFromHTML(content);
+    let text = (await getTextFromHTML(content))?.trim();
 
     if (!text) {
       console.log(
@@ -71,12 +71,12 @@ const loadPageContent = async (url: string) => {
     }
 
     content = await page.content();
-    text = await getTextFromHTML(content);
+    text = (await getTextFromHTML(content))?.trim();
 
     await context.close();
     await browser.close();
 
-    return content;
+    return text;
   }
 };
 
