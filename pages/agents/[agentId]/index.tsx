@@ -55,6 +55,7 @@ import ChatBubble from '@app/components/ChatBubble';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgentChat from '@app/hooks/useAgentChat';
+import useChatConfig from '@app/hooks/useChatConfig';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
 import { RouteNames } from '@app/types';
@@ -121,9 +122,13 @@ export default function AgentPage() {
     fetcher
   );
 
+  // const { conversationId } = useChatConfig();
+
   const { handleChatSubmit, history } = useAgentChat({
     queryAgentURL: `/api/agents/${router.query?.agentId}/query`,
-    // queryHistoryURL: `/api/agents/${router.query?.agentId}/history/${session?.user?.id}`,
+    // queryHistoryURL: conversationId
+    //   ? `/api/agents/${router.query?.agentId}/history/${conversationId}`
+    //   : undefined,
   });
 
   const handleDeleteAgent = async () => {

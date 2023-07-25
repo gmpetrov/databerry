@@ -2,7 +2,7 @@ import { ConversationChannel, MessageFrom, Usage } from '@prisma/client';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 
-import { AppNextApiRequest, ChatRequest } from '@app/types';
+import { AppNextApiRequest, ChatRequest, SSE_EVENT } from '@app/types';
 import accountConfig, { queryCountConfig } from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
@@ -23,6 +23,8 @@ export const chatAgentRequest = async (
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
 
+  const conversationId = data.conversationId || cuid();
+
   const agent = await prisma.agent.findUnique({
     where: {
       id,
@@ -33,8 +35,9 @@ export const chatAgentRequest = async (
           usage: true,
           conversations: {
             where: {
+              id: conversationId,
               agentId: id,
-              userId: session?.user?.id,
+              // userId: session?.user?.id,
             },
             include: {
               messages: {
@@ -55,16 +58,16 @@ export const chatAgentRequest = async (
     },
   });
 
+  if (agent?.ownerId !== session?.user?.id) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+
   const usage = agent?.owner?.usage as Usage;
 
   guardAgentQueryUsage({
     usage,
     plan: session?.user?.currentPlan,
   });
-
-  if (agent?.ownerId !== session?.user?.id) {
-    throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  }
 
   const manager = new AgentManager({ agent, topK: 5 });
 
@@ -75,8 +78,6 @@ export const chatAgentRequest = async (
       Connection: 'keep-alive',
     });
   }
-
-  const conversationId = agent?.owner?.conversations?.[0]?.id;
 
   const conversationManager = new ConversationManager({
     channel: ConversationChannel.dashboard,
@@ -96,7 +97,7 @@ export const chatAgentRequest = async (
       res,
     });
 
-  const [chatRes, conversation] = await Promise.all([
+  const [chatRes] = await Promise.all([
     manager.query({
       input: data.query,
       stream: data.streaming ? handleStream : undefined,
@@ -127,8 +128,14 @@ export const chatAgentRequest = async (
 
   if (data.streaming) {
     streamData({
-      event: 'CHAINDESKSOURCES',
+      event: SSE_EVENT.sources,
       data: JSON.stringify(chatRes.sources),
+      res,
+    });
+
+    streamData({
+      event: SSE_EVENT.chat_config,
+      data: JSON.stringify({ conversationId }),
       res,
     });
 
@@ -137,7 +144,10 @@ export const chatAgentRequest = async (
       res,
     });
   } else {
-    return chatRes;
+    return {
+      ...chatRes,
+      conversationId,
+    };
   }
 };
 

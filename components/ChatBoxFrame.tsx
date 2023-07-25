@@ -6,7 +6,7 @@ import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import useAgentChat from '@app/hooks/useAgentChat';
-import useVisitorId from '@app/hooks/useVisitorId';
+import useChatConfig from '@app/hooks/useChatConfig';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 
@@ -31,13 +31,13 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
   );
-  const { visitorId } = useVisitorId();
+  const { visitorId, conversationId } = useChatConfig();
 
   const { history, handleChatSubmit } = useAgentChat({
     queryAgentURL: `${API_URL}/api/external/agents/${agentId}/query`,
     channel: ConversationChannel.website,
     // queryHistoryURL: visitorId
-    //   ? `/api/external/agents/${router.query?.agentId}/history/${visitorId}`
+    //   ? `/api/external/agents/${router.query?.agentId}/history/${conversationId}`
     //   : undefined,
   });
 

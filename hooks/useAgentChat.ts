@@ -5,14 +5,15 @@ import {
 import type { ConversationChannel, Prisma } from '@prisma/client';
 import useSWR from 'swr';
 
-import { getHistory } from '@app/pages/api/agents/[id]/history/[sessionId]';
+import { getHistory } from '@app/pages/api/agents/[id]/history/[conversationId]';
+import { SSE_EVENT } from '@app/types';
 import { Source } from '@app/types/document';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { EXTRACT_SOURCES } from '@app/utils/regexp';
 import { fetcher } from '@app/utils/swr-fetcher';
 
+import useChatConfig, { ChatConfigProps } from './useChatConfig';
 import useStateReducer from './useStateReducer';
-import useVisitorId from './useVisitorId';
 
 type Props = {
   queryAgentURL: string;
@@ -20,6 +21,7 @@ type Props = {
   channel?: ConversationChannel;
   queryBody?: any;
   datasourceId?: string;
+  conversationId?: string;
 };
 
 const useAgentChat = ({
@@ -27,6 +29,7 @@ const useAgentChat = ({
   queryHistoryURL,
   channel,
   queryBody,
+  ...otherProps
 }: Props) => {
   const [state, setState] = useStateReducer({
     history: [] as {
@@ -37,7 +40,9 @@ const useAgentChat = ({
     }[],
   });
 
-  const { visitorId } = useVisitorId();
+  const { visitorId, conversationId, setChatConfig } = useChatConfig({
+    conversationId: otherProps.conversationId,
+  });
 
   const getHistoryQuery = useSWR<Prisma.PromiseReturnType<typeof getHistory>>(
     queryHistoryURL,
@@ -83,6 +88,7 @@ const useAgentChat = ({
       const ctrl = new AbortController();
       let buffer = '';
       let bufferSources = '';
+      let bufferChatConfig = '';
       let sources = [] as Source[];
 
       class RetriableError extends Error {}
@@ -99,6 +105,7 @@ const useAgentChat = ({
           streaming: true,
           query: message,
           visitorId: visitorId,
+          conversationId,
           channel,
         }),
         signal: ctrl.signal,
@@ -148,6 +155,7 @@ const useAgentChat = ({
 
             console.debug('[answer]', buffer);
             console.debug('[sources]', bufferSources);
+            console.log('[chat_config]', bufferSources);
 
             try {
               sources = JSON.parse(bufferSources) as Source[];
@@ -163,6 +171,14 @@ const useAgentChat = ({
               setState({
                 history: h as any,
               });
+
+              try {
+                const chatConfig = JSON.parse(
+                  bufferChatConfig
+                ) as ChatConfigProps;
+
+                setChatConfig(chatConfig);
+              } catch {}
             } catch {}
           } else if (event.data?.startsWith('[ERROR]')) {
             ctrl.abort();
@@ -176,8 +192,10 @@ const useAgentChat = ({
                 } as any,
               ],
             });
-          } else if (event.event === 'CHAINDESKSOURCES') {
+          } else if (event.event === SSE_EVENT.sources) {
             bufferSources += decodeURIComponent(event.data) as string;
+          } else if (event.event === SSE_EVENT.chat_config) {
+            bufferChatConfig += decodeURIComponent(event.data) as string;
           } else {
             // const data = JSON.parse(event.data || `{}`);
             buffer += decodeURIComponent(event.data) as string;
@@ -226,6 +244,7 @@ const useAgentChat = ({
   return {
     handleChatSubmit,
     history: state.history,
+    conversationId,
   };
 };
 

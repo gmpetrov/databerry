@@ -12,14 +12,13 @@ export const getHistory = async (
   res: NextApiResponse
 ) => {
   const session = req.session;
-  const sessionId = req.query.sessionId as string;
+  const conversationId = req.query.conversationId as string;
   const agentId = req.query.id as string;
   const cursor = req.body.cursor as string;
 
-  const conversation = await prisma.conversation.findFirst({
+  const conversation = await prisma.conversation.findUnique({
     where: {
-      agentId,
-      userId: session?.user?.id,
+      id: conversationId,
     },
     include: {
       messages: {

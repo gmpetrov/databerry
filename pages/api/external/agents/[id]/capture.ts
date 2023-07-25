@@ -24,6 +24,7 @@ const cors = Cors({
 const CaptureRequestSchema = z.object({
   visitorId: z.string().min(1),
   visitorEmail: z.string().min(1),
+  conversationId: z.string().cuid(),
 });
 
 type CaptureRequestSchemaType = z.infer<typeof CaptureRequestSchema>;
@@ -50,8 +51,8 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
       },
       conversations: {
         where: {
+          id: data.conversationId,
           agentId: agentId,
-          visitorId: data.visitorId || 'UNKNOWN',
         },
         take: 1,
         include: {

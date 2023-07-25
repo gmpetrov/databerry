@@ -49,3 +49,8 @@ export enum MetadataFields {
 export enum TaskQueue {
   load_datasource = 'load-datasource',
 }
+
+export enum SSE_EVENT {
+  sources = 'CHAINDESKSOURCES',
+  chat_config = 'CHAT_CONFIG',
+}

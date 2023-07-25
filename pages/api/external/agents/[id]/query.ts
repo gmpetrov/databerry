@@ -3,12 +3,13 @@ import Cors from 'cors';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { ChatRequest } from '@app/types/dtos';
-import { AppNextApiRequest } from '@app/types/index';
+import { AppNextApiRequest, SSE_EVENT } from '@app/types/index';
 import accountConfig, { queryCountConfig } from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import ConversationManager from '@app/utils/conversation';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import cuid from '@app/utils/cuid';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
@@ -36,6 +37,8 @@ export const queryAgent = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
+  const conversationId = data.conversationId || cuid();
+
   const agent = await prisma.agent.findUnique({
     where: {
       id: agentId,
@@ -60,8 +63,8 @@ export const queryAgent = async (
       conversations: {
         where: {
           id: data.conversationId,
-          visitorId: data.visitorId || 'UNKNOWN',
           agentId: agentId,
+          // visitorId: data.visitorId || 'UNKNOWN',
         },
         take: 1,
         include: {
@@ -122,8 +125,6 @@ export const queryAgent = async (
       res,
     });
 
-  const conversationId = agent?.conversations?.[0]?.id;
-
   const conversationManager = new ConversationManager({
     agentId,
     conversationId,
@@ -175,8 +176,14 @@ export const queryAgent = async (
 
   if (data.streaming) {
     streamData({
-      event: 'CHAINDESKSOURCES',
+      event: SSE_EVENT.sources,
       data: JSON.stringify(chatRes.sources),
+      res,
+    });
+
+    streamData({
+      event: SSE_EVENT.chat_config,
+      data: JSON.stringify({ conversationId }),
       res,
     });
 
@@ -187,6 +194,7 @@ export const queryAgent = async (
   } else {
     return {
       answer: chatRes.answer,
+      sources: chatRes.sources,
       visitorId: conversationManager.visitorId,
       conversationId: conversationManager.conversationId,
     };
