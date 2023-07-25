@@ -31,6 +31,9 @@ export class WebSiteLoader extends DatasourceLoaderBase {
       this.datasource?.owner?.subscriptions?.[0]?.plan ||
       SubscriptionPlan.level_0;
 
+    const maxAutoPages =
+      accountConfig[currentPlan]?.limits?.maxWebsiteURL || 25;
+
     if (sitemap) {
       const { pages, sitemaps } = await getSitemapPages(sitemap);
       urls = pages;
@@ -45,7 +48,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
         nestedSitemaps = sitemaps;
       } else {
         // Fallback to recursive search
-        urls = await findDomainPages(source);
+        urls = await findDomainPages(source, maxAutoPages);
       }
     } else {
       urls = [];

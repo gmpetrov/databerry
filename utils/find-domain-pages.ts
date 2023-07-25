@@ -66,6 +66,8 @@ export const getSitemapPages = async (sitemapURL: string) => {
 const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
   // Create a set to track visited URLs
   const visitedUrls = new Set<string>();
+  const origin = new URL(startingUrl).origin;
+  const hostname = new URL(startingUrl).hostname;
 
   // Define the crawl function
   async function crawl(url: string) {
@@ -102,11 +104,16 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
       }
 
       const href = c(link).attr('href');
-      // Check if link is internal
-      if (href?.startsWith(startingUrl) || href?.startsWith('/')) {
-        await crawl(
-          href?.startsWith('/') ? new URL(startingUrl).origin + href : href
-        );
+
+      let linkHostname = undefined;
+      try {
+        linkHostname = new URL(href!).hostname;
+      } catch {}
+
+      if (href?.startsWith('/') || linkHostname === hostname) {
+        const url = href?.startsWith('/') ? origin + href : href;
+
+        await crawl(url!);
       }
     }
   }
@@ -115,7 +122,7 @@ const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
   try {
     await pTimeout(crawl(startingUrl), {
       //  STOP AFTER 45 SECONDS OTHERWISE LAMBDA WILL TIMEOUT AFTER 60 SECONDS
-      milliseconds: 50000,
+      milliseconds: 60000,
     });
   } catch {}
 
