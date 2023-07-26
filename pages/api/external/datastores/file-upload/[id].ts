@@ -128,7 +128,7 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
       name,
       type: DatasourceType.file,
       config: {
-        type: file.mime_type,
+        mime_type: file.mime_type || (file as any)?.mimetype,
         datasource_name: name,
         custom_id,
       },
