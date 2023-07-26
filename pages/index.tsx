@@ -1,10 +1,11 @@
 import { useColorScheme } from '@mui/joy/styles';
+import clsx from 'clsx';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 // import { SecondaryFeatures } from '@app/landing-page/components/SecondaryFeatures';
 // import { Testimonials } from '@app/landing-page/components/Testimonials';
 import Script from 'next/script';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import CompanyLogos from '@app/components/landing-page/CompanyLogos';
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
@@ -28,7 +29,9 @@ import FeaturesForSlack from './FeaturesForSlack';
 
 export default function Home() {
   const router = useRouter();
-  const { setMode } = useColorScheme();
+  const [mounted, setMounted] = useState(false);
+
+  const { mode, setMode } = useColorScheme();
 
   useEffect(() => {
     // Force dark mode on the landing page
@@ -44,6 +47,7 @@ export default function Home() {
   }, [router]);
 
   useEffect(() => {
+    setMounted(true);
     setMode('dark');
   }, []);
 
@@ -93,7 +97,7 @@ export default function Home() {
         data-name="databerry-chat-bubble"
       ></script>
 
-      <main className="bg-black min-heigh-full">
+      <main className={clsx('bg-black min-heigh-full', mounted ? mode : '')}>
         {/* <Hero /> */}
         <HeroChatGPTPlugin />
         {/* <CompanyLogos /> */}

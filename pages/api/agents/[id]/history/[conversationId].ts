@@ -1,11 +1,19 @@
+import { AgentVisibility } from '@prisma/client';
+import Cors from 'cors';
 import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
 import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
+import { createLazyAuthHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 
-const handler = createAuthApiHandler();
+const handler = createLazyAuthHandler();
+
+const cors = Cors({
+  methods: ['POST', 'HEAD'],
+});
 
 export const getHistory = async (
   req: AppNextApiRequest,
@@ -21,6 +29,7 @@ export const getHistory = async (
       id: conversationId,
     },
     include: {
+      agent: true,
       messages: {
         take: -20,
         ...(cursor
@@ -37,9 +46,23 @@ export const getHistory = async (
     },
   });
 
+  // if (
+  //   conversation?.agent?.visibility === AgentVisibility.private &&
+  //   conversation?.agent?.ownerId !== session?.user?.id
+  // ) {
+  //   throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  // }
+
   return conversation;
 };
 
 handler.get(respond(getHistory));
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

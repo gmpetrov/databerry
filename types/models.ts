@@ -44,7 +44,7 @@ export const UpsertDatasourceSchema = z.object({
   datastoreId: z.string().trim().cuid(),
   datasourceText: z.string().optional(),
   isUpdateText: z.boolean().optional(),
-  config: z.object({}),
+  config: z.object({}).optional(),
 });
 
 export type UpsertDatasourceSchema = z.infer<typeof UpsertDatasourceSchema>;

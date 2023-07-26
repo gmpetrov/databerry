@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 import { z } from 'zod';
 
-import { ChatRequest } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';

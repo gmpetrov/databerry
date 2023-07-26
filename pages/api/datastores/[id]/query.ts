@@ -1,17 +1,17 @@
 import { DatastoreVisibility } from '@prisma/client';
 import Cors from 'cors';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiResponse } from 'next';
 
 import { SearchRequestSchema } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import { createLazyAuthHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 import validate from '@app/utils/validate';
 
-const handler = createApiHandler();
+const handler = createLazyAuthHandler();
 
 const cors = Cors({
   methods: ['POST', 'HEAD'],
@@ -23,13 +23,10 @@ export const queryURL = async (
 ) => {
   console.log('REG BODY', req.body);
   console.log('REG QUERY', req.query);
+  const session = req.session;
   const datastoreId = req.query.id as string;
   const data = req.body as SearchRequestSchema;
   const topK = data.topK || 5;
-
-  // get Bearer token from header
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')?.[1];
 
   if (!datastoreId) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -55,12 +52,7 @@ export const queryURL = async (
 
   if (
     datastore.visibility === DatastoreVisibility.private &&
-    (!token ||
-      !(
-        datastore?.owner?.apiKeys.find((each) => each.key === token) ||
-        // TODO REMOVE AFTER MIGRATION
-        datastore.apiKeys.find((each) => each.key === token)
-      ))
+    datastore.ownerId !== session?.user?.id
   ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
@@ -78,6 +70,7 @@ export const queryURL = async (
     score: each.metadata.score || 0,
     source: each.metadata.source_url,
     datasource_name: each.metadata.datasource_name,
+    datasource_id: each.metadata.datasource_id,
   }));
 };
 
@@ -89,7 +82,7 @@ handler.post(
 );
 
 export default async function wrapper(
-  req: NextApiRequest,
+  req: AppNextApiRequest,
   res: NextApiResponse
 ) {
   await runMiddleware(req, res, cors);

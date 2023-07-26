@@ -22,11 +22,18 @@ import { GoogleDriveManager } from '../utils/google-drive-manager';
 
 (async () => {
   const res = await prisma.appDatasource.findMany({
+    where: {
+      type: {
+        not: 'file',
+      },
+    },
     select: {
       id: true,
     },
-    // skip: 22495,
-    skip: 77492,
+    orderBy: {
+      createdAt: 'asc',
+    },
+    skip: 40438,
   });
 
   const ids = res.map((each) => each.id);
@@ -36,6 +43,7 @@ import { GoogleDriveManager } from '../utils/google-drive-manager';
 
   console.log('DATABASE_URL', process.env.DATABASE_URL);
   console.log('QDRANT_API_URL', process.env.QDRANT_API_URL);
+  console.log(`getS3RootDomain()`, getS3RootDomain());
   console.log(`${ids.length} Datasources to process`);
   console.log(`${batches.length} Batch to process`);
 
@@ -66,7 +74,6 @@ import { GoogleDriveManager } from '../utils/google-drive-manager';
             {}) as FileMetadataSchema;
           let dsMetadata = { ...metadata } as any;
 
-          metadata.source_url;
           if ((metadata as any).source) {
             metadata.source_url = (metadata as any).source;
             delete (metadata as any).source;
@@ -161,10 +168,6 @@ import { GoogleDriveManager } from '../utils/google-drive-manager';
               );
             };
 
-            await pRetry(updateQdrant, {
-              retries: 10,
-            });
-
             const updateDB = async () => {
               await prisma.appDatasource.update({
                 where: {
@@ -178,9 +181,18 @@ import { GoogleDriveManager } from '../utils/google-drive-manager';
               });
             };
 
-            // await pRetry(updateDB, {
-            //   retries: 0,
-            // });
+            if (dsMetadata?.source_url?.includes('minio:9000')) {
+              console.log('dsMetadata', dsMetadata);
+            }
+            await Promise.all([
+              await pRetry(updateQdrant, {
+                retries: 10,
+              }),
+
+              await pRetry(updateDB, {
+                retries: 10,
+              }),
+            ]);
           };
 
           await pRetry(runUpdate, {

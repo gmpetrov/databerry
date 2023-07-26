@@ -57,7 +57,7 @@ module.exports = {
         Authorization: 'Bearer {{bundle.authData.api_key}}',
       },
       method: 'POST',
-      url: `${baseApiUrl}/api/external/agents/{{bundle.inputData.agent_id}}/query`,
+      url: `${baseApiUrl}/api/agents/{{bundle.inputData.agent_id}}/query`,
     },
     sample: {
       query: 'Hello',

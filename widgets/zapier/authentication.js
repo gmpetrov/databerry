@@ -7,7 +7,7 @@ module.exports = {
   test: {
     headers: { Authorization: 'Bearer {{bundle.authData.api_key}}' },
     removeMissingValuesFrom: { params: true },
-    url: `${baseApiUrl}/api/external/me`,
+    url: `${baseApiUrl}/api/me`,
   },
   connectionLabel: (z, bundle) => {
     const { email } = bundle.inputData;

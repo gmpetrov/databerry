@@ -51,16 +51,16 @@ import truncateByModel from './truncate-by-model';
 // `;
 
 const getCustomerSupportPrompt = ({
-  prompt,
+  promptTemplate,
   query,
   context,
 }: {
-  prompt?: string;
+  promptTemplate?: string;
   query: string;
   context: string;
 }) => {
   // Create a final answer with references named SOURCES at the end of your answer, that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
-  return `${prompt || CUSTOMER_SUPPORT}
+  return `${promptTemplate || CUSTOMER_SUPPORT}
 Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked.
 If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
 Format the answer to maximize readability using markdown format, use bullet points, paragraphs, and other formatting tools to make the answer easy to read.
@@ -84,18 +84,18 @@ Answer: The cost of the Premium plan is $9.99 per month. The features included i
 type GetPromptProps = {
   context: string;
   query: string;
-  prompt?: string;
+  promptTemplate?: string;
   history?: { from: MessageFrom; message: string }[];
 };
 
 const getCustomerSupportMessages = ({
   context,
   query,
-  prompt,
+  promptTemplate,
   history,
 }: GetPromptProps) => {
   const systemPrompt = getCustomerSupportPrompt({
-    prompt,
+    promptTemplate,
     query,
     context,
   });
@@ -126,10 +126,10 @@ const getCustomerSupportMessages = ({
 const getRawMessages = ({
   context,
   query,
-  prompt,
+  promptTemplate,
   history,
 }: GetPromptProps) => {
-  const finalPrompt = prompt!
+  const finalPrompt = promptTemplate!
     ?.replace('{query}', query)
     ?.replace('{context}', context);
 
@@ -147,7 +147,7 @@ const chat = async ({
   datastore,
   query,
   topK,
-  prompt,
+  promptTemplate,
   promptType,
   stream,
   temperature,
@@ -158,7 +158,7 @@ const chat = async ({
 }: {
   datastore?: Datastore;
   query: string;
-  prompt?: string;
+  promptTemplate?: string;
   promptType?: PromptType;
   topK?: number;
   stream?: any;
@@ -182,7 +182,7 @@ const chat = async ({
     datastore &&
     (promptType === PromptType.customer_support ||
       // Don't use search for raw prompts that don't have {context} in them
-      (promptType === PromptType.raw && prompt?.includes('{context}')));
+      (promptType === PromptType.raw && promptTemplate?.includes('{context}')));
 
   if (isSearchNeeded) {
     const store = new DatastoreManager(datastore);
@@ -214,7 +214,7 @@ const chat = async ({
   switch (promptType) {
     case PromptType.customer_support:
       messages = getCustomerSupportMessages({
-        prompt,
+        promptTemplate,
         context,
         query: _query,
         history,
@@ -222,7 +222,7 @@ const chat = async ({
       break;
     case PromptType.raw:
       messages = getRawMessages({
-        prompt,
+        promptTemplate,
         context,
         query: _query,
         history,

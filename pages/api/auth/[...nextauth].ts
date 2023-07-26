@@ -5,6 +5,7 @@ import EmailProvider from 'next-auth/providers/email';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 
+import { sessionUserInclude } from '@app/utils/auth';
 import prisma from '@app/utils/prisma-client';
 import uuidv4 from '@app/utils/uuid';
 
@@ -31,18 +32,7 @@ const CustomPrismaProvider = (p: PrismaClient) => {
         include: {
           user: {
             include: {
-              usage: true,
-              subscriptions: {
-                where: {
-                  status: 'active',
-                },
-              },
-              _count: {
-                select: {
-                  agents: true,
-                  datastores: true,
-                },
-              },
+              ...sessionUserInclude,
             },
           },
         },

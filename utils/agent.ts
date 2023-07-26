@@ -37,6 +37,8 @@ export default class AgentManager {
     truncateQuery,
     temperature,
     filters,
+    promptType,
+    promptTemplate,
   }: {
     input: string;
     stream?: any;
@@ -44,12 +46,14 @@ export default class AgentManager {
     truncateQuery?: boolean;
     temperature?: ChatRequest['temperature'];
     filters?: ChatRequest['filters'];
+    promptType?: ChatRequest['promptType'];
+    promptTemplate?: ChatRequest['promptTemplate'];
   }) {
     if (this.agent.tools.length <= 1) {
       const { answer, sources } = await chat({
         modelName: this.agent.modelName,
-        prompt: this.agent.prompt as string,
-        promptType: this.agent.promptType,
+        promptTemplate: promptTemplate || (this.agent.prompt as string),
+        promptType: promptType || this.agent.promptType,
         datastore: this.agent?.tools[0]?.datastore as any,
         query: input,
         topK: this.topK,

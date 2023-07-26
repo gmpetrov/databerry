@@ -23,6 +23,11 @@ export const getAgents = async (
       ownerId: session?.user?.id,
     },
     include: {
+      owner: {
+        include: {
+          subscriptions: true,
+        },
+      },
       tools: {
         select: {
           id: true,
