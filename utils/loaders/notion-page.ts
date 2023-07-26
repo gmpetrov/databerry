@@ -70,7 +70,6 @@ const getBlockContents = (block: any) => {
 }
 
 const getNotionPageContent = async (datasource: DatasourceExtended) => {
-
     const pageId: string = (
         datasource.config as z.infer<typeof NotionBlock>['config']
       )['pageId'];
@@ -82,7 +81,6 @@ const getNotionPageContent = async (datasource: DatasourceExtended) => {
     const blocksList: Array<any> = []
     let sentencesList: Array<string> = []
     let finalString = ""
-
 
     return await new Promise<Array<any>>(async(resolve) => {
         const notionBlocks = await getNotionBlocks(key,pageId)
@@ -124,7 +122,7 @@ export class NotionPageLoader  extends DatasourceLoaderBase {
         return 0;
     };
     async load() {
-     
+
         const resp = await getNotionPageContent(this.datasource)
         return {
             pageContent: resp,

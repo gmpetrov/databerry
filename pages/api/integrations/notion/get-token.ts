@@ -19,13 +19,10 @@ export const getToken = async (req: AppNextApiRequest, res: NextApiResponse) => 
         headers:{
           'Authorization': `Basic ${key}`,
           'Notion-Version': process.env.NOTION_VERSION
-      }
+        }
     }
     const response = await axios.post(url,data,headers)
-    // res.json( response );
-    console.log(response)
    res.send(response.data)
   };
 handler.post(getToken);
-
 export default handler;
