@@ -3,7 +3,6 @@ import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios';
 import { z } from 'zod';
 
 import { NotionSourceSchema } from '@app/components/DatasourceForms/NotionForm';
-import { NotionBlock, NotionKeyConfig } from '@app/types/notion-models';
 import type { Document } from '@app/utils/datastores/base';
 import prisma from '@app/utils/prisma-client';
 
@@ -14,10 +13,12 @@ import { DatasourceExtended, DatasourceLoaderBase } from './base';
 const pageIds: Array<string> = []
 
 const getNotionBasePages = async(datasource: DatasourceExtended) => {
-
-    const key = (
+    let key = (
         datasource.config as z.infer<typeof NotionSourceSchema>['config']
-      )['integrationKey'];
+      )['integrationKey']
+    if(key === 'internal'){
+        key = process.env.NOTION_API_KEY as string
+    }
     const notionHeader = {
         headers:{
             'Authorization': `Bearer ${key}`,
@@ -25,7 +26,6 @@ const getNotionBasePages = async(datasource: DatasourceExtended) => {
         }
     }
 
-    
     const searchUrl = `${process.env.NOTION_BASE_URL}/search/`
     const basePages: Array<any> = (await axios.post(
         searchUrl,{},notionHeader)
