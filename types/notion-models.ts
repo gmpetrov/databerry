@@ -7,7 +7,10 @@ export const NotionKeyConfig = z.object({
 export type NotionKeyConfig = z.infer<typeof NotionKeyConfig>
 
 export const NotionBlock = z.object({
-    config: z.object({ pageId: z.string().trim() }),
+    config: z.object({ 
+        pageId: z.string().trim(),
+        integrationKey: z.string().trim(), 
+    }),
     id: z.string().trim(),
 })
 

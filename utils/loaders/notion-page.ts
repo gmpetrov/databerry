@@ -5,21 +5,14 @@ import { z } from 'zod';
 import { NotionBlock } from '@app/types/notion-models';
 import type { Document } from '@app/utils/datastores/base';
 
-import { DatasourceLoaderBase } from './base';
+import { DatasourceExtended, DatasourceLoaderBase } from './base';
 
 
-const notionHeader = {
-    headers:{
-        'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
-        'Notion-Version': process.env.NOTION_VERSION
-    }
-}
-
-const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
+const flattenChildBlocks = async (code:string,blocks: Array<any>): Promise<Array<any>> => {
     const container: Array<any> = []
     let childContainer: Array<any> = []
     return Promise.all(blocks.map(async (block)=>{
-        const childBlocks = await getNotionBlocks(block.id)
+        const childBlocks = await getNotionBlocks(code,block.id)
         childBlocks.map((block)=>{
             container.push(block)
         })
@@ -32,7 +25,7 @@ const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
         })
         return new Promise<Array<any>>(async(resolve) => {
             if(childContainer.length > 0) {
-                await flattenChildBlocks(childContainer)
+                await flattenChildBlocks(code,childContainer)
                 .then((newContainer) => {
                     newContainer.forEach((val) => {
                         container.push(val)
@@ -50,7 +43,13 @@ const flattenChildBlocks = async (blocks: Array<any>): Promise<Array<any>> => {
     })
 }
 
-const getNotionBlocks = async (id: string) => { 
+const getNotionBlocks = async (code:string, id: string) => { 
+    const notionHeader = {
+        headers:{
+            'Authorization': `Bearer ${code}`,
+            'Notion-Version': process.env.NOTION_VERSION
+        }
+    }
     const blockUrl = `${process.env.NOTION_BASE_URL}/blocks/${id}/children/`
     const blocks: Array<any> = (await axios.get(blockUrl,notionHeader)).data.results
     return blocks
@@ -70,7 +69,15 @@ const getBlockContents = (block: any) => {
     return blockSentences
 }
 
-const getNotionPageContent = async (pageId: string) => {
+const getNotionPageContent = async (datasource: DatasourceExtended) => {
+
+    const pageId: string = (
+        datasource.config as z.infer<typeof NotionBlock>['config']
+      )['pageId'];
+      const key = (
+        datasource.config as z.infer<typeof NotionBlock>['config']
+      )['integrationKey'];
+
     const childBlocks: Array<any> = []
     const blocksList: Array<any> = []
     let sentencesList: Array<string> = []
@@ -78,7 +85,7 @@ const getNotionPageContent = async (pageId: string) => {
 
 
     return await new Promise<Array<any>>(async(resolve) => {
-        const notionBlocks = await getNotionBlocks(pageId)
+        const notionBlocks = await getNotionBlocks(key,pageId)
         notionBlocks.map((block) => {
             if(block.has_children) {
                 childBlocks.push(block)
@@ -89,7 +96,7 @@ const getNotionPageContent = async (pageId: string) => {
     })
     .then(async (blocks) => {
         return new Promise<string>(async(resolve) => {
-            await flattenChildBlocks(blocks)
+            await flattenChildBlocks(key,blocks)
             .then((flattens) => {
                 flattens.map((block) => {
                     blocksList.push(block)
@@ -117,10 +124,8 @@ export class NotionPageLoader  extends DatasourceLoaderBase {
         return 0;
     };
     async load() {
-        const pageId: string = (
-            this.datasource.config as z.infer<typeof NotionBlock>['config']
-          )['pageId'];
-        const resp = await getNotionPageContent(pageId)
+     
+        const resp = await getNotionPageContent(this.datasource)
         return {
             pageContent: resp,
             metadata: {

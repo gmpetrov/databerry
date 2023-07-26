@@ -14,28 +14,23 @@ import { DatasourceExtended, DatasourceLoaderBase } from './base';
 const pageIds: Array<string> = []
 
 const getNotionBasePages = async(datasource: DatasourceExtended) => {
-    // const key = (datasource.config as z.infer<typeof NotionKeyConfig>['config'])['integrationKey']
+
+    const key = (
+        datasource.config as z.infer<typeof NotionSourceSchema>['config']
+      )['integrationKey'];
     const notionHeader = {
         headers:{
-            'Authorization': `Bearer ${process.env.NOTION_API_KEY}`,
+            'Authorization': `Bearer ${key}`,
             'Notion-Version': process.env.NOTION_VERSION
         }
     }
 
-    console.log("----NOTION VERSION----",process.env.NOTION_CLIENT_ID)
-    const config = (
-        datasource.config as z.infer<typeof NotionSourceSchema>['config']
-      )['notionIntegrationType'];
-    console.log(config)
-    // await getAuth()
     
     const searchUrl = `${process.env.NOTION_BASE_URL}/search/`
     const basePages: Array<any> = (await axios.post(
         searchUrl,{},notionHeader)
     ).data.results
     const filteredBasePages = basePages.filter(val => (val.parent.type === 'workspace') && val.object === 'page')
-    const notionDatabasePages = basePages.filter(val => (val.parent.type === 'workspace') && val.object === 'database')
-    console.log(notionDatabasePages)
     filteredBasePages.map(async (page) => {
         const ids = cuid()
         pageIds.push(ids)
@@ -45,6 +40,7 @@ const getNotionBasePages = async(datasource: DatasourceExtended) => {
                 name: page.properties.title.title[0].plain_text,
                 type: DatasourceType.notion_page,
                 config: {
+                    integrationKey: key,
                     pageId: page.id
                 },
                 ownerId: datasource.ownerId,
