@@ -16,7 +16,9 @@ import accountConfig from '@app/utils/account-config';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { s3 } from '@app/utils/aws';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';
+import getS3RootDomain from '@app/utils/get-s3-root-domain';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
@@ -123,13 +125,33 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
     file?.originalname ||
     `${generateFunId()}.${mime.extension(file.mimetype)}`;
 
+  const datasourceId = cuid();
+
+  // Add to S3
+  const fileExt = mime.extension(file.mimetype);
+  const s3FileName = `${datasourceId}${fileExt ? `.${fileExt}` : ''}`;
+  const s3Key = `datastores/${datastore.id}/${datasourceId}/${s3FileName}`;
+  const sourceUrl = `${getS3RootDomain()}/${s3Key}`;
+
+  const params = {
+    Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+    Key: `datastores/${datastore.id}/${datasourceId}/${s3FileName}`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+    ACL: 'public-read',
+  };
+
+  await s3.putObject(params).promise();
+
   const datasource = await prisma.appDatasource.create({
     data: {
+      id: datasourceId,
       name,
       type: DatasourceType.file,
       config: {
         mime_type: file.mimetype,
         datasource_name: name,
+        source_url: sourceUrl,
         custom_id,
       },
       status: DatasourceStatus.pending,
@@ -146,25 +168,11 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  // Add to S3
-  const fileExt = mime.extension(file.mimetype);
-  const s3FileName = `${datasource.id}${fileExt ? `.${fileExt}` : ''}`;
-
-  const params = {
-    Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-    Key: `datastores/${datastore.id}/${datasource.id}/${s3FileName}`,
-    Body: file.buffer,
-    ContentType: file.mimetype,
-    ACL: 'public-read',
-  };
-
-  await s3.putObject(params).promise();
-
   // Trigger processing
   await triggerTaskLoadDatasource([
     {
       userId: datasource.ownerId!,
-      datasourceId: datasource.id,
+      datasourceId,
       priority: 1,
     },
   ]);
