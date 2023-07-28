@@ -45,6 +45,8 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const fileName = (req as any)?.body?.fileName as string;
   const custom_id = (req as any)?.body?.custom_id as string;
 
+  console.log('file ========>', file);
+
   // Patch for mime_type 'application/octet-stream' as some http clients don't send the correct mime_type (e.g curl with json file)
   if (file?.mime_type === 'application/octet-stream') {
     let type = mime.contentType(file.originalname);
