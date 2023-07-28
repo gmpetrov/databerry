@@ -29,7 +29,7 @@ const cors = Cors({
 const handler = createApiHandler();
 
 const FileSchema = z.object({
-  mime_type: z.enum([
+  mimetype: z.enum([
     ...AcceptedDatasourceMimeTypes,
     'application/octet-stream',
   ]),
@@ -45,17 +45,15 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const fileName = (req as any)?.body?.fileName as string;
   const custom_id = (req as any)?.body?.custom_id as string;
 
-  console.log('file ========>', file);
-
   // Patch for mime_type 'application/octet-stream' as some http clients don't send the correct mime_type (e.g curl with json file)
-  if (file?.mime_type === 'application/octet-stream') {
+  if (file?.mimetype === 'application/octet-stream') {
     let type = mime.contentType(file.originalname);
 
     if (type) {
       type = type.split(';')?.[0];
-      file.mime_type = type as any;
+      file.mimetype = type as any;
     } else {
-      file.mime_type = 'octet' as any;
+      file.mimetype = 'octet' as any;
     }
   }
 
@@ -123,14 +121,14 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const name =
     fileName ||
     file?.originalname ||
-    `${generateFunId()}.${mime.extension(file.mime_type)}`;
+    `${generateFunId()}.${mime.extension(file.mimetype)}`;
 
   const datasource = await prisma.appDatasource.create({
     data: {
       name,
       type: DatasourceType.file,
       config: {
-        mime_type: file.mime_type || (file as any)?.mimetype,
+        mime_type: file.mimetype,
         datasource_name: name,
         custom_id,
       },
@@ -149,14 +147,14 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   });
 
   // Add to S3
-  const fileExt = mime.extension(file.mime_type);
+  const fileExt = mime.extension(file.mimetype);
   const s3FileName = `${datasource.id}${fileExt ? `.${fileExt}` : ''}`;
 
   const params = {
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
     Key: `datastores/${datastore.id}/${datasource.id}/${s3FileName}`,
     Body: file.buffer,
-    ContentType: file.mime_type,
+    ContentType: file.mimetype,
     ACL: 'public-read',
   };
 
