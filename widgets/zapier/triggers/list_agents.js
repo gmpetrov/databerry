@@ -13,7 +13,7 @@ module.exports = {
         Accept: 'application/json',
         Authorization: 'Bearer {{bundle.authData.api_key}}',
       },
-      url: `${baseApiUrl}/api/external/agents`,
+      url: `${baseApiUrl}/api/agents`,
     },
     sample: {
       id: process.env.TEST_AGENT_ID || 'cliobpozh0000e9og25x37w42',

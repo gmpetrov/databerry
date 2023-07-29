@@ -1,20 +1,51 @@
 import { DatasourceStatus, DatasourceType, Usage } from '@prisma/client';
+import Cors from 'cors';
+import mime from 'mime-types';
+import multer from 'multer';
 import { NextApiResponse } from 'next';
+import { Readable } from 'node:stream';
+import { z } from 'zod';
 
+import { AcceptedDatasourceMimeTypes } from '@app/types/dtos';
 import { AppNextApiRequest } from '@app/types/index';
 import { UpsertDatasourceSchema } from '@app/types/models';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
+import { s3 } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
-import findDomainPages, { getSitemapPages } from '@app/utils/find-domain-pages';
-import findSitemap from '@app/utils/find-sitemap';
 import generateFunId from '@app/utils/generate-fun-id';
+import getS3RootDomain from '@app/utils/get-s3-root-domain';
 import guardDataProcessingUsage from '@app/utils/guard-data-processing-usage';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 import triggerTaskLoadDatasource from '@app/utils/trigger-task-load-datasource';
 import validate from '@app/utils/validate';
 
+const cors = Cors({
+  methods: ['POST', 'HEAD'],
+});
+
 const handler = createAuthApiHandler();
+
+async function buffer(readable: Readable) {
+  const chunks = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
+const FileSchema = z.object({
+  mimetype: z.enum([
+    ...AcceptedDatasourceMimeTypes,
+    'application/octet-stream',
+  ]),
+  fieldname: z.string(),
+  originalname: z.string(),
+  encoding: z.string(),
+  size: z.number(),
+  buffer: z.any(),
+});
 
 export const getDatasources = async (
   req: AppNextApiRequest,
@@ -40,8 +71,48 @@ export const upsertDatasource = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const data = req.body as UpsertDatasourceSchema;
   const session = req.session;
+  const file = (req as any).file as z.infer<typeof FileSchema>;
+
+  let data: UpsertDatasourceSchema;
+  let sourceUrl = '';
+
+  if (file) {
+    try {
+      await FileSchema.parseAsync(file);
+    } catch (err: any) {
+      throw new ApiError(ApiErrorType.INVALID_REQUEST);
+    }
+
+    data = {
+      // @ts-ignore
+      type: DatasourceType.file,
+      ...(req.body as UpsertDatasourceSchema),
+      name:
+        file?.originalname ||
+        `${generateFunId()}.${mime.extension(file.mimetype)}`,
+      config: {
+        mime_type: file?.mimetype,
+        custom_id: req.body?.custom_id,
+      },
+    };
+    console.log('DATA', data);
+  } else {
+    const buf = await buffer(req);
+    const rawBody = buf.toString('utf8');
+
+    data = JSON.parse(rawBody) as UpsertDatasourceSchema;
+  }
+
+  try {
+    await UpsertDatasourceSchema.parseAsync(data);
+  } catch (err: any) {
+    throw new ApiError(ApiErrorType.INVALID_REQUEST);
+  }
+
+  if (file && data.type !== DatasourceType.file) {
+    throw new ApiError(ApiErrorType.INVALID_REQUEST);
+  }
 
   const datastore = await prisma.datastore.findUnique({
     where: {
@@ -65,60 +136,6 @@ export const upsertDatasource = async (
     plan: session?.user?.currentPlan,
   });
 
-  // // TODO: find a better way to handle this
-  // if (data.type === DatasourceType.web_site) {
-  //   let urls: string[] = [];
-  //   const sitemap = (data as any).config.sitemap;
-  //   const source = (data as any).config.source_url;
-
-  //   if (sitemap) {
-  //     urls = await getSitemapPages(sitemap);
-  //   } else if (source) {
-  //     // Try to find sitemap
-  //     const sitemapURL = await findSitemap(source);
-
-  //     if (sitemapURL) {
-  //       console.log('CALLLED--------->', sitemapURL);
-  //       urls = await getSitemapPages(sitemapURL);
-  //       console.log('END--------->', urls);
-  //     } else {
-  //       // Fallback to recursive search
-  //       urls = await findDomainPages((data as any).config.source_url);
-  //     }
-  //   } else {
-  //     return;
-  //   }
-
-  //   // urls = urls.slice(0, 10);
-
-  //   console.log('CALLED 2222');
-  //   const ids = urls.map(() => cuid());
-  //   console.log('CALLED 33333');
-
-  //   await prisma.appDatasource.createMany({
-  //     data: urls.map((each, idx) => ({
-  //       id: ids[idx],
-  //       type: DatasourceType.web_page,
-  //       name: each,
-  //       config: {
-  //         ...data.config,
-  //         source: each,
-  //       },
-  //       ownerId: session?.user?.id,
-  //       datastoreId: data.datastoreId,
-  //     })),
-  //   });
-  //   console.log('CALLED 33333');
-
-  //   await triggerTaskLoadDatasource(
-  //     ids.map((each) => ({
-  //       datasourceId: each,
-  //     }))
-  //   );
-
-  //   return;
-  // }
-
   let existingDatasource;
   if (data?.id) {
     existingDatasource = await prisma.appDatasource.findUnique({
@@ -131,7 +148,7 @@ export const upsertDatasource = async (
       existingDatasource &&
       (existingDatasource as any)?.ownerId !== session?.user?.id
     ) {
-      throw new Error('Unauthorized');
+      throw new ApiError(ApiErrorType.UNAUTHORIZED);
     }
   }
 
@@ -153,6 +170,24 @@ export const upsertDatasource = async (
     serviceProvider = provider;
   }
 
+  if (file) {
+    // Add to S3
+    const fileExt = mime.extension(file.mimetype);
+    const s3FileName = `${id}${fileExt ? `.${fileExt}` : ''}`;
+    const s3Key = `datastores/${datastore.id}/${id}/${s3FileName}`;
+    sourceUrl = `${getS3RootDomain()}/${s3Key}`;
+
+    const params = {
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+      Key: s3Key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    };
+
+    await s3.putObject(params).promise();
+  }
+
   const datasource = await prisma.appDatasource.upsert({
     where: {
       id,
@@ -161,7 +196,15 @@ export const upsertDatasource = async (
       id,
       type: data.type,
       name: data.name || generateFunId(),
-      config: data.config,
+      config: {
+        ...data.config,
+        ...(file
+          ? {
+              mime_type: file.mimetype,
+              source_url: sourceUrl,
+            }
+          : {}),
+      },
       status: DatasourceStatus.pending,
       owner: {
         connect: {
@@ -185,7 +228,16 @@ export const upsertDatasource = async (
     },
     update: {
       name: data.name,
-      config: data.config,
+
+      config: {
+        ...data.config,
+        ...(file
+          ? {
+              mime_type: file.mimetype,
+              source_url: sourceUrl,
+            }
+          : {}),
+      },
     },
   });
 
@@ -201,11 +253,25 @@ export const upsertDatasource = async (
   return datasource;
 };
 
-handler.post(
-  validate({
-    body: UpsertDatasourceSchema,
-    handler: respond(upsertDatasource),
-  })
+handler.use(multer().single('file')).post(
+  respond(upsertDatasource)
+  // validate({
+  //   body: UpsertDatasourceSchema,
+  //   handler: respond(upsertDatasource),
+  // })
 );
 
-export default handler;
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

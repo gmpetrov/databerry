@@ -1,10 +1,18 @@
+import { AgentVisibility } from '@prisma/client';
+import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
+import { createLazyAuthHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 
-const handler = createAuthApiHandler();
+const cors = Cors({
+  methods: ['GET', 'HEAD'],
+});
+
+const handler = createLazyAuthHandler();
 
 export const getAgent = async (
   req: AppNextApiRequest,
@@ -18,6 +26,11 @@ export const getAgent = async (
       id,
     },
     include: {
+      // owner: {
+      //   include: {
+      //     usage: true,
+      //   }
+      // },
       tools: {
         include: {
           datastore: true,
@@ -26,9 +39,13 @@ export const getAgent = async (
     },
   });
 
-  if (agent?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
-  }
+  // TODO: ENABLE BACK AFTER API REFACTO
+  // if (
+  //   agent?.visibility === AgentVisibility.private &&
+  //   agent?.ownerId !== session?.user?.id
+  // ) {
+  //   throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  // }
 
   return agent;
 };
@@ -55,8 +72,8 @@ export const deleteAgent = async (
     },
   });
 
-  if (agent?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+  if (!session?.user || agent?.ownerId !== session?.user?.id) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   await prisma.agent.delete({
@@ -70,4 +87,11 @@ export const deleteAgent = async (
 
 handler.delete(respond(deleteAgent));
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

@@ -38,29 +38,43 @@ const nextConfig = {
         source: '/.well-known/openapi.yaml',
         destination: '/api/openai/plugin/openapi-yaml',
       },
+      // {
+      //   source: '/datastores/:id/:path*',
+      //   destination: '/api/datastores/:id/:path*',
+      // },
       {
-        source: '/chat/:path*',
-        destination: '/api/chat/:path*',
+        source: '/datastores/:path*',
+        destination: '/api/datastores/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'api.chaindesk.ai',
+          },
+        ],
       },
       {
-        source: '/query/:path*',
-        destination: '/api/external/datastores/query/:path*',
+        source: '/datasources/:path*',
+        destination: '/api/datasources/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'api.chaindesk.ai',
+          },
+        ],
       },
       {
-        source: '/datastores/query/:path*',
-        destination: '/api/external/datastores/query/:path*',
-      },
-      {
-        source: '/update/:path*',
-        destination: '/api/external/datastores/update/:path*',
+        source: '/agents/:path*',
+        destination: '/api/agents/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'api.chaindesk.ai',
+          },
+        ],
       },
       {
         source: '/datastores/update/:path*',
         destination: '/api/external/datastores/update/:path*',
-      },
-      {
-        source: '/upsert/:path*',
-        destination: '/api/external/datastores/upsert/:path*',
       },
       {
         source: '/datastores/upsert/:path*',
@@ -71,22 +85,23 @@ const nextConfig = {
         destination: '/api/external/datastores/file-upload/:path*',
       },
       {
+        //TODO: REMOVE AFTER API REFACTOR
+        source: '/api/external/agents/:path*',
+        destination: '/api/agents/:path*',
+      },
+      {
         source: '/agents/query/:id',
-        destination: '/api/external/agents/:id/query',
-      },
-      // TODO remove routes below after migration
-      {
-        source: '/crisp/:path*',
-        destination: '/integrations/crisp/:path*',
+        destination: '/api/agents/:id/query',
       },
       {
-        source: '/api/crisp/:path*',
-        destination: '/api/integrations/crisp/:path*',
+        source: '/api/external/datastores',
+        destination: '/api/datastores',
       },
       {
-        source: '/api/slack/:path*',
-        destination: '/api/integrations/slack/:path*',
+        source: '/api/external/me',
+        destination: '/api/me',
       },
+      // END REMOVE AFTER API REFACTOR
     ];
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {

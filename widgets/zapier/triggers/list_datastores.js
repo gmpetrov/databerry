@@ -14,7 +14,7 @@ module.exports = {
         Authorization: 'Bearer {{bundle.authData.api_key}}',
       },
       removeMissingValuesFrom: { params: true },
-      url: `${baseApiUrl}/api/external/datastores`,
+      url: `${baseApiUrl}/api/datastores`,
     },
     outputFields: [
       { key: 'id', label: 'Datastore ID', type: 'string' },

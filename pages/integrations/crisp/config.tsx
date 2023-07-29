@@ -66,13 +66,13 @@ export default function CrispConfig(props: { agent: Agent }) {
   const handleFetchAgents = async (apiKey: string) => {
     try {
       setIsFetchAgentsLoading(true);
-      const { data } = await axios.get('/api/external/agents', {
+      const { data } = await axios.get('/api/agents', {
         headers: {
           Authorization: `Bearer ${apiKey}`,
         },
       });
 
-      const fetchedUser = await axios.get('/api/external/me', {
+      const fetchedUser = await axios.get('/api/me', {
         headers: {
           Authorization: `Bearer ${apiKey}`,
         },

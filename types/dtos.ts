@@ -135,6 +135,8 @@ export const ChatRequest = z.object({
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional().default(false),
   temperature: z.number().min(0.0).max(1.0).optional(),
+  promptTemplate: z.string().optional(),
+  promptType: z.nativeEnum(PromptType).optional(),
   filters: FiltersSchema.optional(),
 });
 

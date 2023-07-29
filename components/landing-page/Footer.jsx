@@ -74,6 +74,7 @@ export function Footer() {
             Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
             reserved.
           </p>
+          <p>Made in France 🇫🇷</p>
         </div>
       </Container>
     </footer>

@@ -113,7 +113,9 @@ export const XPBNPQuery = async (
 
   const { answer } = await chat({
     promptType: 'raw',
-    prompt: `${data.query || 'Fait résumé de ce document: '} ${content || ''}`,
+    promptTemplate: `${data.query || 'Fait résumé de ce document: '} ${
+      content || ''
+    }`,
     // datastore: datastore as any,
     temperature: 0,
     query: data.query,

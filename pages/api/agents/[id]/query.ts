@@ -1,20 +1,30 @@
-import { ConversationChannel, MessageFrom, Usage } from '@prisma/client';
+import {
+  AgentVisibility,
+  ConversationChannel,
+  MessageFrom,
+  Usage,
+} from '@prisma/client';
+import Cors from 'cors';
 import cuid from 'cuid';
-import { NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppNextApiRequest, SSE_EVENT } from '@app/types';
 import { ChatRequest } from '@app/types/dtos';
-import accountConfig, { queryCountConfig } from '@app/utils/account-config';
+import { queryCountConfig } from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import chat from '@app/utils/chat';
 import ConversationManager from '@app/utils/conversation';
-import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
+import { createLazyAuthHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 import streamData from '@app/utils/stream-data';
 
-const handler = createAuthApiHandler();
+const handler = createLazyAuthHandler();
+
+const cors = Cors({
+  methods: ['POST', 'HEAD'],
+});
 
 export const chatAgentRequest = async (
   req: AppNextApiRequest,
@@ -36,9 +46,10 @@ export const chatAgentRequest = async (
           usage: true,
           conversations: {
             where: {
-              id: conversationId,
-              agentId: id,
-              // userId: session?.user?.id,
+              AND: {
+                id: conversationId,
+                agentId: id,
+              },
             },
             include: {
               messages: {
@@ -59,9 +70,17 @@ export const chatAgentRequest = async (
     },
   });
 
-  if (agent?.ownerId !== session?.user?.id) {
-    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  if (!agent) {
+    throw new ApiError(ApiErrorType.NOT_FOUND);
   }
+
+  // TODO: ENABLE AFTER API REFACTO
+  // if (
+  //   (agent?.visibility === AgentVisibility.private &&
+  //     agent?.ownerId !== session?.user?.id)
+  // ) {
+  //   throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  // }
 
   const usage = agent?.owner?.usage as Usage;
 
@@ -84,6 +103,7 @@ export const chatAgentRequest = async (
     channel: ConversationChannel.dashboard,
     agentId: agent?.id,
     userId: session?.user?.id,
+    visitorId: data.visitorId,
     conversationId,
   });
 
@@ -107,6 +127,8 @@ export const chatAgentRequest = async (
         from: m.from,
         message: m.text,
       })),
+      promptTemplate: data.promptTemplate,
+      promptType: data.promptType,
     }),
     prisma.usage.update({
       where: {
@@ -135,6 +157,7 @@ export const chatAgentRequest = async (
         answer: chatRes.answer,
         sources: chatRes.sources,
         conversationId,
+        visitorId: conversationManager.visitorId,
       }),
       res,
     });
@@ -147,10 +170,18 @@ export const chatAgentRequest = async (
     return {
       ...chatRes,
       conversationId,
+      visitorId: conversationManager.visitorId,
     };
   }
 };
 
 handler.post(respond(chatAgentRequest));
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

@@ -1,3 +1,4 @@
+import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
@@ -5,8 +6,13 @@ import { deleteFolderFromS3Bucket } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 
 const handler = createAuthApiHandler();
+
+const cors = Cors({
+  methods: ['GET', 'DELETE', 'HEAD'],
+});
 
 export const getDatasource = async (
   req: AppNextApiRequest,
@@ -76,4 +82,11 @@ export const deleteDatasource = async (
 
 handler.delete(respond(deleteDatasource));
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

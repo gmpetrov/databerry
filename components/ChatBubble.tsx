@@ -72,11 +72,11 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   });
 
   const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `${API_URL}/api/external/agents/${props.agentId}/query`,
+    queryAgentURL: `${API_URL}/api/agents/${props.agentId}/query`,
     channel: 'website',
     // channel: ConversationChannel.website // not working with bundler parcel,
     // queryHistoryURL: conversationId
-    //   ? `${API_URL}/api/external/agents/${props.agentId}/history/${conversationId}`
+    //   ? `${API_URL}/api/agents/${props.agentId}/history/${conversationId}`
     //   : undefined,
   });
 
@@ -90,9 +90,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   const handleFetchAgent = async () => {
     try {
-      const res = await fetch(
-        `${API_URL}/api/external/agents/${props.agentId}`
-      );
+      const res = await fetch(`${API_URL}/api/agents/${props.agentId}`);
       const data = (await res.json()) as Agent;
 
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
@@ -207,7 +205,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   setState({ isCaptureLoading: true });
 
                   await fetch(
-                    `${API_URL}/api/external/agents/${props.agentId}/capture`,
+                    `${API_URL}/api/agents/${props.agentId}/capture`,
                     {
                       method: 'POST',
                       headers: {

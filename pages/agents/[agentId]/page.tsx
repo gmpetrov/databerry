@@ -22,7 +22,7 @@ import superjson from 'superjson';
 import useSWR from 'swr';
 
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getAgent } from '@app/pages/api/external/agents/[id]';
+import { getAgent } from '@app/pages/api/agents/[id]';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 import prisma from '@app/utils/prisma-client';
@@ -39,7 +39,7 @@ function App(props: { agent: Agent }) {
   });
 
   const getAgentConfigQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
-    `/api/external/agents/${agentId}`,
+    `/api/agents/${agentId}`,
     fetcher
   );
 

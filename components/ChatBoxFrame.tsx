@@ -34,10 +34,10 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   const { visitorId, conversationId } = useChatConfig();
 
   const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `${API_URL}/api/external/agents/${agentId}/query`,
+    queryAgentURL: `${API_URL}/api/agents/${agentId}/query`,
     channel: ConversationChannel.website,
     // queryHistoryURL: visitorId
-    //   ? `/api/external/agents/${router.query?.agentId}/history/${conversationId}`
+    //   ? `/api/agents/${router.query?.agentId}/history/${conversationId}`
     //   : undefined,
   });
 
@@ -50,7 +50,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
 
   const handleFetchAgent = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/external/agents/${agentId}`);
+      const res = await fetch(`${API_URL}/api/agents/${agentId}`);
       const data = (await res.json()) as Agent;
 
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;

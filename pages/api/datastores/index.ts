@@ -32,6 +32,7 @@ export const getDatastores = async (
     orderBy: {
       createdAt: 'desc',
     },
+    take: 100,
   });
 
   return datastores;
@@ -43,7 +44,7 @@ export const createDatastore = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const data = req.body as CreateDatastoreRequestSchema;
+  let data = req.body as CreateDatastoreRequestSchema;
   const session = req.session;
 
   let existingDatastore;
@@ -57,6 +58,11 @@ export const createDatastore = async (
     if (existingDatastore?.ownerId !== session?.user?.id) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
+
+    data = {
+      ...existingDatastore,
+      ...data,
+    } as CreateDatastoreRequestSchema;
   }
 
   const id = data?.id || cuid();
@@ -84,10 +90,6 @@ export const createDatastore = async (
           key: uuidv4(),
         },
       },
-      // config: {
-      //   apiKey: process.env.QDRANT_API_KEY,
-      //   apiURL: process.env.QDRANT_API_URL,
-      // } as z.infer<typeof QdrantConfigSchema>,
       pluginName: data.pluginName || name?.substring(0, 20),
       pluginDescriptionForHumans: `About ${
         data.pluginDescriptionForHumans || name?.substring(0, 90)

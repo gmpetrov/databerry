@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import nc, { ErrorHandler } from 'next-connect';
 
 import { AppNextApiRequest } from '@app/types';
-import auth from '@app/utils/auth';
+import auth, { optionalAuth } from '@app/utils/auth';
 
 import { ApiError } from './api-error';
 import { Handle, options } from './validate';
@@ -21,6 +21,11 @@ export const createApiHandler = (opts?: options) =>
   nc<NextApiRequest, NextApiResponse>({
     onError,
   });
+
+export const createLazyAuthHandler = (opts?: options) =>
+  nc<AppNextApiRequest, NextApiResponse>({
+    onError,
+  }).use(optionalAuth);
 
 export const createAuthApiHandler = (opts?: options) =>
   nc<AppNextApiRequest, NextApiResponse>({
