@@ -13,6 +13,7 @@ import {
 import { SearchRequestSchema } from '@app/types/dtos';
 import { QdrantConfigSchema } from '@app/types/models';
 
+import { embedDocuments } from '../mocks';
 import uuidv4 from '../uuid';
 
 import { ClientManager } from './base';
@@ -39,6 +40,10 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     super(datastore);
 
     this.embeddings = new OpenAIEmbeddings();
+
+    if (process.env.NODE_ENV === 'test') {
+      this.embeddings.embedDocuments = embedDocuments;
+    }
 
     this.client = axios.create({
       baseURL: process.env.QDRANT_API_URL,
