@@ -2,6 +2,7 @@ import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { deleteFolderFromS3Bucket } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
@@ -61,7 +62,7 @@ export const deleteDatasource = async (
   });
 
   if (datasource?.owner?.id !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   await Promise.all([

@@ -84,11 +84,14 @@ export const upsertDatasource = async (
       throw new ApiError(ApiErrorType.INVALID_REQUEST);
     }
 
+    const formData = req.body as UpsertDatasourceSchema;
+
     data = {
       // @ts-ignore
       type: DatasourceType.file,
       ...(req.body as UpsertDatasourceSchema),
       name:
+        (req.body as any)?.fileName ||
         file?.originalname ||
         `${generateFunId()}.${mime.extension(file.mimetype)}`,
       config: {
@@ -96,7 +99,6 @@ export const upsertDatasource = async (
         custom_id: req.body?.custom_id,
       },
     };
-    console.log('DATA', data);
   } else {
     const buf = await buffer(req);
     const rawBody = buf.toString('utf8');
