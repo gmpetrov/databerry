@@ -130,6 +130,7 @@ export const chatAgentRequest = async (
       promptTemplate: data.promptTemplate,
       promptType: data.promptType,
       truncateQuery: data.truncateQuery,
+      filters: data.filters,
     }),
     prisma.usage.update({
       where: {
