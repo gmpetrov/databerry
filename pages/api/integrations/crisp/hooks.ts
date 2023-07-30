@@ -332,11 +332,15 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             }
           );
 
-          await handleQuery(
-            body.website_id,
-            body.data.session_id,
-            body.data.content
-          );
+          try {
+            await handleQuery(
+              body.website_id,
+              body.data.session_id,
+              body.data.content
+            );
+          } catch (err) {
+            console.log(err);
+          }
         }
 
         break;
