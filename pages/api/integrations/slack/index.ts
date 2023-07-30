@@ -6,7 +6,6 @@
 // (Langhchain not fully supported on Edge, Prisma woudl require to subscribe to Data Proxy, Migrate from axios to fetch)
 //  + I think it's better to minimize dependency with other providers if we want to work on a full onpremise solution in the future
 // ATM Dockerizing the app and host it on Fly.io for handling that type of use-cases
-
 import {
   ConversationChannel,
   MessageFrom,
@@ -21,6 +20,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import AgentManager from '@app/utils/agent';
 import ConversationManager from '@app/utils/conversation';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import formatSourcesRawText from '@app/utils/form-sources-raw-text';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import slackAgent from '@app/utils/slack-agent';
@@ -279,23 +279,6 @@ handler.post(slack);
 
 export default handler;
 
-function formatSourcesRawText(
-  sources:
-    | {
-        datasource_id: string;
-        datasource_type: 'file' | 'google_drive_file';
-        datasource_name: string;
-        source_url: string;
-        mime_type: string;
-        chunk_id: string;
-        page_number?: number | undefined;
-        total_pages?: number | undefined;
-        score?: number | undefined;
-      }[]
-    | undefined
-) {
-  throw new Error('Function not implemented.');
-}
 // {
 //     token: '1XKAxGolQBBhlPy5aJUrZnf8',
 //     team_id: 'T0F2WGXSA',
