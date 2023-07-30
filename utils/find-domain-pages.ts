@@ -52,10 +52,22 @@ export const getSitemapPages = async (sitemapURL: string) => {
   };
 
   try {
-    // const { data } = await axios.get(sitemapURL);
-    const data = await fetchWithBrowser(sitemapURL);
+    let content = '';
+    try {
+      const { data } = await axios.get(sitemapURL);
 
-    return getUrlsFromSitemap(data);
+      if (!data) {
+        throw 'empty data';
+      }
+
+      content = data;
+    } catch (err) {
+      console.log(err);
+
+      content = await fetchWithBrowser(sitemapURL);
+    }
+
+    return getUrlsFromSitemap(content);
   } catch (err) {
     console.log(err);
   }
