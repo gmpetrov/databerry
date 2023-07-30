@@ -49,10 +49,9 @@ export type TaskRemoveDatastoreSchema = z.infer<
   typeof TaskRemoveDatasourceRequestSchema
 >;
 
-export const FiltersSchema = BaseDocumentMetadataSchema.pick({
-  datasource_id: true,
-  custom_id: true,
-}).extend({
+export const FiltersSchema = z.object({
+  custom_id: z.string().optional(),
+  datasource_id: z.string().cuid().optional(),
   datasource_ids: z.array(z.string().cuid()).optional(),
   custom_ids: z.array(z.string()).optional(),
 });

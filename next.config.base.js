@@ -73,6 +73,14 @@ const nextConfig = {
         ],
       },
       {
+        source: '/datastores/query/:id',
+        destination: '/api/datastores/:id/query',
+      },
+      {
+        source: '/api/datastores/query/:id',
+        destination: '/api/datastores/:id/query',
+      },
+      {
         source: '/datastores/update/:path*',
         destination: '/api/external/datastores/update/:path*',
       },
