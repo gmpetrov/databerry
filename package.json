@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:all": "npm-run-all --parallel dev worker:datasource-loader",
-    "dev:all:test": "NODE_ENV=test npm-run-all --parallel 'dev -p 3042' worker:datasource-loader",
+    "dev:all:test": "NODE_ENV=test APP_ENV=test npm-run-all --parallel 'dev -p 3042' worker:datasource-loader",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

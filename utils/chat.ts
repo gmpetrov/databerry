@@ -243,6 +243,20 @@ const chat = async ({
     ],
   });
 
+  if (process.env.APP_ENV === 'test') {
+    model.call = async (props: any) => {
+      const res = {
+        text: 'Hello world',
+      } as any;
+
+      if (stream) {
+        stream(res.text);
+      }
+
+      return res;
+    };
+  }
+
   const output = await model.call(messages);
 
   const answer = output?.text?.trim?.()?.replace(EXTRACT_SOURCES, '');

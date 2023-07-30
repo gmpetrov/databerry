@@ -1,5 +1,4 @@
 import { ChildProcess, spawn } from 'child_process';
-import terminate from 'terminate';
 
 import prisma from '@app/utils/prisma-client';
 
@@ -7,12 +6,13 @@ import sleep from './utils/sleep';
 
 let p: ChildProcess | null = null;
 
-beforeAll(async () => {
-  if (!p) {
-    p = spawn('pnpm run dev:all:test', {
-      shell: true,
-    });
-  }
+const globalSetup = async () => {
+  p = spawn('pnpm run dev:all:test', {
+    shell: true,
+    stdio: 'inherit',
+  });
+
+  (global as any).TEST_PROCESS_PID = p.pid;
 
   await sleep(1000);
 
@@ -44,18 +44,6 @@ beforeAll(async () => {
     },
     update: {},
   });
-});
+};
 
-afterAll(async () => {
-  if (p) {
-    terminate(p.pid!, 'SIGINT', { timeout: 1000 }, (err) => {
-      terminate(p?.pid!);
-    });
-  }
-
-  // await prisma.user.delete({
-  //   where: {
-  //     id: process.env.TEST_USER_ID,
-  //   },
-  // });
-});
+export default globalSetup;

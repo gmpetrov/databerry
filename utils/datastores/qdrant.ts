@@ -41,7 +41,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
 
     this.embeddings = new OpenAIEmbeddings();
 
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.APP_ENV === 'test') {
       this.embeddings.embedDocuments = embedDocuments;
     }
 
