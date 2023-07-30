@@ -88,7 +88,7 @@ model Datastore {
   config Json?
 
   ownerId String? @map("owner_id")
-  owner   User?   @relation(fields: [ownerId], references: [id])
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

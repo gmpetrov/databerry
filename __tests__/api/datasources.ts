@@ -46,7 +46,7 @@ describe('Datasources - Create', () => {
       expect(!!result.data?.id).toBe(true);
 
       // wait 1 seconds for the worker to finish processing the datasource
-      await sleep(1500);
+      await sleep(2000);
 
       const { data } = await http.get(`/api/datasources/${result.data?.id}`);
 

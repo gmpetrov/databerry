@@ -16,11 +16,8 @@ const globalSetup = async () => {
 
   await sleep(1000);
 
-  await prisma.user.upsert({
-    where: {
-      id: process.env.TEST_USER_ID,
-    },
-    create: {
+  await prisma.user.create({
+    data: {
       id: process.env.TEST_USER_ID,
       email: 'jest@chaindesk.ai',
       usage: {
@@ -30,6 +27,32 @@ const globalSetup = async () => {
         create: {
           key: process.env.TEST_USER_API_KEY!,
           id: `id_${process.env.TEST_USER_API_KEY_ID}`!,
+        },
+      },
+      agents: {
+        createMany: {
+          data: [
+            {
+              id: process.env.TEST_PRIVATE_AGENT_ID!,
+              name: 'Private Agent',
+              description: 'This is a private agent',
+              modelName: 'gpt_3_5_turbo',
+              promptType: 'customer_support',
+              prompt: 'Hello, my name is John, I am a customer support agent.',
+              temperature: 0,
+              visibility: 'private',
+            },
+            {
+              id: process.env.TEST_PUBLIC_AGENT_ID!,
+              name: 'Public Agent',
+              description: 'This is a private agent',
+              modelName: 'gpt_3_5_turbo',
+              promptType: 'customer_support',
+              prompt: 'Hello, my name is John, I am a customer support agent.',
+              temperature: 0,
+              visibility: 'public',
+            },
+          ],
         },
       },
       datastores: {
@@ -42,7 +65,6 @@ const globalSetup = async () => {
         },
       },
     },
-    update: {},
   });
 };
 
