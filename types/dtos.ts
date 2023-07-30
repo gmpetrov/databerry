@@ -164,6 +164,8 @@ export const UpsertAgentSchema = z.object({
   promptType: z.nativeEnum(PromptType).default('customer_support'),
   visibility: z.nativeEnum(AgentVisibility).default('private'),
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
+  includeSources: z.boolean().optional().nullable(),
+  restrictKnowledge: z.boolean().optional().nullable(),
   tools: z
     .array(
       z.object({

@@ -106,6 +106,8 @@ export const upsertAgent = async (
       },
       iconUrl: data.iconUrl,
       visibility: data.visibility || AgentVisibility.private,
+      includeSources: data.includeSources,
+      restrictKnowledge: data.restrictKnowledge,
       tools: {
         createMany: {
           data: (data.tools || []).map((tool) => ({
@@ -130,6 +132,8 @@ export const upsertAgent = async (
       interfaceConfig: data.interfaceConfig || {},
       iconUrl: data.iconUrl,
       handle: data.handle,
+      includeSources: data.includeSources,
+      restrictKnowledge: data.restrictKnowledge,
       tools: {
         createMany: {
           data: newTools.map((tool) => ({

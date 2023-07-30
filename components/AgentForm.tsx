@@ -172,6 +172,7 @@ export default function BaseForm(props: Props) {
     resolver: zodResolver(UpsertAgentSchema),
     defaultValues: {
       prompt: CUSTOMER_SUPPORT,
+      includeSources: true,
       ...props?.defaultValues,
     },
   });
@@ -586,6 +587,24 @@ export default function BaseForm(props: Props) {
                   Go to Datastore
                 </Button>
               </Link>
+            </Stack>
+          )}
+
+          {tools[0]?.id && (
+            <Stack direction="row">
+              <FormControl className="flex flex-row space-x-4">
+                <Checkbox
+                  {...register('includeSources')}
+                  defaultChecked={!!defaultValues?.includeSources}
+                />
+                <div className="flex flex-col">
+                  <FormLabel>Include sources in Agent Answer</FormLabel>
+                  <Typography level="body3">
+                    When activated, your agent will include sources used to
+                    generate the answer.
+                  </Typography>
+                </div>
+              </FormControl>
             </Stack>
           )}
 

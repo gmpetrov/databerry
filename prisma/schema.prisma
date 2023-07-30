@@ -170,8 +170,8 @@ model Agent {
   temperature Float          @default(0.0)
   modelName   AgentModelName @default(gpt_3_5_turbo) @map("model_name")
 
-  // includeSources    Boolean? @default(true) @map("include_sources")
-  // restrictKnowledge Boolean? @default(true) @map("restrict_knowledge")
+  includeSources    Boolean? @default(true) @map("include_sources")
+  restrictKnowledge Boolean? @default(true) @map("restrict_knowledge")
 
   visibility    AgentVisibility @default(private)
   conversations Conversation[]

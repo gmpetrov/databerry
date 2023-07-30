@@ -127,6 +127,7 @@ export const chatAgentRequest = async (
         from: m.from,
         message: m.text,
       })),
+      temperature: data.temperature,
       promptTemplate: data.promptTemplate,
       promptType: data.promptType,
       truncateQuery: data.truncateQuery,

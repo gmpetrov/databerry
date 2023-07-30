@@ -119,7 +119,9 @@ const getCustomerSupportMessages = ({
     new HumanChatMessage(`CONTEXT INFOMATION:
     ${context}
 
-    Question: ${query}`),
+    Question: ${query}
+    
+    Answer:`),
   ];
 };
 
@@ -155,6 +157,7 @@ const chat = async ({
   modelName = AgentModelName.gpt_3_5_turbo,
   truncateQuery,
   filters,
+  includeSources,
 }: {
   datastore?: Datastore;
   query: string;
@@ -167,6 +170,7 @@ const chat = async ({
   history?: { from: MessageFrom; message: string }[];
   truncateQuery?: boolean;
   filters?: ChatRequest['filters'];
+  includeSources?: boolean;
 }) => {
   const _modelName = ModelConfig[modelName]?.name;
   const _query = truncateQuery
@@ -259,7 +263,7 @@ const chat = async ({
 
   const output = await model.call(messages);
 
-  const answer = output?.text?.trim?.()?.replace(EXTRACT_SOURCES, '');
+  const answer = output?.text?.trim?.();
   let sources: Source[] = [];
   try {
     // const ids: string[] = JSON.parse(
@@ -291,77 +295,79 @@ const chat = async ({
     //   }));
   } catch {}
 
-  try {
-    model.modelName = 'gpt-4';
-    const sourceRequest = await model.call(
-      [
-        new HumanChatMessage(
-          `Chunks: ${contextForRef}\n\nQuestion: ${_query}\n\n`
-        ),
-        new AIChatMessage(`${output.text}`),
-      ],
-      {
-        functions: [
-          {
-            name: 'getChunkIdsUsedToAnswer',
-            description:
-              'Get chunks where content information is part of the answer if any.',
-            parameters: {
-              type: 'object',
-              properties: {
-                // hasEnoughInformationToAnswer: {
-                //   type: 'boolean',
-                //   description:
-                //     'tell is the AI has enough information to answer',
-                // },
-                chunkIds: {
-                  type: 'array',
-                  // desription: "IDs of the chunks used for the AI's answer.",
-                  items: {
-                    type: 'string',
+  if (includeSources) {
+    try {
+      model.modelName = 'gpt-4';
+      const sourceRequest = await model.call(
+        [
+          new HumanChatMessage(
+            `Chunks: ${contextForRef}\n\nQuestion: ${_query}\n\n`
+          ),
+          new AIChatMessage(`${output.text}`),
+        ],
+        {
+          functions: [
+            {
+              name: 'getChunkIdsUsedToAnswer',
+              description:
+                'Get chunks where content information is part of the answer if any.',
+              parameters: {
+                type: 'object',
+                properties: {
+                  // hasEnoughInformationToAnswer: {
+                  //   type: 'boolean',
+                  //   description:
+                  //     'tell is the AI has enough information to answer',
+                  // },
+                  chunkIds: {
+                    type: 'array',
+                    // desription: "IDs of the chunks used for the AI's answer.",
+                    items: {
+                      type: 'string',
+                    },
                   },
                 },
               },
             },
-          },
-        ],
-      }
-    );
+          ],
+        }
+      );
 
-    const json = JSON.parse(
-      sourceRequest?.additional_kwargs?.function_call?.arguments ||
-        `{chunkIds: []}`
-    );
+      const json = JSON.parse(
+        sourceRequest?.additional_kwargs?.function_call?.arguments ||
+          `{chunkIds: []}`
+      );
 
-    const ids: string[] = json?.chunkIds || [];
+      const ids: string[] = json?.chunkIds || [];
 
-    const usedDatasourceIds = new Set();
+      const usedDatasourceIds = new Set();
 
-    results
-      .filter((each) => ids.includes(each.metadata.chunk_id!))
-      .forEach((each) => {
-        usedDatasourceIds.add(each.metadata.datasource_id!);
-      });
+      results
+        .filter((each) => ids.includes(each.metadata.chunk_id!))
+        .forEach((each) => {
+          usedDatasourceIds.add(each.metadata.datasource_id!);
+        });
 
-    sources = Array.from(usedDatasourceIds)
-      .map(
-        (id) =>
-          results.find(
-            (one) => one.metadata.datasource_id === id
-          ) as AppDocument<ChunkMetadataRetrieved>
-      )
-      .map((each) => ({
-        chunk_id: each.metadata.chunk_id,
-        datasource_id: each.metadata.datasource_id!,
-        datasource_name: each.metadata.datasource_name!,
-        datasource_type: each.metadata.datasource_type!,
-        source_url: each.metadata.source_url!,
-        mime_type: each.metadata.mime_type!,
-        page_number: each.metadata.page_number!,
-        total_pages: each.metadata.total_pages!,
-        score: each.metadata.score!,
-      }));
-  } catch {}
+      sources = Array.from(usedDatasourceIds)
+        .map(
+          (id) =>
+            results.find(
+              (one) => one.metadata.datasource_id === id
+            ) as AppDocument<ChunkMetadataRetrieved>
+        )
+        .map((each) => ({
+          chunk_id: each.metadata.chunk_id,
+          datasource_id: each.metadata.datasource_id!,
+          datasource_name: each.metadata.datasource_name!,
+          datasource_type: each.metadata.datasource_type!,
+          source_url: each.metadata.source_url!,
+          mime_type: each.metadata.mime_type!,
+          page_number: each.metadata.page_number!,
+          total_pages: each.metadata.total_pages!,
+          score: each.metadata.score!,
+        }));
+    } catch {}
+  }
 
   return {
     answer,

@@ -62,6 +62,7 @@ export default class AgentManager {
         history,
         truncateQuery,
         filters,
+        includeSources: !!this.agent.includeSources,
       });
 
       return { answer, sources };
