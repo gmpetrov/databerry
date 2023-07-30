@@ -1,15 +1,10 @@
 import axios, { AxiosError } from 'axios';
 
-const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_DASHBOARD_URL,
-  headers: {
-    Authorization: `Bearer ${process.env.TEST_USER_API_KEY}`,
-  },
-});
+import { testHttp } from '@app/utils/tests';
 
 describe('Datastores - Query', () => {
   it('It should query datastore', async () => {
-    const res = await http.post(
+    const res = await testHttp.post(
       `/api/datastores/query/${process.env.TEST_DATASTORE_ID}`,
       {
         query: 'Hello',
@@ -20,7 +15,7 @@ describe('Datastores - Query', () => {
   });
 
   it('It should query datastore', async () => {
-    const res = await http.post(
+    const res = await testHttp.post(
       `/api/datastores/${process.env.TEST_DATASTORE_ID}/query`,
       {
         query: 'Hello',
@@ -31,7 +26,7 @@ describe('Datastores - Query', () => {
   });
 
   it('Sould retrieve topK chunks', async () => {
-    const res = await http.post(
+    const res = await testHttp.post(
       `/api/datastores/${process.env.TEST_DATASTORE_ID}/query`,
       {
         query: 'Hello',

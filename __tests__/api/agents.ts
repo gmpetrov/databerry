@@ -1,15 +1,8 @@
-import axios, { AxiosError } from 'axios';
-
-const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_DASHBOARD_URL,
-  headers: {
-    Authorization: `Bearer ${process.env.TEST_USER_API_KEY}`,
-  },
-});
+import { testHttp } from '@app/utils/tests';
 
 describe('Agents - Query', () => {
   // it('It should be unauthorized', async () => {
-  //   const { data } = await http
+  //   const { data } = await testHttp
   //     .post(`/api/agents/${process.env.TEST_PRIVATE_AGENT}/query`, {
   //       query: 'Hello',
   //     })
@@ -25,7 +18,7 @@ describe('Agents - Query', () => {
   // });
 
   it('It should query agent', async () => {
-    const { data } = await http.post(
+    const { data } = await testHttp.post(
       `/api/agents/${process.env.TEST_PRIVATE_AGENT_ID}/query`,
       {
         query: 'Hello',
@@ -39,7 +32,7 @@ describe('Agents - Query', () => {
   });
 
   it('It should be same conversation ID', async () => {
-    const { data } = await http.post(
+    const { data } = await testHttp.post(
       `/api/agents/${process.env.TEST_PRIVATE_AGENT_ID}/query`,
       {
         query: 'Hello',
@@ -51,7 +44,7 @@ describe('Agents - Query', () => {
   });
 
   it('It should be same conversation ID', async () => {
-    const { data } = await http.post(
+    const { data } = await testHttp.post(
       `/api/agents/${process.env.TEST_PRIVATE_AGENT_ID}/query`,
       {
         query: 'Hello',
@@ -63,7 +56,7 @@ describe('Agents - Query', () => {
   });
 
   it('It should use filters', async () => {
-    const { data } = await http.post(
+    const { data } = await testHttp.post(
       `/api/agents/${process.env.TEST_PRIVATE_AGENT_ID}/query`,
       {
         query: 'Hello',

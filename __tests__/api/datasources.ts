@@ -1,15 +1,10 @@
-import axios, { AxiosError } from 'axios';
+import fs from 'fs';
+import path from 'path';
 
 import { UpsertDatasourceSchema } from '@app/types/models';
 import prisma from '@app/utils/prisma-client';
 import sleep from '@app/utils/sleep';
-
-const http = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_DASHBOARD_URL,
-  headers: {
-    Authorization: `Bearer ${process.env.TEST_USER_API_KEY}`,
-  },
-});
+import { testHttp } from '@app/utils/tests';
 
 beforeAll(async () => {});
 
@@ -17,7 +12,7 @@ describe('Datasources - Create', () => {
   it('should be forbidden without API Key', async () => {
     expect.assertions(1);
     try {
-      await http.post(
+      await testHttp.post(
         `/api/datasources`,
         {},
         {
@@ -34,7 +29,7 @@ describe('Datasources - Create', () => {
   it('should create a web_page datasource', async () => {
     expect.assertions(2);
     try {
-      const result = await http.post('/api/datasources', {
+      const result = await testHttp.post('/api/datasources', {
         datastoreId: process.env.TEST_DATASTORE_ID,
         name: 'Chaindesk Landingpage',
         type: 'web_page',
@@ -48,7 +43,9 @@ describe('Datasources - Create', () => {
       // wait 1 seconds for the worker to finish processing the datasource
       await sleep(2000);
 
-      const { data } = await http.get(`/api/datasources/${result.data?.id}`);
+      const { data } = await testHttp.get(
+        `/api/datasources/${result.data?.id}`
+      );
 
       expect(data?.status).toBe('synched');
 
@@ -62,5 +59,43 @@ describe('Datasources - Create', () => {
 
       // fail('Should be able to create a datasource');
     }
+  });
+
+  it('should create a file datasource', async () => {
+    const filePath = path.resolve(process.cwd(), 'public/privacy.pdf');
+    const fileName = 'privacy.pdf';
+    const buffer = fs.readFileSync(filePath);
+
+    const formData = new FormData();
+
+    formData.append(
+      'file',
+      new Blob([buffer], {
+        type: 'application/pdf',
+      }),
+      fileName
+    );
+
+    formData.append('type', 'file');
+    formData.append('fileName', fileName);
+    formData.append('datastoreId', process.env.TEST_DATASTORE_ID!);
+
+    const { data } = await testHttp.post('/api/datasources', formData);
+
+    expect(!!data?.id).toBe(true);
+
+    expect(data?.name).toBe(fileName);
+
+    await sleep(2000);
+
+    const up: any = await testHttp.get(`/api/datasources/${data?.id}`);
+
+    expect(up?.data?.status).toBe('synched');
+
+    await prisma.appDatasource.delete({
+      where: {
+        id: data?.id,
+      },
+    });
   });
 });
