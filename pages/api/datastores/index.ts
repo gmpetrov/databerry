@@ -1,14 +1,21 @@
 import { DatastoreVisibility } from '@prisma/client';
+import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types';
 import { CreateDatastoreRequestSchema } from '@app/types/dtos';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 import uuidv4 from '@app/utils/uuid';
 import validate from '@app/utils/validate';
+
+const cors = Cors({
+  methods: ['GET', 'POST', 'HEAD'],
+});
 
 const handler = createAuthApiHandler();
 
@@ -56,7 +63,7 @@ export const createDatastore = async (
     });
 
     if (existingDatastore?.ownerId !== session?.user?.id) {
-      return res.status(403).json({ message: 'Unauthorized' });
+      throw new ApiError(ApiErrorType.UNAUTHORIZED);
     }
 
     data = {
@@ -121,4 +128,11 @@ handler.post(
   })
 );
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

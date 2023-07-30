@@ -1,4 +1,5 @@
 import { AgentVisibility, ToolType } from '@prisma/client';
+import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types';
@@ -7,10 +8,15 @@ import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
 import uuidv4 from '@app/utils/uuid';
 import validate from '@app/utils/validate';
 
 const handler = createAuthApiHandler();
+
+const cors = Cors({
+  methods: ['POST', 'HEAD'],
+});
 
 export const getAgents = async (
   req: AppNextApiRequest,
@@ -150,4 +156,11 @@ handler.post(
   })
 );
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}

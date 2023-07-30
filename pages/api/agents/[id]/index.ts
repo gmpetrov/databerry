@@ -9,7 +9,7 @@ import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 
 const cors = Cors({
-  methods: ['GET', 'HEAD'],
+  methods: ['GET', 'DELETE', 'HEAD'],
 });
 
 const handler = createLazyAuthHandler();
@@ -59,6 +59,10 @@ export const deleteAgent = async (
   const session = req.session;
   const id = req.query.id as string;
 
+  if (!session?.user) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+
   const agent = await prisma.agent.findUnique({
     where: {
       id,
@@ -72,7 +76,7 @@ export const deleteAgent = async (
     },
   });
 
-  if (!session?.user || agent?.ownerId !== session?.user?.id) {
+  if (agent?.ownerId !== session?.user?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

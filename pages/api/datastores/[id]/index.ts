@@ -1,11 +1,18 @@
-import { AppDatasource, DatasourceStatus } from '@prisma/client';
+import { DatasourceStatus } from '@prisma/client';
+import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types/index';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { deleteFolderFromS3Bucket } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import prisma from '@app/utils/prisma-client';
+import runMiddleware from '@app/utils/run-middleware';
+
+const cors = Cors({
+  methods: ['GET', 'DELETE', 'HEAD'],
+});
 
 const handler = createAuthApiHandler();
 
@@ -94,7 +101,7 @@ export const getDatastore = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   return datastore;
@@ -116,7 +123,7 @@ export const deleteDatastore = async (
   });
 
   if (datastore?.ownerId !== session?.user?.id) {
-    throw new Error('Unauthorized');
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   await Promise.all([
@@ -139,4 +146,11 @@ export const deleteDatastore = async (
 
 handler.delete(respond(deleteDatastore));
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}
