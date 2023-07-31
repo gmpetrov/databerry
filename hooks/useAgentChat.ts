@@ -193,7 +193,7 @@ const useAgentChat = ({
           } else if (event.event === SSE_EVENT.answer) {
             // const data = JSON.parse(event.data || `{}`);
             buffer += decodeURIComponent(event.data) as string;
-            buffer = buffer?.replace(EXTRACT_SOURCES, '');
+            // buffer = buffer?.replace(EXTRACT_SOURCES, '');
 
             const h = [...history];
 
