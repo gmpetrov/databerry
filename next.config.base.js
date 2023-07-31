@@ -63,6 +63,10 @@ const nextConfig = {
         ],
       },
       {
+        source: '/agents/query/:id',
+        destination: '/api/agents/:id/query',
+      },
+      {
         source: '/agents/:path*',
         destination: '/api/agents/:path*',
         has: [
@@ -97,10 +101,7 @@ const nextConfig = {
         source: '/api/external/agents/:path*',
         destination: '/api/agents/:path*',
       },
-      {
-        source: '/agents/query/:id',
-        destination: '/api/agents/:id/query',
-      },
+
       {
         source: '/api/external/datastores',
         destination: '/api/datastores',
