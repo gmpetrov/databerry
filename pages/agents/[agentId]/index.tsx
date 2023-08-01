@@ -52,10 +52,10 @@ import useSWR from 'swr';
 import AgentForm from '@app/components/AgentForm';
 import ChatBox from '@app/components/ChatBox';
 import ChatBubble from '@app/components/ChatBubble';
+import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
-import useAgentChat from '@app/hooks/useAgentChat';
-import useChatConfig from '@app/hooks/useChatConfig';
+import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
 import { RouteNames } from '@app/types';
@@ -122,13 +122,18 @@ export default function AgentPage() {
     fetcher
   );
 
-  // const { conversationId } = useChatConfig();
-
-  const { handleChatSubmit, history } = useAgentChat({
-    queryAgentURL: `/api/agents/${router.query?.agentId}/query`,
-    // queryHistoryURL: conversationId
-    //   ? `/api/agents/${router.query?.agentId}/history/${conversationId}`
-    //   : undefined,
+  const {
+    history,
+    handleChatSubmit,
+    isLoadingConversation,
+    hasMoreMessages,
+    handleLoadMoreMessages,
+    setConversationId,
+    conversationId,
+  } = useChat({
+    endpoint: router.query?.agentId
+      ? `/api/agents/${router.query?.agentId}/query`
+      : undefined,
   });
 
   const handleDeleteAgent = async () => {
@@ -153,6 +158,15 @@ export default function AgentPage() {
       handleChangeTab('chat');
     }
   }, [router.query.tab]);
+
+  React.useEffect(() => {
+    setConversationId(router.query.conversationId as string);
+  }, [router.query.conversationId]);
+
+  React.useEffect(() => {
+    router.query.conversationId = conversationId;
+    router.replace(router, undefined, { shallow: true });
+  }, [conversationId]);
 
   if (!getAgentQuery?.data) {
     return null;
@@ -334,12 +348,39 @@ export default function AgentPage() {
               overflow: 'hidden',
             }}
           >
-            <ChatBox
-              messages={history}
-              onSubmit={handleChatSubmit}
-              agentIconUrl={getAgentQuery?.data?.iconUrl!}
-              disableWatermark
-            />
+            <Stack
+              direction="row"
+              sx={{
+                width: '100%',
+                height: '100%',
+                maxHeight: '100%',
+                overflow: 'hidden',
+              }}
+              gap={1}
+            >
+              <Box
+                sx={(theme) => ({
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: 200,
+                  [theme.breakpoints.down('sm')]: {
+                    display: 'none',
+                  },
+                })}
+              >
+                <ConversationList agentId={router.query?.agentId as string} />
+              </Box>
+
+              <ChatBox
+                messages={history}
+                onSubmit={handleChatSubmit}
+                agentIconUrl={getAgentQuery?.data?.iconUrl!}
+                isLoadingConversation={isLoadingConversation}
+                disableWatermark
+                hasMoreMessages={hasMoreMessages}
+                handleLoadMoreMessages={handleLoadMoreMessages}
+              />
+            </Stack>
           </Box>
         )}
 
@@ -493,6 +534,50 @@ export default function AgentPage() {
                     </ListItem>
                   ))}
                 </List>
+
+                {getAgentQuery?.data?.id! && (
+                  <>
+                    <SlackBotModal
+                      agentId={getAgentQuery?.data?.id!}
+                      isOpen={state.isSlackModalOpen}
+                      handleCloseModal={() =>
+                        setState({ isSlackModalOpen: false })
+                      }
+                    />
+
+                    <CrispSettingsModal
+                      agentId={getAgentQuery?.data?.id!}
+                      isOpen={state.isCrispModalOpen}
+                      handleCloseModal={() =>
+                        setState({ isCrispModalOpen: false })
+                      }
+                    />
+
+                    <BubbleWidgetSettingsModal
+                      agentId={getAgentQuery?.data?.id!}
+                      isOpen={state.isBubbleWidgetModalOpen}
+                      handleCloseModal={() =>
+                        setState({ isBubbleWidgetModalOpen: false })
+                      }
+                    />
+
+                    <IFrameWidgetSettingsModal
+                      agentId={getAgentQuery?.data?.id!}
+                      isOpen={state.isIFrameWidgetModalOpen}
+                      handleCloseModal={() =>
+                        setState({ isIFrameWidgetModalOpen: false })
+                      }
+                    />
+
+                    <StandalonePageWidgetSettingsModal
+                      agentId={getAgentQuery?.data?.id!}
+                      isOpen={state.isStandalonePageWidgetModalOpen}
+                      handleCloseModal={() =>
+                        setState({ isStandalonePageWidgetModalOpen: false })
+                      }
+                    />
+                  </>
+                )}
               </>
             )}
 
@@ -575,46 +660,6 @@ export default function AgentPage() {
           </Box>
         }
       </>
-
-      {getAgentQuery?.data?.id! && (
-        <>
-          <SlackBotModal
-            agentId={getAgentQuery?.data?.id!}
-            isOpen={state.isSlackModalOpen}
-            handleCloseModal={() => setState({ isSlackModalOpen: false })}
-          />
-
-          <CrispSettingsModal
-            agentId={getAgentQuery?.data?.id!}
-            isOpen={state.isCrispModalOpen}
-            handleCloseModal={() => setState({ isCrispModalOpen: false })}
-          />
-
-          <BubbleWidgetSettingsModal
-            agentId={getAgentQuery?.data?.id!}
-            isOpen={state.isBubbleWidgetModalOpen}
-            handleCloseModal={() =>
-              setState({ isBubbleWidgetModalOpen: false })
-            }
-          />
-
-          <IFrameWidgetSettingsModal
-            agentId={getAgentQuery?.data?.id!}
-            isOpen={state.isIFrameWidgetModalOpen}
-            handleCloseModal={() =>
-              setState({ isIFrameWidgetModalOpen: false })
-            }
-          />
-
-          <StandalonePageWidgetSettingsModal
-            agentId={getAgentQuery?.data?.id!}
-            isOpen={state.isStandalonePageWidgetModalOpen}
-            handleCloseModal={() =>
-              setState({ isStandalonePageWidgetModalOpen: false })
-            }
-          />
-        </>
-      )}
 
       <UsageLimitModal
         title="Upgrade to premium to use this feature"

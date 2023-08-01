@@ -5,12 +5,12 @@ import * as React from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import Layout from '@app/components/Layout';
-import useAgentChat from '@app/hooks/useAgentChat';
+import useChat from '@app/hooks/useChat';
 
 export default function DatasourcesPage() {
   const agentId = 'clh9ldhip0000e9ogeunjdqhd';
-  const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `https://app.chaindesk.ai/api/agents/${agentId}/query`,
+  const { history, handleChatSubmit } = useChat({
+    endpoint: `/api/agents/${agentId}/query`,
   });
 
   return (

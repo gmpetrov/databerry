@@ -1,4 +1,5 @@
 import axios from 'axios';
+import pMap from 'p-map';
 
 import { DatastoreManager } from '@app/utils/datastores';
 import prisma from '@app/utils/prisma-client';
@@ -12,6 +13,13 @@ const qdrantClient = axios.create({
 
 (async () => {
   const DATASTORE_ID = 'cljz1bnn50002rg6hemmia8ev';
+
+  const datastores = await prisma.datastore.findMany({
+    select: {
+      id: true,
+    },
+  });
+
   const processDatatore = async (datastoreId: string) => {
     const datastore = await prisma.datastore.findUnique({
       where: {
@@ -88,5 +96,12 @@ const qdrantClient = axios.create({
     // }
   };
 
-  await processDatatore(DATASTORE_ID);
+  //   await processDatatore(DATASTORE_ID);
+
+  console.log('NB Datastore to process', datastores.length);
+  pMap(
+    datastores.map((each) => each.id),
+    (id) => processDatatore(id),
+    { concurrency: 1 }
+  );
 })();

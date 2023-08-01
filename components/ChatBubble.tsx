@@ -21,8 +21,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
-import useAgentChat from '@app/hooks/useAgentChat';
-import useChatConfig from '@app/hooks/useChatConfig';
+import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
@@ -58,7 +57,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
   const chatBoxRef = useRef(null);
-  const { visitorId, conversationId } = useChatConfig();
+
   const [state, setState] = useStateReducer({
     isOpen: false,
     agent: undefined as Agent | undefined,
@@ -71,13 +70,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     visitorEmail: '',
   });
 
-  const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `${API_URL}/api/agents/${props.agentId}/query`,
+  const { history, handleChatSubmit, conversationId, visitorId } = useChat({
+    endpoint: `${API_URL}/api/agents/${props.agentId}/query`,
     channel: 'website',
     // channel: ConversationChannel.website // not working with bundler parcel,
-    // queryHistoryURL: conversationId
-    //   ? `${API_URL}/api/agents/${props.agentId}/history/${conversationId}`
-    //   : undefined,
   });
 
   const textColor = useMemo(() => {

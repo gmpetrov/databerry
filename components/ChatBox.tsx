@@ -5,10 +5,12 @@ import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
 import Chip from '@mui/joy/Chip';
 import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
+import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
@@ -16,6 +18,7 @@ import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import InfiniteScroll from 'react-infinite-scroller';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { z } from 'zod';
@@ -40,6 +43,9 @@ type Props = {
   disableWatermark?: boolean;
   renderAfterMessages?: JSX.Element | null;
   agentIconUrl?: string;
+  isLoadingConversation?: boolean;
+  hasMoreMessages?: boolean;
+  handleLoadMoreMessages?: () => void;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -53,6 +59,9 @@ function ChatBox({
   renderAfterMessages,
   disableWatermark,
   agentIconUrl,
+  isLoadingConversation,
+  hasMoreMessages,
+  handleLoadMoreMessages,
 }: Props) {
   const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
@@ -116,7 +125,6 @@ function ChatBox({
       <Stack
         ref={scrollableRef}
         direction={'column'}
-        gap={2}
         sx={{
           boxSizing: 'border-box',
           maxWidth: '100%',
@@ -129,167 +137,208 @@ function ChatBox({
           pt: 2,
         }}
       >
-        {firstMsg && (
-          <Stack sx={{ width: '100%' }} direction={'row'} gap={1}>
-            <Avatar
-              size="sm"
-              variant="outlined"
-              src={agentIconUrl || '/app-rounded-bg-white.png'}
-            ></Avatar>
-            <Card
-              size="sm"
-              variant={'outlined'}
-              color={'primary'}
-              className="prose-sm message-agent"
-              sx={{
-                mr: 'auto',
-                ml: 'none',
-                whiteSpace: 'pre-wrap',
-              }}
-            >
-              {firstMsg?.message}
-            </Card>
-          </Stack>
-        )}
-
-        {messages.map((each, index) => (
-          <Stack
-            key={index}
-            sx={{
-              width: '100%',
-              maxWidth: '100%',
-              mr: each.from === 'agent' ? 'auto' : 'none',
-              ml: each.from === 'human' ? 'auto' : 'none',
-            }}
-          >
-            <Stack
-              sx={{
-                width: '100%',
-                maxWidth: '100%',
-              }}
-              direction={'row'}
-              gap={1}
-            >
-              {each.from === 'agent' && (
+        <InfiniteScroll
+          isReverse
+          useWindow={false}
+          getScrollParent={() => scrollableRef.current}
+          loadMore={handleLoadMoreMessages!}
+          hasMore={hasMoreMessages}
+          loader={
+            Array(1)
+              .fill(0)
+              .map((_, index) => (
+                <Stack key={index} direction={'row'} gap={2} mb={2}>
+                  <Skeleton variant="circular" width={34} height={34} />
+                  <Stack gap={1} sx={{ width: '100%' }}>
+                    <Skeleton variant="text" width={'97%'} />
+                    <Skeleton variant="text" width={'92%'} />
+                    <Skeleton variant="text" width={'95%'} />
+                  </Stack>
+                </Stack>
+              )) as any
+          }
+        >
+          <Stack gap={2}>
+            {firstMsg && (
+              <Stack sx={{ width: '100%' }} direction={'row'} gap={1}>
                 <Avatar
                   size="sm"
                   variant="outlined"
                   src={agentIconUrl || '/app-rounded-bg-white.png'}
                 ></Avatar>
-              )}
-
-              {each.from === 'human' && (
-                <Avatar
+                <Card
                   size="sm"
-                  variant="outlined"
-                  src={session?.data?.user?.image || undefined}
-                ></Avatar>
-              )}
+                  variant={'outlined'}
+                  color={'primary'}
+                  className="prose-sm message-agent"
+                  sx={{
+                    mr: 'auto',
+                    ml: 'none',
+                    whiteSpace: 'pre-wrap',
+                  }}
+                >
+                  {firstMsg?.message}
+                </Card>
+              </Stack>
+            )}
 
-              <Card
-                size="sm"
-                variant={'outlined'}
-                className={clsx(
-                  each.from === 'agent' ? 'message-agent' : 'message-human'
-                )}
-                color={each.from === 'agent' ? 'primary' : 'neutral'}
-                sx={(theme) => ({
-                  overflowY: 'hidden',
-                  overflowX: 'auto',
-                  marginRight: 'auto',
-                  maxWidth: '100%',
-                  py: 0,
-                  px: 2,
-                  [' p ']: {
-                    m: 0,
-                    py: 1,
-                    maxWidth: '100%',
-                    // wordBreak: 'break-word',
-                  },
-                  table: {
-                    overflowX: 'auto',
-                  },
-                  // pre: {
-                  //   overflowX: 'scroll',
-                  // },
-                  // code: {},
-                  // 'ol,ul,p': {
-                  //   // color: theme.palette.text.secondary,
-                  // },
-                  // 'ol, ul': {
-                  //   my: 0,
-                  //   pl: 2,
-                  // },
-                  // ol: {
-                  //   listStyle: 'numeric',
-                  // },
-                  // // 'ol > li > p': {
-                  // //   fontWeight: 'bold',
-                  // // },
-                  // ul: {
-                  //   listStyle: 'disc',
-                  //   mb: 2,
-                  // },
-                  // li: {
-                  //   my: 1,
-                  // },
-                  // 'li::marker, ol::marker': {
-                  //   // color: theme.palette.text.tertiary,
-                  // },
-                  // a: {
-                  //   // color: theme.palette.text.primary,
-                  //   textDecoration: 'underline',
-                  // },
-                  // [' p ']: {
-                  // py: 1,
-                  // m: 0,
-                  // },
-                })}
-              >
-                {each.from === 'agent' ? (
-                  <ReactMarkdown
-                    className="prose-sm prose dark:prose-invert"
-                    remarkPlugins={[remarkGfm]}
-                    linkTarget={'_blank'}
-                  >
-                    {each.message}
-                  </ReactMarkdown>
-                ) : (
-                  <p className="prose-sm ">{each.message}</p>
-                )}
-
-                {(each?.sources?.length || 0) > 0 && (
-                  <Box
-                    sx={{
-                      pb: 2,
-                    }}
-                  >
-                    <details>
-                      <summary>Sources</summary>
-                      <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
-                        {each?.sources?.map((source) => (
-                          <SourceComponent
-                            key={source.chunk_id}
-                            source={source}
-                          />
-                        ))}
+            {isLoadingConversation && (
+              <Stack gap={2}>
+                {Array(1)
+                  .fill(0)
+                  .map((_, index) => (
+                    <Stack key={index} direction={'row'} gap={2}>
+                      <Skeleton variant="circular" width={34} height={34} />
+                      <Stack gap={1} sx={{ width: '100%' }}>
+                        <Skeleton variant="text" width={'97%'} />
+                        <Skeleton variant="text" width={'92%'} />
+                        <Skeleton variant="text" width={'95%'} />
                       </Stack>
-                    </details>
-                  </Box>
-                )}
-              </Card>
-            </Stack>
-          </Stack>
-        ))}
+                    </Stack>
+                  ))}
+              </Stack>
+            )}
 
-        {isLoading && (
-          <CircularProgress
-            variant="soft"
-            color="neutral"
-            size="sm"
-            sx={{ mx: 'auto', my: 2 }}
-          />
-        )}
+            {messages.map((each, index) => (
+              <Stack
+                key={index}
+                sx={{
+                  width: '100%',
+                  maxWidth: '100%',
+                  mr: each.from === 'agent' ? 'auto' : 'none',
+                  ml: each.from === 'human' ? 'auto' : 'none',
+                }}
+              >
+                <Stack
+                  sx={{
+                    width: '100%',
+                    maxWidth: '100%',
+                  }}
+                  direction={'row'}
+                  gap={1}
+                >
+                  {each.from === 'agent' && (
+                    <Avatar
+                      size="sm"
+                      variant="outlined"
+                      src={agentIconUrl || '/app-rounded-bg-white.png'}
+                    ></Avatar>
+                  )}
+
+                  {each.from === 'human' && (
+                    <Avatar
+                      size="sm"
+                      variant="outlined"
+                      src={session?.data?.user?.image || undefined}
+                    ></Avatar>
+                  )}
+
+                  <Card
+                    size="sm"
+                    variant={'outlined'}
+                    className={clsx(
+                      each.from === 'agent' ? 'message-agent' : 'message-human'
+                    )}
+                    color={each.from === 'agent' ? 'primary' : 'neutral'}
+                    sx={(theme) => ({
+                      overflowY: 'hidden',
+                      overflowX: 'auto',
+                      marginRight: 'auto',
+                      maxWidth: '100%',
+                      py: 0,
+                      px: 2,
+                      [' p ']: {
+                        m: 0,
+                        py: 1,
+                        maxWidth: '100%',
+                        // wordBreak: 'break-word',
+                      },
+                      table: {
+                        overflowX: 'auto',
+                      },
+                      // pre: {
+                      //   overflowX: 'scroll',
+                      // },
+                      // code: {},
+                      // 'ol,ul,p': {
+                      //   // color: theme.palette.text.secondary,
+                      // },
+                      // 'ol, ul': {
+                      //   my: 0,
+                      //   pl: 2,
+                      // },
+                      // ol: {
+                      //   listStyle: 'numeric',
+                      // },
+                      // // 'ol > li > p': {
+                      // //   fontWeight: 'bold',
+                      // // },
+                      // ul: {
+                      //   listStyle: 'disc',
+                      //   mb: 2,
+                      // },
+                      // li: {
+                      //   my: 1,
+                      // },
+                      // 'li::marker, ol::marker': {
+                      //   // color: theme.palette.text.tertiary,
+                      // },
+                      // a: {
+                      //   // color: theme.palette.text.primary,
+                      //   textDecoration: 'underline',
+                      // },
+                      // [' p ']: {
+                      // py: 1,
+                      // m: 0,
+                      // },
+                    })}
+                  >
+                    {each.from === 'agent' ? (
+                      <ReactMarkdown
+                        className="prose-sm prose dark:prose-invert"
+                        remarkPlugins={[remarkGfm]}
+                        linkTarget={'_blank'}
+                      >
+                        {each.message}
+                      </ReactMarkdown>
+                    ) : (
+                      <p className="prose-sm ">{each.message}</p>
+                    )}
+
+                    {(each?.sources?.length || 0) > 0 && (
+                      <Box
+                        sx={{
+                          pb: 2,
+                        }}
+                      >
+                        <details>
+                          <summary>Sources</summary>
+                          <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
+                            {each?.sources?.map((source) => (
+                              <SourceComponent
+                                key={source.chunk_id}
+                                source={source}
+                              />
+                            ))}
+                          </Stack>
+                        </details>
+                      </Box>
+                    )}
+                  </Card>
+                </Stack>
+              </Stack>
+            ))}
+
+            {isLoading && (
+              <CircularProgress
+                variant="soft"
+                color="neutral"
+                size="sm"
+                sx={{ mx: 'auto', my: 2 }}
+              />
+            )}
+          </Stack>
+        </InfiniteScroll>
       </Stack>
 
       {!!hideTemplateMessages && renderAfterMessages}
