@@ -295,7 +295,7 @@ const chat = async ({
     //   }));
   } catch {}
 
-  if (includeSources) {
+  if (includeSources && results?.length > 0) {
     try {
       model.modelName = 'gpt-4';
       const sourceRequest = await model.call(
