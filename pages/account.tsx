@@ -390,8 +390,9 @@ export default function AccountPage() {
               <Button
                 onClick={handleClickManageSubscription}
                 endDecorator={<ArrowForwardRoundedIcon />}
-                variant="plain"
+                variant="solid"
                 sx={{ ml: 'auto' }}
+                color="warning"
               >
                 Upgrade / Manage Subscription
               </Button>

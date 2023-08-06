@@ -103,11 +103,11 @@ export default function Layout(props: Props) {
               Chaindesk
             </Typography>
 
-            {session?.user?.isPremium && (
+            {/* {session?.user?.isPremium && (
               <Chip color="warning" variant="soft" size="sm">
                 premium
               </Chip>
-            )}
+            )} */}
           </Box>
           {/* <Input
             size="sm"
@@ -180,9 +180,9 @@ export default function Layout(props: Props) {
                 },
               ]}
             /> */}
-            <ColorSchemeToggle />
+            {/* <ColorSchemeToggle /> */}
 
-            <Box
+            {/* <Box
               onClick={openUserMenu as any}
               id="basic-demo-button"
               aria-controls={isMenuOpen ? 'basic-menu' : undefined}
@@ -198,9 +198,9 @@ export default function Layout(props: Props) {
                   },
                 }}
               />
-            </Box>
+            </Box> */}
 
-            <Menu
+            {/* <Menu
               id="basic-menu"
               anchorEl={userMenuElement}
               open={isMenuOpen}
@@ -214,7 +214,7 @@ export default function Layout(props: Props) {
               <MenuItem>{session?.user?.email}</MenuItem>
               <Divider />
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
-            </Menu>
+            </Menu> */}
           </Box>
         </Header>
         <SideNav>
