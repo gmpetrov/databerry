@@ -49,7 +49,7 @@ import ChatBoxBNP from '@app/components/ChatBoxBNP';
 import CreateDatastoreModal from '@app/components/CreateDatastoreModal';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
-import useAgentChat from '@app/hooks/useAgentChat';
+import useChat from '@app/hooks/useChat';
 import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getDatastores } from '@app/pages/api/datastores';
@@ -289,11 +289,11 @@ const SearchBNP = (props: {
     fetcher
   );
 
-  const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: queryURL,
-    queryHistoryURL: state.userName
-      ? `/api/xp/bnp/history?userName=${state.userName}`
-      : undefined,
+  const { history, handleChatSubmit } = useChat({
+    endpoint: queryURL,
+    // queryHistoryURL: state.userName
+    //   ? `/api/xp/bnp/history?userName=${state.userName}`
+    //   : undefined,
     channel: ConversationChannel.website,
     queryBody: {
       datastoreId: props.datastoreId,

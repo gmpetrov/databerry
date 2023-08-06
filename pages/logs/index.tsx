@@ -9,17 +9,17 @@ import Divider from '@mui/joy/Divider';
 import List from '@mui/joy/List';
 import ListDivider from '@mui/joy/ListDivider';
 import ListItemContent from '@mui/joy/ListItemContent';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import Sheet from '@mui/joy/Sheet';
+import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import ListItem from '@mui/material/ListItem';
 import { Prisma } from '@prisma/client';
-import { useVirtualizer } from '@tanstack/react-virtual';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
 import { ReactElement } from 'react';
 import React from 'react';
+import InfiniteScroll from 'react-infinite-scroller';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
@@ -51,8 +51,13 @@ export default function LogsPage() {
       });
       return null; // reached the end
     }
-    return `/api/logs?page=${pageIndex}&limit=${LIMIT}`;
+
+    const cursor = previousPageData?.[previousPageData?.length - 1]
+      ?.id as string;
+
+    return `/api/logs?cursor=${cursor || ''}`;
   }, fetcher);
+
   const getMessagesQuery = useSWR<Prisma.PromiseReturnType<typeof getMessages>>(
     state.currentConversationId
       ? `/api/logs/${state.currentConversationId}`
@@ -60,43 +65,10 @@ export default function LogsPage() {
     fetcher
   );
 
-  const allRows = getConversationsQuery?.data?.flatMap((d) => d) || [];
-
-  const rowVirtualizer = useVirtualizer({
-    count: Number(allRows?.length),
-    getScrollElement: () => parentRef.current as any,
-    estimateSize: () => 93,
-    // overscan: 5,
-  });
-
-  React.useEffect(() => {
-    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
-    // const cursor = allRows?.[allRows.length - 1]?.id;
-
-    if (!lastItem) {
-      return;
-    }
-
-    if (
-      lastItem.index >= allRows.length - 1 &&
-      !state.hasReachedEnd &&
-      !getConversationsQuery.isLoading &&
-      !getConversationsQuery.isValidating
-    ) {
-      getConversationsQuery.setSize(getConversationsQuery.size + 1);
-    }
-  }, [
-    // hasNextPage,
-    // fetchNextPage,
-    allRows.length,
-    getConversationsQuery.isLoading,
-    getConversationsQuery.isValidating,
-    getConversationsQuery.size,
-    state.hasReachedEnd,
-    rowVirtualizer.getVirtualItems(),
-  ]);
-
-  if (!getConversationsQuery.isLoading && allRows?.length === 0) {
+  if (
+    !getConversationsQuery.isLoading &&
+    getConversationsQuery?.data?.flat()?.length === 0
+  ) {
     return (
       <Alert
         variant="outlined"
@@ -127,7 +99,7 @@ export default function LogsPage() {
       variant="outlined"
       sx={(theme) => ({
         height: '100%',
-        borderRadius: 10,
+        borderRadius: 'sm',
       })}
     >
       <Stack direction={'row'} sx={{ height: '100%' }}>
@@ -140,18 +112,39 @@ export default function LogsPage() {
             maxWidth: '30%',
             height: '100%',
             overflowY: 'auto',
+            '--ListDivider-gap': '0px',
           }}
+          size="sm"
         >
-          {rowVirtualizer.getVirtualItems().map((row) => {
-            if (!row) {
-              return null;
+          <InfiniteScroll
+            useWindow={false}
+            getScrollParent={() => parentRef.current as any}
+            loadMore={() => {
+              if (
+                getConversationsQuery.isLoading ||
+                getConversationsQuery.isValidating
+              )
+                return;
+
+              getConversationsQuery.setSize(getConversationsQuery.size + 1);
+            }}
+            hasMore={!state.hasReachedEnd}
+            loader={
+              Array(3)
+                .fill(0)
+                .map((each, idx) => (
+                  <React.Fragment key={idx}>
+                    <ListItem>
+                      <Skeleton variant="text" />
+                    </ListItem>
+
+                    <ListDivider></ListDivider>
+                  </React.Fragment>
+                )) as any
             }
-
-            const isLoaderRow = row.index > allRows?.length - 1;
-            const each = allRows[row.index];
-
-            return (
-              <React.Fragment key={row.key}>
+          >
+            {getConversationsQuery?.data?.flat()?.map((each) => (
+              <React.Fragment key={each.id}>
                 <ListItem
                   sx={(theme) => ({
                     py: 1,
@@ -162,8 +155,6 @@ export default function LogsPage() {
                     ...(state.currentConversationId === each.id && {
                       backgroundColor: theme.palette.action.hover,
                     }),
-                    borderBottomWidth: 0.2,
-                    borderBottomColor: theme.palette.divider,
                   })}
                   onClick={() => {
                     setState({
@@ -171,9 +162,6 @@ export default function LogsPage() {
                     });
                   }}
                 >
-                  {/* <ListItemDecorator sx={{ alignSelf: 'flex-start' }}>
-    <Avatar src="/static/images/avatar/1.jpg" />
-  </ListItemDecorator> */}
                   <ListItemContent>
                     <Stack>
                       <Stack direction="row" justifyContent={'space-between'}>
@@ -198,10 +186,6 @@ export default function LogsPage() {
                             // variant="soft"
                             color="danger"
                             size="sm"
-                            sx={{
-                              borderRadius: '100%',
-                              // p: 1,
-                            }}
                           >
                             <Typography textColor={'common.white'}>
                               {each?._count?.messages}
@@ -223,14 +207,14 @@ export default function LogsPage() {
                     </Stack>
                   </ListItemContent>
                 </ListItem>
-                {/* <ListDivider /> */}
-
-                {getConversationsQuery.isLoading && (
-                  <CircularProgress size="sm" sx={{ mx: 'auto', my: 2 }} />
-                )}
+                <ListDivider />
               </React.Fragment>
-            );
-          })}
+            ))}
+          </InfiniteScroll>
+
+          {getConversationsQuery.isLoading && (
+            <CircularProgress size="sm" sx={{ mx: 'auto', my: 2 }} />
+          )}
         </List>
         <Divider orientation="vertical" />
         <Box sx={{ width: '100%', paddingX: 2 }}>
@@ -256,29 +240,10 @@ LogsPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-// export const getServerSideProps = withAuth(
-//   async (ctx: GetServerSidePropsContext) => {
-//     return {
-//       props: {},
-//     };
-//   }
-// );
-// Patch for PH Launch
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  const session = await getServerSession(ctx.req, ctx.res, authOptions);
-
-  if (!session) {
+export const getServerSideProps = withAuth(
+  async (ctx: GetServerSidePropsContext) => {
     return {
-      redirect: {
-        statusCode: 302,
-        destination: `https://chaindesk.ai`,
-      },
+      props: {},
     };
   }
-
-  (ctx as any).req.session = session;
-
-  return {
-    props: {},
-  };
-};
+);

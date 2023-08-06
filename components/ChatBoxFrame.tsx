@@ -5,8 +5,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
-import useAgentChat from '@app/hooks/useAgentChat';
-import useChatConfig from '@app/hooks/useChatConfig';
+import useChat from '@app/hooks/useChat';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 
@@ -31,14 +30,10 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
   );
-  const { visitorId, conversationId } = useChatConfig();
 
-  const { history, handleChatSubmit } = useAgentChat({
-    queryAgentURL: `${API_URL}/api/agents/${agentId}/query`,
+  const { history, handleChatSubmit } = useChat({
+    endpoint: `/api/agents/${router.query?.agentId}/query`,
     channel: ConversationChannel.website,
-    // queryHistoryURL: visitorId
-    //   ? `/api/agents/${router.query?.agentId}/history/${conversationId}`
-    //   : undefined,
   });
 
   const primaryColor =

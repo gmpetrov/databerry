@@ -19,6 +19,7 @@ function DashboardThemeProvider(props: any) {
           defaultMode="dark"
           modeStorageKey="chaindesk-dashboard-mode"
           colorSchemeStorageKey="chaindesk-dashboard-color-scheme"
+          attribute="chaindesk-dashboard-color-scheme"
         >
           <CssBaseline enableColorScheme />
           {props.children}

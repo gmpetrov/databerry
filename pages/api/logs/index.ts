@@ -10,6 +10,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
   const page = Number(req.query.page);
   const limit = Number(req.query.limit);
+  const cursor = req.query.cursor as string;
 
   const conversations = await prisma.conversation.findMany({
     where: {
@@ -17,8 +18,18 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
         ownerId: session?.user?.id,
       },
     },
-    take: limit,
-    skip: page * limit,
+    take: 100,
+    // skip: page * limit,
+
+    ...(cursor
+      ? {
+          skip: 1,
+          cursor: {
+            id: cursor,
+          },
+        }
+      : {}),
+
     include: {
       agent: true,
       _count: {
@@ -33,7 +44,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
       messages: {
         take: 1,
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'asc',
         },
       },
     },

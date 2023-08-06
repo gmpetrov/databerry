@@ -3,9 +3,11 @@ import {
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
 import type { ConversationChannel, Prisma } from '@prisma/client';
-import useSWR from 'swr';
+import { useCallback, useEffect } from 'react';
+import { useSWRConfig } from 'swr';
+import useSWRInfinite from 'swr/infinite';
 
-import { getHistory } from '@app/pages/api/agents/[id]/history/[conversationId]';
+import { getConversation } from '@app/pages/api/conversations/[conversationId]';
 import { SSE_EVENT } from '@app/types';
 import { Source } from '@app/types/document';
 import type { ChatResponse } from '@app/types/dtos';
@@ -13,26 +15,26 @@ import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { EXTRACT_SOURCES } from '@app/utils/regexp';
 import { fetcher } from '@app/utils/swr-fetcher';
 
-import useChatConfig, { ChatConfigProps } from './useChatConfig';
 import useStateReducer from './useStateReducer';
 
+const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
+
 type Props = {
-  queryAgentURL: string;
-  queryHistoryURL?: string;
+  endpoint?: string;
   channel?: ConversationChannel;
   queryBody?: any;
   datasourceId?: string;
-  conversationId?: string;
 };
 
-const useAgentChat = ({
-  queryAgentURL,
-  queryHistoryURL,
-  channel,
-  queryBody,
-  ...otherProps
-}: Props) => {
+const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
+  const { mutate, cache } = useSWRConfig();
+
   const [state, setState] = useStateReducer({
+    visitorId: '',
+    conversationId: '',
+    hasMoreMessages: true,
+    prevConversationId: '',
+    mounted: false,
     history: [] as {
       from: 'human' | 'agent';
       message: string;
@@ -41,37 +43,61 @@ const useAgentChat = ({
     }[],
   });
 
-  const { visitorId, conversationId, setChatConfig } = useChatConfig({
-    conversationId: otherProps.conversationId,
-  });
+  const getConversationQuery = useSWRInfinite<
+    Prisma.PromiseReturnType<typeof getConversation>
+  >(
+    (pageIndex, previousPageData) => {
+      if (!state.conversationId) {
+        if (state.hasMoreMessages) {
+          setState({ hasMoreMessages: false });
+        }
 
-  const getHistoryQuery = useSWR<Prisma.PromiseReturnType<typeof getHistory>>(
-    queryHistoryURL,
+        return null;
+      }
+
+      if (previousPageData && previousPageData?.messages?.length === 0) {
+        setState({
+          hasMoreMessages: false,
+        });
+        return null;
+      }
+
+      const cursor = previousPageData?.messages?.[
+        previousPageData?.messages?.length - 1
+      ]?.id as string;
+
+      return `${API_URL}/api/conversations/${state.conversationId}?cursor=${
+        cursor || ''
+      }`;
+    },
     fetcher,
     {
       onSuccess: (data) => {
         setState({
-          history: [
-            ...(data?.messages || [])?.map((message) => ({
-              id: message.id,
-              from: message.from,
-              message: message.text,
-              createdAt: message.createdAt,
+          history: data
+            ?.map((each) => each?.messages)
+            ?.flat()
+            ?.reverse()
+            ?.map((message) => ({
+              id: message?.id!,
+              from: message?.from!,
+              message: message?.text!,
+              createdAt: message?.createdAt!,
             })),
-            ...state.history.filter(
-              // Remove messages with undefined IDs + remove duplicates (messages coming from the API)
-              (message) =>
-                !!message.id &&
-                !data?.messages?.find((m) => m.id === message.id)
-            ),
-          ],
         });
       },
     }
   );
 
+  const handleLoadMoreMessages = () => {
+    if (getConversationQuery.isLoading || getConversationQuery.isValidating)
+      return;
+
+    getConversationQuery.setSize(getConversationQuery.size + 1);
+  };
+
   const handleChatSubmit = async (message: string) => {
-    if (!message) {
+    if (!message || !endpoint) {
       return;
     }
 
@@ -92,7 +118,7 @@ const useAgentChat = ({
       class RetriableError extends Error {}
       class FatalError extends Error {}
 
-      await fetchEventSource(queryAgentURL, {
+      await fetchEventSource(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,8 +128,8 @@ const useAgentChat = ({
           ...queryBody,
           streaming: true,
           query: message,
-          visitorId: visitorId,
-          conversationId,
+          visitorId: state.visitorId,
+          conversationId: state.conversationId,
           channel,
         }),
         signal: ctrl.signal,
@@ -167,15 +193,18 @@ const useAgentChat = ({
                 h.push({ from: 'agent', message: buffer, sources });
               }
 
+              localStorage.setItem('visitorId', visitorId || '');
+              localStorage.setItem('conversationId', conversationId || '');
+
               setState({
                 history: h as any,
-              });
-
-              setChatConfig({
                 conversationId,
+                prevConversationId: state.conversationId,
                 visitorId,
               });
-            } catch {}
+            } catch (err) {
+              console.log(err);
+            }
           } else if (event.data?.startsWith('[ERROR]')) {
             ctrl.abort();
 
@@ -235,11 +264,56 @@ const useAgentChat = ({
     }
   };
 
+  const setConversationId = useCallback((value?: string) => {
+    localStorage.setItem('conversationId', value || '');
+    setState({
+      conversationId: value || '',
+    });
+  }, []);
+
+  const setVisitorId = useCallback((value?: string) => {
+    localStorage.setItem('visitorId', value || '');
+    setState({
+      visitorId: value || '',
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Init from localStorage onmount (for chatbubble widget)
+      setState({
+        visitorId: localStorage.getItem('visitorId') as string,
+        conversationId: localStorage.getItem('conversationId') as string,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!state.prevConversationId && state.conversationId) {
+      // New conversation
+      setState({
+        hasMoreMessages: false,
+      });
+      return;
+    }
+
+    // Conversation changed, reset history (for conversation switching)
+    setState({
+      history: [],
+    });
+  }, [state.conversationId]);
+
   return {
     handleChatSubmit,
     history: state.history,
-    conversationId,
+    isLoadingConversation: getConversationQuery.isLoading,
+    hasMoreMessages: state.hasMoreMessages,
+    handleLoadMoreMessages: handleLoadMoreMessages,
+    visitorId: state.visitorId,
+    conversationId: state.conversationId,
+    setConversationId,
+    setVisitorId,
   };
 };
 
-export default useAgentChat;
+export default useChat;

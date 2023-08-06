@@ -34,6 +34,7 @@ specifiers:
   '@types/nprogress': ^0.2.0
   '@types/react': 18.0.29
   '@types/react-dom': 18.0.11
+  '@types/react-infinite-scroller': ^1.2.3
   '@types/react-syntax-highlighter': ^15.5.6
   '@types/react-transition-group': ^4.4.6
   '@types/uuid': ^9.0.1
@@ -90,6 +91,7 @@ specifiers:
   react-frame-component: ^5.2.6
   react-hook-form: ^7.43.8
   react-hot-toast: ^2.4.1
+  react-infinite-scroller: ^1.2.6
   react-markdown: ^8.0.7
   react-syntax-highlighter: ^15.5.0
   react-transition-group: ^4.4.5
@@ -178,6 +180,7 @@ dependencies:
   react-frame-component: 5.2.6_biqbaboplfbrettd7655fr4n2y
   react-hook-form: 7.43.8_react@18.2.0
   react-hot-toast: 2.4.1_biqbaboplfbrettd7655fr4n2y
+  react-infinite-scroller: 1.2.6_react@18.2.0
   react-markdown: 8.0.7_k4en7uapxoluuejoeg6o3ic2aa
   react-syntax-highlighter: 15.5.0_react@18.2.0
   react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
@@ -203,6 +206,7 @@ devDependencies:
   '@types/mime-types': 2.1.1
   '@types/multer': 1.4.7
   '@types/nprogress': 0.2.0
+  '@types/react-infinite-scroller': 1.2.3
   '@types/react-syntax-highlighter': 15.5.6
   '@types/react-transition-group': 4.4.6
   '@types/uuid': 9.0.1
@@ -2133,6 +2137,12 @@ packages:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
     dependencies:
       '@types/react': 18.0.29
+
+  /@types/react-infinite-scroller/1.2.3:
+    resolution: {integrity: sha512-l60JckVoO+dxmKW2eEG7jbliEpITsTJvRPTe97GazjF5+ylagAuyYdXl8YY9DQsTP9QjhqGKZROknzgscGJy0A==}
+    dependencies:
+      '@types/react': 18.0.29
+    dev: true
 
   /@types/react-is/18.2.1:
     resolution: {integrity: sha512-wyUkmaaSZEzFZivD8F2ftSyAfk6L+DfFliVj/mYdOXbVjRcS87fQJLTnhk6dRZPuJjI+9g6RZJO4PNCngUrmyw==}
@@ -7727,6 +7737,15 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     transitivePeerDependencies:
       - csstype
+    dev: false
+
+  /react-infinite-scroller/1.2.6_react@18.2.0:
+    resolution: {integrity: sha512-mGdMyOD00YArJ1S1F3TVU9y4fGSfVVl6p5gh/Vt4u99CJOptfVu/q5V/Wlle72TMgYlBwIhbxK5wF0C/R33PXQ==}
+    peerDependencies:
+      react: ^0.14.9 || ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-is/16.13.1:

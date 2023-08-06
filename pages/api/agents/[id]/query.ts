@@ -159,7 +159,7 @@ export const chatAgentRequest = async (
       data: JSON.stringify({
         answer: chatRes.answer,
         sources: chatRes.sources,
-        conversationId,
+        conversationId: conversationManager.conversationId,
         visitorId: conversationManager.visitorId,
       }),
       res,
@@ -172,7 +172,7 @@ export const chatAgentRequest = async (
   } else {
     return {
       ...chatRes,
-      conversationId,
+      conversationId: conversationManager.conversationId,
       visitorId: conversationManager.visitorId,
     };
   }
