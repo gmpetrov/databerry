@@ -83,6 +83,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               from: message?.from!,
               message: message?.text!,
               createdAt: message?.createdAt!,
+              sources: message?.sources as Source[],
             })),
         });
       },
