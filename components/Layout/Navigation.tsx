@@ -150,6 +150,7 @@ export default function Navigation() {
         label: 'Documentation',
         route: 'https://docs.chaindesk.ai/',
         icon: <QuestionMarkRoundedIcon fontSize="small" />,
+        target: 'blank',
       },
     ];
   }, [router.route, countUnreadQuery?.data]);
@@ -176,7 +177,7 @@ export default function Navigation() {
             }}
           >
             {items.map((each) => (
-              <Link key={each.route} href={each.route}>
+              <Link key={each.route} href={each.route} target={each?.target}>
                 <ListItem>
                   <ListItemButton
                     variant={each.active ? 'soft' : 'plain'}
