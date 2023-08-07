@@ -39,13 +39,12 @@ export const getAgent = async (
     },
   });
 
-  // TODO: ENABLE BACK AFTER API REFACTO
-  // if (
-  //   agent?.visibility === AgentVisibility.private &&
-  //   agent?.ownerId !== session?.user?.id
-  // ) {
-  //   throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  // }
+  if (
+    agent?.visibility === AgentVisibility.private &&
+    agent?.ownerId !== session?.user?.id
+  ) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
 
   return agent;
 };

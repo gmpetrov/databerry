@@ -12,6 +12,7 @@ import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 import {
   Avatar,
@@ -36,7 +37,13 @@ import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
-import { DatastoreVisibility, Prisma, ToolType } from '@prisma/client';
+import {
+  Agent,
+  AgentVisibility,
+  DatastoreVisibility,
+  Prisma,
+  ToolType,
+} from '@prisma/client';
 import axios, { AxiosError } from 'axios';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -48,6 +55,7 @@ import { ReactElement } from 'react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
 
 import AgentForm from '@app/components/AgentForm';
 import ChatBox from '@app/components/ChatBox';
@@ -57,10 +65,11 @@ import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { upsertAgent } from '@app/pages/api/agents';
 import { getAgent } from '@app/pages/api/agents/[id]';
 import { RouteNames } from '@app/types';
 import agentToolFormat from '@app/utils/agent-tool-format';
-import { fetcher } from '@app/utils/swr-fetcher';
+import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
 const ChatInterfaceConfigForm = dynamic(
@@ -121,6 +130,10 @@ export default function AgentPage() {
     `/api/agents/${router.query?.agentId}`,
     fetcher
   );
+
+  const upsertAgentMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof upsertAgent>
+  >(`/api/agents`, postFetcher);
 
   const {
     history,
@@ -420,6 +433,7 @@ export default function AgentPage() {
                           isBubbleWidgetModalOpen: true,
                         });
                       },
+                      publicAgentRequired: true,
                     },
                     {
                       name: 'Standalone WebPage',
@@ -429,6 +443,7 @@ export default function AgentPage() {
                           isStandalonePageWidgetModalOpen: true,
                         });
                       },
+                      publicAgentRequired: true,
                     },
                     {
                       name: 'iFrame',
@@ -438,6 +453,7 @@ export default function AgentPage() {
                           isIFrameWidgetModalOpen: true,
                         });
                       },
+                      publicAgentRequired: true,
                     },
                     {
                       name: 'Slack',
@@ -508,17 +524,45 @@ export default function AgentPage() {
                       </Stack>
 
                       {(!each?.isPremium ||
-                        (each.isPremium && session?.user?.isPremium)) && (
-                        <Button
-                          size="sm"
-                          variant="outlined"
-                          startDecorator={<TuneRoundedIcon />}
-                          sx={{ ml: 'auto' }}
-                          onClick={each.action}
-                        >
-                          Settings
-                        </Button>
-                      )}
+                        (each.isPremium && session?.user?.isPremium)) &&
+                        (each?.publicAgentRequired &&
+                        agent?.visibility === DatastoreVisibility.private ? (
+                          <Button
+                            size="sm"
+                            variant="outlined"
+                            startDecorator={<ToggleOffIcon />}
+                            sx={{ ml: 'auto' }}
+                            loading={upsertAgentMutation.isMutating}
+                            onClick={async () => {
+                              const accepted = await confirm(
+                                'This feature requires your Agent to be public. Unauthenticated users (visitors) can query it. Make it public?'
+                              );
+
+                              if (!accepted) {
+                                return;
+                              }
+
+                              await upsertAgentMutation.trigger({
+                                ...agent,
+                                visibility: AgentVisibility.public,
+                              } as any);
+
+                              await getAgentQuery.mutate();
+                            }}
+                          >
+                            Enable
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outlined"
+                            startDecorator={<TuneRoundedIcon />}
+                            sx={{ ml: 'auto' }}
+                            onClick={each.action}
+                          >
+                            Settings
+                          </Button>
+                        ))}
 
                       {each.isPremium && !session?.user?.isPremium && (
                         <Button

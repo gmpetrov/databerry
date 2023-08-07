@@ -208,6 +208,10 @@ export default function StandalonePageSettings(props: Props) {
 
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack gap={3}>
+            <Alert color="warning">
+              {'🚨 To use this feature Agent visibility "public" is required'}
+            </Alert>
+
             <Stack gap={2} width="100%">
               <Stack id="embed" gap={2} mt={4} mb={2}>
                 {/* <Typography>Standalone Page URL</Typography> */}

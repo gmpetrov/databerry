@@ -146,6 +146,10 @@ export default function BubbleWidgetSettings(props: Props) {
 
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <Stack gap={3}>
+            <Alert color="warning">
+              {'🚨 To use this feature Agent visibility "public" is required'}
+            </Alert>
+
             <FormControl>
               <FormLabel>Authorized Domains</FormLabel>
 

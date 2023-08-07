@@ -74,13 +74,12 @@ export const chatAgentRequest = async (
     throw new ApiError(ApiErrorType.NOT_FOUND);
   }
 
-  // TODO: ENABLE AFTER API REFACTO
-  // if (
-  //   (agent?.visibility === AgentVisibility.private &&
-  //     agent?.ownerId !== session?.user?.id)
-  // ) {
-  //   throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  // }
+  if (
+    agent?.visibility === AgentVisibility.private &&
+    agent?.ownerId !== session?.user?.id
+  ) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
 
   const usage = agent?.owner?.usage as Usage;
 
