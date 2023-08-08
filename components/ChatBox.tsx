@@ -141,7 +141,7 @@ function ChatBox({
           isReverse
           useWindow={false}
           getScrollParent={() => scrollableRef.current}
-          loadMore={handleLoadMoreMessages!}
+          loadMore={handleLoadMoreMessages ? handleLoadMoreMessages : () => {}}
           hasMore={hasMoreMessages}
           loader={
             Array(1)

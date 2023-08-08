@@ -65,10 +65,9 @@ export default function LogsPage() {
     fetcher
   );
 
-  if (
-    !getConversationsQuery.isLoading &&
-    getConversationsQuery?.data?.flat()?.length === 0
-  ) {
+  const conversations = getConversationsQuery?.data?.flat() || [];
+
+  if (!getConversationsQuery.isLoading && conversations.length === 0) {
     return (
       <Alert
         variant="outlined"
@@ -143,7 +142,10 @@ export default function LogsPage() {
                 )) as any
             }
           >
-            {getConversationsQuery?.data?.flat()?.map((each) => (
+            {/* Add fragment to remove InfiniteScroll warning when empty conversations */}
+            <React.Fragment />
+
+            {conversations.map((each) => (
               <React.Fragment key={each.id}>
                 <ListItem
                   sx={(theme) => ({
