@@ -1,7 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {
+  Alert,
   Box,
   Breadcrumbs,
   Button,
@@ -157,6 +159,17 @@ export default function DatasourcesPage() {
           </Button>
         </Box>
       </Box>
+
+      <Alert
+        variant="soft"
+        color="neutral"
+        startDecorator={<InfoRoundedIcon />}
+        sx={{ mb: 2 }}
+      >
+        A datastore is a container that hold different type datasources (files,
+        web pages, etc...). At the moment an Agent can be connected to one
+        datastore only.
+      </Alert>
 
       {getDatastoresQuery?.data && (
         <DatastoreTable items={getDatastoresQuery.data} />

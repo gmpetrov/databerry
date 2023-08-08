@@ -13,9 +13,9 @@ import colors from '@mui/joy/colors';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
+import Stack from '@mui/joy/Stack';
 import { extendTheme, useColorScheme } from '@mui/joy/styles';
 import Typography from '@mui/joy/Typography';
-import Stack from '@mui/material/Stack';
 import type { Agent } from '@prisma/client';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Transition } from 'react-transition-group';
@@ -79,6 +79,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     hasMoreMessages,
     handleLoadMoreMessages,
     handleEvalAnswer,
+    handleAbort,
   } = useChat({
     endpoint: `${API_URL}/api/agents/${props.agentId}/query`,
     channel: 'website',
@@ -471,6 +472,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   hasMoreMessages={hasMoreMessages}
                   handleLoadMoreMessages={handleLoadMoreMessages}
                   handleEvalAnswer={handleEvalAnswer}
+                  handleAbort={handleAbort}
                 />
               </Box>
             </Card>

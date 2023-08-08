@@ -1,25 +1,14 @@
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import MenuIcon from '@mui/icons-material/Menu';
-import {
-  Avatar,
-  Chip,
-  Divider,
-  IconButton,
-  Menu,
-  MenuItem,
-  useColorScheme,
-} from '@mui/joy';
+import { IconButton, Theme, useColorScheme } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
-import axios from 'axios';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/react';
+import { SxProps } from '@mui/material';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 
 import Logo from '../Logo';
 
-import ColorSchemeToggle from './ColorSchemeToggle';
 import Header from './Header';
 import Main from './Main';
 import Navigation from './Navigation';
@@ -29,6 +18,7 @@ import SideNav from './SideNav';
 
 type Props = {
   children: React.ReactNode;
+  mainSxProps?: SxProps<Theme>;
 };
 
 export default function Layout(props: Props) {
@@ -226,6 +216,7 @@ export default function Layout(props: Props) {
             height: '100%',
             maxHeight: '100%',
             overflowY: 'scroll',
+            ...props.mainSxProps,
           }}
         >
           {props.children}

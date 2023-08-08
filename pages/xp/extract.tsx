@@ -17,15 +17,15 @@ import {
 import Box from '@mui/joy/Box';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import Button from '@mui/joy/Button';
+import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Stack from '@mui/joy/Stack';
 import Tab from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
 import { Prisma } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';

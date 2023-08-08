@@ -2,6 +2,8 @@ import * as pdfJS from 'pdfjs-dist';
 
 import { AppDocument } from '@app/types/document';
 
+import cleanTextForEmbeddings from './clean-text-for-embeddings';
+
 const pdfToDocs = async (buffer: ArrayBuffer) => {
   const pdf = await pdfJS.getDocument({
     data: new Uint8Array(buffer),
@@ -23,7 +25,7 @@ const pdfToDocs = async (buffer: ArrayBuffer) => {
           page_number: i,
           total_pages: pdf.numPages,
         },
-        pageContent: text,
+        pageContent: cleanTextForEmbeddings(text),
       })
     );
   }

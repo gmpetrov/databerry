@@ -127,6 +127,7 @@ const nextConfig = {
       ],
     };
   },
+  outputFileTracingIgnores: ['canvas'],
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.externals.push({
       playwright: true,

@@ -24,4 +24,7 @@ export abstract class ClientManager<T extends Datastore> {
   abstract search(
     props: SearchRequestSchema
   ): Promise<AppDocument<ChunkMetadataRetrieved>[]>;
+  abstract getChunk(
+    chunkId: string
+  ): Promise<AppDocument<ChunkMetadataRetrieved>>;
 }

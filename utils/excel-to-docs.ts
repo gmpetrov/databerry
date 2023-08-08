@@ -1,5 +1,7 @@
 import { AppDocument, FileMetadataSchema } from '@app/types/document';
 
+import cleanTextForEmbeddings from './clean-text-for-embeddings';
+
 const excelToDocs = async (buffer: ArrayBuffer) => {
   const XLSX = await import('xlsx');
 
@@ -14,7 +16,7 @@ const excelToDocs = async (buffer: ArrayBuffer) => {
 
     docs.push(
       new AppDocument<any>({
-        pageContent: sheetData,
+        pageContent: cleanTextForEmbeddings(sheetData),
         metadata: {
           page_number: index + 1,
           total_pages: workbook.SheetNames.length,

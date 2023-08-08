@@ -1,11 +1,16 @@
+import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import Button from '@mui/joy/Button';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
 import List from '@mui/joy/List';
 import ListDivider from '@mui/joy/ListDivider';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
+import { SxProps } from '@mui/joy/styles/types';
 import Typography from '@mui/joy/Typography';
 import { Conversation, Prisma } from '@prisma/client';
 import { useRouter } from 'next/router';
@@ -16,10 +21,12 @@ import useSWRInfinite from 'swr/infinite';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getConversations } from '@app/pages/api/agents/[id]/c';
+import relativeDate from '@app/utils/relative-date';
 import { fetcher } from '@app/utils/swr-fetcher';
 
 type Props = {
-  agentId: string;
+  agentId?: string;
+  rootSx?: SxProps;
 };
 
 const Item = (props: {
@@ -32,6 +39,10 @@ const Item = (props: {
     <React.Fragment>
       <ListItem
         sx={(theme) => ({
+          mx: 1,
+          my: 0.5,
+          borderRadius: 'sm',
+          overflow: 'hidden',
           ...(props.selected
             ? {
                 backgroundColor: theme.palette.background.level2,
@@ -49,12 +60,12 @@ const Item = (props: {
         </ListItemButton>
       </ListItem>
 
-      <ListDivider />
+      {/* <ListDivider /> */}
     </React.Fragment>
   );
 };
 
-function ConversationList({ agentId }: Props) {
+function ConversationList({ agentId, rootSx }: Props) {
   const scrollParentRef = useRef(null);
   const router = useRouter();
   const conversationId = router.query.conversationId as string;
@@ -78,7 +89,9 @@ function ConversationList({ agentId }: Props) {
       const cursor = previousPageData?.[previousPageData?.length - 1]
         ?.id as string;
 
-      return `/api/agents/${agentId}/c?cursor=${cursor || ''} `;
+      return `/api/conversations?cursor=${cursor || ''}${
+        agentId ? `&agentId=${agentId}` : ''
+      }`;
     },
     fetcher,
     {
@@ -103,19 +116,34 @@ function ConversationList({ agentId }: Props) {
     router.replace(router, undefined, { shallow: true });
   };
 
+  if (!getConversationsQuery.isLoading && conversations.length === 0) {
+    return null;
+  }
+
   return (
-    <Stack sx={{ height: '100%' }} gap={1}>
+    <Stack
+      sx={(theme) => ({
+        height: '100%',
+        borderRight: 1,
+        borderColor: theme.palette.divider,
+        ...(rootSx as any),
+      })}
+      // gap={1}
+    >
       <Button
         size="sm"
-        variant="plain"
+        variant="outlined"
+        color="neutral"
         onClick={() => {
           router.query.conversationId = undefined;
           router.replace(router, undefined, { shallow: true });
         }}
-        startDecorator={<AddRoundedIcon />}
+        startDecorator={<AddRoundedIcon fontSize="sm" />}
+        sx={{ m: 1, whiteSpace: 'nowrap' }}
       >
         New Chat
       </Button>
+      {/* <Divider /> */}
       <List
         slotProps={{
           root: {
@@ -125,7 +153,7 @@ function ConversationList({ agentId }: Props) {
         sx={(theme) => ({
           height: '100%',
           maxHeight: '100%',
-          borderRadius: 'sm',
+          border: 'none',
           overflow: 'auto',
           '--ListDivider-gap': '0px',
         })}
@@ -154,7 +182,7 @@ function ConversationList({ agentId }: Props) {
                     <Skeleton variant="text" />
                   </ListItem>
 
-                  <ListDivider></ListDivider>
+                  {/* <ListDivider />   */}
                 </React.Fragment>
               )) as any
           }

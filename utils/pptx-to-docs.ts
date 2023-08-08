@@ -1,5 +1,7 @@
 import { AppDocument } from '@app/types/document';
 
+import cleanTextForEmbeddings from './clean-text-for-embeddings';
+
 const { DOMParser } = require('@xmldom/xmldom');
 
 const pptxToDocs = async (buffer: ArrayBuffer) => {
@@ -32,7 +34,7 @@ const pptxToDocs = async (buffer: ArrayBuffer) => {
 
     docs.push(
       new AppDocument<any>({
-        pageContent: texts.join('\n\n'),
+        pageContent: cleanTextForEmbeddings(texts.join(' ')),
         metadata: {
           page_number: index + 1,
           total_pages: slideContents.length,

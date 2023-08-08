@@ -4,15 +4,16 @@ import { Box, Sheet, Stack, Typography, TypographyProps } from '@mui/joy';
 import Chip from '@mui/joy/Chip';
 // Breaks chat-bubble-widget build
 // import { DatasourceType } from '@prisma/client';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { Source } from '@app/types/document';
 
 type Props = {
   source: Source;
+  onClick?: (source: Source) => any;
 };
 
-function SourceComponent({ source }: Props) {
+function SourceComponent({ source, onClick }: Props) {
   let icon = null;
   let scoreColor: TypographyProps['color'] = 'neutral';
 
@@ -37,41 +38,44 @@ function SourceComponent({ source }: Props) {
     scoreColor = 'danger';
   }
 
+  const handleClick = useCallback(() => {
+    onClick?.(source);
+  }, [source]);
+
   return (
-    <Stack direction={'row'} gap={1} alignItems={'center'}>
-      <Chip
-        key={source.chunk_id}
-        variant="outlined"
-        color="neutral"
-        size="sm"
-        className="truncate"
-        sx={{ maxWidth: '100%' }}
-        startDecorator={
-          <Stack direction={'row'} gap={1}>
-            {icon}
-          </Stack>
-        }
-        endDecorator={
-          <Typography
-            level="body4"
-            variant="soft"
-            color={scoreColor}
-            sx={{ borderRadius: 100, ml: 1 }}
-            // sx={{ px: 0.5, py: 0, m: 0 }}
-          >
-            {source.score?.toFixed(2)}
-          </Typography>
-        }
-      >
-        {source.source_url ? (
-          <a href={source.source_url || '#'} target="_blank">
-            {source.datasource_name || source.source_url}
-          </a>
-        ) : (
-          source.datasource_name || source.source_url
-        )}
-      </Chip>
-    </Stack>
+    <Chip
+      key={source.chunk_id}
+      variant="outlined"
+      color="neutral"
+      size="sm"
+      className="truncate"
+      sx={{ maxWidth: '450px', marginRight: 'auto' }}
+      startDecorator={
+        <Stack direction={'row'} gap={1}>
+          {icon}
+        </Stack>
+      }
+      endDecorator={
+        <Typography
+          level="body4"
+          variant="soft"
+          color={scoreColor}
+          sx={{ borderRadius: 100, ml: 1 }}
+          // sx={{ px: 0.5, py: 0, m: 0 }}
+        >
+          {source.score?.toFixed(2)}
+        </Typography>
+      }
+      onClick={onClick ? handleClick : undefined}
+    >
+      {source.source_url && !onClick ? (
+        <a href={source.source_url || '#'} target="_blank">
+          {source.datasource_name || source.source_url}
+        </a>
+      ) : (
+        source.datasource_name || source.source_url
+      )}
+    </Chip>
   );
 }
 

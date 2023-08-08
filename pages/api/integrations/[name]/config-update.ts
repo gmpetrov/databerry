@@ -1,5 +1,4 @@
 import { IntegrationType } from '@prisma/client';
-import { blake3 } from 'hash-wasm';
 import { NextApiResponse } from 'next';
 import { z } from 'zod';
 

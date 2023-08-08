@@ -38,6 +38,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     hasMoreMessages,
     handleLoadMoreMessages,
     handleEvalAnswer,
+    handleAbort,
   } = useChat({
     endpoint: `/api/agents/${router.query?.agentId}/query`,
     channel: ConversationChannel.website,
@@ -120,6 +121,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         hasMoreMessages={hasMoreMessages}
         handleLoadMoreMessages={handleLoadMoreMessages}
         handleEvalAnswer={handleEvalAnswer}
+        handleAbort={handleAbort}
       />
     </Box>
   );

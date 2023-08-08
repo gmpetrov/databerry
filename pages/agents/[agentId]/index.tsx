@@ -144,6 +144,7 @@ export default function AgentPage() {
     setConversationId,
     conversationId,
     handleEvalAnswer,
+    handleAbort,
   } = useChat({
     endpoint: router.query?.agentId
       ? `/api/agents/${router.query?.agentId}/query`
@@ -360,6 +361,8 @@ export default function AgentPage() {
               height: '100%',
               maxHeight: '100%',
               overflow: 'hidden',
+              mt: -5,
+              mb: -6,
             }}
           >
             <Stack
@@ -382,19 +385,33 @@ export default function AgentPage() {
                   },
                 })}
               >
-                <ConversationList agentId={router.query?.agentId as string} />
+                <ConversationList
+                  agentId={router.query?.agentId as string}
+                  rootSx={{
+                    pt: 1,
+                  }}
+                />
               </Box>
 
-              <ChatBox
-                disableWatermark
-                messages={history}
-                onSubmit={handleChatSubmit}
-                agentIconUrl={getAgentQuery?.data?.iconUrl!}
-                isLoadingConversation={isLoadingConversation}
-                hasMoreMessages={hasMoreMessages}
-                handleLoadMoreMessages={handleLoadMoreMessages}
-                handleEvalAnswer={handleEvalAnswer}
-              />
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  pb: 2,
+                }}
+              >
+                <ChatBox
+                  disableWatermark
+                  messages={history}
+                  onSubmit={handleChatSubmit}
+                  agentIconUrl={getAgentQuery?.data?.iconUrl!}
+                  isLoadingConversation={isLoadingConversation}
+                  hasMoreMessages={hasMoreMessages}
+                  handleLoadMoreMessages={handleLoadMoreMessages}
+                  handleEvalAnswer={handleEvalAnswer}
+                  handleAbort={handleAbort}
+                />
+              </Box>
             </Stack>
           </Box>
         )}

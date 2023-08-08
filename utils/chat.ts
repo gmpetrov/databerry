@@ -5,11 +5,7 @@ import {
   PromptType,
 } from '@prisma/client';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
-import {
-  AIChatMessage,
-  HumanChatMessage,
-  SystemChatMessage,
-} from 'langchain/schema';
+import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema';
 
 import {
   AppDocument,
@@ -18,6 +14,7 @@ import {
 } from '@app/types/document';
 import { ChatRequest, ChatResponse } from '@app/types/dtos';
 
+import { QdrantManager } from './datastores/qdrant';
 import { ModelConfig } from './config';
 import { DatastoreManager } from './datastores';
 import { CUSTOMER_SUPPORT } from './prompt-templates';
@@ -102,21 +99,21 @@ const getCustomerSupportMessages = ({
 
   const prevMessages = (history || [])?.map((each) => {
     if (each.from === MessageFrom.human) {
-      return new HumanChatMessage(each.message);
+      return new HumanMessage(each.message);
     }
-    return new AIChatMessage(each.message);
+    return new AIMessage(each.message);
   });
 
   return [
-    new SystemChatMessage(systemPrompt),
-    new HumanChatMessage(
+    new SystemMessage(systemPrompt),
+    new HumanMessage(
       'Don’t justify your answers. Don’t give information not mentioned in the CONTEXT INFORMATION. Don’t make up URLs.'
     ),
-    new AIChatMessage(
+    new AIMessage(
       'Sure! I will stick to all the information given in the system context. I won’t answer any question that is outside the context of information. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in the context of the information provided. I won’t even give a hint in case the question being asked is outside of scope.'
     ),
     ...prevMessages,
-    new HumanChatMessage(`CONTEXT INFOMATION:
+    new HumanMessage(`CONTEXT INFOMATION:
     ${context}
 
     Question: ${query}
@@ -137,12 +134,12 @@ const getRawMessages = ({
 
   const prevMessages = (history || [])?.map((each) => {
     if (each.from === MessageFrom.human) {
-      return new HumanChatMessage(each.message);
+      return new HumanMessage(each.message);
     }
-    return new AIChatMessage(each.message);
+    return new AIMessage(each.message);
   });
 
-  return [...prevMessages, new HumanChatMessage(finalPrompt)];
+  return [...prevMessages, new HumanMessage(finalPrompt)];
 };
 
 const chat = async ({
@@ -158,6 +155,7 @@ const chat = async ({
   truncateQuery,
   filters,
   includeSources,
+  abortController,
 }: {
   datastore?: Datastore;
   query: string;
@@ -171,6 +169,7 @@ const chat = async ({
   truncateQuery?: boolean;
   filters?: ChatRequest['filters'];
   includeSources?: boolean;
+  abortController?: any;
 }) => {
   const _modelName = ModelConfig[modelName]?.name;
   const _query = truncateQuery
@@ -183,20 +182,41 @@ const chat = async ({
   let results: AppDocument<ChunkMetadataRetrieved>[] = [];
 
   const isSearchNeeded =
-    datastore &&
+    (datastore ||
+      filters?.datasource_ids?.length ||
+      filters?.datastore_ids?.length) &&
     (promptType === PromptType.customer_support ||
       // Don't use search for raw prompts that don't have {context} in them
       (promptType === PromptType.raw && promptTemplate?.includes('{context}')));
 
   if (isSearchNeeded) {
-    const store = new DatastoreManager(datastore);
-    results = await store.search({
-      query: _query,
-      topK: topK || 5,
-      tags: [],
-      filters,
-    });
+    if (datastore) {
+      const store = new DatastoreManager(datastore);
+      results = await store.search({
+        query: _query,
+        topK: topK || 5,
+        tags: [],
+        filters,
+      });
+    } else if (
+      filters?.datasource_ids?.length ||
+      filters?.datastore_ids?.length
+    ) {
+      // Support for Multi-datastore search
+      // TODO: need to be refactored if other vector db provider are used in the future
+      results = await QdrantManager._search({
+        query: _query,
+        topK: topK || 5,
+        tags: [],
+        filters,
+      });
+    }
   }
+
+  // Sort by order of appearance in the document
+  results = results.sort(
+    (a, b) => a.metadata.chunk_offset! - b.metadata.chunk_offset!
+  );
 
   const context = results
     ?.map(
@@ -213,7 +233,7 @@ const chat = async ({
     )
     ?.join('\n\n');
 
-  let messages = [] as (SystemChatMessage | HumanChatMessage | AIChatMessage)[];
+  let messages = [] as (SystemMessage | HumanMessage | AIMessage)[];
 
   switch (promptType) {
     case PromptType.customer_support:
@@ -261,113 +281,104 @@ const chat = async ({
     };
   }
 
-  const output = await model.call(messages);
+  const output = await model.call(messages, {
+    signal: abortController?.signal,
+  });
 
   const answer = output?.text?.trim?.();
   let sources: Source[] = [];
-  try {
-    // const ids: string[] = JSON.parse(
-    //   output?.text?.trim?.()?.match(EXTRACT_SOURCES)?.[1] || `[]`
-    // );
-    // const usedDatasourceIds = new Set();
-    // results
-    //   .filter((each) => ids.includes(each.metadata.chunk_id!))
-    //   .forEach((each) => {
-    //     usedDatasourceIds.add(each.metadata.datasource_id!);
-    //   });
-    // sources = Array.from(usedDatasourceIds)
-    //   .map(
-    //     (id) =>
-    //       results.find(
-    //         (one) => one.metadata.datasource_id === id
-    //       ) as AppDocument<ChunkMetadataRetrieved>
-    //   )
-    //   .map((each) => ({
-    //     chunk_id: each.metadata.chunk_id,
-    //     datasource_id: each.metadata.datasource_id!,
-    //     datasource_name: each.metadata.datasource_name!,
-    //     datasource_type: each.metadata.datasource_type!,
-    //     source_url: each.metadata.source_url!,
-    //     mime_type: each.metadata.mime_type!,
-    //     page_number: each.metadata.page_number!,
-    //     total_pages: each.metadata.total_pages!,
-    //     score: each.metadata.score!,
-    //   }));
-  } catch {}
 
   if (includeSources && results?.length > 0) {
-    try {
-      model.modelName = 'gpt-4';
-      const sourceRequest = await model.call(
-        [
-          new HumanChatMessage(
-            `Chunks: ${contextForRef}\n\nQuestion: ${_query}\n\n`
-          ),
-          new AIChatMessage(`${output.text}`),
-        ],
-        {
-          functions: [
-            {
-              name: 'getChunkIdsUsedToAnswer',
-              description:
-                'Get chunks where content information is part of the answer if any.',
-              parameters: {
-                type: 'object',
-                properties: {
-                  // hasEnoughInformationToAnswer: {
-                  //   type: 'boolean',
-                  //   description:
-                  //     'tell is the AI has enough information to answer',
-                  // },
-                  chunkIds: {
-                    type: 'array',
-                    // desription: "IDs of the chunks used for the AI's answer.",
-                    items: {
-                      type: 'string',
-                    },
-                  },
-                },
-              },
-            },
-          ],
+    results
+      .filter((each) => each.metadata.score! > 0.78)
+      .map((each) => ({
+        chunk_id: each.metadata.chunk_id,
+        datasource_id: each.metadata.datasource_id!,
+        datasource_name: each.metadata.datasource_name!,
+        datasource_type: each.metadata.datasource_type!,
+        source_url: each.metadata.source_url!,
+        mime_type: each.metadata.mime_type!,
+        page_number: each.metadata.page_number!,
+        total_pages: each.metadata.total_pages!,
+        score: each.metadata.score!,
+      }))
+      .forEach((each) => {
+        if (!sources.find((one) => one.datasource_id === each.datasource_id)) {
+          sources.push(each);
         }
-      );
-
-      const json = JSON.parse(
-        sourceRequest?.additional_kwargs?.function_call?.arguments ||
-          `{chunkIds: []}`
-      );
-
-      const ids: string[] = json?.chunkIds || [];
-
-      const usedDatasourceIds = new Set();
-
-      results
-        .filter((each) => ids.includes(each.metadata.chunk_id!))
-        .forEach((each) => {
-          usedDatasourceIds.add(each.metadata.datasource_id!);
-        });
-
-      sources = Array.from(usedDatasourceIds)
-        .map(
-          (id) =>
-            results.find(
-              (one) => one.metadata.datasource_id === id
-            ) as AppDocument<ChunkMetadataRetrieved>
-        )
-        .map((each) => ({
-          chunk_id: each.metadata.chunk_id,
-          datasource_id: each.metadata.datasource_id!,
-          datasource_name: each.metadata.datasource_name!,
-          datasource_type: each.metadata.datasource_type!,
-          source_url: each.metadata.source_url!,
-          mime_type: each.metadata.mime_type!,
-          page_number: each.metadata.page_number!,
-          total_pages: each.metadata.total_pages!,
-          score: each.metadata.score!,
-        }));
-    } catch {}
+      });
   }
+
+  // DISABLE: Too slow and expensive for the value added at the moment
+  // if (includeSources && results?.length > 0) {
+  //   try {
+  //     model.modelName = 'gpt-4';
+  //     const sourceRequest = await model.call(
+  //       [
+  //         new HumanMessage(
+  //           `Chunks: ${contextForRef}\n\nQuestion: ${_query}\n\n`
+  //         ),
+  //         new AIMessage(`${output.text}`),
+  //       ],
+  //       {
+  //         signal: abortController?.signal,
+  //         functions: [
+  //           {
+  //             name: 'getChunkIdsUsedToAnswer',
+  //             description:
+  //               'Get chunks where content information is part of the answer if any.',
+  //             parameters: {
+  //               type: 'object',
+  //               properties: {
+  //                 chunkIds: {
+  //                   type: 'array',
+  //                   // desription: "IDs of the chunks used for the AI's answer.",
+  //                   items: {
+  //                     type: 'string',
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         ],
+  //       }
+  //     );
+
+  //     const json = JSON.parse(
+  //       sourceRequest?.additional_kwargs?.function_call?.arguments ||
+  //         `{chunkIds: []}`
+  //     );
+
+  //     const ids: string[] = json?.chunkIds || [];
+
+  //     const usedDatasourceIds = new Set();
+
+  //     results
+  //       .filter((each) => ids.includes(each.metadata.chunk_id!))
+  //       .forEach((each) => {
+  //         usedDatasourceIds.add(each.metadata.datasource_id!);
+  //       });
+
+  //     sources = Array.from(usedDatasourceIds)
+  //       .map(
+  //         (id) =>
+  //           results.find(
+  //             (one) => one.metadata.datasource_id === id
+  //           ) as AppDocument<ChunkMetadataRetrieved>
+  //       )
+  //       .map((each) => ({
+  //         chunk_id: each.metadata.chunk_id,
+  //         datasource_id: each.metadata.datasource_id!,
+  //         datasource_name: each.metadata.datasource_name!,
+  //         datasource_type: each.metadata.datasource_type!,
+  //         source_url: each.metadata.source_url!,
+  //         mime_type: each.metadata.mime_type!,
+  //         page_number: each.metadata.page_number!,
+  //         total_pages: each.metadata.total_pages!,
+  //         score: each.metadata.score!,
+  //       }));
+  //   } catch {}
+  // }
 
   return {
     answer,
