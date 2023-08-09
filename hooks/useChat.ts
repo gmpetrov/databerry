@@ -10,9 +10,8 @@ import useSWRInfinite from 'swr/infinite';
 import { getConversation } from '@app/pages/api/conversations/[conversationId]';
 import { SSE_EVENT } from '@app/types';
 import { Source } from '@app/types/document';
-import type { ChatResponse } from '@app/types/dtos';
+import type { ChatResponse, EvalAnswer } from '@app/types/dtos';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import { EXTRACT_SOURCES } from '@app/utils/regexp';
 import { fetcher } from '@app/utils/swr-fetcher';
 
 import useStateReducer from './useStateReducer';
@@ -24,6 +23,22 @@ type Props = {
   channel?: ConversationChannel;
   queryBody?: any;
   datasourceId?: string;
+};
+
+export const handleEvalAnswer = async (props: {
+  value: 'good' | 'bad';
+  messageId: string;
+}) => {
+  await fetch(`${API_URL}/api/conversations/eval-answer`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      eval: props.value,
+      messageId: props.messageId,
+    } as EvalAnswer),
+  });
 };
 
 const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
@@ -80,6 +95,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             ?.reverse()
             ?.map((message) => ({
               id: message?.id!,
+              eval: message?.eval,
               from: message?.from!,
               message: message?.text!,
               createdAt: message?.createdAt!,
@@ -182,16 +198,21 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             console.log('[response]', bufferEndpointResponse);
 
             try {
-              const { sources, conversationId, visitorId } = JSON.parse(
-                bufferEndpointResponse
-              ) as ChatResponse;
+              const { sources, conversationId, visitorId, messageId } =
+                JSON.parse(bufferEndpointResponse) as ChatResponse;
 
               const h = [...history];
 
               if (h?.[nextIndex]) {
                 h[nextIndex].message = `${buffer}`;
+                (h[nextIndex] as any).id = messageId;
               } else {
-                h.push({ from: 'agent', message: buffer, sources });
+                h.push({
+                  id: messageId,
+                  from: 'agent',
+                  message: buffer,
+                  sources,
+                });
               }
 
               localStorage.setItem('visitorId', visitorId || '');
@@ -314,6 +335,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     conversationId: state.conversationId,
     setConversationId,
     setVisitorId,
+    handleEvalAnswer,
   };
 };
 

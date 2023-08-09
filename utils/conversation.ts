@@ -58,6 +58,7 @@ export default class ConversationManager {
 
   push(
     message: Pick<Message, 'from' | 'text'> & {
+      id?: string;
       createdAt?: Date;
       sources?: Source[];
     }

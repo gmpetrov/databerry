@@ -2,6 +2,7 @@ import {
   AgentModelName,
   AgentVisibility,
   ConversationChannel,
+  MessageEval,
   PromptType,
   ToolType,
 } from '@prisma/client';
@@ -146,6 +147,7 @@ export const ChatResponse = z.object({
   sources: z.array(Source).optional(),
   conversationId: z.string().cuid(),
   visitorId: z.string().optional(),
+  messageId: z.string().cuid(),
 });
 
 export type ChatResponse = z.infer<typeof ChatResponse>;
@@ -219,3 +221,10 @@ export const GenerateUploadLinkRequest = z.object({
 export type GenerateUploadLinkRequest = z.infer<
   typeof GenerateUploadLinkRequest
 >;
+
+export const EvalAnswer = z.object({
+  messageId: z.string().cuid(),
+  eval: z.nativeEnum(MessageEval),
+});
+
+export type EvalAnswer = z.infer<typeof EvalAnswer>;

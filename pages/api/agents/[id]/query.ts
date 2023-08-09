@@ -144,7 +144,10 @@ export const chatAgentRequest = async (
     }),
   ]);
 
+  const answerMsgId = cuid();
+
   conversationManager.push({
+    id: answerMsgId,
     from: MessageFrom.agent,
     text: chatRes.answer,
     sources: chatRes.sources,
@@ -156,6 +159,7 @@ export const chatAgentRequest = async (
     streamData({
       event: SSE_EVENT.endpoint_response,
       data: JSON.stringify({
+        messageId: answerMsgId,
         answer: chatRes.answer,
         sources: chatRes.sources,
         conversationId: conversationManager.conversationId,
@@ -171,6 +175,7 @@ export const chatAgentRequest = async (
   } else {
     return {
       ...chatRes,
+      messageId: answerMsgId,
       conversationId: conversationManager.conversationId,
       visitorId: conversationManager.visitorId,
     };
