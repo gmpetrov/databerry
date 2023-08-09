@@ -31,7 +31,14 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     props.initConfig || defaultChatBubbleConfig
   );
 
-  const { history, handleChatSubmit } = useChat({
+  const {
+    history,
+    handleChatSubmit,
+    isLoadingConversation,
+    hasMoreMessages,
+    handleLoadMoreMessages,
+    handleEvalAnswer,
+  } = useChat({
     endpoint: `/api/agents/${router.query?.agentId}/query`,
     channel: ConversationChannel.website,
   });
@@ -109,6 +116,10 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         messageTemplates={config.messageTemplates}
         initialMessage={config.initialMessage}
         agentIconUrl={agent?.iconUrl!}
+        isLoadingConversation={isLoadingConversation}
+        hasMoreMessages={hasMoreMessages}
+        handleLoadMoreMessages={handleLoadMoreMessages}
+        handleEvalAnswer={handleEvalAnswer}
       />
     </Box>
   );

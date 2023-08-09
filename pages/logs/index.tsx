@@ -17,7 +17,7 @@ import ListItem from '@mui/material/ListItem';
 import { Prisma } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
-import { ReactElement } from 'react';
+import { ReactElement, useCallback } from 'react';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import useSWR from 'swr';
@@ -25,6 +25,7 @@ import useSWRInfinite from 'swr/infinite';
 
 import ChatBox from '@app/components/ChatBox';
 import Layout from '@app/components/Layout';
+import { handleEvalAnswer } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { authOptions } from '@app/pages/api/auth/[...nextauth]';
 import relativeDate from '@app/utils/relative-date';
@@ -227,10 +228,12 @@ export default function LogsPage() {
                 from: each.from,
                 message: each.text,
                 createdAt: each.createdAt,
+                eval: each.eval,
               })) || []
             }
             onSubmit={async () => {}}
             readOnly={true}
+            handleEvalAnswer={handleEvalAnswer}
           />
         </Box>
       </Stack>

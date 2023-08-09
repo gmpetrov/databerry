@@ -143,6 +143,7 @@ export default function AgentPage() {
     handleLoadMoreMessages,
     setConversationId,
     conversationId,
+    handleEvalAnswer,
   } = useChat({
     endpoint: router.query?.agentId
       ? `/api/agents/${router.query?.agentId}/query`
@@ -385,13 +386,14 @@ export default function AgentPage() {
               </Box>
 
               <ChatBox
+                disableWatermark
                 messages={history}
                 onSubmit={handleChatSubmit}
                 agentIconUrl={getAgentQuery?.data?.iconUrl!}
                 isLoadingConversation={isLoadingConversation}
-                disableWatermark
                 hasMoreMessages={hasMoreMessages}
                 handleLoadMoreMessages={handleLoadMoreMessages}
+                handleEvalAnswer={handleEvalAnswer}
               />
             </Stack>
           </Box>

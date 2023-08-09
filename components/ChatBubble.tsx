@@ -70,7 +70,16 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     visitorEmail: '',
   });
 
-  const { history, handleChatSubmit, conversationId, visitorId } = useChat({
+  const {
+    history,
+    handleChatSubmit,
+    conversationId,
+    visitorId,
+    isLoadingConversation,
+    hasMoreMessages,
+    handleLoadMoreMessages,
+    handleEvalAnswer,
+  } = useChat({
     endpoint: `${API_URL}/api/agents/${props.agentId}/query`,
     channel: 'website',
     // channel: ConversationChannel.website // not working with bundler parcel,
@@ -458,6 +467,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   initialMessage={state.config.initialMessage}
                   renderAfterMessages={Capture}
                   agentIconUrl={state.agent?.iconUrl!}
+                  isLoadingConversation={isLoadingConversation}
+                  hasMoreMessages={hasMoreMessages}
+                  handleLoadMoreMessages={handleLoadMoreMessages}
+                  handleEvalAnswer={handleEvalAnswer}
                 />
               </Box>
             </Card>

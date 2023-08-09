@@ -1,6 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
+import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
+import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -16,7 +20,7 @@ import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import ReactMarkdown from 'react-markdown';
@@ -28,6 +32,8 @@ import type { Source } from '@app/types/document';
 import SourceComponent from './Source';
 
 type Message = {
+  id?: string;
+  eval?: 'good' | 'bad' | null;
   from: 'human' | 'agent';
   message: string;
   createdAt?: Date;
@@ -46,9 +52,92 @@ type Props = {
   isLoadingConversation?: boolean;
   hasMoreMessages?: boolean;
   handleLoadMoreMessages?: () => void;
+  handleEvalAnswer?: (props: {
+    messageId: string;
+    value: 'good' | 'bad';
+  }) => any;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
+
+const CopyButton = (props: { text: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(props.text);
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch (err) {}
+  }, [props.text]);
+
+  return copied ? (
+    <IconButton size="sm" color="neutral" variant="plain">
+      <DoneRoundedIcon fontSize={'sm'} />
+    </IconButton>
+  ) : (
+    <IconButton size="sm" color="neutral" variant="plain" onClick={handleCopy}>
+      <ContentPasteRoundedIcon fontSize={'sm'} />
+    </IconButton>
+  );
+};
+
+const EvalButton = (props: {
+  messageId: string;
+  eval?: 'good' | 'bad' | null;
+  handleEvalAnswer?: (props: {
+    messageId: string;
+    value: 'good' | 'bad';
+  }) => any;
+}) => {
+  const [value, setValue] = useState(props.eval);
+
+  const handleClick = useCallback(
+    async (value: 'good' | 'bad') => {
+      setValue(value);
+
+      await props.handleEvalAnswer?.({
+        messageId: props.messageId,
+        value,
+      });
+    },
+    [props.handleEvalAnswer]
+  );
+
+  return (
+    <React.Fragment>
+      {(!value || value === 'good') && (
+        <IconButton
+          size="sm"
+          color={value ? 'success' : 'neutral'}
+          variant="plain"
+          onClick={async (e) => {
+            e.stopPropagation();
+            await handleClick('good');
+          }}
+        >
+          <ThumbUpAltRoundedIcon fontSize={'sm'} />
+        </IconButton>
+      )}
+      {(!value || value === 'bad') && (
+        <IconButton
+          size="sm"
+          color={value ? 'danger' : 'neutral'}
+          variant="plain"
+          onClick={async (e) => {
+            e.stopPropagation();
+            await handleClick('bad');
+          }}
+        >
+          <ThumbDownAltRoundedIcon fontSize={'sm'} />
+        </IconButton>
+      )}
+    </React.Fragment>
+  );
+};
 
 function ChatBox({
   messages,
@@ -62,6 +151,7 @@ function ChatBox({
   isLoadingConversation,
   hasMoreMessages,
   handleLoadMoreMessages,
+  handleEvalAnswer,
 }: Props) {
   const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
@@ -233,98 +323,124 @@ function ChatBox({
                     ></Avatar>
                   )}
 
-                  <Card
-                    size="sm"
-                    variant={'outlined'}
-                    className={clsx(
-                      each.from === 'agent' ? 'message-agent' : 'message-human'
-                    )}
-                    color={each.from === 'agent' ? 'primary' : 'neutral'}
-                    sx={(theme) => ({
-                      overflowY: 'hidden',
-                      overflowX: 'auto',
-                      marginRight: 'auto',
-                      maxWidth: '100%',
-                      py: 0,
-                      px: 2,
-                      [' p ']: {
-                        m: 0,
-                        py: 1,
-                        maxWidth: '100%',
-                        // wordBreak: 'break-word',
-                      },
-                      table: {
+                  <Stack gap={0.5}>
+                    <Card
+                      size="sm"
+                      variant={'outlined'}
+                      className={clsx(
+                        each.from === 'agent'
+                          ? 'message-agent'
+                          : 'message-human'
+                      )}
+                      color={each.from === 'agent' ? 'primary' : 'neutral'}
+                      sx={(theme) => ({
+                        overflowY: 'hidden',
                         overflowX: 'auto',
-                      },
-                      // pre: {
-                      //   overflowX: 'scroll',
-                      // },
-                      // code: {},
-                      // 'ol,ul,p': {
-                      //   // color: theme.palette.text.secondary,
-                      // },
-                      // 'ol, ul': {
-                      //   my: 0,
-                      //   pl: 2,
-                      // },
-                      // ol: {
-                      //   listStyle: 'numeric',
-                      // },
-                      // // 'ol > li > p': {
-                      // //   fontWeight: 'bold',
-                      // // },
-                      // ul: {
-                      //   listStyle: 'disc',
-                      //   mb: 2,
-                      // },
-                      // li: {
-                      //   my: 1,
-                      // },
-                      // 'li::marker, ol::marker': {
-                      //   // color: theme.palette.text.tertiary,
-                      // },
-                      // a: {
-                      //   // color: theme.palette.text.primary,
-                      //   textDecoration: 'underline',
-                      // },
-                      // [' p ']: {
-                      // py: 1,
-                      // m: 0,
-                      // },
-                    })}
-                  >
-                    {each.from === 'agent' ? (
-                      <ReactMarkdown
-                        className="prose-sm prose dark:prose-invert"
-                        remarkPlugins={[remarkGfm]}
-                        linkTarget={'_blank'}
-                      >
-                        {each.message}
-                      </ReactMarkdown>
-                    ) : (
-                      <p className="prose-sm ">{each.message}</p>
-                    )}
+                        marginRight: 'auto',
+                        maxWidth: '100%',
+                        py: 0,
+                        px: 2,
+                        [' p ']: {
+                          m: 0,
+                          py: 1,
+                          maxWidth: '100%',
+                          // wordBreak: 'break-word',
+                        },
+                        table: {
+                          overflowX: 'auto',
+                        },
+                        // pre: {
+                        //   overflowX: 'scroll',
+                        // },
+                        // code: {},
+                        // 'ol,ul,p': {
+                        //   // color: theme.palette.text.secondary,
+                        // },
+                        // 'ol, ul': {
+                        //   my: 0,
+                        //   pl: 2,
+                        // },
+                        // ol: {
+                        //   listStyle: 'numeric',
+                        // },
+                        // // 'ol > li > p': {
+                        // //   fontWeight: 'bold',
+                        // // },
+                        // ul: {
+                        //   listStyle: 'disc',
+                        //   mb: 2,
+                        // },
+                        // li: {
+                        //   my: 1,
+                        // },
+                        // 'li::marker, ol::marker': {
+                        //   // color: theme.palette.text.tertiary,
+                        // },
+                        // a: {
+                        //   // color: theme.palette.text.primary,
+                        //   textDecoration: 'underline',
+                        // },
+                        // [' p ']: {
+                        // py: 1,
+                        // m: 0,
+                        // },
+                      })}
+                    >
+                      {each.from === 'agent' ? (
+                        <ReactMarkdown
+                          className="prose-sm prose dark:prose-invert"
+                          remarkPlugins={[remarkGfm]}
+                          linkTarget={'_blank'}
+                        >
+                          {each.message}
+                        </ReactMarkdown>
+                      ) : (
+                        <p className="prose-sm ">{each.message}</p>
+                      )}
 
-                    {(each?.sources?.length || 0) > 0 && (
-                      <Box
-                        sx={{
-                          pb: 2,
-                        }}
+                      <Stack direction="row" justifyContent={'space-between'}>
+                        {(each?.sources?.length || 0) > 0 && (
+                          <Box
+                            sx={{
+                              pb: 2,
+                            }}
+                          >
+                            <details>
+                              <summary className="cursor-pointer">
+                                Sources
+                              </summary>
+                              <Stack
+                                direction={'column'}
+                                gap={1}
+                                sx={{ pt: 1 }}
+                              >
+                                {each?.sources?.map((source) => (
+                                  <SourceComponent
+                                    key={source.chunk_id}
+                                    source={source}
+                                  />
+                                ))}
+                              </Stack>
+                            </details>
+                          </Box>
+                        )}
+                      </Stack>
+                    </Card>
+                    {each.from === 'agent' && each?.id && (
+                      <Stack
+                        direction="row"
+                        marginLeft={'auto'}
+                        // marginBottom={'auto'}
                       >
-                        <details>
-                          <summary>Sources</summary>
-                          <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
-                            {each?.sources?.map((source) => (
-                              <SourceComponent
-                                key={source.chunk_id}
-                                source={source}
-                              />
-                            ))}
-                          </Stack>
-                        </details>
-                      </Box>
+                        <CopyButton text={each?.message} />
+                        <EvalButton
+                          messageId={each?.id!}
+                          handleEvalAnswer={handleEvalAnswer}
+                          eval={each?.eval}
+                        />
+                      </Stack>
                     )}
-                  </Card>
+                  </Stack>
                 </Stack>
               </Stack>
             ))}

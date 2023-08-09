@@ -236,6 +236,8 @@ model Message {
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
 
+  eval MessageEval?
+
   read Boolean? @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -542,4 +544,9 @@ enum AgentModelName {
   gpt_3_5_turbo_16k
   gpt_4
   gpt_4_32k
+}
+
+enum MessageEval {
+  good
+  bad
 }
