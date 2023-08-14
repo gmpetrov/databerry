@@ -1,4 +1,4 @@
-import { DatasourceStatus } from '@prisma/client';
+import { DatasourceStatus, DatasourceType } from '@prisma/client';
 import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
@@ -24,6 +24,7 @@ export const getDatastore = async (
   const id = req.query.id as string;
   const search = req.query.search as string;
   const status = req.query.status as DatasourceStatus;
+  const type = req.query.type as DatasourceType;
   const offset = parseInt((req.query.offset as string) || '0');
   const limit = parseInt((req.query.limit as string) || '100');
   const groupId = (req.query.groupId || null) as string | null;
@@ -50,6 +51,11 @@ export const getDatastore = async (
                     status,
                   }
                 : {}),
+              ...(type
+                ? {
+                    type,
+                  }
+                : {}),
             },
           },
         },
@@ -69,6 +75,11 @@ export const getDatastore = async (
           ...(status
             ? {
                 status,
+              }
+            : {}),
+          ...(type
+            ? {
+                type,
               }
             : {}),
         },

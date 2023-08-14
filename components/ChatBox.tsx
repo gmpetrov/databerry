@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
+import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
@@ -438,6 +439,15 @@ function ChatBox({
                           handleEvalAnswer={handleEvalAnswer}
                           eval={each?.eval}
                         />
+
+                        <Button
+                          size="sm"
+                          variant="plain"
+                          color="neutral"
+                          startDecorator={<SchoolTwoToneIcon />}
+                        >
+                          Improve
+                        </Button>
                       </Stack>
                     )}
                   </Stack>
