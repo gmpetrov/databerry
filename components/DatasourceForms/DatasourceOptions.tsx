@@ -48,6 +48,12 @@ const options: DatsourceOption[] = [
     disabled: false,
   },
   {
+    type: DatasourceType.qa,
+    label: 'Q&A',
+    description: 'Provide sepecific Question/Answer content',
+    disabled: false,
+  },
+  {
     type: 'google_drive_folder' as any,
     label: 'Google Drive™',
     description: 'Talk to your Google Drive files',

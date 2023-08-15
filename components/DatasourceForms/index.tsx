@@ -22,6 +22,10 @@ const GoogleDriveForm = dynamic(() => import('./GoogleDriveForm'), {
   ssr: false,
 });
 
+const QAForm = dynamic(() => import('./QAForm'), {
+  ssr: false,
+});
+
 const DatasourceFormsMap = {
   [DatasourceType.web_page]: WebPageForm,
   [DatasourceType.text]: TextForm,
@@ -29,6 +33,7 @@ const DatasourceFormsMap = {
   [DatasourceType.web_site]: WebSiteForm,
   [DatasourceType.google_drive_file]: GoogleDriveForm,
   [DatasourceType.google_drive_folder]: GoogleDriveForm,
+  [DatasourceType.qa]: QAForm,
   [DatasourceType.notion]: undefined as any,
 };
 

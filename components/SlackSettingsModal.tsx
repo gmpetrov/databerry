@@ -97,7 +97,7 @@ export default function SlackSettingsModal(props: Props) {
         p: 2,
       }}
     >
-      <Card sx={{ width: '100%', maxWidth: 400 }}>
+      <Card variant="outlined" sx={{ width: '100%', maxWidth: 400 }}>
         <Typography level="h4">Slack Bot</Typography>
         <Typography color="neutral" level="h6">
           Settings

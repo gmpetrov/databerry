@@ -24,6 +24,7 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 import ChatBox from '@app/components/ChatBox';
+import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import Layout from '@app/components/Layout';
 import { handleEvalAnswer } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -42,6 +43,7 @@ export default function LogsPage() {
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
     hasReachedEnd: false,
+    currentImproveAnswerID: undefined as string | undefined,
   });
   const getConversationsQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getLogs>
@@ -234,9 +236,25 @@ export default function LogsPage() {
             onSubmit={async () => {}}
             readOnly={true}
             handleEvalAnswer={handleEvalAnswer}
+            handleImprove={(message) => {
+              setState({
+                currentImproveAnswerID: message?.id,
+              });
+            }}
           />
         </Box>
       </Stack>
+
+      {state.currentImproveAnswerID && (
+        <ImproveAnswerModal
+          handleCloseModal={() => {
+            setState({
+              currentImproveAnswerID: '',
+            });
+          }}
+          messageId={state.currentImproveAnswerID}
+        />
+      )}
     </Sheet>
   );
 }

@@ -1,8 +1,6 @@
 import createCache from '@emotion/cache';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {
   Alert,
   Box,
@@ -136,6 +134,7 @@ export default function BubbleWidgetSettings(props: Props) {
       }}
     >
       <Card
+        variant="outlined"
         sx={{
           width: '100%',
           maxWidth: 'lg',

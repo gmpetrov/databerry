@@ -7,6 +7,7 @@ import { DatasourceLoaderBase } from './base';
 import { FileLoader } from './file';
 import { GoogleDriveFileLoader } from './google-drive-file';
 import { GoogleDriveFolderLoader } from './google-drive-folder';
+import { QALoader } from './qa';
 import { TextLoader } from './text';
 import { WebPageLoader } from './web-page';
 import { WebSiteLoader } from './web-site';
@@ -25,6 +26,7 @@ export class DatasourceLoader {
     [DatasourceType.file]: FileLoader,
     [DatasourceType.google_drive_file]: GoogleDriveFileLoader,
     [DatasourceType.google_drive_folder]: GoogleDriveFolderLoader,
+    [DatasourceType.qa]: QALoader,
     [DatasourceType.notion]: undefined as any,
   };
 
