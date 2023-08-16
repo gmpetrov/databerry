@@ -331,7 +331,7 @@ export default function Navigation() {
                 color="warning"
                 sx={{ ml: 'auto' }}
               >
-                {accountConfig?.['level_3']?.label}
+                {accountConfig?.[session?.data?.user?.currentPlan!]?.label}
               </Chip>
             </Button>
 
