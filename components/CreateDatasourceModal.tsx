@@ -110,6 +110,7 @@ export default function CreateDatastoreModal(props: Props) {
                 <Button
                   type="submit"
                   loading={btnProps.isLoading}
+                  disabled={btnProps.disabled}
                   variant="solid"
                   sx={{ mt: 1, mr: 1 }}
                 >
@@ -177,11 +178,13 @@ export default function CreateDatastoreModal(props: Props) {
                   <div className="flex flex-col space-y-4">
                     <Typography>{step.description}</Typography>
 
-                    <Alert color="primary">
-                      Chaindesk works best with unstructured data. Better
-                      support for tabular data (csv, spreadsheet, etc...) is
-                      coming soon 😉
-                    </Alert>
+                    {index === 0 && (
+                      <Alert color="primary">
+                        Chaindesk works best with unstructured data. Better
+                        support for tabular data (csv, spreadsheet, etc...) is
+                        coming soon 😉
+                      </Alert>
+                    )}
 
                     {step.component}
                     {!step.disableButtons && (

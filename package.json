@@ -76,6 +76,7 @@
     "hash-wasm": "^4.9.0",
     "ioredis": "^5.3.1",
     "js-cookie": "^3.0.5",
+    "js-tiktoken": "^1.0.7",
     "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
     "langchain": "^0.0.96",

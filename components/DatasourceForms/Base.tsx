@@ -9,7 +9,12 @@ import {
 import axios from 'axios';
 import mime from 'mime-types';
 import React, { useEffect, useState } from 'react';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import {
+  FormProvider,
+  useForm,
+  useFormContext,
+  ValidationMode,
+} from 'react-hook-form';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
@@ -27,6 +32,9 @@ import type { DatasourceFormProps } from './types';
 type Props = DatasourceFormProps & {
   schema: any;
   children: React.ReactNode;
+  mode?: keyof ValidationMode;
+  hideName?: boolean;
+  hideText?: boolean;
 };
 
 const DatasourceText = (props: {
@@ -70,6 +78,7 @@ export default function BaseForm(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const methods = useForm<UpsertDatasourceSchema>({
     resolver: zodResolver(props.schema),
+    mode: props.mode,
     defaultValues: {
       ...props?.defaultValues,
     },
@@ -80,7 +89,7 @@ export default function BaseForm(props: Props) {
     control,
     handleSubmit,
     reset,
-    formState: { errors, defaultValues, isDirty, dirtyFields },
+    formState: { errors, defaultValues, isDirty, dirtyFields, isValid },
   } = methods;
 
   const upsertDatasourceMutation = useSWRMutation<
@@ -182,12 +191,13 @@ export default function BaseForm(props: Props) {
         <Input
           label="Name (optional)"
           control={control as any}
+          hidden={props.hideName}
           {...register('name')}
         />
 
         {props.children}
 
-        {defaultValues?.datastoreId && (
+        {!props.hideText && defaultValues?.datastoreId && (
           <DatasourceText
             datastoreId={defaultValues?.datastoreId}
             datasourceId={defaultValues?.id}
@@ -197,6 +207,7 @@ export default function BaseForm(props: Props) {
         {props?.customSubmitButton ? (
           React.createElement(props.customSubmitButton, {
             isLoading: isLoading || upsertDatasourceMutation.isMutating,
+            disabled: !isDirty || !isValid,
           })
         ) : (
           <Button
@@ -204,7 +215,7 @@ export default function BaseForm(props: Props) {
             variant="soft"
             color="primary"
             loading={isLoading || upsertDatasourceMutation.isMutating}
-            disabled={!isDirty}
+            disabled={!isDirty || !isValid}
             {...props.submitButtonProps}
           >
             {props.submitButtonText || 'Submit'}

@@ -63,9 +63,13 @@ function SourceComponent({ source }: Props) {
           </Typography>
         }
       >
-        <a href={source.source_url || '#'} target="_blank">
-          {source.datasource_name || source.source_url}
-        </a>
+        {source.source_url ? (
+          <a href={source.source_url || '#'} target="_blank">
+            {source.datasource_name || source.source_url}
+          </a>
+        ) : (
+          source.datasource_name || source.source_url
+        )}
       </Chip>
     </Stack>
   );

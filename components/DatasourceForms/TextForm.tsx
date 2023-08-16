@@ -29,7 +29,7 @@ function Nested() {
   return (
     <>
       <Input
-        label="Source (optional)"
+        label="Source URL (optional)"
         control={control as any}
         placeholder="https://news.ycombinator.com"
         {...register('config.source_url')}

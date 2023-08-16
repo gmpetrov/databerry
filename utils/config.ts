@@ -1,6 +1,7 @@
 import { AgentModelName } from '@prisma/client';
 
 const config = {
+  defaultDatasourceChunkSize: 256,
   datasourceTable: {
     limit: 20,
   },

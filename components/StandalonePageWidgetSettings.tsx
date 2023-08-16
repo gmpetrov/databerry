@@ -192,6 +192,7 @@ export default function StandalonePageSettings(props: Props) {
       }}
     >
       <Card
+        variant="outlined"
         sx={{
           width: '100%',
           maxWidth: 'lg',

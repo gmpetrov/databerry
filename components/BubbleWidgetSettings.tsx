@@ -130,6 +130,7 @@ export default function BubbleWidgetSettings(props: Props) {
       }}
     >
       <Card
+        variant="outlined"
         sx={{
           width: '100%',
           maxWidth: 'lg',

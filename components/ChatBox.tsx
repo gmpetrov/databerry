@@ -10,8 +10,6 @@ import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import Chip from '@mui/joy/Chip';
 import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
@@ -32,7 +30,7 @@ import type { Source } from '@app/types/document';
 
 import SourceComponent from './Source';
 
-type Message = {
+export type ChatBoxMessage = {
   id?: string;
   eval?: 'good' | 'bad' | null;
   from: 'human' | 'agent';
@@ -42,7 +40,7 @@ type Message = {
 };
 
 type Props = {
-  messages: Message[];
+  messages: ChatBoxMessage[];
   onSubmit: (message: string) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
@@ -57,6 +55,7 @@ type Props = {
     messageId: string;
     value: 'good' | 'bad';
   }) => any;
+  handleImprove?: (message: ChatBoxMessage) => any;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -153,11 +152,12 @@ function ChatBox({
   hasMoreMessages,
   handleLoadMoreMessages,
   handleEvalAnswer,
+  handleImprove,
 }: Props) {
   const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [firstMsg, setFirstMsg] = useState<Message>();
+  const [firstMsg, setFirstMsg] = useState<ChatBoxMessage>();
   const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
   const lastMessageLength =
     messages?.length > 0
@@ -440,14 +440,17 @@ function ChatBox({
                           eval={each?.eval}
                         />
 
-                        <Button
-                          size="sm"
-                          variant="plain"
-                          color="neutral"
-                          startDecorator={<SchoolTwoToneIcon />}
-                        >
-                          Improve
-                        </Button>
+                        {handleImprove && (
+                          <Button
+                            size="sm"
+                            variant="plain"
+                            color="neutral"
+                            startDecorator={<SchoolTwoToneIcon />}
+                            onClick={() => handleImprove(each)}
+                          >
+                            Improve
+                          </Button>
+                        )}
                       </Stack>
                     )}
                   </Stack>

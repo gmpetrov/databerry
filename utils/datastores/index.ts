@@ -3,6 +3,7 @@ import { blake3, createBLAKE3 } from 'hash-wasm';
 
 import { AppDocument, ChunkMetadata } from '@app/types/document';
 import { SearchRequestSchema } from '@app/types/dtos';
+import config from '@app/utils/config';
 
 import uuidv4 from '../uuid';
 
@@ -11,7 +12,7 @@ import { QdrantManager } from './qdrant';
 export class DatastoreManager {
   datastore: Datastore;
   manager: ClientManager<Datastore>;
-  chunkSize: number = 256;
+  chunkSize: number = config.defaultDatasourceChunkSize;
 
   managersMap = {
     [DatastoreType.qdrant]: QdrantManager,
@@ -50,6 +51,7 @@ export class DatastoreManager {
     const document = documents?.[0];
 
     const tags = document?.metadata?.tags || ([] as string[]);
+    const source_url = document?.metadata?.source_url || '';
     const hasher = await createBLAKE3();
 
     hasher.init();
@@ -58,6 +60,10 @@ export class DatastoreManager {
 
     for (const tag of tags || []) {
       hasher.update(tag);
+    }
+
+    if (source_url) {
+      hasher.update(source_url);
     }
 
     return hasher.digest('hex');
