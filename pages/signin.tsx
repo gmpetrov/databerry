@@ -43,6 +43,7 @@ export default function SignInPage() {
     if (status === 'unauthenticated') {
       setIsReady(true);
     } else if (status === 'authenticated') {
+      gtag('event', 'login');
       router.push(RouteNames.HOME);
     }
   }, [status]);
