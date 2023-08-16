@@ -25,6 +25,7 @@ specifiers:
   '@testing-library/jest-dom': ^5.17.0
   '@testing-library/react': ^14.0.0
   '@types/cors': ^2.8.13
+  '@types/gtag.js': ^0.0.13
   '@types/jest': ^29.5.3
   '@types/js-cookie': ^3.0.3
   '@types/mime-types': ^2.1.1
@@ -201,6 +202,7 @@ devDependencies:
   '@testing-library/jest-dom': 5.17.0
   '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
   '@types/cors': 2.8.13
+  '@types/gtag.js': 0.0.13
   '@types/jest': 29.5.3
   '@types/js-cookie': 3.0.3
   '@types/mime-types': 2.1.1
@@ -2014,6 +2016,10 @@ packages:
     resolution: {integrity: sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==}
     dependencies:
       '@types/node': 18.15.10
+    dev: true
+
+  /@types/gtag.js/0.0.13:
+    resolution: {integrity: sha512-yOXFkfnt1DQr1v9B4ERulJOGnbdVqnPHV8NG4nkQhnu4qbrJecQ06DlaKmSjI3nzIwBj5U9/X61LY4sTc2KbaQ==}
     dev: true
 
   /@types/hast/2.3.4:
