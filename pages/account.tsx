@@ -130,6 +130,28 @@ export default function AccountPage() {
         return;
       }
 
+      try {
+        const checkoutDataRes = await axios.post(
+          '/api/stripe/get-checkout-session',
+          {
+            checkoutSessionId,
+          }
+        );
+
+        const checkoutData = checkoutDataRes.data;
+
+        if (checkoutData) {
+          console.debug(checkoutData);
+          gtag('event', 'purchase', {
+            transaction_id: checkoutData.id,
+            value: checkoutData.amount_total,
+            currency: checkoutData.currency,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
       let utmParams = {};
       try {
         utmParams = JSON.parse(Cookies.get('utmParams') || '{}');
