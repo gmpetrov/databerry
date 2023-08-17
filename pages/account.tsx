@@ -145,7 +145,7 @@ export default function AccountPage() {
           gtag('event', 'purchase', {
             transaction_id: checkoutData.id,
             value: checkoutData.amount_total,
-            currency: checkoutData.currency,
+            currency: checkoutData.currency / 100,
           });
         }
       } catch (err) {
