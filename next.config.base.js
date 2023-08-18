@@ -17,101 +17,103 @@ const nextConfig = {
     return [];
   },
   async rewrites() {
-    return [
-      {
-        source: '/@:path',
-        destination: '/agents/@:path/page',
-      },
-      {
-        source: '/privacy',
-        destination: '/privacy.pdf',
-      },
-      {
-        source: '/terms',
-        destination: '/terms.pdf',
-      },
-      {
-        source: '/.well-known/ai-plugin.json',
-        destination: '/api/openai/plugin/ai-plugin-json',
-      },
-      {
-        source: '/.well-known/openapi.yaml',
-        destination: '/api/openai/plugin/openapi-yaml',
-      },
-      // {
-      //   source: '/datastores/:id/:path*',
-      //   destination: '/api/datastores/:id/:path*',
-      // },
-      {
-        source: '/datastores/:path*',
-        destination: '/api/datastores/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'api.chaindesk.ai',
-          },
-        ],
-      },
-      {
-        source: '/datasources/:path*',
-        destination: '/api/datasources/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'api.chaindesk.ai',
-          },
-        ],
-      },
-      {
-        source: '/agents/query/:id',
-        destination: '/api/agents/:id/query',
-      },
-      {
-        source: '/agents/:path*',
-        destination: '/api/agents/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'api.chaindesk.ai',
-          },
-        ],
-      },
-      {
-        source: '/datastores/query/:id',
-        destination: '/api/datastores/:id/query',
-      },
-      {
-        source: '/api/datastores/query/:id',
-        destination: '/api/datastores/:id/query',
-      },
-      {
-        source: '/datastores/update/:path*',
-        destination: '/api/external/datastores/update/:path*',
-      },
-      {
-        source: '/datastores/upsert/:path*',
-        destination: '/api/external/datastores/upsert/:path*',
-      },
-      {
-        source: '/datastores/file-upload/:path*',
-        destination: '/api/external/datastores/file-upload/:path*',
-      },
-      {
-        //TODO: REMOVE AFTER API REFACTOR
-        source: '/api/external/agents/:path*',
-        destination: '/api/agents/:path*',
-      },
+    return {
+      beforeFiles: [
+        {
+          source: '/@:path',
+          destination: '/agents/@:path/page',
+        },
+        {
+          source: '/privacy',
+          destination: '/privacy.pdf',
+        },
+        {
+          source: '/terms',
+          destination: '/terms.pdf',
+        },
+        {
+          source: '/.well-known/ai-plugin.json',
+          destination: '/api/openai/plugin/ai-plugin-json',
+        },
+        {
+          source: '/.well-known/openapi.yaml',
+          destination: '/api/openai/plugin/openapi-yaml',
+        },
+        // {
+        //   source: '/datastores/:id/:path*',
+        //   destination: '/api/datastores/:id/:path*',
+        // },
+        {
+          source: '/datastores/:path*',
+          destination: '/api/datastores/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'api.chaindesk.ai',
+            },
+          ],
+        },
+        {
+          source: '/datasources/:path*',
+          destination: '/api/datasources/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'api.chaindesk.ai',
+            },
+          ],
+        },
+        {
+          source: '/agents/query/:id',
+          destination: '/api/agents/:id/query',
+        },
+        {
+          source: '/agents/:path*',
+          destination: '/api/agents/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'api.chaindesk.ai',
+            },
+          ],
+        },
+        {
+          source: '/datastores/query/:id',
+          destination: '/api/datastores/:id/query',
+        },
+        {
+          source: '/api/datastores/query/:id',
+          destination: '/api/datastores/:id/query',
+        },
+        {
+          source: '/datastores/update/:path*',
+          destination: '/api/external/datastores/update/:path*',
+        },
+        {
+          source: '/datastores/upsert/:path*',
+          destination: '/api/external/datastores/upsert/:path*',
+        },
+        {
+          source: '/datastores/file-upload/:path*',
+          destination: '/api/external/datastores/file-upload/:path*',
+        },
+        {
+          //TODO: REMOVE AFTER API REFACTOR
+          source: '/api/external/agents/:path*',
+          destination: '/api/agents/:path*',
+        },
 
-      {
-        source: '/api/external/datastores',
-        destination: '/api/datastores',
-      },
-      {
-        source: '/api/external/me',
-        destination: '/api/me',
-      },
-      // END REMOVE AFTER API REFACTOR
-    ];
+        {
+          source: '/api/external/datastores',
+          destination: '/api/datastores',
+        },
+        {
+          source: '/api/external/me',
+          destination: '/api/me',
+        },
+        // END REMOVE AFTER API REFACTOR
+      ],
+    };
   },
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.externals.push({
