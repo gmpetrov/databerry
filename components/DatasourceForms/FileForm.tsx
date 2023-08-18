@@ -26,7 +26,7 @@ export const FileForm = UpsertDatasourceSchema.extend({
   file: z.any(),
   config: z.object({
     source_url: z.string(),
-    mime_type: z.string().optional(),
+    mime_type: z.string(),
     fileSize: z.number().optional(),
     fileUploadPath: z.string().optional(),
   }),
@@ -45,7 +45,7 @@ const acceptedFileTypes = [
 
 function Nested() {
   const { data: session, status } = useSession();
-  const { control, register, setValue, reset, watch } =
+  const { control, register, setValue, reset, watch, trigger } =
     useFormContext<z.infer<typeof FileForm>>();
   const fileInputRef = useRef();
 
@@ -75,11 +75,12 @@ function Nested() {
       file,
     });
 
-    setValue('name', file?.name);
-    setValue('file', file);
-    setValue('config.source_url', file?.name);
-    setValue('config.mime_type', file?.type);
-    setValue('config.fileSize', file?.size);
+    setValue('name', file?.name, { shouldDirty: true });
+    setValue('file', file, { shouldDirty: true });
+    setValue('config.source_url', file?.name, { shouldDirty: true });
+    setValue('config.mime_type', file?.type, { shouldDirty: true });
+    setValue('config.fileSize', file?.size, { shouldDirty: true });
+    trigger();
   };
 
   const handleFileDrop = (event: any) => {
@@ -98,8 +99,7 @@ function Nested() {
 
   const handleRemoveFile = () => {
     setState({ file: null });
-    setValue('name', '');
-    setValue('config.source_url', '');
+    reset();
     setValue('datasourceText', '', { shouldDirty: false });
   };
 

@@ -44,7 +44,7 @@ export const GoogleDriveSourceSchema = UpsertDatasourceSchema.extend({
 });
 
 function Nested() {
-  const { control, register, setValue, formState } =
+  const { control, register, setValue, formState, trigger } =
     useFormContext<z.infer<typeof GoogleDriveSourceSchema>>();
 
   const [state, setState] = useStateReducer({
@@ -105,7 +105,9 @@ function Nested() {
                   currentProviderId: value as string,
                 });
 
-                setValue('config.serviceProviderId', value as string);
+                setValue('config.serviceProviderId', value as string, {
+                  shouldDirty: true,
+                });
               }}
             >
               {getProvidersQuery.data?.map((provider) => (
@@ -190,17 +192,30 @@ function Nested() {
                     ) : null
                   }
                   onChange={(_, value) => {
-                    setValue('name', value?.label! || '');
-                    setValue('config.source_url', value?.label! || '');
-                    setValue('config.objectId', value?.id! || '');
-                    setValue('config.mime_type', value?.mimeType! || '');
+                    setValue('name', value?.label! || '', {
+                      shouldDirty: true,
+                    });
+                    setValue('config.source_url', value?.label! || '', {
+                      shouldDirty: true,
+                    });
+                    setValue('config.objectId', value?.id! || '', {
+                      shouldDirty: true,
+                    });
+                    setValue('config.mime_type', value?.mimeType! || '', {
+                      shouldDirty: true,
+                    });
                     if (
                       value?.mimeType === 'application/vnd.google-apps.folder'
                     ) {
-                      setValue('type', DatasourceType.google_drive_folder);
+                      setValue('type', DatasourceType.google_drive_folder, {
+                        shouldDirty: true,
+                      });
                     } else {
-                      setValue('type', DatasourceType.google_drive_file);
+                      setValue('type', DatasourceType.google_drive_file, {
+                        shouldDirty: true,
+                      });
                     }
+                    trigger();
                   }}
                   renderOption={(props, option) => (
                     <Stack key={option.id}>
