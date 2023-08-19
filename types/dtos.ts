@@ -211,6 +211,9 @@ export const AcceptedDatasourceMimeTypes = [
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.google-apps.document',
+  'application/vnd.google-apps.presentation',
+  // 'application/vnd.google-apps.spreadsheet',
 ] as const;
 
 export const GenerateUploadLinkRequest = z.object({
