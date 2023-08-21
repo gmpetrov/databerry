@@ -153,7 +153,7 @@ export const chatAgentRequest = async (
     sources: chatRes.sources,
   });
 
-  conversationManager.save();
+  await conversationManager.save();
 
   if (data.streaming) {
     streamData({
