@@ -170,6 +170,10 @@ function ChatBox({
   });
 
   const submit = async ({ query }: z.infer<typeof Schema>) => {
+    if (isLoading) {
+      return;
+    }
+
     try {
       setIsLoading(true);
       setHideTemplateMessages(true);
