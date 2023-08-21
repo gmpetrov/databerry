@@ -104,7 +104,7 @@ const callsToAction = [
   },
   {
     name: 'Book a Call',
-    href: 'https://calendly.com/databerry-georges/15min',
+    href: 'https://calendar.app.google/js1tgwSh2CUvV4CA7',
     icon: PhoneIcon,
   },
 ];
