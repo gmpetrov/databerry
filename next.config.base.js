@@ -14,7 +14,19 @@ const nextConfig = {
 
   reactStrictMode: true,
   async redirects() {
-    return [];
+    return [
+      {
+        source: '/',
+        destination: '/agents',
+        permanent: true,
+        has: [
+          {
+            type: 'host',
+            value: 'app.chaindesk.ai',
+          },
+        ],
+      },
+    ];
   },
   async rewrites() {
     return {
