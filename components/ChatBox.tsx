@@ -4,6 +4,7 @@ import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
 import Avatar from '@mui/joy/Avatar';
@@ -12,7 +13,6 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CircularProgress from '@mui/joy/CircularProgress';
 import IconButton from '@mui/joy/IconButton';
-import Input from '@mui/joy/Input';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
@@ -56,6 +56,10 @@ type Props = {
     value: 'good' | 'bad';
   }) => any;
   handleImprove?: (message: ChatBoxMessage) => any;
+  topSettings?: JSX.Element | null;
+  handleSourceClick?: (source: Source) => any;
+  handleAbort?: any;
+  emptyComponent?: JSX.Element | null;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -150,9 +154,13 @@ function ChatBox({
   agentIconUrl,
   isLoadingConversation,
   hasMoreMessages,
+  topSettings,
+  emptyComponent,
   handleLoadMoreMessages,
   handleEvalAnswer,
   handleImprove,
+  handleSourceClick,
+  handleAbort,
 }: Props) {
   const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
@@ -294,6 +302,8 @@ function ChatBox({
               </Stack>
             )}
 
+            {messages?.length <= 0 && emptyComponent}
+
             {messages.map((each, index) => (
               <Stack
                 key={index}
@@ -328,7 +338,7 @@ function ChatBox({
                     ></Avatar>
                   )}
 
-                  <Stack gap={0.5}>
+                  <Stack>
                     <Card
                       size="sm"
                       variant={'outlined'}
@@ -342,53 +352,31 @@ function ChatBox({
                         overflowY: 'hidden',
                         overflowX: 'auto',
                         marginRight: 'auto',
+                        gap: 0,
                         maxWidth: '100%',
-                        py: 0,
+                        // '.prose > *:first-child': {
+                        //   pt: 1,
+                        //   mt: 0,
+                        // },
+                        // '.prose > *:last-child': {
+                        //   pb: 1,
+                        //   mb: 0,
+                        // },
+                        py: 1,
                         px: 2,
                         [' p ']: {
                           m: 0,
-                          py: 1,
+                          // p: 0,
                           maxWidth: '100%',
                           // wordBreak: 'break-word',
+                        },
+
+                        'h1,h2,h3,h4,h5': {
+                          fontSize: theme.fontSize.sm,
                         },
                         table: {
                           overflowX: 'auto',
                         },
-                        // pre: {
-                        //   overflowX: 'scroll',
-                        // },
-                        // code: {},
-                        // 'ol,ul,p': {
-                        //   // color: theme.palette.text.secondary,
-                        // },
-                        // 'ol, ul': {
-                        //   my: 0,
-                        //   pl: 2,
-                        // },
-                        // ol: {
-                        //   listStyle: 'numeric',
-                        // },
-                        // // 'ol > li > p': {
-                        // //   fontWeight: 'bold',
-                        // // },
-                        // ul: {
-                        //   listStyle: 'disc',
-                        //   mb: 2,
-                        // },
-                        // li: {
-                        //   my: 1,
-                        // },
-                        // 'li::marker, ol::marker': {
-                        //   // color: theme.palette.text.tertiary,
-                        // },
-                        // a: {
-                        //   // color: theme.palette.text.primary,
-                        //   textDecoration: 'underline',
-                        // },
-                        // [' p ']: {
-                        // py: 1,
-                        // m: 0,
-                        // },
                       })}
                     >
                       {each.from === 'agent' ? (
@@ -407,7 +395,9 @@ function ChatBox({
                         {(each?.sources?.length || 0) > 0 && (
                           <Box
                             sx={{
-                              pb: 2,
+                              mt: 2,
+                              width: '100%',
+                              maxWidth: '100%',
                             }}
                           >
                             <details>
@@ -423,6 +413,7 @@ function ChatBox({
                                   <SourceComponent
                                     key={source.chunk_id}
                                     source={source}
+                                    onClick={handleSourceClick}
                                   />
                                 ))}
                               </Stack>
@@ -528,8 +519,15 @@ function ChatBox({
             </Stack>
           )}
 
-          <Stack width="100%">
+          <Stack width="100%" gap={0.5}>
+            {topSettings}
+
             <Textarea
+              slotProps={{
+                textarea: {
+                  id: 'chatbox-input',
+                },
+              }}
               maxRows={4}
               minRows={1}
               onKeyDown={(e) => {
@@ -549,14 +547,32 @@ function ChatBox({
               // disabled={!state.currentDatastoreId || state.loading}
               variant="outlined"
               endDecorator={
-                <IconButton
-                  size="sm"
-                  type="submit"
-                  disabled={isLoading}
-                  sx={{ maxHeight: '100%' }}
-                >
-                  <SendRoundedIcon />
-                </IconButton>
+                <Stack direction="row">
+                  {!isLoading && (
+                    <IconButton
+                      size="sm"
+                      type="submit"
+                      disabled={isLoading}
+                      sx={{ maxHeight: '100%' }}
+                    >
+                      <SendRoundedIcon />
+                    </IconButton>
+                  )}
+
+                  {isLoading && handleAbort && (
+                    <IconButton
+                      size="sm"
+                      color="danger"
+                      sx={{ maxHeight: '100%' }}
+                      variant={'soft'}
+                      onClick={() => {
+                        handleAbort?.();
+                      }}
+                    >
+                      <StopRoundedIcon />
+                    </IconButton>
+                  )}
+                </Stack>
               }
               {...methods.register('query')}
             />

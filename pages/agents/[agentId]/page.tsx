@@ -11,8 +11,8 @@ import {
   Stack,
   Typography,
 } from '@mui/joy';
+import Avatar from '@mui/joy/Avatar';
 import colors from '@mui/joy/colors';
-import Avatar from '@mui/material/Avatar';
 import { Agent, Prisma } from '@prisma/client';
 import Head from 'next/head';
 import { useRouter } from 'next/router';

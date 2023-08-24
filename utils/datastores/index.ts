@@ -46,6 +46,10 @@ export class DatastoreManager {
     return this.manager.remove(datasourceId);
   }
 
+  getChunk(chunkId: string) {
+    return this.manager.getChunk(chunkId);
+  }
+
   // Documents represents multiple units (pages) from a single datasource
   static async hash(documents: AppDocument[]) {
     const document = documents?.[0];
@@ -64,6 +68,10 @@ export class DatastoreManager {
 
     if (source_url) {
       hasher.update(source_url);
+    }
+
+    if (document.metadata?.datasource_name) {
+      hasher.update(document.metadata?.datasource_name!);
     }
 
     return hasher.digest('hex');

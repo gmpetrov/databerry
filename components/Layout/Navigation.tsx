@@ -1,10 +1,12 @@
 import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
+import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
+import NewReleasesRoundedIcon from '@mui/icons-material/NewReleasesRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
@@ -102,15 +104,22 @@ export default function Navigation() {
   const items = React.useMemo(() => {
     return [
       {
+        label: 'Chat',
+        route: RouteNames.CHAT,
+        icon: <ChatRoundedIcon fontSize="md" />,
+        active: router.route === RouteNames.CHAT,
+        isExperimental: true,
+      },
+      {
         label: 'Agents',
         route: RouteNames.AGENTS,
-        icon: <SmartToyRoundedIcon fontSize="small" />,
+        icon: <SmartToyRoundedIcon fontSize="md" />,
         active: router.route === RouteNames.AGENTS,
       },
       {
         label: 'Datastores',
         route: RouteNames.DATASTORES,
-        icon: <StorageRoundedIcon fontSize="small" />,
+        icon: <StorageRoundedIcon fontSize="md" />,
         active: router.route === RouteNames.DATASTORES,
       },
       {
@@ -123,17 +132,12 @@ export default function Navigation() {
             color="danger"
             invisible={!countUnreadQuery?.data || countUnreadQuery?.data <= 0}
           >
-            <InboxRoundedIcon fontSize="small" />
+            <InboxRoundedIcon fontSize="md" />
           </Badge>
         ),
         active: router.route === RouteNames.LOGS,
       },
-      // {
-      //   label: 'Chat',
-      //   route: RouteNames.CHAT,
-      //   icon: <ChatBubbleIcon fontSize="small" />,
-      //   active: router.route === RouteNames.CHAT,
-      // },
+
       // {
       //   label: 'Apps',
       //   route: RouteNames.APPS,
@@ -189,6 +193,17 @@ export default function Navigation() {
                       {each.icon}
                     </ListItemDecorator>
                     <ListItemContent>{each.label}</ListItemContent>
+
+                    {each.isExperimental && (
+                      <Chip
+                        startDecorator={<NewReleasesRoundedIcon />}
+                        size="sm"
+                        variant="soft"
+                        color="warning"
+                      >
+                        Beta
+                      </Chip>
+                    )}
                   </ListItemButton>
                 </ListItem>
               </Link>

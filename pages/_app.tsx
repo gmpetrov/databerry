@@ -2,6 +2,10 @@ import '@app/utils/env';
 import '@app/styles/globals.css';
 import '@app/styles/preflight.css';
 import '@app/styles/nprogress.css';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import '@react-pdf-viewer/search/lib/styles/index.css';
+import '@react-pdf-viewer/highlight/lib/styles/index.css';
 
 import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';

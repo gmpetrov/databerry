@@ -24,7 +24,7 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
           flex: 1,
           overflow: 'auto',
           minHeight: 0,
-          my: 4,
+          // my: 4,
         }}
       >
         <Table

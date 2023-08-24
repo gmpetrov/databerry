@@ -1,4 +1,5 @@
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Badge from '@mui/joy/Badge';
@@ -8,12 +9,12 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import Divider from '@mui/joy/Divider';
 import List from '@mui/joy/List';
 import ListDivider from '@mui/joy/ListDivider';
+import ListItem from '@mui/joy/ListItem';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Sheet from '@mui/joy/Sheet';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
-import ListItem from '@mui/material/ListItem';
 import { Prisma } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
@@ -97,165 +98,177 @@ export default function LogsPage() {
   }
 
   return (
-    <Sheet
-      variant="outlined"
-      sx={(theme) => ({
-        height: '100%',
-        borderRadius: 'sm',
-      })}
-    >
-      <Stack direction={'row'} sx={{ height: '100%' }}>
-        <List
-          // aria-labelledby="ellipsis-list-demo"
-          // sx={{ '--ListItemDecorator-size': '56px' }}
-          ref={parentRef as any}
-          sx={{
-            width: 'sm',
-            maxWidth: '30%',
-            height: '100%',
-            overflowY: 'auto',
-            '--ListDivider-gap': '0px',
-          }}
-          size="sm"
-        >
-          <InfiniteScroll
-            useWindow={false}
-            getScrollParent={() => parentRef.current as any}
-            loadMore={() => {
-              if (
-                getConversationsQuery.isLoading ||
-                getConversationsQuery.isValidating
-              )
-                return;
+    <Stack gap={2} sx={{ height: 'calc(100vh - 160px)' }}>
+      <Alert
+        variant="soft"
+        color="neutral"
+        startDecorator={<InfoRoundedIcon />}
+      >
+        View all Agents conversations across all channels. Evaluate and improve
+        answers.
+      </Alert>
 
-              getConversationsQuery.setSize(getConversationsQuery.size + 1);
+      <Sheet
+        variant="outlined"
+        sx={(theme) => ({
+          height: '100%',
+          borderRadius: 'sm',
+        })}
+      >
+        <Stack direction={'row'} sx={{ height: '100%' }}>
+          <List
+            // aria-labelledby="ellipsis-list-demo"
+            // sx={{ '--ListItemDecorator-size': '56px' }}
+            ref={parentRef as any}
+            sx={{
+              width: 'sm',
+              minWidth: 300,
+              maxWidth: '30%',
+              height: '100%',
+              overflowY: 'auto',
+              '--ListDivider-gap': '0px',
             }}
-            hasMore={!state.hasReachedEnd}
-            loader={
-              Array(3)
-                .fill(0)
-                .map((each, idx) => (
-                  <React.Fragment key={idx}>
-                    <ListItem>
-                      <Skeleton variant="text" />
-                    </ListItem>
-
-                    <ListDivider></ListDivider>
-                  </React.Fragment>
-                )) as any
-            }
+            size="sm"
           >
-            {/* Add fragment to remove InfiniteScroll warning when empty conversations */}
-            <React.Fragment />
+            <InfiniteScroll
+              useWindow={false}
+              getScrollParent={() => parentRef.current as any}
+              loadMore={() => {
+                if (
+                  getConversationsQuery.isLoading ||
+                  getConversationsQuery.isValidating
+                )
+                  return;
 
-            {conversations.map((each) => (
-              <React.Fragment key={each.id}>
-                <ListItem
-                  sx={(theme) => ({
-                    py: 1,
-                    '&:hover': {
-                      cursor: 'pointer',
-                      backgroundColor: theme.palette.action.hover,
-                    },
-                    ...(state.currentConversationId === each.id && {
-                      backgroundColor: theme.palette.action.hover,
-                    }),
-                  })}
-                  onClick={() => {
-                    setState({
-                      currentConversationId: each.id,
-                    });
-                  }}
-                >
-                  <ListItemContent>
-                    <Stack>
-                      <Stack direction="row" justifyContent={'space-between'}>
-                        <Typography>{each?.agent?.name}</Typography>
+                getConversationsQuery.setSize(getConversationsQuery.size + 1);
+              }}
+              hasMore={!state.hasReachedEnd}
+              loader={
+                Array(3)
+                  .fill(0)
+                  .map((each, idx) => (
+                    <React.Fragment key={idx}>
+                      <ListItem>
+                        <Skeleton variant="text" />
+                      </ListItem>
 
-                        <Typography level="body3">
-                          {relativeDate(each?.updatedAt)}
-                        </Typography>
+                      <ListDivider></ListDivider>
+                    </React.Fragment>
+                  )) as any
+              }
+            >
+              {/* Add fragment to remove InfiniteScroll warning when empty conversations */}
+              <React.Fragment />
+
+              {conversations.map((each) => (
+                <React.Fragment key={each.id}>
+                  <ListItem
+                    sx={(theme) => ({
+                      py: 1,
+                      '&:hover': {
+                        cursor: 'pointer',
+                        backgroundColor: theme.palette.action.hover,
+                      },
+                      ...(state.currentConversationId === each.id && {
+                        backgroundColor: theme.palette.action.hover,
+                      }),
+                    })}
+                    onClick={() => {
+                      setState({
+                        currentConversationId: each.id,
+                      });
+                    }}
+                  >
+                    <ListItemContent>
+                      <Stack>
+                        <Stack direction="row" justifyContent={'space-between'}>
+                          <Typography>{each?.agent?.name}</Typography>
+
+                          <Typography level="body3">
+                            {relativeDate(each?.updatedAt)}
+                          </Typography>
+                        </Stack>
+                        <Stack
+                          direction="row"
+                          justifyContent={'space-between'}
+                          alignItems={'start'}
+                          gap={1}
+                        >
+                          <Typography level="body2" noWrap>
+                            {each?.messages?.[0]?.text}
+                          </Typography>
+
+                          {each?._count?.messages > 0 && (
+                            <Chip
+                              // variant="soft"
+                              color="danger"
+                              size="sm"
+                            >
+                              <Typography textColor={'common.white'}>
+                                {each?._count?.messages}
+                              </Typography>
+                            </Chip>
+                          )}
+                        </Stack>
+                        <Chip
+                          size="sm"
+                          color="neutral"
+                          variant="outlined"
+                          sx={{
+                            mr: 'auto',
+                            mt: 1,
+                          }}
+                        >
+                          {each?.channel}
+                        </Chip>
                       </Stack>
-                      <Stack
-                        direction="row"
-                        justifyContent={'space-between'}
-                        alignItems={'start'}
-                        gap={1}
-                      >
-                        <Typography level="body2" noWrap>
-                          {each?.messages?.[0]?.text}
-                        </Typography>
+                    </ListItemContent>
+                  </ListItem>
+                  <ListDivider />
+                </React.Fragment>
+              ))}
+            </InfiniteScroll>
 
-                        {each?._count?.messages > 0 && (
-                          <Chip
-                            // variant="soft"
-                            color="danger"
-                            size="sm"
-                          >
-                            <Typography textColor={'common.white'}>
-                              {each?._count?.messages}
-                            </Typography>
-                          </Chip>
-                        )}
-                      </Stack>
-                      <Chip
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        sx={{
-                          mr: 'auto',
-                          mt: 1,
-                        }}
-                      >
-                        {each?.channel}
-                      </Chip>
-                    </Stack>
-                  </ListItemContent>
-                </ListItem>
-                <ListDivider />
-              </React.Fragment>
-            ))}
-          </InfiniteScroll>
+            {getConversationsQuery.isLoading && (
+              <CircularProgress size="sm" sx={{ mx: 'auto', my: 2 }} />
+            )}
+          </List>
+          <Divider orientation="vertical" />
+          <Box sx={{ width: '100%', paddingX: 2 }}>
+            <ChatBox
+              messages={
+                getMessagesQuery?.data?.map((each) => ({
+                  id: each.id,
+                  from: each.from,
+                  message: each.text,
+                  createdAt: each.createdAt,
+                  eval: each.eval,
+                })) || []
+              }
+              onSubmit={async () => {}}
+              readOnly={true}
+              handleEvalAnswer={handleEvalAnswer}
+              handleImprove={(message) => {
+                setState({
+                  currentImproveAnswerID: message?.id,
+                });
+              }}
+            />
+          </Box>
+        </Stack>
 
-          {getConversationsQuery.isLoading && (
-            <CircularProgress size="sm" sx={{ mx: 'auto', my: 2 }} />
-          )}
-        </List>
-        <Divider orientation="vertical" />
-        <Box sx={{ width: '100%', paddingX: 2 }}>
-          <ChatBox
-            messages={
-              getMessagesQuery?.data?.map((each) => ({
-                id: each.id,
-                from: each.from,
-                message: each.text,
-                createdAt: each.createdAt,
-                eval: each.eval,
-              })) || []
-            }
-            onSubmit={async () => {}}
-            readOnly={true}
-            handleEvalAnswer={handleEvalAnswer}
-            handleImprove={(message) => {
+        {state.currentImproveAnswerID && (
+          <ImproveAnswerModal
+            handleCloseModal={() => {
               setState({
-                currentImproveAnswerID: message?.id,
+                currentImproveAnswerID: '',
               });
             }}
+            messageId={state.currentImproveAnswerID}
           />
-        </Box>
-      </Stack>
-
-      {state.currentImproveAnswerID && (
-        <ImproveAnswerModal
-          handleCloseModal={() => {
-            setState({
-              currentImproveAnswerID: '',
-            });
-          }}
-          messageId={state.currentImproveAnswerID}
-        />
-      )}
-    </Sheet>
+        )}
+      </Sheet>
+    </Stack>
   );
 }
 

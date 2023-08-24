@@ -13,7 +13,7 @@ import {
 import { SearchRequestSchema } from '@app/types/dtos';
 import { QdrantConfigSchema } from '@app/types/models';
 
-import { embedDocuments } from '../mocks';
+import { embedDocuments as embedDocumentsMock } from '../mocks';
 import uuidv4 from '../uuid';
 
 import { ClientManager } from './base';
@@ -32,6 +32,24 @@ export type Point = {
   };
 };
 
+const initEmbeddingModel = () => {
+  const embeddings = new OpenAIEmbeddings();
+
+  if (process.env.APP_ENV === 'test') {
+    embeddings.embedDocuments = embedDocumentsMock;
+  }
+
+  return embeddings;
+};
+
+const initHTTPClient = () =>
+  axios.create({
+    baseURL: process.env.QDRANT_API_URL,
+    headers: {
+      'api-key': process.env.QDRANT_API_KEY,
+    },
+  });
+
 export class QdrantManager extends ClientManager<DatastoreType> {
   client: AxiosInstance;
   embeddings: Embeddings;
@@ -39,18 +57,8 @@ export class QdrantManager extends ClientManager<DatastoreType> {
   constructor(datastore: DatastoreType) {
     super(datastore);
 
-    this.embeddings = new OpenAIEmbeddings();
-
-    if (process.env.APP_ENV === 'test') {
-      this.embeddings.embedDocuments = embedDocuments;
-    }
-
-    this.client = axios.create({
-      baseURL: process.env.QDRANT_API_URL,
-      headers: {
-        'api-key': process.env.QDRANT_API_KEY,
-      },
-    });
+    this.embeddings = initEmbeddingModel();
+    this.client = initHTTPClient();
   }
 
   private async initAppCollection() {
@@ -201,10 +209,9 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     return documents;
   }
 
-  async search(props: SearchRequestSchema) {
-    const vectors = await this.embeddings.embedDocuments([props.query]);
-
-    const results = await this.client.post(
+  static async _search(props: SearchRequestSchema & { datastore_id?: string }) {
+    const vectors = await initEmbeddingModel().embedDocuments([props.query]);
+    const results = await initHTTPClient().post(
       `/collections/text-embedding-ada-002/points/search`,
       {
         vector: vectors[0],
@@ -213,10 +220,14 @@ export class QdrantManager extends ClientManager<DatastoreType> {
         with_vectors: false,
         filter: {
           must: [
-            {
-              key: MetadataFields.datastore_id,
-              match: { value: this.datastore.id },
-            },
+            ...(props.datastore_id
+              ? [
+                  {
+                    key: MetadataFields.datastore_id,
+                    match: { value: props.datastore_id },
+                  },
+                ]
+              : []),
             ...(props.filters?.custom_id
               ? [
                   {
@@ -243,6 +254,10 @@ export class QdrantManager extends ClientManager<DatastoreType> {
               key: MetadataFields.datasource_id,
               match: { value: each },
             })),
+            ...(props.filters?.datastore_ids || [])?.map((each) => ({
+              key: MetadataFields.datastore_id,
+              match: { value: each },
+            })),
           ],
         },
       }
@@ -259,5 +274,30 @@ export class QdrantManager extends ClientManager<DatastoreType> {
         },
       });
     }) as AppDocument<ChunkMetadataRetrieved>[];
+  }
+
+  async search(props: SearchRequestSchema) {
+    return QdrantManager._search({
+      ...props,
+      datastore_id: this.datastore.id,
+    });
+  }
+
+  async getChunk(chunkId: string) {
+    const result = await initHTTPClient().get(
+      `/collections/text-embedding-ada-002/points/${chunkId}`
+    );
+
+    const point = result.data?.result as Point;
+
+    const { text, ...metadata } = point?.payload;
+    return new AppDocument<ChunkMetadataRetrieved>({
+      pageContent: text,
+      metadata: {
+        ...metadata,
+        chunk_id: point?.id,
+        score: point?.score!,
+      },
+    });
   }
 }

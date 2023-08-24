@@ -320,6 +320,8 @@ export default function BubbleWidgetSettings(props: Props) {
                                 theme={theme}
                                 defaultMode="light"
                                 modeStorageKey="databerry-chat-bubble"
+                                // colorSchemeStorageKey="databerry-chat-bubble-scheme"
+                                // attribute="databerry-chat-bubble-scheme"
                               >
                                 <CssBaseline />
                                 <Box

@@ -29,7 +29,7 @@ export default class ConversationManager {
   conversationId?: string;
   channel: ConversationChannel;
   messages: MessageExtended[] = [];
-  agentId: string;
+  agentId?: string;
   metadata?: Record<string, any> = {};
 
   constructor({
@@ -40,7 +40,7 @@ export default class ConversationManager {
     conversationId,
     metadata,
   }: {
-    agentId: string;
+    agentId?: string;
     channel: ConversationChannel;
     conversationId?: string;
     userId?: string;
@@ -82,11 +82,15 @@ export default class ConversationManager {
       create: {
         id: this.conversationId,
         channel: this.channel,
-        agent: {
-          connect: {
-            id: this.agentId,
-          },
-        },
+        ...(this.agentId
+          ? {
+              agent: {
+                connect: {
+                  id: this.agentId,
+                },
+              },
+            }
+          : {}),
         messages: {
           createMany: {
             data: this.messages,

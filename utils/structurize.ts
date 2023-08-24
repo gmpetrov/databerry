@@ -1,5 +1,5 @@
 // Parse text into Json from a given Json Schema
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAIApi from 'openai';
 
 import countTokens from './count-tokens';
 import splitTextByToken from './split-text-by-token';
@@ -12,10 +12,7 @@ const structurize = async (props: {
     [key: string]: any;
   };
 }) => {
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-  const openai = new OpenAIApi(configuration);
+  const openai = new OpenAIApi();
 
   const nbTokens = countTokens({
     text: props.text,
@@ -41,7 +38,7 @@ const structurize = async (props: {
       ? `extractData Current Value: ${JSON.stringify(json)}\nContent: ${each}`
       : each;
 
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
       functions: [
@@ -53,10 +50,10 @@ const structurize = async (props: {
       ],
     });
 
-    totalTokens += completion?.data?.usage?.total_tokens || 0;
+    totalTokens += completion?.usage?.total_tokens || 0;
 
     json = JSON.parse(
-      completion.data.choices?.[0]?.message?.function_call?.arguments || '{}'
+      completion.choices?.[0]?.message?.function_call?.arguments || '{}'
     );
 
     console.log('JSON STEP', json);

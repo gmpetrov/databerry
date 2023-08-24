@@ -7,13 +7,16 @@ import { WebPageSourceSchema } from '@app/components/DatasourceForms/WebPageForm
 import { AppDocument } from '@app/types/document';
 
 import { ApiError, ApiErrorType } from '../api-error';
+import cleanTextForEmbeddings from '../clean-text-for-embeddings';
 
 import { DatasourceLoaderBase } from './base';
 
-const getTextFromHTML = async (html: string) => {
+export const getTextFromHTML = async (html: string) => {
   const { load } = await import('cheerio');
 
   const $ = load(html);
+  $('header').remove();
+  $('footer').remove();
   $('script').remove();
   $('style').remove();
   $('link').remove();
@@ -24,7 +27,7 @@ const getTextFromHTML = async (html: string) => {
   return text?.trim();
 };
 
-const loadPageContent = async (url: string) => {
+export const loadPageContent = async (url: string) => {
   try {
     const { data } = await axios(url, {
       headers: {
@@ -106,7 +109,7 @@ export class WebPageLoader extends DatasourceLoaderBase {
 
     return [
       new AppDocument({
-        pageContent: text,
+        pageContent: cleanTextForEmbeddings(text),
         metadata: {
           source_url: url,
           datastore_id: this.datasource.datastoreId!,

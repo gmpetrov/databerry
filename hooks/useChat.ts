@@ -23,6 +23,7 @@ type Props = {
   channel?: ConversationChannel;
   queryBody?: any;
   datasourceId?: string;
+  localStorageConversationIdKey?: string;
 };
 
 export const handleEvalAnswer = async (props: {
@@ -41,8 +42,12 @@ export const handleEvalAnswer = async (props: {
   });
 };
 
+const LOCAL_STORAGE_CONVERSATION_ID_KEY = 'conversationId';
+
 const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
-  const { mutate, cache } = useSWRConfig();
+  const localStorageConversationIdKey =
+    otherProps.localStorageConversationIdKey ||
+    LOCAL_STORAGE_CONVERSATION_ID_KEY;
 
   const [state, setState] = useStateReducer({
     visitorId: '',
@@ -56,6 +61,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       id?: string;
       sources?: Source[];
     }[],
+    handleAbort: undefined as any,
   });
 
   const getConversationQuery = useSWRInfinite<
@@ -118,19 +124,23 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       return;
     }
 
+    const ctrl = new AbortController();
     const history = [...state.history, { from: 'human', message }];
     const nextIndex = history.length;
 
     setState({
       history: history as any,
+      handleAbort: () => {
+        ctrl.abort();
+      },
     });
 
     let answer = '';
     let error = '';
 
     try {
-      const ctrl = new AbortController();
       let buffer = '';
+      let bufferStep = '';
       let bufferEndpointResponse = '';
       class RetriableError extends Error {}
       class FatalError extends Error {}
@@ -141,6 +151,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
           'Content-Type': 'application/json',
           // Accept: 'text/event-stream',
         },
+        openWhenHidden: true,
         body: JSON.stringify({
           ...queryBody,
           streaming: true,
@@ -216,7 +227,10 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               }
 
               localStorage.setItem('visitorId', visitorId || '');
-              localStorage.setItem('conversationId', conversationId || '');
+              localStorage.setItem(
+                localStorageConversationIdKey,
+                conversationId || ''
+              );
 
               setState({
                 history: h as any,
@@ -241,6 +255,20 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             });
           } else if (event.event === SSE_EVENT.endpoint_response) {
             bufferEndpointResponse += decodeURIComponent(event.data) as string;
+          } else if (event.event === SSE_EVENT.step) {
+            bufferStep += decodeURIComponent(event.data) as string;
+
+            const h = [...history];
+
+            if (h?.[nextIndex]) {
+              h[nextIndex].message = `${bufferStep}`;
+            } else {
+              h.push({ from: 'agent', message: bufferStep });
+            }
+
+            setState({
+              history: h as any,
+            });
           } else if (event.event === SSE_EVENT.answer) {
             // const data = JSON.parse(event.data || `{}`);
             buffer += decodeURIComponent(event.data) as string;
@@ -287,7 +315,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
   };
 
   const setConversationId = useCallback((value?: string) => {
-    localStorage.setItem('conversationId', value || '');
+    localStorage.setItem(localStorageConversationIdKey, value || '');
     setState({
       conversationId: value || '',
     });
@@ -305,7 +333,9 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       // Init from localStorage onmount (for chatbubble widget)
       setState({
         visitorId: localStorage.getItem('visitorId') as string,
-        conversationId: localStorage.getItem('conversationId') as string,
+        conversationId: localStorage.getItem(
+          localStorageConversationIdKey
+        ) as string,
       });
     }
   }, []);
@@ -336,6 +366,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     setConversationId,
     setVisitorId,
     handleEvalAnswer,
+    handleAbort: state.handleAbort,
   };
 };
 

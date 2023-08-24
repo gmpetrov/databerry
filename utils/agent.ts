@@ -39,6 +39,7 @@ export default class AgentManager {
     filters,
     promptType,
     promptTemplate,
+    abortController,
   }: {
     input: string;
     stream?: any;
@@ -48,6 +49,7 @@ export default class AgentManager {
     filters?: ChatRequest['filters'];
     promptType?: ChatRequest['promptType'];
     promptTemplate?: ChatRequest['promptTemplate'];
+    abortController?: any;
   }) {
     if (this.agent.tools.length <= 1) {
       const { answer, sources } = await chat({
@@ -63,6 +65,7 @@ export default class AgentManager {
         truncateQuery,
         filters,
         includeSources: !!this.agent.includeSources,
+        abortController,
       });
 
       return { answer, sources };

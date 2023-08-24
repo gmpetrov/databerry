@@ -1,5 +1,7 @@
 import { AppDocument } from '@app/types/document';
 
+import cleanTextForEmbeddings from './clean-text-for-embeddings';
+
 const wordToDocs = async (buffer: Buffer) => {
   const mammoth = await import('mammoth');
 
@@ -7,7 +9,7 @@ const wordToDocs = async (buffer: Buffer) => {
 
   return [
     new AppDocument<any>({
-      pageContent: result.value,
+      pageContent: cleanTextForEmbeddings(result.value),
       metadata: {},
     }),
   ];
