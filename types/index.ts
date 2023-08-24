@@ -17,6 +17,11 @@ export enum RouteNames {
   SLACK_BOT = '/products/slack-bot',
 }
 
+export enum PromptTypesLabels {
+  customer_support = 'Customer support',
+  raw = 'Raw',
+}
+
 export type AppNextApiRequest = NextApiRequest & {
   session: Session;
 };
