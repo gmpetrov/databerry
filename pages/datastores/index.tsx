@@ -166,9 +166,9 @@ export default function DatasourcesPage() {
         startDecorator={<InfoRoundedIcon />}
         sx={{ mb: 2 }}
       >
-        A datastore is a container that hold different type datasources (files,
-        web pages, etc...). At the moment an Agent can be connected to one
-        datastore only.
+        A datastore is a container that holds different type of datasources
+        (files, web pages, etc...). At the moment an Agent can be connected to
+        one datastore only.
       </Alert>
 
       {getDatastoresQuery?.data && (
