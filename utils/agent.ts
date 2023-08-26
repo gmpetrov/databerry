@@ -20,6 +20,7 @@ import { Tool as LangchainTool } from 'langchain/tools';
 
 import { ChatRequest } from '@app/types/dtos';
 
+import { ChatModelConfigSchema } from './../types/dtos';
 import chatRetrieval from './chains/chat-retrieval';
 import createPromptContext from './create-prompt-context';
 import promptInject from './prompt-inject';
@@ -32,6 +33,17 @@ type ToolExtended = Tool & {
 export type AgentWithTools = Agent & {
   tools: ToolExtended[];
 };
+
+type AgentManagerProps = ChatModelConfigSchema &
+  Pick<
+    ChatRequest,
+    'modelName' | 'truncateQuery' | 'filters' | 'promptType' | 'promptTemplate'
+  > & {
+    input: string;
+    stream?: any;
+    history?: Message[] | undefined;
+    abortController?: any;
+  };
 
 export default class AgentManager {
   agent: AgentWithTools;
@@ -47,22 +59,13 @@ export default class AgentManager {
     stream,
     history,
     truncateQuery,
-    temperature,
     filters,
     promptType,
     promptTemplate,
     abortController,
-  }: {
-    input: string;
-    stream?: any;
-    history?: Message[] | undefined;
-    truncateQuery?: boolean;
-    temperature?: ChatRequest['temperature'];
-    filters?: ChatRequest['filters'];
-    promptType?: ChatRequest['promptType'];
-    promptTemplate?: ChatRequest['promptTemplate'];
-    abortController?: any;
-  }) {
+    temperature,
+    ...otherProps
+  }: AgentManagerProps) {
     const _query = truncateQuery
       ? await truncateByModel({
           text: input,
@@ -105,6 +108,7 @@ export default class AgentManager {
       }
 
       return chatRetrieval({
+        ...otherProps,
         getPrompt(chunks) {
           if (_promptType === PromptType.customer_support) {
             return promptInject({
@@ -128,14 +132,17 @@ export default class AgentManager {
             context: createPromptContext(chunks),
           });
         },
+        // Retrieval
         datastore: this.agent?.tools[0]?.datastore as any,
         retrievalSearch: _query,
         topK: this.topK,
         filters,
         includeSources: !!this.agent.includeSources,
 
+        // Model
         modelName: this.agent.modelName,
         temperature: temperature || this.agent.temperature,
+
         stream,
         history,
         abortController,

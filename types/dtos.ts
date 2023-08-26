@@ -129,16 +129,29 @@ export const UpdateResponseSchema = z.object({
 
 export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 
-export const ChatRequest = z.object({
+export const ChatModelConfigSchema = z.object({
+  temperature: z.number().min(0.0).max(1.0).optional(),
+  maxTokens: z.number().optional(),
+  presencePenalty: z.number().optional(),
+  frequencyPenalty: z.number().optional(),
+  topP: z.number().optional(),
+});
+
+export type ChatModelConfigSchema = z.infer<typeof ChatModelConfigSchema>;
+
+export const ChatRequest = ChatModelConfigSchema.extend({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
   visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),
   conversationId: z.union([z.string().cuid().nullish(), z.literal('')]),
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
-  truncateQuery: z.boolean().optional().default(false),
-  temperature: z.number().min(0.0).max(1.0).optional(),
+  truncateQuery: z.boolean().optional(),
+
   promptTemplate: z.string().optional(),
   promptType: z.nativeEnum(PromptType).optional(),
+
+  modelName: z.nativeEnum(AgentModelName).optional(),
+
   filters: FiltersSchema.optional(),
 });
 

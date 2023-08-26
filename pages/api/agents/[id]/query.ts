@@ -88,6 +88,11 @@ export const chatAgentRequest = async (
     plan: session?.user?.currentPlan,
   });
 
+  if (data.modelName) {
+    // override modelName
+    agent.modelName = data.modelName;
+  }
+
   const manager = new AgentManager({ agent, topK: 5 });
   const ctrl = new AbortController();
 
@@ -125,15 +130,12 @@ export const chatAgentRequest = async (
 
   const [chatRes] = await Promise.all([
     manager.query({
+      ...data,
       input: data.query,
       stream: data.streaming ? handleStream : undefined,
       history: agent?.owner?.conversations?.[0]?.messages,
-      temperature: data.temperature,
-      promptTemplate: data.promptTemplate,
-      promptType: data.promptType,
-      truncateQuery: data.truncateQuery,
-      filters: data.filters,
       abortController: ctrl,
+      filters: data.filters,
     }),
     prisma.usage.update({
       where: {

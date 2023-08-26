@@ -2,14 +2,13 @@ import { AgentModelName, Message, MessageFrom } from '@prisma/client';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { AIMessage, BaseMessage, HumanMessage } from 'langchain/schema';
 
-import { ChatResponse } from '@app/types/dtos';
+import { ChatModelConfigSchema, ChatResponse } from '@app/types/dtos';
 
 import { ModelConfig } from './config';
 
-export type ChatProps = {
+export type ChatProps = ChatModelConfigSchema & {
   prompt: string;
   stream?: any;
-  temperature?: number;
   modelName?: AgentModelName;
   history?: Message[];
   abortController?: any;
@@ -24,13 +23,18 @@ const chat = async ({
   initialMessages = [],
   modelName = AgentModelName.gpt_3_5_turbo,
   abortController,
+  ...otherProps
 }: ChatProps) => {
-  const _modelName = ModelConfig[modelName]?.name;
-
   const model = new ChatOpenAI({
-    modelName: _modelName,
-    temperature: temperature || 0,
     streaming: Boolean(stream),
+    modelName: ModelConfig[modelName]?.name,
+
+    temperature: temperature || 0,
+    topP: otherProps.topP,
+    frequencyPenalty: otherProps.frequencyPenalty,
+    presencePenalty: otherProps.presencePenalty,
+    maxTokens: otherProps.maxTokens,
+
     callbacks: [
       {
         handleLLMNewToken: stream,

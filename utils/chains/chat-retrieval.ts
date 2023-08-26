@@ -27,7 +27,6 @@ export type ChatRetrievalChainProps = Omit<ChatProps, 'prompt'> & {
     - output
   */
 const chatRetrieval = async ({
-  temperature,
   topK,
   stream,
   history,
@@ -38,6 +37,8 @@ const chatRetrieval = async ({
   retrievalSearch,
   initialMessages,
   getPrompt,
+  abortController,
+  ...otherProps
 }: ChatRetrievalChainProps) => {
   const SIMILARITY_THRESHOLD = 0.78;
 
@@ -58,10 +59,11 @@ const chatRetrieval = async ({
   const { answer } = await chat({
     modelName,
     prompt,
-    temperature: temperature || 0,
     stream,
     history,
     initialMessages,
+    abortController,
+    ...otherProps,
   });
 
   // Generate sources
