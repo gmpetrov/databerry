@@ -58,3 +58,7 @@ export enum SSE_EVENT {
   endpoint_response = 'endpoint_response',
   step = 'step',
 }
+
+export enum ChainType {
+  qa = 'qa',
+}

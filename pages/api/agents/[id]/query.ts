@@ -107,7 +107,7 @@ export const chatAgentRequest = async (
     channel: ConversationChannel.dashboard,
     agentId: agent?.id,
     userId: session?.user?.id,
-    visitorId: data.visitorId,
+    visitorId: data.visitorId!,
     conversationId,
   });
 
@@ -127,10 +127,7 @@ export const chatAgentRequest = async (
     manager.query({
       input: data.query,
       stream: data.streaming ? handleStream : undefined,
-      history: agent?.owner?.conversations?.[0]?.messages?.map((m) => ({
-        from: m.from,
-        message: m.text,
-      })),
+      history: agent?.owner?.conversations?.[0]?.messages,
       temperature: data.temperature,
       promptTemplate: data.promptTemplate,
       promptType: data.promptType,

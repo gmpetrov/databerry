@@ -222,10 +222,7 @@ const handleQuery = async (
 
   const { answer, sources } = await new AgentManager({ agent }).query({
     input: query,
-    history: conversation?.messages?.map((message) => ({
-      from: message.from,
-      message: message.text,
-    })),
+    history: conversation?.messages,
   });
 
   const finalAnser = `${answer}\n\n${formatSourcesRawText(sources!)}`.trim();

@@ -1,29 +1,19 @@
-import {
-  AgentVisibility,
-  ConversationChannel,
-  MessageFrom,
-  Usage,
-} from '@prisma/client';
+import { ConversationChannel, MessageFrom, Usage } from '@prisma/client';
 import Cors from 'cors';
 import cuid from 'cuid';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppNextApiRequest, SSE_EVENT } from '@app/types';
-import { ChatRequest } from '@app/types/dtos';
-import { queryCountConfig } from '@app/utils/account-config';
-import AgentManager from '@app/utils/agent';
+import { RunChainRequest } from '@app/types/dtos';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import ChainManager from '@app/utils/chains';
 import ConversationManager from '@app/utils/conversation';
-import {
-  createAuthApiHandler,
-  createLazyAuthHandler,
-  respond,
-} from '@app/utils/createa-api-handler';
+import { createAuthApiHandler } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 import streamData from '@app/utils/stream-data';
+import validate from '@app/utils/validate';
 
 const handler = createAuthApiHandler();
 
@@ -36,7 +26,7 @@ export const runChainRequest = async (
   res: NextApiResponse
 ) => {
   const session = req.session;
-  const data = req.body as ChatRequest;
+  const data = req.body as RunChainRequest;
 
   const conversationId = data.conversationId || cuid();
 
@@ -110,7 +100,7 @@ export const runChainRequest = async (
     channel: ConversationChannel.dashboard,
     // agentId: agent?.id,
     userId: session?.user?.id,
-    visitorId: data.visitorId,
+    visitorId: data.visitorId!,
     conversationId,
   });
 
@@ -133,14 +123,10 @@ export const runChainRequest = async (
     manager.query({
       input: data.query,
       stream: data.streaming ? handleStream : undefined,
-      history: conversation?.messages?.map((m) => ({
-        from: m.from,
-        message: m.text,
-      })),
+      history: conversation?.messages,
       temperature: data.temperature,
       promptTemplate: data.promptTemplate,
       promptType: data.promptType,
-      truncateQuery: data.truncateQuery,
       filters: data.filters,
       httpResponse: res,
       abortController: ctrl,
@@ -194,7 +180,12 @@ export const runChainRequest = async (
   }
 };
 
-handler.post(respond(runChainRequest));
+handler.post(
+  validate({
+    handler: runChainRequest,
+    body: RunChainRequest,
+  })
+);
 
 export default async function wrapper(
   req: AppNextApiRequest,

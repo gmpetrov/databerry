@@ -14,6 +14,7 @@ import {
   Source,
 } from './document';
 import { AgentInterfaceConfig, DatastoreSchema } from './models';
+import { ChainType } from '.';
 
 export const CreateDatastoreRequestSchema = DatastoreSchema.extend({
   id: z.string().trim().cuid().optional(),
@@ -131,8 +132,8 @@ export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 export const ChatRequest = z.object({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
-  visitorId: z.string().cuid().optional(),
-  conversationId: z.string().cuid().optional(),
+  visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),
+  conversationId: z.union([z.string().cuid().nullish(), z.literal('')]),
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional().default(false),
   temperature: z.number().min(0.0).max(1.0).optional(),
@@ -142,6 +143,11 @@ export const ChatRequest = z.object({
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;
+export const RunChainRequest = ChatRequest.extend({
+  chainType: z.nativeEnum(ChainType),
+});
+
+export type RunChainRequest = z.infer<typeof RunChainRequest>;
 
 export const ChatResponse = z.object({
   answer: z.string(),

@@ -1,4 +1,11 @@
-import { Agent, Datastore, MessageFrom, Tool, ToolType } from '@prisma/client';
+import {
+  Agent,
+  Datastore,
+  Message,
+  MessageFrom,
+  Tool,
+  ToolType,
+} from '@prisma/client';
 import axiosMod, { AxiosRequestConfig, AxiosStatic } from 'axios';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -10,11 +17,7 @@ import {
   ChatPromptTemplate,
   HumanMessagePromptTemplate,
 } from 'langchain/prompts';
-import {
-  AIChatMessage,
-  HumanChatMessage,
-  SystemChatMessage,
-} from 'langchain/schema';
+import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema';
 import { Tool as LangchainTool } from 'langchain/tools';
 import { WebBrowser } from 'langchain/tools/webbrowser';
 
@@ -22,10 +25,13 @@ import { SSE_EVENT } from '@app/types';
 import { Source } from '@app/types/document';
 import { ChatRequest } from '@app/types/dtos';
 
-import { getTextFromHTML, loadPageContent } from './loaders/web-page';
-import chat from './chat';
-import splitTextByToken from './split-text-by-token';
-import streamData from './stream-data';
+import streamData from '..//stream-data';
+import chat from '../chatv2';
+import { getTextFromHTML, loadPageContent } from '../loaders/web-page';
+import splitTextByToken from '../split-text-by-token';
+
+import chatRetrieval from './chat-retrieval';
+import qa from './qa';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -34,17 +40,6 @@ type ToolExtended = Tool & {
 export type AgentWithTools = Agent & {
   tools: ToolExtended[];
 };
-
-const qaPrompt = `
-INSTRUCTIONS: Given the following extracted parts of a long document and a question, create a final answer using ONLY THE GIVEN DOCUMENT DATA NOT FROM YOUR TRAINED KNOWLEDGE BASE in the language the question is asked, if it's asked in English, answer in English and so on. If you can't fetch a proper answer from the GIVEN DATA then just say that you don't know the answer from the document. Don't try to give an answer like a search engine for everything. Give an answer as much as it is asked for. Be specific to the question and don't give full explanation with long answer all the time unless asked explicitly or highly relevant. When asked for how many, how much etc, try giving the quantifiable answer without giving the full lengthy explanation. Always answer in the same language the question is asked in. Give the answer in proper line breaks between paragraphs or sentences.
-
-CONTEXT:
-{context}
-
-Question: {query}
-Give answer in the markdown rich format with proper headlines, bold, italics etc as per heirarchy and readability requirements. Make sure you follow all the given INSTRUCTIONS strictly when giving the answer with care. Do not answer like a generic AI, but act like a trained AI to answer questions based on the only info provided in the above CONTEXT sections.
-Helpful Answer:
-`;
 
 const googleSearch = async (query: string) => {
   const url = `https://www.google.com/search?q=${encodeURI(query)}`;
@@ -77,18 +72,14 @@ export default class ChainManager {
     input,
     stream,
     history,
-    truncateQuery,
     temperature,
     filters,
-    promptType,
-    promptTemplate,
     httpResponse,
     abortController,
   }: {
     input: string;
     stream?: any;
-    history?: { from: MessageFrom; message: string }[] | undefined;
-    truncateQuery?: boolean;
+    history?: Message[] | undefined;
     temperature?: ChatRequest['temperature'];
     filters?: ChatRequest['filters'];
     promptType?: ChatRequest['promptType'];
@@ -97,22 +88,25 @@ export default class ChainManager {
     abortController?: any;
   }) {
     if (filters?.datasource_ids?.length || filters?.datastore_ids?.length) {
-      const { answer, sources } = await chat({
-        modelName: 'gpt_3_5_turbo_16k',
-        promptType: 'raw',
-        promptTemplate: qaPrompt,
+      return qa({
         query: input,
-        topK: 15,
-        temperature: 0,
+        temperature,
         stream,
         history,
-        truncateQuery,
         filters,
-        includeSources: true,
       });
-
-      return { answer, sources };
     }
+
+    return chat({
+      initialMessages: [
+        new SystemMessage(
+          `You are a productivity assistant. Please provide a helpful and professional response to the user's question or issue.`
+        ),
+      ],
+      prompt: input,
+      temperature: temperature || 0.5,
+      stream,
+    });
 
     const model = new ChatOpenAI({
       // modelName: 'gpt-4',
@@ -133,16 +127,16 @@ export default class ChainManager {
     });
 
     const messages = [
-      new SystemChatMessage(`You are a productivity assistant.
+      new SystemMessage(`You are a productivity assistant.
 Please provide a helpful and professional response to the user's question or issue.
       `),
       // ...(history?.map((m) => {
       //   if (m.from === MessageFrom.agent) {
-      //     return new AIChatMessage(m.message);
+      //     return new AIMessage(m.message);
       //   }
-      //   return new HumanChatMessage(m.message);
+      //   return new HumanMessage(m.message);
       // }) || []),
-      new HumanChatMessage(input),
+      new HumanMessage(input),
     ];
 
     const res = await model.call(messages, {
@@ -220,7 +214,7 @@ Please provide a helpful and professional response to the user's question or iss
 
         const out = await model.call([
           ...messages,
-          new HumanChatMessage(
+          new HumanMessage(
             `${chunks[0]}`
             // `${input}\n${chunks[0]}\nAlso provide up to 5 markdown links from the text above that would be of interest (always including URL and text). Links should be provided, if present, in markdown syntax as a list under the heading "Relevant Links:".`
           ),

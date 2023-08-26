@@ -15,6 +15,7 @@ import { useSession } from 'next-auth/react';
 import pDebounce from 'p-debounce';
 import { ReactElement } from 'react';
 import * as React from 'react';
+import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
 import ChatBox from '@app/components/ChatBox';
@@ -24,7 +25,7 @@ import EmptyMainChatCard from '@app/components/EmptyMainChatCard';
 import Layout from '@app/components/Layout';
 import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
-import { RouteNames } from '@app/types';
+import { ChainType } from '@app/types';
 import { Source } from '@app/types/document';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
@@ -43,6 +44,7 @@ export default function ChatPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
+    currentChainType: ChainType.qa,
     ressourcesQuery: '',
     selectedKnowledgeOptions: [] as KnowledgeOption[],
     chatFilters: {
@@ -70,6 +72,7 @@ export default function ChatPage() {
     endpoint: `/api/chains/run`,
     queryBody: {
       filters: state.chatFilters,
+      chainType: state.currentChainType,
     },
     localStorageConversationIdKey: 'mainChatConversationId',
   });
@@ -145,7 +148,7 @@ export default function ChatPage() {
         placeholder="chain"
         startDecorator={<MemoryRoundedIcon />}
         sx={{ mt: 'auto' }}
-        defaultValue={'qa'}
+        value={state.currentChainType}
       >
         <Option value="qa">Q&A</Option>
         {/* <Option value="agent">Agent</Option> */}
@@ -219,46 +222,53 @@ export default function ChatPage() {
 
   React.useEffect(() => {
     (async () => {
-      const id = router.query.datasourceId as string;
-      const chunkId = router.query.chunkId as string;
-      let chunkText = undefined as string | undefined;
-      let chunkPageNumber = 0 as number;
+      try {
+        const id = router.query.datasourceId as string;
+        const chunkId = router.query.chunkId as string;
+        let chunkText = undefined as string | undefined;
+        let chunkPageNumber = 0 as number;
 
-      if (!id) {
-        return;
-      }
-
-      const res = await axios.get('/api/datasources/' + id);
-      const datasource = res.data as AppDatasource;
-
-      if (datasource) {
-        if (chunkId) {
-          const chunkRes = await axios.get(
-            `/api/datasources/${id}/chunks/${chunkId}`
-          );
-          const chunk = chunkRes.data as Awaited<ReturnType<typeof getChunk>>;
-          chunkText = chunk.pageContent;
-          chunkPageNumber = chunk?.metadata?.page_number || 0;
+        if (!id) {
+          return;
         }
 
-        setState({
-          viewerSearch: chunkText,
-          viewerPageNumber: chunkPageNumber,
-          selectedKnowledgeOptions: [
-            {
-              id,
-              label: datasource.name,
-              type: 'datasources',
-              mime_type: (datasource as any)?.config?.mime_type,
-            },
-          ],
-        });
+        const res = await axios.get('/api/datasources/' + id);
+        const datasource = res.data as AppDatasource;
 
-        setTimeout(() => {
+        if (datasource) {
+          if (chunkId) {
+            const chunkRes = await axios.get(
+              `/api/datasources/${id}/chunks/${chunkId}`
+            );
+            const chunk = chunkRes.data as Awaited<ReturnType<typeof getChunk>>;
+            chunkText = chunk.pageContent;
+            chunkPageNumber = chunk?.metadata?.page_number || 0;
+          }
+
           setState({
-            viewerPageNumber: undefined,
+            viewerSearch: chunkText,
+            viewerPageNumber: chunkPageNumber,
+            selectedKnowledgeOptions: [
+              {
+                id,
+                label: datasource.name,
+                type: 'datasources',
+                mime_type: (datasource as any)?.config?.mime_type,
+              },
+            ],
           });
-        }, 5000);
+
+          setTimeout(() => {
+            setState({
+              viewerPageNumber: undefined,
+            });
+          }, 5000);
+        }
+      } catch (err) {
+        toast.error('Datasource was not found. Has it been deleted?', {
+          duration: 5000,
+        });
+        console.log(err);
       }
 
       delete router.query.datasourceId;

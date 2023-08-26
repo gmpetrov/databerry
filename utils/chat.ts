@@ -18,43 +18,12 @@ import { QdrantManager } from './datastores/qdrant';
 import { ModelConfig } from './config';
 import { DatastoreManager } from './datastores';
 import { CUSTOMER_SUPPORT } from './prompt-templates';
-import { EXTRACT_SOURCES } from './regexp';
 import truncateByModel from './truncate-by-model';
-
-// `${prompt || CUSTOMER_SUPPORT}
-// Given a following extracted chunks of a long document, create a final answer in the same language in which the question is asked.
-// If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
-// Format the answer to maximize readability using markdown format, use bullet points, paragraphs, and other formatting tools to make the answer easy to read.
-// If you find an answer from on of the chunks, inlcude after your answer, SOURCES, a string array that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
-// Don't include SOURCES if you din't find an answer in the chunks.
-
-// Here's an example:
-// =======
-// CONTEXT INFOMATION:
-// CHUNK_ID: 42
-// CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
-// CHUNK_ID: 21
-// CHUNK: Not relevant piece of information
-
-// Question: What is the cost of the Premium plan and what features does it include?
-
-// Answer: The cost of the Premium plan is $9.99 per month. The features included in this plan are:
-// - Ad-free streaming
-// - Unlimited streaming hours
-// - Ability to download songs for offline listening
-
-// SOURCES: ["42"]
-// =======
-// `;
 
 const getCustomerSupportPrompt = ({
   promptTemplate,
-  query,
-  context,
 }: {
   promptTemplate?: string;
-  query: string;
-  context: string;
 }) => {
   // Create a final answer with references named SOURCES at the end of your answer, that contains ids of the chunks that were used to create the answer, make sure to include the one used only.
   return `${promptTemplate || CUSTOMER_SUPPORT}
@@ -93,8 +62,6 @@ const getCustomerSupportMessages = ({
 }: GetPromptProps) => {
   const systemPrompt = getCustomerSupportPrompt({
     promptTemplate,
-    query,
-    context,
   });
 
   const prevMessages = (history || [])?.map((each) => {
@@ -142,6 +109,22 @@ const getRawMessages = ({
   return [...prevMessages, new HumanMessage(finalPrompt)];
 };
 
+export type ChatProps = {
+  datastore?: Datastore;
+  query: string;
+  promptTemplate?: string;
+  promptType?: PromptType;
+  topK?: number;
+  stream?: any;
+  temperature?: number;
+  modelName?: AgentModelName;
+  history?: { from: MessageFrom; message: string }[];
+  truncateQuery?: boolean;
+  filters?: ChatRequest['filters'];
+  includeSources?: boolean;
+  abortController?: any;
+};
+
 const chat = async ({
   datastore,
   query,
@@ -156,21 +139,7 @@ const chat = async ({
   filters,
   includeSources,
   abortController,
-}: {
-  datastore?: Datastore;
-  query: string;
-  promptTemplate?: string;
-  promptType?: PromptType;
-  topK?: number;
-  stream?: any;
-  temperature?: number;
-  modelName?: AgentModelName;
-  history?: { from: MessageFrom; message: string }[];
-  truncateQuery?: boolean;
-  filters?: ChatRequest['filters'];
-  includeSources?: boolean;
-  abortController?: any;
-}) => {
+}: ChatProps) => {
   const _modelName = ModelConfig[modelName]?.name;
   const _query = truncateQuery
     ? await truncateByModel({
@@ -226,12 +195,12 @@ const chat = async ({
     )
     ?.join('\n');
 
-  const contextForRef = results
-    ?.map(
-      (each) =>
-        `CHUNK_ID: ${each.metadata.chunk_id}\nCHUNK: ${each.pageContent}`
-    )
-    ?.join('\n\n');
+  // const contextForRef = results
+  //   ?.map(
+  //     (each) =>
+  //       `CHUNK_ID: ${each.metadata.chunk_id}\nCHUNK: ${each.pageContent}`
+  //   )
+  //   ?.join('\n\n');
 
   let messages = [] as (SystemMessage | HumanMessage | AIMessage)[];
 
