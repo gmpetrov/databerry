@@ -10,7 +10,9 @@ CONTEXT:
 {context}
 
 Question: {query}
+
 Give answer in the markdown rich format with proper headlines, bold, italics etc as per heirarchy and readability requirements. Make sure you follow all the given INSTRUCTIONS strictly when giving the answer with care. Do not answer like a generic AI, but act like a trained AI to answer questions based on the only info provided in the above CONTEXT sections.
+If you don't find an answer from the CONTEXT, politely say that you don't know. Don't try to make up an answer.
 Helpful Answer:
 `;
 
