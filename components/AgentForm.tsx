@@ -174,6 +174,7 @@ export default function BaseForm(props: Props) {
   const methods = useForm<UpsertAgentSchema>({
     resolver: zodResolver(UpsertAgentSchema),
     defaultValues: {
+      promptType: PromptType.customer_support,
       prompt: CUSTOMER_SUPPORT,
       includeSources: true,
       ...props?.defaultValues,
@@ -457,21 +458,25 @@ export default function BaseForm(props: Props) {
         <FormControl>
           <FormLabel>Prompt</FormLabel>
 
-          <Chip sx={{ mb: 1 }} variant="soft" size="sm" color="warning">
-            {PromptTypesLabels[promptType]}
-          </Chip>
+          {promptType && (
+            <Chip sx={{ mb: 1 }} variant="soft" size="sm" color="warning">
+              {PromptTypesLabels[promptType]}
+            </Chip>
+          )}
 
           <Stack mb={1} gap={1}>
-            <Alert
-              startDecorator={<InfoRoundedIcon />}
-              size="sm"
-              color="neutral"
-              variant="soft"
-            >
-              {promptType === PromptType.customer_support &&
-                customerSupportPromptTypeDescription}
-              {promptType === PromptType.raw && rawPromptTypeDescription}
-            </Alert>
+            {promptType && (
+              <Alert
+                startDecorator={<InfoRoundedIcon />}
+                size="sm"
+                color="neutral"
+                variant="soft"
+              >
+                {promptType === PromptType.customer_support &&
+                  customerSupportPromptTypeDescription}
+                {promptType === PromptType.raw && rawPromptTypeDescription}
+              </Alert>
+            )}
             {promptType === PromptType.customer_support && (
               <Alert
                 startDecorator={<InfoRoundedIcon />}
