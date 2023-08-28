@@ -40,18 +40,14 @@ const chatRetrieval = async ({
   abortController,
   ...otherProps
 }: ChatRetrievalChainProps) => {
-  const SIMILARITY_THRESHOLD = 0.78;
-
-  const results = (
-    retrievalSearch
-      ? await retrieval({
-          datastore,
-          filters,
-          topK: topK || 5,
-          query: retrievalSearch,
-        })
-      : []
-  ).filter((each) => each.metadata.score! > SIMILARITY_THRESHOLD);
+  const results = retrievalSearch
+    ? await retrieval({
+        datastore,
+        filters,
+        topK: topK || 5,
+        query: retrievalSearch,
+      })
+    : [];
 
   const prompt = getPrompt(results);
 

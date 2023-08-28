@@ -107,6 +107,8 @@ export default class AgentManager {
         ];
       }
 
+      const SIMILARITY_THRESHOLD = 0.78;
+
       return chatRetrieval({
         ...otherProps,
         getPrompt(chunks) {
@@ -121,7 +123,11 @@ export default class AgentManager {
 
               Answer:`,
               query: _query,
-              context: createPromptContext(chunks),
+              context: createPromptContext(
+                chunks.filter(
+                  (each) => each.metadata.score! > SIMILARITY_THRESHOLD
+                )
+              ),
               extraInstructions: _promptTemplate,
             });
           }
