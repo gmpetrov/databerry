@@ -105,7 +105,7 @@
     "slug": "zapier",
     "name": "Zapier",
     "description": "Connect with over 5,000 applications via Zapier",
-    "logo": "https://assets.stickpng.com/images/62a2289b443b787d5837125e.png",
+    "logo": "/images/zapier-logo.png",
     "CTA": "Create Your Bot",
     "youtubeVideoId": "Pa-cyPJzt5k",
     "features": [
