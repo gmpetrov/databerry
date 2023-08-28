@@ -3,7 +3,7 @@ import { Session } from 'next-auth';
 import { ReactElement, ReactNode } from 'react';
 
 export enum RouteNames {
-  HOME = '/chat',
+  HOME = '/agents',
   SIGN_IN = '/signin',
   SIGN_UP = '/signup',
   AGENTS = '/agents',

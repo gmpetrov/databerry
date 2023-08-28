@@ -94,6 +94,7 @@ export default class ChainManager {
         stream,
         history,
         filters,
+        abortController,
       });
     }
 
@@ -106,6 +107,7 @@ export default class ChainManager {
       prompt: input,
       temperature: temperature || 0.5,
       stream,
+      abortController,
     });
 
     const model = new ChatOpenAI({
