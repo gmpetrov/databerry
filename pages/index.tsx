@@ -14,6 +14,7 @@ import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
 import { Hero } from '@app/components/landing-page/Hero';
 import { HeroChatGPTPlugin } from '@app/components/landing-page/HeroChatGPTPlugin';
+import Languages from '@app/components/landing-page/Languages';
 // import { Pricing } from '@app/landing-page/components/Pricing';
 import { PrimaryFeatures } from '@app/components/landing-page/PrimaryFeatures';
 import SEO from '@app/components/SEO';
@@ -96,10 +97,11 @@ export default function Home() {
         <CallToAction />
         <Testimonials />
         <Pricing />
-        <Faqs /> */}
+      <Faqs /> */}
         <FeaturesForChatWithData />
         <FeaturesForCustomerSupport />
         <FeaturesForDevs />
+        <Languages />
         {/* <FeaturesForChatGPTPlugin /> */}
         {/* <FeaturesForSlack /> */}
         {/* <FeaturesForInfluencers /> */}

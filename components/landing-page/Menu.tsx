@@ -94,8 +94,8 @@ const solutions = [
   //   ),
   // },
   {
-    name: 'Datberry API',
-    description: 'Document Retrieval as a service',
+    name: 'Chaindesk API',
+    description: 'Acess the Chaindesk API to build your own workflows',
     href: 'https://docs.chaindesk.ai/introduction',
     icon: ServerIcon,
   },

@@ -50,6 +50,32 @@
     ]
   },
   {
+    "slug": "chat",
+    "name": "Chat Assistant",
+    "description": "Chat with your data, ask questions, get summaries, find information, and more.",
+    "logo": "/images/chat-assistant-logo.png",
+    "CTA": "Upload a Document",
+    "youtubeVideoId": "_n3VQM9N3-Q",
+    "features": [
+      {
+        "name": "Create a Datastore",
+        "description": "A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)"
+      },
+      {
+        "name": "Add your data",
+        "description": "Upload documents, link your Google Drive, connect to Notion and more!"
+      },
+      {
+        "name": "Chat",
+        "description": "You can ask questions, get summaries, find information, and more."
+      },
+      {
+        "name": "Auto Synch",
+        "description": "We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch."
+      }
+    ]
+  },
+  {
     "slug": "slack-bot",
     "name": "Slack Bot",
     "description": "Deploy a custom ChatGPT bot to your Slack workspace",
@@ -80,7 +106,7 @@
     "name": "Crisp Plugin",
     "description": "Deploy a custom ChatGPT bot to Crisp",
     "CTA": "Deploy Bot to Crisp",
-    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg",
+    "logo": "/images/crisp-logo.svg",
     "youtubeVideoId": "rLgn1_MWGPM",
     "features": [
       {
