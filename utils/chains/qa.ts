@@ -28,6 +28,7 @@ const qa = async ({
   stream,
   history,
   filters,
+  abortController,
 }: QAChainProps) => {
   return chatRetrieval({
     modelName: 'gpt_3_5_turbo_16k',
@@ -45,6 +46,7 @@ const qa = async ({
     history,
     filters,
     includeSources: true,
+    abortController,
   });
 };
 
