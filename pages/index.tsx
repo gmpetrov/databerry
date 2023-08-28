@@ -16,6 +16,7 @@ import { Hero } from '@app/components/landing-page/Hero';
 import { HeroChatGPTPlugin } from '@app/components/landing-page/HeroChatGPTPlugin';
 // import { Pricing } from '@app/landing-page/components/Pricing';
 import { PrimaryFeatures } from '@app/components/landing-page/PrimaryFeatures';
+import SEO from '@app/components/SEO';
 
 import ChatBotBenefits from './ChatBotBenefits';
 import Cta from './Cta';
@@ -53,31 +54,12 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>
-          Chaindesk - Build ChatGPT Agents trained on your custom data
-        </title>
+      <SEO
+        title="Chaindesk - Build ChatGPT Agents trained on your custom data"
+        description="Chaindesk offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
+      />
 
-        <meta
-          name="title"
-          content="Chaindesk - Build ChatGPT Agents trained on your custom data"
-        />
-        <meta
-          name="description"
-          content="Chaindesk offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
-        />
-        <meta
-          name="keywords"
-          content="AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, Chaindesk, ChatGPT Plugin"
-        />
-        <meta
-          property="og:title"
-          content="Chaindesk - Build ChatGPT Agents trained on your custom data"
-        />
-        <meta
-          property="og:description"
-          content="With our no-code platform, create a custom AI chatbot trained on your data in seconds. Streamline customer support, onboard new team members, and more!"
-        />
+      <Head>
         <meta property="og:url" content="https://www.chaindesk.ai/" />
         <meta property="og:site_name" content="Chaindesk" />
         <meta property="og:type" content="website" />
@@ -118,7 +100,7 @@ export default function Home() {
         <FeaturesForChatWithData />
         <FeaturesForCustomerSupport />
         <FeaturesForDevs />
-        <FeaturesForChatGPTPlugin />
+        {/* <FeaturesForChatGPTPlugin /> */}
         {/* <FeaturesForSlack /> */}
         {/* <FeaturesForInfluencers /> */}
         {/* <ChatBotBenefits /> */}

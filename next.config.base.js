@@ -32,6 +32,10 @@ const nextConfig = {
     return {
       beforeFiles: [
         {
+          source: '/sitemap.xml',
+          destination: '/api/sitemap',
+        },
+        {
           source: '/@:path',
           destination: '/agents/@:path/page',
         },

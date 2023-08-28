@@ -130,15 +130,15 @@ export function Header() {
 <Menu />
 
               <NavLink href="/pricing">Pricing</NavLink>
-              <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
+              {/* <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
                 GitHub
-              </NavLink>
-              <NavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
+              </NavLink> */}
+              {/* <NavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
                 Docs
-              </NavLink>
-              <NavLink href="https://databerry.getrewardful.com/" target={"_blank"}>
+              </NavLink> */}
+              {/* <NavLink href="https://databerry.getrewardful.com/" target={"_blank"}>
                 Affiliates
-              </NavLink>
+              </NavLink> */}
               {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               {/* <NavLink href="#pricing">Pricing</NavLink> */}
             </div>
