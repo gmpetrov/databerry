@@ -161,6 +161,14 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     exited: { opacity: 0 },
   };
 
+  const bubbleIcon = useMemo(() => {
+    if (state.agent?.iconUrl) {
+      return <img src={state.agent?.iconUrl} width={30} height={30} />;
+    } else {
+      return <AutoAwesomeIcon />;
+    }
+  }, [state.agent?.iconUrl]);
+
   const Capture = useMemo(() => {
     let Component = null;
 
@@ -506,7 +514,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             },
           })}
         >
-          {state.isOpen ? <ClearRoundedIcon /> : <AutoAwesomeIcon />}
+          {state.isOpen ? <ClearRoundedIcon /> : bubbleIcon}
         </IconButton>
       </Box>
     </>
