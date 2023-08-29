@@ -105,10 +105,10 @@ export const upsertDatasource = async (
 
     data = JSON.parse(rawBody) as UpsertDatasourceSchema;
 
-    if (req.body?.custom_id) {
+    if ((data as any)?.custom_id) {
       data.config = {
         ...data?.config,
-        custom_id: req.body?.custom_id,
+        custom_id: (data as any)?.custom_id,
       };
     }
   }
