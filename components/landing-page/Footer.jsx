@@ -1,12 +1,12 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import Button from '@mui/joy/Button'
-import Link from 'next/link'
+import Button from '@mui/joy/Button';
+import Link from 'next/link';
 
-import { Container } from '@app/components/landing-page/Container'
-import { Logo } from '@app/components/landing-page/Logo'
-import { NavLink } from '@app/components/landing-page/NavLink'
+import { Container } from '@app/components/landing-page/Container';
+import { Logo } from '@app/components/landing-page/Logo';
+import { NavLink } from '@app/components/landing-page/NavLink';
 import { RouteNames } from '@app/types';
-import products from '@app/utils/data/products.json'
+import products from '@app/utils/data/products.json';
 
 // export function Footer() {
 //   return (
@@ -72,8 +72,8 @@ import products from '@app/utils/data/products.json'
 //             </Link> */}
 //           </div>
 //           <p className="mt-6 text-sm text-slate-500 sm:mt-0">
-            // Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
-            // reserved.
+// Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
+// reserved.
 //           </p>
 //           <p>Made in France 🇫🇷</p>
 //         </div>
@@ -82,11 +82,11 @@ import products from '@app/utils/data/products.json'
 //   )
 // }
 
-
 const navigation = {
   solutions: [
-    ...products.map(product => ({
-      name: product.name, href: `/products/${product.slug}` 
+    ...products.map((product) => ({
+      name: product.name,
+      href: `/products/${product.slug}`,
     })),
     // { name: 'Marketing', href: '#' },
     // { name: 'Analytics', href: '#' },
@@ -95,7 +95,11 @@ const navigation = {
   ],
   support: [
     { name: 'Pricing', href: '/pricing' },
-    { name: 'Documentation', href: 'https://docs.chaindesk.ai', target: "_blank" },
+    {
+      name: 'Documentation',
+      href: 'https://docs.chaindesk.ai',
+      target: '_blank',
+    },
     { name: 'Privacy', href: '/privacy' },
     { name: 'Terms', href: '/terms' },
     // { name: 'Guides', href: '#' },
@@ -107,10 +111,7 @@ const navigation = {
     // { name: 'Jobs', href: '#' },
     // { name: 'Press', href: '#' },
   ],
-  legal: [
-    { name: 'Affiliates', href: 'https://databerry.getrewardful.com' },
-
-  ],
+  legal: [{ name: 'Affiliates', href: 'https://databerry.getrewardful.com' }],
   social: [
     // {
     //   name: 'Facebook',
@@ -148,6 +149,17 @@ const navigation = {
       ),
     },
     {
+      name: 'Linkedin',
+      href: 'https://www.linkedin.com/company/chaindesk',
+      icon: (props) => (
+        <svg
+        fill="currentColor" viewBox="0 0 24 24" {...props}
+        >
+          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+        </svg>
+      ),
+    },
+    {
       name: 'GitHub',
       href: 'https://github.com/gmpetrov/databerry',
       icon: (props) => (
@@ -174,9 +186,9 @@ const navigation = {
       ),
     },
   ],
-}
+};
 
-export  function Footer() {
+export function Footer() {
   return (
     <footer className="bg-black" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
@@ -185,11 +197,16 @@ export  function Footer() {
       <div className="px-6 pt-16 pb-8 mx-auto max-w-7xl sm:pt-24 lg:px-8 lg:pt-32">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-4">
-          <Logo className="w-auto h-8 mx-auto" />
+            <Logo className="w-auto h-8 mx-auto" />
 
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
-                <a key={item.name} href={item.href} className="text-gray-500 hover:text-gray-400" target="_blank">
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-gray-500 hover:text-gray-400"
+                  target="_blank"
+                >
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="w-6 h-6" aria-hidden="true" />
                 </a>
@@ -200,11 +217,16 @@ export  function Footer() {
           <div className="grid grid-cols-1 gap-8 mt-16 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-3 md:gap-8">
               <div>
-                <h3 className="text-sm font-semibold leading-6 text-white">Product</h3>
+                <h3 className="text-sm font-semibold leading-6 text-white">
+                  Product
+                </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.solutions.map((item) => (
                     <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                      <a
+                        href={item.href}
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                      >
                         {item.name}
                       </a>
                     </li>
@@ -212,11 +234,16 @@ export  function Footer() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-white">Help & Support</h3>
+                <h3 className="text-sm font-semibold leading-6 text-white">
+                  Help & Support
+                </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.support.map((item) => (
                     <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                      <a
+                        href={item.href}
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                      >
                         {item.name}
                       </a>
                     </li>
@@ -224,11 +251,16 @@ export  function Footer() {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-white">Community</h3>
+                <h3 className="text-sm font-semibold leading-6 text-white">
+                  Community
+                </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.legal.map((item) => (
                     <li key={item.name}>
-                      <a href={item.href} className="text-sm leading-6 text-gray-300 hover:text-white">
+                      <a
+                        href={item.href}
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                      >
                         {item.name}
                       </a>
                     </li>
@@ -265,10 +297,12 @@ export  function Footer() {
           </div>
         </div>
         <div className="pt-8 mt-16 border-t border-white/10 sm:mt-20 lg:mt-24">
-          <p className="text-xs leading-5 text-gray-400">Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
-            reserved.</p>
+          <p className="text-xs leading-5 text-gray-400">
+            Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
+            reserved.
+          </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }
