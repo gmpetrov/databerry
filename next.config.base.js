@@ -36,6 +36,14 @@ const nextConfig = {
           destination: '/api/sitemap',
         },
         {
+          source: '/blog',
+          destination: 'https://chaindesk-blog.vercel.app/blog',
+        },
+        {
+          source: '/blog/:path*',
+          destination: 'https://chaindesk-blog.vercel.app/blog/:path*',
+        },
+        {
           source: '/@:path',
           destination: '/agents/@:path/page',
         },
