@@ -104,6 +104,13 @@ export const upsertDatasource = async (
     const rawBody = buf.toString('utf8');
 
     data = JSON.parse(rawBody) as UpsertDatasourceSchema;
+
+    if (req.body?.custom_id) {
+      data.config = {
+        ...data?.config,
+        custom_id: req.body?.custom_id,
+      };
+    }
   }
 
   try {
