@@ -116,13 +116,13 @@ export default function Navigation() {
         icon: <StorageRoundedIcon fontSize="md" />,
         active: router.route === RouteNames.DATASTORES,
       },
-      // {
-      //   label: 'Chat',
-      //   route: RouteNames.CHAT,
-      //   icon: <ChatRoundedIcon fontSize="md" />,
-      //   active: router.route === RouteNames.CHAT,
-      //   isExperimental: true,
-      // },
+      {
+        label: 'Chat',
+        route: RouteNames.CHAT,
+        icon: <ChatRoundedIcon fontSize="md" />,
+        active: router.route === RouteNames.CHAT,
+        isExperimental: true,
+      },
       {
         label: 'Logs',
         route: RouteNames.LOGS,
