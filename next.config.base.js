@@ -37,7 +37,11 @@ const nextConfig = {
         },
         {
           source: '/blog',
-          destination: 'https://chaindesk-blog.vercel.app',
+          destination: 'https://chaindesk-blog.vercel.app/blog',
+        },
+        {
+          source: '/blog/:path*',
+          destination: 'https://chaindesk-blog.vercel.app/blog/:path*',
         },
         {
           source: '/@:path',

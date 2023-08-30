@@ -67,6 +67,7 @@ const chatRetrieval = async ({
 
   if (includeSources && results?.length > 0) {
     results
+      .sort((a, b) => b.metadata.score! - a.metadata.score!)
       .map((each) => ({
         chunk_id: each.metadata.chunk_id,
         datasource_id: each.metadata.datasource_id!,

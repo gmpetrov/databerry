@@ -23,6 +23,7 @@ export class QALoader extends DatasourceLoaderBase {
           datasource_name: this.datasource.name,
           datasource_type: this.datasource.type,
           source_url: (this.datasource?.config as QAConfig)?.source_url!,
+          custom_id: (this.datasource?.config as any)?.custom_id,
           tags: [],
         },
       }),

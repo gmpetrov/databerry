@@ -118,6 +118,8 @@ function Languages({}: Props) {
   return (
     <Stack
       sx={(theme) => ({
+        maxWidth: '100%',
+        overflow: 'hidden',
         ['.slide-left, .slide-right']: {
           display: 'flex',
           flexDirection: 'row',

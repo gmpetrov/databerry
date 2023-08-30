@@ -17,6 +17,7 @@ export class TextLoader extends DatasourceLoaderBase {
           datasource_name: this.datasource.name,
           datasource_type: this.datasource.type,
           source_url: (this.datasource?.config as any)?.source_url,
+          custom_id: (this.datasource?.config as any)?.custom_id,
           tags: [],
         },
       }),
