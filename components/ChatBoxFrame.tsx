@@ -3,11 +3,14 @@ import { useColorScheme } from '@mui/joy/styles';
 import { Agent, ConversationChannel } from '@prisma/client';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
+import useSWR from 'swr';
 
 import ChatBox from '@app/components/ChatBox';
 import useChat from '@app/hooks/useChat';
+import useRateLimit from '@app/hooks/useRateLimit';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
+import { fetcher } from '@app/utils/swr-fetcher';
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
@@ -30,6 +33,9 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
   );
+  const { isRateExceeded, rateExceededMessage } = useRateLimit({
+    agentId: `${router.query?.agentId}`,
+  });
 
   const {
     history,
@@ -42,6 +48,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   } = useChat({
     endpoint: `/api/agents/${router.query?.agentId}/query`,
     channel: ConversationChannel.website,
+    isRateExceeded,
+    rateExceededMessage,
   });
 
   const primaryColor =
@@ -51,11 +59,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
   }, [primaryColor]);
 
-  const handleFetchAgent = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/agents/${agentId}`);
-      const data = (await res.json()) as Agent;
-
+  useSWR<Agent>(`${API_URL}/api/agents/${agentId}`, fetcher, {
+    onSuccess: (data) => {
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
 
       setAgent(data);
@@ -63,17 +68,11 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         ...defaultChatBubbleConfig,
         ...agentConfig,
       });
-    } catch (err) {
+    },
+    onError: (err) => {
       console.error(err);
-    } finally {
-    }
-  };
-
-  useEffect(() => {
-    if (agentId) {
-      handleFetchAgent();
-    }
-  }, [agentId]);
+    },
+  });
 
   useEffect(() => {
     if (props.initConfig) {

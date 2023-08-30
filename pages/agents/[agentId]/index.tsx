@@ -62,6 +62,7 @@ import ChatBox from '@app/components/ChatBox';
 import ChatBubble from '@app/components/ChatBubble';
 import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
+import RateLimitForm, { RateLimitFields } from '@app/components/RateLimitForm';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -163,6 +164,22 @@ export default function AgentPage() {
     }
   };
 
+  const handleRateLimit = async (values: RateLimitFields) => {
+    await toast.promise(
+      axios.post('/api/agents', {
+        ...getAgentQuery?.data,
+        interfaceConfig: values,
+      }),
+      {
+        loading: 'Updating...',
+        success: 'Updated!',
+        error: 'Something went wrong',
+      }
+    );
+
+    getAgentQuery.mutate();
+  };
+
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;
     router.replace(router);
@@ -191,8 +208,8 @@ export default function AgentPage() {
 
   return (
     <Box
-      component="main"
-      className="MainContent"
+      component='main'
+      className='MainContent'
       sx={(theme) => ({
         px: {
           xs: 2,
@@ -224,8 +241,8 @@ export default function AgentPage() {
     >
       <>
         <Breadcrumbs
-          size="sm"
-          aria-label="breadcrumbs"
+          size='sm'
+          aria-label='breadcrumbs'
           separator={<ChevronRightRoundedIcon />}
           sx={{
             '--Breadcrumbs-gap': '1rem',
@@ -240,15 +257,15 @@ export default function AgentPage() {
           </Link>
           <Link href={RouteNames.AGENTS}>
             <Typography
-              fontSize="inherit"
-              color="neutral"
-              className="hover:underline"
+              fontSize='inherit'
+              color='neutral'
+              className='hover:underline'
             >
               Agents
             </Typography>
           </Link>
 
-          <Typography fontSize="inherit" color="neutral">
+          <Typography fontSize='inherit' color='neutral'>
             {getAgentQuery?.data?.name}
           </Typography>
         </Breadcrumbs>
@@ -269,12 +286,12 @@ export default function AgentPage() {
         >
           <Stack gap={2}>
             <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-              <Typography level="h1" fontSize="xl4">
+              <Typography level='h1' fontSize='xl4'>
                 {getAgentQuery?.data?.name}
               </Typography>
               <Chip
-                size="sm"
-                variant="soft"
+                size='sm'
+                variant='soft'
                 color={
                   {
                     public: 'success',
@@ -288,9 +305,9 @@ export default function AgentPage() {
 
             <Stack direction={'row'} gap={2} alignItems={'center'}>
               <Tabs
-                aria-label="Icon tabs"
+                aria-label='Icon tabs'
                 value={(router.query.tab as string) || 'chat'}
-                size="md"
+                size='md'
                 sx={{
                   borderRadius: 'lg',
                   display: 'inline-flex',
@@ -300,7 +317,7 @@ export default function AgentPage() {
                   handleChangeTab(value as string);
                 }}
               >
-                <TabList size="sm">
+                <TabList size='sm'>
                   <Tab value={'chat'}>
                     <ListItemDecorator>
                       <MessageRoundedIcon />
@@ -366,7 +383,7 @@ export default function AgentPage() {
             }}
           >
             <Stack
-              direction="row"
+              direction='row'
               sx={{
                 width: '100%',
                 height: '100%',
@@ -426,19 +443,19 @@ export default function AgentPage() {
           >
             {router.query.tab === 'deploy' && (
               <>
-                <Typography level="h5">
+                <Typography level='h5'>
                   Deploy Agent to the following services
                 </Typography>
 
-                <List variant="outlined" sx={{ mt: 2 }}>
+                <List variant='outlined' sx={{ mt: 2 }}>
                   {[
                     {
                       name: 'Website (bubble widget)',
                       // icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
                       icon: (
                         <IconButton
-                          size="sm"
-                          variant="solid"
+                          size='sm'
+                          variant='solid'
                           sx={(theme) => ({
                             // backgroundColor: state.config.primaryColor,
                             borderRadius: '100%',
@@ -478,11 +495,11 @@ export default function AgentPage() {
                       name: 'Slack',
                       icon: (
                         <Image
-                          className="w-8"
-                          src="/slack-logo.png"
+                          className='w-8'
+                          src='/slack-logo.png'
                           width={100}
                           height={100}
-                          alt="slack logo"
+                          alt='slack logo'
                         ></Image>
                       ),
                       action: () => {
@@ -494,11 +511,11 @@ export default function AgentPage() {
                       isPremium: true,
                       icon: (
                         <Image
-                          className="w-20"
-                          src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg"
+                          className='w-20'
+                          src='https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_de_Crisp.svg'
                           width={20}
                           height={20}
-                          alt="crisp logo"
+                          alt='crisp logo'
                         ></Image>
                       ),
                       action: () => {
@@ -510,9 +527,9 @@ export default function AgentPage() {
                       isPremium: false,
                       icon: (
                         <img
-                          className="w-8"
-                          src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
-                          alt="zapier logo"
+                          className='w-8'
+                          src='https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png'
+                          alt='zapier logo'
                         ></img>
                       ),
                       action: () => {
@@ -531,12 +548,12 @@ export default function AgentPage() {
                       })}
                     >
                       {/* <ListItemButton> */}
-                      <Stack direction="row" gap={2} alignItems={'center'}>
+                      <Stack direction='row' gap={2} alignItems={'center'}>
                         {each.icon}
                         <Typography fontWeight={'bold'}>{each.name}</Typography>
 
                         {each.isPremium && (
-                          <Chip color="warning" size="sm" variant="soft">
+                          <Chip color='warning' size='sm' variant='soft'>
                             premium
                           </Chip>
                         )}
@@ -547,8 +564,8 @@ export default function AgentPage() {
                         (each?.publicAgentRequired &&
                         agent?.visibility === DatastoreVisibility.private ? (
                           <Button
-                            size="sm"
-                            variant="outlined"
+                            size='sm'
+                            variant='outlined'
                             startDecorator={<ToggleOffIcon />}
                             sx={{ ml: 'auto' }}
                             loading={upsertAgentMutation.isMutating}
@@ -573,8 +590,8 @@ export default function AgentPage() {
                           </Button>
                         ) : (
                           <Button
-                            size="sm"
-                            variant="outlined"
+                            size='sm'
+                            variant='outlined'
                             startDecorator={<TuneRoundedIcon />}
                             sx={{ ml: 'auto' }}
                             onClick={each.action}
@@ -585,9 +602,9 @@ export default function AgentPage() {
 
                       {each.isPremium && !session?.user?.isPremium && (
                         <Button
-                          size="sm"
-                          variant="outlined"
-                          color="warning"
+                          size='sm'
+                          variant='outlined'
+                          color='warning'
                           sx={{ ml: 'auto' }}
                           onClick={() => setState({ isUsageModalOpen: true })}
                         >
@@ -662,18 +679,18 @@ export default function AgentPage() {
 
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
-                  <Typography level="body3" mb={2}>
+                  <Typography level='body3' mb={2}>
                     Use the Agent ID to query the agent through Chaindesk API
                   </Typography>
                   <Stack spacing={2}>
                     <Alert
-                      color="info"
+                      color='info'
                       startDecorator={<HelpOutlineRoundedIcon />}
                       endDecorator={
-                        <Link href="https://docs.chaindesk.ai" target="_blank">
+                        <Link href='https://docs.chaindesk.ai' target='_blank'>
                           <Button
-                            variant="plain"
-                            size="sm"
+                            variant='plain'
+                            size='sm'
                             endDecorator={<ArrowForwardRoundedIcon />}
                           >
                             Documentation
@@ -685,7 +702,7 @@ export default function AgentPage() {
                     </Alert>
 
                     <Alert
-                      color="neutral"
+                      color='neutral'
                       sx={{
                         cursor: 'copy',
                       }}
@@ -702,15 +719,17 @@ export default function AgentPage() {
                 </FormControl>
 
                 <Divider sx={{ my: 4 }} />
+                <RateLimitForm onSubmit={handleRateLimit} />
+                <Divider sx={{ my: 4 }} />
 
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Delete Agent</FormLabel>
-                  <Typography level="body3">
+                  <Typography level='body3'>
                     It will delete the agent permanently
                   </Typography>
 
                   <Button
-                    color="danger"
+                    color='danger'
                     sx={{ mr: 'auto', mt: 2 }}
                     startDecorator={<DeleteIcon />}
                     onClick={handleDeleteAgent}
@@ -725,8 +744,8 @@ export default function AgentPage() {
       </>
 
       <UsageLimitModal
-        title="Upgrade to premium to use this feature"
-        description="This feature is restricted to premium users only"
+        title='Upgrade to premium to use this feature'
+        description='This feature is restricted to premium users only'
         isOpen={state.isUsageModalOpen}
         handleClose={() => {
           setState({

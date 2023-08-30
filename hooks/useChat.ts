@@ -4,7 +4,6 @@ import {
 } from '@microsoft/fetch-event-source';
 import type { ConversationChannel, Prisma } from '@prisma/client';
 import { useCallback, useEffect } from 'react';
-import { useSWRConfig } from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 import { getConversation } from '@app/pages/api/conversations/[conversationId]';
@@ -24,6 +23,8 @@ type Props = {
   queryBody?: any;
   datasourceId?: string;
   localStorageConversationIdKey?: string;
+  isRateExceeded?: boolean;
+  rateExceededMessage?: string;
 };
 
 export const handleEvalAnswer = async (props: {
@@ -44,7 +45,14 @@ export const handleEvalAnswer = async (props: {
 
 const LOCAL_STORAGE_CONVERSATION_ID_KEY = 'conversationId';
 
-const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
+const useChat = ({
+  endpoint,
+  channel,
+  queryBody,
+  isRateExceeded,
+  rateExceededMessage,
+  ...otherProps
+}: Props) => {
   const localStorageConversationIdKey =
     otherProps.localStorageConversationIdKey ||
     LOCAL_STORAGE_CONVERSATION_ID_KEY;
@@ -121,6 +129,16 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
 
   const handleChatSubmit = async (message: string) => {
     if (!message || !endpoint) {
+      return;
+    }
+
+    if (isRateExceeded) {
+      setState({
+        history: [
+          ...state.history,
+          { from: 'agent', message: rateExceededMessage },
+        ] as any,
+      });
       return;
     }
 

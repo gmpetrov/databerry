@@ -19,12 +19,15 @@ import Typography from '@mui/joy/Typography';
 import type { Agent } from '@prisma/client';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Transition } from 'react-transition-group';
+import useSWR from 'swr';
 
 import ChatBox from '@app/components/ChatBox';
 import useChat from '@app/hooks/useChat';
+import useRateLimit from '@app/hooks/useRateLimit';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { AgentInterfaceConfig } from '@app/types/models';
 import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
+import { fetcher } from '@app/utils/swr-fetcher';
 
 export const theme = extendTheme({
   cssVarPrefix: 'databerry-chat-bubble',
@@ -69,7 +72,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     isCaptureLoading: false,
     visitorEmail: '',
   });
-
+  const { isRateExceeded, rateExceededMessage } = useRateLimit({
+    agentId: props.agentId,
+  });
   const {
     history,
     handleChatSubmit,
@@ -83,6 +88,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   } = useChat({
     endpoint: `${API_URL}/api/agents/${props.agentId}/query`,
     channel: 'website',
+    isRateExceeded,
+    rateExceededMessage,
     // channel: ConversationChannel.website // not working with bundler parcel,
   });
 
@@ -94,11 +101,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     );
   }, [state.config.primaryColor]);
 
-  const handleFetchAgent = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/agents/${props.agentId}`);
-      const data = (await res.json()) as Agent;
-
+  useSWR<Agent>(`${API_URL}/api/agents/${props.agentId}`, fetcher, {
+    onSuccess: (data) => {
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
 
       setState({
@@ -108,15 +112,11 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           ...agentConfig,
         },
       });
-    } catch (err) {
+    },
+    onError: (err) => {
       console.error(err);
-    } finally {
-    }
-  };
-
-  useEffect(() => {
-    handleFetchAgent();
-  }, []);
+    },
+  });
 
   useEffect(() => {
     if (state.config?.initialMessage) {
@@ -181,9 +181,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         >
           {state.visitorEmail && (
             <Chip
-              size="sm"
-              color="success"
-              variant="soft"
+              size='sm'
+              color='success'
+              variant='soft'
               sx={{ mr: 'auto' }}
               endDecorator={<CheckRoundedIcon />}
             >
@@ -193,9 +193,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
           {!state.visitorEmail && !state.showCaptureForm && (
             <Button
-              size="sm"
-              variant="plain"
-              color="neutral"
+              size='sm'
+              variant='plain'
+              color='neutral'
               startDecorator={<ThreePRoundedIcon />}
               sx={{ mr: 'auto' }}
               onClick={() => setState({ showCaptureForm: true })}
@@ -243,10 +243,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 }
               }}
             >
-              <Stack direction="row" gap={0.5} sx={{ width: '100%' }}>
+              <Stack direction='row' gap={0.5} sx={{ width: '100%' }}>
                 <IconButton
-                  size="sm"
-                  variant="plain"
+                  size='sm'
+                  variant='plain'
                   onClick={() => {
                     setState({
                       showCaptureForm: false,
@@ -258,21 +258,21 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
                 <Input
                   sx={{ width: '100%' }}
-                  size="sm"
-                  name="email"
-                  type="email"
-                  placeholder="Leave your email to get contacted by the team"
+                  size='sm'
+                  name='email'
+                  type='email'
+                  placeholder='Leave your email to get contacted by the team'
                   required
                   // startDecorator={<AlternateEmailRoundedIcon />}
                   disabled={state.isCaptureLoading}
                   endDecorator={
                     <IconButton
-                      color="neutral"
-                      type="submit"
+                      color='neutral'
+                      type='submit'
                       disabled={state.isCaptureLoading}
                     >
                       {state.isCaptureLoading ? (
-                        <CircularProgress size="sm" variant="soft" />
+                        <CircularProgress size='sm' variant='soft' />
                       ) : (
                         <CheckRoundedIcon />
                       )}
@@ -378,7 +378,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           {(s) => (
             <Card
               ref={chatBoxRef}
-              variant="outlined"
+              variant='outlined'
               sx={(theme) => ({
                 zIndex: 9999,
                 position: 'absolute',
@@ -426,15 +426,15 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               })}
             >
               <Box sx={{ width: '100%', mt: -2, py: 1 }}>
-                <Stack direction="row" alignItems={'center'}>
+                <Stack direction='row' alignItems={'center'}>
                   {state.config?.displayName && (
                     <Typography>{state.config?.displayName}</Typography>
                   )}
 
                   <IconButton
-                    variant="plain"
+                    variant='plain'
                     sx={{ ml: 'auto' }}
-                    size="sm"
+                    size='sm'
                     onClick={() => setState({ isOpen: false })}
                   >
                     <CloseRoundedIcon />
@@ -488,7 +488,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         </Transition>
         <IconButton
           // color={'neutral'}
-          variant="solid"
+          variant='solid'
           onClick={() =>
             setState({
               isOpen: !state.isOpen,
