@@ -15,8 +15,10 @@ export const getTextFromHTML = async (html: string) => {
   const { load } = await import('cheerio');
 
   const $ = load(html);
-  $('header').remove();
+  $('head').remove();
   $('footer').remove();
+  $('header').remove();
+  $('nav').remove();
   $('script').remove();
   $('style').remove();
   $('link').remove();
@@ -116,6 +118,7 @@ export class WebPageLoader extends DatasourceLoaderBase {
           datasource_id: this.datasource.id,
           datasource_name: this.datasource.name,
           datasource_type: this.datasource.type,
+          custom_id: (this.datasource?.config as any)?.custom_id,
           tags: [],
         },
       }),

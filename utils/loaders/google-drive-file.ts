@@ -124,6 +124,7 @@ export class GoogleDriveFileLoader extends DatasourceLoaderBase {
             datasource_type: this.datasource.type as 'google_drive_file',
             source_url: webViewLink as string,
             mime_type: gMimeType as string,
+            custom_id: (this.datasource?.config as any)?.custom_id,
             tags: [],
           },
         })
