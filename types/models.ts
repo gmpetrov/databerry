@@ -64,6 +64,20 @@ export const AgentInterfaceConfig = z.object({
   tiktokURL: z.string().optional(),
   githubURL: z.string().optional(),
   websiteURL: z.string().optional(),
+  rateLimit: z
+    .object({
+      enabled: z.boolean().optional(),
+      maxQueries: z
+        .number()
+        .or(z.string().pipe(z.coerce.number().positive()))
+        .optional(),
+      interval: z
+        .number()
+        .or(z.string().pipe(z.coerce.number().positive()))
+        .optional(),
+      limitReachedMessage: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig>;

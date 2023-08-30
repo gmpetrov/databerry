@@ -4,7 +4,6 @@ import {
 } from '@microsoft/fetch-event-source';
 import type { ConversationChannel, Prisma } from '@prisma/client';
 import { useCallback, useEffect } from 'react';
-import { useSWRConfig } from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 import { getConversation } from '@app/pages/api/conversations/[conversationId]';
@@ -14,6 +13,7 @@ import type { ChatResponse, EvalAnswer } from '@app/types/dtos';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { fetcher } from '@app/utils/swr-fetcher';
 
+import useRateLimit from './useRateLimit';
 import useStateReducer from './useStateReducer';
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
@@ -24,6 +24,8 @@ type Props = {
   queryBody?: any;
   datasourceId?: string;
   localStorageConversationIdKey?: string;
+  // TODO: Remove when rate limit implemented from backend
+  agentId?: string;
 };
 
 export const handleEvalAnswer = async (props: {
@@ -63,6 +65,12 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     }[],
     handleAbort: undefined as any,
   });
+
+  // TODO: Remove when rate limit implemented from backend
+  const { isRateExceeded, rateExceededMessage, handleIncrementRateLimitCount } =
+    useRateLimit({
+      agentId: otherProps.agentId,
+    });
 
   const getConversationQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getConversation>
@@ -121,6 +129,16 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
 
   const handleChatSubmit = async (message: string) => {
     if (!message || !endpoint) {
+      return;
+    }
+
+    if (isRateExceeded) {
+      setState({
+        history: [
+          ...state.history,
+          { from: 'agent', message: rateExceededMessage },
+        ] as any,
+      });
       return;
     }
 
@@ -288,8 +306,11 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
           }
         },
       });
+
+      handleIncrementRateLimitCount?.();
     } catch (err) {
       console.error('err', err);
+
       if (err instanceof ApiError) {
         if (err?.message) {
           error = err?.message;

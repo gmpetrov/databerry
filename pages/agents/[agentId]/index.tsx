@@ -62,12 +62,14 @@ import ChatBox from '@app/components/ChatBox';
 import ChatBubble from '@app/components/ChatBubble';
 import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
+import RateLimitForm, { RateLimitFields } from '@app/components/RateLimitForm';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { upsertAgent } from '@app/pages/api/agents';
 import { getAgent } from '@app/pages/api/agents/[id]';
 import { RouteNames } from '@app/types';
+import { AgentInterfaceConfig } from '@app/types/models';
 import agentToolFormat from '@app/utils/agent-tool-format';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
@@ -163,6 +165,23 @@ export default function AgentPage() {
     }
   };
 
+  const handleSubmitRateLimit = async (values: RateLimitFields) => {
+    await toast.promise(
+      upsertAgentMutation.trigger({
+        ...getAgentQuery?.data,
+        interfaceConfig: {
+          ...(getAgentQuery?.data?.interfaceConfig as any),
+          rateLimit: values.rateLimit,
+        },
+      } as any),
+      {
+        loading: 'Updating...',
+        success: 'Updated!',
+        error: 'Something went wrong',
+      }
+    );
+  };
+
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;
     router.replace(router);
@@ -188,7 +207,7 @@ export default function AgentPage() {
   }
 
   const agent = getAgentQuery?.data;
-
+  const agentConfig = agent.interfaceConfig as AgentInterfaceConfig;
   return (
     <Box
       component="main"
@@ -660,6 +679,12 @@ export default function AgentPage() {
 
                 <Divider sx={{ my: 4 }} />
 
+                <RateLimitForm
+                  onSubmit={handleSubmitRateLimit}
+                  rateLimit={agentConfig.rateLimit}
+                />
+
+                <Divider sx={{ my: 4 }} />
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
                   <Typography level="body3" mb={2}>
@@ -702,7 +727,6 @@ export default function AgentPage() {
                 </FormControl>
 
                 <Divider sx={{ my: 4 }} />
-
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Delete Agent</FormLabel>
                   <Typography level="body3">

@@ -41,7 +41,9 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     handleAbort,
   } = useChat({
     endpoint: `/api/agents/${router.query?.agentId}/query`,
+
     channel: ConversationChannel.website,
+    agentId,
   });
 
   const primaryColor =
@@ -50,6 +52,22 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
   }, [primaryColor]);
+
+  // TODO: find why onSuccess is not working
+  // useSWR<Agent>(`${API_URL}/api/agents/${agentId}`, fetcher, {
+  //   onSuccess: (data) => {
+  //     const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
+
+  //     setAgent(data);
+  //     setConfig({
+  //       ...defaultChatBubbleConfig,
+  //       ...agentConfig,
+  //     });
+  //   },
+  //   onError: (err) => {
+  //     console.error(err);
+  //   },
+  // });
 
   const handleFetchAgent = async () => {
     try {
