@@ -54,6 +54,14 @@ const SynchButton = ({
     color: 'info',
   });
 
+  const handleClick = React.useCallback(
+    async (e: any) => {
+      setState({ loading: true });
+      await onClick?.(e);
+    },
+    [setState, onClick]
+  );
+
   React.useEffect(() => {
     let loading = false;
     let buttonText = 'Synch';
@@ -115,7 +123,7 @@ const SynchButton = ({
         : {
             startDecorator: <PlayArrow />,
           })}
-      onClick={onClick}
+      onClick={handleClick}
       size="sm"
       variant="outlined"
       color={state.color as any}
@@ -133,7 +141,7 @@ export default function DatasourceTable({
 }: {
   // items: Datasource[];
   handleBulkDelete: (ids: string[]) => any;
-  handleSynch: (datasourceId: string) => any;
+  handleSynch: (datasourceId: string) => Promise<any>;
 }) {
   const router = useRouter();
 

@@ -35,7 +35,7 @@ function Datasources(props: Props) {
 
     await axios.post(`/api/datasources/${datasourceId}/synch`);
 
-    getDatastoreQuery.mutate();
+    await getDatastoreQuery.mutate();
   };
 
   const handleBulkDelete = async (datasourceIds: string[]) => {
