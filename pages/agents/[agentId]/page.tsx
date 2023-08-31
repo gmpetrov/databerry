@@ -21,6 +21,7 @@ import React, { ReactElement, useEffect, useMemo } from 'react';
 import superjson from 'superjson';
 import useSWR from 'swr';
 
+import SEO from '@app/components/SEO';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
 import { AgentInterfaceConfig } from '@app/types/models';
@@ -65,6 +66,11 @@ function App(props: { agent: Agent }) {
 
   return (
     <>
+      <SEO
+        title={`${props?.agent?.name} - made with Chaindesk.ai`}
+        description={props?.agent?.description}
+        url={`https://chaindesk.ai/@${props?.agent?.handle}`}
+      />
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -72,32 +78,6 @@ function App(props: { agent: Agent }) {
           href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
           rel="stylesheet"
         />
-
-        <title>{`${props?.agent?.name} - made with Chaindesk.ai`}</title>
-
-        <meta
-          name="title"
-          content={`${props?.agent?.name} - made with Chaindesk.ai`}
-        />
-        <meta name="description" content={`${props?.agent?.description}`} />
-        <meta
-          name="keywords"
-          content="AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, Chaindesk, ChatGPT Plugin"
-        />
-        <meta
-          property="og:title"
-          content={`${props?.agent?.name} - made with Chaindesk.ai`}
-        />
-        <meta
-          property="og:description"
-          content={`${props?.agent?.description}`}
-        />
-        <meta
-          property="og:url"
-          content={`https://chaindesk.ai/@${props?.agent?.handle}`}
-        />
-        <meta property="og:site_name" content="Chaindesk" />
-        <meta property="og:type" content="website" />
       </Head>
 
       {!agent || !state.isPageReady ? (
