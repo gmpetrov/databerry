@@ -31,11 +31,10 @@ export class WebSiteLoader extends DatasourceLoaderBase {
       this.datasource?.owner?.subscriptions?.[0]?.plan ||
       SubscriptionPlan.level_0;
 
-    const maxAutoPages =
-      accountConfig[currentPlan]?.limits?.maxWebsiteURL || 25;
+    const maxPages = accountConfig[currentPlan]?.limits?.maxWebsiteURL || 25;
 
     if (sitemap) {
-      const { pages, sitemaps } = await getSitemapPages(sitemap);
+      const { pages, sitemaps } = await getSitemapPages(sitemap, maxPages);
       urls = pages;
       nestedSitemaps = sitemaps;
     } else if (source) {
@@ -43,21 +42,19 @@ export class WebSiteLoader extends DatasourceLoaderBase {
       const sitemapURL = await findSitemap(source);
 
       if (sitemapURL) {
-        const { pages, sitemaps } = await getSitemapPages(sitemapURL);
+        const { pages, sitemaps } = await getSitemapPages(sitemapURL, maxPages);
         urls = pages;
         nestedSitemaps = sitemaps;
       } else {
         // Fallback to recursive search
-        urls = await findDomainPages(source, maxAutoPages);
+        urls = await findDomainPages(source, maxPages);
       }
     } else {
       urls = [];
     }
 
-    urls = urls.slice(
-      0,
-      accountConfig[currentPlan]?.limits?.maxWebsiteURL || 10
-    );
+    // TODO: not needed anymore as maxPages is already applied above
+    urls = urls.slice(0, maxPages);
 
     const groupId = this.datasource?.groupId || this.datasource?.id;
     const children = await prisma.appDatasource.findMany({

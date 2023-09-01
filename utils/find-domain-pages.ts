@@ -45,34 +45,56 @@ export const getUrlsFromSitemap = (data: any) => {
   };
 };
 
-export const getSitemapPages = async (sitemapURL: string) => {
-  const result = {
-    pages: [] as string[],
-    sitemaps: [] as string[],
-  };
-
+export const getSitemapPages = async (
+  sitemapURL: string,
+  maxPages?: number
+) => {
+  const pages = [] as string[];
   try {
-    let content = '';
-    try {
-      const { data } = await axios.get(sitemapURL);
+    const getUrls = async (sitemap: string) => {
+      let content = '';
+      try {
+        if (maxPages && pages.length >= maxPages) {
+          return;
+        }
 
-      if (!data) {
-        throw 'empty data';
+        const { data } = await axios.get(sitemap);
+
+        if (!data) {
+          throw 'empty data';
+        }
+
+        content = data;
+      } catch (err) {
+        console.log(err);
+
+        content = await fetchWithBrowser(sitemap);
       }
 
-      content = data;
-    } catch (err) {
-      console.log(err);
+      const res = getUrlsFromSitemap(content);
 
-      content = await fetchWithBrowser(sitemapURL);
-    }
+      for (const each of res.pages) {
+        pages.push(each);
 
-    return getUrlsFromSitemap(content);
+        if (maxPages && pages.length >= maxPages) {
+          return;
+        }
+      }
+
+      for (const each of res.sitemaps) {
+        await getUrls(each);
+      }
+    };
+
+    await getUrls(sitemapURL);
   } catch (err) {
-    console.log(err);
+    console.log('err', err);
   }
 
-  return result;
+  return {
+    pages,
+    sitemaps: [],
+  };
 };
 
 const findDomainPages = async (startingUrl: string, nbPageLimit = 25) => {
