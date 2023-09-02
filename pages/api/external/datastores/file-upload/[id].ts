@@ -62,7 +62,8 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   try {
     await FileSchema.parseAsync(file);
   } catch (err) {
-    console.log('Error File Upload', err);
+    req.logger.error('Error File Upload');
+    req.logger.error(err);
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
@@ -188,7 +189,7 @@ export const config = {
 };
 
 export default async function wrapper(
-  req: NextApiRequest,
+  req: AppNextApiRequest,
   res: NextApiResponse
 ) {
   await runMiddleware(req, res, cors);

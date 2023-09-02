@@ -4,6 +4,7 @@ import Redis from 'ioredis';
 import { TaskQueue } from '@app/types';
 import { TaskLoadDatasourceRequestSchema } from '@app/types/dtos';
 import { WorkerPro } from '@app/utils/bullmq-pro';
+import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
 import taskLoadDatasource from '@app/utils/task-load-datasource';
 
@@ -14,14 +15,14 @@ const datasourceLoadQueue = new WorkerPro(
   async (job) => {
     const data = job?.data as TaskLoadDatasourceRequestSchema;
     try {
-      console.log('JOB', data);
+      logger.info(data);
 
       await taskLoadDatasource(data);
 
       return;
     } catch (err) {
       // TODO: handle error
-      console.error(err);
+      logger.error(err);
 
       await prisma.appDatasource.update({
         where: {

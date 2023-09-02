@@ -28,7 +28,7 @@ export const checkDatasource = async (
       datastoreId: data.datastoreId,
     } as AppDatasource).getSize(data.datasourceText);
   } catch (err: any) {
-    console.log('[checkDatasource]', err?.response?.status);
+    req.logger.error(err?.response?.status);
   }
 
   if (!session.user?.isPremium && size / 1000000 > 1.1) {

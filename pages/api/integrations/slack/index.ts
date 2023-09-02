@@ -22,6 +22,7 @@ import ConversationManager from '@app/utils/conversation';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import formatSourcesRawText from '@app/utils/form-sources-raw-text';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
+import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
 import slackAgent from '@app/utils/slack-agent';
 
@@ -155,7 +156,6 @@ const handleMention = async (payload: MentionEvent) => {
 
   const query = (args || []).join(' ');
   const cmd = args?.[0]?.toLowerCase();
-  console.log('QUERUY---->', query);
   const slackClient = new WebClient(integration?.integrationToken!);
 
   try {
@@ -168,7 +168,7 @@ const handleMention = async (payload: MentionEvent) => {
       plan,
     });
   } catch (err) {
-    console.log(err);
+    logger.error(err);
 
     return await slackClient.chat.postMessage({
       channel: payload.event.channel,
@@ -252,7 +252,7 @@ const handleAsk = async (payload: CommandEvent) => {
 };
 
 export const slack = async (req: AppNextApiRequest, res: NextApiResponse) => {
-  console.log('PAYLOAD', req.body);
+  req.logger.info(req.body);
 
   if (req.body?.type === 'url_verification') {
     return res.json({ challenge: `${req.body?.challenge}` });

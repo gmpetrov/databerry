@@ -3,10 +3,13 @@ import { NextApiResponse } from 'next';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { Middleware } from 'next-connect';
+import { v4 as uuidv4 } from 'uuid';
 
 import { authOptions } from '@app/pages/api/auth/[...nextauth]';
 import { AppNextApiRequest } from '@app/types/index';
 import prisma from '@app/utils/prisma-client';
+
+import logger from './logger';
 
 export const sessionUserInclude: Prisma.UserInclude = {
   usage: true,
@@ -97,6 +100,28 @@ export const optionalAuth: Middleware<
   if (session) {
     req.session = session;
   }
+
+  return next();
+};
+
+export const withLogger: Middleware<
+  AppNextApiRequest,
+  NextApiResponse
+> = async (req, res, next) => {
+  if (!req.requestId) {
+    req.requestId = uuidv4();
+  }
+
+  req.logger = logger.child({
+    requestId: req.requestId,
+    requestPath: req.url,
+  });
+
+  req.logger.info(req.method);
+
+  // res.on('close', () => {
+  //   req.logger.info('end');
+  // });
 
   return next();
 };

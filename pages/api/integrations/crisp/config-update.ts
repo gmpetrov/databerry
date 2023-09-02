@@ -31,7 +31,7 @@ export const updateCrispConfig = async (
   try {
     metadata = await client.website.getWebsite(data.website_id);
   } catch (err) {
-    console.log('err getting website', err);
+    req.logger.error(err);
   }
 
   // if (data.token !== websites[data.website_id]?.token) {

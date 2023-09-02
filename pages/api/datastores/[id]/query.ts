@@ -21,8 +21,9 @@ export const queryURL = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  console.log('REG BODY', req.body);
-  console.log('REG QUERY', req.query);
+  req.logger.info(req.body);
+  req.logger.info(req.query);
+
   const session = req.session;
   const datastoreId = req.query.id as string;
   const data = req.body as SearchRequestSchema;

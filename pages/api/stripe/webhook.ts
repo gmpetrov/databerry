@@ -55,7 +55,7 @@ handler.post(async (req, res) => {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err: any) {
-    console.log(`❌ Error message: ${err?.message}`);
+    req.logger.error(`❌ Error message: ${err?.message}`);
     return res.status(400).send(`Webhook Error: ${err?.message}`);
   }
 
@@ -260,7 +260,7 @@ handler.post(async (req, res) => {
           throw new Error(`Unhandled relevant event! ${event.type}`);
       }
     } catch (error) {
-      console.log(error);
+      req.logger.error(error);
       return res
         .status(400)
         .send('Webhook error: "Webhook handler failed. View logs."');

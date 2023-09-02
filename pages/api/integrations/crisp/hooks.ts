@@ -269,11 +269,10 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   let body = {} as HookBody;
   try {
     res.status(200).send('Handling...');
-    const host = req?.headers?.['host'];
-    const subdomain = getSubdomain(host!);
+    // const host = req?.headers?.['host'];
+    // const subdomain = getSubdomain(host!);
     body = req.body as HookBody;
-
-    console.log('BODY', body);
+    req.logger.info(body);
 
     const _timestamp = req.headers['x-crisp-request-timestamp'];
     const _signature = req.headers['x-crisp-signature'];
@@ -336,7 +335,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               body.data.content
             );
           } catch (err) {
-            console.log(err);
+            req.logger.error(err);
           }
         }
 
@@ -359,7 +358,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         }
         break;
       case 'message:updated':
-        console.log(body.data.content?.choices);
+        req.logger.info(body.data.content?.choices);
         const choices = body.data.content
           ?.choices as HookBodyMessageUpdated['data']['content']['choices'];
         const selected = choices?.find((one) => one.selected);
@@ -459,7 +458,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       }
     );
   } catch (err) {
-    console.log('ERROR', err);
+    req.logger.error(err);
   } finally {
     return 'Success';
   }

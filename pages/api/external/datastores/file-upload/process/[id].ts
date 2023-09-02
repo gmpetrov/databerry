@@ -103,7 +103,7 @@ handler.post(
 );
 
 export default async function wrapper(
-  req: NextApiRequest,
+  req: AppNextApiRequest,
   res: NextApiResponse
 ) {
   await runMiddleware(req, res, cors);

@@ -64,7 +64,7 @@ export const generateOpenApiYaml = async (
 handler.get(generateOpenApiYaml);
 
 export default async function wrapper(
-  req: NextApiRequest,
+  req: AppNextApiRequest,
   res: NextApiResponse
 ) {
   await runMiddleware(req, res, cors);

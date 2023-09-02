@@ -1,5 +1,6 @@
 import { NextApiRequest, NextPage } from 'next/types';
 import { Session } from 'next-auth';
+import type { Logger } from 'pino';
 import { ReactElement, ReactNode } from 'react';
 
 export enum RouteNames {
@@ -24,6 +25,8 @@ export enum PromptTypesLabels {
 
 export type AppNextApiRequest = NextApiRequest & {
   session: Session;
+  requestId?: string;
+  logger: Logger;
 };
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {

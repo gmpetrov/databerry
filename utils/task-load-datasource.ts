@@ -98,11 +98,6 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   } catch (err) {
     if (err instanceof ApiError) {
       if (err.name === ApiErrorType.WEBPAGE_IS_SITEMAP) {
-        console.log(
-          'ApiErrorType.WEBPAGE_IS_SITEMAP',
-          ApiErrorType.WEBPAGE_IS_SITEMAP
-        );
-
         // WebPage is a sitemap re-run as a sitemap
         await prisma.appDatasource.update({
           where: {

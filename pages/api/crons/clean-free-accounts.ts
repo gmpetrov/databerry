@@ -24,7 +24,7 @@ export const cleanFreeAccounts = async (
     },
   });
 
-  console.log(`Processed ${result.count} items`);
+  req.logger.info(`Processed ${result.count} items`);
 
   return result;
 };

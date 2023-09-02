@@ -95,7 +95,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
           },
         ]);
       } catch (err) {
-        console.log('ERROR TRIGGERING TASK', err);
+        req.logger.error('ERROR TRIGGERING TASK', err);
 
         await prisma.appDatasource.update({
           where: {

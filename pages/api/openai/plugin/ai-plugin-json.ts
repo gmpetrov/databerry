@@ -81,7 +81,7 @@ export const generateAiPluginJson = async (
 handler.get(generateAiPluginJson);
 
 export default async function wrapper(
-  req: NextApiRequest,
+  req: AppNextApiRequest,
   res: NextApiResponse
 ) {
   await runMiddleware(req, res, cors);

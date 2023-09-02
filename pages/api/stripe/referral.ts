@@ -5,7 +5,6 @@ import { AppNextApiRequest } from '@app/types/index';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { stripe } from '@app/utils/stripe';
 import validate from '@app/utils/validate';
-
 const handler = createAuthApiHandler();
 
 const Schema = z.object({
@@ -22,7 +21,7 @@ export const referral = async (
   const referralId = req.body.referralId as string;
   const utmParams = (req.body.utmParams || {}) as any;
 
-  console.log('payload', req.body);
+  req.logger.info(req.body);
 
   const data = await stripe.checkout.sessions.retrieve(checkoutSessionId);
 

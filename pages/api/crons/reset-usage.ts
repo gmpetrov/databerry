@@ -3,6 +3,7 @@ import { NextApiResponse } from 'next';
 import { AppNextApiRequest } from '@app/types';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
 
 const handler = createApiHandler();
@@ -24,7 +25,7 @@ export const getAgents = async (
     },
   });
 
-  console.log(`Processed ${result.count} items`);
+  logger.info(`Processed ${result.count} items`);
 
   return result;
 };
