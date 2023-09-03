@@ -73,9 +73,6 @@ wp_enqueue_style('chaindesk-style', plugins_url('assets/style.css', __FILE__));
     <div class="chaindesk-modal">
       <h2 class="chaindesk-title"><?php _e('Connected with Chaindesk.', 'chaindesk'); ?></h2>
       <p class="chaindesk-subtitle"><?php _e('You can now use Chaindesk from your homepage.', 'chaindesk'); ?></p>
-      <!-- <a class="chaindesk-button chaindesk-neutral" href="https://app.crisp.chat/settings/website/<?php echo esc_html($agent_id) ?>"><?php _e('Go to my Chaindesk Settings', 'chaindesk'); ?></a> -->
-
-      <!-- <a class="chaindesk-button chaindesk" href="https://app.crisp.chat/website/<?php echo esc_html($agent_id) ?>/inbox/"><?php _e('Go to my Inbox', 'chaindesk'); ?></a> -->
 
       <a class="chaindesk-button chaindesk-neutral" href="<?php echo esc_url($add_to_chaindesk_link);  ?>"><?php _e('Reconfigure', 'chaindesk'); ?></a>
 
