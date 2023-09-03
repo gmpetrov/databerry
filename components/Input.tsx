@@ -25,7 +25,19 @@ const Input = forwardRef((props: Props, ref) => {
 
   return (
     <FormControl error={!!errorMsg}>
-      {!props.hidden && label && <FormLabel>{label}</FormLabel>}
+      {!props.hidden && label && (
+        <FormLabel
+          sx={{
+            ...(props.disabled
+              ? {
+                  color: 'text.disabled',
+                }
+              : {}),
+          }}
+        >
+          {label}
+        </FormLabel>
+      )}
 
       <BaseInput
         ref={ref as any}

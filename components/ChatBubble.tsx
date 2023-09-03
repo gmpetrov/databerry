@@ -84,6 +84,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     endpoint: `${API_URL}/api/agents/${props.agentId}/query`,
     channel: 'website',
     // channel: ConversationChannel.website // not working with bundler parcel,
+    agentId: props?.agentId,
   });
 
   const textColor = useMemo(() => {
@@ -93,6 +94,22 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
       '#000000'
     );
   }, [state.config.primaryColor]);
+
+  // TODO: find why onSuccess is not working
+  // useSWR<Agent>(`${API_URL}/api/agents/${agentId}`, fetcher, {
+  //   onSuccess: (data) => {
+  //     const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
+
+  //     setAgent(data);
+  //     setConfig({
+  //       ...defaultChatBubbleConfig,
+  //       ...agentConfig,
+  //     });
+  //   },
+  //   onError: (err) => {
+  //     console.error(err);
+  //   },
+  // });
 
   const handleFetchAgent = async () => {
     try {
@@ -115,8 +132,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   };
 
   useEffect(() => {
-    handleFetchAgent();
-  }, []);
+    if (props.agentId) {
+      handleFetchAgent();
+    }
+  }, [props.agentId]);
 
   useEffect(() => {
     if (state.config?.initialMessage) {
