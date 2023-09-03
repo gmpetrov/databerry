@@ -3,7 +3,7 @@ Contributors: chaindesk.ai
 Donate link: https://chaindesk.ai
 Tags: chatgpt, livechat, chat, live chat, free-live-chat, live-chat, live support, chat-plugin
 Requires at least: 3.0.1
-Tested up to: 4.8
+Tested up to: 6.3.1
 Stable tag: 4.7
 License: MIT
 License URI: https://opensource.org/licenses/MIT
