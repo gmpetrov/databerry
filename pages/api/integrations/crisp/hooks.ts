@@ -290,7 +290,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     // }
 
     if (req.headers['x-delivery-attempt-count'] !== '1') {
-      return "Not the first attempt, don't handle.";
+      return 'Not the first attempt, don\'t handle.';
     }
 
     const metadata = (

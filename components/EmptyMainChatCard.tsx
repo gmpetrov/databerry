@@ -25,7 +25,7 @@ const features = [
   {
     title: 'Retrieve information spread across all your organization',
     icon: <ManageSearchTwoToneIcon />,
-    prompts: ["What's the onboarding process for new employees"],
+    prompts: ['What\'s the onboarding process for new employees'],
   },
   {
     title: 'Analyze a specific document',

@@ -20,7 +20,7 @@ module.exports = {
       name: 'Test Agent',
       description: 'Test',
       prompt:
-        "As a customer support agent, please provide a helpful and professional response to the user's question or issue.\nAnswer in 20 words maximum.",
+        'As a customer support agent, please provide a helpful and professional response to the user\'s question or issue.\nAnswer in 20 words maximum.',
       promptType: 'customer_support',
       iconUrl: null,
       temperature: 0,

@@ -11,7 +11,7 @@ const customerSupportDataset = [
     question: '¿eres mi amigo?',
   },
   {
-    question: "C'est quoi chaindesk?",
+    question: 'C\'est quoi chaindesk?',
   },
   {
     question: '什么是 chaindesk.ai？',
@@ -23,7 +23,7 @@ const customerSupportDataset = [
     question: 'Comment créer un site internet?',
   },
   {
-    question: "Est-il possible d'evaluer la réponse des agents?",
+    question: 'Est-il possible d\'evaluer la réponse des agents?',
   },
 ];
 

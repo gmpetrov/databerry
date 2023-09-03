@@ -40,7 +40,7 @@ module.exports = {
         label: 'Truncate Query',
         type: 'boolean',
         helpText:
-          "Automatically truncate the query to fit Agent'model context size limit",
+          'Automatically truncate the query to fit Agent\'model context size limit',
         required: false,
         list: false,
         altersDynamicFields: false,

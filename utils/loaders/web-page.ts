@@ -70,7 +70,7 @@ export const loadPageContent = async (url: string) => {
 
     if (!text) {
       console.log(
-        "not text parssed from html, let's try again after 10 seconds"
+        'not text parssed from html, let\'s try again after 10 seconds'
       );
       await page.waitForTimeout(10000);
     }
