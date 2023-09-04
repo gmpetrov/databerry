@@ -65,14 +65,15 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/server ./server
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# TODO: Improve this. Output file tracing is removing modules needed for workers
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
+# # TODO: Improve this. Output file tracing is removing modules needed for workers
+# COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+# RUN yarn global add husky
+# RUN \
+#     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+#     elif [ -f package-lock.json ]; then npm ci; \
+#     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
+#     else echo "Lockfile not found." && exit 1; \
+#     fi
 RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 USER nextjs
