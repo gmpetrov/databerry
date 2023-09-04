@@ -103,7 +103,7 @@ export const chatAgentRequest = async (
       Connection: 'keep-alive',
     });
 
-    req.socket.on('close', function () {
+    req.socket.on('close', function() {
       ctrl.abort();
     });
   }
