@@ -1,0 +1,36 @@
+version: "3.1"
+services:
+  mysql:
+    container_name: chaindesk_prestashop_db
+    image: mysql:5.7
+    volumes:
+      - db:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: prestashop
+    networks:
+      - prestashop_network
+  prestashop:
+    container_name: prestashop
+    image: prestashop/prestashop
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    ports:
+      - 8080:80
+    environment:
+      DB_SERVER: chaindesk_prestashop_db
+      DB_NAME: prestashop
+      DB_USER: root
+      DB_PASSWD: admin
+    volumes:
+      - prestashop:/var/www/html
+      - .:/var/www/html/modules/chaindesk
+    networks:
+      - prestashop_network
+volumes:
+  db:
+  prestashop:
+networks:
+  prestashop_network:
