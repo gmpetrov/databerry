@@ -86,7 +86,7 @@ export default class AgentManager {
               Format the answer to maximize readability using markdown format, use bullet points, paragraphs, and other formatting tools to make the answer easy to read.
           Here's an example:
           =======
-          CONTEXT INFOMATION:
+          CONTEXT INFORMATION:
           CHUNK: Our company offers a subscription-based music streaming service called "MusicStreamPro." We have two plans: Basic and Premium. The Basic plan costs $4.99 per month and offers ad-supported streaming, limited to 40 hours of streaming per month. The Premium plan costs $9.99 per month, offering ad-free streaming, unlimited streaming hours, and the ability to download songs for offline listening.
           CHUNK: Not relevant piece of information
 
