@@ -1,6 +1,18 @@
 # FROM node:18-alpine AS base
 
-FROM mcr.microsoft.com/playwright:v1.32.0-focal as base
+FROM ubuntu:focal as base
+
+RUN set -uex; \
+    apt-get update; \
+    apt-get install -y ca-certificates curl gnupg; \
+    mkdir -p /etc/apt/keyrings; \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
+    | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
+    NODE_MAJOR=18; \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
+    > /etc/apt/sources.list.d/nodesource.list; \
+    apt-get update; \
+    apt-get install nodejs -y;
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -12,12 +24,15 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1
 RUN \
     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
     elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
+    elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i ; \
     else echo "Lockfile not found." && exit 1; \
     fi
+RUN npx playwright install --with-deps chromium
+
 RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 # Rebuild the source code only when needed
@@ -31,7 +46,7 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN mv next.config.docker.js next.config.js
-RUN yarn prisma:generate
+RUN npm run prisma:generate
 
 ARG NEXT_PUBLIC_S3_BUCKET_NAME
 ARG NEXT_PUBLIC_DASHBOARD_URL
@@ -41,7 +56,7 @@ ARG NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1
 ARG NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID
 ARG NEXT_PUBLIC_CRISP_PLUGIN_ID
 
-RUN NODE_OPTIONS="--max_old_space_size=4096" yarn build
+RUN NODE_OPTIONS="--max_old_space_size=4096" npm run build
 
 # If using npm comment out above and use below instead
 # RUN npm run build
@@ -74,8 +89,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 #     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
 #     else echo "Lockfile not found." && exit 1; \
 #     fi
-RUN rm -rf node_modules/.pnpm/canvas@2.11.2
-
 USER nextjs
 
 EXPOSE 3000

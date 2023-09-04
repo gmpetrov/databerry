@@ -1,3 +1,5 @@
+import 'pdfjs-dist/build/pdf.worker.js';
+
 import * as pdfJS from 'pdfjs-dist';
 
 import { AppDocument } from '@app/types/document';
