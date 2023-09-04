@@ -7,6 +7,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   experimental: {
     appDir: true,
+    // outputFileTracingIgnores: ['canvas'],
   },
   eslint: {
     dirs: ['pages', 'utils', 'components', 'hooks', 'types', 'widgets'],
@@ -42,6 +43,14 @@ const nextConfig = {
         {
           source: '/blog/:path*',
           destination: 'https://chaindesk-blog.vercel.app/blog/:path*',
+        },
+        {
+          source: '/help',
+          destination: 'https://help-center-wine.vercel.app/help',
+        },
+        {
+          source: '/help/:path*',
+          destination: 'https://help-center-wine.vercel.app/help/:path*',
         },
         {
           source: '/@:path',
