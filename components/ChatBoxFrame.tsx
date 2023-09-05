@@ -40,7 +40,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     handleEvalAnswer,
     handleAbort,
   } = useChat({
-    endpoint: `/api/agents/${router.query?.agentId}/query`,
+    endpoint: `${API_URL}/api/agents/${router.query?.agentId}/query`,
 
     channel: ConversationChannel.website,
     agentId,
