@@ -202,7 +202,7 @@ export default function BubbleWidgetSettings(props: Props) {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>Message Templates</FormLabel>
+                  <FormLabel>Message Suggestions</FormLabel>
 
                   {/* <Alert sx={{ mb: 1 }}>
             Domains where the chat widget will be added for security purposes.

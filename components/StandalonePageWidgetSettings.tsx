@@ -303,7 +303,7 @@ export default function StandalonePageSettings(props: Props) {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>Message Templates</FormLabel>
+                  <FormLabel>Message Suggestions</FormLabel>
 
                   <Textarea
                     placeholder={`Pricing Plans\nHow to create a website?`}
