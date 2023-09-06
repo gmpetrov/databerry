@@ -23,7 +23,7 @@ export const updateIntegrationConfig = async (
 ) => {
   const session = req.session;
   const data = req.body as z.infer<typeof schema>;
-  const name = req.query.name as 'wordpress' | 'shopify';
+  const name = req.query.name as 'wordpress' | 'shopify' | 'prestashop';
 
   const agent = await prisma.agent.findUnique({
     where: {
