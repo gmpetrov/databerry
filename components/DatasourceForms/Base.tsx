@@ -113,6 +113,10 @@ export default function BaseForm(props: Props) {
       const payload = {
         id: cuid(),
         ...values,
+        config: {
+          ...defaultValues?.config,
+          ...values?.config,
+        },
         isUpdateText: !!datasourceText,
         file: undefined,
       } as UpsertDatasourceSchema;
