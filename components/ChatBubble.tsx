@@ -85,6 +85,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     channel: 'website',
     // channel: ConversationChannel.website // not working with bundler parcel,
     agentId: props?.agentId,
+    localStorageConversationIdKey: 'chatBubbleConversationId',
   });
 
   const textColor = useMemo(() => {

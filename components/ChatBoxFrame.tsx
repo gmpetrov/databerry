@@ -44,6 +44,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
 
     channel: ConversationChannel.website,
     agentId,
+    localStorageConversationIdKey: 'iFrameConversationId',
   });
 
   const primaryColor =
