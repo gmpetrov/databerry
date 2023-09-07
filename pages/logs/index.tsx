@@ -1,5 +1,6 @@
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import { Button } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Badge from '@mui/joy/Badge';
@@ -18,6 +19,7 @@ import Typography from '@mui/joy/Typography';
 import { Prisma } from '@prisma/client';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
+import { useSession } from 'next-auth/react';
 import { ReactElement, useCallback } from 'react';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -25,6 +27,7 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 import ChatBox from '@app/components/ChatBox';
+import { ConversationExport } from '@app/components/ConversationExport';
 import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import Layout from '@app/components/Layout';
 import { handleEvalAnswer } from '@app/hooks/useChat';
@@ -40,6 +43,7 @@ import { getMessages } from '../api/logs/[id]';
 const LIMIT = 20;
 
 export default function LogsPage() {
+  const { data: session } = useSession();
   const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
@@ -71,6 +75,8 @@ export default function LogsPage() {
 
   const conversations = getConversationsQuery?.data?.flat() || [];
 
+  if (!session?.user) return null;
+
   if (!getConversationsQuery.isLoading && conversations.length === 0) {
     return (
       <Alert
@@ -98,15 +104,16 @@ export default function LogsPage() {
   }
 
   return (
-    <Stack gap={2} sx={{ height: 'calc(100vh - 160px)' }}>
-      <Alert
+    <Stack gap={2} sx={{ height: 'calc(100vh - 175px)' }}>
+      {/* <Alert
         variant="soft"
         color="neutral"
         startDecorator={<InfoRoundedIcon />}
       >
         View all Agents conversations across all channels. Evaluate and improve
         answers.
-      </Alert>
+      </Alert> */}
+      <ConversationExport userId={session.user.id} />
 
       <Sheet
         variant="outlined"
