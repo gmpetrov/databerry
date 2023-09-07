@@ -56,7 +56,7 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Chaindesk - Build ChatGPT Agents trained on your custom data"
+        title="Chaindesk - ChatGPT Chat Bot for your business"
         description="Chaindesk offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
       />
 
