@@ -17,6 +17,7 @@ import { HeroChatGPTPlugin } from '@app/components/landing-page/HeroChatGPTPlugi
 import Languages from '@app/components/landing-page/Languages';
 // import { Pricing } from '@app/landing-page/components/Pricing';
 import { PrimaryFeatures } from '@app/components/landing-page/PrimaryFeatures';
+import PartnerLogos from '@app/components/PartnerLogos';
 import SEO from '@app/components/SEO';
 
 import ChatBotBenefits from './ChatBotBenefits';
@@ -83,6 +84,7 @@ export default function Home() {
       <main className={clsx('bg-black min-heigh-full', mounted ? mode : '')}>
         {/* <Hero /> */}
         <HeroChatGPTPlugin />
+        <PartnerLogos/>
         {/* <CompanyLogos /> */}
         {/* <Image
           src="/features.png"
