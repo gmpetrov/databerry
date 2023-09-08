@@ -1,7 +1,9 @@
 import {
   AgentModelName,
   AgentVisibility,
+  Conversation,
   ConversationChannel,
+  Message,
   MessageEval,
   PromptType,
   ToolType,
@@ -251,3 +253,7 @@ export const EvalAnswer = z.object({
 });
 
 export type EvalAnswer = z.infer<typeof EvalAnswer>;
+
+export type ConversationWithMessages = Conversation & {
+  messages: Message[];
+};
