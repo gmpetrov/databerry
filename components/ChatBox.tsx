@@ -590,7 +590,7 @@ function ChatBox({
                   <Typography level="body3">
                     Powered by{' '}
                     <Typography color="primary" fontWeight={'bold'}>
-                      ChatbotGPT.ai
+                      ChatbotGPT
                     </Typography>
                   </Typography>
                 </Box>

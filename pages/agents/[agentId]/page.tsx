@@ -105,7 +105,7 @@ function App(props: { agent: Agent }) {
                 <Typography level="body2">
                   Powered by{' '}
                   <Typography color="primary" fontWeight={'bold'}>
-                    ChatbotGPT.ai
+                    ChatbotGPT
                   </Typography>
                 </Typography>
               </Box>
