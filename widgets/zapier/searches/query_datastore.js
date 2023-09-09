@@ -4,7 +4,7 @@ zapier.tools.env.inject();
 
 const baseApiUrl = process.env.API_URL
   ? process.env.API_URL
-  : 'https://api.chaindesk.ai';
+  : 'https://app.chaindesk.ai';
 
 module.exports = {
   display: {
@@ -46,7 +46,7 @@ module.exports = {
       },
       method: 'POST',
       removeMissingValuesFrom: { params: true },
-      url: `${baseApiUrl}/datastores/query/{{bundle.inputData.datastore_id}}`,
+      url: `${baseApiUrl}/api/datastores/{{bundle.inputData.datastore_id}}/query`,
     },
     sample: {
       text: 'Lorem ipsum',

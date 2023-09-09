@@ -8,7 +8,7 @@ zapier.tools.env.inject();
 
 const baseApiUrl = process.env.API_URL
   ? process.env.API_URL
-  : 'https://api.chaindesk.ai';
+  : 'https://app.chaindesk.ai';
 
 // Getting a stream directly from http. This only works on core 10+. For core
 // 9.x compatible code, see uploadFile_v9.js.

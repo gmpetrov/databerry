@@ -1,6 +1,6 @@
 const baseApiUrl = process.env.API_URL
   ? process.env.API_URL
-  : 'https://api.chaindesk.ai';
+  : 'https://app.chaindesk.ai';
 
 module.exports = {
   type: 'custom',
