@@ -57,21 +57,21 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Chaindesk - ChatGPT Chat Bot for your business"
-        description="Chaindesk offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
+        title="ChatbotGPT - ChatGPT Chat Bot for your business"
+        description="ChatbotGPT offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
       />
 
       <Head>
-        <meta property="og:url" content="https://www.chaindesk.ai/" />
-        <meta property="og:site_name" content="Chaindesk" />
+        <meta property="og:url" content="https://www.chatbotgpt.ai/" />
+        <meta property="og:site_name" content="ChatbotGPT" />
         <meta property="og:type" content="website" />
       </Head>
-      <div className="w-full p-2 text-center bg-indigo-500">
+      {/* <div className="w-full p-2 text-center bg-indigo-500">
         <h2>
           🔔 Rebranding Alert - Databerry.ai is now ⛓️{' '}
-          <strong>Chaindesk.ai</strong>
+          <strong>ChatbotGPT.ai</strong>
         </h2>
-      </div>
+      </div> */}
       <Header />
 
       <script
@@ -84,7 +84,7 @@ export default function Home() {
       <main className={clsx('bg-black min-heigh-full', mounted ? mode : '')}>
         {/* <Hero /> */}
         <HeroChatGPTPlugin />
-        <PartnerLogos/>
+        <PartnerLogos />
         {/* <CompanyLogos /> */}
         {/* <Image
           src="/features.png"

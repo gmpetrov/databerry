@@ -16,19 +16,19 @@ export default function Pricing() {
   return (
     <>
       <Head>
-        <title>Chaindesk Pricing - Plans for Teams of All Sizes</title>
+        <title>ChatbotGPT Pricing - Plans for Teams of All Sizes</title>
 
         <meta
           name="title"
-          content="Chaindesk Pricing - Plans for Teams of All Sizes"
+          content="ChatbotGPT Pricing - Plans for Teams of All Sizes"
         />
         <meta
           name="description"
-          content="Choose an affordable plan with Chaindesk. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
+          content="Choose an affordable plan with ChatbotGPT. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
         />
         <meta
           name="keywords"
-          content="Chaindesk, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
+          content="ChatbotGPT, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
         />
         <meta name="robots" content="index, follow" />
       </Head>
@@ -56,14 +56,12 @@ const tiers = [
       `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_0'].limits.maxAgentsQueries} GPT-3.5 agents queries / month`,
-      `File upload limited to ${
-        accountConfig['level_0'].limits.maxFileSize / 1000000
-      }MB / file`,
-      `Data processing limited to ${
-        accountConfig['level_0'].limits.maxDataProcessing / 1000000
-      }MB / month`,
+      `File upload limited to ${accountConfig['level_0'].limits.maxFileSize /
+        1000000}MB / file`,
+      `Data processing limited to ${accountConfig['level_0'].limits
+        .maxDataProcessing / 1000000}MB / month`,
       'Manual data synching',
-      'Access to Chaindesk API',
+      'Access to ChatbotGPT API',
       // 'ChatGPT plugin',
     ],
     mostPopular: false,
@@ -77,15 +75,14 @@ const tiers = [
     features: [
       `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_1'].limits.maxAgentsQueries} GPT-3.5 or ${
-        accountConfig['level_1'].limits.maxAgentsQueries / 2
-      } GPT-4 agents queries / month`,
-      `File upload limited to ${
-        accountConfig['level_1'].limits.maxFileSize / 1000000
-      }MB / file`,
-      `Data processing limited to ${
-        accountConfig['level_1'].limits.maxDataProcessing / 1000000
-      }MB / month`,
+      `${
+        accountConfig['level_1'].limits.maxAgentsQueries
+      } GPT-3.5 or ${accountConfig['level_1'].limits.maxAgentsQueries /
+        2} GPT-4 agents queries / month`,
+      `File upload limited to ${accountConfig['level_1'].limits.maxFileSize /
+        1000000}MB / file`,
+      `Data processing limited to ${accountConfig['level_1'].limits
+        .maxDataProcessing / 1000000}MB / month`,
       'Manual data synching',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
@@ -103,15 +100,14 @@ const tiers = [
     features: [
       `${accountConfig['level_2'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_2'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_2'].limits.maxAgentsQueries} GPT-3.5 or ${
-        accountConfig['level_2'].limits.maxAgentsQueries / 2
-      } GPT-4 agents queries / month`,
-      `File upload limited to ${
-        accountConfig['level_2'].limits.maxFileSize / 1000000
-      }MB / file`,
-      `Data processing limited to ${
-        accountConfig['level_2'].limits.maxDataProcessing / 1000000
-      }MB / month`,
+      `${
+        accountConfig['level_2'].limits.maxAgentsQueries
+      } GPT-3.5 or ${accountConfig['level_2'].limits.maxAgentsQueries /
+        2} GPT-4 agents queries / month`,
+      `File upload limited to ${accountConfig['level_2'].limits.maxFileSize /
+        1000000}MB / file`,
+      `Data processing limited to ${accountConfig['level_2'].limits
+        .maxDataProcessing / 1000000}MB / month`,
       'auto synch datasources',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
@@ -128,15 +124,14 @@ const tiers = [
     features: [
       `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_3'].limits.maxAgentsQueries} GPT-3.5 or ${
-        accountConfig['level_3'].limits.maxAgentsQueries / 2
-      } GPT-4 agents queries / month`,
-      `File upload limited to ${
-        accountConfig['level_3'].limits.maxFileSize / 1000000
-      }MB / file`,
-      `Data processing limited to ${
-        accountConfig['level_3'].limits.maxDataProcessing / 1000000
-      }MB / month`,
+      `${
+        accountConfig['level_3'].limits.maxAgentsQueries
+      } GPT-3.5 or ${accountConfig['level_3'].limits.maxAgentsQueries /
+        2} GPT-4 agents queries / month`,
+      `File upload limited to ${accountConfig['level_3'].limits.maxFileSize /
+        1000000}MB / file`,
+      `Data processing limited to ${accountConfig['level_3'].limits
+        .maxDataProcessing / 1000000}MB / month`,
       'auto synch datasources',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,

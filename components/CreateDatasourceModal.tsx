@@ -180,7 +180,7 @@ export default function CreateDatastoreModal(props: Props) {
 
                     {index === 0 && (
                       <Alert color="primary">
-                        Chaindesk works best with unstructured data. Better
+                        ChatbotGPT works best with unstructured data. Better
                         support for tabular data (csv, spreadsheet, etc...) is
                         coming soon 😉
                       </Alert>

@@ -165,9 +165,8 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
               <Avatar
                 size="lg"
                 variant="outlined"
-                src={`${
-                  datastore?.pluginIconUrl || '/.well-known/logo.png'
-                }?timestamp=${Date.now()}`}
+                src={`${datastore?.pluginIconUrl ||
+                  '/.well-known/logo.png'}?timestamp=${Date.now()}`}
               />
             </AvatarGroup>
             <Stack direction="row" gap={1}>
@@ -202,7 +201,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           <FormLabel>Name for humans (required, 20 character max)</FormLabel>
           <Input
             control={methods.control as any}
-            placeholder="e.g. Chaindesk"
+            placeholder="e.g. ChatbotGPT"
             {...methods.register('pluginName')}
           />
         </FormControl>
@@ -212,7 +211,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           </FormLabel>
           <Input
             control={methods.control as any}
-            placeholder="e.g. Chaindesk is a no-code platform for building AI apps..."
+            placeholder="e.g. ChatbotGPT is a no-code platform for building AI apps..."
             {...methods.register('pluginDescriptionForHumans')}
           />
         </FormControl>

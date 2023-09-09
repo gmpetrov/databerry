@@ -11,14 +11,14 @@ import { RouteNames } from '@app/types';
 import products from '@app/utils/data/products.json';
 
 type PageProps = {
-  product: (typeof products)[0];
+  product: typeof products[0];
 };
 
 export default function ProductPage({ product }: PageProps) {
   return (
     <>
       <SEO
-        title={`${product.name} - Chaindesk.ai`}
+        title={`${product.name} - ChatbotGPT.ai`}
         description={product.description}
       />
 
@@ -124,7 +124,7 @@ export default function ProductPage({ product }: PageProps) {
 }
 
 export function PrimaryFeatures(props: {
-  features: (typeof products)[0]['features'];
+  features: typeof products[0]['features'];
 }) {
   return (
     <div id="features" className="py-24 bg-black sm:py-32">
@@ -137,7 +137,7 @@ export function PrimaryFeatures(props: {
             A chatbot train on your data in minutes
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-            Chaindesk.ai makes it very easy to train a chatbot on your company
+            ChatbotGPT.ai makes it very easy to train a chatbot on your company
             data.
           </p>
         </div>

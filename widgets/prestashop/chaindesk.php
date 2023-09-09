@@ -14,7 +14,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class Chaindesk extends Module
+class ChatbotGPT extends Module
 {
     public function __construct()
     {
@@ -68,7 +68,7 @@ class Chaindesk extends Module
         $tab->name = [];
 
         foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = 'Chaindesk';
+            $tab->name[$lang['id_lang']] = 'ChatbotGPT';
         }
 
         $tab->id_parent = (int) Tab::getIdFromClassName('AdminAdmin');

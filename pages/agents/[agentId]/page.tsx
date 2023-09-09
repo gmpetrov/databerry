@@ -67,7 +67,7 @@ function App(props: { agent: Agent }) {
   return (
     <>
       <SEO
-        title={`${props?.agent?.name} - made with Chaindesk.ai`}
+        title={`${props?.agent?.name} - made with ChatbotGPT.ai`}
         description={props?.agent?.description}
         url={`https://chaindesk.ai/@${props?.agent?.handle}`}
       />
@@ -105,7 +105,7 @@ function App(props: { agent: Agent }) {
                 <Typography level="body2">
                   Powered by{' '}
                   <Typography color="primary" fontWeight={'bold'}>
-                    Chaindesk
+                    ChatbotGPT.ai
                   </Typography>
                 </Typography>
               </Box>

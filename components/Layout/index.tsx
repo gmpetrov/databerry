@@ -25,8 +25,10 @@ export default function Layout(props: Props) {
   const { mode, setMode } = useColorScheme();
   const { data: session, status } = useSession();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [userMenuElement, setUserMenuElement] =
-    React.useState<null | HTMLElement>(null);
+  const [
+    userMenuElement,
+    setUserMenuElement,
+  ] = React.useState<null | HTMLElement>(null);
 
   const [mounted, setMounted] = React.useState(false);
 
@@ -90,7 +92,7 @@ export default function Layout(props: Props) {
             </IconButton> */}
             <Logo className="w-10" />
             <Typography component="h1" fontWeight="xl">
-              Chaindesk
+              ChatbotGPT
             </Typography>
 
             {/* {session?.user?.isPremium && (

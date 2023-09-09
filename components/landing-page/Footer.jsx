@@ -49,7 +49,7 @@ import products from '@app/utils/data/products.json';
 //             {/* <Link
 //               href="https://twitter.com"
 //               className="group"
-//               aria-label="Chaindesk on Twitter"
+//               aria-label="ChatbotGPT on Twitter"
 //             >
 //               <svg
 //                 aria-hidden="true"
@@ -61,7 +61,7 @@ import products from '@app/utils/data/products.json';
 //             {/* <Link
 //               href="https://github.com"
 //               className="group"
-//               aria-label="Chaindesk on GitHub"
+//               aria-label="ChatbotGPT on GitHub"
 //             >
 //               <svg
 //                 aria-hidden="true"
@@ -72,7 +72,7 @@ import products from '@app/utils/data/products.json';
 //             </Link> */}
 //           </div>
 //           <p className="mt-6 text-sm text-slate-500 sm:mt-0">
-// Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
+// Copyright &copy; {new Date().getFullYear()} ChatbotGPT. All rights
 // reserved.
 //           </p>
 //           <p>Made in France 🇫🇷</p>
@@ -298,7 +298,7 @@ export function Footer() {
         </div>
         <div className="pt-8 mt-16 border-t border-white/10 sm:mt-20 lg:mt-24">
           <p className="text-xs leading-5 text-gray-400">
-            Copyright &copy; {new Date().getFullYear()} Chaindesk. All rights
+            Copyright &copy; {new Date().getFullYear()} ChatbotGPT.ai - All rights
             reserved.
           </p>
         </div>

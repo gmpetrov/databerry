@@ -2,7 +2,7 @@
   <br>
   <a href="https://chaindesk.ai"><img src="public/app-logo-icon.png" alt="WebTorrent" width="200"></a>
   <br>
-  Chaindesk
+  ChatbotGPT
   <br>
     <h3 align="center">The no-code platform for building custom LLM Agents</h3>
   <br>
@@ -12,10 +12,10 @@
 <!-- <h4 align="center">The no-code platform for semantic search and retrieval of personal or organizational documents.</h4> -->
 
 <h2 align="center">
-<img src="public/og-image.png" alt="Chaindesk" width="1000" style="max-width: 100%;">
+<img src="public/og-image.png" alt="ChatbotGPT" width="1000" style="max-width: 100%;">
 </h2>
 
-**[Chaindesk](https://chaindesk.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
+**[ChatbotGPT](https://chaindesk.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
 
 ### [📄 Documentation](https://docs.chaindesk.ai/)
 

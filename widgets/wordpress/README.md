@@ -1,4 +1,4 @@
-## Chaindesk Wordpress Plugin
+## ChatbotGPT Wordpress Plugin
 
 # Dev
 ```

@@ -1,4 +1,4 @@
-name: Chaindesk on Fly.io
+name: ChatbotGPT on Fly.io
 on:
   push:
     branches:

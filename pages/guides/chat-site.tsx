@@ -86,7 +86,7 @@ export default function DatasourcesPage() {
             1. Get the API Key of one of your Datastore{' '}
           </Typography>
           <Typography level="body1">
-            {`2. Go to Crisp's marketplace and install Chaindesk plugin`}
+            {`2. Go to Crisp's marketplace and install ChatbotGPT plugin`}
           </Typography>
           <Typography level="body1">
             3. Get the API Key of one of your Datastore{' '}

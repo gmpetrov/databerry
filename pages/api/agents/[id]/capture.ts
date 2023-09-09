@@ -133,7 +133,7 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
     </style>
   </head>
   <body>
-    <h2>Chaindesk.ai</h2>
+    <h2>ChatbotGPT.ai</h2>
     <h3>Visitor requested assistance</h3>
 
     <p>Visitor Email: <strong>${data.visitorEmail}</strong></p>
@@ -170,7 +170,7 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
   await transporter.sendMail({
     to: onwerEmail,
-    subject: 'Visitor requested assistance - ⛓️ Chaindesk',
+    subject: 'Visitor requested assistance - ⛓️ ChatbotGPT',
     html,
   });
 

@@ -47,7 +47,7 @@ export function PrimaryFeatures() {
           Prepare your data for the new AI era
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-          Chaindesk provides a user-friendly solution to quickly setup a semantic search system over your custom data without any technical knowledge
+          ChatbotGPT provides a user-friendly solution to quickly setup a semantic search system over your custom data without any technical knowledge
           </p>
         </div>
         <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">

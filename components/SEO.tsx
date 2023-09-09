@@ -24,9 +24,8 @@ function SEO(props: Props) {
 
       <meta
         name="keywords"
-        content={`"AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, Chaindesk, ChatGPT Plugin, Chat PDF, Chat with any document, Custom ChatGPT Bot" ${
-          props.keywords || ''
-        }`}
+        content={`"AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, ChatbotGPT, ChatGPT Plugin, Chat PDF, Chat with any document, Custom ChatGPT Bot, Chatbot GPT, Chatbot, ChatGPT Chatbot" ${props.keywords ||
+          ''}`}
       />
 
       <meta property="og:image" content="/og-image.png" />

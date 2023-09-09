@@ -21,8 +21,8 @@ describe('Datasources - Create', () => {
           },
         }
       );
-    } catch (err: any) {
-      expect(err.response?.status).toBe(403);
+    } catch (err) {
+      expect((err as any)?.response?.status).toBe(403);
     }
   });
 
@@ -31,7 +31,7 @@ describe('Datasources - Create', () => {
     try {
       const result = await testHttp.post('/api/datasources', {
         datastoreId: process.env.TEST_DATASTORE_ID,
-        name: 'Chaindesk Landingpage',
+        name: 'ChatbotGPT Landingpage',
         type: 'web_page',
         config: {
           source_url: 'https://www.chaindesk.ai/',
@@ -54,7 +54,7 @@ describe('Datasources - Create', () => {
           id: result?.data?.id,
         },
       });
-    } catch (err: any) {
+    } catch (err) {
       console.log(err);
 
       // fail('Should be able to create a datasource');

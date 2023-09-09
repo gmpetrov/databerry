@@ -273,7 +273,7 @@ export default function AccountPage() {
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
           {/* <Typography level="body3">
-            Use the api key to access the Chaindesk API
+            Use the api key to access the ChatbotGPT API
           </Typography> */}
 
           <Card variant="outlined">
@@ -331,9 +331,9 @@ export default function AccountPage() {
                           : 'success'
                       }
                     >
-                      {`${
-                        session?.user?.usage?.nbDataProcessingBytes / 1000000
-                      }/${currentPlan?.limits?.maxDataProcessing / 1000000}MB`}
+                      {`${session?.user?.usage?.nbDataProcessingBytes /
+                        1000000}/${currentPlan?.limits?.maxDataProcessing /
+                        1000000}MB`}
                     </Typography>
                   </Stack>
                 </Typography>
@@ -358,9 +358,8 @@ export default function AccountPage() {
                 >
                   <Typography>{`${
                     currentPlan?.limits?.maxAgentsQueries
-                  } GPT-3.5 or ${
-                    currentPlan?.limits?.maxAgentsQueries / 2
-                  } GPT-4 Agent responses / month`}</Typography>
+                  } GPT-3.5 or ${currentPlan?.limits?.maxAgentsQueries /
+                    2} GPT-4 Agent responses / month`}</Typography>
                 </Typography>
               ) : (
                 <Typography
@@ -374,17 +373,15 @@ export default function AccountPage() {
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
-                <Typography>{`${
-                  currentPlan?.limits?.maxFileSize / 1000000
-                }MB File upload limit`}</Typography>
+                <Typography>{`${currentPlan?.limits?.maxFileSize /
+                  1000000}MB File upload limit`}</Typography>
               </Typography>
               <Typography
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
-                <Typography>{`${
-                  currentPlan?.limits?.maxDataProcessing / 1000000
-                }MB Data processing (embeddings) / month`}</Typography>
+                <Typography>{`${currentPlan?.limits?.maxDataProcessing /
+                  1000000}MB Data processing (embeddings) / month`}</Typography>
               </Typography>
             </Stack>
 
@@ -429,7 +426,7 @@ export default function AccountPage() {
             <FormLabel>API Keys</FormLabel>
 
             <Typography level="body3">
-              Use the api key to access the Chaindesk API
+              Use the api key to access the ChatbotGPT API
             </Typography>
 
             <Stack direction={'column'} gap={2} mt={2}>
