@@ -11,6 +11,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import AgentManager from '@app/utils/agent';
 import ConversationManager from '@app/utils/conversation';
 import { createApiHandler } from '@app/utils/createa-api-handler';
+import filterInternalSources from '@app/utils/filter-internal-sources';
 import formatSourcesRawText from '@app/utils/form-sources-raw-text';
 import getSubdomain from '@app/utils/get-subdomain';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
@@ -225,7 +226,9 @@ const handleQuery = async (
     history: conversation?.messages,
   });
 
-  const finalAnser = `${answer}\n\n${formatSourcesRawText(sources!)}`.trim();
+  const finalAnser = `${answer}\n\n${formatSourcesRawText(
+    filterInternalSources(sources)!
+  )}`.trim();
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
     type: 'picker',

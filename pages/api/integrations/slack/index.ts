@@ -20,6 +20,7 @@ import { AppNextApiRequest } from '@app/types/index';
 import AgentManager from '@app/utils/agent';
 import ConversationManager from '@app/utils/conversation';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import filterInternalSources from '@app/utils/filter-internal-sources';
 import formatSourcesRawText from '@app/utils/form-sources-raw-text';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
 import logger from '@app/utils/logger';
@@ -241,7 +242,7 @@ const handleAsk = async (payload: CommandEvent) => {
   conversationManager.save();
 
   const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
-    chatRes?.sources
+    filterInternalSources(chatRes?.sources)
   )}`.trim();
 
   return axios.post(payload.response_url, {

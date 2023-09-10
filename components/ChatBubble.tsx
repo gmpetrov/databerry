@@ -501,6 +501,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   handleLoadMoreMessages={handleLoadMoreMessages}
                   handleEvalAnswer={handleEvalAnswer}
                   handleAbort={handleAbort}
+                  hideInternalSources
                 />
               </Box>
             </Card>

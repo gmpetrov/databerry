@@ -27,6 +27,7 @@ import remarkGfm from 'remark-gfm';
 import { z } from 'zod';
 
 import type { Source } from '@app/types/document';
+import filterInternalSources from '@app/utils/filter-internal-sources';
 
 import SourceComponent from './Source';
 
@@ -60,6 +61,7 @@ type Props = {
   handleSourceClick?: (source: Source) => any;
   handleAbort?: any;
   emptyComponent?: JSX.Element | null;
+  hideInternalSources?: boolean;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -161,6 +163,7 @@ function ChatBox({
   handleImprove,
   handleSourceClick,
   handleAbort,
+  hideInternalSources
 }: Props) {
   const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
@@ -392,7 +395,7 @@ function ChatBox({
                       )}
 
                       <Stack direction="row" justifyContent={'space-between'}>
-                        {(each?.sources?.length || 0) > 0 && (
+                        {((hideInternalSources ? filterInternalSources(each?.sources!) : each?.sources)?.length || 0) > 0 && (
                           <Box
                             sx={{
                               mt: 2,
@@ -409,7 +412,7 @@ function ChatBox({
                                 gap={1}
                                 sx={{ pt: 1 }}
                               >
-                                {each?.sources?.map((source) => (
+                                {(hideInternalSources ? filterInternalSources(each?.sources!) : each?.sources)?.map((source) => (
                                   <SourceComponent
                                     key={source.chunk_id}
                                     source={source}
