@@ -25,8 +25,17 @@ const useRateLimit = ({ agentId }: { agentId?: string }): RateResponse => {
   const rateLimit = config?.rateLimit?.maxQueries || 0;
 
   const handleIncrementRateLimitCount = useCallback(() => {
-    let currentRateCount = Number(localStorage.getItem('rateLimitCount')) || 0;
-    localStorage.setItem('rateLimitCount', `${++currentRateCount}`);
+    let currentRateCount = 0;
+
+    try {
+      currentRateCount = Number(localStorage.getItem('rateLimitCount'))
+    }catch {}
+
+    currentRateCount++;
+
+    try {
+      localStorage.setItem('rateLimitCount', `${currentRateCount}`);
+    }catch {}
 
     if (currentRateCount >= rateLimit) {
       setIsRateExceeded(true);
@@ -37,7 +46,9 @@ const useRateLimit = ({ agentId }: { agentId?: string }): RateResponse => {
     if (!config?.rateLimit?.interval) return;
 
     const interval = setInterval(() => {
-      localStorage.setItem('rateLimitCount', '0');
+      try {
+        localStorage.setItem('rateLimitCount', '0');
+      }catch {}
       setIsRateExceeded(false);
     }, config?.rateLimit?.interval * 1000);
 

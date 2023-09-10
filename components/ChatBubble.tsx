@@ -158,13 +158,17 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   useEffect(() => {
     if (localStorage) {
-      const visitorEmail = localStorage.getItem('visitorEmail');
+      try {
+        const visitorEmail = localStorage.getItem('visitorEmail');
 
-      if (visitorEmail) {
-        setState({
-          visitorEmail,
-        });
+        if (visitorEmail) {
+          setState({
+            visitorEmail,
+          });
+        }
       }
+      catch {}
+
     }
   }, []);
 
@@ -259,7 +263,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                     visitorEmail: email,
                   });
 
-                  localStorage.setItem('visitorEmail', email);
+                  try {
+                    localStorage.setItem('visitorEmail', email);
+                  }catch {}
                 }
               }}
             >

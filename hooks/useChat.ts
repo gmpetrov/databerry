@@ -244,18 +244,22 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                 });
               }
 
-              localStorage.setItem('visitorId', visitorId || '');
-              localStorage.setItem(
-                localStorageConversationIdKey,
-                conversationId || ''
-              );
-
               setState({
                 history: h as any,
                 conversationId,
                 prevConversationId: state.conversationId,
                 visitorId,
               });
+
+              try {
+                localStorage.setItem('visitorId', visitorId || '');
+              localStorage.setItem(
+                localStorageConversationIdKey,
+                conversationId || ''
+              );
+              }catch {}
+
+
             } catch (err) {
               console.log(err);
             }
@@ -336,28 +340,39 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
   };
 
   const setConversationId = useCallback((value?: string) => {
-    localStorage.setItem(localStorageConversationIdKey, value || '');
     setState({
       conversationId: value || '',
     });
+    try {
+      localStorage.setItem(localStorageConversationIdKey, value || '');
+    }catch {}
   }, []);
 
   const setVisitorId = useCallback((value?: string) => {
-    localStorage.setItem('visitorId', value || '');
     setState({
       visitorId: value || '',
     });
+    try {
+      localStorage.setItem('visitorId', value || '');
+    }catch {}
   }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Init from localStorage onmount (for chatbubble widget)
-      setState({
-        visitorId: localStorage.getItem('visitorId') as string,
-        conversationId: localStorage.getItem(
+
+      try {
+        const visitorId = localStorage.getItem('visitorId') as string;
+        const conversationId = localStorage.getItem(
           localStorageConversationIdKey
-        ) as string,
-      });
+          ) as string
+          
+          setState({
+            visitorId,
+            conversationId,
+          });
+        }
+        catch {}
     }
   }, []);
 
