@@ -6,6 +6,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { DatastoreType, Prisma } from '@prisma/client';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -15,9 +16,11 @@ import { z } from 'zod';
 import Input from '@app/components/Input';
 import { createDatastore } from '@app/pages/api/datastores';
 import { QdrantSchema as Schema } from '@app/types/models';
-import { postFetcher } from '@app/utils/swr-fetcher';
+import { generateActionFetcher, HTTP_METHOD } from '@app/utils/swr-fetcher';
 
 import { DatastoreFormProps } from './types';
+
+const DATASTORE_BASE_API = '/api/datastores'
 
 export const UpsertDatastoreSchema = z.object({
   id: z.string().trim().optional(),
@@ -30,6 +33,8 @@ export const UpsertDatastoreSchema = z.object({
 
 export type UpsertDatastoreSchema = z.infer<typeof UpsertDatastoreSchema>;
 
+
+
 type Props = DatastoreFormProps & {
   schema: any;
   children: React.ReactNode;
@@ -37,7 +42,10 @@ type Props = DatastoreFormProps & {
 
 type Schema = z.infer<typeof Schema>;
 
+
 export default function BaseForm(props: Props) {
+  const datastoreId = props?.defaultValues?.id;
+
   const methods = useForm<Schema>({
     resolver: zodResolver(Schema),
     defaultValues: {
@@ -54,14 +62,15 @@ export default function BaseForm(props: Props) {
     formState: { errors },
   } = methods;
 
-  const upsertDatastoreMutation = useSWRMutation<
+  const uri = datastoreId ? `${DATASTORE_BASE_API}/${datastoreId}` : DATASTORE_BASE_API
+  const datastoreMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof createDatastore>
-  >(`/api/datastores`, postFetcher<Schema>);
+  >(uri,  generateActionFetcher(datastoreId ? HTTP_METHOD.PATCH : HTTP_METHOD.POST)<Schema>);
 
   const onSubmit = async (values: Schema) => {
     try {
       const datastore = await toast.promise(
-        upsertDatastoreMutation.trigger(values as any),
+        datastoreMutation.trigger(values as any),
         {
           loading: 'Updating...',
           success: 'Updated!',
@@ -80,10 +89,10 @@ export default function BaseForm(props: Props) {
   const onSubmitWrapper = (e: any) => {
     e.stopPropagation();
 
-    methods.handleSubmit(onSubmit)(e);
+    handleSubmit(onSubmit)(e);
   };
 
-  const networkError = upsertDatastoreMutation.error?.message;
+  const networkError = datastoreMutation.error?.message;
 
   console.log('validation errors', errors);
 
@@ -122,9 +131,9 @@ export default function BaseForm(props: Props) {
               <Typography level="body3">
                 When activated, your datastore will be available by anyone on
                 the internet.{' '}
-                <Typography fontWeight={'bold'} color="primary">
+                {/* <Typography fontWeight={'bold'} color="primary">
                   Required for a public ChatGPT plugin.
-                </Typography>
+                </Typography> */}
               </Typography>
             </div>
           </FormControl>
@@ -144,14 +153,14 @@ export default function BaseForm(props: Props) {
 
         {props.customSubmitButton ? (
           React.createElement(props.customSubmitButton, {
-            isLoading: upsertDatastoreMutation.isMutating,
+            isLoading: datastoreMutation.isMutating,
           })
         ) : (
           <Button
             type="submit"
             variant="soft"
             size="md"
-            loading={upsertDatastoreMutation.isMutating}
+            loading={datastoreMutation.isMutating}
             {...props.submitButtonProps}
           >
             {props.submitButtonText || 'Submit'}

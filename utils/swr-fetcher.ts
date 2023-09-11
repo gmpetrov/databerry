@@ -1,11 +1,16 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-export const postFetcher = <T>(uri: string, { arg }: { arg: T }) =>
+export enum HTTP_METHOD  {
+  POST = 'POST',
+  PATCH = 'PATCH'
+}
+
+export const generateActionFetcher = (method: HTTP_METHOD) => <T>(uri: string, { arg }: { arg: T }) =>
   axios(uri, {
-    method: 'POST',
+    method,
     data: arg,
   }).then((r) => r.data);
-
+   
 export const createFetcher =
   (config: AxiosRequestConfig) =>
   <T>(url: string, { arg }: { arg: T }) =>

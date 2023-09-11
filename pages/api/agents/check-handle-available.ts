@@ -2,14 +2,14 @@ import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
 import { AppNextApiRequest } from '@app/types';
-import { UpsertAgentSchema } from '@app/types/dtos';
+import { CreateAgentSchema } from '@app/types/dtos';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
 import validate from '@app/utils/validate';
 
 const handler = createAuthApiHandler();
 
-const Schema = UpsertAgentSchema.pick({ handle: true });
+const Schema = CreateAgentSchema.pick({ handle: true });
 
 export const checkHandleAvailable = async (
   req: AppNextApiRequest,
@@ -33,7 +33,7 @@ export const checkHandleAvailable = async (
 
 handler.post(
   validate({
-    body: UpsertAgentSchema.pick({ handle: true }),
+    body: CreateAgentSchema.pick({ handle: true }),
     handler: respond(checkHandleAvailable),
   })
 );

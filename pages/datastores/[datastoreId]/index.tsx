@@ -241,7 +241,7 @@ export default function DatastorePage() {
           </Tabs>
 
           {/* <Link href="#chatgpt-plugin"> */}
-          <Button
+          {/* <Button
             onClick={() => {
               handleChangeTab('settings');
               setTimeout(() => {
@@ -253,7 +253,7 @@ export default function DatastorePage() {
             startDecorator={<LinkRoundedIcon />}
           >
             ChatGPT Plugin
-          </Button>
+          </Button> */}
           {/* </Link> */}
         </Stack>
 

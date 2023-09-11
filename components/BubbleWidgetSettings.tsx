@@ -81,8 +81,7 @@ export default function BubbleWidgetSettings(props: Props) {
       console.log('values', values);
 
       await toast.promise(
-        axios.post('/api/agents', {
-          ...getAgentQuery?.data,
+        axios.patch(`/api/agents/${props.agentId}`, {
           interfaceConfig: values,
         }),
         {

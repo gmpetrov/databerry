@@ -3,13 +3,12 @@ import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types';
-import { UpsertAgentSchema } from '@app/types/dtos';
+import { CreateAgentSchema, UpdateAgentSchema } from '@app/types/dtos';
+import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
-import uuidv4 from '@app/utils/uuid';
 import validate from '@app/utils/validate';
 
 const handler = createAuthApiHandler();
@@ -52,51 +51,17 @@ export const getAgents = async (
 
 handler.get(respond(getAgents));
 
-export const upsertAgent = async (
+export const createAgent = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const data = req.body as UpsertAgentSchema;
+  const data = req.body as CreateAgentSchema;
   const session = req.session;
 
-  let existingAgent;
-  if (data?.id) {
-    existingAgent = await prisma.agent.findUnique({
-      where: {
-        id: data.id,
-      },
-      include: {
-        tools: true,
-      },
-    });
-
-    if (existingAgent?.organizationId !== session?.organization?.id) {
-      throw new Error('Unauthorized');
-    }
-  }
-
-  const id = data?.id || cuid();
-
-  const currentTools = existingAgent?.tools || [];
-  const newTools = (data?.tools || []).filter(
-    (tool) => !currentTools.find((one) => one.id === tool.id)
-  );
-  const removedTools = (existingAgent?.tools || [])
-    .filter((tool) => !(data?.tools || []).find((one) => one.id === tool.id))
-    .map((each) => ({ id: each.id }));
-
-  const agent = await prisma.agent.upsert({
-    where: {
-      id,
-    },
-    create: {
-      id,
+  return prisma.agent.create({
+    data: {
+      ...data,
       name: data.name || generateFunId(),
-      description: data.description,
-      modelName: data.modelName!,
-      prompt: data.prompt,
-      promptType: data.promptType,
-      temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
       handle: data.handle,
       organization: {
@@ -104,59 +69,27 @@ export const upsertAgent = async (
           id: session?.organization?.id,
         },
       },
-      iconUrl: data.iconUrl,
       visibility: data.visibility || AgentVisibility.private,
-      includeSources: data.includeSources,
-      restrictKnowledge: data.restrictKnowledge,
       tools: {
         createMany: {
           data: (data.tools || []).map((tool) => ({
             type: tool.type,
             ...(tool.type === ToolType.datastore
               ? {
-                  datastoreId: tool.id,
-                }
+                datastoreId: tool.id,
+              }
               : {}),
           })),
         },
       },
-    },
-    update: {
-      name: data.name || generateFunId(),
-      description: data.description,
-      visibility: data.visibility || AgentVisibility.private,
-      modelName: data.modelName,
-      prompt: data.prompt,
-      promptType: data.promptType,
-      temperature: data.temperature,
-      interfaceConfig: data.interfaceConfig || {},
-      iconUrl: data.iconUrl,
-      handle: data.handle,
-      includeSources: data.includeSources,
-      restrictKnowledge: data.restrictKnowledge,
-      tools: {
-        createMany: {
-          data: newTools.map((tool) => ({
-            type: tool.type,
-            ...(tool.type === ToolType.datastore
-              ? {
-                  datastoreId: tool.id,
-                }
-              : {}),
-          })),
-        },
-        deleteMany: removedTools,
-      },
-    },
+    }
   });
-
-  return agent;
 };
 
 handler.post(
   validate({
-    body: UpsertAgentSchema,
-    handler: respond(upsertAgent),
+    body: CreateAgentSchema,
+    handler: respond(createAgent),
   })
 );
 
