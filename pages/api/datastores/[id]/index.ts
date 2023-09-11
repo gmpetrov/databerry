@@ -137,20 +137,28 @@ export const deleteDatastore = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  await Promise.all([
-    prisma.datastore.delete({
-      where: {
-        id,
-      },
-    }),
+  await prisma.$transaction(
+    async (tx) => {
+      await Promise.all([
+        new DatastoreManager(datastore).delete(),
 
-    new DatastoreManager(datastore).delete(),
+        deleteFolderFromS3Bucket(
+          process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+          `datastores/${datastore.id || 'UNKNOWN'}` // add UNKNOWN to avoid to delete all the folder 😅
+        ),
+      ]);
 
-    deleteFolderFromS3Bucket(
-      process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-      `datastores/${datastore.id || 'UNKNOWN'}` // add UNKNOWN to avoid to delete all the folder 😅
-    ),
-  ]);
+      await tx.datastore.delete({
+        where: {
+          id,
+        },
+      });
+    },
+    {
+      maxWait: 10000, // 10s
+      timeout: 60000, // 60s
+    }
+  );
 
   return datastore;
 };

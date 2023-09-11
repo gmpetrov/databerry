@@ -20,6 +20,7 @@ export abstract class ClientManager<T extends Datastore> {
     documents: AppDocument<ChunkMetadata>[]
   ): Promise<AppDocument<ChunkMetadata>[]>;
   abstract remove(datasourceId: string): Promise<any>;
+  abstract removeBulk(datasourceIds: string[]): Promise<any>;
   abstract delete(): Promise<any>;
   abstract search(
     props: SearchRequestSchema

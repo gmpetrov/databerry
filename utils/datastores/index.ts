@@ -46,6 +46,10 @@ export class DatastoreManager {
     return this.manager.remove(datasourceId);
   }
 
+  removeBulk(datasourceIds: string[]) {
+    return this.manager.removeBulk(datasourceIds);
+  }
+
   getChunk(chunkId: string) {
     return this.manager.getChunk(chunkId);
   }

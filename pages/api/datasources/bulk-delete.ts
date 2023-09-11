@@ -1,10 +1,12 @@
 import { NextApiResponse } from 'next';
 import pMap from 'p-map';
+import pRetry from 'p-retry';
 import { z } from 'zod';
 
 import { AppNextApiRequest } from '@app/types';
 import { UpsertDatasourceSchema } from '@app/types/models';
 import { deleteFolderFromS3Bucket } from '@app/utils/aws';
+import bulkDeleteDatasources from '@app/utils/bulk-delete-datasources';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import { DatasourceLoader } from '@app/utils/loaders';
@@ -22,7 +24,7 @@ export type BulkDeleteDatasourcesSchema = z.infer<
   typeof BulkDeleteDatasourcesSchema
 >;
 
-export const bulkDeleteDatasources = async (
+export const bulkDelete = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
@@ -49,6 +51,11 @@ export const bulkDeleteDatasources = async (
       id: true,
       ownerId: true,
       datastoreId: true,
+      children: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -58,29 +65,17 @@ export const bulkDeleteDatasources = async (
     }
   }
 
-  const deleted = await prisma.appDatasource.deleteMany({
-    where: {
-      id: {
-        in: data.ids,
-      },
-    },
+  const ids = datasources
+    .map((datasource) => [
+      datasource.id,
+      ...datasource.children.map((child) => child.id),
+    ])
+    .flat();
+
+  const deleted = await bulkDeleteDatasources({
+    datastoreId: datastore.id,
+    datasourceIds: ids,
   });
-
-  await pMap(
-    data.ids,
-    async (id) => {
-      await Promise.all([
-        new DatastoreManager(datastore!).remove(id),
-        deleteFolderFromS3Bucket(
-          process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-          `datastores/${datastore.id}/${id}`
-        ),
-      ]);
-
-      return id;
-    },
-    { concurrency: 5 }
-  );
 
   return deleted.count;
 };
@@ -88,7 +83,7 @@ export const bulkDeleteDatasources = async (
 handler.post(
   validate({
     body: BulkDeleteDatasourcesSchema,
-    handler: respond(bulkDeleteDatasources),
+    handler: respond(bulkDelete),
   })
 );
 

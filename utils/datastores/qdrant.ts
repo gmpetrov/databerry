@@ -185,6 +185,34 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       }
     );
   }
+  //  Delete points related to a Datasource
+  async removeBulk(datasourceIds: string[]) {
+    return this.client.post(
+      `/collections/text-embedding-ada-002/points/batch`,
+      {
+        operations: datasourceIds.map((id) => ({
+          delete: {
+            filter: {
+              must: [
+                {
+                  key: MetadataFields.datastore_id,
+                  match: {
+                    value: this.datastore.id,
+                  },
+                },
+                {
+                  key: MetadataFields.datasource_id,
+                  match: {
+                    value: id,
+                  },
+                },
+              ],
+            },
+          },
+        })),
+      }
+    );
+  }
 
   async upload(documents: AppDocument<ChunkMetadata>[]) {
     const ids: string[] = documents.map((each) => each.metadata.chunk_id!);

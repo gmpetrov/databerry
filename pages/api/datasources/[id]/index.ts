@@ -4,8 +4,10 @@ import { NextApiResponse } from 'next';
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { deleteFolderFromS3Bucket } from '@app/utils/aws';
+import bulkDeleteDatasources from '@app/utils/bulk-delete-datasources';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
+import { DatasourceLoader } from '@app/utils/loaders';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 
@@ -58,6 +60,11 @@ export const deleteDatasource = async (
     include: {
       owner: true,
       datastore: true,
+      children: {
+        select: {
+          id: true,
+        },
+      },
     },
   });
 
@@ -65,18 +72,13 @@ export const deleteDatasource = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  await Promise.all([
-    prisma.appDatasource.delete({
-      where: {
-        id,
-      },
-    }),
-    new DatastoreManager(datasource.datastore!).remove(datasource.id),
-    deleteFolderFromS3Bucket(
-      process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-      `datastores/${datasource?.datastore?.id!}/${datasource.id}`
-    ),
-  ]);
+  // Delete datasource and all its children (for grouped datasources)
+  const ids = [datasource.id, ...datasource.children.map((child) => child.id)];
+
+  await bulkDeleteDatasources({
+    datastoreId: datasource.datastoreId!,
+    datasourceIds: ids,
+  });
 
   return datasource;
 };
