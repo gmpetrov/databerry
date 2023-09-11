@@ -48,6 +48,7 @@ type Props = {
   readOnly?: boolean;
   disableWatermark?: boolean;
   renderAfterMessages?: JSX.Element | null;
+  renderBottom?: JSX.Element | null;
   agentIconUrl?: string;
   isLoadingConversation?: boolean;
   hasMoreMessages?: boolean;
@@ -163,7 +164,8 @@ function ChatBox({
   handleImprove,
   handleSourceClick,
   handleAbort,
-  hideInternalSources
+  hideInternalSources,
+  renderBottom
 }: Props) {
   const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
@@ -468,11 +470,8 @@ function ChatBox({
         </InfiniteScroll>
       </Stack>
 
-      {!!hideTemplateMessages && renderAfterMessages}
+      {renderAfterMessages}
 
-      {/* </Stack> */}
-
-      {/* <div className="w-full h-12 -translate-y-1/2 pointer-events-none backdrop-blur-lg"></div> */}
       {!readOnly && (
         <form
           style={{
@@ -480,6 +479,7 @@ function ChatBox({
             width: '100%',
             position: 'relative',
             display: 'flex',
+            flexDirection: 'column',
 
             marginTop: 'auto',
             overflow: 'visible',
@@ -496,17 +496,23 @@ function ChatBox({
             methods.handleSubmit(submit)(e);
           }}
         >
-          {!hideTemplateMessages && (messageTemplates?.length || 0) > 0 && (
+
+
+
+          {(messageTemplates?.length || 0) > 0 && (
             <Stack
               direction="row"
               gap={1}
               sx={{
-                position: 'absolute',
-                zIndex: 1,
-                transform: 'translateY(-100%)',
-                flexWrap: 'wrap',
-                mt: -1,
-                left: '0',
+                // position: 'absolute',
+                // zIndex: 1,
+                // transform: 'translateY(-100%)',
+                // left: '0',
+                // mt: -1,
+                flexWrap: 'nowrap',
+                mb: 1,
+                overflowX: 'auto',
+                maxWidth: '100%',
               }}
             >
               {messageTemplates?.map((each, idx) => (
@@ -515,6 +521,7 @@ function ChatBox({
                   size="sm"
                   variant="soft"
                   onClick={() => submit({ query: each })}
+                  sx={{whiteSpace: 'nowrap'}}
                 >
                   {each}
                 </Button>
@@ -602,6 +609,8 @@ function ChatBox({
           </Stack>
         </form>
       )}
+      
+      {renderBottom}
     </Stack>
   );
 }

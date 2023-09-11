@@ -201,6 +201,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         <Stack
           sx={{
             mb: -1,
+            position: 'absolute',
+            bottom: 0,
+            width: '100%'
           }}
         >
           {state.visitorEmail && (
@@ -500,7 +503,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   onSubmit={handleChatSubmit}
                   messageTemplates={state.config.messageTemplates}
                   initialMessage={state.config.initialMessage}
-                  renderAfterMessages={Capture}
+                  renderBottom={Capture}
                   agentIconUrl={state.agent?.iconUrl!}
                   isLoadingConversation={isLoadingConversation}
                   hasMoreMessages={hasMoreMessages}
