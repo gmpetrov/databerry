@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "prestashop/php-dev-tools": "^4.3"
+    }
+}

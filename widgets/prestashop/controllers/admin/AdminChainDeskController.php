@@ -9,7 +9,6 @@
  * @copyright chaindesk
  * @license MIT License
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -39,6 +38,7 @@ class AdminChainDeskController extends ModuleAdminController
         if (Tools::getIsset('agentId')) {
             $sanitizedAgentId = pSQL(Tools::getValue('agentId'));
             Configuration::updateValue('CHAINDESK_AGENT_ID', $sanitizedAgentId);
+
             return $sanitizedAgentId;
         }
 
@@ -58,6 +58,7 @@ class AdminChainDeskController extends ModuleAdminController
         $agentId = Configuration::get('CHAINDESK_AGENT_ID');
         $http_callback = Tools::getShopDomainSsl(true, true) . $_SERVER['REQUEST_URI'];
         $base_url = 'https://app.chaindesk.ai'; // Use single quotes for simple strings
+
         return $base_url . '/integrations/prestashop/config?callback=' . urlencode($http_callback) . '&siteurl=' . urlencode(Tools::getShopDomainSsl(true, true)) . '&agentId=' . $agentId;
     }
 }

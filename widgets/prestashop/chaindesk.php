@@ -9,7 +9,6 @@
  * @copyright chaindesk
  * @license MIT License
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -47,10 +46,10 @@ class ChatbotGPT extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        return parent::install() &&
-            $this->registerHooks() &&
-            $this->installTab() &&
-            Configuration::updateValue('MYMODULE_NAME', 'chaindesk');
+        return parent::install()
+            && $this->registerHooks()
+            && $this->installTab()
+            && Configuration::updateValue('MYMODULE_NAME', 'chaindesk');
     }
 
     private function registerHooks()
@@ -73,6 +72,7 @@ class ChatbotGPT extends Module
 
         $tab->id_parent = (int) Tab::getIdFromClassName('AdminAdmin');
         $tab->module = $this->name;
+
         return $tab->add();
     }
 
