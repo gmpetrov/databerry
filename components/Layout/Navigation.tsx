@@ -1,8 +1,11 @@
+import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
 import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
@@ -48,8 +51,10 @@ import ColorSchemeToggle from './ColorSchemeToggle';
 export default function Navigation() {
   const router = useRouter();
   const session = useSession();
-  const [userMenuElement, setUserMenuElement] =
-    React.useState<null | HTMLElement>(null);
+  const [
+    userMenuElement,
+    setUserMenuElement,
+  ] = React.useState<null | HTMLElement>(null);
 
   const openUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setUserMenuElement(event.currentTarget);
@@ -152,9 +157,15 @@ export default function Navigation() {
         active: router.route === RouteNames.ACCOUNT,
       },
       {
-        label: 'Documentation',
+        label: 'Help Center',
+        route: 'https://chatbotgpt.ai/help',
+        icon: <HelpRoundedIcon fontSize="small" />,
+        target: 'blank',
+      },
+      {
+        label: 'API Documentation',
         route: 'https://docs.chaindesk.ai/',
-        icon: <QuestionMarkRoundedIcon fontSize="small" />,
+        icon: <ApiRoundedIcon fontSize="small" />,
         target: 'blank',
       },
     ];
@@ -390,10 +401,9 @@ export default function Navigation() {
                 {`${(
                   (session?.data?.user?.usage?.nbDataProcessingBytes || 0) /
                   1000000
-                )?.toFixed(2)} / ${
-                  accountConfig?.[session?.data?.user?.currentPlan!]?.limits
-                    ?.maxDataProcessing / 1000000
-                } MB processed`}
+                )?.toFixed(2)} / ${accountConfig?.[
+                  session?.data?.user?.currentPlan!
+                ]?.limits?.maxDataProcessing / 1000000} MB processed`}
               </Typography>
               <LinearProgress
                 determinate

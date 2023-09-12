@@ -94,6 +94,11 @@ const navigation = {
     // { name: 'Insights', href: '#' },
   ],
   support: [
+    {
+      name: 'Help Center',
+      href: 'https://chatbotgpt.ai/help',
+      target: '_blank',
+    },
     { name: 'Pricing', href: '/pricing' },
     {
       name: 'Documentation',
