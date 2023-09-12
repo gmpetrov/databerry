@@ -10,15 +10,15 @@ let transport: Parameters<typeof pino>['0']['transport'] = {
   },
 };
 
-if (process.env.AXIOM_TOKEN) {
-  transport = {
-    target: '@axiomhq/pino',
-    options: {
-      dataset: process.env.AXIOM_DATASET,
-      token: process.env.AXIOM_TOKEN,
-    },
-  };
-}
+// if (process.env.AXIOM_TOKEN) {
+//   transport = {
+//     target: '@axiomhq/pino',
+//     options: {
+//       dataset: process.env.AXIOM_DATASET,
+//       token: process.env.AXIOM_TOKEN,
+//     },
+//   };
+// }
 
 const logger = pino({
   transport,

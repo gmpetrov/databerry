@@ -1,3 +1,4 @@
 chaindesk.zip
 vendor
 .php-cs-fixer.cache
+.php-cs-fixer.dist.php
