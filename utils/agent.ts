@@ -140,7 +140,11 @@ export default class AgentManager {
         },
         // Retrieval
         datastore: this.agent?.tools[0]?.datastore as any,
-        retrievalSearch: _query,
+        retrievalSearch:
+          _promptType === PromptType.raw &&
+          !_promptTemplate.includes('{context}')
+            ? undefined
+            : _query,
         topK: this.topK,
         filters,
         includeSources: !!this.agent.includeSources,
