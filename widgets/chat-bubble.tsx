@@ -33,25 +33,23 @@ if (typeof window !== 'undefined') {
     const root = createRoot(div);
     root.render(
       <StrictMode>
-        <SessionProvider>
-          <StyledEngineProvider injectFirst>
-            <CacheProvider value={cache}>
-              <ThemeProvider theme={theme}>
-                <CssVarsProvider
-                  theme={theme}
-                  defaultMode="light"
-                  modeStorageKey="databerry-chat-bubble"
-                  colorSchemeStorageKey="databerry-chat-bubble-scheme"
-                  attribute="databerry-chat-bubble-scheme"
-                  colorSchemeNode={div}
-                >
-                  <ChatBubble agentId={me.id} />
-                  {/* <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} /> */}
-                </CssVarsProvider>
-              </ThemeProvider>
-            </CacheProvider>
-          </StyledEngineProvider>
-        </SessionProvider>
+        <StyledEngineProvider injectFirst>
+          <CacheProvider value={cache}>
+            <ThemeProvider theme={theme}>
+              <CssVarsProvider
+                theme={theme}
+                defaultMode="light"
+                modeStorageKey="databerry-chat-bubble"
+                colorSchemeStorageKey="databerry-chat-bubble-scheme"
+                attribute="databerry-chat-bubble-scheme"
+                colorSchemeNode={div}
+              >
+                <ChatBubble agentId={me.id} />
+                {/* <ChatBubble agentId={'clgqxreyd0000ya0u5hb560qs'} /> */}
+              </CssVarsProvider>
+            </ThemeProvider>
+          </CacheProvider>
+        </StyledEngineProvider>
       </StrictMode>
     );
   });

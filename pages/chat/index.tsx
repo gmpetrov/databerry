@@ -356,6 +356,7 @@ export default function ChatPage() {
                     handlePromptClick={handleExamplePromptClick}
                   />
                 }
+                userImgUrl={session?.user?.image!}
               />
             </Box>
 

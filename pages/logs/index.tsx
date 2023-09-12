@@ -260,6 +260,7 @@ export default function LogsPage() {
                   currentImproveAnswerID: message?.id,
                 });
               }}
+              userImgUrl={session?.user?.image!}
             />
           </Box>
         </Stack>

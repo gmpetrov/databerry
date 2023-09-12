@@ -429,6 +429,7 @@ export default function AgentPage() {
                   handleLoadMoreMessages={handleLoadMoreMessages}
                   handleEvalAnswer={handleEvalAnswer}
                   handleAbort={handleAbort}
+                  userImgUrl={session?.user?.image!}
                 />
               </Box>
             </Stack>

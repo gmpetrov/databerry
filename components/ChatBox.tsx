@@ -18,7 +18,6 @@ import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import clsx from 'clsx';
-import { useSession } from 'next-auth/react';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -63,6 +62,7 @@ type Props = {
   handleAbort?: any;
   emptyComponent?: JSX.Element | null;
   hideInternalSources?: boolean;
+  userImgUrl?: string;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -165,9 +165,9 @@ function ChatBox({
   handleSourceClick,
   handleAbort,
   hideInternalSources,
-  renderBottom
+  renderBottom,
+  userImgUrl
 }: Props) {
-  const session = useSession();
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<ChatBoxMessage>();
@@ -339,7 +339,7 @@ function ChatBox({
                     <Avatar
                       size="sm"
                       variant="outlined"
-                      src={session?.data?.user?.image || undefined}
+                      src={userImgUrl || undefined}
                     ></Avatar>
                   )}
 
