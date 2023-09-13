@@ -367,7 +367,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 width: '100%',
                 maxWidth: 1000,
                 display: 'flex',
-                boxShadow: 'md',
+                // boxShadow: 'md',
               }}
             >
               <Typography>{state.config?.initialMessage}</Typography>
@@ -415,7 +415,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 display: 'flex',
                 flexDirection: 'column',
                 boxSizing: 'border-box',
-                boxShadow: 'md',
+                // boxShadow: 'md',
 
                 transition: `opacity 150ms ease-in-out`,
                 opacity: 0,

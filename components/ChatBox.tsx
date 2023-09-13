@@ -243,6 +243,19 @@ function ChatBox({
           overflowY: 'auto',
           pb: 8,
           pt: 2,
+
+          // Scrollbar
+          scrollbarColor: 'rgba(0,0,0,.3) transparent',
+          '&::-webkit-scrollbar': {
+            width: '0.4em'
+          },
+          '&::-webkit-scrollbar-track': {
+            display: 'none',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'rgba(0,0,0,.3)',
+            borderRadius: '20px',
+          }
         }}
       >
         <InfiniteScroll
@@ -513,6 +526,18 @@ function ChatBox({
                 mb: 1,
                 overflowX: 'auto',
                 maxWidth: '100%',
+
+                scrollbarColor: 'rgba(0,0,0,.3) transparent',
+                '&::-webkit-scrollbar': {
+                  height: '0.4em',
+                },
+                '&::-webkit-scrollbar-track': {
+                  display: 'none',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  backgroundColor: 'rgba(0,0,0,.3)',
+                  borderRadius: '20px',
+                }
               }}
             >
               {messageTemplates?.map((each, idx) => (
