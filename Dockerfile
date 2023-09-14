@@ -55,11 +55,10 @@ ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 ARG NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1
 ARG NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID
 ARG NEXT_PUBLIC_CRISP_PLUGIN_ID
+ARG NEXT_PUBLIC_GA_ID
+ARG NEXT_PUBLIC_HOTJAR_ID
 
 RUN NODE_OPTIONS="--max_old_space_size=4096" npm run build
-
-# If using npm comment out above and use below instead
-# RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
