@@ -14,6 +14,7 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import Logo from '@app/components/Logo';
+import SEO from '@app/components/SEO';
 import { RouteNames } from '@app/types';
 
 type Props = {
@@ -64,6 +65,12 @@ export default function SignInPage() {
 
   return (
     <>
+      <SEO
+        title="Sign-in"
+        description="Sign-in to your ChatbotGPT account."
+        baseUrl="https://app.chaindesk.ai"
+        uri={RouteNames.SIGN_IN}
+      />
       <Head>
         <link
           href="https://fonts.googleapis.com/css?family=Roboto"

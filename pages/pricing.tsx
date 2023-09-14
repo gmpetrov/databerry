@@ -10,28 +10,17 @@ import { useEffect, useState } from 'react';
 import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
 import { Hero } from '@app/components/landing-page/Hero';
+import SEO from '@app/components/SEO';
 import accountConfig from '@app/utils/account-config';
 
 export default function Pricing() {
   return (
     <>
-      <Head>
-        <title>ChatbotGPT Pricing - Plans for Teams of All Sizes</title>
-
-        <meta
-          name="title"
-          content="ChatbotGPT Pricing - Plans for Teams of All Sizes"
-        />
-        <meta
-          name="description"
-          content="Choose an affordable plan with ChatbotGPT. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales."
-        />
-        <meta
-          name="keywords"
-          content="ChatbotGPT, Pricing, Data Processing, AI, Agents, Datastores, Queries, File Upload, Data Synching, API, ChatGPT Plugin, Slack Bot, Crisp Plugin, Website Loader"
-        />
-        <meta name="robots" content="index, follow" />
-      </Head>
+      <SEO
+        title="Plans for Teams of All Sizes"
+        description="Choose an affordable plan with ChatbotGPT. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales. Free plan included!"
+        uri={'/pricing'}
+      />
       <Header />
       <main className="flex flex-col min-h-full mb-auto bg-black">
         <Example />

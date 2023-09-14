@@ -4,10 +4,12 @@ import { IconButton, Theme, useColorScheme } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
 import { SxProps } from '@mui/material';
+import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
 import Logo from '../Logo';
+import SEO from '../SEO';
 
 import Header from './Header';
 import Main from './Main';
@@ -22,6 +24,7 @@ type Props = {
 };
 
 export default function Layout(props: Props) {
+  const router = useRouter();
   const { mode, setMode } = useColorScheme();
   const { data: session, status } = useSession();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -48,6 +51,12 @@ export default function Layout(props: Props) {
 
   return (
     <>
+      <SEO
+        title="Dashboard | ChatbotGPT."
+        description="Build your own ChatGPT Chat Bot for your business."
+        baseUrl="https://app.chaindesk.ai"
+        uri={router.pathname}
+      />
       {drawerOpen && (
         <SideDrawer
           onClose={() => setDrawerOpen(false)}

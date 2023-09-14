@@ -7,7 +7,15 @@ import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 
+import ChatBotBenefits from '@app/components/landing-page/ChatBotBenefits';
 import CompanyLogos from '@app/components/landing-page/CompanyLogos';
+import FAQ from '@app/components/landing-page/FAQ';
+import FeaturesForChatGPTPlugin from '@app/components/landing-page/FeaturesForChatGPTPlugin';
+import FeaturesForChatWithData from '@app/components/landing-page/FeaturesForChatWithData';
+import FeaturesForCustomerSupport from '@app/components/landing-page/FeaturesForCustomerSupport';
+import FeaturesForDevs from '@app/components/landing-page/FeaturesForDevs';
+import FeaturesForInfluencers from '@app/components/landing-page/FeaturesForInfluencers';
+import FeaturesForSlack from '@app/components/landing-page/FeaturesForSlack';
 // import { CallToAction } from '@app/landing-page/components/CallToAction';
 // import { Faqs } from '@app/landing-page/components/Faqs';
 import { Footer } from '@app/components/landing-page/Footer';
@@ -20,15 +28,7 @@ import { PrimaryFeatures } from '@app/components/landing-page/PrimaryFeatures';
 import PartnerLogos from '@app/components/PartnerLogos';
 import SEO from '@app/components/SEO';
 
-import ChatBotBenefits from './ChatBotBenefits';
-import Cta from './Cta';
-import FAQ from './FAQ';
-import FeaturesForChatGPTPlugin from './FeaturesForChatGPTPlugin';
-import FeaturesForChatWithData from './FeaturesForChatWithData';
-import FeaturesForCustomerSupport from './FeaturesForCustomerSupport';
-import FeaturesForDevs from './FeaturesForDevs';
-import FeaturesForInfluencers from './FeaturesForInfluencers';
-import FeaturesForSlack from './FeaturesForSlack';
+import Cta from '../components/landing-page/Cta';
 
 export default function Home() {
   const router = useRouter();
@@ -59,6 +59,7 @@ export default function Home() {
       <SEO
         title="ChatbotGPT - ChatGPT AI Chat Bot for your business"
         description="ChatbotGPT offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
+        uri="/"
       />
 
       <Head>

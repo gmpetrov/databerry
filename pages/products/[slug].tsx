@@ -18,8 +18,9 @@ export default function ProductPage({ product }: PageProps) {
   return (
     <>
       <SEO
-        title={`${product.name} - ChatbotGPT.ai`}
+        title={`${product.name} | ChatbotGPT`}
         description={product.description}
+        uri={`/products/${product.slug}`}
       />
 
       <Header />
