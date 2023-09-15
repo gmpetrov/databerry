@@ -344,6 +344,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             sx={{
               position: 'fixed',
               bottom: 100,
+              maxWidth: 'calc(100% - 75px)',
 
               transition: `opacity 300ms ease-in-out`,
               opacity: 0,
@@ -364,10 +365,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           >
             <Card
               sx={{
-                width: '100%',
                 maxWidth: 1000,
                 display: 'flex',
-                // boxShadow: 'md',
               }}
               variant='outlined'
             >
@@ -433,7 +432,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 },
                 [theme.breakpoints.only('xs')]: {
                   width: '100vw',
-                  height: '100vh',
+                  height: '100dvh',
                   maxWidth: '100vw',
                   position: 'fixed',
 
@@ -485,8 +484,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                     maxHeight: '680px',
                   },
                   [theme.breakpoints.only('xs')]: {
-                    height: 'calc(100vh - 100px)',
-                    // maxHeight: '100vh',
+                    height: '100%',
                     maxWidth: '100vw',
                   },
 

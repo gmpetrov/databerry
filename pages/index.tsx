@@ -75,17 +75,15 @@ export default function Home() {
       </div> */}
       <Header />
 
-      {/* <script
+      <script
         defer
         src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
         id="clgtujkqh022j0u0zw3ut8vk3"
         data-name="databerry-chat-bubble"
-      ></script> */}
+      ></script>
 
-      <script
-        type="text/javascript"
-        dangerouslySetInnerHTML={{
-          __html: `(function() {
+      {/* <Script id="chaindesk" strategy="afterInteractive">
+        {`(function() {
       d = document;
       s = d.createElement('script');
       s.id = 'clgtujkqh022j0u0zw3ut8vk3';
@@ -93,9 +91,8 @@ export default function Home() {
       s.src = 'https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest';
       s.async = 1;
       d.getElementsByTagName('head')[0].appendChild(s);
-    })();`,
-        }}
-      ></script>
+    })();`}
+      </Script> */}
 
       <main className={clsx('bg-black min-heigh-full', mounted ? mode : '')}>
         {/* <Hero /> */}

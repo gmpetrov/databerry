@@ -14,7 +14,7 @@
     "e2e:api": "jest __tests__/api",
     "e2e:api:watch": "jest __tests__/api --watch",
     "build:widget:chat-bubble": "NEXT_PUBLIC_DASHBOARD_URL=https://app.chaindesk.ai npx parcel build widgets/chat-bubble.tsx",
-    "build:widget:chat-bubble:dev": "NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel build widgets/chat-bubble.tsx",
+    "build:widget:chat-bubble:dev": "concurrently \"npx serve tests/chat-bubble\" \"mkdir -p tests/chat-bubble/dist && NEXT_PUBLIC_DASHBOARD_URL=https://app.chaindesk.ai npx parcel watch widgets/chat-bubble.tsx --dist-dir tests/chat-bubble/dist\"",
     "publish:package:chat-bubble": "npm run build:widget:chat-bubble && cp dist/chat-bubble* packages/chat-bubble/ && cd packages/chat-bubble && npm version patch && npm publish --access public",
     "build:widget:prestashop": "cd widgets/prestashop && bash build.sh",
     "build:widget:wordpress": "cd widgets/wordpress && bash build.sh",
@@ -39,7 +39,8 @@
     "@app/utils": "./utils",
     "@app/types": "./types",
     "@app/hooks": "./hooks",
-    "buffer": false
+    "buffer": false,
+    "process": false
   },
   "config": {
     "commitizen": {
