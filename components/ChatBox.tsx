@@ -209,7 +209,7 @@ function ChatBox({
   React.useEffect(() => {
     setTimeout(() => {
       setFirstMsg(
-        initialMessage ? { from: 'agent', message: initialMessage } : undefined
+        initialMessage?.trim?.() ? { from: 'agent', message: initialMessage } : undefined
       );
     }, 0);
   }, [initialMessage]);

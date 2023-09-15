@@ -11,6 +11,7 @@ import {
   CssBaseline,
   Divider,
   FormControl,
+  FormHelperText,
   FormLabel,
   IconButton,
   List,
@@ -236,13 +237,20 @@ export default function BubbleWidgetSettings(props: Props) {
                   />
                 </FormControl>
 
-                <FormControl>
+                <FormControl
+                  error={!!methods?.formState?.errors?.primaryColor?.message}
+                >
                   <FormLabel>Brand Color</FormLabel>
                   <Input
                     defaultValue={config?.primaryColor || '#000000'}
                     placeholder="#000000"
                     {...methods.register('primaryColor')}
                   />
+                  {methods?.formState?.errors?.primaryColor?.message && (
+                    <FormHelperText>
+                      {methods?.formState?.errors?.primaryColor?.message}
+                    </FormHelperText>
+                  )}
                 </FormControl>
 
                 <FormControl>

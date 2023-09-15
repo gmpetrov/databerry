@@ -51,7 +51,12 @@ export type UpsertDatasourceSchema = z.infer<typeof UpsertDatasourceSchema>;
 
 export const AgentInterfaceConfig = z.object({
   displayName: z.string().trim().optional(),
-  primaryColor: z.string().trim().optional(),
+  primaryColor: z
+    .string()
+    .refine((val) => /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i.test(val), {
+      message: 'Invalid hex color',
+    })
+    .optional(),
   initialMessage: z.string().trim().optional(),
   messageTemplates: z.array(z.string()).optional(),
   position: z.enum(['left', 'right']).optional(),

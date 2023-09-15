@@ -74,13 +74,6 @@ import agentToolFormat from '@app/utils/agent-tool-format';
 import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
-const ChatInterfaceConfigForm = dynamic(
-  () => import('@app/components/ChatInterfaceConfigForm'),
-  {
-    ssr: false,
-  }
-);
-
 const SlackBotModal = dynamic(
   () => import('@app/components/SlackSettingsModal'),
   {
