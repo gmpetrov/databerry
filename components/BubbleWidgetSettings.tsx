@@ -112,11 +112,23 @@ export default function BubbleWidgetSettings(props: Props) {
 
   const values = methods.watch();
 
-  const installScript = `<script 
-  id="${getAgentQuery?.data?.id}"
-  data-name="databerry-chat-bubble"
-  src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-></script>`;
+  //   const installScript = `<script
+  //   async
+  //   id="${getAgentQuery?.data?.id}"
+  //   data-name="databerry-chat-bubble"
+  //   src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
+  // ></script>`;
+  const installScript = `<script type="text/javascript">
+  (function() {
+    d = document;
+    s = d.createElement('script');
+    s.id = '${getAgentQuery?.data?.id}';
+    s.setAttribute('data-name', 'databerry-chat-bubble');
+    s.src = 'https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest';
+    s.async = 1;
+    d.getElementsByTagName('head')[0].appendChild(s);
+  })();
+</script>`;
 
   return (
     <Modal

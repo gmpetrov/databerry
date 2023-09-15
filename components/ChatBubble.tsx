@@ -369,6 +369,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 display: 'flex',
                 // boxShadow: 'md',
               }}
+              variant='outlined'
             >
               <Typography>{state.config?.initialMessage}</Typography>
             </Card>

@@ -127,7 +127,9 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     getConversationQuery.setSize(getConversationQuery.size + 1);
   };
 
-  const handleChatSubmit = async (message: string) => {
+  const handleChatSubmit = async (_message: string) => {
+    const message = _message?.trim?.();
+
     if (!message || !endpoint) {
       return;
     }
