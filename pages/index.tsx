@@ -35,7 +35,7 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
 
   const { mode, setMode } = useColorScheme();
-
+  const url = `https://api.notion.com/v1/oauth/authorize?owner=user&client_id=${process.env.NOTION_CLIENT_ID}&response_type=code`
   useEffect(() => {
     // Force dark mode on the landing page
     const handleRouteChange = (newPath: string) => {
@@ -100,6 +100,13 @@ export default function Home() {
         <Testimonials />
         <Pricing />
       <Faqs /> */}
+      <a href={`https://api.notion.com/v1/oauth/authorize?owner=user&client_id=${process.env.NOTION_CLIENT_ID}&response_type=code`}>
+        wtf
+      </a>
+       <button onClick={()=>window.open(`https://api.notion.com/v1/oauth/authorize?owner=user&client_id=8f56c7ea-0f01-415e-9998-b8854067ff60&response_type=code`, 'authModal', 'width=800,height=800')}> 
+
+      Notion
+        </button>
         <FeaturesForChatWithData />
         <FeaturesForCustomerSupport />
         <FeaturesForDevs />
