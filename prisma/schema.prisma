@@ -549,6 +549,7 @@ enum DatasourceType {
   google_drive_file
   google_drive_folder
   notion
+  notion_page
   qa
 }
 

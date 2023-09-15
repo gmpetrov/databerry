@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button } from '@mui/joy';
+import { Alert, Button, Option, Select } from '@mui/joy';
+import { FormLabel } from '@mui/joy';
 import Textarea from '@mui/joy/Textarea';
 import {
   AppDatasource as Datasource,
@@ -21,6 +22,7 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
+import { getNotebooks } from '@app/pages/api/integrations/notion/get-notebooks';
 import { GenerateUploadLinkRequest } from '@app/types/dtos';
 import { UpsertDatasourceSchema } from '@app/types/models';
 import cuid from '@app/utils/cuid';
@@ -46,9 +48,8 @@ const DatasourceText = (props: {
 
   const query = useSWR(
     props?.datasourceId
-      ? `${getS3RootDomain()}/datastores/${props?.datastoreId}/${
-          props?.datasourceId
-        }/data.json`
+      ? `${getS3RootDomain()}/datastores/${props?.datastoreId}/${props?.datasourceId
+      }/data.json`
       : null,
     fetcher
   );
@@ -80,6 +81,45 @@ const DatasourceText = (props: {
     />
   );
 };
+
+const DatasourceNotebook = (props: { serviceProviderId: string, title: string }) => {
+  const { register, setValue, trigger } = useFormContext();
+  const getNotebooksQuery = useSWR<
+    Awaited<ReturnType<typeof getNotebooks>>
+  >(
+    `/api/integrations/notion/get-notebooks?providerId=${props.serviceProviderId}`,
+    fetcher,
+  );
+
+  return (
+    <div>
+      <FormLabel>Used notebook</FormLabel>
+      <Select
+        {...register('config.notebookId')}
+        onChange={(_, value) => {
+          setValue('config.notebookId', value as string, {
+            shouldDirty: true,
+          });
+
+          trigger();
+        }}
+        placeholder={props.title}
+      >
+        {getNotebooksQuery.isLoading &&
+          <Option key='loading' value='loading'>
+            loading pages..
+          </Option>}
+        {(getNotebooksQuery?.data || []).map((notebook) => (
+          <Option key={notebook.id} value={notebook.id}>
+            {notebook.title}
+          </Option>
+        ))}
+
+      </Select>
+    </div>
+
+  )
+}
 
 export default function BaseForm(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -210,7 +250,11 @@ export default function BaseForm(props: Props) {
 
         {props.children}
 
-        {!props.hideText && defaultValues?.datastoreId && (
+        {(defaultValues?.config as any)?.notebookId &&
+          <DatasourceNotebook serviceProviderId={(defaultValues as any)?.serviceProviderId} title={(defaultValues?.config as any)?.title} />
+        }
+
+        {!props.hideText && defaultValues?.datastoreId && defaultValues?.type !== DatasourceType.notion && (
           <DatasourceText
             datastoreId={defaultValues?.datastoreId}
             datasourceId={defaultValues?.id}
@@ -220,6 +264,8 @@ export default function BaseForm(props: Props) {
             }
           />
         )}
+
+
 
         {props?.customSubmitButton ? (
           React.createElement(props.customSubmitButton, {

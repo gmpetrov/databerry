@@ -68,7 +68,9 @@ const options: DatsourceOption[] = [
     label: 'Notion',
     description: 'Download a Notion notebook',
     icon: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg',
-    disabled: true,
+    disabled: false,
+    //TODO: make isPremium true once ready to be merged
+    isPremium: false
   },
 ];
 

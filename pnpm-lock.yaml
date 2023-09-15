@@ -53,6 +53,9 @@ dependencies:
   '@next/bundle-analyzer':
     specifier: ^13.3.0
     version: 13.3.0
+  '@notionhq/client':
+    specifier: ^2.2.13
+    version: 2.2.13
   '@pinecone-database/pinecone':
     specifier: ^0.0.11
     version: 0.0.11
@@ -175,7 +178,7 @@ dependencies:
     version: 3.10.1
   langchain:
     specifier: ^0.0.132
-    version: 0.0.132(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.1)(mammoth@1.5.1)(playwright@1.32.3)
+    version: 0.0.132(@notionhq/client@2.2.13)(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.1)(mammoth@1.5.1)(playwright@1.32.3)
   mammoth:
     specifier: ^1.5.1
     version: 1.5.1
@@ -2211,6 +2214,16 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+
+  /@notionhq/client@2.2.13:
+    resolution: {integrity: sha512-wJpEl30QUSy2K3/Q2c2knNiZlLXJ17JnQgaIiFbN68IMJy+2TE9fXLxvV1N/cMVs2+SpteAa6PlyrUgfGdlmDg==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@types/node-fetch': 2.6.4
+      node-fetch: 2.6.11
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /@octokit/auth-token@3.0.4:
     resolution: {integrity: sha512-TWFX7cZF2LXoCvdmJWY7XVPi74aSY0+FfBZNSXEXFkMpjcqsQwDSYVv5FhRFaI0V1ECnwbz4j59T/G+rXNWaIQ==}
@@ -10217,7 +10230,7 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /langchain@0.0.132(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.1)(mammoth@1.5.1)(playwright@1.32.3):
+  /langchain@0.0.132(@notionhq/client@2.2.13)(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.1)(mammoth@1.5.1)(playwright@1.32.3):
     resolution: {integrity: sha512-gXnuiAhsQQqXheKQiaSmFa9s3S/Yhkkb9OCytu04OE0ecttvVvfjjqIoNVS9vor8V7kRUgYPKHJsMz2UFDoJNw==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -10440,6 +10453,7 @@ packages:
         optional: true
     dependencies:
       '@anthropic-ai/sdk': 0.5.10
+      '@notionhq/client': 2.2.13
       '@pinecone-database/pinecone': 0.0.11
       ansi-styles: 5.2.0
       axios: 1.3.4

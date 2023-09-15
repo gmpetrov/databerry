@@ -209,9 +209,9 @@ export const upsertDatasource = async (
         ...data.config,
         ...(file
           ? {
-              mime_type: file.mimetype,
-              source_url: sourceUrl,
-            }
+            mime_type: file.mimetype,
+            source_url: sourceUrl,
+          }
           : {}),
       },
       status: DatasourceStatus.pending,
@@ -227,12 +227,12 @@ export const upsertDatasource = async (
       },
       ...(serviceProvider
         ? {
-            serviceProvider: {
-              connect: {
-                id: serviceProvider.id,
-              },
+          serviceProvider: {
+            connect: {
+              id: serviceProvider.id,
             },
-          }
+          },
+        }
         : {}),
     },
     update: {
@@ -242,9 +242,9 @@ export const upsertDatasource = async (
         ...data.config,
         ...(file
           ? {
-              mime_type: file.mimetype,
-              source_url: sourceUrl,
-            }
+            mime_type: file.mimetype,
+            source_url: sourceUrl,
+          }
           : {}),
       },
     },

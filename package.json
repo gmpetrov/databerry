@@ -78,6 +78,7 @@
     "@mui/utils": "^5.14.11",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@next/bundle-analyzer": "^13.3.0",
+    "@notionhq/client": "^2.2.13",
     "@pinecone-database/pinecone": "^0.0.11",
     "@prisma/client": "^4.13.0",
     "@react-email/button": "0.0.10",

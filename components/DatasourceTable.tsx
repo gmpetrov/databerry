@@ -107,6 +107,8 @@ const SynchButton = ({
       DatasourceType.web_site,
       DatasourceType.google_drive_folder,
       DatasourceType.google_drive_file,
+      DatasourceType.notion_page,
+      DatasourceType.notion
     ].includes(datasource.type as any)
   ) {
     return null;
