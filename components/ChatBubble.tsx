@@ -17,7 +17,7 @@ import Stack from '@mui/joy/Stack';
 import { extendTheme, useColorScheme } from '@mui/joy/styles';
 import Typography from '@mui/joy/Typography';
 import type { Agent } from '@prisma/client';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
@@ -68,6 +68,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     showCaptureForm: false,
     isCaptureLoading: false,
     visitorEmail: '',
+    windowHeight: '100dvh'
   });
 
   const {
@@ -157,6 +158,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   }, [props.initConfig]);
 
   useEffect(() => {
+    if (window?.visualViewport?.height) {
+      setState({ windowHeight: `${window.visualViewport.height}px` })
+    }
     if (localStorage) {
       try {
         const visitorEmail = localStorage.getItem('visitorEmail');
@@ -167,9 +171,26 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           });
         }
       }
-      catch {}
+      catch { }
 
     }
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!window.visualViewport) {
+        return;
+      }
+      console.log('d')
+      setState({ windowHeight: `${window.visualViewport.height}px` });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+
   }, []);
 
   // useEffect(() => {
@@ -268,7 +289,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
                   try {
                     localStorage.setItem('visitorEmail', email);
-                  }catch {}
+                  } catch { }
                 }
               }}
             >
@@ -353,13 +374,13 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
               ...(state.config.position === 'left'
                 ? {
-                    left: '20px',
-                  }
+                  left: '20px',
+                }
                 : {}),
               ...(state.config.position === 'right'
                 ? {
-                    right: '20px',
-                  }
+                  right: '20px',
+                }
                 : {}),
             }}
           >
@@ -387,13 +408,13 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
           ...(state.config.position === 'left'
             ? {
-                left: '20px',
-              }
+              left: '20px',
+            }
             : {}),
           ...(state.config.position === 'right'
             ? {
-                right: '20px',
-              }
+              right: '20px',
+            }
             : {}),
         }}
       >
@@ -423,8 +444,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
                 ...(state.config.position === 'right'
                   ? {
-                      transform: `translateX(${-500 + 50}px)`,
-                    }
+                    transform: `translateX(${-500 + 50}px)`,
+                  }
                   : {}),
 
                 [theme.breakpoints.up('sm')]: {
@@ -432,7 +453,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 },
                 [theme.breakpoints.only('xs')]: {
                   width: '100vw',
-                  height: '100dvh',
+                  height: state.windowHeight,
                   maxWidth: '100vw',
                   position: 'fixed',
 
@@ -523,8 +544,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               isOpen: !state.isOpen,
               ...(!state.isOpen
                 ? {
-                    hasOpenOnce: true,
-                  }
+                  hasOpenOnce: true,
+                }
                 : {}),
             })
           }
