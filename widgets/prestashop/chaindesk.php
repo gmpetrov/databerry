@@ -17,6 +17,7 @@ class ChatbotGPT extends Module
 {
     public function __construct()
     {
+        $this->module_key = '939dd04147febe539250e68dbe55df68';
         $this->name = 'chaindesk';
         $this->tab = 'front_office_features';
         $this->version = '1.0.0';
