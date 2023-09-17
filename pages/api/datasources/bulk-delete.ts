@@ -37,7 +37,7 @@ export const bulkDelete = async (
     },
   });
 
-  if (datastore?.ownerId !== session?.user?.id) {
+  if (datastore?.organizationId !== session?.organization?.id) {
     throw new Error('Unauthorized');
   }
 
@@ -49,7 +49,7 @@ export const bulkDelete = async (
     },
     select: {
       id: true,
-      ownerId: true,
+      organizationId: true,
       datastoreId: true,
       children: {
         select: {

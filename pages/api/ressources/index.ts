@@ -20,6 +20,7 @@ export const searchRessources = async (
     include: {
       datastores: {
         where: {
+          organizationId: session?.organization?.id,
           name: {
             contains: search,
             mode: 'insensitive',
@@ -32,6 +33,7 @@ export const searchRessources = async (
       },
       agents: {
         where: {
+          organizationId: session?.organization?.id,
           name: {
             contains: search,
             mode: 'insensitive',
@@ -44,6 +46,7 @@ export const searchRessources = async (
       },
       datasources: {
         where: {
+          organizationId: session?.organization?.id,
           name: {
             contains: search,
             mode: 'insensitive',

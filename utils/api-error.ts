@@ -5,6 +5,7 @@ export enum ApiErrorType {
   INVALID_REQUEST = 'INVALID_REQUEST',
   WEBPAGE_IS_SITEMAP = 'WEBPAGE_IS_SITEMAP',
   EMPTY_DATASOURCE = 'EMPTY_DATASOURCE',
+  ALREADY_INVITED = 'ALREADY_INVITED',
 }
 
 export class ApiError extends Error {
@@ -26,6 +27,9 @@ export class ApiError extends Error {
           this.status = 400;
           break;
         case ApiErrorType.EMPTY_DATASOURCE:
+          this.status = 400;
+          break;
+        case ApiErrorType.ALREADY_INVITED:
           this.status = 400;
           break;
         default:

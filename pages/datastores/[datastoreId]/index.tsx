@@ -196,8 +196,8 @@ export default function DatastorePage() {
               onClick={() => {
                 try {
                   guardDataProcessingUsage({
-                    usage: session?.user.usage!,
-                    plan: session?.user.currentPlan!,
+                    usage: session?.organization.usage!,
+                    plan: session?.organization.currentPlan!,
                   });
 
                   setState({ isCreateDatasourceModalOpen: true });

@@ -16,7 +16,7 @@ export const authCallback = async (
   const authCode = req.query.code;
   req.logger.info(req.query);
   const metadata = JSON.parse(req.query.state as any) as {
-    userId: string;
+    organizationId: string;
     agentId: string;
   };
 
@@ -47,7 +47,7 @@ export const authCallback = async (
     },
   });
 
-  if (agent?.ownerId !== metadata.userId) {
+  if (agent?.organizationId !== metadata.organizationId) {
     throw new Error('Unauthorized');
   }
 

@@ -31,12 +31,12 @@ export const updateIntegrationConfig = async (
     },
   });
 
-  if (agent?.ownerId !== session?.user?.id) {
+  if (agent?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   const integrationId = await createIntegrationId({
-    userId: session.user.id,
+    organizationId: session.organization.id,
     siteurl: data.siteurl,
   });
   let metadata = {

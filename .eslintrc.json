@@ -2,13 +2,6 @@
   "extends": "next/core-web-vitals",
   "plugins": ["simple-import-sort"],
   "rules": {
-    "quotes": [
-      "error",
-      "single",
-      {
-        "allowTemplateLiterals": true
-      }
-    ],
     "simple-import-sort/imports": [
       "error",
       {

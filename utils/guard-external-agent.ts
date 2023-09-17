@@ -7,7 +7,7 @@ import { ApiError, ApiErrorType } from './api-error';
 
 type Props = {
   agent: AgentWithTools & {
-    owner: {
+    organization: {
       apiKeys: UserApiKey[];
     };
   };
@@ -30,7 +30,7 @@ const guardExternalAgent = ({ agent, apiKey, hostname }: Props) => {
 
   if (agent?.visibility === AgentVisibility.private) {
     if (
-      !agent?.owner?.apiKeys.find((each) => each.key === apiKey) &&
+      !agent?.organization?.apiKeys.find((each) => each.key === apiKey) &&
       !authrorizedDomains.includes(hostname || '')
     )
       throw new ApiError(ApiErrorType.UNAUTHORIZED);

@@ -31,7 +31,7 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
     });
 
     const currentPlan =
-      this.datasource?.owner?.subscriptions?.[0]?.plan ||
+      this.datasource?.organization?.subscriptions?.[0]?.plan ||
       SubscriptionPlan.level_0;
 
     await driveManager.refreshAuth();
@@ -75,7 +75,7 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
         config: {
           objectId: each?.id,
         },
-        ownerId: this.datasource?.ownerId,
+        organizationId: this.datasource?.organizationId,
         datastoreId: this.datasource?.datastoreId,
         groupId: this.datasource?.id,
         serviceProviderId: this.datasource?.serviceProviderId,
@@ -85,7 +85,7 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
 
     await triggerTaskLoadDatasource(
       [...ids].map((id) => ({
-        userId: this.datasource?.ownerId!,
+        organizationId: this.datasource?.organizationId!,
         datasourceId: id,
         priority: 10,
       }))

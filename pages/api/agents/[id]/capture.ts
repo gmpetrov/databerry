@@ -37,10 +37,18 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
       id: agentId,
     },
     include: {
-      owner: {
+      organization: {
         include: {
           usage: true,
           apiKeys: true,
+          memberships: {
+            where: {
+              role: 'OWNER',
+            },
+            include: {
+              user: true,
+            },
+          },
           subscriptions: {
             where: {
               status: 'active',
@@ -66,7 +74,7 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  const onwerEmail = agent?.owner?.email!;
+  const onwerEmail = agent?.organization?.memberships?.[0]?.user?.email!;
 
   if (!onwerEmail) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);

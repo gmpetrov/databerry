@@ -56,7 +56,7 @@ export default function DatasourcesPage() {
   const handleClickNewDatastore = () => {
     if (
       (getDatastoresQuery?.data?.length || 0) >=
-      accountConfig[session?.user?.currentPlan!]?.limits?.maxDatastores
+      accountConfig[session?.organization?.currentPlan!]?.limits?.maxDatastores
     ) {
       setState({ isUsageModalOpen: true });
     } else {

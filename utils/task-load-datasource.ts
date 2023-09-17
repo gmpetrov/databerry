@@ -26,7 +26,7 @@ const updateDatasourceArgs = Prisma.validator<Prisma.AppDatasourceArgs>()({
   include: {
     datastore: true,
     serviceProvider: true,
-    owner: {
+    organization: {
       include: {
         usage: true,
         subscriptions: {
@@ -57,11 +57,12 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   }
 
   const currentPlan =
-    datasource?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
+    datasource?.organization?.subscriptions?.[0]?.plan ||
+    SubscriptionPlan.level_0;
 
   try {
     guardDataProcessingUsage({
-      usage: datasource?.owner?.usage as Usage,
+      usage: datasource?.organization?.usage as Usage,
       plan: currentPlan,
     });
   } catch {
@@ -92,9 +93,9 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
 
   let documents: AppDocument[] = [];
   try {
-    documents = (
-      data.isUpdateText ? await loader.loadText() : await loader.load()
-    )!;
+    documents = (data.isUpdateText
+      ? await loader.loadText()
+      : await loader.load())!;
   } catch (err) {
     if (err instanceof ApiError) {
       if (err.name === ApiErrorType.WEBPAGE_IS_SITEMAP) {
@@ -116,7 +117,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
         //
         await triggerTaskLoadDatasource([
           {
-            userId: datasource.ownerId!,
+            organizationId: datasource.organizationId!,
             datasourceId: datasource.id,
             priority: 2,
           },
@@ -164,12 +165,12 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
       nbSynch: datasource?.nbSynch! + 1,
       hash,
       // Update usage
-      owner: {
+      organization: {
         update: {
           usage: {
             update: {
               nbDataProcessingBytes:
-                (datasource?.owner?.usage?.nbDataProcessingBytes || 0) +
+                (datasource?.organization?.usage?.nbDataProcessingBytes || 0) +
                 new TextEncoder().encode(text).length,
             },
           },

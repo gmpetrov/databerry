@@ -70,7 +70,7 @@ function Nested() {
             <strong>
               Limited to{' '}
               {
-                accountConfig[session?.user?.currentPlan!]?.limits
+                accountConfig[session?.organization?.currentPlan!]?.limits
                   ?.maxWebsiteURL
               }
               {' Pages on your plan.'}
@@ -97,7 +97,7 @@ function Nested() {
             <strong>
               Limited to{' '}
               {
-                accountConfig[session?.user?.currentPlan!]?.limits
+                accountConfig[session?.organization?.currentPlan!]?.limits
                   ?.maxWebsiteURL
               }
               {' Pages on your plan.'}

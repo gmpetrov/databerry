@@ -41,7 +41,7 @@ export const evalAnswer = async (
 
   if (
     message?.conversation?.agent?.visibility === AgentVisibility.private &&
-    message?.conversation?.agent?.ownerId !== session?.user?.id
+    message?.conversation?.agent?.organizationId !== session?.organization?.id
   ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }

@@ -26,13 +26,13 @@ export const generateUploadLink = async (
     },
   });
 
-  if (datastore?.ownerId !== session?.user?.id) {
+  if (datastore?.organizationId !== session?.organization?.id) {
     throw new Error('Unauthorized');
   }
 
   const param = {
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
-    Key: `datastores/${datastore.id}/${data.fileName}`,
+    Key: `datastores/${datastore?.id!}/${data.fileName}`,
     Expires: 900,
     ACL: 'public-read',
     ContentType: data.type,

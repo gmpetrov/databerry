@@ -31,14 +31,14 @@ export default function CrispConfig(props: { agent: Agent }) {
   const [isApiKeyValid, setIsApiKeyValid] = useState(!!props.agent);
   const [isFetchAgentsLoading, setIsFetchAgentsLoading] = useState(false);
   const [inputValue, setInputValue] = useState(
-    (props as any)?.agent?.owner?.apiKeys?.[0]?.key || ''
+    (props as any)?.agent?.organization?.apiKeys?.[0]?.key || ''
   );
   const [submitError, setSubmitError] = useState('');
   const [agents, setAgents] = useState<Agent[]>([]);
   const [currentAgent, setCurrentAgent] = useState<Agent | undefined>(
     props.agent
   );
-  const subscription = (props?.agent as any)?.owner
+  const subscription = (props?.agent as any)?.organization
     ?.subscriptions?.[0] as Subscription;
   const [isPremium, setIsPremium] = useState(
     subscription?.plan && subscription?.plan !== 'level_0'
@@ -125,7 +125,7 @@ export default function CrispConfig(props: { agent: Agent }) {
   };
 
   useEffect(() => {
-    const apiKey = (props as any)?.agent?.owner?.apiKeys?.[0]?.key;
+    const apiKey = (props as any)?.agent?.organization?.apiKeys?.[0]?.key;
 
     console.log('apiKey', apiKey);
 
@@ -280,7 +280,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     include: {
       agent: {
         include: {
-          owner: {
+          organization: {
             include: {
               subscriptions: true,
               apiKeys: true,

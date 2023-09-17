@@ -4,7 +4,6 @@ import {
   MessageFrom,
   Usage,
 } from '@prisma/client';
-import Cors from 'cors';
 import cuid from 'cuid';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -16,15 +15,13 @@ import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import ConversationManager from '@app/utils/conversation';
 import { createLazyAuthHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
+import cors from '@app/utils/middlewares/cors';
+import pipe from '@app/utils/middlewares/pipe';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 import streamData from '@app/utils/stream-data';
 
 const handler = createLazyAuthHandler();
-
-const cors = Cors({
-  methods: ['POST', 'HEAD'],
-});
 
 export const chatAgentRequest = async (
   req: AppNextApiRequest,
@@ -41,7 +38,7 @@ export const chatAgentRequest = async (
       id,
     },
     include: {
-      owner: {
+      organization: {
         include: {
           usage: true,
           conversations: {
@@ -76,16 +73,16 @@ export const chatAgentRequest = async (
 
   if (
     agent?.visibility === AgentVisibility.private &&
-    agent?.ownerId !== session?.user?.id
+    agent?.organizationId !== session?.organization?.id
   ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  const usage = agent?.owner?.usage as Usage;
+  const usage = agent?.organization?.usage as Usage;
 
   guardAgentQueryUsage({
     usage,
-    plan: session?.user?.currentPlan,
+    plan: session?.organization?.currentPlan,
   });
 
   if (data.modelName) {
@@ -109,6 +106,7 @@ export const chatAgentRequest = async (
   }
 
   const conversationManager = new ConversationManager({
+    organizationId: agent?.organizationId!,
     channel: ConversationChannel.dashboard,
     agentId: agent?.id,
     userId: session?.user?.id,
@@ -133,17 +131,17 @@ export const chatAgentRequest = async (
       ...data,
       input: data.query,
       stream: data.streaming ? handleStream : undefined,
-      history: agent?.owner?.conversations?.[0]?.messages,
+      history: agent?.organization?.conversations?.[0]?.messages,
       abortController: ctrl,
       filters: data.filters,
     }),
     prisma.usage.update({
       where: {
-        id: agent?.owner?.usage?.id,
+        id: agent?.organization?.usage?.id,
       },
       data: {
         nbAgentQueries:
-          (agent?.owner?.usage?.nbAgentQueries || 0) +
+          (agent?.organization?.usage?.nbAgentQueries || 0) +
           (queryCountConfig?.[agent?.modelName] || 1),
       },
     }),
@@ -189,11 +187,4 @@ export const chatAgentRequest = async (
 
 handler.post(respond(chatAgentRequest));
 
-export default async function wrapper(
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) {
-  await runMiddleware(req, res, cors);
-
-  return handler(req, res);
-}
+export default pipe(cors({ methods: ['POST', 'HEAD'] }), handler);

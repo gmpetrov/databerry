@@ -28,8 +28,6 @@ import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Menu from '@mui/joy/Menu';
-import MenuItem from '@mui/joy/MenuItem';
 import Stack from '@mui/joy/Stack';
 import SvgIcon from '@mui/joy/SvgIcon';
 import Typography from '@mui/joy/Typography';
@@ -41,28 +39,18 @@ import * as React from 'react';
 import useSWR from 'swr';
 
 import { countUnread } from '@app/pages/api/logs/count-unread';
+import { getOrganizations } from '@app/pages/api/organizations';
 import { getStatus } from '@app/pages/api/status';
 import { AppStatus, RouteNames } from '@app/types';
 import accountConfig from '@app/utils/account-config';
 import { fetcher } from '@app/utils/swr-fetcher';
 
+import AccountCard from '../AccountCard';
+
 import ColorSchemeToggle from './ColorSchemeToggle';
 
 export default function Navigation() {
   const router = useRouter();
-  const session = useSession();
-  const [
-    userMenuElement,
-    setUserMenuElement,
-  ] = React.useState<null | HTMLElement>(null);
-
-  const openUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setUserMenuElement(event.currentTarget);
-  };
-
-  const closeUserMenu = () => {
-    setUserMenuElement(null);
-  };
 
   const getDatastoresQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
@@ -82,19 +70,6 @@ export default function Navigation() {
 
   const isStatusOK = getDatastoresQuery?.data?.status === AppStatus.OK;
   const isMaintenance = !!getDatastoresQuery?.data?.isMaintenance;
-
-  const isMenuOpen = Boolean(userMenuElement);
-  const usageQueryRate =
-    ((session?.data?.user?.usage?.nbAgentQueries || 0) /
-      accountConfig?.[session?.data?.user?.currentPlan!]?.limits
-        ?.maxAgentsQueries) *
-    100;
-
-  const usageDataRate =
-    ((session?.data?.user?.usage?.nbDataProcessingBytes || 0) /
-      accountConfig?.[session?.data?.user?.currentPlan!]?.limits
-        ?.maxDataProcessing) *
-    100;
 
   React.useEffect(() => {
     if (
@@ -306,131 +281,7 @@ export default function Navigation() {
       </ListItem> */}
       </List>
 
-      <Stack gap={1}>
-        <Card variant="outlined" size="sm">
-          <Stack
-            direction="row"
-            justifyContent={'space-between'}
-            alignItems={'start'}
-            gap={1}
-          >
-            <Button
-              onClick={openUserMenu as any}
-              id="basic-demo-button"
-              aria-controls={isMenuOpen ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={isMenuOpen ? 'true' : undefined}
-              variant="plain"
-              size={'sm'}
-              color="neutral"
-              sx={{
-                flexDirection: 'row',
-                display: 'flex',
-                gap: 1,
-                width: '100%',
-                maxWidth: '100%',
-                justifyContent: 'space-between',
-                // borderRadius: 99,
-              }}
-              className="truncate"
-              endDecorator={<ExpandMoreRoundedIcon />}
-            >
-              <Avatar
-                size="sm"
-                src={session?.data?.user?.image!}
-                sx={{
-                  ':hover': {
-                    cursor: 'pointer',
-                  },
-                }}
-              />
-
-              <Typography
-                className="truncate"
-                sx={{ maxWidth: '100%' }}
-                level="body2"
-              >
-                {session?.data?.user?.name || session?.data?.user?.email}
-              </Typography>
-              <Chip
-                size="sm"
-                variant="outlined"
-                color="warning"
-                sx={{ ml: 'auto' }}
-              >
-                {accountConfig?.[session?.data?.user?.currentPlan!]?.label}
-              </Chip>
-            </Button>
-
-            <Menu
-              id="basic-menu"
-              anchorEl={userMenuElement}
-              open={isMenuOpen}
-              onClose={closeUserMenu}
-              aria-labelledby="basic-demo-button"
-              placement="bottom-start"
-              sx={(theme) => ({
-                zIndex: theme.zIndex.tooltip,
-              })}
-            >
-              <MenuItem>{session?.data?.user?.email}</MenuItem>
-              <Divider />
-              <MenuItem onClick={() => signOut()}>Logout</MenuItem>
-            </Menu>
-
-            <ColorSchemeToggle />
-          </Stack>
-          <Stack gap={1}>
-            <Stack width={'100%'} gap={1}>
-              <Typography level="body3" sx={{ textAlign: 'right' }}>
-                {`${session?.data?.user?.usage?.nbAgentQueries?.toLocaleString(
-                  'en-US'
-                )} / ${accountConfig?.[
-                  session?.data?.user?.currentPlan!
-                ]?.limits?.maxAgentsQueries?.toLocaleString('en-US')} queries`}
-              </Typography>
-              <LinearProgress
-                determinate
-                color={usageQueryRate >= 80 ? 'danger' : 'neutral'}
-                value={usageQueryRate}
-                sx={{ overflow: 'hidden' }}
-              />
-            </Stack>
-            <Stack width={'100%'} gap={1}>
-              <Typography level="body3" sx={{ textAlign: 'right' }}>
-                {`${(
-                  (session?.data?.user?.usage?.nbDataProcessingBytes || 0) /
-                  1000000
-                )?.toFixed(2)} / ${accountConfig?.[
-                  session?.data?.user?.currentPlan!
-                ]?.limits?.maxDataProcessing / 1000000} MB processed`}
-              </Typography>
-              <LinearProgress
-                determinate
-                color={usageDataRate >= 80 ? 'danger' : 'neutral'}
-                value={usageDataRate}
-                sx={{ overflow: 'hidden' }}
-              />
-            </Stack>
-          </Stack>
-        </Card>
-
-        <Link href={RouteNames.ACCOUNT} style={{ width: '100%' }}>
-          <Button
-            size="sm"
-            color="warning"
-            sx={(theme) => ({
-              width: '100%',
-              // background: theme.palette.warning[100],
-              // color: theme.colorSchemes.light.palette.text.primary,
-            })}
-            startDecorator={<ArrowCircleUpRoundedIcon />}
-            variant="soft"
-          >
-            Upgrade Plan
-          </Button>
-        </Link>
-      </Stack>
+      <AccountCard />
 
       <Divider sx={{ my: 2 }}></Divider>
 

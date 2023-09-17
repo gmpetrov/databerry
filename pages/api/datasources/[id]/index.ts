@@ -37,7 +37,7 @@ export const getDatasource = async (
     },
   });
 
-  if (datasource?.ownerId !== session?.user?.id) {
+  if (datasource?.organizationId !== session?.organization?.id) {
     throw new Error('Unauthorized');
   }
 
@@ -58,7 +58,7 @@ export const deleteDatasource = async (
       id,
     },
     include: {
-      owner: true,
+      organization: true,
       datastore: true,
       children: {
         select: {
@@ -68,7 +68,7 @@ export const deleteDatasource = async (
     },
   });
 
-  if (datasource?.owner?.id !== session?.user?.id) {
+  if (datasource?.organization?.id !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

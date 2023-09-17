@@ -6,7 +6,7 @@ const datasourceExtended = Prisma.validator<Prisma.AppDatasourceArgs>()({
   include: {
     datastore: true,
     serviceProvider: true,
-    owner: {
+    organization: {
       include: {
         usage: true,
         subscriptions: {

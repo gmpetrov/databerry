@@ -37,14 +37,6 @@ export const queryURL = async (
     where: {
       id: datastoreId,
     },
-    include: {
-      apiKeys: true,
-      owner: {
-        include: {
-          apiKeys: true,
-        },
-      },
-    },
   });
 
   if (!datastore) {
@@ -53,7 +45,7 @@ export const queryURL = async (
 
   if (
     datastore.visibility === DatastoreVisibility.private &&
-    datastore.ownerId !== session?.user?.id
+    datastore.organizationId !== session?.organization?.id
   ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }

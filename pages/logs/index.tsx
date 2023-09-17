@@ -75,7 +75,7 @@ export default function LogsPage() {
 
   const conversations = getConversationsQuery?.data?.flat() || [];
 
-  if (!session?.user) return null;
+  if (!session?.organization) return null;
 
   if (!getConversationsQuery.isLoading && conversations.length === 0) {
     return (
@@ -113,7 +113,7 @@ export default function LogsPage() {
         View all Agents conversations across all channels. Evaluate and improve
         answers.
       </Alert> */}
-      <ConversationExport userId={session.user.id} />
+      <ConversationExport />
 
       <Sheet
         variant="outlined"

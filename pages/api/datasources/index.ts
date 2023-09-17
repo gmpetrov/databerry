@@ -55,7 +55,7 @@ export const getDatasources = async (
 
   const datasources = await prisma.appDatasource.findMany({
     where: {
-      ownerId: session?.user?.id,
+      organizationId: session?.organization?.id,
     },
     orderBy: {
       updatedAt: 'desc',
@@ -80,7 +80,7 @@ export const upsertDatasource = async (
   if (file) {
     try {
       await FileSchema.parseAsync(file);
-    } catch (err: any) {
+    } catch (err) {
       throw new ApiError(ApiErrorType.INVALID_REQUEST);
     }
 
@@ -115,7 +115,7 @@ export const upsertDatasource = async (
 
   try {
     await UpsertDatasourceSchema.parseAsync(data);
-  } catch (err: any) {
+  } catch (err) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
@@ -128,7 +128,7 @@ export const upsertDatasource = async (
       id: data.datastoreId,
     },
     include: {
-      owner: {
+      organization: {
         include: {
           usage: true,
         },
@@ -136,13 +136,13 @@ export const upsertDatasource = async (
     },
   });
 
-  if (datastore?.ownerId !== session?.user?.id) {
+  if (datastore?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   guardDataProcessingUsage({
-    usage: datastore?.owner?.usage as Usage,
-    plan: session?.user?.currentPlan,
+    usage: datastore?.organization?.usage as Usage,
+    plan: session?.organization?.currentPlan,
   });
 
   let existingDatasource;
@@ -155,7 +155,7 @@ export const upsertDatasource = async (
 
     if (
       existingDatasource &&
-      (existingDatasource as any)?.ownerId !== session?.user?.id
+      (existingDatasource as any)?.organizationId !== session?.organization?.id
     ) {
       throw new ApiError(ApiErrorType.UNAUTHORIZED);
     }
@@ -172,7 +172,7 @@ export const upsertDatasource = async (
       },
     });
 
-    if (provider?.ownerId !== session?.user?.id) {
+    if (provider?.organizationId !== session?.organization?.id) {
       throw new ApiError(ApiErrorType.UNAUTHORIZED);
     }
 
@@ -215,9 +215,9 @@ export const upsertDatasource = async (
           : {}),
       },
       status: DatasourceStatus.pending,
-      owner: {
+      organization: {
         connect: {
-          id: session?.user?.id,
+          id: session?.organization?.id,
         },
       },
       datastore: {
@@ -252,7 +252,7 @@ export const upsertDatasource = async (
 
   await triggerTaskLoadDatasource([
     {
-      userId: session.user.id,
+      organizationId: session?.organization?.id,
       datasourceId: id,
       isUpdateText: data.isUpdateText,
       priority: 1,

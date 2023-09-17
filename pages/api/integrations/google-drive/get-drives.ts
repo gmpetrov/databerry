@@ -27,7 +27,7 @@ export const getDrives = async (
     },
   });
 
-  if (provider?.ownerId !== session?.user?.id) {
+  if (provider?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

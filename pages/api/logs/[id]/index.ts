@@ -21,7 +21,7 @@ export const getMessages = async (
     include: {
       agent: {
         select: {
-          ownerId: true,
+          organizationId: true,
         },
       },
       messages: {
@@ -33,7 +33,7 @@ export const getMessages = async (
     },
   });
 
-  if (conversastion?.agent?.ownerId !== session?.user?.id) {
+  if (conversastion?.agent?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

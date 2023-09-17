@@ -39,7 +39,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
     include: {
       apiKeys: true,
-      owner: {
+      organization: {
         include: {
           apiKeys: true,
         },
@@ -55,7 +55,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
     datastore.visibility === DatastoreVisibility.private &&
     (!token ||
       !(
-        datastore?.owner?.apiKeys.find((each) => each.key === token) ||
+        datastore?.organization?.apiKeys.find((each) => each.key === token) ||
         // TODO REMOVE AFTER MIGRATION
         datastore.apiKeys.find((each) => each.key === token)
       ))
@@ -72,7 +72,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
       name: each.name || generateFunId(),
       datastoreId: datastore.id,
       status: DatasourceStatus.pending,
-      ownerId: datastore.ownerId,
+      organizationId: datastore.organizationId,
       config: {
         ...each.metadata,
       },
@@ -89,7 +89,7 @@ export const upsert = async (req: AppNextApiRequest, res: NextApiResponse) => {
         });
         await triggerTaskLoadDatasource([
           {
-            userId: datastore.ownerId!,
+            organizationId: datastore?.organization?.id!,
             datasourceId: ids[index],
             priority: 1,
           },

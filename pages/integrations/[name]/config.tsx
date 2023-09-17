@@ -229,7 +229,7 @@ export const getServerSideProps = withAuth(
       integration = await prisma.externalIntegration.findUnique({
         where: {
           integrationId: await createIntegrationId({
-            userId: session?.user?.id,
+            organizationId: session?.organization?.id,
             siteurl,
           }),
         },

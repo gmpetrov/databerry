@@ -54,9 +54,9 @@ handler.post(async (req, res) => {
       sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (err: any) {
-    req.logger.error(`❌ Error message: ${err?.message}`);
-    return res.status(400).send(`Webhook Error: ${err?.message}`);
+  } catch (err) {
+    req.logger.error(`❌ Error message: ${(err as any)?.message}`);
+    return res.status(400).send(`Webhook Error: ${(err as any)?.message}`);
   }
 
   if (relevantEvents.has(event.type)) {
@@ -166,9 +166,9 @@ handler.post(async (req, res) => {
         case 'checkout.session.completed':
           {
             const data = event.data.object as Stripe.Checkout.Session;
-            const userId = data.client_reference_id as string;
+            const organizationId = data.client_reference_id as string;
 
-            if (!userId) {
+            if (!organizationId) {
               throw new Error('No user id found');
             }
 
@@ -203,9 +203,9 @@ handler.post(async (req, res) => {
                 //       },
                 //     }
                 //   : {}),
-                user: {
+                organization: {
                   connect: {
-                    id: userId,
+                    id: organizationId,
                   },
                 },
                 price: {

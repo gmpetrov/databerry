@@ -27,11 +27,11 @@ export const checkDatasource = async (
       name: data.name,
       datastoreId: data.datastoreId,
     } as AppDatasource).getSize(data.datasourceText);
-  } catch (err: any) {
-    req.logger.error(err?.response?.status);
+  } catch (err) {
+    req.logger.error((err as any)?.response?.status);
   }
 
-  if (!session.user?.isPremium && size / 1000000 > 1.1) {
+  if (!session.organization?.isPremium && size / 1000000 > 1.1) {
     isValid = false;
     message =
       'The maximum file size is 1MB on the free plan. Contact support@chaindesk.ai to upgrade your account';

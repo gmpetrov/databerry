@@ -26,10 +26,10 @@ export const getAgents = async (
 
   const agents = await prisma.agent.findMany({
     where: {
-      ownerId: session?.user?.id,
+      organizationId: session?.organization?.id,
     },
     include: {
-      owner: {
+      organization: {
         include: {
           subscriptions: true,
         },
@@ -70,7 +70,7 @@ export const upsertAgent = async (
       },
     });
 
-    if (existingAgent?.ownerId !== session?.user?.id) {
+    if (existingAgent?.organizationId !== session?.organization?.id) {
       throw new Error('Unauthorized');
     }
   }
@@ -99,9 +99,9 @@ export const upsertAgent = async (
       temperature: data.temperature,
       interfaceConfig: data.interfaceConfig || {},
       handle: data.handle,
-      owner: {
+      organization: {
         connect: {
-          id: session?.user?.id,
+          id: session?.organization?.id,
         },
       },
       iconUrl: data.iconUrl,

@@ -8,6 +8,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Organization {
+  id      String  @id @default(cuid())
+  name    String
+  iconUrl String? @map("icon_url")
+
+  usage            Usage?
+  agents           Agent[]
+  apiKeys          UserApiKey[]
+  datastores       Datastore[]
+  memberships      Membership[]
+  conversations    Conversation[]
+  subscriptions    Subscription[]
+  appDatasources   AppDatasource[]
+  serviceProviders ServiceProvider[]
+  sessions         Session[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("organizations")
+}
+
+model Membership {
+  id   String         @id @default(cuid())
+  role MembershipRole
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String       @map("organization_id")
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
+  // When the user joins, we will clear out the name and email and set the user.
+  invitedName  String? @map("invited_name")
+  invitedEmail String? @map("invited_email")
+  invitedToken String? @map("invited_token")
+
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@unique([organizationId, invitedEmail])
+  @@unique([organizationId, userId])
+  @@map("memberships")
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -21,7 +66,6 @@ model User {
   picture       String?
   hasOptInEmail Boolean? @default(false) @map("has_opt_in_email")
 
-  projects      Project[]
   agents        Agent[]
   datastores    Datastore[]
   datasources   AppDatasource[]
@@ -30,10 +74,14 @@ model User {
   usage         Usage?
   conversations Conversation[]
 
+  serviceProviders ServiceProvider[]
+
+  memberships Membership[]
+
+  role GlobalRole @default(CUSTOMER)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  serviceProviders ServiceProvider[]
 
   @@map("users")
 }
@@ -41,8 +89,11 @@ model User {
 model Usage {
   id String @id @default(cuid())
 
-  userId String @unique @map("user_id")
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @unique @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  organizationId String?       @unique @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   nbAgentQueries        Int @default(0) @map("nb_agent_queries")
   nbDatastoreQueries    Int @default(0) @map("nb_datastore_queries")
@@ -51,22 +102,6 @@ model Usage {
   nbModelTokens         Int @default(0) @map("nb_tokens")
 
   @@map("usages")
-}
-
-model Project {
-  id        String @id @default(cuid())
-  subdomain String @unique
-  ownerId   String @map("user_id")
-  owner     User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  name      String
-
-  disabled Boolean? @default(false)
-
-  publishedAt DateTime? @map("published_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  @@map("projects")
 }
 
 model Datastore {
@@ -89,6 +124,9 @@ model Datastore {
 
   ownerId String? @map("owner_id")
   owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -114,6 +152,9 @@ model AppDatasource {
   ownerId String? @map("owner_id")
   owner   User?   @relation(fields: [ownerId], references: [id])
 
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
   nbChunks Int? @default(0) @map("nb_chunks")
   textSize Int? @default(0) @map("text_size")
 
@@ -138,8 +179,11 @@ model UserApiKey {
   id  String @id @default(cuid())
   key String @unique()
 
-  userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String? @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -176,8 +220,12 @@ model Agent {
   visibility    AgentVisibility @default(private)
   conversations Conversation[]
 
-  ownerId             String?               @map("owner_id")
-  owner               User?                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String? @map("owner_id")
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
   externalIntegration ExternalIntegration[]
 
   nbQueries Int? @default(0) @map("nb_queries")
@@ -220,6 +268,9 @@ model Conversation {
   channel ConversationChannel @default(dashboard)
 
   metadata Json?
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -288,6 +339,9 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
   @@map("sessions")
 }
@@ -368,13 +422,13 @@ model Subscription {
   metadata             Json?
   coupon               String?
 
-  // projectId String?  @unique
-  // project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
   price Price @relation(fields: [priceId], references: [id])
 
   user   User?   @relation(name: "user", fields: [userId], references: [id], onDelete: Cascade)
   userId String? @unique @map("user_id")
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -392,8 +446,11 @@ model ServiceProvider {
 
   config Json?
 
-  ownerId String @map("user_id")
-  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String? @map("user_id")
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   appDatasources AppDatasource[]
 
@@ -550,4 +607,15 @@ enum AgentModelName {
 enum MessageEval {
   good
   bad
+}
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  USER
+}
+
+enum GlobalRole {
+  SUPERADMIN
+  CUSTOMER
 }

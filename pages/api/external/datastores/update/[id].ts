@@ -31,7 +31,7 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
     include: {
       apiKeys: true,
-      owner: {
+      organization: {
         include: {
           apiKeys: true,
         },
@@ -47,7 +47,7 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
     datastore.visibility === DatastoreVisibility.private &&
     (!token ||
       !(
-        datastore?.owner?.apiKeys.find((each) => each.key === token) ||
+        datastore?.organization?.apiKeys.find((each) => each.key === token) ||
         // TODO REMOVE AFTER MIGRATION
         datastore.apiKeys.find((each) => each.key === token)
       ))
@@ -86,7 +86,7 @@ export const update = async (req: AppNextApiRequest, res: NextApiResponse) => {
     });
     await triggerTaskLoadDatasource([
       {
-        userId: datastore.ownerId!,
+        organizationId: datastore.organizationId!,
         datasourceId: data.id,
         isUpdateText: true,
         priority: 1,

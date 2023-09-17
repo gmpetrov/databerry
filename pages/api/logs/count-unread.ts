@@ -16,7 +16,7 @@ export const countUnread = async (
     where: {
       conversation: {
         agent: {
-          ownerId: session?.user?.id,
+          organizationId: session?.organization?.id,
         },
       },
       read: false,

@@ -20,7 +20,7 @@ export const getSlackIntegrations = async (
     where: {
       type: IntegrationType.slack,
       agent: {
-        ownerId: session.user.id,
+        organizationId: session.organization.id,
       },
     },
     include: {
@@ -54,7 +54,7 @@ export const updateSlackIntegration = async (
     },
   });
 
-  if (integration?.agent?.ownerId !== session.user.id) {
+  if (integration?.agent?.organizationId !== session.organization.id) {
     throw new Error('Unauthorized');
   }
 
@@ -64,7 +64,7 @@ export const updateSlackIntegration = async (
     },
   });
 
-  if (agent?.ownerId !== session.user.id) {
+  if (agent?.organizationId !== session.organization.id) {
     throw new Error('Unauthorized');
   }
 
@@ -111,7 +111,7 @@ export const deleteSlackIntegration = async (
     },
   });
 
-  if (integration?.agent?.ownerId !== session.user.id) {
+  if (integration?.agent?.organizationId !== session.organization.id) {
     throw new Error('Unauthorized');
   }
 

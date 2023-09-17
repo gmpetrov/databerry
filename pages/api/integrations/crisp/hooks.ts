@@ -101,7 +101,7 @@ const getAgent = async (websiteId: string) => {
     include: {
       agent: {
         include: {
-          owner: {
+          organization: {
             include: {
               usage: true,
               subscriptions: true,
@@ -163,9 +163,9 @@ const handleQuery = async (
 ) => {
   const agent = await getAgent(websiteId);
 
-  const usage = agent?.owner?.usage!;
+  const usage = agent?.organization?.usage!;
   const plan =
-    agent?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
+    agent?.organization?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
 
   try {
     guardAgentQueryUsage({
@@ -210,6 +210,7 @@ const handleQuery = async (
   const conversationId = conversation?.id || cuid();
 
   const conversationManager = new ConversationManager({
+    organizationId: agent?.organizationId!,
     channel: ConversationChannel.crisp,
     agentId: agent?.id!,
     visitorId: sessionId,

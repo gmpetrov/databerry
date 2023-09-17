@@ -556,7 +556,7 @@ export default function AgentPage() {
                       </Stack>
 
                       {(!each?.isPremium ||
-                        (each.isPremium && session?.user?.isPremium)) &&
+                        (each.isPremium && session?.organization?.isPremium)) &&
                         (each?.publicAgentRequired &&
                         agent?.visibility === DatastoreVisibility.private ? (
                           <Button
@@ -596,7 +596,7 @@ export default function AgentPage() {
                           </Button>
                         ))}
 
-                      {each.isPremium && !session?.user?.isPremium && (
+                      {each.isPremium && !session?.organization?.isPremium && (
                         <Button
                           size="sm"
                           variant="outlined"

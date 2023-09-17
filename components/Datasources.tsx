@@ -26,8 +26,8 @@ function Datasources(props: Props) {
   const handleSynchDatasource = async (datasourceId: string) => {
     try {
       guardDataProcessingUsage({
-        usage: session?.user.usage!,
-        plan: session?.user.currentPlan!,
+        usage: session?.organization.usage!,
+        plan: session?.organization.currentPlan!,
       });
     } catch {
       return setIsUsageModalOpen(true);

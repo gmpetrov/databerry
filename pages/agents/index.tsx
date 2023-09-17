@@ -142,7 +142,8 @@ export default function AgentsPage() {
             onClick={() => {
               if (
                 (getAgentsQuery?.data?.length || 0) >=
-                accountConfig[session?.user?.currentPlan!]?.limits?.maxAgents
+                accountConfig[session?.organization?.currentPlan!]?.limits
+                  ?.maxAgents
               ) {
                 return setState({
                   isUsageLimitModalOpen: true,

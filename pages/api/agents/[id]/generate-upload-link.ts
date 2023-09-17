@@ -39,13 +39,13 @@ export const generateUploadLink = async (
     },
   });
 
-  if (agent?.ownerId !== session?.user?.id) {
+  if (agent?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   const param = {
     Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
-    Key: `agents/${agent.id}/${data.fileName}`,
+    Key: `agents/${agent?.id!}/${data.fileName}`,
     Expires: 900,
     ACL: 'public-read',
     ContentType: data.type,
