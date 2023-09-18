@@ -142,7 +142,7 @@ export default function AccountPage() {
 
         if (checkoutData) {
           console.debug(checkoutData);
-          gtag('event', 'purchase', {
+          window?.gtag?.('event', 'purchase', {
             transaction_id: checkoutData.id,
             value: checkoutData.amount_total,
             currency: checkoutData.currency / 100,
@@ -331,9 +331,9 @@ export default function AccountPage() {
                           : 'success'
                       }
                     >
-                      {`${session?.user?.usage?.nbDataProcessingBytes /
-                        1000000}/${currentPlan?.limits?.maxDataProcessing /
-                        1000000}MB`}
+                      {`${
+                        session?.user?.usage?.nbDataProcessingBytes / 1000000
+                      }/${currentPlan?.limits?.maxDataProcessing / 1000000}MB`}
                     </Typography>
                   </Stack>
                 </Typography>
@@ -358,8 +358,9 @@ export default function AccountPage() {
                 >
                   <Typography>{`${
                     currentPlan?.limits?.maxAgentsQueries
-                  } GPT-3.5 or ${currentPlan?.limits?.maxAgentsQueries /
-                    2} GPT-4 Agent responses / month`}</Typography>
+                  } GPT-3.5 or ${
+                    currentPlan?.limits?.maxAgentsQueries / 2
+                  } GPT-4 Agent responses / month`}</Typography>
                 </Typography>
               ) : (
                 <Typography
@@ -373,15 +374,17 @@ export default function AccountPage() {
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
-                <Typography>{`${currentPlan?.limits?.maxFileSize /
-                  1000000}MB File upload limit`}</Typography>
+                <Typography>{`${
+                  currentPlan?.limits?.maxFileSize / 1000000
+                }MB File upload limit`}</Typography>
               </Typography>
               <Typography
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
-                <Typography>{`${currentPlan?.limits?.maxDataProcessing /
-                  1000000}MB Data processing (embeddings) / month`}</Typography>
+                <Typography>{`${
+                  currentPlan?.limits?.maxDataProcessing / 1000000
+                }MB Data processing (embeddings) / month`}</Typography>
               </Typography>
             </Stack>
 
