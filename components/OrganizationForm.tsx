@@ -28,8 +28,10 @@ import {
   OrganizationInviteSchema,
   UpdateOrgSchema,
 } from '@app/types/dtos';
+import accountConfig from '@app/utils/account-config';
 import { ApiErrorType } from '@app/utils/api-error';
 import getS3RootDomain from '@app/utils/get-s3-root-domain';
+import { hasAdminRole } from '@app/utils/has-oneof-roles';
 import { fetcher } from '@app/utils/swr-fetcher';
 
 import IconInput from './ui/IconInput';
@@ -67,14 +69,18 @@ function OrganizationForm({}: Props) {
     iconUrl: getOrganizationQuery?.data?.iconUrl || '',
   });
 
-  // const members = useMemo(() => {
-  //   return getMembershipsQuery.data?.filter(
-  //     (membership) => membership.userId !== session?.user?.id
-  //   );
-  // }, [getMembershipsQuery.data, session?.user?.id]);
-
   const submitInvite = async (values: OrganizationInviteSchema) => {
     try {
+      if (
+        Number(getMembershipsQuery.data?.length) >=
+        accountConfig[session?.organization?.currentPlan!]?.limits?.maxSeats
+      ) {
+        alert(
+          'You have reached the maximum number of seats for your plan. Please contact support@chaindesk.ai to upgrade your plan.'
+        );
+        return;
+      }
+
       setState({
         isSubmitting: true,
       });
@@ -244,10 +250,16 @@ function OrganizationForm({}: Props) {
             control={updateOrgMethods.control}
             label="Team Name"
             defaultValue={getOrganizationQuery?.data?.name!}
+            disabled={!hasAdminRole(session?.roles)}
             {...updateOrgMethods.register('name')}
           ></Input>
 
-          <Button type="submit" size="sm" sx={{ ml: 'auto' }}>
+          <Button
+            type="submit"
+            size="sm"
+            sx={{ ml: 'auto' }}
+            disabled={!hasAdminRole(session?.roles)}
+          >
             Update
           </Button>
 
@@ -270,6 +282,7 @@ function OrganizationForm({}: Props) {
             }
             onChange={handleUploadIcon}
             onDelete={handleDeleteIcon}
+            disabled={!hasAdminRole(session?.roles)}
           />
         </form>
 
@@ -295,7 +308,20 @@ function OrganizationForm({}: Props) {
       </Stack>
 
       {Number(getMembershipsQuery?.data?.length) > 0 && (
-        <Stack sx={{ px: 2 }}>
+        <Stack sx={{ px: 2 }} gap={1}>
+          <Typography
+            level="body1"
+            fontWeight={'bold'}
+            color={
+              Number(getMembershipsQuery?.data?.length) >=
+              accountConfig[session?.organization?.currentPlan!]?.limits
+                ?.maxSeats
+                ? 'danger'
+                : 'success'
+            }
+          >{`${getMembershipsQuery?.data?.length}/${
+            accountConfig[session?.organization?.currentPlan!]?.limits?.maxSeats
+          } seats used`}</Typography>
           <Sheet sx={{ borderRadius: 'md' }}>
             <Table variant="outlined">
               <thead>
@@ -333,12 +359,7 @@ function OrganizationForm({}: Props) {
                         disabled={
                           state.isDeletingMember ||
                           member.role === MembershipRole.OWNER ||
-                          !session?.roles?.some((role) =>
-                            [
-                              MembershipRole.OWNER,
-                              MembershipRole.OWNER,
-                            ].includes(role)
-                          )
+                          !hasAdminRole(session?.roles)
                         }
                       >
                         {state.isDeletingMember ? (
@@ -355,6 +376,13 @@ function OrganizationForm({}: Props) {
           </Sheet>
         </Stack>
       )}
+
+      {/* <stripe-pricing-table
+        pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_SEAT_ID}
+        publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+        client-reference-id={session?.organization?.id}
+        customer-email={session?.user?.email}
+      ></stripe-pricing-table> */}
     </Stack>
   );
 }

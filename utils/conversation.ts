@@ -57,6 +57,7 @@ export default class ConversationManager {
     this.channel = channel;
     this.agentId = agentId;
     this.metadata = metadata;
+    this.organizationId = organizationId;
   }
 
   push(

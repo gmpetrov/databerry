@@ -12,6 +12,7 @@ type Props = {
   onDelete?: React.MouseEventHandler<HTMLAnchorElement>;
   innerIcon?: JSX.Element;
   label?: string;
+  disabled?: boolean;
 };
 
 function IconInput(props: Props) {
@@ -48,6 +49,7 @@ function IconInput(props: Props) {
             }}
             startDecorator={<AutorenewIcon />}
             loading={state.isUploading}
+            disabled={props.disabled}
           >
             Replace
           </Button>
@@ -58,6 +60,7 @@ function IconInput(props: Props) {
               onClick={props.onDelete}
               size="sm"
               startDecorator={<DeleteIcon />}
+              disabled={props.disabled}
             >
               Delete
             </Button>

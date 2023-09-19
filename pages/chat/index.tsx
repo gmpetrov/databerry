@@ -321,15 +321,18 @@ export default function ChatPage() {
           >
             <Box
               sx={(theme) => ({
-                // width: '100%',
-                height: '100%',
-                maxWidth: 200,
                 [theme.breakpoints.down('sm')]: {
                   display: 'none',
                 },
               })}
             >
-              <ConversationList agentId={'null'} />
+              <ConversationList
+                agentId={'null'}
+                rootSx={{
+                  height: '100%',
+                  width: '200px',
+                }}
+              />
             </Box>
 
             <Box

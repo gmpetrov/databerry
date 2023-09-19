@@ -83,7 +83,20 @@ export const getServerSideProps = withAuth(
         new TextEncoder().encode(process.env.JWT_SECRET)
       );
 
-      const membership = await prisma.membership.update({
+      const membership = await prisma.membership.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          organization: true,
+        },
+      });
+
+      if (membership?.invitedToken !== token) {
+        throw new Error('Token does not match invitedToken');
+      }
+
+      await prisma.membership.update({
         where: {
           id,
         },

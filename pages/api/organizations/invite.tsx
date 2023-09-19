@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { render } from '@react-email/components';
+import cuid from 'cuid';
 import * as jose from 'jose';
 import { NextApiResponse } from 'next';
 
@@ -32,18 +33,22 @@ export const invite = async (req: AppNextApiRequest, res: NextApiResponse) => {
       throw new ApiError(ApiErrorType.ALREADY_INVITED);
     }
 
+    const membershipId = cuid();
+
+    const token = await new jose.SignJWT({})
+      .setProtectedHeader({ alg: 'HS256' })
+      .setJti(membershipId)
+      .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+
     const membership = await prisma.membership.create({
       data: {
+        id: membershipId,
+        invitedToken: token,
         invitedEmail: data.email,
         organizationId: session.organization.id,
         role: 'USER',
       },
     });
-
-    const token = await new jose.SignJWT({})
-      .setProtectedHeader({ alg: 'HS256' })
-      .setJti(membership.id)
-      .sign(new TextEncoder().encode(process.env.JWT_SECRET));
 
     //   TODO SEND EMAIL
     await mailer.sendMail({

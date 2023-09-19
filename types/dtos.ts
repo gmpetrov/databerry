@@ -330,7 +330,7 @@ export const UpdateOrgSchema = z.object({
     .string()
     .trim()
     .min(1)
-    .max(25),
+    .max(50),
   iconUrl: z.union([
     z
       .string()

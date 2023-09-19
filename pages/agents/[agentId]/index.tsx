@@ -389,9 +389,6 @@ export default function AgentPage() {
             >
               <Box
                 sx={(theme) => ({
-                  width: '100%',
-                  height: '100%',
-                  maxWidth: 200,
                   [theme.breakpoints.down('sm')]: {
                     display: 'none',
                   },
@@ -401,6 +398,8 @@ export default function AgentPage() {
                   agentId={router.query?.agentId as string}
                   rootSx={{
                     pt: 1,
+                    height: '100%',
+                    width: '200px',
                   }}
                 />
               </Box>

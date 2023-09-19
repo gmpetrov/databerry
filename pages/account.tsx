@@ -29,6 +29,7 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import { z } from 'zod';
 
+import Admin from '@app/components/Admin';
 import Layout from '@app/components/Layout';
 import OrganizationForm from '@app/components/OrganizationForm';
 import UserFree from '@app/components/UserFree';
@@ -265,7 +266,7 @@ export default function AccountPage() {
             <stripe-pricing-table
               pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
               publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-              client-reference-id={session?.user?.id}
+              client-reference-id={session?.organization?.id}
               customer-email={session?.user?.email}
             ></stripe-pricing-table>
           </Card>
@@ -383,15 +384,17 @@ export default function AccountPage() {
             <Divider sx={{ my: 2 }} />
 
             <UserPremium>
-              <Button
-                onClick={handleClickManageSubscription}
-                endDecorator={<ArrowForwardRoundedIcon />}
-                variant="solid"
-                sx={{ ml: 'auto' }}
-                color="warning"
-              >
-                Upgrade / Manage Subscription
-              </Button>
+              <Admin>
+                <Button
+                  onClick={handleClickManageSubscription}
+                  endDecorator={<ArrowForwardRoundedIcon />}
+                  variant="solid"
+                  sx={{ ml: 'auto' }}
+                  color="warning"
+                >
+                  Upgrade / Manage Subscription
+                </Button>
+              </Admin>
             </UserPremium>
           </Card>
         </FormControl>
