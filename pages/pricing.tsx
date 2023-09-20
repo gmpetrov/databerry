@@ -59,7 +59,7 @@ const tiers = [
     name: 'Startup',
     id: 'tier-startup',
     href: 'https://app.chaindesk.ai/account',
-    price: { monthly: '$25', annually: '$250' },
+    price: { monthly: '$49', annually: '$490' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
       `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
@@ -77,6 +77,7 @@ const tiers = [
       `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
       'Access to Crisp Plugin',
       'Access to Slack Bot',
+      `${accountConfig['level_1'].limits.maxSeats} Team seat(s) included`,
     ],
     mostPopular: false,
   },
@@ -100,6 +101,7 @@ const tiers = [
       'auto synch datasources',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
+      `${accountConfig['level_2'].limits.maxSeats} Team seat(s) included`,
     ],
     mostPopular: true,
   },
@@ -124,6 +126,7 @@ const tiers = [
       'auto synch datasources',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
+      `${accountConfig['level_3'].limits.maxSeats} Team seat(s) included`,
     ],
     mostPopular: false,
   },
@@ -265,10 +268,12 @@ function Example() {
                     key={feature}
                     className={clsx('flex gap-x-3', {
                       'text-green-400':
+                        feature.includes('auto synch') ||
                         feature.includes('ChatGPT') ||
                         feature.includes('Crisp Plugin') ||
                         feature.includes('Slack Bot') ||
-                        feature.includes('Website loader'),
+                        feature.includes('Website loader') ||
+                        feature.includes('seat'),
                     })}
                   >
                     <CheckIcon
