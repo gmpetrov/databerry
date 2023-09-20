@@ -29,8 +29,9 @@
     "stripe:dev": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
     "docker:compose:deps": "docker compose -f .dev/databerry/docker-compose.deps.yml --env-file .dev/databerry/docker.env",
     "docker:compose:app": "docker compose -f .dev/databerry/docker-compose.app.yml --env-file .dev/databerry/docker.env",
-    "changelog": "git fetch --all && pnpx gitmoji-changelog",
-    "commit": "pnpx git-cz"
+    "changelog": "git fetch --all && gitmoji-changelog",
+    "commit": "git-cz",
+    "release": "release-it"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -46,6 +47,14 @@
   "config": {
     "commitizen": {
       "path": "node_modules/cz-emoji"
+    }
+  },
+  "release-it": {
+    "git": {
+      "requireUpstream": false
+    },
+    "hooks": {
+      "after:bump": "npm run changelog && git add CHANGELOG.md"
     }
   },
   "dependencies": {
@@ -171,12 +180,14 @@
     "cz-emoji": "1.3.2-canary.2",
     "dotenv-cli": "^7.1.0",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "gitmoji-changelog": "^2.3.0",
     "husky": "^8.0.3",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
     "lint-staged": "^14.0.1",
     "postcss": "^8.4.21",
     "prisma": "^4.13.0",
+    "release-it": "^16.1.5",
     "tailwindcss": "^3.2.7",
     "terminate": "^2.6.1",
     "ts-node": "^10.9.1",
