@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.4"></a>
+## 0.1.4 (2023-09-20)
+
+### Miscellaneous
+
+- 🤖 add apple merchant id verificaftion [[654e0f9](https://github.com/gmpetrov/databerry/commit/654e0f9cd0faee538efd432507ec958fe5909a2f)]
+
+
 <a name="0.1.3"></a>
 ## 0.1.3 (2023-09-20)
 
