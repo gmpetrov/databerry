@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.2"></a>
+## 0.1.2 (2023-09-20)
+
+### Miscellaneous
+
+- 🤖 setup gh workflow to run on tag push [[7026356](https://github.com/gmpetrov/databerry/commit/70263562ca3a6af3f7ddf45e751c738828439a0c)]
+
+
 <a name="0.1.1"></a>
 ## 0.1.1 (2023-09-20)
 
