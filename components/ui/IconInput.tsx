@@ -13,13 +13,11 @@ type Props = {
   innerIcon?: JSX.Element;
   label?: string;
   disabled?: boolean;
+  loading?: boolean;
 };
 
 function IconInput(props: Props) {
   const ref = useRef();
-  const [state, setState] = useStateReducer({
-    isUploading: false,
-  });
 
   return (
     <Stack gap={1}>
@@ -48,7 +46,7 @@ function IconInput(props: Props) {
               (ref as any).current?.click?.();
             }}
             startDecorator={<AutorenewIcon />}
-            loading={state.isUploading}
+            loading={props.loading}
             disabled={props.disabled}
           >
             Replace
@@ -61,6 +59,7 @@ function IconInput(props: Props) {
               size="sm"
               startDecorator={<DeleteIcon />}
               disabled={props.disabled}
+              loading={props.loading}
             >
               Delete
             </Button>

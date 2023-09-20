@@ -201,7 +201,7 @@ function OrganizationForm({}: Props) {
     } catch (err) {
       console.log(err, err);
     } finally {
-      setState({ isUpdatingOrg: true });
+      setState({ isUpdatingOrg: false });
     }
   };
 
@@ -250,7 +250,7 @@ function OrganizationForm({}: Props) {
             control={updateOrgMethods.control}
             label="Team Name"
             defaultValue={getOrganizationQuery?.data?.name!}
-            disabled={!hasAdminRole(session?.roles)}
+            disabled={!hasAdminRole(session?.roles) || state.isUpdatingOrg}
             {...updateOrgMethods.register('name')}
           ></Input>
 
@@ -259,6 +259,7 @@ function OrganizationForm({}: Props) {
             size="sm"
             sx={{ ml: 'auto' }}
             disabled={!hasAdminRole(session?.roles)}
+            loading={state.isUpdatingOrg}
           >
             Update
           </Button>
@@ -283,6 +284,7 @@ function OrganizationForm({}: Props) {
             onChange={handleUploadIcon}
             onDelete={handleDeleteIcon}
             disabled={!hasAdminRole(session?.roles)}
+            loading={state.isUpdatingOrg}
           />
         </form>
 
