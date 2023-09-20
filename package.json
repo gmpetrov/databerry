@@ -52,7 +52,10 @@
   "release-it": {
     "git": {
       "requireUpstream": false,
-      "commit": "🔖 ${version}"
+      "commit": true,
+      "tag": true,
+      "push": true,
+      "tagAnnotation": "🔖 ${version}"
     },
     "hooks": {
       "after:bump": "npm run changelog && git add CHANGELOG.md"
