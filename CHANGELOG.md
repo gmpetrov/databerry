@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.5"></a>
+## 0.1.5 (2023-09-20)
+
+### Fixed
+
+- 🐛 chain/chat use organization.id [[e2b2126](https://github.com/gmpetrov/databerry/commit/e2b212601cb37efa80f85532c97844c9f8dc5bba)]
+
+
 <a name="0.1.4"></a>
 ## 0.1.4 (2023-09-20)
 
