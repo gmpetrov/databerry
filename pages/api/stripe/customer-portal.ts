@@ -14,7 +14,7 @@ export const createCustomerPortalLink = async (
   const session = req.session;
 
   const { url } = await stripe.billingPortal.sessions.create({
-    customer: session.user.customerId,
+    customer: session?.organization?.customerId!,
     return_url: `${process.env.NEXT_PUBLIC_DASHBOARD_URL!}/account`,
   });
 

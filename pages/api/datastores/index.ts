@@ -27,7 +27,7 @@ export const getDatastores = async (
 
   const datastores = await prisma.datastore.findMany({
     where: {
-      ownerId: session?.user?.id,
+      organizationId: session?.organization?.id,
     },
     include: {
       _count: {
@@ -62,7 +62,7 @@ export const createDatastore = async (
       },
     });
 
-    if (existingDatastore?.ownerId !== session?.user?.id) {
+    if (existingDatastore?.organizationId !== session?.organization?.id) {
       throw new ApiError(ApiErrorType.UNAUTHORIZED);
     }
 
@@ -86,9 +86,9 @@ export const createDatastore = async (
       visibility: data.isPublic
         ? DatastoreVisibility.public
         : DatastoreVisibility.private,
-      owner: {
+      organization: {
         connect: {
-          id: session?.user?.id,
+          id: session?.organization?.id,
         },
       },
       config: {},
@@ -98,9 +98,8 @@ export const createDatastore = async (
         },
       },
       pluginName: data.pluginName || name?.substring(0, 20),
-      pluginDescriptionForHumans: `About ${
-        data.pluginDescriptionForHumans || name?.substring(0, 90)
-      }`,
+      pluginDescriptionForHumans: `About ${data.pluginDescriptionForHumans ||
+        name?.substring(0, 90)}`,
       pluginDescriptionForModel: `Plugin for searching informations about ${name} to find answers to questions and retrieve relevant information. Use it whenever a user asks something that might be related to ${name}.`,
     },
     update: {

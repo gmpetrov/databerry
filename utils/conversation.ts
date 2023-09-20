@@ -24,6 +24,7 @@ type MessageExtended = Pick<Message, 'from' | 'text' | 'sources'> & {
 };
 
 export default class ConversationManager {
+  organizationId: string;
   userId?: string;
   visitorId?: string;
   conversationId?: string;
@@ -33,6 +34,7 @@ export default class ConversationManager {
   metadata?: Record<string, any> = {};
 
   constructor({
+    organizationId,
     agentId,
     userId,
     visitorId,
@@ -40,6 +42,7 @@ export default class ConversationManager {
     conversationId,
     metadata,
   }: {
+    organizationId: string;
     agentId?: string;
     channel: ConversationChannel;
     conversationId?: string;
@@ -54,6 +57,7 @@ export default class ConversationManager {
     this.channel = channel;
     this.agentId = agentId;
     this.metadata = metadata;
+    this.organizationId = organizationId;
   }
 
   push(
@@ -82,6 +86,11 @@ export default class ConversationManager {
       create: {
         id: this.conversationId,
         channel: this.channel,
+        organization: {
+          connect: {
+            id: this.organizationId,
+          },
+        },
         ...(this.agentId
           ? {
               agent: {

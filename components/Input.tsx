@@ -7,7 +7,7 @@ import React, { forwardRef } from 'react';
 import { Control, useFormState } from 'react-hook-form';
 
 type Props = InputProps & {
-  control: Control;
+  control: Control<any>;
   label?: string;
   helperText?: string;
 };

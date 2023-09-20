@@ -111,7 +111,7 @@ export const getDatastore = async (
     },
   });
 
-  if (datastore?.ownerId !== session?.user?.id) {
+  if (datastore?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
@@ -133,7 +133,7 @@ export const deleteDatastore = async (
     },
   });
 
-  if (datastore?.ownerId !== session?.user?.id) {
+  if (datastore?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

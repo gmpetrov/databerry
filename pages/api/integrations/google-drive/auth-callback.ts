@@ -25,9 +25,9 @@ export const auth = async (req: AppNextApiRequest, res: NextApiResponse) => {
       name: userInfo?.data?.user?.emailAddress,
       accessToken: driveManager.accessToken,
       refreshToken: driveManager.refreshToken,
-      owner: {
+      organization: {
         connect: {
-          id: session?.user?.id,
+          id: session?.organization?.id,
         },
       },
     },

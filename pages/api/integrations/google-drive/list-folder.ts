@@ -30,7 +30,7 @@ export const listFolder = async (
     },
   });
 
-  if (provider?.ownerId !== session?.user?.id) {
+  if (provider?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
@@ -49,7 +49,7 @@ export const listFolder = async (
     files: results?.data.files?.filter(
       (each) =>
         Number(each.size || 0) <
-        accountConfig[session?.user?.currentPlan || 'level_0']?.limits
+        accountConfig[session?.organization?.currentPlan || 'level_0']?.limits
           ?.maxFileSize
     ),
   };

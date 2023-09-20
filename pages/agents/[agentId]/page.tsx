@@ -29,7 +29,7 @@ import pickColorBasedOnBgColor from '@app/utils/pick-color-based-on-bgcolor';
 import prisma from '@app/utils/prisma-client';
 import { fetcher } from '@app/utils/swr-fetcher';
 
-function App(props: { agent: Agent }) {
+function AgentPage(props: { agent: Agent }) {
   const router = useRouter();
   const agentId = props.agent?.id;
 
@@ -576,11 +576,11 @@ function App(props: { agent: Agent }) {
   );
 }
 
-App.getLayout = function getLayout(page: ReactElement) {
+AgentPage.getLayout = function getLayout(page: ReactElement) {
   return <SessionProvider>{page}</SessionProvider>;
 };
 
-export default App;
+export default AgentPage;
 
 export async function getStaticPaths() {
   const all: string[] = [];

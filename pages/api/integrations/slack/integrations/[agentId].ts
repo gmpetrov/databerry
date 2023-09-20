@@ -19,7 +19,7 @@ export const getSlackIntegrations = async (
       type: IntegrationType.slack,
       agent: {
         id: agentId,
-        ownerId: session.user.id,
+        organizationId: session.organization.id,
       },
     },
     include: {

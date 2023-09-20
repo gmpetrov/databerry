@@ -102,7 +102,7 @@ const getIntegrationByTeamId = async (teamId: string) => {
     include: {
       agent: {
         include: {
-          owner: {
+          organization: {
             include: {
               usage: true,
               subscriptions: true,
@@ -160,9 +160,9 @@ const handleMention = async (payload: MentionEvent) => {
   const slackClient = new WebClient(integration?.integrationToken!);
 
   try {
-    const usage = agent?.owner?.usage!;
+    const usage = agent?.organization?.usage!;
     const plan =
-      agent?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
+      agent?.organization?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
 
     guardAgentQueryUsage({
       usage,
@@ -219,6 +219,7 @@ const handleAsk = async (payload: CommandEvent) => {
   const conversationId = conversation?.id;
 
   const conversationManager = new ConversationManager({
+    organizationId: agent?.organizationId!,
     conversationId,
     agentId: agent?.id!,
     visitorId: payload.user_id,

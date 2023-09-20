@@ -15,7 +15,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const conversations = await prisma.conversation.findMany({
     where: {
       agent: {
-        ownerId: session?.user?.id,
+        organizationId: session.organization?.id,
       },
     },
     take: 100,

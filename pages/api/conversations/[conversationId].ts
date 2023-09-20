@@ -47,7 +47,7 @@ export const getConversation = async (
 
   if (
     conversation?.agent?.visibility === AgentVisibility.private &&
-    conversation?.agent?.ownerId !== session?.user?.id
+    conversation?.agent?.organizationId !== session?.organization?.id
   ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
@@ -65,7 +65,7 @@ export const deleteConversation = async (
   const conversationId = req.query.conversationId as string;
   const cursor = req.body.cursor as string;
 
-  if (!session?.user) {
+  if (!session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
@@ -91,7 +91,7 @@ export const deleteConversation = async (
     },
   });
 
-  if (conversation?.agent?.ownerId !== session?.user?.id) {
+  if (conversation?.agent?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

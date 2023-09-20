@@ -20,7 +20,7 @@ export const getCrispIntegrations = async (
       type: IntegrationType.crisp,
       agent: {
         id: agentId,
-        ownerId: session.user.id,
+        organizationId: session.organization.id,
       },
     },
     include: {
@@ -53,7 +53,7 @@ export const deleteCrispIntegration = async (
     },
   });
 
-  if (integration?.agent?.ownerId !== session.user.id) {
+  if (integration?.agent?.organizationId !== session?.organization?.id) {
     throw new Error('Unauthorized');
   }
 

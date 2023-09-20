@@ -18,7 +18,7 @@ export const getServiceProviders = async (
     where: {
       AND: [
         {
-          ownerId: session?.user?.id,
+          organizationId: session?.organization?.id,
         },
         ...(type ? [{ type }] : []),
       ],

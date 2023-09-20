@@ -1,4 +1,10 @@
-import { Prisma, SubscriptionPlan, Usage, User } from '@prisma/client';
+import {
+  MembershipRole,
+  Prisma,
+  SubscriptionPlan,
+  Usage,
+  User,
+} from '@prisma/client';
 import { NextApiResponse } from 'next';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
@@ -18,6 +24,15 @@ export const sessionUserInclude: Prisma.UserInclude = {
       status: 'active',
     },
   },
+  memberships: {
+    include: {
+      organization: {
+        include: {
+          usage: true,
+        },
+      },
+    },
+  },
   _count: {
     select: {
       agents: true,
@@ -26,18 +41,54 @@ export const sessionUserInclude: Prisma.UserInclude = {
   },
 };
 
-export const formatUserSession = (user: User) => {
+export const sessionOrganizationInclude: Prisma.OrganizationInclude = {
+  usage: true,
+  subscriptions: {
+    where: {
+      status: 'active',
+    },
+  },
+  _count: {
+    select: {
+      agents: true,
+      datastores: true,
+    },
+  },
+};
+
+export const formatUserSession = (
+  user: Prisma.UserGetPayload<{ include: typeof sessionUserInclude }>
+) => {
   return {
     ...user,
-    usage: (user as any)?.usage as Usage,
-    nbAgents: (user as any)?.['_count']?.agents as number,
-    nbDatastores: (user as any)?.['_count']?.datastores as number,
+    memberships: user?.memberships || [],
+    usage: user?.usage as Usage,
+    nbAgents: user?.['_count']?.agents as number,
+    nbDatastores: user?.['_count']?.datastores as number,
     id: user.id,
     currentPlan:
-      (user as any)?.subscriptions?.[0]?.plan ||
+      user?.subscriptions?.[0]?.plan ||
       (SubscriptionPlan.level_0 as SubscriptionPlan),
-    isPremium: (user as any)?.subscriptions?.length > 0,
-    customerId: (user as any)?.subscriptions?.[0]?.customerId as string,
+    isPremium: Number(user?.subscriptions?.length) > 0,
+    customerId: user?.subscriptions?.[0]?.customerId as string,
+  };
+};
+
+export const formatOrganizationSession = (
+  organization: Prisma.OrganizationGetPayload<{
+    include: typeof sessionOrganizationInclude;
+  }>
+) => {
+  return {
+    ...organization,
+    usage: organization?.usage as Usage,
+    nbAgents: organization?.['_count']?.agents as number,
+    nbDatastores: organization?.['_count']?.datastores as number,
+    currentPlan:
+      organization?.subscriptions?.[0]?.plan ||
+      (SubscriptionPlan.level_0 as SubscriptionPlan),
+    isPremium: Number(organization?.subscriptions?.length) > 0,
+    customerId: organization?.subscriptions?.[0]?.customerId as string,
   };
 };
 
@@ -58,14 +109,17 @@ const handleGetSession = async (
         user: {
           include: sessionUserInclude,
         },
+        organization: {
+          include: sessionOrganizationInclude,
+        },
       },
     });
 
-    if (key?.user) {
+    if (key?.organization) {
       session = {
-        user: {
-          ...formatUserSession(key.user),
-        },
+        user: undefined,
+        roles: [MembershipRole.ADMIN],
+        organization: formatOrganizationSession(key.organization!),
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toDateString(),
       };
     }

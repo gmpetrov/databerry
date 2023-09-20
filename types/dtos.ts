@@ -19,21 +19,32 @@ import { AgentInterfaceConfig, DatastoreSchema } from './models';
 import { ChainType } from '.';
 
 export const CreateDatastoreRequestSchema = DatastoreSchema.extend({
-  id: z.string().trim().cuid().optional(),
+  id: z
+    .string()
+    .trim()
+    .cuid()
+    .optional(),
 });
 export type CreateDatastoreRequestSchema = z.infer<
   typeof CreateDatastoreRequestSchema
 >;
 
 export const UpsertDatasourceRequestSchema = z.object({
-  id: z.string().trim().cuid().optional(),
+  id: z
+    .string()
+    .trim()
+    .cuid()
+    .optional(),
   datasourceText: z.string().optional(),
   config: z.object({}),
 });
 
 export const TaskLoadDatasourceRequestSchema = z.object({
   datasourceId: z.string().min(1),
-  isUpdateText: z.boolean().optional().default(false),
+  isUpdateText: z
+    .boolean()
+    .optional()
+    .default(false),
 });
 export type TaskLoadDatasourceRequestSchema = z.infer<
   typeof TaskLoadDatasourceRequestSchema
@@ -55,7 +66,10 @@ export type TaskRemoveDatastoreSchema = z.infer<
 
 export const FiltersSchema = z.object({
   custom_id: z.string().optional(),
-  datasource_id: z.string().cuid().optional(),
+  datasource_id: z
+    .string()
+    .cuid()
+    .optional(),
   datastore_ids: z.array(z.string().cuid()).optional(),
   datasource_ids: z.array(z.string().cuid()).optional(),
   custom_ids: z.array(z.string()).optional(),
@@ -63,7 +77,10 @@ export const FiltersSchema = z.object({
 
 export const SearchRequestSchema = z.object({
   query: z.string(),
-  topK: z.number().default(5).optional(),
+  topK: z
+    .number()
+    .default(5)
+    .optional(),
   tags: z.array(z.string()).optional(),
   filters: FiltersSchema.optional(),
 });
@@ -132,7 +149,11 @@ export const UpdateResponseSchema = z.object({
 export type UpdateResponseSchema = z.infer<typeof UpdateResponseSchema>;
 
 export const ChatModelConfigSchema = z.object({
-  temperature: z.number().min(0.0).max(1.0).optional(),
+  temperature: z
+    .number()
+    .min(0.0)
+    .max(1.0)
+    .optional(),
   maxTokens: z.number().optional(),
   presencePenalty: z.number().optional(),
   frequencyPenalty: z.number().optional(),
@@ -143,9 +164,24 @@ export type ChatModelConfigSchema = z.infer<typeof ChatModelConfigSchema>;
 
 export const ChatRequest = ChatModelConfigSchema.extend({
   query: z.string(),
-  streaming: z.boolean().optional().default(false),
-  visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),
-  conversationId: z.union([z.string().cuid().nullish(), z.literal('')]),
+  streaming: z
+    .boolean()
+    .optional()
+    .default(false),
+  visitorId: z.union([
+    z
+      .string()
+      .cuid()
+      .nullish(),
+    z.literal(''),
+  ]),
+  conversationId: z.union([
+    z
+      .string()
+      .cuid()
+      .nullish(),
+    z.literal(''),
+  ]),
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional(),
 
@@ -175,28 +211,59 @@ export const ChatResponse = z.object({
 export type ChatResponse = z.infer<typeof ChatResponse>;
 
 export const UpsertAgentSchema = z.object({
-  id: z.string().trim().cuid().optional(),
-  name: z.string().trim().optional(),
-  description: z.string().trim().min(1),
-  prompt: z.string().trim().optional().nullable(),
+  id: z
+    .string()
+    .trim()
+    .cuid()
+    .optional(),
+  name: z
+    .string()
+    .trim()
+    .optional(),
+  description: z
+    .string()
+    .trim()
+    .min(1),
+  prompt: z
+    .string()
+    .trim()
+    .optional()
+    .nullable(),
   modelName: z
     .nativeEnum(AgentModelName)
     .default(AgentModelName.gpt_3_5_turbo)
     .optional(),
   temperature: z.number().default(0.0),
-  iconUrl: z.string().trim().optional().nullable(),
+  iconUrl: z
+    .string()
+    .trim()
+    .optional()
+    .nullable(),
   promptType: z.nativeEnum(PromptType).default('customer_support'),
   visibility: z.nativeEnum(AgentVisibility).default('private'),
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
-  includeSources: z.boolean().optional().nullable(),
-  restrictKnowledge: z.boolean().optional().nullable(),
+  includeSources: z
+    .boolean()
+    .optional()
+    .nullable(),
+  restrictKnowledge: z
+    .boolean()
+    .optional()
+    .nullable(),
   tools: z
     .array(
       z.object({
         id: z.string().cuid(),
         type: z.nativeEnum(ToolType),
-        name: z.string().trim().optional(),
-        description: z.string().trim().optional().nullable(),
+        name: z
+          .string()
+          .trim()
+          .optional(),
+        description: z
+          .string()
+          .trim()
+          .optional()
+          .nullable(),
       })
     )
     .optional(),
@@ -257,3 +324,25 @@ export type EvalAnswer = z.infer<typeof EvalAnswer>;
 export type ConversationWithMessages = Conversation & {
   messages: Message[];
 };
+
+export const UpdateOrgSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1)
+    .max(50),
+  iconUrl: z.union([
+    z
+      .string()
+      .url()
+      .nullish(),
+    z.literal(''),
+  ]),
+});
+
+export type UpdateOrgSchema = z.infer<typeof UpdateOrgSchema>;
+
+export const OrganizationInviteSchema = z.object({
+  email: z.string().email(),
+});
+export type OrganizationInviteSchema = z.infer<typeof OrganizationInviteSchema>;

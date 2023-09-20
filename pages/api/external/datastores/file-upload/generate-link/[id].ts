@@ -29,7 +29,10 @@ const cors = Cors({
 const handler = createApiHandler();
 
 const Schema = GenerateUploadLinkRequest.extend({
-  fileName: z.string().optional().nullable(),
+  fileName: z
+    .string()
+    .optional()
+    .nullable(),
 });
 
 export const generateLink = async (
@@ -53,7 +56,7 @@ export const generateLink = async (
     },
     include: {
       apiKeys: true,
-      owner: {
+      organization: {
         include: {
           apiKeys: true,
           usage: true,
@@ -75,7 +78,7 @@ export const generateLink = async (
     datastore.visibility === DatastoreVisibility.private &&
     (!token ||
       !(
-        datastore?.owner?.apiKeys.find((each) => each.key === token) ||
+        datastore?.organization?.apiKeys.find((each) => each.key === token) ||
         // TODO REMOVE AFTER MIGRATION
         datastore.apiKeys.find((each) => each.key === token)
       ))
@@ -84,9 +87,10 @@ export const generateLink = async (
   }
 
   guardDataProcessingUsage({
-    usage: datastore?.owner?.usage as Usage,
+    usage: datastore?.organization?.usage as Usage,
     plan:
-      datastore?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0,
+      datastore?.organization?.subscriptions?.[0]?.plan ||
+      SubscriptionPlan.level_0,
   });
 
   const id = cuid();
@@ -112,9 +116,9 @@ export const generateLink = async (
         type: data.type,
       },
       status: DatasourceStatus.pending,
-      owner: {
+      organization: {
         connect: {
-          id: datastore?.ownerId!,
+          id: datastore?.organizationId!,
         },
       },
       datastore: {

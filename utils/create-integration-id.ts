@@ -2,9 +2,9 @@ import { blake3 } from 'hash-wasm';
 
 const createIntegrationId = async (props: {
   siteurl: string;
-  userId: string;
+  organizationId: string;
 }) => {
-  const id = await blake3(`${props.userId}-${props.siteurl}`);
+  const id = await blake3(`${props.organizationId}-${props.siteurl}`);
 
   return id;
 };

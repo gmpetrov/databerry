@@ -16,10 +16,11 @@ async function exportConversations(
   req: AppNextApiRequest,
   res: NextApiResponse
 ) {
-  const {userId} = req.body 
-  const {conversations} = await prisma.user.findUniqueOrThrow({
+  const session = req.session;
+
+  const { conversations } = await prisma.organization.findUniqueOrThrow({
     where: {
-      id: userId,
+      id: session?.organization?.id,
     },
     include: {
       conversations: {
@@ -29,7 +30,7 @@ async function exportConversations(
       },
     },
   });
- 
+
   const zipBuffer = await zipConversations(conversations);
 
   res.setHeader('Content-Type', 'application/zip');

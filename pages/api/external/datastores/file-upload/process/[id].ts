@@ -51,7 +51,7 @@ export const processUpload = async (
     },
     include: {
       datastore: true,
-      owner: {
+      organization: {
         include: {
           usage: true,
           apiKeys: true,
@@ -73,20 +73,21 @@ export const processUpload = async (
     datasource?.datastoreId !== datastoreId ||
     (datasource?.datastore?.visibility === DatastoreVisibility.private &&
       (!token ||
-        !datasource?.owner?.apiKeys.find((each) => each.key === token)))
+        !datasource?.organization?.apiKeys.find((each) => each.key === token)))
   ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   guardDataProcessingUsage({
-    usage: datasource?.owner?.usage as Usage,
+    usage: datasource?.organization?.usage as Usage,
     plan:
-      datasource?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0,
+      datasource?.organization?.subscriptions?.[0]?.plan ||
+      SubscriptionPlan.level_0,
   });
 
   await triggerTaskLoadDatasource([
     {
-      userId: datasource.ownerId!,
+      organizationId: datasource.organizationId!,
       datasourceId,
       priority: 1,
     },

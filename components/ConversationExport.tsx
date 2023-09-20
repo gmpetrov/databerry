@@ -10,11 +10,9 @@ import { toast } from 'react-hot-toast';
 
 import { ConversationWithMessages } from '@app/types/dtos';
 
-interface Props {
-  userId: string;
-}
+interface Props {}
 
-export function ConversationExport({ userId }: Props) {
+export function ConversationExport({}: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const exportConversations = async () => {
     try {
@@ -22,9 +20,7 @@ export function ConversationExport({ userId }: Props) {
       const { data } = await toast.promise(
         axios.post(
           '/api/conversations/export',
-          {
-            userId,
-          },
+          {},
           {
             responseType: 'blob',
           }

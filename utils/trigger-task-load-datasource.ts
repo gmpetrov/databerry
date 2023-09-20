@@ -20,7 +20,7 @@ const datasourceLoadQueue = new QueuePro(TaskQueue.load_datasource, {
 
 const triggerTaskLoadDatasource = async (
   data: {
-    userId: string;
+    organizationId: string;
     datasourceId: string;
     isUpdateText?: boolean;
     priority?: number;
@@ -32,7 +32,7 @@ const triggerTaskLoadDatasource = async (
       data: each as TaskLoadDatasourceRequestSchema,
       opts: {
         group: {
-          id: each.userId,
+          id: each.organizationId,
         },
         ...(each.priority ? { priority: each.priority } : {}),
       },

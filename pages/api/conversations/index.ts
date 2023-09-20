@@ -5,11 +5,7 @@ import { z } from 'zod';
 
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
-import {
-  createAuthApiHandler,
-  createLazyAuthHandler,
-  respond,
-} from '@app/utils/createa-api-handler';
+import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 import sleep from '@app/utils/sleep';
@@ -28,7 +24,7 @@ export const getConversations = async (
   const agentId = req.query.agentId as string;
   const cursor = req.query.cursor as string;
 
-  if (!session.user) {
+  if (!session.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
@@ -36,7 +32,8 @@ export const getConversations = async (
     where: {
       AND: [
         {
-          userId: session.user.id,
+          userId: session?.user?.id,
+          organizationId: session.organization.id,
         },
         ...(agentId && agentId !== 'null' ? [{ agentId }] : []),
         ...(agentId === 'null'

@@ -17,11 +17,14 @@ export const getApiKeys = async (
   const apiKeys = await prisma.datastoreApiKey.findMany({
     where: {
       datastoreId: id,
+      datastore: {
+        organizationId: session?.organization?.id,
+      },
     },
     include: {
       datastore: {
         select: {
-          ownerId: true,
+          organizationId: true,
         },
       },
     },
@@ -31,7 +34,7 @@ export const getApiKeys = async (
     return [];
   }
 
-  if (apiKeys?.[0]?.datastore?.ownerId !== session?.user?.id) {
+  if (apiKeys?.[0]?.datastore?.organizationId !== session?.organization?.id) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -53,7 +56,7 @@ export const createApiKey = async (
     },
   });
 
-  if (datastore?.ownerId !== session?.user?.id) {
+  if (datastore?.organizationId !== session?.organization?.id) {
     return res.status(403).json({ error: 'Unauthorized' });
   }
 
@@ -88,7 +91,7 @@ export const deleteApiKey = async (
     include: {
       datastore: {
         select: {
-          ownerId: true,
+          organizationId: true,
         },
       },
     },
@@ -96,7 +99,7 @@ export const deleteApiKey = async (
 
   if (
     apiKey?.datastoreId !== id ||
-    apiKey?.datastore?.ownerId !== session?.user?.id
+    apiKey?.datastore?.organizationId !== session?.organization?.id
   ) {
     return res.status(403).json({ error: 'Unauthorized' });
   }

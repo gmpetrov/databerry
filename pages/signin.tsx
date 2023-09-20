@@ -45,9 +45,16 @@ export default function SignInPage() {
       setIsReady(true);
     } else if (status === 'authenticated') {
       window?.gtag?.('event', 'login');
-      router.push(RouteNames.HOME);
+
+      const redirect = router.query.redirect as string | undefined;
+
+      if (redirect) {
+        router.push(redirect);
+      } else {
+        router.push(RouteNames.HOME);
+      }
     }
-  }, [status]);
+  }, [status, router]);
 
   const {
     register,

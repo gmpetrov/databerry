@@ -29,7 +29,9 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import { z } from 'zod';
 
+import Admin from '@app/components/Admin';
 import Layout from '@app/components/Layout';
+import OrganizationForm from '@app/components/OrganizationForm';
 import UserFree from '@app/components/UserFree';
 import UserPremium from '@app/components/UserPremium';
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -170,9 +172,9 @@ export default function AccountPage() {
     })();
   }, []);
 
-  const currentPlan = accountConfig[session?.user?.currentPlan!];
+  const currentPlan = accountConfig[session?.organization?.currentPlan!];
 
-  if (!session?.user) {
+  if (!session?.organization) {
     return null;
   }
 
@@ -236,6 +238,15 @@ export default function AccountPage() {
             Subscription
           </Button>
         </Link>
+        <Link href={`#team`}>
+          <Button
+            size="sm"
+            variant="plain"
+            startDecorator={<LinkRoundedIcon />}
+          >
+            Team
+          </Button>
+        </Link>
         <Link href={`#api-keys`}>
           <Button
             size="sm"
@@ -255,7 +266,7 @@ export default function AccountPage() {
             <stripe-pricing-table
               pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
               publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-              client-reference-id={session?.user?.id}
+              client-reference-id={session?.organization?.id}
               customer-email={session?.user?.email}
             ></stripe-pricing-table>
           </Card>
@@ -295,45 +306,30 @@ export default function AccountPage() {
                     <Typography color="neutral">Agents Responses:</Typography>
                     <Typography
                       color={
-                        session?.user?.usage?.nbAgentQueries >=
+                        session?.organization?.usage?.nbAgentQueries >=
                         currentPlan?.limits?.maxAgentsQueries
                           ? 'danger'
                           : 'success'
                       }
                     >
-                      {`${session?.user?.usage?.nbAgentQueries}/${currentPlan?.limits?.maxAgentsQueries}`}
+                      {`${session?.organization?.usage?.nbAgentQueries}/${currentPlan?.limits?.maxAgentsQueries}`}
                     </Typography>
                   </Stack>
                 </Typography>
-                {/* <Typography level="h6">
-                  <Stack direction={'row'} spacing={1}>
-                    <Typography color="neutral">Datastores:</Typography>
-                    <Typography
-                      color={
-                        session?.user?.nbDatastores >=
-                        currentPlan?.limits?.maxDatastores
-                          ? 'danger'
-                          : 'success'
-                      }
-                    >
-                      {`${session?.user?.nbDatastores}/${currentPlan?.limits?.maxDatastores}`}
-                    </Typography>
-                  </Stack>
-                </Typography> */}
                 <Typography level="h6">
                   <Stack direction={'row'} spacing={1}>
                     <Typography color="neutral">Data Processing:</Typography>
                     <Typography
                       color={
-                        session?.user?.usage?.nbDataProcessingBytes >=
+                        session?.organization?.usage?.nbDataProcessingBytes >=
                         currentPlan?.limits?.maxDataProcessing
                           ? 'danger'
                           : 'success'
                       }
                     >
-                      {`${
-                        session?.user?.usage?.nbDataProcessingBytes / 1000000
-                      }/${currentPlan?.limits?.maxDataProcessing / 1000000}MB`}
+                      {`${session?.organization?.usage?.nbDataProcessingBytes /
+                        1000000}/${currentPlan?.limits?.maxDataProcessing /
+                        1000000}MB`}
                     </Typography>
                   </Stack>
                 </Typography>
@@ -351,16 +347,15 @@ export default function AccountPage() {
               >
                 <Typography>{`${currentPlan?.limits?.maxDatastores} Datastores`}</Typography>
               </Typography>
-              {session?.user?.isPremium ? (
+              {session?.organization?.isPremium ? (
                 <Typography
                   level="h6"
                   startDecorator={<CheckRoundedIcon color="success" />}
                 >
                   <Typography>{`${
                     currentPlan?.limits?.maxAgentsQueries
-                  } GPT-3.5 or ${
-                    currentPlan?.limits?.maxAgentsQueries / 2
-                  } GPT-4 Agent responses / month`}</Typography>
+                  } GPT-3.5 or ${currentPlan?.limits?.maxAgentsQueries /
+                    2} GPT-4 Agent responses / month`}</Typography>
                 </Typography>
               ) : (
                 <Typography
@@ -374,53 +369,39 @@ export default function AccountPage() {
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
-                <Typography>{`${
-                  currentPlan?.limits?.maxFileSize / 1000000
-                }MB File upload limit`}</Typography>
+                <Typography>{`${currentPlan?.limits?.maxFileSize /
+                  1000000}MB File upload limit`}</Typography>
               </Typography>
               <Typography
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
-                <Typography>{`${
-                  currentPlan?.limits?.maxDataProcessing / 1000000
-                }MB Data processing (embeddings) / month`}</Typography>
+                <Typography>{`${currentPlan?.limits?.maxDataProcessing /
+                  1000000}MB Data processing (embeddings) / month`}</Typography>
               </Typography>
             </Stack>
 
             <Divider sx={{ my: 2 }} />
 
-            {/* {currentPlan?.type === SubscriptionPlan?.level_0 && (
-              <Link
-                href={`${process.env
-                  .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
-                  session?.user?.id
-                }&prefilled_email=${session?.user?.email}`}
-                style={{ marginLeft: 'auto' }}
-              >
+            <UserPremium>
+              <Admin>
                 <Button
+                  onClick={handleClickManageSubscription}
                   endDecorator={<ArrowForwardRoundedIcon />}
                   variant="solid"
+                  sx={{ ml: 'auto' }}
                   color="warning"
                 >
-                  Subscribe
+                  Upgrade / Manage Subscription
                 </Button>
-              </Link>
-            )} */}
-
-            <UserPremium>
-              <Button
-                onClick={handleClickManageSubscription}
-                endDecorator={<ArrowForwardRoundedIcon />}
-                variant="solid"
-                sx={{ ml: 'auto' }}
-                color="warning"
-              >
-                Upgrade / Manage Subscription
-              </Button>
+              </Admin>
             </UserPremium>
           </Card>
         </FormControl>
+
+        <Divider sx={{ my: 4 }} />
+
+        <OrganizationForm />
 
         <Divider sx={{ my: 4 }} />
 
@@ -497,6 +478,7 @@ export default function AccountPage() {
             </Button>
           </FormControl>
         </Box>
+
         {/* <Divider sx={{ my: 4 }} />
 
         <FormControl sx={{ gap: 1 }}>

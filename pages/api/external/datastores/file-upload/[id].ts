@@ -87,7 +87,7 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
     include: {
       apiKeys: true,
-      owner: {
+      organization: {
         include: {
           apiKeys: true,
           usage: true,
@@ -105,19 +105,23 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
     throw new ApiError(ApiErrorType.NOT_FOUND);
   }
 
-  if (!token || !datastore?.owner?.apiKeys.find((each) => each.key === token)) {
+  if (
+    !token ||
+    !datastore?.organization?.apiKeys.find((each) => each.key === token)
+  ) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   const plan =
-    datastore?.owner?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
+    datastore?.organization?.subscriptions?.[0]?.plan ||
+    SubscriptionPlan.level_0;
 
   if (file.size > accountConfig[plan]?.limits?.maxFileSize) {
     throw new ApiError(ApiErrorType.USAGE_LIMIT);
   }
 
   guardDataProcessingUsage({
-    usage: datastore?.owner?.usage as Usage,
+    usage: datastore?.organization?.usage as Usage,
     plan,
   });
 
@@ -155,9 +159,9 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
         custom_id,
       },
       status: DatasourceStatus.pending,
-      owner: {
+      organization: {
         connect: {
-          id: datastore?.ownerId!,
+          id: datastore?.organizationId!,
         },
       },
       datastore: {
@@ -171,7 +175,7 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
   // Trigger processing
   await triggerTaskLoadDatasource([
     {
-      userId: datasource.ownerId!,
+      organizationId: datasource.organizationId!,
       datasourceId,
       priority: 1,
     },

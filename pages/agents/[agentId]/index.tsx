@@ -389,9 +389,6 @@ export default function AgentPage() {
             >
               <Box
                 sx={(theme) => ({
-                  width: '100%',
-                  height: '100%',
-                  maxWidth: 200,
                   [theme.breakpoints.down('sm')]: {
                     display: 'none',
                   },
@@ -401,6 +398,8 @@ export default function AgentPage() {
                   agentId={router.query?.agentId as string}
                   rootSx={{
                     pt: 1,
+                    height: '100%',
+                    width: '200px',
                   }}
                 />
               </Box>
@@ -556,7 +555,7 @@ export default function AgentPage() {
                       </Stack>
 
                       {(!each?.isPremium ||
-                        (each.isPremium && session?.user?.isPremium)) &&
+                        (each.isPremium && session?.organization?.isPremium)) &&
                         (each?.publicAgentRequired &&
                         agent?.visibility === DatastoreVisibility.private ? (
                           <Button
@@ -596,7 +595,7 @@ export default function AgentPage() {
                           </Button>
                         ))}
 
-                      {each.isPremium && !session?.user?.isPremium && (
+                      {each.isPremium && !session?.organization?.isPremium && (
                         <Button
                           size="sm"
                           variant="outlined"

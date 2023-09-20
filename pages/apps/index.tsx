@@ -158,7 +158,7 @@ export default function DatasourcesPage() {
             }}
             gap={2}
           >
-            {session?.user?.isPremium ? (
+            {session?.organization?.isPremium ? (
               <Link
                 target="_blank"
                 href={`https://blog.chaindesk.ai/chat-site`}
@@ -176,7 +176,7 @@ export default function DatasourcesPage() {
               <Link
                 href={`${process.env
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
-                  session?.user?.id
+                  session?.organization?.id
                 }`}
                 className="w-full"
               >
@@ -238,7 +238,7 @@ export default function DatasourcesPage() {
             }}
             gap={2}
           >
-            {session?.user?.isPremium ? (
+            {session?.organization?.isPremium ? (
               <Button
                 onClick={() => setState({ isSlackModalOpen: true })}
                 endDecorator={<ArrowForwardRoundedIcon />}
@@ -251,7 +251,7 @@ export default function DatasourcesPage() {
               <Link
                 href={`${process.env
                   .NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1!}?client_reference_id=${
-                  session?.user?.id
+                  session?.organization?.id
                 }`}
                 className="w-full"
               >

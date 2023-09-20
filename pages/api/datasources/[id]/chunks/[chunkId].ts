@@ -25,7 +25,7 @@ export const getChunk = async (
     },
   });
 
-  if (datasource?.ownerId !== session.user?.id) {
+  if (datasource?.organizationId !== session.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

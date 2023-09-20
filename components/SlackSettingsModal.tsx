@@ -57,7 +57,7 @@ export default function SlackSettingsModal(props: Props) {
       }&scope=app_mentions:read,channels:history,groups:history,chat:write,commands,users:read&redirect_uri=${
         process.env.NEXT_PUBLIC_DASHBOARD_URL
       }/api/integrations/slack/auth-callback&state=${JSON.stringify({
-        userId: session?.user.id,
+        organizationId: session?.organization.id,
         agentId: props.agentId,
       })}`
     ),

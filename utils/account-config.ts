@@ -11,6 +11,8 @@ type Plan = {
     maxFileSize: number; // in bytes
     maxDataProcessing: number; // in bytes
 
+    maxSeats: number;
+
     // e.g.: Crisp / Slack thread summary
     maxSummary: number;
 
@@ -40,6 +42,7 @@ const config: {
       maxDataProcessing: 5000000, // 5 MB
       maxSummary: 10,
       maxWebsiteURL: 10,
+      maxSeats: 1,
     },
   },
   [SubscriptionPlan.level_1]: {
@@ -54,6 +57,7 @@ const config: {
       maxDataProcessing: 50000000, // 50 MB
       maxSummary: 100,
       maxWebsiteURL: 50,
+      maxSeats: 1,
     },
   },
   [SubscriptionPlan.level_2]: {
@@ -68,6 +72,7 @@ const config: {
       maxDataProcessing: 100000000, // 100 MB
       maxSummary: 200,
       maxWebsiteURL: 500,
+      maxSeats: 3,
     },
   },
   [SubscriptionPlan.level_3]: {
@@ -83,6 +88,7 @@ const config: {
       maxDataProcessing: 500000000,
       maxSummary: 500,
       maxWebsiteURL: 10000,
+      maxSeats: 10,
     },
   },
 };

@@ -43,7 +43,7 @@ export const updateCrispConfig = async (
       id: data.agentId,
     },
     include: {
-      owner: {
+      organization: {
         include: {
           apiKeys: true,
         },
@@ -51,7 +51,7 @@ export const updateCrispConfig = async (
     },
   });
 
-  if (!agent?.owner?.apiKeys?.find((one) => one.key === data.apiKey)) {
+  if (!agent?.organization?.apiKeys?.find((one) => one.key === data.apiKey)) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

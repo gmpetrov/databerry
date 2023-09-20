@@ -33,7 +33,10 @@ export const getConversations = async (
   const conversations = await prisma.conversation.findMany({
     where: {
       AND: {
-        agentId,
+        agent: {
+          id: agentId,
+          organizationId: session.organization.id,
+        },
         userId: session.user.id,
       },
     },
@@ -65,14 +68,6 @@ export const getConversations = async (
       },
     },
   });
-
-  // await sleep(3000);
-  // if (
-  //   conversation?.agent?.visibility === AgentVisibility.private &&
-  //   conversation?.agent?.ownerId !== session?.user?.id
-  // ) {
-  //   throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  // }
 
   return conversations;
 };

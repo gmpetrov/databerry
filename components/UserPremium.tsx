@@ -11,7 +11,7 @@ type Props = {
 function UserPremium(props: Props) {
   const { data: session, status } = useSession();
 
-  const currentPlan = accountConfig[session?.user?.currentPlan!];
+  const currentPlan = accountConfig[session?.organization?.currentPlan!];
 
   if (currentPlan?.type === SubscriptionPlan?.level_0) {
     return null;

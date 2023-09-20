@@ -22,7 +22,7 @@ export const synchDatasource = async (
       id,
     },
     include: {
-      owner: {
+      organization: {
         include: {
           usage: true,
         },
@@ -30,13 +30,13 @@ export const synchDatasource = async (
     },
   });
 
-  if (datasource?.owner?.id !== session?.user?.id) {
+  if (datasource?.organization?.id !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
   guardDataProcessingUsage({
-    usage: datasource?.owner?.usage!,
-    plan: session?.user?.currentPlan,
+    usage: datasource?.organization?.usage!,
+    plan: session?.organization?.currentPlan,
   });
 
   const updated = await prisma.appDatasource.update({
@@ -53,7 +53,7 @@ export const synchDatasource = async (
 
   await triggerTaskLoadDatasource([
     {
-      userId: session?.user?.id!,
+      organizationId: session?.organization?.id!,
       datasourceId: datasource.id,
       priority: 2,
     },

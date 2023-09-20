@@ -131,7 +131,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     include: {
       agent: {
         include: {
-          owner: {
+          organization: {
             include: {
               subscriptions: {
                 where: {
@@ -148,7 +148,8 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   return {
     props: {
-      isPremium: (integration?.agent?.owner?.subscriptions?.length || 0) > 0,
+      isPremium:
+        (integration?.agent?.organization?.subscriptions?.length || 0) > 0,
     },
   };
   // }

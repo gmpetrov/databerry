@@ -15,7 +15,6 @@ export const checkHandleAvailable = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const session = req.session;
   const { handle } = req.body as z.infer<typeof Schema>;
 
   const agent = await prisma.agent.findUnique({

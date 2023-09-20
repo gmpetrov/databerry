@@ -154,8 +154,9 @@ const Tool = (props: {
 export default function BaseForm(props: Props) {
   const session = useSession();
   const defaultIconUrl = '/.well-known/logo.png';
-  const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
-    useState(false);
+  const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] = useState(
+    false
+  );
   const fileInputRef = useRef();
 
   const [state, setState] = useStateReducer({
@@ -169,8 +170,9 @@ export default function BaseForm(props: Props) {
     Prisma.PromiseReturnType<typeof upsertAgent>
   >(`/api/agents`, postFetcher);
 
-  const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] =
-    useState(false);
+  const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] = useState(
+    false
+  );
   const methods = useForm<UpsertAgentSchema>({
     resolver: zodResolver(UpsertAgentSchema),
     defaultValues: {
@@ -214,10 +216,6 @@ export default function BaseForm(props: Props) {
         },
       });
 
-      const getAgentStoreS3Url = (agentId: string) => {
-        return `${getS3RootDomain()}/agents/${agentId}`;
-      };
-
       const iconUrl = `${getS3RootDomain()}/agents/${
         defaultValues?.id
       }/${fileName}`;
@@ -234,10 +232,10 @@ export default function BaseForm(props: Props) {
       } as any);
 
       toast.success('Agent icon updated successfully!');
-      setState({ isUploadingAgentIcon: false });
     } catch (err) {
       console.log(err, err);
     } finally {
+      setState({ isUploadingAgentIcon: false });
     }
   };
 

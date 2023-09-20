@@ -15,7 +15,7 @@ export const getApiKeys = async (
 
   const apiKeys = await prisma.userApiKey.findMany({
     where: {
-      userId: session?.user?.id,
+      organizationId: session?.organization?.id,
     },
   });
 
@@ -33,9 +33,9 @@ export const createApiKey = async (
   const apiKey = await prisma.userApiKey.create({
     data: {
       key: uuidv4(),
-      user: {
+      organization: {
         connect: {
-          id: session?.user?.id,
+          id: session?.organization?.id,
         },
       },
     },
@@ -58,7 +58,7 @@ export const deleteApiKey = async (
       id: apiKeyId,
     },
     include: {
-      user: {
+      organization: {
         select: {
           apiKeys: {
             select: {
@@ -71,8 +71,8 @@ export const deleteApiKey = async (
   });
 
   if (
-    apiKey?.userId !== session?.user?.id ||
-    apiKey?.user?.apiKeys?.length === 1
+    apiKey?.organizationId !== session?.organization?.id ||
+    apiKey?.organization?.apiKeys?.length === 1
   ) {
     // User should always have at least one API key
     throw new Error('Unauthorized');

@@ -28,7 +28,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
     const sitemap = (this.datasource.config as any).sitemap;
     const source = (this.datasource.config as any).source_url;
     const currentPlan =
-      this.datasource?.owner?.subscriptions?.[0]?.plan ||
+      this.datasource?.organization?.subscriptions?.[0]?.plan ||
       SubscriptionPlan.level_0;
 
     const maxPages = accountConfig[currentPlan]?.limits?.maxWebsiteURL || 25;
@@ -90,7 +90,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
             ...(this.datasource.config as any),
             source_url: each,
           },
-          ownerId: this.datasource?.ownerId,
+          organizationId: this.datasource?.organizationId,
           datastoreId: this.datasource?.datastoreId,
           groupId,
         })),
@@ -108,7 +108,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
             ...(this.datasource.config as any),
             sitemap: each,
           },
-          ownerId: this.datasource?.ownerId,
+          organizationId: this.datasource?.organizationId,
           datastoreId: this.datasource?.datastoreId,
           groupId,
         })),
@@ -117,7 +117,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
 
     await triggerTaskLoadDatasource(
       [...ids, ...idsSitemaps].map((each) => ({
-        userId: this.datasource?.ownerId!,
+        organizationId: this.datasource?.organizationId!,
         datasourceId: each,
         priority: 10,
       }))

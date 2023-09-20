@@ -31,8 +31,8 @@ export const runChainRequest = async (
   const conversationId = data.conversationId || cuid();
 
   guardAgentQueryUsage({
-    usage: session?.user?.usage,
-    plan: session?.user?.currentPlan,
+    usage: session?.organization?.usage,
+    plan: session?.organization?.currentPlan,
   });
 
   const conversation = await prisma.conversation.findUnique({
@@ -60,7 +60,7 @@ export const runChainRequest = async (
     : [];
 
   datastores.forEach((each) => {
-    if (each.ownerId !== session?.user?.id) {
+    if (each.organizationId !== session?.organization?.id) {
       throw new ApiError(ApiErrorType.UNAUTHORIZED);
     }
   });
@@ -76,7 +76,7 @@ export const runChainRequest = async (
     : [];
 
   datasources.forEach((each) => {
-    if (each.ownerId !== session?.user?.id) {
+    if (each.organizationId !== session?.organization?.id) {
       throw new ApiError(ApiErrorType.UNAUTHORIZED);
     }
   });
@@ -91,12 +91,13 @@ export const runChainRequest = async (
       Connection: 'keep-alive',
     });
 
-    req.socket.on('close', function () {
+    req.socket.on('close', function() {
       ctrl.abort();
     });
   }
 
   const conversationManager = new ConversationManager({
+    organizationId: session?.organization?.id,
     channel: ConversationChannel.dashboard,
     // agentId: agent?.id,
     userId: session?.user?.id,
@@ -133,10 +134,10 @@ export const runChainRequest = async (
     }),
     prisma.usage.update({
       where: {
-        id: session?.user?.usage?.id,
+        id: session?.organization?.usage?.id,
       },
       data: {
-        nbAgentQueries: (session?.user?.usage?.nbAgentQueries || 0) + 1,
+        nbAgentQueries: (session?.organization?.usage?.nbAgentQueries || 0) + 1,
         //   (queryCountConfig?.[agent?.modelName] || 1),
       },
     }),
