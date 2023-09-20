@@ -131,23 +131,19 @@ export const authOptions = {
 
       let organization = user?.organization;
 
-      if (trigger === 'update' && newSession.orgId) {
-        const found = user?.memberships?.find(
-          (one) => one.organizationId === newSession.orgId
-        );
+      const found = user?.memberships?.find(
+        (one) => one.organizationId === organization.id
+      );
 
-        if (!found) {
-          throw new Error('Unauthorized');
-        }
-
-        const updated = await prisma.session.update({
+      const handleUpdateOrg = (orgId: string) => {
+        return prisma.session.update({
           where: {
             id: user?.sessionId,
           },
           data: {
             organization: {
               connect: {
-                id: newSession.orgId,
+                id: orgId,
               },
             },
           },
@@ -159,6 +155,25 @@ export const authOptions = {
             },
           },
         });
+      };
+
+      if (!found) {
+        // User has no access to this organization anymore, update the session
+        const defaultOrgId = user?.memberships?.[0]?.organizationId;
+
+        const updated = await handleUpdateOrg(defaultOrgId!);
+
+        organization = updated.organization!;
+      } else if (trigger === 'update' && newSession.orgId) {
+        const found = user?.memberships?.find(
+          (one) => one.organizationId === newSession.orgId
+        );
+
+        if (!found) {
+          throw new Error('Unauthorized');
+        }
+
+        const updated = await handleUpdateOrg(newSession.orgId!);
 
         organization = updated.organization!;
       }
