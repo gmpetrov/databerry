@@ -20,9 +20,8 @@ import clsx from 'clsx';
 import * as React from 'react';
 
 interface VercelInviteUserEmailProps {
-  agentName: string;
   ctaLink?: string;
-  messages?: Partial<Message>[];
+  nbLeads?: number;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -30,23 +29,10 @@ const baseUrl = process.env.VERCEL_URL
   : '';
 
 export const VercelInviteUserEmail = ({
-  agentName = 'Chaindesk',
   ctaLink = '',
-  messages = [
-    {
-      id: '1',
-      text: 'Hello World',
-      from: 'human',
-    },
-    {
-      id: '2',
-      text:
-        'How can I help you? flkdsj skldjf lksdfj lksdjf lskdfjsdlfk jdlksdj lfdskjf ',
-      from: 'agent',
-    },
-  ],
+  nbLeads = 42,
 }: VercelInviteUserEmailProps) => {
-  const previewText = `New conversation started with Agent ${agentName}`;
+  const previewText = `Your Daily Leads`;
 
   return (
     <Html>
@@ -65,31 +51,17 @@ export const VercelInviteUserEmail = ({
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
-              New conversation started with Agent <strong>{agentName}</strong>
+              Your Daily Leads
             </Heading>
             <Text className="text-black text-[14px] leading-[24px]">
               Hello 👋
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              A new conversation has been started with your Agent{' '}
-              <strong>{agentName}</strong>
+              <strong>{nbLeads}</strong> lead(s) created yesterday.
             </Text>
-
-            <Container>
-              {(messages || []).map((message) => (
-                <Section
-                  key={message.id}
-                  className={clsx(
-                    'px-4 py-2 mb-2 border border-solid border-[#eaeaea] rounded-lg',
-                    {
-                      'bg-[#eaeaea50]': message.from === 'agent',
-                    }
-                  )}
-                >
-                  <Text>{message.text}</Text>
-                </Section>
-              ))}
-            </Container>
+            <Text className="text-black text-[14px] leading-[24px]">
+              Attached to this mail are all the leads collected yesteday.
+            </Text>
 
             <Section className="text-center mt-[32px] mb-[32px]">
               <Button
@@ -98,15 +70,15 @@ export const VercelInviteUserEmail = ({
                 className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
                 href={ctaLink}
               >
-                View Conversation
+                Open Dashoard
               </Button>
             </Section>
-            <Text className="text-black text-[14px] leading-[24px]">
+            {/* <Text className="text-black text-[14px] leading-[24px]">
               or copy and paste this URL into your browser:{' '}
               <Link href={ctaLink} className="text-blue-600 no-underline">
                 {ctaLink}
               </Link>
-            </Text>
+            </Text> */}
             {/* <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" /> */}
           </Container>
         </Body>

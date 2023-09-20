@@ -14,6 +14,18 @@ RUN set -uex; \
     apt-get update; \
     apt-get install nodejs -y;
 
+# https://fly.io/docs/app-guides/supercronic/
+# Latest releases available at https://github.com/aptible/supercronic/releases
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.1/supercronic-linux-amd64 \
+    SUPERCRONIC=supercronic-linux-amd64 \
+    SUPERCRONIC_SHA1SUM=d7f4c0886eb85249ad05ed592902fa6865bb9d70
+
+RUN curl -fsSLO "$SUPERCRONIC_URL" \
+    && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
+    && chmod +x "$SUPERCRONIC" \
+    && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
+    && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
+
 # Install dependencies only when needed
 FROM base AS deps
 
@@ -78,16 +90,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/server ./server
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/crontab ./crontab
 
-# # TODO: Improve this. Output file tracing is removing modules needed for workers
-# COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-# RUN yarn global add husky
-# RUN \
-#     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-#     elif [ -f package-lock.json ]; then npm ci; \
-#     elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i ; \
-#     else echo "Lockfile not found." && exit 1; \
-#     fi
 USER nextjs
 
 EXPOSE 3000

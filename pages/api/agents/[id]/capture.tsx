@@ -1,18 +1,16 @@
+import { render } from '@react-email/components';
 import Cors from 'cors';
 import { NextApiRequest, NextApiResponse } from 'next';
-import nodemailer from 'nodemailer';
 import { z } from 'zod';
 
+import HelpRequest from '@app/components/emails/HelpRequest';
 import { AppNextApiRequest } from '@app/types/index';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
+import mailer from '@app/utils/mailer';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
 import { validate } from '@app/utils/validate';
-
-const transporter = nodemailer.createTransport(process.env.EMAIL_SERVER, {
-  from: process.env.EMAIL_FROM,
-});
 
 const handler = createApiHandler();
 
@@ -173,14 +171,45 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
     </a>
   </body>
 </html>
-
   `;
 
-  await transporter.sendMail({
-    to: onwerEmail,
-    subject: 'Visitor requested assistance - ⛓️ ChatbotGPT',
-    html,
-  });
+  await Promise.all([
+    prisma.lead.create({
+      data: {
+        email: data.visitorEmail,
+        agent: {
+          connect: {
+            id: agentId,
+          },
+        },
+        organization: {
+          connect: {
+            id: agent?.organizationId!,
+          },
+        },
+      },
+    }),
+    mailer.sendMail({
+      from: {
+        name: 'Chaindesk',
+        address: process.env.EMAIL_FROM!,
+      },
+      to: onwerEmail,
+      subject: '❓ Visitor requested assistance',
+      html: render(
+        <HelpRequest
+          visitorEmail={data.visitorEmail}
+          agentName={agent.name}
+          messages={agent?.conversations?.[0]?.messages}
+          ctaLink={`${
+            process.env.NEXT_PUBLIC_DASHBOARD_URL
+          }/logs?conversationId=${encodeURIComponent(
+            data.conversationId
+          )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
+        />
+      ),
+    }),
+  ]);
 
   return true;
 };

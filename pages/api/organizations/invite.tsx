@@ -51,7 +51,10 @@ export const invite = async (req: AppNextApiRequest, res: NextApiResponse) => {
     });
 
     await mailer.sendMail({
-      from: process.env.EMAIL_FROM,
+      from: {
+        name: 'Chaindesk',
+        address: process.env.EMAIL_FROM!,
+      },
       to: data.email,
       subject: `💌 You have been invited to join ${session?.organization?.name}`,
       html: render(

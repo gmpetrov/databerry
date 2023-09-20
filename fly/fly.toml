@@ -9,6 +9,7 @@ primary_region = "iad"
 web = "node server.js"
 # https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
 worker = "node --max-old-space-size=1536 server/datasource-loader.js"
+cron = "supercronic crontab"
 
 [build]
   [build.args]

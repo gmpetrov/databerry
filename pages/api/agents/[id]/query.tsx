@@ -194,12 +194,27 @@ export const chatAgentRequest = async (
   ) {
     try {
       await mailer.sendMail({
-        from: process.env.EMAIL_FROM,
+        from: {
+          name: 'Chaindesk',
+          address: process.env.EMAIL_FROM!,
+        },
         to: ownerEmail,
         subject: `💬 New conversation started with Agent ${agent?.name}`,
         html: render(
           <NewConversation
             agentName={agent.name}
+            messages={[
+              {
+                id: '1',
+                text: data.query,
+                from: MessageFrom.human,
+              },
+              {
+                id: '2',
+                text: chatRes.answer,
+                from: MessageFrom.agent,
+              },
+            ]}
             ctaLink={`${
               process.env.NEXT_PUBLIC_DASHBOARD_URL
             }/logs?conversationId=${encodeURIComponent(
