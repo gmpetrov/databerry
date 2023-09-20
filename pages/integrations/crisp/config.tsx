@@ -44,24 +44,24 @@ export default function CrispConfig(props: { agent: Agent }) {
     subscription?.plan && subscription?.plan !== 'level_0'
   );
   const [apiKey, setApiKey] = useState('');
-  const user = session?.data?.user;
+  const organization = session?.data?.organization;
 
   useEffect(() => {
     (async () => {
       {
-        if (user) {
+        if (organization) {
           const apiKeys = await axios.get('/api/accounts/api-keys');
           const { data } = await axios.get('/api/agents');
 
           const apiKey = apiKeys.data[0]?.key;
-          setIsPremium(user?.isPremium);
+          setIsPremium(organization?.isPremium);
           setAgents(data);
           setApiKey(apiKey);
           setIsApiKeyValid(!!apiKey);
         }
       }
     })();
-  }, [user]);
+  }, [organization]);
 
   const handleFetchAgents = async (apiKey: string) => {
     try {
@@ -158,7 +158,7 @@ export default function CrispConfig(props: { agent: Agent }) {
             <Logo className="w-20 mx-auto mb-5" />
             <form className="flex flex-col">
               <Stack spacing={2}>
-                {!user && (
+                {!organization && (
                   <FormControl>
                     <FormLabel>ChatbotGPT API Key</FormLabel>
                     <Alert variant="outlined" sx={{ mb: 2 }}>

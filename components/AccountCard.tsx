@@ -100,14 +100,14 @@ function AccountCard({}: Props) {
 
   const isMenuOpen = Boolean(userMenuElement);
   const usageQueryRate =
-    ((session?.data?.user?.usage?.nbAgentQueries || 0) /
-      accountConfig?.[session?.data?.user?.currentPlan!]?.limits
+    ((session?.data?.organization?.usage?.nbAgentQueries || 0) /
+      accountConfig?.[session?.data?.organization?.currentPlan!]?.limits
         ?.maxAgentsQueries) *
     100;
 
   const usageDataRate =
-    ((session?.data?.user?.usage?.nbDataProcessingBytes || 0) /
-      accountConfig?.[session?.data?.user?.currentPlan!]?.limits
+    ((session?.data?.organization?.usage?.nbDataProcessingBytes || 0) /
+      accountConfig?.[session?.data?.organization?.currentPlan!]?.limits
         ?.maxDataProcessing) *
     100;
 
@@ -223,14 +223,6 @@ function AccountCard({}: Props) {
               >
                 {session?.data?.user?.name || session?.data?.user?.email}
               </Typography>
-              {/* <Chip
-              size="sm"
-              variant="outlined"
-              color="warning"
-              sx={{ ml: 'auto' }}
-            >
-              {accountConfig?.[session?.data?.user?.currentPlan!]?.label}
-            </Chip> */}
             </Button>
 
             <Menu
@@ -254,10 +246,10 @@ function AccountCard({}: Props) {
           <Stack gap={1}>
             <Stack width={'100%'} gap={1}>
               <Typography level="body3" sx={{ textAlign: 'right' }}>
-                {`${session?.data?.user?.usage?.nbAgentQueries?.toLocaleString(
+                {`${session?.data?.organization?.usage?.nbAgentQueries?.toLocaleString(
                   'en-US'
                 )} / ${accountConfig?.[
-                  session?.data?.user?.currentPlan!
+                  session?.data?.organization?.currentPlan!
                 ]?.limits?.maxAgentsQueries?.toLocaleString('en-US')} queries`}
               </Typography>
               <LinearProgress
@@ -270,10 +262,10 @@ function AccountCard({}: Props) {
             <Stack width={'100%'} gap={1}>
               <Typography level="body3" sx={{ textAlign: 'right' }}>
                 {`${(
-                  (session?.data?.user?.usage?.nbDataProcessingBytes || 0) /
-                  1000000
+                  (session?.data?.organization?.usage?.nbDataProcessingBytes ||
+                    0) / 1000000
                 )?.toFixed(2)} / ${accountConfig?.[
-                  session?.data?.user?.currentPlan!
+                  session?.data?.organization?.currentPlan!
                 ]?.limits?.maxDataProcessing / 1000000} MB processed`}
               </Typography>
               <LinearProgress

@@ -497,6 +497,7 @@ export default function AgentPage() {
                           alt="slack logo"
                         ></Image>
                       ),
+                      isPremium: true,
                       action: () => {
                         setState({ isSlackModalOpen: true });
                       },
@@ -519,7 +520,7 @@ export default function AgentPage() {
                     },
                     {
                       name: 'Zapier',
-                      isPremium: false,
+                      isPremium: true,
                       icon: (
                         <img
                           className="w-8"
@@ -527,6 +528,7 @@ export default function AgentPage() {
                           alt="zapier logo"
                         ></img>
                       ),
+
                       action: () => {
                         window.open(
                           'https://zapier.com/apps/databerry/integrations',

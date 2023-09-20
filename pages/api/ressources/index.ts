@@ -13,14 +13,13 @@ export const searchRessources = async (
   const session = req.session;
   const search = req.query.search as string;
 
-  const user = await prisma.user.findUnique({
+  const org = await prisma.organization.findUnique({
     where: {
-      id: session?.user?.id,
+      id: session?.organization?.id,
     },
     include: {
       datastores: {
         where: {
-          organizationId: session?.organization?.id,
           name: {
             contains: search,
             mode: 'insensitive',
@@ -33,7 +32,6 @@ export const searchRessources = async (
       },
       agents: {
         where: {
-          organizationId: session?.organization?.id,
           name: {
             contains: search,
             mode: 'insensitive',
@@ -44,9 +42,8 @@ export const searchRessources = async (
         },
         take: 100,
       },
-      datasources: {
+      appDatasources: {
         where: {
-          organizationId: session?.organization?.id,
           name: {
             contains: search,
             mode: 'insensitive',
@@ -61,9 +58,9 @@ export const searchRessources = async (
   });
 
   return {
-    agents: user?.agents,
-    datastores: user?.datastores,
-    datasources: user?.datasources,
+    agents: org?.agents,
+    datastores: org?.datastores,
+    datasources: org?.appDatasources,
   };
 };
 

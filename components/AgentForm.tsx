@@ -403,13 +403,13 @@ export default function BaseForm(props: Props) {
             </Option>
             <Option
               value={AgentModelName.gpt_3_5_turbo_16k}
-              disabled={!session?.data?.user?.isPremium}
+              disabled={!session?.data?.organization?.isPremium}
             >
               OpenAI gpt-3.5-turbo 16k (premium)
             </Option>
             <Option
               value={AgentModelName.gpt_4}
-              disabled={!session?.data?.user?.isPremium}
+              disabled={!session?.data?.organization?.isPremium}
             >
               OpenAI gpt-4 (premium)
             </Option>

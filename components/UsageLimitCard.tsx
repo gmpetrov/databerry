@@ -5,6 +5,7 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Divider from '@mui/joy/Divider';
 import Modal from '@mui/joy/Modal';
+import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
 import React from 'react';
@@ -14,9 +15,10 @@ import { RouteNames } from '@app/types';
 type Props = {
   title?: string;
   description?: string;
+  handleClose?: any;
 };
 
-const UsageLimitCard = ({ title, description }: Props) => {
+const UsageLimitCard = ({ title, description, handleClose }: Props) => {
   return (
     <Card
       variant="outlined"
@@ -43,15 +45,23 @@ const UsageLimitCard = ({ title, description }: Props) => {
 
       <Divider sx={{ my: 3 }} />
 
-      <Link href={RouteNames.ACCOUNT} style={{ marginLeft: 'auto' }}>
-        <Button
-          endDecorator={<ArrowForwardRoundedIcon />}
-          color="success"
-          variant="plain"
-        >
-          Upgrade Plan
-        </Button>
-      </Link>
+      <Stack direction="row" sx={{ ml: 'auto' }} gap={1}>
+        {handleClose && (
+          <Button onClick={handleClose} variant="plain" color="neutral">
+            Cancel
+          </Button>
+        )}
+
+        <Link href={RouteNames.ACCOUNT}>
+          <Button
+            endDecorator={<ArrowForwardRoundedIcon />}
+            color="success"
+            variant="outlined"
+          >
+            Upgrade Plan
+          </Button>
+        </Link>
+      </Stack>
     </Card>
   );
 };

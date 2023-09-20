@@ -18,7 +18,11 @@ function UsageLimitModal({ isOpen, title, description, handleClose }: Props) {
       sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
     >
       <div>
-        <UsageLimitCard title={title} description={description} />
+        <UsageLimitCard
+          title={title}
+          description={description}
+          handleClose={handleClose}
+        />
       </div>
     </Modal>
   );

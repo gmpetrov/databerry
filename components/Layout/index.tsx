@@ -103,12 +103,6 @@ export default function Layout(props: Props) {
             <Typography component="h1" fontWeight="xl">
               ChatbotGPT
             </Typography>
-
-            {/* {session?.user?.isPremium && (
-              <Chip color="warning" variant="soft" size="sm">
-                premium
-              </Chip>
-            )} */}
           </Box>
           {/* <Input
             size="sm"

@@ -49,12 +49,12 @@ export default function CrispConfig(props: { agent: Agent }) {
     agents: [] as Agent[],
   });
 
-  const user = session?.data?.user;
+  const organization = session?.data?.organization;
 
   useEffect(() => {
     (async () => {
       {
-        if (user) {
+        if (organization) {
           const apiKeys = await axios.get('/api/accounts/api-keys');
           const { data } = await axios.get('/api/agents');
 
@@ -67,7 +67,7 @@ export default function CrispConfig(props: { agent: Agent }) {
         }
       }
     })();
-  }, [user]);
+  }, [organization]);
 
   const sendConfig = async (e: any) => {
     e.stopPropagation();
