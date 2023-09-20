@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.3"></a>
+## 0.1.3 (2023-09-20)
+
+### Miscellaneous
+
+- 🤖 update pricing [[f624ec1](https://github.com/gmpetrov/databerry/commit/f624ec15e9d478b482fe0c73d806bbdcc2a8dcc4)]
+
+
 <a name="0.1.2"></a>
 ## 0.1.2 (2023-09-20)
 
