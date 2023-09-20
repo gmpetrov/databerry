@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { NextApiResponse } from 'next';
 
+import { version } from '@app/package.json';
 import { AppNextApiRequest, AppStatus } from '@app/types';
 import { createApiHandler, respond } from '@app/utils/createa-api-handler';
 import prisma from '@app/utils/prisma-client';
@@ -47,6 +48,7 @@ export const getStatus = async (
     db: dbCheck,
     vectorDb: vectorDbCheck,
     isMaintenance: process.env.MAINTENANCE_MODE === 'true',
+    latestVersion: version,
   };
 };
 

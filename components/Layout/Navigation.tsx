@@ -3,6 +3,7 @@ import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
@@ -32,27 +33,26 @@ import Stack from '@mui/joy/Stack';
 import SvgIcon from '@mui/joy/SvgIcon';
 import Typography from '@mui/joy/Typography';
 import { Prisma } from '@prisma/client';
+import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
 import * as React from 'react';
+import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
 import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getOrganizations } from '@app/pages/api/organizations';
 import { getStatus } from '@app/pages/api/status';
 import { AppStatus, RouteNames } from '@app/types';
-import accountConfig from '@app/utils/account-config';
 import { fetcher } from '@app/utils/swr-fetcher';
 
 import AccountCard from '../AccountCard';
 
-import ColorSchemeToggle from './ColorSchemeToggle';
-
 export default function Navigation() {
   const router = useRouter();
 
-  const getDatastoresQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
+  const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
     fetcher,
     {
@@ -68,8 +68,9 @@ export default function Navigation() {
     }
   );
 
-  const isStatusOK = getDatastoresQuery?.data?.status === AppStatus.OK;
-  const isMaintenance = !!getDatastoresQuery?.data?.isMaintenance;
+  const { publicRuntimeConfig } = getConfig();
+  const isStatusOK = getStatusQuery?.data?.status === AppStatus.OK;
+  const isMaintenance = !!getStatusQuery?.data?.isMaintenance;
 
   React.useEffect(() => {
     if (
@@ -80,6 +81,48 @@ export default function Navigation() {
       router.push(RouteNames.MAINTENANCE);
     }
   }, [isMaintenance]);
+
+  React.useEffect(() => {
+    if (
+      publicRuntimeConfig?.version &&
+      getStatusQuery?.data?.latestVersion &&
+      publicRuntimeConfig?.version !== getStatusQuery?.data?.latestVersion
+    ) {
+      toast(
+        (t) => (
+          <Stack
+            direction={'row'}
+            sx={{
+              alignItems: 'center',
+            }}
+            gap={2}
+            width={'100%'}
+          >
+            <IconButton
+              size="sm"
+              variant="plain"
+              color="neutral"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              <CloseRoundedIcon />
+            </IconButton>
+            <p className="font-bold whitespace-nowrap">New version available</p>
+            <Button
+              size="sm"
+              onClick={() => {
+                window?.location?.reload?.();
+              }}
+            >
+              Update
+            </Button>
+          </Stack>
+        ),
+        {
+          duration: 10000,
+        }
+      );
+    }
+  }, [publicRuntimeConfig?.version, getStatusQuery?.data?.latestVersion]);
 
   const items = React.useMemo(() => {
     return [

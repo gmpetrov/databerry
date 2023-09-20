@@ -3,8 +3,13 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const pkg = require('./package.json');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  publicRuntimeConfig: {
+    version: pkg.version,
+  },
   experimental: {
     // outputFileTracingIgnores: ['canvas'],
   },
