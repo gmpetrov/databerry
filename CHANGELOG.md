@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.6"></a>
+## 0.1.6 (2023-09-20)
+
+### Miscellaneous
+
+- 🎸 new conversation started email [[9783b85](https://github.com/gmpetrov/databerry/commit/9783b85eef6459fcd3c6087ee3e0bc196955ab89)]
+
+
 <a name="0.1.5"></a>
 ## 0.1.5 (2023-09-20)
 
