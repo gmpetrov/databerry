@@ -595,6 +595,8 @@ enum ConversationChannel {
   website
   slack
   crisp
+  zapier
+  api
 }
 
 enum AgentModelName {

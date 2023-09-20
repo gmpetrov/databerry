@@ -62,7 +62,11 @@ const RenderOrgOption = (props: RenderOrgOptionProps) => {
 
 type Props = {};
 function AccountCard({}: Props) {
+  const router = useRouter();
   const session = useSession();
+
+  const targetOrgId = router.query?.targetOrgId as string;
+
   const getOrgsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getOrganizations>
   >('/api/organizations', fetcher);
@@ -83,6 +87,25 @@ function AccountCard({}: Props) {
     setUserMenuElement(null);
   };
 
+  const handleSwitchOrg = React.useCallback(
+    async (id: string) => {
+      try {
+        setIsUpdatingSession(true);
+
+        await session.update({
+          orgId: id,
+        });
+
+        window.location.reload();
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsUpdatingSession(false);
+      }
+    },
+    [session]
+  );
+
   const handleCreateOrg = React.useCallback(async () => {
     try {
       setIsCreatingOrg(true);
@@ -97,6 +120,22 @@ function AccountCard({}: Props) {
       setIsCreatingOrg(false);
     }
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (
+        targetOrgId &&
+        targetOrgId !== session?.data?.organization?.id &&
+        session?.data?.user?.memberships?.find(
+          (one) => one.organizationId === targetOrgId
+        )
+      ) {
+        delete router.query.targetOrgId;
+        router.replace(router, undefined, { shallow: true });
+        handleSwitchOrg(targetOrgId);
+      }
+    })();
+  }, [targetOrgId, session?.data?.organization?.id, handleSwitchOrg]);
 
   const isMenuOpen = Boolean(userMenuElement);
   const usageQueryRate =
@@ -136,21 +175,7 @@ function AccountCard({}: Props) {
               />
             );
           }}
-          onChange={async (_, value) => {
-            try {
-              setIsUpdatingSession(true);
-
-              await session.update({
-                orgId: value as string,
-              });
-
-              window.location.reload();
-            } catch (err) {
-              console.log(err);
-            } finally {
-              setIsUpdatingSession(false);
-            }
-          }}
+          onChange={(_, value) => handleSwitchOrg(value as string)}
         >
           {getOrgsQuery?.data?.map((org) => (
             <Option key={org.id} value={org.id}>

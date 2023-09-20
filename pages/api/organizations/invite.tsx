@@ -50,7 +50,6 @@ export const invite = async (req: AppNextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    //   TODO SEND EMAIL
     await mailer.sendMail({
       from: process.env.EMAIL_FROM,
       to: data.email,

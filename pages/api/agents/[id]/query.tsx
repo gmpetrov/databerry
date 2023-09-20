@@ -1,20 +1,28 @@
 import {
   AgentVisibility,
   ConversationChannel,
+  MembershipRole,
   MessageFrom,
   Usage,
 } from '@prisma/client';
+import { render } from '@react-email/components';
 import cuid from 'cuid';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import NewConversation from '@app/components/emails/NewConversation';
 import { AppNextApiRequest, SSE_EVENT } from '@app/types';
 import { ChatRequest } from '@app/types/dtos';
 import { queryCountConfig } from '@app/utils/account-config';
 import AgentManager from '@app/utils/agent';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
+import {
+  formatOrganizationSession,
+  sessionOrganizationInclude,
+} from '@app/utils/auth';
 import ConversationManager from '@app/utils/conversation';
 import { createLazyAuthHandler, respond } from '@app/utils/createa-api-handler';
 import guardAgentQueryUsage from '@app/utils/guard-agent-query-usage';
+import mailer from '@app/utils/mailer';
 import cors from '@app/utils/middlewares/cors';
 import pipe from '@app/utils/middlewares/pipe';
 import prisma from '@app/utils/prisma-client';
@@ -32,6 +40,10 @@ export const chatAgentRequest = async (
   const data = req.body as ChatRequest;
 
   const conversationId = data.conversationId || cuid();
+  const isNewConversation = !data.conversationId;
+  if (session?.authType == 'apiKey') {
+    data.channel = ConversationChannel.api;
+  }
 
   const agent = await prisma.agent.findUnique({
     where: {
@@ -40,7 +52,19 @@ export const chatAgentRequest = async (
     include: {
       organization: {
         include: {
-          usage: true,
+          ...sessionOrganizationInclude,
+          memberships: {
+            where: {
+              role: MembershipRole.OWNER,
+            },
+            include: {
+              user: {
+                select: {
+                  email: true,
+                },
+              },
+            },
+          },
           conversations: {
             where: {
               AND: {
@@ -78,11 +102,13 @@ export const chatAgentRequest = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  const usage = agent?.organization?.usage as Usage;
+  const orgSession =
+    session?.organization || formatOrganizationSession(agent?.organization!);
+  const usage = orgSession?.usage as Usage;
 
   guardAgentQueryUsage({
     usage,
-    plan: session?.organization?.currentPlan,
+    plan: orgSession?.currentPlan,
   });
 
   if (data.modelName) {
@@ -107,7 +133,7 @@ export const chatAgentRequest = async (
 
   const conversationManager = new ConversationManager({
     organizationId: agent?.organizationId!,
-    channel: ConversationChannel.dashboard,
+    channel: data.channel,
     agentId: agent?.id,
     userId: session?.user?.id,
     visitorId: data.visitorId!,
@@ -157,6 +183,35 @@ export const chatAgentRequest = async (
   });
 
   await conversationManager.save();
+
+  // Send new conversation notfication from website visitor
+  const ownerEmail = agent?.organization?.memberships?.[0]?.user?.email;
+  if (
+    ownerEmail &&
+    isNewConversation &&
+    data.channel === ConversationChannel.website &&
+    !session?.user?.id
+  ) {
+    try {
+      await mailer.sendMail({
+        from: process.env.EMAIL_FROM,
+        to: ownerEmail,
+        subject: `💬 New conversation started with Agent ${agent?.name}`,
+        html: render(
+          <NewConversation
+            agentName={agent.name}
+            ctaLink={`${
+              process.env.NEXT_PUBLIC_DASHBOARD_URL
+            }/logs?conversationId=${encodeURIComponent(
+              conversationId
+            )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
+          />
+        ),
+      });
+    } catch (err) {
+      req.logger.error(err);
+    }
+  }
 
   if (data.streaming) {
     streamData({

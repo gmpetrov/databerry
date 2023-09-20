@@ -17,10 +17,11 @@ import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { Prisma } from '@prisma/client';
+import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
 import { useSession } from 'next-auth/react';
-import { ReactElement, useCallback } from 'react';
+import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import useSWR from 'swr';
@@ -38,12 +39,14 @@ import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
 import { getLogs } from '../api/logs';
-import { getMessages } from '../api/logs/[id]';
+import { getConversation } from '../api/logs/[id]';
 
 const LIMIT = 20;
 
 export default function LogsPage() {
   const { data: session } = useSession();
+  const router = useRouter();
+  const conversationId = router.query.conversationId as string;
   const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
@@ -63,17 +66,43 @@ export default function LogsPage() {
     const cursor = previousPageData?.[previousPageData?.length - 1]
       ?.id as string;
 
-    return `/api/logs?cursor=${cursor || ''}`;
+    return `/api/logs?cursor=${cursor || ''}&conversationId=${router.query
+      .conversationId || ''}`;
   }, fetcher);
 
-  const getMessagesQuery = useSWR<Prisma.PromiseReturnType<typeof getMessages>>(
+  const getConversationQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getConversation>
+  >(
     state.currentConversationId
       ? `/api/logs/${state.currentConversationId}`
       : null,
     fetcher
   );
 
-  const conversations = getConversationsQuery?.data?.flat() || [];
+  // Fetch single converstaion from query parameter (e.g: load converstaion from email notification)
+  const getSingleConversationQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getConversation>
+  >(conversationId ? `/api/logs/${conversationId}` : null, fetcher);
+
+  const conversations = useMemo(() => {
+    return [
+      ...(getSingleConversationQuery?.data
+        ? [getSingleConversationQuery?.data]
+        : []),
+      ...(getConversationsQuery?.data?.flat() || [])?.filter(
+        // Filter out single conversation from list
+        (each) => each.id !== getSingleConversationQuery?.data?.id
+      ),
+    ];
+  }, [getConversationsQuery?.data, getSingleConversationQuery?.data]);
+
+  useEffect(() => {
+    if (getSingleConversationQuery?.data?.id) {
+      setState({
+        currentConversationId: getSingleConversationQuery?.data?.id,
+      });
+    }
+  }, [getSingleConversationQuery?.data?.id]);
 
   if (!session?.organization) return null;
 
@@ -217,17 +246,22 @@ export default function LogsPage() {
                             </Chip>
                           )}
                         </Stack>
-                        <Chip
-                          size="sm"
-                          color="neutral"
-                          variant="outlined"
+                        <Stack
+                          direction="row"
                           sx={{
-                            mr: 'auto',
                             mt: 1,
                           }}
+                          gap={1}
                         >
-                          {each?.channel}
-                        </Chip>
+                          <Chip size="sm" color="neutral" variant="outlined">
+                            {'🤖 '}
+                            {each?.agent?.name}
+                          </Chip>
+                          <Chip size="sm" color="neutral" variant="outlined">
+                            {'🚀 '}
+                            {each?.channel}
+                          </Chip>
+                        </Stack>
                       </Stack>
                     </ListItemContent>
                   </ListItem>
@@ -244,7 +278,7 @@ export default function LogsPage() {
           <Box sx={{ width: '100%', paddingX: 2 }}>
             <ChatBox
               messages={
-                getMessagesQuery?.data?.map((each) => ({
+                getConversationQuery?.data?.messages?.map((each) => ({
                   id: each.id,
                   from: each.from,
                   message: each.text,

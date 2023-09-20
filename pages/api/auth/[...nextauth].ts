@@ -186,6 +186,7 @@ export const authOptions = {
       ];
 
       return {
+        authType: 'session',
         ...session,
         roles,
         organization: {

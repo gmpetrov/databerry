@@ -7,7 +7,7 @@ import prisma from '@app/utils/prisma-client';
 
 const handler = createAuthApiHandler();
 
-export const getMessages = async (
+export const getConversation = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
@@ -19,9 +19,14 @@ export const getMessages = async (
       id,
     },
     include: {
-      agent: {
+      agent: true,
+      _count: {
         select: {
-          organizationId: true,
+          messages: {
+            where: {
+              read: false,
+            },
+          },
         },
       },
       messages: {
@@ -46,9 +51,9 @@ export const getMessages = async (
     },
   });
 
-  return conversastion?.messages;
+  return conversastion;
 };
 
-handler.get(respond(getMessages));
+handler.get(respond(getConversation));
 
 export default handler;

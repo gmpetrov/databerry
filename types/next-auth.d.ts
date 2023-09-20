@@ -6,6 +6,7 @@ declare module 'next-auth' {
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
+    authType?: 'apiKey' | 'session',
     roles: (GlobalRole | MembershipRole)[]
     organization: Organization & {
       usage: Usage;

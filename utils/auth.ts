@@ -117,6 +117,7 @@ const handleGetSession = async (
 
     if (key?.organization) {
       session = {
+        authType: 'apiKey',
         user: undefined,
         roles: [MembershipRole.ADMIN],
         organization: formatOrganizationSession(key.organization!),
