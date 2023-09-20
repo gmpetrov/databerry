@@ -1,9 +1,11 @@
 name: ChatbotGPT on Fly.io
 on:
   push:
-    branches:
-      - main
-      - feature/slack-bot
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  # push:
+  #   branches:
+  #     - main
 jobs:
   deploy:
     name: Deploy app
