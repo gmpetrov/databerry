@@ -7,7 +7,7 @@ import Box from '@mui/joy/Box';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
-import { AppDatasource, Prisma } from '@prisma/client';
+import { AppDatasource, DatasourceType, Prisma } from '@prisma/client';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -79,7 +79,10 @@ export default function ChatPage() {
 
   const handleSourceClick = React.useCallback(
     (source: Source) => {
-      if (source.mime_type === 'application/pdf') {
+      if (
+        source.datasource_type === DatasourceType.file &&
+        source.mime_type === 'application/pdf'
+      ) {
         router.query.chunkId = source.chunk_id;
         router.query.datasourceId = source.datasource_id;
         router.replace(router, undefined, { shallow: true });
