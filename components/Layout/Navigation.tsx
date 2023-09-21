@@ -1,5 +1,6 @@
 import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
 import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
@@ -370,25 +371,30 @@ export default function Navigation() {
           </Typography>
         </Link>
 
-        <Chip
-          color={isStatusOK ? 'success' : 'danger'}
-          variant="soft"
-          sx={{ mx: 'auto' }}
+        <Link
+          href={'https://status.chaindesk.ai/'}
+          target={'_blank'}
+          className="mx-auto"
         >
-          <Stack direction="row" alignItems={'center'} gap={1}>
-            <Box
-              sx={{
-                width: '10px',
-                height: '10px',
-                borderRadius: '99px',
-                bgcolor: isStatusOK ? 'success.300' : 'danger.500',
-              }}
-            />
-            <Typography level="body2">
-              system status: {isStatusOK ? 'ok' : 'ko'}
-            </Typography>
-          </Stack>
-        </Chip>
+          <Chip
+            color={isStatusOK ? 'success' : 'danger'}
+            variant="soft"
+            sx={{ cursor: 'pointer' }}
+            endDecorator={<ArrowForwardRoundedIcon />}
+          >
+            <Stack direction="row" alignItems={'center'} gap={1}>
+              <Box
+                sx={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '99px',
+                  bgcolor: isStatusOK ? 'success.300' : 'danger.500',
+                }}
+              />
+              <Typography level="body2">system status</Typography>
+            </Stack>
+          </Chip>
+        </Link>
       </Stack>
     </Stack>
   );

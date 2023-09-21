@@ -13,16 +13,17 @@ model Organization {
   name    String
   iconUrl String? @map("icon_url")
 
+  leads            Lead[]
   usage            Usage?
   agents           Agent[]
   apiKeys          UserApiKey[]
+  sessions         Session[]
   datastores       Datastore[]
   memberships      Membership[]
   conversations    Conversation[]
   subscriptions    Subscription[]
   appDatasources   AppDatasource[]
   serviceProviders ServiceProvider[]
-  sessions         Session[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -236,6 +237,7 @@ model Agent {
 
   handle  String?  @unique @map("handle")
   domains Domain[]
+  leads   Lead[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -475,6 +477,24 @@ model MessageBNP {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("messages_bnp")
+}
+
+model Lead {
+  id          String  @id @default(cuid())
+  email       String?
+  firstName   String? @map("first_name")
+  lastName    String? @map("last_name")
+  phoneNumber String? @map("phone_number")
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  agent   Agent?  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId String? @map("agent_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("leads")
 }
 
 model XPBNPEval {

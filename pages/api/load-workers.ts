@@ -1,4 +1,5 @@
 import '@app/workers/datasource-loader';
+import '@app/cron/daily-leads';
 
 import { NextApiResponse } from 'next';
 

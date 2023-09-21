@@ -181,6 +181,7 @@ const nextConfig = {
               process.cwd(),
               'workers/datasource-loader.ts'
             ),
+            'daily-leads': path.resolve(process.cwd(), 'cron/daily-leads.tsx'),
           };
         },
       };
