@@ -58,7 +58,7 @@ export default function Home() {
     <>
       <SEO
         title="ChatbotGPT - ChatGPT AI Chat Bot for your business"
-        description="ChatbotGPT offers a no-code platform to create custom AI chatbots trained on your data. Our solution streamlines customer support, onboards new team members, and simplifies your team's workflow."
+        description="ChatbotGPT brings a no-code platform to create custom AI chatbots trained on your data. Our solution makes customer support easy and simplifies team workflow."
         uri="/"
       />
 

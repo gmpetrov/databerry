@@ -1,8 +1,8 @@
 [
   {
     "slug": "chat-bubble",
-    "name": "Chat Bubble",
-    "description": "Automate customer support with a ChatGPT Bot trained on your data",
+    "name": "Chat Bubble - ChatbotGPT.ai: Train Your Chatbot in Minutes",
+    "description": "Train a chatbot with your data on ChatbotGPT.ai platform. Paste your data to train the bot. Add HTML snippet to go live! Stay updated with auto-sync.",
     "logo": "/app-logo-icon.png",
     "CTA": "Create Your Bot",
 
@@ -28,8 +28,8 @@
   },
   {
     "slug": "standalone-webpage",
-    "name": "No-code Web Page",
-    "description": "Generate a dedicated web page for your Agent, connet a custom domain and share it with your audience",
+    "name": "No-Code Webpage - ChatbotGPT.ai: Create & Share Your Bot's Page",
+    "description": "Generate a dedicated web page for your Agent, connect a custom domain and share it with your audience",
     "logo": "https://emojiisland.com/cdn/shop/products/Nail_Polish_Emoji_Icon_ios10_large.png?v=1571606091",
     "CTA": "Create Your Bot",
     "youtubeVideoId": "Pa-cyPJzt5k",
@@ -51,8 +51,8 @@
   },
   {
     "slug": "chat",
-    "name": "Chat Assistant",
-    "description": "Chat with your data, ask questions, get summaries, find information, and more.",
+    "name": "Chat Assistant by ChatbotGPT.ai - Chat with Your Data",
+    "description": "Chatbot assistant offers a seamless chat experience. Easily create a Datastore, upload your files, and interact in real-time. Stay updated with auto-sync.",
     "logo": "/images/chat-assistant-logo.png",
     "CTA": "Upload a Document",
     "youtubeVideoId": "_n3VQM9N3-Q",
@@ -77,8 +77,8 @@
   },
   {
     "slug": "slack-bot",
-    "name": "Slack Bot",
-    "description": "Deploy a custom ChatGPT bot to your Slack workspace",
+    "name": "ChatGPT Bot for Slack with ChatbotGPT.ai: Elevate Your Workspace",
+    "description": "Deploy a custom ChatbotGPT bot to your Slack workspace in minutes. Train with your company data, install the Slack plugin, and enjoy AI-driven interactions.",
     "logo": "/slack-logo.png",
     "CTA": "Create your Slack Bot",
     "youtubeVideoId": "x8-poiGrBa8",
@@ -103,8 +103,8 @@
   },
   {
     "slug": "crisp-plugin",
-    "name": "Crisp Plugin",
-    "description": "Deploy a custom ChatGPT bot to Crisp",
+    "name": "ChatGPT bot for Crisp with ChatbotGPT.ai: Supercharge Your Site",
+    "description": "Enhance your Crisp experience with a custom ChatbotGPT bot. Train on your data in minutes, install the Crisp plugin, and keep your bot synced for optimal performance.",
     "CTA": "Deploy Bot to Crisp",
     "logo": "/images/crisp-logo.svg",
     "youtubeVideoId": "rLgn1_MWGPM",
@@ -129,8 +129,8 @@
   },
   {
     "slug": "zapier",
-    "name": "Zapier",
-    "description": "Connect with over 5,000 applications via Zapier",
+    "name": "ChatbotGPT.ai & Zapier: Seamless Integration with 5,000+ Apps",
+    "description": "Connect ChatbotGPT.ai with over 5,000 apps via Zapier. Train your chatbot in minutes, integrate it seamlessly on your site, and keep your data always in sync.",
     "logo": "/images/zapier-logo.png",
     "CTA": "Create Your Bot",
     "youtubeVideoId": "Pa-cyPJzt5k",
@@ -155,8 +155,8 @@
   },
   {
     "slug": "chat-pdf",
-    "name": "Chat with PDF",
-    "description": "Chat with any PDF document, ask questions, get summaries, find information, and more.",
+    "name": "Chat with PDFs via ChatbotGPT.ai: Unlock Document Insights",
+    "description": "Chat with any PDF using ChatbotGPT.ai. Easily upload your PDFs, create a Datastore, and start getting summaries or finding information. Always in sync.",
     "logo": "/images/chat-assistant-logo.png",
     "CTA": "Upload a PDF",
     "youtubeVideoId": "_n3VQM9N3-Q",
