@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.8"></a>
+## 0.1.8 (2023-09-21)
+
+### Fixed
+
+- 🐛 click on source from google drive pdf [[330340b](https://github.com/gmpetrov/databerry/commit/330340b8bd09fc1c893f60b6ad7fedd8b60da05d)]
+
+
 <a name="0.1.7"></a>
 ## 0.1.7 (2023-09-21)
 
