@@ -9,7 +9,7 @@
  * Version: 1.0
  * Author URI: https://chatbotgpt.ai
  *
- * Text Domain: chaindesk
+ * Text Domain: ChatbotGPT
  * Domain Path: /languages/
 */
 
@@ -62,7 +62,15 @@ function chaindesk_plugin_settings_page()
     // update_option("agent_id", null);
 
     $is_chaindesk_working = isset($agent_id) && !empty($agent_id);
-    $http_callback = esc_url("http" . (($_SERVER['SERVER_PORT'] == 443) ? "s://" : "://") . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    // Check if the connection is secure
+    $is_secure = $_SERVER['SERVER_PORT'] == 443;
+
+    // Construct and sanitize the different parts of the URL
+    $protocol = $is_secure ? "https://" : "http://";
+    $host = sanitize_text_field($_SERVER['HTTP_HOST']);
+    $request_uri = sanitize_text_field($_SERVER['REQUEST_URI']);
+    $http_callback = esc_url($protocol . $host . $request_uri);
+
     // $base_url = "http://localhost:3000";
     $base_url = "https://app.chaindesk.ai";
     $add_to_chaindesk_link = $base_url."/integrations/wordpress/config?callback=$http_callback&siteurl=".get_option('siteurl')."&agentId=".$agent_id;
@@ -118,15 +126,17 @@ function chaindesk_hook_head()
 
     // Check if the script is already enqueued.
     if (!empty($agent_id) && !wp_script_is($agent_id, 'enqueued')) {
+
+        $agent_id_escaped = esc_attr($agent_id);
         $output = "<script 
             data-cfasync='false' 
             data-name='databerry-chat-bubble'
-            id='$agent_id'
+            id='$agent_id_escaped'
             src='https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest'
         >";
 
         $output .= "</script>";
-
+        
         echo $output;
     }
 }
