@@ -13,7 +13,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class ChatbotGPT extends Module
+class Chaindesk extends Module
 {
     public function __construct()
     {
@@ -47,10 +47,7 @@ class ChatbotGPT extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        return parent::install()
-            && $this->registerHooks()
-            && $this->installTab()
-            && Configuration::updateValue('MYMODULE_NAME', 'chaindesk');
+        return parent::install() && $this->registerHooks() && $this->installTab() && Configuration::updateValue('MYMODULE_NAME', 'chaindesk');
     }
 
     private function registerHooks()
@@ -63,17 +60,14 @@ class ChatbotGPT extends Module
         $tab = new Tab();
         $tab->active = 1;
         $tab->class_name = 'AdminChainDesk';
-
-        // Add a blank line before the following line to adhere to the rule
         $tab->name = [];
 
         foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = 'ChatbotGPT';
+            $tab->name[$lang['id_lang']] = 'Chaindesk';
         }
 
         $tab->id_parent = (int) Tab::getIdFromClassName('AdminAdmin');
         $tab->module = $this->name;
-
         return $tab->add();
     }
 
