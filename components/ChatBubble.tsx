@@ -64,7 +64,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     config: props.initConfig || defaultChatBubbleConfig,
     hasOpenOnce: false,
     showInitialMessage: false,
-    showHelp: true,
+    showHelp: false,
     showCaptureForm: false,
     isCaptureLoading: false,
     visitorEmail: '',
@@ -171,6 +171,14 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
     }
   }, []);
+
+  useEffect(() => {
+    if (conversationId) {
+      setState({
+        showHelp: true,
+      })
+    }
+  }, [conversationId])
 
   // useEffect(() => {
   //   if (config?.theme) {
