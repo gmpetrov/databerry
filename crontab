@@ -1,1 +1,1 @@
-*/5 * * * * node --max-old-space-size=1536 server/daily-leads.js
+0 6 * * * node --max-old-space-size=1536 server/daily-leads.js
