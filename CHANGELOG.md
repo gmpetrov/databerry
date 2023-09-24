@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.9"></a>
+## 0.1.9 (2023-09-24)
+
+### Fixed
+
+- 🐛 disable help form if conversationId undefined [[400d34e](https://github.com/gmpetrov/databerry/commit/400d34e2701f3ca8cc422b9b2d512d5fe93010e6)]
+
+### Miscellaneous
+
+- 🤖 prestashop widget validation [[1709274](https://github.com/gmpetrov/databerry/commit/1709274c9ee14a4ba1cd4466bf53dd65168d4a88)]
+- 🤖 wording for seo [[76ba3b1](https://github.com/gmpetrov/databerry/commit/76ba3b1608e81be0bbfc12c8eb94b1d44611207d)]
+
+
 <a name="0.1.8"></a>
 ## 0.1.8 (2023-09-21)
 
