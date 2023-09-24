@@ -325,6 +325,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
     return Component;
   }, [
+    state.showHelp,
     props.agentId,
     state.isCaptureLoading,
     state.showCaptureForm,
