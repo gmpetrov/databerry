@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.10"></a>
+## 0.1.10 (2023-09-24)
+
+### Fixed
+
+- 🐛 wrong cron schedule [[6b982d7](https://github.com/gmpetrov/databerry/commit/6b982d74746fe50c439b4d639e2216c437dbe112)]
+- 🐛 chatbubble help component [[472ab45](https://github.com/gmpetrov/databerry/commit/472ab450911482d8eeafae307bf04d84e3da7ad2)]
+
+
 <a name="0.1.9"></a>
 ## 0.1.9 (2023-09-24)
 
