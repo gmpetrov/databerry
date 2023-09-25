@@ -45,6 +45,7 @@ import axios from 'axios';
 import mime from 'mime-types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
@@ -55,15 +56,25 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getAgents, upsertAgent } from '@app/pages/api/agents';
+import { getAgents } from '@app/pages/api/agents';
+import { getAgent, updateAgent } from '@app/pages/api/agents/[id]';
 import { createDatastore, getDatastores } from '@app/pages/api/datastores';
 import { PromptTypesLabels, RouteNames } from '@app/types';
-import { GenerateUploadLinkRequest, UpsertAgentSchema } from '@app/types/dtos';
+import {
+  CreateAgentSchema,
+  GenerateUploadLinkRequest,
+  UpdateAgentSchema,
+} from '@app/types/dtos';
+import { AgentInterfaceConfig } from '@app/types/models';
 import cuid from '@app/utils/cuid';
 import getDatastoreS3Url from '@app/utils/get-datastore-s3-url';
 import getS3RootDomain from '@app/utils/get-s3-root-domain';
 import { CUSTOMER_SUPPORT } from '@app/utils/prompt-templates';
-import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
+import {
+  fetcher,
+  generateActionFetcher,
+  HTTP_METHOD,
+} from '@app/utils/swr-fetcher';
 
 const CreateDatastoreModal = dynamic(
   () => import('@app/components/CreateDatastoreModal'),
@@ -73,12 +84,13 @@ const CreateDatastoreModal = dynamic(
 );
 
 type Props = {
-  defaultValues?: UpsertAgentSchema;
+  defaultValues?: CreateAgentSchema;
   onSubmitSucces?: (agent: Agent) => any;
+  agentId?: string;
 };
 
 // const BASE_PROMPT_TEMPLATE = `Imagine you are an AI customer support assistant, specifically trained on custom data to accurately answer queries based on the provided context. Your primary goal is to assist users by providing relevant information, and you should not attempt to make up answers if the information is not available in the context. Given the following context, please provide the best possible answer to the user's query:`;
-
+const AGENT_BASE_API = '/api/agents';
 const customerSupportPromptTypeDescription = `Prompts of type "Customer Support" enable support for multiple languages and knowledge restriction automatically.`;
 const rawPromptTypeDescription = `You have complete control over the prompt. Use variable {query} to reference user's query.\nUse variable {context} to reference the retrieved context.`;
 
@@ -166,15 +178,30 @@ export default function BaseForm(props: Props) {
     iconUrl: props?.defaultValues?.iconUrl || defaultIconUrl,
   });
 
-  const upsertAgentMutation = useSWRMutation<
-    Prisma.PromiseReturnType<typeof upsertAgent>
-  >(`/api/agents`, postFetcher);
+  const getAgentQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
+    props.agentId ? `/api/agents/${props.agentId}` : null,
+    fetcher
+  );
+  // const agent = getAgentQuery?.data;
+  // const agentConfig = agent?.interfaceConfig as AgentInterfaceConfig;
+
+  const isUpdate = !!props.agentId;
+  const uri = props.agentId
+    ? `${AGENT_BASE_API}/${props.agentId}`
+    : AGENT_BASE_API;
+
+  const AgentMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof updateAgent>
+  >(
+    uri,
+    generateActionFetcher(isUpdate ? HTTP_METHOD.PATCH : HTTP_METHOD.POST)
+  );
 
   const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] = useState(
     false
   );
-  const methods = useForm<UpsertAgentSchema>({
-    resolver: zodResolver(UpsertAgentSchema),
+  const methods = useForm<CreateAgentSchema>({
+    resolver: zodResolver(CreateAgentSchema),
     defaultValues: {
       promptType: PromptType.customer_support,
       prompt: CUSTOMER_SUPPORT,
@@ -188,8 +215,11 @@ export default function BaseForm(props: Props) {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, defaultValues, isDirty, dirtyFields },
   } = methods;
+
+  const isRateLimitEnabled = watch('interfaceConfig.rateLimit.enabled');
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
@@ -226,7 +256,7 @@ export default function BaseForm(props: Props) {
 
       methods.setValue('iconUrl', iconUrl);
 
-      await upsertAgentMutation.trigger({
+      await AgentMutation.trigger({
         ...defaultValues,
         iconUrl,
       } as any);
@@ -243,7 +273,7 @@ export default function BaseForm(props: Props) {
     try {
       setState({ isUploadingAgentIcon: true });
 
-      await upsertAgentMutation.trigger({
+      await AgentMutation.trigger({
         ...defaultValues,
         iconUrl: null,
       } as any);
@@ -254,16 +284,21 @@ export default function BaseForm(props: Props) {
     }
   };
 
-  const onSubmit = async (values: UpsertAgentSchema) => {
+  const onSubmit = async (values: UpdateAgentSchema) => {
     try {
       setState({ isLoading: true });
       console.log('values', values);
-      const { data } = await toast.promise(axios.post('/api/agents', values), {
-        loading: 'Updating...',
-        success: 'Updated!',
-        error: 'Something went wrong',
-      });
-      props?.onSubmitSucces?.(data as Agent);
+      const agent = await toast.promise(
+        AgentMutation.trigger({
+          ...values,
+        } as any),
+        {
+          loading: 'Updating...',
+          success: 'Updated!',
+          error: 'Something went wrong',
+        }
+      );
+      props?.onSubmitSucces?.(agent as Agent);
     } catch (err) {
       console.log('error', err);
     } finally {
@@ -593,7 +628,7 @@ export default function BaseForm(props: Props) {
           </Stack>
 
           {!tools[0]?.id && (
-            <Stack direction={'column'} gap={1}>
+            <Stack direction={'column'} gap={1} mb={2}>
               <Button
                 sx={{ mr: 'auto', mt: 2 }}
                 variant="plain"
@@ -626,7 +661,7 @@ export default function BaseForm(props: Props) {
           )}
 
           {tools[0]?.id && (
-            <Stack direction="row">
+            <Stack direction="row" mb={2}>
               <FormControl className="flex flex-row space-x-4">
                 <Checkbox
                   {...register('includeSources')}
@@ -641,6 +676,52 @@ export default function BaseForm(props: Props) {
                 </div>
               </FormControl>
             </Stack>
+          )}
+          {props.agentId && (
+            <>
+              <Divider />
+              <Stack gap={2} pt={3}>
+                <div className="flex space-x-4">
+                  <Checkbox
+                    size="lg"
+                    {...register('interfaceConfig.rateLimit.enabled')}
+                    defaultChecked={isRateLimitEnabled}
+                  />
+                  <div className="flex flex-col">
+                    <FormLabel>Enable Rate Limit</FormLabel>
+                    <Typography level="body3">
+                      X messages max every Y seconds
+                    </Typography>
+                  </div>
+                </div>
+
+                <Stack gap={2} pl={4}>
+                  <Input
+                    control={control as any}
+                    label="Max number of queries"
+                    disabled={!isRateLimitEnabled}
+                    placeholder="10"
+                    {...register('interfaceConfig.rateLimit.maxQueries')}
+                  />
+                  <Input
+                    control={control as any}
+                    label="Interval (in seconds)"
+                    disabled={!isRateLimitEnabled}
+                    placeholder="60"
+                    {...register('interfaceConfig.rateLimit.interval')}
+                  />
+                  <Input
+                    control={control as any}
+                    label="Rate Limit Reached Message"
+                    placeholder="Usage limit reached"
+                    disabled={!isRateLimitEnabled}
+                    {...register(
+                      'interfaceConfig.rateLimit.limitReachedMessage'
+                    )}
+                  />
+                </Stack>
+              </Stack>
+            </>
           )}
 
           <CreateDatastoreModal

@@ -3,10 +3,9 @@ import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
 import { AppNextApiRequest } from '@app/types';
-import { CreateDatastoreRequestSchema } from '@app/types/dtos';
+import { CreateDatastoreRequestSchema, UpdateDatastoreRequestSchema } from '@app/types/dtos';
 import { ApiError, ApiErrorType } from '@app/utils/api-error';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
-import cuid from '@app/utils/cuid';
 import generateFunId from '@app/utils/generate-fun-id';
 import prisma from '@app/utils/prisma-client';
 import runMiddleware from '@app/utils/run-middleware';
@@ -53,33 +52,10 @@ export const createDatastore = async (
 ) => {
   let data = req.body as CreateDatastoreRequestSchema;
   const session = req.session;
-
-  let existingDatastore;
-  if (data?.id) {
-    existingDatastore = await prisma.datastore.findUnique({
-      where: {
-        id: data.id,
-      },
-    });
-
-    if (existingDatastore?.organizationId !== session?.organization?.id) {
-      throw new ApiError(ApiErrorType.UNAUTHORIZED);
-    }
-
-    data = {
-      ...existingDatastore,
-      ...data,
-    } as CreateDatastoreRequestSchema;
-  }
-
-  const id = data?.id || cuid();
   const name = data.name || generateFunId();
 
-  const datastore = await prisma.datastore.upsert({
-    where: {
-      id,
-    },
-    create: {
+  return prisma.datastore.create({
+    data: {
       type: data.type,
       name,
       description: data.description,
@@ -102,22 +78,7 @@ export const createDatastore = async (
         name?.substring(0, 90)}`,
       pluginDescriptionForModel: `Plugin for searching informations about ${name} to find answers to questions and retrieve relevant information. Use it whenever a user asks something that might be related to ${name}.`,
     },
-    update: {
-      type: data.type,
-      name: data.name,
-      description: data.description,
-      pluginIconUrl: data.pluginIconUrl,
-      pluginName: data.pluginName,
-      pluginDescriptionForHumans: data.pluginDescriptionForHumans,
-      pluginDescriptionForModel: data.pluginDescriptionForModel,
-      visibility: data.isPublic
-        ? DatastoreVisibility.public
-        : DatastoreVisibility.private,
-      // config: data.config,
-    },
   });
-
-  return datastore;
 };
 
 handler.post(

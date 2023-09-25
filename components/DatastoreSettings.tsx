@@ -33,12 +33,13 @@ import Input from '@app/components/Input';
 import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { createDatastore } from '@app/pages/api/datastores';
+import { updateDatastore } from '@app/pages/api/datastores/[id]';
 import { RouteNames } from '@app/types';
 import { GenerateUploadLinkRequest } from '@app/types/dtos';
 import { QdrantSchema as Schema } from '@app/types/models';
 import getDatastoreS3Url from '@app/utils/get-datastore-s3-url';
 import getRootDomain from '@app/utils/get-root-domain';
-import { postFetcher } from '@app/utils/swr-fetcher';
+import { generateActionFetcher, HTTP_METHOD } from '@app/utils/swr-fetcher';
 
 import UsageLimitCard from './UsageLimitCard';
 import UserFree from './UserFree';
@@ -59,9 +60,16 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
   const { getDatastoreQuery } = useGetDatastoreQuery({});
 
-  const upsertDatastoreMutation = useSWRMutation<
+  const createDatastoreMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof createDatastore>
-  >(`/api/datastores`, postFetcher);
+  >(`/api/datastores`, generateActionFetcher(HTTP_METHOD.POST));
+
+  const updateDatastoreMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof updateDatastore>
+  >(
+    `/api/datastores/${datastore.id}`,
+    generateActionFetcher(HTTP_METHOD.PATCH)
+  );
 
   const methods = useForm<Schema>({
     resolver: zodResolver(Schema),
@@ -95,7 +103,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
       const pluginIconUrl = `${getDatastoreS3Url(datastore?.id!)}/${fileName}`;
 
-      await upsertDatastoreMutation.trigger({
+      await createDatastoreMutation.trigger({
         ...datastore,
         pluginIconUrl: pluginIconUrl,
       } as any);
@@ -114,7 +122,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
     try {
       setState({ isUploadingPluginIcon: true });
 
-      await upsertDatastoreMutation.trigger({
+      await updateDatastoreMutation.trigger({
         ...datastore,
         pluginIconUrl: '',
       } as any);
@@ -130,8 +138,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
     try {
       setState({ isUpdatingPlugin: true });
 
-      await upsertDatastoreMutation.trigger({
-        ...datastore,
+      await updateDatastoreMutation.trigger({
         ...values,
       } as any);
 
@@ -345,6 +352,10 @@ function DatastoreSettings() {
     }
   };
 
+  if (!getDatastoreQuery?.data?.id) {
+    return null;
+  }
+
   return (
     <Box
       sx={(theme) => ({
@@ -414,7 +425,7 @@ function DatastoreSettings() {
         </Stack>
       </FormControl>
 
-      <Divider sx={{ my: 4 }} />
+      {/* <Divider sx={{ my: 4 }} />
 
       <Box id="chatgpt-plugin">
         {getDatastoreQuery?.data?.id && (
@@ -462,7 +473,7 @@ function DatastoreSettings() {
             </UserPremium>
           </FormControl>
         )}
-      </Box>
+      </Box> */}
 
       <Divider sx={{ my: 4 }} />
 

@@ -52,7 +52,7 @@ import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
-import { UpsertAgentSchema } from '@app/types/dtos';
+import { UpdateAgentSchema } from '@app/types/dtos';
 import { AgentInterfaceConfig } from '@app/types/models';
 import { fetcher } from '@app/utils/swr-fetcher';
 import writeClipboard from '@app/utils/write-clipboard';
@@ -81,12 +81,12 @@ export default function StandalonePageSettings(props: Props) {
     fetcher
   );
 
-  const methods = useForm<UpsertAgentSchema>({
-    resolver: zodResolver(UpsertAgentSchema),
-    defaultValues: getAgentQuery?.data as UpsertAgentSchema,
+  const methods = useForm<UpdateAgentSchema>({
+    resolver: zodResolver(UpdateAgentSchema),
+    defaultValues: getAgentQuery?.data as UpdateAgentSchema,
   });
 
-  const onSubmit = async (values: UpsertAgentSchema) => {
+  const onSubmit = async (values: UpdateAgentSchema) => {
     try {
       setIsLoading(true);
 
@@ -99,9 +99,8 @@ export default function StandalonePageSettings(props: Props) {
       console.log('values', values);
 
       await toast.promise(
-        axios.post('/api/agents', {
-          ...getAgentQuery?.data,
-          ...values,
+        axios.patch(`/api/agents/${props.agentId}`, {
+          ...values
         }),
         {
           loading: 'Updating...',
@@ -165,7 +164,7 @@ export default function StandalonePageSettings(props: Props) {
 
   useEffect(() => {
     if (getAgentQuery.data) {
-      methods.reset(getAgentQuery.data as UpsertAgentSchema);
+      methods.reset(getAgentQuery.data as UpdateAgentSchema);
     }
   }, [getAgentQuery.data]);
 

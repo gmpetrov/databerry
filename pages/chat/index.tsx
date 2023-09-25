@@ -27,7 +27,7 @@ import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { ChainType } from '@app/types';
 import { Source } from '@app/types/document';
-import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
+import { fetcher } from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
 import { getChunk } from '../api/datasources/[id]/chunks/[chunkId]';

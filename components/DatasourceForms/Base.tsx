@@ -25,7 +25,7 @@ import { GenerateUploadLinkRequest } from '@app/types/dtos';
 import { UpsertDatasourceSchema } from '@app/types/models';
 import cuid from '@app/utils/cuid';
 import getS3RootDomain from '@app/utils/get-s3-root-domain';
-import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
+import { fetcher, generateActionFetcher, HTTP_METHOD } from '@app/utils/swr-fetcher';
 
 import type { DatasourceFormProps } from './types';
 
@@ -101,7 +101,7 @@ export default function BaseForm(props: Props) {
 
   const upsertDatasourceMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof upsertDatasource>
-  >(`/api/datasources`, postFetcher<UpsertDatasourceSchema>);
+  >(`/api/datasources`, generateActionFetcher(HTTP_METHOD.POST)<UpsertDatasourceSchema>);
 
   const onSubmit = async (values: UpsertDatasourceSchema) => {
     try {

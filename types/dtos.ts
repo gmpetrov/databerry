@@ -29,6 +29,9 @@ export type CreateDatastoreRequestSchema = z.infer<
   typeof CreateDatastoreRequestSchema
 >;
 
+export const UpdateDatastoreRequestSchema = CreateDatastoreRequestSchema.partial()
+export type UpdateDatastoreRequestSchema = z.infer<typeof UpdateDatastoreRequestSchema>
+
 export const UpsertDatasourceRequestSchema = z.object({
   id: z
     .string()
@@ -210,25 +213,11 @@ export const ChatResponse = z.object({
 
 export type ChatResponse = z.infer<typeof ChatResponse>;
 
-export const UpsertAgentSchema = z.object({
-  id: z
-    .string()
-    .trim()
-    .cuid()
-    .optional(),
-  name: z
-    .string()
-    .trim()
-    .optional(),
-  description: z
-    .string()
-    .trim()
-    .min(1),
-  prompt: z
-    .string()
-    .trim()
-    .optional()
-    .nullable(),
+export const CreateAgentSchema = z.object({
+  id: z.string().trim().cuid().optional(),
+  name: z.string().trim().optional(),
+  description: z.string().trim().min(1),
+  prompt: z.string().trim().optional().nullable(),
   modelName: z
     .nativeEnum(AgentModelName)
     .default(AgentModelName.gpt_3_5_turbo)
@@ -289,7 +278,10 @@ export const UpsertAgentSchema = z.object({
     .nullable(),
 });
 
-export type UpsertAgentSchema = z.infer<typeof UpsertAgentSchema>;
+export type CreateAgentSchema = z.infer<typeof CreateAgentSchema>;
+
+export const UpdateAgentSchema = CreateAgentSchema.partial()
+export type UpdateAgentSchema = z.infer<typeof UpdateAgentSchema>
 
 export const AcceptedDatasourceMimeTypes = [
   'text/csv',

@@ -62,16 +62,17 @@ import ChatBox from '@app/components/ChatBox';
 import ChatBubble from '@app/components/ChatBubble';
 import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
-import RateLimitForm, { RateLimitFields } from '@app/components/RateLimitForm';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
-import { upsertAgent } from '@app/pages/api/agents';
-import { getAgent } from '@app/pages/api/agents/[id]';
+import { getAgent, updateAgent } from '@app/pages/api/agents/[id]';
 import { RouteNames } from '@app/types';
-import { AgentInterfaceConfig } from '@app/types/models';
 import agentToolFormat from '@app/utils/agent-tool-format';
-import { fetcher, postFetcher } from '@app/utils/swr-fetcher';
+import {
+  fetcher,
+  generateActionFetcher,
+  HTTP_METHOD,
+} from '@app/utils/swr-fetcher';
 import { withAuth } from '@app/utils/withAuth';
 
 const SlackBotModal = dynamic(
@@ -126,9 +127,12 @@ export default function AgentPage() {
     fetcher
   );
 
-  const upsertAgentMutation = useSWRMutation<
-    Prisma.PromiseReturnType<typeof upsertAgent>
-  >(`/api/agents`, postFetcher);
+  const updateAgentMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof updateAgent>
+  >(
+    `/api/agents/${router.query?.agentId}`,
+    generateActionFetcher(HTTP_METHOD.PATCH)
+  );
 
   const {
     history,
@@ -158,23 +162,6 @@ export default function AgentPage() {
     }
   };
 
-  const handleSubmitRateLimit = async (values: RateLimitFields) => {
-    await toast.promise(
-      upsertAgentMutation.trigger({
-        ...getAgentQuery?.data,
-        interfaceConfig: {
-          ...(getAgentQuery?.data?.interfaceConfig as any),
-          rateLimit: values.rateLimit,
-        },
-      } as any),
-      {
-        loading: 'Updating...',
-        success: 'Updated!',
-        error: 'Something went wrong',
-      }
-    );
-  };
-
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;
     router.replace(router);
@@ -200,7 +187,6 @@ export default function AgentPage() {
   }
 
   const agent = getAgentQuery?.data;
-  const agentConfig = agent.interfaceConfig as AgentInterfaceConfig;
   return (
     <Box
       component="main"
@@ -565,7 +551,7 @@ export default function AgentPage() {
                             variant="outlined"
                             startDecorator={<ToggleOffIcon />}
                             sx={{ ml: 'auto' }}
-                            loading={upsertAgentMutation.isMutating}
+                            loading={updateAgentMutation.isMutating}
                             onClick={async () => {
                               const accepted = await confirm(
                                 'This feature requires your Agent to be public. Unauthenticated users (visitors) can query it. Make it public?'
@@ -575,7 +561,7 @@ export default function AgentPage() {
                                 return;
                               }
 
-                              await upsertAgentMutation.trigger({
+                              await updateAgentMutation.trigger({
                                 ...agent,
                                 visibility: AgentVisibility.public,
                               } as any);
@@ -670,15 +656,8 @@ export default function AgentPage() {
                       ...agent.tools.map((each) => agentToolFormat(each)),
                     ],
                   }}
+                  agentId={agent?.id}
                 />
-
-                <Divider sx={{ my: 4 }} />
-
-                <RateLimitForm
-                  onSubmit={handleSubmitRateLimit}
-                  rateLimit={agentConfig.rateLimit}
-                />
-
                 <Divider sx={{ my: 4 }} />
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
