@@ -10,8 +10,8 @@ module.exports = {
     url: `${baseApiUrl}/api/me`,
   },
   connectionLabel: (z, bundle) => {
-    const { email } = bundle.inputData;
-    return `User: ${email}`;
+    const { name } = bundle.inputData;
+    return `Oganization: ${name}`;
   },
   fields: [
     {

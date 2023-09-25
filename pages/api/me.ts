@@ -8,7 +8,7 @@ const handler = createAuthApiHandler();
 export const me = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
 
-  return session.user;
+  return session.organization;
 };
 
 handler.get(respond(me));
