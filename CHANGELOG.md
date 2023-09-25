@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.11"></a>
+## 0.1.11 (2023-09-25)
+
+### Fixed
+
+- 🐛 /api/me endpoint wrong response [[9d3d242](https://github.com/gmpetrov/databerry/commit/9d3d24261ec7bfa1cf5c48832dd46d3b795a3b8a)]
+
+
 <a name="0.1.10"></a>
 ## 0.1.10 (2023-09-24)
 
