@@ -299,7 +299,7 @@ export default function AccountPage() {
             >{`${currentPlan?.label}`}</Typography>
 
             <Stack width="100%" spacing={2} my={2}>
-              <Stack spacing={1}>
+              {/* <Stack spacing={1}>
                 <Typography level="body1">Current Usage</Typography>
                 <Typography level="h6">
                   <Stack direction={'row'} spacing={1}>
@@ -333,7 +333,7 @@ export default function AccountPage() {
                     </Typography>
                   </Stack>
                 </Typography>
-              </Stack>
+              </Stack> */}
               <Divider></Divider>
               <Typography
                 level="h6"
@@ -369,16 +369,23 @@ export default function AccountPage() {
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
-                <Typography>{`${currentPlan?.limits?.maxFileSize /
-                  1000000}MB File upload limit`}</Typography>
+                <Typography>{`${currentPlan?.limits?.maxStoredTokens /
+                  1000000} Million words storage`}</Typography>
               </Typography>
               <Typography
                 level="h6"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
+                <Typography>{`${currentPlan?.limits?.maxFileSize /
+                  1000000}MB File upload limit`}</Typography>
+              </Typography>
+              {/* <Typography
+                level="h6"
+                startDecorator={<CheckRoundedIcon color="success" />}
+              >
                 <Typography>{`${currentPlan?.limits?.maxDataProcessing /
                   1000000}MB Data processing (embeddings) / month`}</Typography>
-              </Typography>
+              </Typography> */}
             </Stack>
 
             <Divider sx={{ my: 2 }} />
