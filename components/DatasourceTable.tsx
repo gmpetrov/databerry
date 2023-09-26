@@ -50,7 +50,7 @@ const SynchButton = ({
 }) => {
   const [state, setState] = useStateReducer({
     loading: false,
-    buttonText: 'Synch',
+    buttonText: 'Sync',
     color: 'info',
   });
 
@@ -64,7 +64,7 @@ const SynchButton = ({
 
   React.useEffect(() => {
     let loading = false;
-    let buttonText = 'Synch';
+    let buttonText = 'Sync';
     let color = 'neutral';
 
     if (
@@ -83,12 +83,12 @@ const SynchButton = ({
         buttonText = 'Pending';
         break;
       case DatasourceStatus.error:
-        buttonText = 'Synch';
+        buttonText = 'Sync';
         color = 'error';
         break;
       case DatasourceStatus.unsynched:
       case DatasourceStatus.synched:
-        buttonText = 'Synch';
+        buttonText = 'Sync';
         break;
       default:
         break;
@@ -145,12 +145,19 @@ export default function DatasourceTable({
 }) {
   const router = useRouter();
 
-  const { getDatastoreQuery, offset, limit, search, status, type, groupId } =
-    useGetDatastoreQuery({
-      swrConfig: {
-        refreshInterval: 5000,
-      },
-    });
+  const {
+    getDatastoreQuery,
+    offset,
+    limit,
+    search,
+    status,
+    type,
+    groupId,
+  } = useGetDatastoreQuery({
+    swrConfig: {
+      refreshInterval: 5000,
+    },
+  });
 
   const [selected, setSelected] = React.useState<string[]>([]);
   const [state, setState] = useStateReducer({
@@ -431,7 +438,7 @@ export default function DatasourceTable({
               <th style={{ width: 220, padding: 12 }}>Name</th>
               <th style={{ width: 120, padding: 12 }}>Type</th>
               <th style={{ width: 120, padding: 12 }}>Size</th>
-              <th style={{ width: 120, padding: 12 }}>Last Synch</th>
+              <th style={{ width: 120, padding: 12 }}>Last Sync</th>
               <th style={{ width: 120, padding: 12 }}>Status</th>
               {/* <th style={{ width: 120, padding: 12 }}>Subscription</th> */}
               <th style={{ width: 120, padding: 12 }}> </th>
@@ -615,7 +622,7 @@ export default function DatasourceTable({
                 </td>
                 <td className="space-x-2">
                   {/* <Button size="sm" variant="outlined">
-                    Synch
+                    Sync
                   </Button> */}
                   <SynchButton
                     datasource={datasource}
