@@ -10,6 +10,7 @@ type Plan = {
     maxDatasources: number;
     maxFileSize: number; // in bytes
     maxDataProcessing: number; // in bytes
+    maxStoredTokens: number;
 
     maxSeats: number;
 
@@ -22,9 +23,9 @@ type Plan = {
 
 export const queryCountConfig = {
   [AgentModelName.gpt_3_5_turbo]: 1,
-  [AgentModelName.gpt_3_5_turbo_16k]: 2,
-  [AgentModelName.gpt_4]: 2,
-  [AgentModelName.gpt_4_32k]: 4,
+  [AgentModelName.gpt_3_5_turbo_16k]: 15,
+  [AgentModelName.gpt_4]: 20,
+  [AgentModelName.gpt_4_32k]: 30,
 };
 
 const config: {
@@ -43,6 +44,7 @@ const config: {
       maxSummary: 10,
       maxWebsiteURL: 10,
       maxSeats: 1,
+      maxStoredTokens: 20000,
     },
   },
   [SubscriptionPlan.level_1]: {
@@ -50,7 +52,7 @@ const config: {
     label: 'Growth',
     limits: {
       maxAgents: 2,
-      maxAgentsQueries: 1000,
+      maxAgentsQueries: 5000,
       maxDatastores: 2,
       maxDatasources: 100, // per datastore
       maxFileSize: 5000000, // 5 MB
@@ -58,6 +60,7 @@ const config: {
       maxSummary: 100,
       maxWebsiteURL: 50,
       maxSeats: 1,
+      maxStoredTokens: 30000000,
     },
   },
   [SubscriptionPlan.level_2]: {
@@ -73,6 +76,7 @@ const config: {
       maxSummary: 200,
       maxWebsiteURL: 500,
       maxSeats: 3,
+      maxStoredTokens: 60000000,
     },
   },
   [SubscriptionPlan.level_3]: {
@@ -89,6 +93,7 @@ const config: {
       maxSummary: 500,
       maxWebsiteURL: 10000,
       maxSeats: 10,
+      maxStoredTokens: 300000000,
     },
   },
 };

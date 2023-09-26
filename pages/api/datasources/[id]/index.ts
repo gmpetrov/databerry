@@ -9,6 +9,7 @@ import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import { DatasourceLoader } from '@app/utils/loaders';
 import prisma from '@app/utils/prisma-client';
+import refreshStoredTokensUsage from '@app/utils/refresh-stored-tokens-usage';
 import runMiddleware from '@app/utils/run-middleware';
 
 const handler = createAuthApiHandler();
@@ -79,6 +80,8 @@ export const deleteDatasource = async (
     datastoreId: datasource.datastoreId!,
     datasourceIds: ids,
   });
+
+  await refreshStoredTokensUsage(datasource.organizationId!);
 
   return datasource;
 };

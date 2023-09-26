@@ -8,8 +8,11 @@ const guardDataProcessingUsage = (props: {
   plan: SubscriptionPlan;
 }) => {
   if (
-    props.usage?.nbDataProcessingBytes >=
-    accountConfig[props.plan]?.limits?.maxDataProcessing
+    // props.usage?.nbDataProcessingBytes >=
+    // accountConfig[props.plan]?.limits?.maxDataProcessing
+
+    props.usage?.nbStoredTokens >=
+    accountConfig[props.plan]?.limits?.maxStoredTokens
   ) {
     throw new ApiError(ApiErrorType.USAGE_LIMIT);
   }

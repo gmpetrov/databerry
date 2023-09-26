@@ -30,6 +30,8 @@ export default function Pricing() {
   );
 }
 
+let formatter = Intl.NumberFormat('en');
+
 const frequencies = [
   { value: 'monthly', label: 'Monthly', priceSuffix: '/month' },
   { value: 'annually', label: 'Annually', priceSuffix: '/year' },
@@ -45,10 +47,14 @@ const tiers = [
       `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
       `${accountConfig['level_0'].limits.maxAgentsQueries} GPT-3.5 agents queries / month`,
+      `${formatter.format(
+        accountConfig['level_0'].limits.maxStoredTokens
+      )} words storage`,
       `File upload limited to ${accountConfig['level_0'].limits.maxFileSize /
         1000000}MB / file`,
-      `Data processing limited to ${accountConfig['level_0'].limits
-        .maxDataProcessing / 1000000}MB / month`,
+
+      // `Data processing limited to ${accountConfig['level_0'].limits
+      //   .maxDataProcessing / 1000000}MB / month`,
       'Manual data synching',
       'Access to ChatbotGPT API',
       // 'ChatGPT plugin',
@@ -67,11 +73,14 @@ const tiers = [
       `${
         accountConfig['level_1'].limits.maxAgentsQueries
       } GPT-3.5 or ${accountConfig['level_1'].limits.maxAgentsQueries /
-        2} GPT-4 agents queries / month`,
+        20} GPT-4 agents queries / month`,
+      `${formatter.format(
+        accountConfig['level_1'].limits.maxStoredTokens
+      )} words storage`,
       `File upload limited to ${accountConfig['level_1'].limits.maxFileSize /
         1000000}MB / file`,
-      `Data processing limited to ${accountConfig['level_1'].limits
-        .maxDataProcessing / 1000000}MB / month`,
+      // `Data processing limited to ${accountConfig['level_1'].limits
+      //   .maxDataProcessing / 1000000}MB / month`,
       'Manual data synching',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
@@ -93,11 +102,14 @@ const tiers = [
       `${
         accountConfig['level_2'].limits.maxAgentsQueries
       } GPT-3.5 or ${accountConfig['level_2'].limits.maxAgentsQueries /
-        2} GPT-4 agents queries / month`,
+        20} GPT-4 agents queries / month`,
+      `${formatter.format(
+        accountConfig['level_2'].limits.maxStoredTokens
+      )} words storage`,
       `File upload limited to ${accountConfig['level_2'].limits.maxFileSize /
         1000000}MB / file`,
-      `Data processing limited to ${accountConfig['level_2'].limits
-        .maxDataProcessing / 1000000}MB / month`,
+      // `Data processing limited to ${accountConfig['level_2'].limits
+      //   .maxDataProcessing / 1000000}MB / month`,
       'auto synch datasources',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
@@ -118,11 +130,14 @@ const tiers = [
       `${
         accountConfig['level_3'].limits.maxAgentsQueries
       } GPT-3.5 or ${accountConfig['level_3'].limits.maxAgentsQueries /
-        2} GPT-4 agents queries / month`,
+        20} GPT-4 agents queries / month`,
+      `${formatter.format(
+        accountConfig['level_3'].limits.maxStoredTokens
+      )} words storage`,
       `File upload limited to ${accountConfig['level_3'].limits.maxFileSize /
         1000000}MB / file`,
-      `Data processing limited to ${accountConfig['level_3'].limits
-        .maxDataProcessing / 1000000}MB / month`,
+      // `Data processing limited to ${accountConfig['level_3'].limits
+      //   .maxDataProcessing / 1000000}MB / month`,
       'auto synch datasources',
       'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,

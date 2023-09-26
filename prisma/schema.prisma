@@ -101,6 +101,7 @@ model Usage {
   nbUploadedBytes       Int @default(0) @map("nb_uploaded_bytes")
   nbDataProcessingBytes Int @default(0) @map("nb_data_processing_bytes")
   nbModelTokens         Int @default(0) @map("nb_tokens")
+  nbStoredTokens        Int @default(0) @map("nb_stored_tokens")
 
   @@map("usages")
 }
@@ -158,6 +159,7 @@ model AppDatasource {
 
   nbChunks Int? @default(0) @map("nb_chunks")
   textSize Int? @default(0) @map("text_size")
+  nbTokens Int? @default(0) @map("nb_tokens")
 
   hash String?
 

@@ -60,6 +60,31 @@ const RenderOrgOption = (props: RenderOrgOptionProps) => {
   );
 };
 
+const UsageGauge = (props: {
+  value: number;
+  max: number;
+  label?: string;
+  fixed?: number;
+}) => {
+  const rate = (props.value / props.max) * 100;
+
+  return (
+    <Stack width={'100%'} gap={1}>
+      <Typography level="body3" sx={{ textAlign: 'right' }}>
+        {`${(props.value || 0).toFixed(props.fixed || 0)} / ${props.max} ${
+          props.label
+        }`}
+      </Typography>
+      <LinearProgress
+        determinate
+        color={rate >= 80 ? 'danger' : 'neutral'}
+        value={rate}
+        sx={{ overflow: 'hidden' }}
+      />
+    </Stack>
+  );
+};
+
 type Props = {};
 function AccountCard({}: Props) {
   const router = useRouter();
@@ -138,17 +163,6 @@ function AccountCard({}: Props) {
   }, [targetOrgId, session?.data?.organization?.id, handleSwitchOrg]);
 
   const isMenuOpen = Boolean(userMenuElement);
-  const usageQueryRate =
-    ((session?.data?.organization?.usage?.nbAgentQueries || 0) /
-      accountConfig?.[session?.data?.organization?.currentPlan!]?.limits
-        ?.maxAgentsQueries) *
-    100;
-
-  const usageDataRate =
-    ((session?.data?.organization?.usage?.nbDataProcessingBytes || 0) /
-      accountConfig?.[session?.data?.organization?.currentPlan!]?.limits
-        ?.maxDataProcessing) *
-    100;
 
   return (
     <Stack gap={1}>
@@ -269,37 +283,43 @@ function AccountCard({}: Props) {
             <ColorSchemeToggle />
           </Stack>
           <Stack gap={1}>
-            <Stack width={'100%'} gap={1}>
-              <Typography level="body3" sx={{ textAlign: 'right' }}>
-                {`${session?.data?.organization?.usage?.nbAgentQueries?.toLocaleString(
-                  'en-US'
-                )} / ${accountConfig?.[
-                  session?.data?.organization?.currentPlan!
-                ]?.limits?.maxAgentsQueries?.toLocaleString('en-US')} queries`}
-              </Typography>
-              <LinearProgress
-                determinate
-                color={usageQueryRate >= 80 ? 'danger' : 'neutral'}
-                value={usageQueryRate}
-                sx={{ overflow: 'hidden' }}
-              />
-            </Stack>
-            <Stack width={'100%'} gap={1}>
-              <Typography level="body3" sx={{ textAlign: 'right' }}>
-                {`${(
-                  (session?.data?.organization?.usage?.nbDataProcessingBytes ||
-                    0) / 1000000
-                )?.toFixed(2)} / ${accountConfig?.[
-                  session?.data?.organization?.currentPlan!
-                ]?.limits?.maxDataProcessing / 1000000} MB processed`}
-              </Typography>
-              <LinearProgress
-                determinate
-                color={usageDataRate >= 80 ? 'danger' : 'neutral'}
-                value={usageDataRate}
-                sx={{ overflow: 'hidden' }}
-              />
-            </Stack>
+            <UsageGauge
+              value={session?.data?.organization?.usage?.nbAgentQueries || 0}
+              max={
+                accountConfig?.[session?.data?.organization?.currentPlan!]
+                  ?.limits?.maxAgentsQueries
+              }
+              label={'Queries'}
+            />
+            <UsageGauge
+              value={
+                (session?.data?.organization?.usage?.nbStoredTokens || 0) /
+                1000000
+              }
+              max={
+                accountConfig?.[session?.data?.organization?.currentPlan!]
+                  ?.limits?.maxStoredTokens / 1000000
+              }
+              label={'Million words stored'}
+              fixed={3}
+            />
+            <UsageGauge
+              value={session?.data?.organization?.nbAgents || 0}
+              max={
+                accountConfig?.[session?.data?.organization?.currentPlan!]
+                  ?.limits?.maxAgents
+              }
+              label={'Agents'}
+            />
+
+            <UsageGauge
+              value={session?.data?.organization?.nbDatastores || 0}
+              max={
+                accountConfig?.[session?.data?.organization?.currentPlan!]
+                  ?.limits?.maxDatastores
+              }
+              label={'Datastores'}
+            />
           </Stack>
         </Stack>
       </Card>

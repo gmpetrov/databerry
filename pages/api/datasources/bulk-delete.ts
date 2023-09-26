@@ -11,6 +11,7 @@ import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import { DatasourceLoader } from '@app/utils/loaders';
 import prisma from '@app/utils/prisma-client';
+import refreshStoredTokensUsage from '@app/utils/refresh-stored-tokens-usage';
 import validate from '@app/utils/validate';
 
 const handler = createAuthApiHandler();
@@ -76,6 +77,8 @@ export const bulkDelete = async (
     datastoreId: datastore.id,
     datasourceIds: ids,
   });
+
+  await refreshStoredTokensUsage(datastore.organizationId!);
 
   return deleted.count;
 };

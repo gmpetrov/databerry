@@ -63,6 +63,9 @@ export const createOrg = async (
           },
         },
       },
+      usage: {
+        create: {},
+      },
       apiKeys: {
         create: {
           key: uuidv4(),

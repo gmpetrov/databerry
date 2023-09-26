@@ -15,7 +15,9 @@ import logger from '@app/utils/logger';
 import prisma from '@app/utils/prisma-client';
 
 import { ApiError, ApiErrorType } from './api-error';
+import countTokens from './count-tokens';
 import guardDataProcessingUsage from './guard-data-processing-usage';
+import refreshStoredTokensUsage from './refresh-stored-tokens-usage';
 import triggerTaskLoadDatasource from './trigger-task-load-datasource';
 
 export type DatasourceExtended = Prisma.AppDatasourceGetPayload<
@@ -148,8 +150,9 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     documents
   );
 
-  const text = documents?.map((each) => each.pageContent)?.join('');
+  const text = chunks?.map((each) => each.pageContent)?.join('');
   const textSize = text?.length || 0;
+  const nbTokens = countTokens({ text });
 
   logger.info(`${data.datasourceId}: loading finished`);
 
@@ -158,6 +161,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
       id: datasource.id,
     },
     data: {
+      nbTokens: nbTokens,
       nbChunks: chunks.length,
       textSize: textSize,
       status: DatasourceStatus.synched,
@@ -198,6 +202,8 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   };
 
   await s3.putObject(params).promise();
+
+  await refreshStoredTokensUsage(datasource.organizationId!);
 
   logger.info(`${data.datasourceId}: datasource runned successfully`);
 };

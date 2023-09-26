@@ -557,9 +557,9 @@ export default function DatasourceTable({
                 </td>
                 <td>
                   {datasource?._count?.children <= 0 && (
-                    <Typography>{`${((datasource.textSize || 0) / 1024).toFixed(
+                    <Typography>{`${((datasource.nbTokens || 0) / 1000).toFixed(
                       1
-                    )}kb / ${datasource.nbChunks} chunks`}</Typography>
+                    )}K tokens / ${datasource.nbChunks} chunks`}</Typography>
                   )}
                 </td>
                 {/* <td>

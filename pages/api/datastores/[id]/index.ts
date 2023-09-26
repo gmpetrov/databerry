@@ -1,4 +1,8 @@
-import { DatasourceStatus, DatasourceType, DatastoreVisibility } from '@prisma/client';
+import {
+  DatasourceStatus,
+  DatasourceType,
+  DatastoreVisibility,
+} from '@prisma/client';
 import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
@@ -9,6 +13,7 @@ import { deleteFolderFromS3Bucket } from '@app/utils/aws';
 import { createAuthApiHandler, respond } from '@app/utils/createa-api-handler';
 import { DatastoreManager } from '@app/utils/datastores';
 import prisma from '@app/utils/prisma-client';
+import refreshStoredTokensUsage from '@app/utils/refresh-stored-tokens-usage';
 import runMiddleware from '@app/utils/run-middleware';
 import validate from '@app/utils/validate';
 
@@ -43,20 +48,20 @@ export const getDatastore = async (
               groupId: groupId,
               ...(search
                 ? {
-                  name: {
-                    contains: search,
-                  },
-                }
+                    name: {
+                      contains: search,
+                    },
+                  }
                 : {}),
               ...(status
                 ? {
-                  status,
-                }
+                    status,
+                  }
                 : {}),
               ...(type
                 ? {
-                  type,
-                }
+                    type,
+                  }
                 : {}),
             },
           },
@@ -69,20 +74,20 @@ export const getDatastore = async (
           groupId,
           ...(search
             ? {
-              name: {
-                contains: search,
-              },
-            }
+                name: {
+                  contains: search,
+                },
+              }
             : {}),
           ...(status
             ? {
-              status,
-            }
+                status,
+              }
             : {}),
           ...(type
             ? {
-              type,
-            }
+                type,
+              }
             : {}),
         },
         orderBy: {
@@ -128,19 +133,19 @@ export const updateDatastore = async (
 ) => {
   const datastoreId = req.query.id as string;
   const data = req.body as UpdateDatastoreRequestSchema;
-  const { isPublic, ...updates } = data
+  const { isPublic, ...updates } = data;
   const session = req.session;
   const datastoreToUpdate = await prisma.datastore.findUnique({
     where: {
       id: datastoreId,
     },
     select: {
-      organizationId: true
-    }
+      organizationId: true,
+    },
   });
 
   if (!datastoreToUpdate) {
-    throw new ApiError(ApiErrorType.NOT_FOUND)
+    throw new ApiError(ApiErrorType.NOT_FOUND);
   }
 
   if (datastoreToUpdate?.organizationId !== session?.organization?.id) {
@@ -148,15 +153,15 @@ export const updateDatastore = async (
   }
   return prisma.datastore.update({
     where: {
-      id: data.id
+      id: data.id,
     },
     data: {
       ...updates,
       visibility: isPublic
         ? DatastoreVisibility.public
         : DatastoreVisibility.private,
-    }
-  })
+    },
+  });
 };
 
 handler.patch(
@@ -165,7 +170,6 @@ handler.patch(
     handler: respond(updateDatastore),
   })
 );
-
 
 export const deleteDatastore = async (
   req: AppNextApiRequest,
@@ -206,6 +210,8 @@ export const deleteDatastore = async (
       timeout: 60000, // 60s
     }
   );
+
+  await refreshStoredTokensUsage(datastore.organizationId!);
 
   return datastore;
 };
