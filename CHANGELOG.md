@@ -1,5 +1,23 @@
 # Changelog
 
+<a name="0.1.12"></a>
+## 0.1.12 (2023-09-26)
+
+### Changed
+
+- ⚡ enh customer support prompt [[193b2bc](https://github.com/gmpetrov/databerry/commit/193b2bc0a298d9753229c20c363bd02c8537ceea)]
+
+### Fixed
+
+- 🐛 wordpress plugin ([#166](https://github.com/gmpetrov/databerry/issues/166)) [[047fd78](https://github.com/gmpetrov/databerry/commit/047fd781c6c0fb383f1f8fef3877273fcdfeda7d)]
+
+### Miscellaneous
+
+- 🎸 usage based on token stored [[ca02759](https://github.com/gmpetrov/databerry/commit/ca02759741cd91a0223304e59487962a6d09ae7c)]
+- 🤖 update wording [[76a426f](https://github.com/gmpetrov/databerry/commit/76a426f909c9018c7fda659b9086792cd7f6c010)]
+-  feat: refactor datastore api ([#147](https://github.com/gmpetrov/databerry/issues/147)) [[1db64ae](https://github.com/gmpetrov/databerry/commit/1db64ae61fc44ce2839f52cb2bc5efb5a4a113ae)]
+
+
 <a name="0.1.11"></a>
 ## 0.1.11 (2023-09-25)
 
