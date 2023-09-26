@@ -204,7 +204,7 @@ function AccountCard({}: Props) {
             </Option>
           ))}
 
-          <Divider sx={{ my: 1 }} />
+          {/* <Divider sx={{ my: 1 }} />
           <Button
             sx={{ mx: 1 }}
             size="sm"
@@ -212,7 +212,7 @@ function AccountCard({}: Props) {
             loading={isCreatingOrg}
           >
             New Team
-          </Button>
+          </Button> */}
         </Select>
       </FormControl>
 
