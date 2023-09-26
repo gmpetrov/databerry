@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.14"></a>
+## 0.1.14 (2023-09-26)
+
+### Miscellaneous
+
+- 🤖 rename to chaindesk [[90e9dec](https://github.com/gmpetrov/databerry/commit/90e9dec2690de79bb05f62b7d3d8a9a58a5cbebb)]
+- 🤖 disable display usage from account [[a80cafc](https://github.com/gmpetrov/databerry/commit/a80cafc42c7507c3df1ff593e139d176d16571b2)]
+
+
 <a name="0.1.13"></a>
 ## 0.1.13 (2023-09-26)
 
