@@ -35,7 +35,7 @@ export default async function handler() {
       >
         <img
           src="https://chaindesk.ai/app-logo-dark.png"
-          alt="ChatbotGPT.ai logo"
+          alt="Chaindesk logo"
           style={{
             objectFit: 'contain',
             width: '300px',

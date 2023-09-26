@@ -4,9 +4,9 @@ import Image from 'next/image';
 export function Logo(props) {
   return (
     <div className={clsx('inline-flex relative items-center font-bold text-white space-x-1', props.className)}>
-      {/* <Image width="100" height="100" className={clsx(props.className)} src="/app-logo-icon.png" alt="" /> */}
-      {/* <span className="text-xl">ChatbotGPT</span> */}
-      <Image width="80" height="100" className={clsx(props.className)} src="/app-logo-dark-2.png" alt="" />
+      <Image width="100" height="100" className={clsx(props.className)} src="/app-logo-icon.png" alt="" />
+      <span className="text-xl">Chaindesk</span>
+      {/* <Image width="80" height="100" className={clsx(props.className)} src="/app-logo-dark-2.png" alt="" /> */}
     </div>
   )
 }

@@ -96,14 +96,14 @@ const solutions = [
   //   ),
   // },
   {
-    name: 'ChatbotGPT API',
-    description: 'Acess the ChatbotGPT API to build your own workflows',
+    name: 'Chaindesk API',
+    description: 'Acess the Chaindesk API to build your own workflows',
     href: 'https://docs.chaindesk.ai/introduction',
     icon: ServerIcon,
   },
   {
     name: 'On Premise',
-    description: 'Install ChatbotGPT on your own infrastructure',
+    description: 'Install Chaindesk on your own infrastructure',
     href: 'https://github.com/gmpetrov/chaindesk',
     icon: CpuChipIcon,
   },

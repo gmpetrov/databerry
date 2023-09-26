@@ -18,7 +18,7 @@ export default function ProductPage({ product }: PageProps) {
   return (
     <>
       <SEO
-        title={`${product.name} | ChatbotGPT`}
+        title={`${product.name} | Chaindesk`}
         description={product.description}
         uri={`/products/${product.slug}`}
       />
@@ -138,7 +138,7 @@ export function PrimaryFeatures(props: {
             A chatbot train on your data in minutes
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-400">
-            ChatbotGPT.ai makes it very easy to train a chatbot on your company
+            Chaindesk makes it very easy to train a chatbot on your company
             data.
           </p>
         </div>

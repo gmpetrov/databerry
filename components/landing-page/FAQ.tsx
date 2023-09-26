@@ -21,7 +21,7 @@ const faqs = [
     id: 4,
     question: 'Does it support other languages?',
     answer:
-      'Yes, ChatbotGPT supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
+      'Yes, Chaindesk supports about 90 languages. You can have your sources in any language and ask it questions in any language.',
   },
   {
     id: 5,

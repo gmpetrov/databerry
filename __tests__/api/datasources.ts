@@ -31,7 +31,7 @@ describe('Datasources - Create', () => {
     try {
       const result = await testHttp.post('/api/datasources', {
         datastoreId: process.env.TEST_DATASTORE_ID,
-        name: 'ChatbotGPT Landingpage',
+        name: 'Chaindesk Landingpage',
         type: 'web_page',
         config: {
           source_url: 'https://www.chaindesk.ai/',

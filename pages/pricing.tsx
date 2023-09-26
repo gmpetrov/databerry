@@ -18,7 +18,7 @@ export default function Pricing() {
     <>
       <SEO
         title="Plans for Teams of All Sizes"
-        description="Choose an affordable plan with ChatbotGPT. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales. Free plan included!"
+        description="Choose an affordable plan with Chaindesk. Our offerings include Discover, Startup, Pro, and Enterprise levels, each packed with features for engaging your audience, creating customer loyalty, and driving sales. Free plan included!"
         uri={'/pricing'}
       />
       <Header />
@@ -56,7 +56,7 @@ const tiers = [
       // `Data processing limited to ${accountConfig['level_0'].limits
       //   .maxDataProcessing / 1000000}MB / month`,
       'Manual data synching',
-      'Access to ChatbotGPT API',
+      'Access to Chaindesk API',
       // 'ChatGPT plugin',
     ],
     mostPopular: false,

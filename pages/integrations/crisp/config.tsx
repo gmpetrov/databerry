@@ -137,7 +137,7 @@ export default function CrispConfig(props: { agent: Agent }) {
   return (
     <>
       <Head>
-        <title>ChatbotGPT - LLMs automation without code</title>
+        <title>Chaindesk - LLMs automation without code</title>
         <meta
           name="description"
           content="Most bookkeeping software is accurate, but hard to use. We make the opposite trade-off, and hope you don’t get audited."
@@ -160,10 +160,10 @@ export default function CrispConfig(props: { agent: Agent }) {
               <Stack spacing={2}>
                 {!organization && (
                   <FormControl>
-                    <FormLabel>ChatbotGPT API Key</FormLabel>
+                    <FormLabel>Chaindesk API Key</FormLabel>
                     <Alert variant="outlined" sx={{ mb: 2 }}>
                       <Stack>
-                        You can find your API Key in your ChatbotGPT{' '}
+                        You can find your API Key in your Chaindesk{' '}
                         <Link
                           href={'https://app.chaindesk.ai/account'}
                           target="_blank"
@@ -176,7 +176,7 @@ export default function CrispConfig(props: { agent: Agent }) {
                     </Alert>
                     <Input
                       value={inputValue}
-                      placeholder="Your ChatbotGPT API Key here"
+                      placeholder="Your Chaindesk API Key here"
                       onChange={(e) => setInputValue(e.currentTarget.value)}
                     />
                   </FormControl>

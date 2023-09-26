@@ -177,7 +177,7 @@ export default function Navigation() {
       },
       {
         label: 'Help Center',
-        route: 'https://chatbotgpt.ai/help',
+        route: 'https://chaindesk.ai/help',
         icon: <HelpRoundedIcon fontSize="small" />,
         target: 'blank',
       },

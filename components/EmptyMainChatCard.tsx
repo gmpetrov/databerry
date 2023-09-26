@@ -25,7 +25,7 @@ const features = [
   {
     title: 'Retrieve information spread across all your organization',
     icon: <ManageSearchTwoToneIcon />,
-    prompts: ['What\'s the onboarding process for new employees']
+    prompts: ["What's the onboarding process for new employees"],
   },
   {
     title: 'Analyze a specific document',
@@ -63,7 +63,7 @@ function EmptyMainChatCard(props: Props) {
             // }}
           >
             <Typography level="h5" color="primary" sx={{ mx: 'auto' }}>
-              Welcome to the new Chat by ChatbotGPT.ai
+              Welcome to the new Chat by Chaindesk
             </Typography>
           </Badge>
           <Typography level="body2">

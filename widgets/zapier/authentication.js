@@ -18,10 +18,10 @@ module.exports = {
       computed: false,
       key: 'api_key',
       required: false,
-      label: 'ChatbotGPT API Key',
+      label: 'Chaindesk API Key',
       type: 'password',
       helpText:
-        'Your ChatbotGPT API Key can be found here https://app.chaindesk.ai/account',
+        'Your Chaindesk API Key can be found here https://app.chaindesk.ai/account',
     },
   ],
   customConfig: {},

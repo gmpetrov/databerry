@@ -67,7 +67,7 @@ function AgentPage(props: { agent: Agent }) {
   return (
     <>
       <SEO
-        title={`${props?.agent?.name} - made with ChatbotGPT.ai`}
+        title={`${props?.agent?.name} - made with Chaindesk`}
         description={props?.agent?.description}
         url={`https://chaindesk.ai/@${props?.agent?.handle}`}
       />
@@ -105,7 +105,7 @@ function AgentPage(props: { agent: Agent }) {
                 <Typography level="body2">
                   Powered by{' '}
                   <Typography color="primary" fontWeight={'bold'}>
-                    ChatbotGPT
+                    Chaindesk
                   </Typography>
                 </Typography>
               </Box>

@@ -625,7 +625,7 @@ function ChatBox({
                   <Typography level="body3">
                     Powered by{' '}
                     <Typography color="primary" fontWeight={'bold'}>
-                      ChatbotGPT
+                      Chaindesk
                     </Typography>
                   </Typography>
                 </Box>

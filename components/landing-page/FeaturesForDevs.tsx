@@ -41,8 +41,8 @@ export default function Example() {
               </p>
               <p className="mt-6 text-lg leading-8 text-gray-300">
                 With our no-code platform, you can create a custom AI chatbot
-                trained on your data in seconds. Use ChatbotGPT API to query
-                your agent or to perform document retrievial
+                trained on your data in seconds. Use Chaindesk API to query your
+                agent or to perform document retrievial
               </p>
               <dl className="max-w-xl mt-10 space-y-8 text-base leading-7 text-gray-300 lg:max-w-none">
                 {features.map((feature) => (

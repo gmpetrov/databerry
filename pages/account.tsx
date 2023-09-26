@@ -284,7 +284,7 @@ export default function AccountPage() {
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
           {/* <Typography level="body3">
-            Use the api key to access the ChatbotGPT API
+            Use the api key to access the Chaindesk API
           </Typography> */}
 
           <Card variant="outlined">
@@ -417,7 +417,7 @@ export default function AccountPage() {
             <FormLabel>API Keys</FormLabel>
 
             <Typography level="body3">
-              Use the api key to access the ChatbotGPT API
+              Use the api key to access the Chaindesk API
             </Typography>
 
             <Stack direction={'column'} gap={2} mt={2}>

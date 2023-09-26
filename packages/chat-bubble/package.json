@@ -1,7 +1,7 @@
 {
   "name": "@databerry/chat-bubble",
-  "version": "1.0.76",
-  "description": "ChatbotGPT.ai Chat Bubble Widget",
+  "version": "1.0.78",
+  "description": "Chaindesk Chat Bubble Widget",
   "main": "chat-bubble.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

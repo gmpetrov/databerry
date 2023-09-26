@@ -127,7 +127,7 @@ export function HeroChatGPTPlugin() {
             <h1 className=" text-4xl font-bold !leading-snug tracking-tight text-white whitespace-pre-wrap font-display sm:text-5xl">
               {/* {'Document Retrieval \nfor ChatGPT \nin minutes'} */}
               {/* {`Build Your Own\nChatGPT Trained On\nYour Custom Data`} */}
-              {`ChatGPT Bot\nTrained On\nYour Custom Data`}
+              {`ChatGPT Agent\nTrained On\nYour Custom Data`}
               {/* {`ChatGPT Plugin\nIn minutes\nWithout Code`} */}
             </h1>
 
@@ -137,7 +137,7 @@ export function HeroChatGPTPlugin() {
         >
           <img
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=394302&theme=light"
-            alt="ChatbotGPT&#0046;ai - Build&#0032;a&#0032;ChatGPT&#0032;plugin&#0032;in&#0032;minutes | Product Hunt"
+            alt="Chaindesk&#0046;ai - Build&#0032;a&#0032;ChatGPT&#0032;plugin&#0032;in&#0032;minutes | Product Hunt"
             style={{
               width: '250px',
               height: '54px',
@@ -204,7 +204,7 @@ export function HeroChatGPTPlugin() {
                 </Stack>
                 <Typography textColor="text.secondary">
                   <b>+8K</b> companies have successfully <br></br>built their
-                  custom AI Agent with ChatbotGPT.ai
+                  custom AI Agent with Chaindesk
                 </Typography>
               </Stack>
             </Box>

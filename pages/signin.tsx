@@ -74,7 +74,7 @@ export default function SignInPage() {
     <>
       <SEO
         title="Sign-in"
-        description="Sign-in to your ChatbotGPT account."
+        description="Sign-in to your Chaindesk account."
         baseUrl="https://app.chaindesk.ai"
         uri={RouteNames.SIGN_IN}
       />

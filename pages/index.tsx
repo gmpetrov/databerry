@@ -57,20 +57,15 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="ChatbotGPT - ChatGPT AI Chat Bot for your business"
-        description="ChatbotGPT brings a no-code platform to create custom AI chatbots trained on your data. Our solution makes customer support easy and simplifies team workflow."
+        title="Chaindesk - ChatGPT AI Chat Bot for your business"
+        description="Chaindesk brings a no-code platform to create custom AI chatbots trained on your data. Our solution makes customer support easy and simplifies team workflow."
         uri="/"
       />
 
-      <Head>
-        <meta property="og:url" content="https://www.chatbotgpt.ai/" />
-        <meta property="og:site_name" content="ChatbotGPT" />
-        <meta property="og:type" content="website" />
-      </Head>
       {/* <div className="w-full p-2 text-center bg-indigo-500">
         <h2>
           🔔 Rebranding Alert - Databerry.ai is now ⛓️{' '}
-          <strong>ChatbotGPT.ai</strong>
+          <strong>Chaindesk</strong>
         </h2>
       </div> */}
       <Header />

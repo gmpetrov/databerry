@@ -9,7 +9,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // Instructing the Vercel edge to cache the file
   res.setHeader('Cache-control', 'stale-while-revalidate, s-maxage=3600');
 
-  const baseUrl = 'https://www.chatbotgpt.ai';
+  const baseUrl = 'https://www.chaindesk.ai';
 
   const paths = [
     '/',

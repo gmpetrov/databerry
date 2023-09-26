@@ -71,10 +71,10 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
   return (
     <>
       <Head>
-        <title>ChatbotGPT - Crisp Widget</title>
+        <title>Chaindesk - Crisp Widget</title>
         <meta
           name="description"
-          content="ChatbotGPT is the leading document retrievial platform"
+          content="Chaindesk is the leading document retrievial platform"
         />
       </Head>
       <Box
@@ -102,7 +102,7 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
           </Stack>
         ) : (
           <Alert color="warning" sx={{ m: 2 }}>
-            This feature is restricted to ChatbotGPT.ai premium users
+            This feature is restricted to Chaindesk premium users
           </Alert>
         )}
       </Box>

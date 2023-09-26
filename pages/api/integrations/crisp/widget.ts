@@ -73,7 +73,7 @@ export const widgetActions = async (
       from: 'operator',
       origin: 'chat',
       user: {
-        nickname: 'ChatbotGPT.ai',
+        nickname: 'Chaindesk',
         avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
       },
       stealth: true,

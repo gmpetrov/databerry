@@ -52,7 +52,7 @@ export default function Layout(props: Props) {
   return (
     <>
       <SEO
-        title="Dashboard | ChatbotGPT."
+        title="Dashboard | Chaindesk."
         description="Build your own ChatGPT Chat Bot for your business."
         baseUrl="https://app.chaindesk.ai"
         uri={router.pathname}
@@ -101,7 +101,7 @@ export default function Layout(props: Props) {
             </IconButton> */}
             <Logo className="w-10" />
             <Typography component="h1" fontWeight="xl">
-              ChatbotGPT
+              Chaindesk
             </Typography>
           </Box>
           {/* <Input

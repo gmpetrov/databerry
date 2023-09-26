@@ -1,15 +1,15 @@
 <?php
 /**
- * @package ChatbotGPT
+ * @package Chaindesk
  * @version 1.0
- * Plugin Name: ChatbotGPT
- * Plugin URI: http://wordpress.org/plugins/chatbotgpt/
- * Description: ChatbotGPT is a Livechat plugin
- * Author: ChatbotGPT
+ * Plugin Name: Chaindesk
+ * Plugin URI: http://wordpress.org/plugins/chaindesk/
+ * Description: Chaindesk is a Livechat plugin
+ * Author: Chaindesk
  * Version: 1.0
- * Author URI: https://chatbotgpt.ai
+ * Author URI: https://chaindesk.ai
  *
- * Text Domain: ChatbotGPT
+ * Text Domain: Chaindesk
  * Domain Path: /languages/
 */
 
@@ -21,7 +21,7 @@ add_action('admin_menu', 'chaindesk_create_menu');
 
 function chaindesk_create_menu()
 {
-    add_menu_page(__('ChatbotGPT Settings', 'chaindesk'), __('ChatbotGPT.ai Settings', 'chaindesk'), 'administrator', __FILE__, 'chaindesk_plugin_settings_page', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjE3IiBoZWlnaHQ9IjE5NSIgdmlld0JveD0iMCAwIDIxNyAxOTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF83Nl8xMDkpIj4KPHBhdGggZD0iTTIxNyAxMzAuMDY3QzIxNyAxNjUuODA2IDE4Ny44NDIgMTk1IDE1MS44OTcgMTk1SDBWNjQuOTMzNEMwIDI5LjE5MzUgMjkuMTU4MiAwIDY1LjEwMyAwSDE1MS44OTdDMTUxLjk0NyAwIDE1MS45OTcgMCAxNTIuMDQ3IDBDMTg3Ljk0MiAwLjAxOTk4ODcgMjE3LjAyIDI5LjA5MzYgMjE2Ljk5IDY0LjkzMzRWMTMwLjA2N0gyMTdaTTY1LjEwMyA4Ni42NzExVjEwOC4zMzlIODYuODA0Vjg2LjY3MTFINjUuMTAzWk0xMzAuMjA2IDg2LjY3MTFWMTA4LjMzOUgxNTEuOTA3Vjg2LjY3MTFIMTMwLjIwNloiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl83Nl8xMDkpIi8+CjwvZz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl83Nl8xMDkiIHgxPSItMjIuMDQxMyIgeTE9Ijk3LjQ5NSIgeDI9IjIwMi41NjYiIHkyPSI5Ny40OTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agb2Zmc2V0PSIwLjI0IiBzdG9wLWNvbG9yPSIjNjc2NUU5Ii8+CjxzdG9wIG9mZnNldD0iMC4zNSIgc3RvcC1jb2xvcj0iIzc5NjJEQyIvPgo8c3RvcCBvZmZzZXQ9IjAuNzIiIHN0b3AtY29sb3I9IiNCQTU4QjAiLz4KPHN0b3Agb2Zmc2V0PSIwLjkiIHN0b3AtY29sb3I9IiNENDU1OUYiLz4KPC9saW5lYXJHcmFkaWVudD4KPGNsaXBQYXRoIGlkPSJjbGlwMF83Nl8xMDkiPgo8cmVjdCB3aWR0aD0iMjE3IiBoZWlnaHQ9IjE5NSIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K');
+    add_menu_page(__('Chaindesk Settings', 'chaindesk'), __('Chaindesk Settings', 'chaindesk'), 'administrator', __FILE__, 'chaindesk_plugin_settings_page', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjE3IiBoZWlnaHQ9IjE5NSIgdmlld0JveD0iMCAwIDIxNyAxOTUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMF83Nl8xMDkpIj4KPHBhdGggZD0iTTIxNyAxMzAuMDY3QzIxNyAxNjUuODA2IDE4Ny44NDIgMTk1IDE1MS44OTcgMTk1SDBWNjQuOTMzNEMwIDI5LjE5MzUgMjkuMTU4MiAwIDY1LjEwMyAwSDE1MS44OTdDMTUxLjk0NyAwIDE1MS45OTcgMCAxNTIuMDQ3IDBDMTg3Ljk0MiAwLjAxOTk4ODcgMjE3LjAyIDI5LjA5MzYgMjE2Ljk5IDY0LjkzMzRWMTMwLjA2N0gyMTdaTTY1LjEwMyA4Ni42NzExVjEwOC4zMzlIODYuODA0Vjg2LjY3MTFINjUuMTAzWk0xMzAuMjA2IDg2LjY3MTFWMTA4LjMzOUgxNTEuOTA3Vjg2LjY3MTFIMTMwLjIwNloiIGZpbGw9InVybCgjcGFpbnQwX2xpbmVhcl83Nl8xMDkpIi8+CjwvZz4KPGRlZnM+CjxsaW5lYXJHcmFkaWVudCBpZD0icGFpbnQwX2xpbmVhcl83Nl8xMDkiIHgxPSItMjIuMDQxMyIgeTE9Ijk3LjQ5NSIgeDI9IjIwMi41NjYiIHkyPSI5Ny40OTUiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agb2Zmc2V0PSIwLjI0IiBzdG9wLWNvbG9yPSIjNjc2NUU5Ii8+CjxzdG9wIG9mZnNldD0iMC4zNSIgc3RvcC1jb2xvcj0iIzc5NjJEQyIvPgo8c3RvcCBvZmZzZXQ9IjAuNzIiIHN0b3AtY29sb3I9IiNCQTU4QjAiLz4KPHN0b3Agb2Zmc2V0PSIwLjkiIHN0b3AtY29sb3I9IiNENDU1OUYiLz4KPC9saW5lYXJHcmFkaWVudD4KPGNsaXBQYXRoIGlkPSJjbGlwMF83Nl8xMDkiPgo8cmVjdCB3aWR0aD0iMjE3IiBoZWlnaHQ9IjE5NSIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K');
     add_action('admin_init', 'chaindesk_register_plugin_settings');
     add_action('admin_init', 'chaindesk_register_plugin_onboarding');
 }
@@ -85,15 +85,15 @@ function chaindesk_plugin_settings_page()
 
   <div class="wrap chaindesk-wrap">
     <div class="chaindesk-modal">
-      <h2 class="chaindesk-title"><?php _e('Connected with ChatbotGPT.', 'chaindesk'); ?></h2>
-      <p class="chaindesk-subtitle"><?php _e('You can now use ChatbotGPT from your homepage.', 'chaindesk'); ?></p>
+      <h2 class="chaindesk-title"><?php _e('Connected with Chaindesk.', 'chaindesk'); ?></h2>
+      <p class="chaindesk-subtitle"><?php _e('You can now use Chaindesk from your homepage.', 'chaindesk'); ?></p>
 
       <a class="chaindesk-button chaindesk-neutral" href="<?php echo esc_url($add_to_chaindesk_link);  ?>"><?php _e('Reconfigure', 'chaindesk'); ?></a>
 
       
     </div>
 
-    <!-- <p class="chaindesk-notice"><?php _e('Loving ChatbotGPT <b style="color:red">♥</b> ? Rate us on the <a target="_blank" href="https://wordpress.org/support/plugin/chaindesk/reviews/?filter=5">Wordpress Plugin Directory</a>', 'chaindesk'); ?></p> -->
+    <!-- <p class="chaindesk-notice"><?php _e('Loving Chaindesk <b style="color:red">♥</b> ? Rate us on the <a target="_blank" href="https://wordpress.org/support/plugin/chaindesk/reviews/?filter=5">Wordpress Plugin Directory</a>', 'chaindesk'); ?></p> -->
   </div>
 
   <?php
@@ -101,9 +101,9 @@ function chaindesk_plugin_settings_page()
         ?>
   <div class="wrap chaindesk-wrap">
     <div class="chaindesk-modal">
-      <h2 class="chaindesk-title"><?php _e('Connect with ChatbotGPT.ai', 'chaindesk'); ?></h2>
-      <p class="chaindesk-subtitle"><?php _e('This link will redirect you to ChatbotGPT and configure your Wordpress.', 'chaindesk'); ?></p>
-      <a class="chaindesk-button chaindesk" href="<?php echo esc_url($add_to_chaindesk_link); ?>"><?php _e('Connect with ChatbotGPT', 'chaindesk'); ?></a>
+      <h2 class="chaindesk-title"><?php _e('Connect with Chaindesk', 'chaindesk'); ?></h2>
+      <p class="chaindesk-subtitle"><?php _e('This link will redirect you to Chaindesk and configure your Wordpress.', 'chaindesk'); ?></p>
+      <a class="chaindesk-button chaindesk" href="<?php echo esc_url($add_to_chaindesk_link); ?>"><?php _e('Connect with Chaindesk', 'chaindesk'); ?></a>
     </div>
   </div>
   <?php
