@@ -104,6 +104,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       onSuccess: (data) => {
         setState({
           history: data
+            ?.filter(each => !!each)
             ?.map((each) => each?.messages)
             ?.flat()
             ?.reverse()
