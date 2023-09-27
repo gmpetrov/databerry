@@ -1,6 +1,6 @@
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import { IconButton,useColorScheme } from '@mui/joy';
+import { IconButton, useColorScheme } from '@mui/joy';
 import React from 'react';
 
 export default function ColorSchemeToggle() {

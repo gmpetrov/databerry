@@ -145,7 +145,7 @@ const Tool = (props: {
           <Stack direction="row" spacing={2} justifyContent={'space-between'}>
             <Stack sx={{ minWidth: 0 }}>
               <Link href={`${RouteNames.DATASTORES}/${props.id}`}>
-                <Typography level="body1">{props.title}</Typography>
+                <Typography level="body-md">{props.title}</Typography>
               </Link>
             </Stack>
             <Stack ml="auto">
@@ -154,7 +154,7 @@ const Tool = (props: {
               </Chip>
             </Stack>
           </Stack>
-          <Typography className="truncate" level="body2">
+          <Typography className="truncate" level="body-sm">
             {props.description}
           </Typography>
         </Stack>
@@ -325,7 +325,7 @@ export default function BaseForm(props: Props) {
         {networkError && <Alert color="danger">{networkError}</Alert>}
         {props.defaultValues?.id && (
           <Stack gap={1}>
-            <Typography level="body2">Icon</Typography>
+            <Typography level="body-sm">Icon</Typography>
             <input
               type="file"
               hidden
@@ -393,7 +393,7 @@ export default function BaseForm(props: Props) {
             control={control as any}
             {...register('description')}
           />
-          <Typography level="body3" mt={1}>
+          <Typography level="body-xs" mt={1}>
             {'Describe what your agent can do.'}
           </Typography>
         </FormControl>
@@ -414,7 +414,7 @@ export default function BaseForm(props: Props) {
             />
             <div className="flex flex-col">
               <FormLabel>Public</FormLabel>
-              <Typography level="body3">
+              <Typography level="body-xs">
                 When activated, your agent will be available without an API Key.
               </Typography>
             </div>
@@ -454,7 +454,7 @@ export default function BaseForm(props: Props) {
         <FormControl>
           <FormLabel>Model Temperature</FormLabel>
 
-          <Alert color="info">
+          <Alert color="neutral">
             Temperature is a parameter of the model that governs the randomness
             and thus the creativity of the responses. A temperature of 0 means
             the responses will be very straightforward, almost deterministic
@@ -548,7 +548,7 @@ export default function BaseForm(props: Props) {
             </Typography> */}
           </FormLabel>
           {/* <FormLabel>Tools</FormLabel> */}
-          <Typography level="body2" mb={2}>
+          <Typography level="body-sm" mb={2}>
             {/* Datastores or external integrations your Agent can access */}
             The Datastore your Agent can access.
           </Typography>
@@ -607,7 +607,7 @@ export default function BaseForm(props: Props) {
                 // });
               }}
             >
-              {/* <Typography level="body2" sx={{ pl: 1 }}>
+              {/* <Typography level="body-sm" sx={{ pl: 1 }}>
               Agents:
             </Typography> */}
               {getDatastoresQuery.data?.map((datastore) => (
@@ -616,7 +616,7 @@ export default function BaseForm(props: Props) {
                 </Option>
               ))}
               {/* <Divider sx={{ my: 2 }}></Divider>
-            <Typography level="body2" sx={{ pl: 1 }}>
+            <Typography level="body-sm" sx={{ pl: 1 }}>
               Datastores:
             </Typography>
             {getDatastoresQuery?.data?.map((datastore) => (
@@ -669,7 +669,7 @@ export default function BaseForm(props: Props) {
                 />
                 <div className="flex flex-col">
                   <FormLabel>Include sources in Agent Answer</FormLabel>
-                  <Typography level="body3">
+                  <Typography level="body-xs">
                     When activated, your agent will include sources used to
                     generate the answer.
                   </Typography>
@@ -689,7 +689,7 @@ export default function BaseForm(props: Props) {
                   />
                   <div className="flex flex-col">
                     <FormLabel>Enable Rate Limit</FormLabel>
-                    <Typography level="body3">
+                    <Typography level="body-xs">
                       X messages max every Y seconds
                     </Typography>
                   </div>
@@ -877,8 +877,10 @@ export default function BaseForm(props: Props) {
             overflowY: 'auto',
           }}
         >
-          <Typography level="h6">Prompt Templates</Typography>
-          <Typography level="body2">Tailored to your business needs</Typography>
+          <Typography level="title-md">Prompt Templates</Typography>
+          <Typography level="body-sm">
+            Tailored to your business needs
+          </Typography>
 
           <Divider sx={{ my: 2 }}></Divider>
           <Stack gap={1} direction="column">
@@ -899,7 +901,7 @@ export default function BaseForm(props: Props) {
                           {PromptTypesLabels[template.type]}
                         </Chip>
                       </Stack>
-                      <Typography level="body2">
+                      <Typography level="body-sm">
                         {template.description}
                       </Typography>
                     </Stack>
@@ -945,7 +947,7 @@ export default function BaseForm(props: Props) {
                           {PromptTypesLabels[template.type]}
                         </Chip>
                       </Stack>
-                      <Typography level="body2">
+                      <Typography level="body-sm">
                         {template.description}
                       </Typography>
                     </Stack>

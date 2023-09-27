@@ -622,7 +622,7 @@ function ChatBox({
                 }}
               >
                 <Box sx={{ mt: 1 }}>
-                  <Typography level="body3">
+                  <Typography level="body-xs">
                     Powered by{' '}
                     <Typography color="primary" fontWeight={'bold'}>
                       Chaindesk

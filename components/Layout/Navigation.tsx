@@ -1,12 +1,7 @@
 import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
-import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import AutoFixHighRoundedIcon from '@mui/icons-material/AutoFixHighRounded';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -16,15 +11,12 @@ import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import Avatar from '@mui/joy/Avatar';
 import Badge from '@mui/joy/Badge';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
-import LinearProgress from '@mui/joy/LinearProgress';
 import List from '@mui/joy/List';
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
@@ -42,16 +34,16 @@ import * as React from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
+import AccountCard from '@app/components/AccountCard';
+import UserMenu from '@app/components/UserMenu';
 import { countUnread } from '@app/pages/api/logs/count-unread';
-import { getOrganizations } from '@app/pages/api/organizations';
 import { getStatus } from '@app/pages/api/status';
 import { AppStatus, RouteNames } from '@app/types';
 import { fetcher } from '@app/utils/swr-fetcher';
 
-import AccountCard from '../AccountCard';
-
 export default function Navigation() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
@@ -366,36 +358,42 @@ export default function Navigation() {
           </Link>
         </Stack>
         <Link href="mailto:support@chaindesk.ai" className="mx-auto">
-          <Typography level="body2" mx={'auto'}>
+          <Typography level="body-sm" mx={'auto'}>
             support@chaindesk.ai
           </Typography>
         </Link>
 
-        <Link
-          href={'https://status.chaindesk.ai/'}
-          target={'_blank'}
-          className="mx-auto"
-        >
-          <Chip
-            color={isStatusOK ? 'success' : 'danger'}
-            variant="soft"
-            sx={{ cursor: 'pointer' }}
-            endDecorator={<ArrowForwardRoundedIcon />}
-          >
-            <Stack direction="row" alignItems={'center'} gap={1}>
-              <Box
-                sx={{
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '99px',
-                  bgcolor: isStatusOK ? 'success.300' : 'danger.500',
-                }}
-              />
-              <Typography level="body2">system status</Typography>
-            </Stack>
+        <Stack direction="row" sx={{ justifyContent: 'center', gap: 1 }}>
+          <Chip color="neutral" variant="soft">
+            v{publicRuntimeConfig?.version}
           </Chip>
-        </Link>
+
+          <Link href={'https://status.chaindesk.ai/'} target={'_blank'}>
+            <Chip
+              color={isStatusOK ? 'success' : 'danger'}
+              variant="soft"
+              sx={{ cursor: 'pointer' }}
+              endDecorator={<ArrowForwardRoundedIcon />}
+            >
+              <Stack direction="row" alignItems={'center'} gap={1}>
+                <Box
+                  sx={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '99px',
+                    bgcolor: isStatusOK ? 'success.300' : 'danger.500',
+                  }}
+                />
+                <Typography level="body-sm">system status</Typography>
+              </Stack>
+            </Chip>
+          </Link>
+        </Stack>
       </Stack>
+
+      <Divider sx={{ my: 2 }}></Divider>
+
+      <UserMenu />
     </Stack>
   );
 }

@@ -152,7 +152,7 @@ export default function BubbleWidgetSettings(props: Props) {
         }}
       >
         <Typography level="h4">Bubble Widget</Typography>
-        <Typography color="neutral" level="h6">
+        <Typography color="neutral" level="title-md">
           Settings
         </Typography>
         <Divider sx={{ my: 2 }}></Divider>
@@ -277,7 +277,7 @@ export default function BubbleWidgetSettings(props: Props) {
           />
         </FormControl> */}
                 <FormControl sx={{ mt: 2 }}>
-                  <Typography mb={1} level="body1">
+                  <Typography mb={1} level="body-md">
                     Bubble Widget Settings
                   </Typography>
                   <FormLabel>Display Name</FormLabel>
@@ -369,7 +369,7 @@ export default function BubbleWidgetSettings(props: Props) {
             </Stack>
 
             <Stack id="embed" gap={2} mb={2}>
-              <Typography level="body2">
+              <Typography level="body-sm">
                 To Embed the Agent as a Chat Bubble on your website paste this
                 code to the HTML Head section
               </Typography>

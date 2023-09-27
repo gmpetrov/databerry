@@ -100,7 +100,7 @@ export default function StandalonePageSettings(props: Props) {
 
       await toast.promise(
         axios.patch(`/api/agents/${props.agentId}`, {
-          ...values
+          ...values,
         }),
         {
           loading: 'Updating...',
@@ -201,7 +201,7 @@ export default function StandalonePageSettings(props: Props) {
         }}
       >
         <Typography level="h4">Standalone Web Page</Typography>
-        <Typography color="neutral" level="h6">
+        <Typography color="neutral" level="title-md">
           Settings
         </Typography>
         <Divider sx={{ my: 2 }}></Divider>

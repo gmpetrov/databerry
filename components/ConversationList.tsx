@@ -54,7 +54,7 @@ const Item = (props: {
           selected={!!props.selected}
           onClick={() => props.handleClick?.(props.id)}
         >
-          <Typography className="truncate" level="body2">
+          <Typography className="truncate" level="body-sm">
             {props.text}
           </Typography>
         </ListItemButton>

@@ -133,7 +133,7 @@ export default function DatasourcesPage() {
             <Typography>ChatGPT Bot trained on website data</Typography>
 
             <Stack direction={'column'} gap={1} mt={4}>
-              <Typography level={'body2'}>Integrated via</Typography>
+              <Typography level={'body-sm'}>Integrated via</Typography>
               <Link target="_blank" href={'https://crisp.chat/'}>
                 <Image
                   className="w-32 mx-auto "
@@ -191,7 +191,7 @@ export default function DatasourcesPage() {
             )}
 
             <Link href={RouteNames.CHAT_SITE} target="_blank">
-              <Typography level="body2" color="neutral">
+              <Typography level="body-sm" color="neutral">
                 More info
               </Typography>
             </Link>
@@ -266,7 +266,7 @@ export default function DatasourcesPage() {
             )}
 
             <Link href={RouteNames.SLACK_BOT} target="_blank">
-              <Typography level="body2" color="neutral">
+              <Typography level="body-sm" color="neutral">
                 More info
               </Typography>
             </Link>

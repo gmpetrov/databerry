@@ -50,7 +50,7 @@ export default function ProductPage({ product }: PageProps) {
               {product.name}
             </Typography>
 
-            <Typography level={'h6'}>{product.description}</Typography>
+            <Typography level={'title-md'}>{product.description}</Typography>
           </Stack>
 
           {product.logo && (
@@ -131,7 +131,7 @@ export function PrimaryFeatures(props: {
     <div id="features" className="py-24 bg-black sm:py-32">
       <div className="px-6 mx-auto max-w-7xl lg:px-8">
         <div className="max-w-2xl mx-auto lg:text-center">
-          <Typography className="font-bold" level="body1" color="primary">
+          <Typography className="font-bold" level="body-md" color="primary">
             Make LLMs aware of your custom data
           </Typography>
           <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">

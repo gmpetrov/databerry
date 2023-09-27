@@ -74,7 +74,7 @@ export default function SubscriptionSuccessPage() {
               </Typography>
               <Stack gap={1}>
                 <Typography level="h3">Your payment is successful</Typography>
-                <Typography level="body1">
+                <Typography level="body-md">
                   Thank your for your payment! Your account has been
                   successfully upgraded
                 </Typography>

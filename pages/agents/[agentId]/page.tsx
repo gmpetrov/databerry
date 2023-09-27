@@ -102,7 +102,7 @@ function AgentPage(props: { agent: Agent }) {
               }}
             >
               <Box>
-                <Typography level="body2">
+                <Typography level="body-sm">
                   Powered by{' '}
                   <Typography color="primary" fontWeight={'bold'}>
                     Chaindesk
@@ -182,7 +182,7 @@ function AgentPage(props: { agent: Agent }) {
                 }}
               >
                 <Typography
-                  level="h5"
+                  level="title-lg"
                   fontWeight={'bold'}
                   sx={{
                     color: textColor,
@@ -191,7 +191,7 @@ function AgentPage(props: { agent: Agent }) {
                   {agent?.name}
                 </Typography>
                 <Typography
-                  level="body2"
+                  level="body-sm"
                   color="neutral"
                   sx={{
                     color: textColor,

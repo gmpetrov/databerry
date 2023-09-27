@@ -54,7 +54,7 @@ const DatastoreOptions = (props: Props) => {
 
             <Stack gap={1}>
               <Stack gap={1} direction="row">
-                <Typography level="body1" fontWeight={'bold'}>
+                <Typography level="body-md" fontWeight={'bold'}>
                   {each.label}
                 </Typography>
                 {each.disabled && (
@@ -63,7 +63,7 @@ const DatastoreOptions = (props: Props) => {
                   </Chip>
                 )}
               </Stack>
-              <Typography level="body2">{each.description}</Typography>
+              <Typography level="body-sm">{each.description}</Typography>
             </Stack>
           </Sheet>
         ))}

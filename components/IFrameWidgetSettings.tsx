@@ -144,7 +144,7 @@ export default function BubbleWidgetSettings(props: Props) {
         }}
       >
         <Typography level="h4">IFrame Widget</Typography>
-        <Typography color="neutral" level="h6">
+        <Typography color="neutral" level="title-md">
           Settings
         </Typography>
         <Divider sx={{ my: 2 }}></Divider>
@@ -323,7 +323,7 @@ export default function BubbleWidgetSettings(props: Props) {
             </Stack>
           </Stack>
           <Stack id="embed" gap={2} mt={4} mb={2}>
-            <Typography level="body2">
+            <Typography level="body-sm">
               To Embed the Agent as an iFrame on your website paste this code
               into an HTML page
             </Typography>

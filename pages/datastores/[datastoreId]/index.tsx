@@ -12,7 +12,7 @@ import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import Stack from '@mui/joy/Stack';
-import Tab from '@mui/joy/Tab';
+import Tab, { tabClasses } from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
@@ -154,7 +154,6 @@ export default function DatastorePage() {
             display: 'flex',
             alignItems: 'center',
             mt: 1,
-            mb: 2,
             gap: 1,
             flexWrap: 'wrap',
             // '& > *': {
@@ -211,27 +210,56 @@ export default function DatastorePage() {
           </Box>
         </Box>
 
-        <Stack direction={'row'} alignItems={'center'} gap={2}>
+        <Stack direction={'row'} alignItems={'center'} gap={2} sx={{
+          width: '100%',
+          mb: 4,
+          mt: 4
+          }}>
           <Tabs
-            aria-label="Icon tabs"
+            aria-label="Tabs"
             value={(router.query.tab as string) || 'datasources'}
             size="md"
+            // variant='plain'
             sx={{
-              borderRadius: 'lg',
-              display: 'inline-flex',
+              // borderRadius: 'lg',
+              // display: 'inline-flex',
+              background: 'transparent',
+              width: '100%',
             }}
             onChange={(event, value) => {
               handleChangeTab(value as string);
             }}
           >
-            <TabList size="sm">
-              <Tab value={'datasources'}>
+            <TabList size="sm"
+            
+            sx={{
+              // pt: 2,
+              justifyContent: 'start',
+              [`&& .${tabClasses.root}`]: {
+                flex: 'initial',
+                bgcolor: 'transparent',
+                '&:hover': {
+                  bgcolor: 'transparent',
+                },
+                [`&.${tabClasses.selected}`]: {
+                  color: 'primary.plainColor',
+                  '&::after': {
+                    height: '3px',
+                    borderTopLeftRadius: '3px',
+                    borderTopRightRadius: '3px',
+                    bgcolor: 'primary.500',
+                  },
+                },
+              },
+            }}
+            >
+              <Tab indicatorInset value={'datasources'}>
                 <ListItemDecorator>
                   <AutoGraphRoundedIcon />
                 </ListItemDecorator>
                 Datasources
               </Tab>
-              <Tab value={'settings'}>
+              <Tab indicatorInset value={'settings'}>
                 <ListItemDecorator>
                   <SettingsIcon />
                 </ListItemDecorator>
@@ -257,7 +285,7 @@ export default function DatastorePage() {
           {/* </Link> */}
         </Stack>
 
-        <Divider sx={{ my: 4 }} />
+        {/* <Divider sx={{ my: 4 }} /> */}
 
         {router.query.tab === 'datasources' && getDatastoreQuery?.data?.id && (
           <Datasources datastoreId={getDatastoreQuery?.data?.id} />

@@ -283,7 +283,7 @@ export default function AccountPage() {
       >
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
-          {/* <Typography level="body3">
+          {/* <Typography level="body-xs">
             Use the api key to access the Chaindesk API
           </Typography> */}
 
@@ -300,8 +300,8 @@ export default function AccountPage() {
 
             <Stack width="100%" spacing={2} my={2}>
               {/* <Stack spacing={1}>
-                <Typography level="body1">Current Usage</Typography>
-                <Typography level="h6">
+                <Typography level="body-md">Current Usage</Typography>
+                <Typography level="title-md">
                   <Stack direction={'row'} spacing={1}>
                     <Typography color="neutral">Agents Responses:</Typography>
                     <Typography
@@ -316,7 +316,7 @@ export default function AccountPage() {
                     </Typography>
                   </Stack>
                 </Typography>
-                <Typography level="h6">
+                <Typography level="title-md">
                   <Stack direction={'row'} spacing={1}>
                     <Typography color="neutral">Data Processing:</Typography>
                     <Typography
@@ -336,20 +336,20 @@ export default function AccountPage() {
               </Stack> */}
               <Divider></Divider>
               <Typography
-                level="h6"
+                level="title-md"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
                 <Typography>{`${currentPlan?.limits?.maxAgents} Agents`}</Typography>
               </Typography>
               <Typography
-                level="h6"
+                level="title-md"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
                 <Typography>{`${currentPlan?.limits?.maxDatastores} Datastores`}</Typography>
               </Typography>
               {session?.organization?.isPremium ? (
                 <Typography
-                  level="h6"
+                  level="title-md"
                   startDecorator={<CheckRoundedIcon color="success" />}
                 >
                   <Typography>{`${
@@ -359,28 +359,28 @@ export default function AccountPage() {
                 </Typography>
               ) : (
                 <Typography
-                  level="h6"
+                  level="title-md"
                   startDecorator={<CheckRoundedIcon color="success" />}
                 >
                   <Typography>{`${currentPlan?.limits?.maxAgentsQueries} GPT-3.5 responses / month`}</Typography>
                 </Typography>
               )}
               <Typography
-                level="h6"
+                level="title-md"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
                 <Typography>{`${currentPlan?.limits?.maxStoredTokens /
                   1000000} Million words storage`}</Typography>
               </Typography>
               <Typography
-                level="h6"
+                level="title-md"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
                 <Typography>{`${currentPlan?.limits?.maxFileSize /
                   1000000}MB File upload limit`}</Typography>
               </Typography>
               {/* <Typography
-                level="h6"
+                level="title-md"
                 startDecorator={<CheckRoundedIcon color="success" />}
               >
                 <Typography>{`${currentPlan?.limits?.maxDataProcessing /
@@ -416,13 +416,13 @@ export default function AccountPage() {
           <FormControl sx={{ gap: 1 }}>
             <FormLabel>API Keys</FormLabel>
 
-            <Typography level="body3">
+            <Typography level="body-xs">
               Use the api key to access the Chaindesk API
             </Typography>
 
             <Stack direction={'column'} gap={2} mt={2}>
               <Alert
-                color="info"
+                color="neutral"
                 startDecorator={<HelpOutlineRoundedIcon />}
                 endDecorator={
                   <Link href="https://docs.chaindesk.ai" target="_blank">
@@ -490,7 +490,7 @@ export default function AccountPage() {
 
         <FormControl sx={{ gap: 1 }}>
           <FormLabel>Delete Datastore</FormLabel>
-          <Typography level="body3">
+          <Typography level="body-xs">
             It will delete the datastore and all its datasources
           </Typography>
           <Button

@@ -63,7 +63,7 @@ function Nested() {
           control={control as any}
           {...register('config.source_url')}
         />
-        <Alert color="info">
+        <Alert color="neutral">
           <Stack>
             Will automatically try to find all pages on the website during 45s
             max.
@@ -91,7 +91,7 @@ function Nested() {
           {...register('config.sitemap')}
         />
 
-        <Alert color="info">
+        <Alert color="neutral">
           <Stack>
             Will process all pages in the sitemap.
             <strong>

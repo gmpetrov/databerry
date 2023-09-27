@@ -128,7 +128,7 @@ export default function BaseForm(props: Props) {
             />
             <div className="flex flex-col">
               <FormLabel>Public</FormLabel>
-              <Typography level="body3">
+              <Typography level="body-xs">
                 When activated, your datastore will be available by anyone on
                 the internet.{' '}
                 {/* <Typography fontWeight={'bold'} color="primary">

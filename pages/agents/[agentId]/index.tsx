@@ -33,7 +33,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import Stack from '@mui/joy/Stack';
-import Tab from '@mui/joy/Tab';
+import Tab, { tabClasses } from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
@@ -265,7 +265,12 @@ export default function AgentPage() {
             // },
           }}
         >
-          <Stack gap={2}>
+          <Stack
+            gap={2}
+            sx={{
+              width: '100%',
+            }}
+          >
             <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
               <Typography level="h1" fontSize="xl4">
                 {getAgentQuery?.data?.name}
@@ -286,32 +291,68 @@ export default function AgentPage() {
 
             <Stack direction={'row'} gap={2} alignItems={'center'}>
               <Tabs
-                aria-label="Icon tabs"
+                aria-label="tabs"
                 value={(router.query.tab as string) || 'chat'}
                 size="md"
                 sx={{
-                  borderRadius: 'lg',
-                  display: 'inline-flex',
+                  // borderRadius: 'lg',
+                  // display: 'inline-flex',
                   //   mt: 4,
+                  bgcolor: 'transparent',
+                  width: '100%',
                 }}
                 onChange={(event, value) => {
                   handleChangeTab(value as string);
                 }}
               >
-                <TabList size="sm">
-                  <Tab value={'chat'}>
+                <TabList
+                  size="sm"
+                  // disableUnderline={true}
+                  // sx={{
+                  //   p: 0.5,
+                  //   gap: 0.5,
+                  //   borderRadius: 'xl',
+                  //   bgcolor: 'background.level1',
+                  //   [`& .${tabClasses.root}[aria-selected="true"]`]: {
+                  //     boxShadow: 'sm',
+                  //     bgcolor: 'background.surface',
+                  //   },
+                  // }}
+
+                  sx={{
+                    // pt: 2,
+                    // justifyContent: 'center',
+                    [`&& .${tabClasses.root}`]: {
+                      flex: 'initial',
+                      bgcolor: 'transparent',
+                      '&:hover': {
+                        bgcolor: 'transparent',
+                      },
+                      [`&.${tabClasses.selected}`]: {
+                        color: 'primary.plainColor',
+                        '&::after': {
+                          height: '3px',
+                          borderTopLeftRadius: '3px',
+                          borderTopRightRadius: '3px',
+                          bgcolor: 'primary.500',
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <Tab indicatorInset value={'chat'}>
                     <ListItemDecorator>
                       <MessageRoundedIcon />
                     </ListItemDecorator>
                     Chat
                   </Tab>
-                  <Tab value={'deploy'}>
+                  <Tab indicatorInset value={'deploy'}>
                     <ListItemDecorator>
                       <RocketLaunchRoundedIcon />
                     </ListItemDecorator>
                     Deploy
                   </Tab>
-                  <Tab value={'settings'}>
+                  <Tab indicatorInset value={'settings'}>
                     <ListItemDecorator>
                       <SettingsIcon />
                     </ListItemDecorator>
@@ -349,7 +390,7 @@ export default function AgentPage() {
           </Stack>
         </Box>
 
-        <Divider sx={{ mb: 4 }} />
+        {/* <Divider sx={{ mb: 4 }} /> */}
 
         {router.query.tab === 'chat' && (
           <Box
@@ -359,7 +400,7 @@ export default function AgentPage() {
               height: '100%',
               maxHeight: '100%',
               overflow: 'hidden',
-              mt: -5,
+              mt: -3,
               mb: -6,
             }}
           >
@@ -424,11 +465,18 @@ export default function AgentPage() {
           >
             {router.query.tab === 'deploy' && (
               <>
-                <Typography level="h5">
+                <Typography level="title-lg">
                   Deploy Agent to the following services
                 </Typography>
 
-                <List variant="outlined" sx={{ mt: 2 }}>
+                <List
+                  variant="outlined"
+                  sx={{
+                    mt: 2,
+
+                    borderRadius: 'lg',
+                  }}
+                >
                   {[
                     {
                       name: 'Website (bubble widget)',
@@ -661,12 +709,12 @@ export default function AgentPage() {
                 <Divider sx={{ my: 4 }} />
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Agent ID</FormLabel>
-                  <Typography level="body3" mb={2}>
+                  <Typography level="body-xs" mb={2}>
                     Use the Agent ID to query the agent through Chaindesk API
                   </Typography>
                   <Stack spacing={2}>
                     <Alert
-                      color="info"
+                      color="neutral"
                       startDecorator={<HelpOutlineRoundedIcon />}
                       endDecorator={
                         <Link href="https://docs.chaindesk.ai" target="_blank">
@@ -703,7 +751,7 @@ export default function AgentPage() {
                 <Divider sx={{ my: 4 }} />
                 <FormControl sx={{ gap: 1 }}>
                   <FormLabel>Delete Agent</FormLabel>
-                  <Typography level="body3">
+                  <Typography level="body-xs">
                     It will delete the agent permanently
                   </Typography>
 

@@ -169,7 +169,7 @@ export default function DatasourcePage() {
                 {
                   unsynched: 'neutral',
                   pending: 'primary',
-                  running: 'info',
+                  running: "neutral",
                   synched: 'success',
                   error: 'danger',
                   usage_limit_reached: 'warning',
@@ -229,7 +229,7 @@ export default function DatasourcePage() {
 
           <FormControl sx={{ gap: 1 }}>
             <FormLabel>Delete Datasource</FormLabel>
-            <Typography level="body3">
+            <Typography level="body-xs">
               It will remove all its data from the datastore.
             </Typography>
             <Button

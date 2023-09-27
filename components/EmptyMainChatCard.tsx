@@ -46,9 +46,9 @@ function EmptyMainChatCard(props: Props) {
   return (
     <Stack>
       <Card
-        variant="plain"
+        variant="outlined"
         color="neutral"
-        sx={{ boxShadow: 'none', maxWidth: 'sm' }}
+        sx={{ boxShadow: 'none', maxWidth: 'sm', mx: 'auto' }}
       >
         <CardContent sx={{ textAlign: 'center' }}>
           <Badge
@@ -62,11 +62,11 @@ function EmptyMainChatCard(props: Props) {
             //   horizontal: 'left',
             // }}
           >
-            <Typography level="h5" color="primary" sx={{ mx: 'auto' }}>
+            <Typography level="title-lg" color="primary" sx={{ mx: 'auto' }}>
               Welcome to the new Chat by Chaindesk
             </Typography>
           </Badge>
-          <Typography level="body2">
+          <Typography level="body-sm">
             The place where you can to talk to your data, and more!
           </Typography>
 
@@ -80,16 +80,16 @@ function EmptyMainChatCard(props: Props) {
                 },
               }}
             >
-              <Typography className="list-item" level="body2">
+              <Typography className="list-item" level="body-sm">
                 {'Select a "Chain" type. e.g: Q&A'}
               </Typography>
-              <Typography className="list-item" level="body2">
+              <Typography className="list-item" level="body-sm">
                 Restrict knowledge to a specific Datastore or Datasource
               </Typography>
-              <Typography className="list-item" level="body2">
+              <Typography className="list-item" level="body-sm">
                 Try a prompt from the below examples
               </Typography>
-              <Typography className="list-item" level="body2">
+              <Typography className="list-item" level="body-sm">
                 If the generated answer contains Sources click on it to open it.
                 Special treatment for PDF files 😉
               </Typography>
@@ -104,12 +104,12 @@ function EmptyMainChatCard(props: Props) {
                     {feature.icon}
                   </IconButton>
                   <Stack>
-                    <Typography level="body1">{feature.title}</Typography>
+                    <Typography level="body-md">{feature.title}</Typography>
                     <Stack>
                       {feature.prompts.map((prompt, idx) => (
                         <Typography
                           key={idx}
-                          level="body2"
+                          level="body-sm"
                           onClick={() => {
                             props.handlePromptClick?.(prompt);
                           }}

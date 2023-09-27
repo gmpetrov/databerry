@@ -39,7 +39,7 @@ export default function AccountPage(props: {
             <Typography level="h2">Chaindesk</Typography>
           </Stack>
 
-          <Typography level="h5" sx={{ textAlign: 'center' }}>
+          <Typography level="title-lg" sx={{ textAlign: 'center' }}>
             🎉 You are now a member of{' '}
             <Typography sx={{ fontWeight: 'bold' }} color="primary">
               {' '}

@@ -98,7 +98,7 @@ const DatasourceOptions = (props: Props) => {
             <Stack gap={1}>
               <Stack gap={1} direction="row">
                 {each.icon && <img src={each.icon} className="h-4" alt="" />}
-                <Typography level="body1" fontWeight={'bold'}>
+                <Typography level="body-md" fontWeight={'bold'}>
                   {each.label}
                 </Typography>
                 {each.isPremium && (
@@ -112,7 +112,7 @@ const DatasourceOptions = (props: Props) => {
                   </Chip>
                 )}
               </Stack>
-              <Typography level="body2">{each.description}</Typography>
+              <Typography level="body-sm">{each.description}</Typography>
             </Stack>
           </Sheet>
         ))}

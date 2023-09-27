@@ -155,7 +155,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
     <form onSubmit={methods.handleSubmit(handleUpdatePlugin)}>
       <Stack gap={2}>
         <Stack gap={1}>
-          <Typography level="body2">Plugin Icon</Typography>
+          <Typography level="body-sm">Plugin Icon</Typography>
 
           <input
             type="file"
@@ -258,7 +258,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
         </Button>
 
         <Stack gap={1}>
-          <Typography level="body2">Plugin Root</Typography>
+          <Typography level="body-sm">Plugin Root</Typography>
 
           <Alert
             color="neutral"
@@ -283,7 +283,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           </Alert>
         </Stack>
         <Stack gap={2}>
-          <Typography level="body2">ai-plugin.json</Typography>
+          <Typography level="body-sm">ai-plugin.json</Typography>
           <Alert
             color="neutral"
             sx={{
@@ -307,7 +307,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
           </Alert>
         </Stack>
         <Stack gap={2}>
-          <Typography level="body2">openapi.yaml</Typography>
+          <Typography level="body-sm">openapi.yaml</Typography>
           <Alert
             color="neutral"
             sx={{
@@ -391,7 +391,7 @@ function DatastoreSettings() {
           <FormLabel>Datastore ID</FormLabel>
 
           <Alert
-            color="info"
+            color="neutral"
             startDecorator={<HelpOutlineRoundedIcon />}
             endDecorator={
               <Link href="https://docs.chaindesk.ai" target="_blank">
@@ -433,7 +433,7 @@ function DatastoreSettings() {
             <FormLabel>ChatGPT Plugin</FormLabel>
 
             <Alert
-              color="info"
+              color="neutral"
               startDecorator={<HelpOutlineRoundedIcon />}
               endDecorator={
                 <Link
@@ -479,7 +479,7 @@ function DatastoreSettings() {
 
       <FormControl sx={{ gap: 1 }}>
         <FormLabel>Delete Datastore</FormLabel>
-        <Typography level="body3">
+        <Typography level="body-xs">
           It will delete the datastore and all its datasources
         </Typography>
         <Button

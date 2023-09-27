@@ -93,7 +93,7 @@ export default function CrispSettingsModal(props: Props) {
     >
       <Card variant="outlined" sx={{ width: '100%', maxWidth: 400 }}>
         <Typography level="h4">Crisp</Typography>
-        <Typography color="neutral" level="h6">
+        <Typography color="neutral" level="title-md">
           Settings
         </Typography>
         <Divider sx={{ my: 2 }}></Divider>

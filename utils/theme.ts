@@ -37,6 +37,19 @@ import type {} from '@mui/material/themeCssVarsAugmentation';
 import { deepmerge } from '@mui/utils';
 import * as React from 'react';
 
+const purple = {
+  50: '#FDF7FF',
+  100: '#F4EAFF',
+  200: '#E1CBFF',
+  300: '#C69EFF',
+  400: '#A374F9',
+  500: '#814DDE',
+  600: '#5F35AE',
+  700: '#452382',
+  800: '#301761',
+  900: '#1D0A42',
+};
+
 // extends Joy theme to include tokens from Material UI
 declare module '@mui/joy/styles' {
   interface Palette {
@@ -73,6 +86,25 @@ declare module '@mui/joy/styles' {
     shadows: Shadows;
     overlays: Overlays;
     zIndex: ZIndex;
+  }
+
+  interface TypographySystemOverrides {
+    kbd: true;
+    display1: true;
+  }
+
+  interface FontSizeOverrides {
+    xl7: true;
+    xl6: true;
+    xl5: true;
+    xs2: true;
+    xs3: true;
+  }
+
+  interface FontWeightOverrides {
+    xs: true;
+    xl2: true;
+    xl3: true;
   }
 }
 
@@ -128,30 +160,28 @@ const muiTheme = extendMuiTheme({
         primary: {
           // main: colors.blue[500],
           // ...primary,
-          ...colors.purple,
+          ...purple,
         },
-        grey: colors.grey,
-        error: {
-          main: colors.red[500],
-        },
-        info: {
-          main: colors.purple[500],
-        },
-        success: {
-          main: colors.green[500],
-        },
-        warning: {
-          main: colors.yellow[200],
-        },
-        common: {
-          white: '#FFF',
-          black: '#09090D',
-        },
-        divider: colors.grey[200],
-        text: {
-          primary: colors.grey[800],
-          secondary: colors.grey[600],
-        },
+        // grey: colors.grey,
+        // error: {
+        //   main: colors.red[500],
+        // },
+        // success: {
+        //   main: colors.green[500],
+        // },
+        // warning: {
+        //   main: colors.yellow[200],
+        // },
+        // common: {
+        //   white: '#FFF',
+        //   // black: '#09090D',
+        //   black: '#000000',
+        // },
+        // divider: colors.grey[200],
+        // text: {
+        //   primary: colors.grey[800],
+        //   secondary: colors.grey[600],
+        // },
       },
     },
     dark: {
@@ -159,30 +189,28 @@ const muiTheme = extendMuiTheme({
         primary: {
           // main: colors.blue[600],
           // ...primary,
-          ...colors.purple,
+          ...purple,
         },
-        grey: colors.grey,
-        error: {
-          main: colors.red[600],
-        },
-        info: {
-          main: colors.purple[600],
-        },
-        success: {
-          main: colors.green[600],
-        },
-        warning: {
-          main: colors.yellow[300],
-        },
-        common: {
-          white: '#FFF',
-          black: '#09090D',
-        },
-        divider: colors.grey[800],
-        text: {
-          primary: colors.grey[100],
-          secondary: colors.grey[300],
-        },
+        // grey: colors.grey,
+        // error: {
+        //   main: colors.red[600],
+        // },
+        // success: {
+        //   main: colors.green[600],
+        // },
+        // warning: {
+        //   main: colors.yellow[300],
+        // },
+        // common: {
+        //   white: '#FFF',
+        //   // black: '#09090D',
+        //   black: '#000',
+        // },
+        // divider: colors.grey[800],
+        // text: {
+        //   primary: colors.grey[100],
+        //   secondary: colors.grey[300],
+        // },
       },
     },
   },
@@ -193,14 +221,14 @@ const joyTheme = extendJoyTheme({
     dark: {
       palette: {
         primary: {
-          ...colors.purple,
+          ...purple,
         },
       },
     },
     light: {
       palette: {
         primary: {
-          ...colors.purple,
+          ...purple,
         },
       },
     },
@@ -210,7 +238,7 @@ const joyTheme = extendJoyTheme({
     display: 'Josefin Sans, sans-serif',
   },
   typography: {
-    display1: {
+    'display1': {
       // `--joy` is the default CSS variable prefix.
       // If you have a custom prefix, you have to use it instead.
       // For more details about the custom prefix, go to https://mui.com/joy-ui/customization/using-css-variables/#custom-prefix
@@ -219,7 +247,30 @@ const joyTheme = extendJoyTheme({
       // `Webkit*` properties must come later.
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
+      fontSize: "57px",
+      lineHeight: "64px",
+      letterSpacing: "-0.25px"
     },
+    kbd: {
+      background:
+        'linear-gradient(to top, var(--joy-palette-background-level2), var(--joy-palette-background-surface))',
+      border: '1px solid var(--joy-palette-neutral-outlinedBorder)',
+      borderRadius: 'var(--joy-radius-xs)',
+      boxShadow: 'var(--joy-shadow-sm)',
+      padding: '0.125em 0.375em',
+    },
+  },
+  fontSize: {
+    xl7: '4.5rem',
+    xl6: '3.75rem',
+    xl5: '3rem',
+    xs2: '0.625rem',
+    xs3: '0.5rem',
+  },
+  fontWeight: {
+    xs: 200,
+    xl2: 800,
+    xl3: 900,
   },
 });
 

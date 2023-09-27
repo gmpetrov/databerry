@@ -7,11 +7,13 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
+import Dropdown from '@mui/joy/Dropdown';
 import FormControl from '@mui/joy/FormControl';
 import FormHelperText from '@mui/joy/FormHelperText';
 import FormLabel from '@mui/joy/FormLabel';
 import LinearProgress from '@mui/joy/LinearProgress';
 import Menu from '@mui/joy/Menu';
+import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
@@ -70,7 +72,7 @@ const UsageGauge = (props: {
 
   return (
     <Stack width={'100%'} gap={1}>
-      <Typography level="body3" sx={{ textAlign: 'right' }}>
+      <Typography level="body-xs" sx={{ textAlign: 'right' }}>
         {`${(props.value || 0).toFixed(props.fixed || 0)} / ${props.max} ${
           props.label
         }`}
@@ -218,70 +220,6 @@ function AccountCard({}: Props) {
 
       <Card variant="outlined" size="sm">
         <Stack gap={2}>
-          <Stack
-            direction="row"
-            justifyContent={'space-between'}
-            alignItems={'start'}
-            gap={1}
-          >
-            <Button
-              onClick={openUserMenu as any}
-              id="basic-demo-button"
-              aria-controls={isMenuOpen ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={isMenuOpen ? 'true' : undefined}
-              variant="plain"
-              size={'sm'}
-              color="neutral"
-              sx={{
-                flexDirection: 'row',
-                display: 'flex',
-                gap: 1,
-                width: '100%',
-                maxWidth: '100%',
-                justifyContent: 'space-between',
-                // borderRadius: 99,
-              }}
-              className="truncate"
-              endDecorator={<ExpandMoreRoundedIcon />}
-            >
-              <Avatar
-                size="sm"
-                src={session?.data?.user?.image!}
-                sx={{
-                  ':hover': {
-                    cursor: 'pointer',
-                  },
-                }}
-              />
-
-              <Typography
-                className="truncate"
-                sx={{ maxWidth: '100%' }}
-                level="body2"
-              >
-                {session?.data?.user?.name || session?.data?.user?.email}
-              </Typography>
-            </Button>
-
-            <Menu
-              id="basic-menu"
-              anchorEl={userMenuElement}
-              open={isMenuOpen}
-              onClose={closeUserMenu}
-              aria-labelledby="basic-demo-button"
-              placement="bottom-start"
-              sx={(theme) => ({
-                zIndex: theme.zIndex.tooltip,
-              })}
-            >
-              <MenuItem>{session?.data?.user?.email}</MenuItem>
-              <Divider />
-              <MenuItem onClick={() => signOut()}>Logout</MenuItem>
-            </Menu>
-
-            <ColorSchemeToggle />
-          </Stack>
           <Stack gap={1}>
             <UsageGauge
               value={session?.data?.organization?.usage?.nbAgentQueries || 0}
@@ -334,7 +272,7 @@ function AccountCard({}: Props) {
             // color: theme.colorSchemes.light.palette.text.primary,
           })}
           startDecorator={<ArrowCircleUpRoundedIcon />}
-          variant="soft"
+          variant="solid"
         >
           Upgrade Plan
         </Button>

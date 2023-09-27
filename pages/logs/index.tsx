@@ -122,8 +122,8 @@ export default function LogsPage() {
             <InboxRoundedIcon />
           </Typography>
           <Stack>
-            <Typography level="body1">No Data</Typography>
-            <Typography level="body2">
+            <Typography level="body-md">No Data</Typography>
+            <Typography level="body-sm">
               All conversations with your agents will be visible here
             </Typography>
           </Stack>
@@ -220,7 +220,7 @@ export default function LogsPage() {
                         <Stack direction="row" justifyContent={'space-between'}>
                           <Typography>{each?.agent?.name}</Typography>
 
-                          <Typography level="body3">
+                          <Typography level="body-xs">
                             {relativeDate(each?.updatedAt)}
                           </Typography>
                         </Stack>
@@ -230,7 +230,7 @@ export default function LogsPage() {
                           alignItems={'start'}
                           gap={1}
                         >
-                          <Typography level="body2" noWrap>
+                          <Typography level="body-sm" noWrap>
                             {each?.messages?.[0]?.text}
                           </Typography>
 

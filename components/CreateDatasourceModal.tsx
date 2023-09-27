@@ -155,7 +155,7 @@ export default function CreateDatastoreModal(props: Props) {
           p: 3,
         }}
       >
-        {/* <Alert severity="info">
+        {/* <Alert severity="neutral">
           Datastores are used to store vectors reprentations of your data
           (embeddings).{' '}
           <Link href="" className="hover:underline" target="_blank">

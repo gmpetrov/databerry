@@ -166,7 +166,7 @@ function Nested() {
           >
             Select or Drop file
           </Button>
-          <Typography level="body3" textAlign={'center'} mt={2}>
+          <Typography level="body-xs" textAlign={'center'} mt={2}>
             PDF, PowerPoint, Excel, Word, Text, Markdown,
           </Typography>
           <UsageLimitModal

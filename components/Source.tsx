@@ -57,7 +57,7 @@ function SourceComponent({ source, onClick }: Props) {
       }
       endDecorator={
         <Typography
-          level="body4"
+          level="body-xs"
           variant="soft"
           color={scoreColor}
           sx={{ borderRadius: 100, ml: 1 }}

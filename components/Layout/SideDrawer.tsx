@@ -29,7 +29,7 @@ export default function SideDrawer({
           height: '100%',
           p: 2,
           boxShadow: 'lg',
-          bgcolor: 'background.surface',
+          bgcolor: 'common.surface',
         }}
       >
         {props.children}

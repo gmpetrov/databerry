@@ -82,13 +82,13 @@ export default function DatasourcesPage() {
         })}
       >
         <Stack gap={4}>
-          <Typography level="body1">
+          <Typography level="body-md">
             1. Get the API Key of one of your Datastore{' '}
           </Typography>
-          <Typography level="body1">
+          <Typography level="body-md">
             {`2. Go to Crisp's marketplace and install Chaindesk plugin`}
           </Typography>
-          <Typography level="body1">
+          <Typography level="body-md">
             3. Get the API Key of one of your Datastore{' '}
           </Typography>
         </Stack>

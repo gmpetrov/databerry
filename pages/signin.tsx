@@ -155,7 +155,7 @@ export default function SignInPage() {
                       </div>
                       <div className="relative flex justify-center ">
                         <Typography
-                          level="body3"
+                          level="body-xs"
                           className="px-2"
                           sx={{ backgroundColor: 'background.surface' }}
                         >

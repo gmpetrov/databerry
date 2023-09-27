@@ -3,7 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, Theme, useColorScheme } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Typography from '@mui/joy/Typography';
-import { SxProps } from '@mui/material';
+import type { SxProps } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React from 'react';
@@ -11,6 +11,7 @@ import React from 'react';
 import Logo from '../Logo';
 import SEO from '../SEO';
 
+import ColorSchemeToggle from './ColorSchemeToggle';
 import Header from './Header';
 import Main from './Main';
 import Navigation from './Navigation';
@@ -210,6 +211,7 @@ export default function Layout(props: Props) {
               <Divider />
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu> */}
+            <ColorSchemeToggle /> 
           </Box>
         </Header>
         <SideNav>
@@ -221,6 +223,7 @@ export default function Layout(props: Props) {
             height: '100%',
             maxHeight: '100%',
             overflowY: 'scroll',
+            backgroundColor: 'background.popup',
             ...props.mainSxProps,
           }}
         >

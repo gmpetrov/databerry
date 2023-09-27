@@ -8,9 +8,9 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Sheet from '@mui/joy/Sheet';
+import Stack from '@mui/joy/Stack';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
-import { Stack } from '@mui/material';
 import { MembershipRole, Prisma } from '@prisma/client';
 import axios from 'axios';
 import mime from 'mime-types';
@@ -239,7 +239,7 @@ function OrganizationForm({}: Props) {
   return (
     <Stack gap={2} id="team">
       <Stack>
-        <Typography level="h5">Team Settings</Typography>
+        <Typography level="title-lg">Team Settings</Typography>
       </Stack>
       <Stack sx={{ p: 2 }} gap={5}>
         <form
@@ -289,7 +289,9 @@ function OrganizationForm({}: Props) {
         </form>
 
         <Stack gap={2} sx={{ mt: 2 }}>
-          <Typography level="h6">Invite a new member to collaborate</Typography>
+          <Typography level="title-md">
+            Invite a new member to collaborate
+          </Typography>
           <form onSubmit={methods.handleSubmit(submitInvite)} className="p-2">
             <Stack gap={2}>
               <Input
@@ -312,7 +314,7 @@ function OrganizationForm({}: Props) {
       {Number(getMembershipsQuery?.data?.length) > 0 && (
         <Stack sx={{ px: 2 }} gap={1}>
           <Typography
-            level="body1"
+            level="body-md"
             fontWeight={'bold'}
             color={
               Number(getMembershipsQuery?.data?.length) >=

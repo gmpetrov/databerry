@@ -51,7 +51,7 @@ const SynchButton = ({
   const [state, setState] = useStateReducer({
     loading: false,
     buttonText: 'Sync',
-    color: 'info',
+    color: 'neutral',
   });
 
   const handleClick = React.useCallback(
@@ -264,7 +264,7 @@ export default function DatasourceTable({
               alignItems={'center'}
             >
               <FormLabel>Search for datasource (name)</FormLabel>
-              <Typography level="body2" color="primary">{`${total} result${
+              <Typography level="body-sm" color="primary">{`${total} result${
                 total > 1 ? 's' : ''
               }`}</Typography>
             </Stack>
@@ -568,12 +568,12 @@ export default function DatasourceTable({
                     <div>
                       <Typography
                         fontWeight="lg"
-                        level="body3"
+                        level="body-xs"
                         textColor="text.primary"
                       >
                         {row.customer.name}
                       </Typography>
-                      <Typography level="body3">
+                      <Typography level="body-xs">
                         {row.customer.email}
                       </Typography>
                     </div>
@@ -604,7 +604,7 @@ export default function DatasourceTable({
                       {
                         unsynched: 'neutral',
                         pending: 'primary',
-                        running: 'info',
+                        running: 'neutral',
                         synched: 'success',
                         error: 'danger',
                         usage_limit_reached: 'warning',
@@ -647,7 +647,7 @@ export default function DatasourceTable({
         >
           <i data-feather="arrow-left" />
         </IconButton>
-        <Typography level="body2" mx="auto">
+        <Typography level="body-sm" mx="auto">
           Page 1 of 10
         </Typography>
         <IconButton
@@ -738,7 +738,7 @@ export default function DatasourceTable({
         >
           <i data-feather="arrow-left" />
         </IconButton>
-        <Typography level="body2" mx="auto">
+        <Typography level="body-sm" mx="auto">
           Page 1 of 10
         </Typography>
         <IconButton
