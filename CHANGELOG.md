@@ -1,5 +1,33 @@
 # Changelog
 
+<a name="0.1.19"></a>
+## 0.1.19 (2023-09-27)
+
+### Fixed
+
+- 🐛 input file with value [[0432f71](https://github.com/gmpetrov/databerry/commit/0432f71ff80d59b632627c56ff03a917ba418359)]
+
+
+<a name="0.1.18"></a>
+## 0.1.18 (2023-09-27)
+
+### Fixed
+
+- 🐛 client side error on /settings/team [[29efd47](https://github.com/gmpetrov/databerry/commit/29efd479035e27ed07b465d3569d38f49092f623)]
+
+### Miscellaneous
+
+-  Release 0.1.17 [[2f1a91f](https://github.com/gmpetrov/databerry/commit/2f1a91f5101532c738298d29172a421aded971e2)]
+
+
+<a name="0.1.16"></a>
+## 0.1.16 (2023-09-27)
+
+### Miscellaneous
+
+- 🎸 better user settings layout [[c9930d9](https://github.com/gmpetrov/databerry/commit/c9930d9e66d519e5ca6bc77e17445f3af1967651)]
+
+
 <a name="0.1.15"></a>
 ## 0.1.15 (2023-09-27)
 

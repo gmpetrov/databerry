@@ -6,6 +6,7 @@ import Tab, { tabClasses } from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -74,10 +75,10 @@ function SettingsLayout(props: Props) {
               bgcolor: 'transparent',
               width: '100%',
             }}
-            onChange={(event, value) => {
-              //   handleChangeTab(value as string);
-              router.push(value as string);
-            }}
+            // onChange={(event, value) => {
+            //   //   handleChangeTab(value as string);
+            //   router.push(value as string);
+            // }}
           >
             <TabList
               size="sm"
@@ -114,30 +115,41 @@ function SettingsLayout(props: Props) {
                 },
               }}
             >
-              <Tab indicatorInset value={'/settings/profile'}>
-                {/* <ListItemDecorator>
+              <Link href={'/settings/profile'}>
+                <Tab indicatorInset value={'/settings/profile'}>
+                  {/* <ListItemDecorator>
                       <MessageRoundedIcon />
                     </ListItemDecorator> */}
-                Profile
-              </Tab>
-              <Tab indicatorInset value={'/settings/team'}>
-                {/* <ListItemDecorator>
+                  Profile
+                </Tab>
+              </Link>
+
+              <Link href={'/settings/team'}>
+                <Tab indicatorInset value={'/settings/team'}>
+                  {/* <ListItemDecorator>
                       <MessageRoundedIcon />
                     </ListItemDecorator> */}
-                Team
-              </Tab>
-              <Tab indicatorInset value={'/settings/billing'}>
-                {/* <ListItemDecorator>
+                  Team
+                </Tab>
+              </Link>
+
+              <Link href={'/settings/billing'}>
+                <Tab indicatorInset value={'/settings/billing'}>
+                  {/* <ListItemDecorator>
                       <RocketLaunchRoundedIcon />
                     </ListItemDecorator> */}
-                Billing
-              </Tab>
-              <Tab indicatorInset value={'/settings/api-keys'}>
-                {/* <ListItemDecorator>
+                  Billing
+                </Tab>
+              </Link>
+
+              <Link href={'/settings/api-keys'}>
+                <Tab indicatorInset value={'/settings/api-keys'}>
+                  {/* <ListItemDecorator>
                       <SettingsIcon />
                     </ListItemDecorator> */}
-                API Keys
-              </Tab>
+                  API Keys
+                </Tab>
+              </Link>
             </TabList>
           </Tabs>
         </Stack>

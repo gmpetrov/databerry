@@ -27,7 +27,6 @@ function IconInput(props: Props) {
         hidden
         accept={'image/*'}
         onChange={props.onChange}
-        defaultValue={props.value || ''}
         ref={ref as any}
       />
 

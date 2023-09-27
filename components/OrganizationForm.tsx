@@ -237,6 +237,10 @@ function OrganizationForm({}: Props) {
     });
   }, [getOrganizationQuery?.data]);
 
+  if (!getOrganizationQuery?.data) {
+    return null;
+  }
+
   return (
     <Stack gap={4} id="team">
       <SettingCard
@@ -253,7 +257,7 @@ function OrganizationForm({}: Props) {
             defaultValue={getOrganizationQuery?.data?.name!}
             disabled={!hasAdminRole(session?.roles) || state.isUpdatingOrg}
             {...updateOrgMethods.register('name')}
-          ></Input>
+          />
 
           <Button
             type="submit"
@@ -270,7 +274,7 @@ function OrganizationForm({}: Props) {
             value={getOrganizationQuery?.data?.iconUrl! || ''}
             hidden
             {...updateOrgMethods.register('iconUrl')}
-          ></Input>
+          />
 
           <IconInput
             innerIcon={<CorporateFareRoundedIcon />}

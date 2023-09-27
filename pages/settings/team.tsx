@@ -9,6 +9,12 @@ import SettingsLayout from '@app/components/SettingsLayout';
 import { withAuth } from '@app/utils/withAuth';
 
 export default function TeamSettingsPage() {
+  const { data: session } = useSession();
+
+  if (!session?.organization) {
+    return null;
+  }
+
   return (
     <Stack sx={{ maxWidth: 'md', mx: 'auto' }}>
       <OrganizationForm />
