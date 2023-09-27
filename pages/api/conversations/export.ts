@@ -40,7 +40,6 @@ async function exportConversations(
 
 handler.post(
   validate({
-    body: z.object({ userId: z.string().cuid() }),
     handler: respond(exportConversations),
   })
 );
