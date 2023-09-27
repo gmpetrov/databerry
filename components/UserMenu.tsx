@@ -33,7 +33,7 @@ function UserMenu({}: Props) {
             gap: 1,
             width: '100%',
             maxWidth: '100%',
-            justifyContent: 'space-between',
+            // justifyContent: 'space-between',
             // borderRadius: 99,
           }}
           className="truncate"
@@ -51,7 +51,7 @@ function UserMenu({}: Props) {
 
           <Typography
             className="truncate"
-            sx={{ maxWidth: '100%' }}
+            sx={{ maxWidth: '100%', mr: 'auto' }}
             level="body-sm"
           >
             {session?.user?.name || session?.user?.email}

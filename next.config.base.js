@@ -31,6 +31,16 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/account',
+        destination: '/settings/billing',
+        permanent: true,
+      },
+      {
+        source: '/settings',
+        destination: '/settings/profile',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

@@ -29,8 +29,10 @@ export type CreateDatastoreRequestSchema = z.infer<
   typeof CreateDatastoreRequestSchema
 >;
 
-export const UpdateDatastoreRequestSchema = CreateDatastoreRequestSchema.partial()
-export type UpdateDatastoreRequestSchema = z.infer<typeof UpdateDatastoreRequestSchema>
+export const UpdateDatastoreRequestSchema = CreateDatastoreRequestSchema.partial();
+export type UpdateDatastoreRequestSchema = z.infer<
+  typeof UpdateDatastoreRequestSchema
+>;
 
 export const UpsertDatasourceRequestSchema = z.object({
   id: z
@@ -214,10 +216,24 @@ export const ChatResponse = z.object({
 export type ChatResponse = z.infer<typeof ChatResponse>;
 
 export const CreateAgentSchema = z.object({
-  id: z.string().trim().cuid().optional(),
-  name: z.string().trim().optional(),
-  description: z.string().trim().min(1),
-  prompt: z.string().trim().optional().nullable(),
+  id: z
+    .string()
+    .trim()
+    .cuid()
+    .optional(),
+  name: z
+    .string()
+    .trim()
+    .optional(),
+  description: z
+    .string()
+    .trim()
+    .min(1),
+  prompt: z
+    .string()
+    .trim()
+    .optional()
+    .nullable(),
   modelName: z
     .nativeEnum(AgentModelName)
     .default(AgentModelName.gpt_3_5_turbo)
@@ -280,8 +296,8 @@ export const CreateAgentSchema = z.object({
 
 export type CreateAgentSchema = z.infer<typeof CreateAgentSchema>;
 
-export const UpdateAgentSchema = CreateAgentSchema.partial()
-export type UpdateAgentSchema = z.infer<typeof UpdateAgentSchema>
+export const UpdateAgentSchema = CreateAgentSchema.partial();
+export type UpdateAgentSchema = z.infer<typeof UpdateAgentSchema>;
 
 export const AcceptedDatasourceMimeTypes = [
   'text/csv',
@@ -338,3 +354,21 @@ export const OrganizationInviteSchema = z.object({
   email: z.string().email(),
 });
 export type OrganizationInviteSchema = z.infer<typeof OrganizationInviteSchema>;
+
+export const UpdateUserProfileSchema = z.object({
+  email: z.string().email(),
+  name: z
+    .string()
+    .trim()
+    .min(1)
+    .max(50),
+  // iconUrl: z.union([
+  //   z
+  //     .string()
+  //     .url()
+  //     .nullish(),
+  //   z.literal(''),
+  // ]),
+});
+
+export type UpdateUserProfileSchema = z.infer<typeof UpdateUserProfileSchema>;

@@ -81,7 +81,7 @@ export default function SubscriptionSuccessPage() {
               </Stack>
             </Stack>
 
-            <Link href={RouteNames.ACCOUNT}>
+            <Link href={RouteNames.BILLING}>
               <Button
                 endDecorator={<ArrowForwardRoundedIcon />}
                 color="primary"

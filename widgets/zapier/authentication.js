@@ -21,7 +21,7 @@ module.exports = {
       label: 'Chaindesk API Key',
       type: 'password',
       helpText:
-        'Your Chaindesk API Key can be found here https://app.chaindesk.ai/account',
+        'Your Chaindesk API Key can be found here https://app.chaindesk.ai/settings/api-keys',
     },
   ],
   customConfig: {},

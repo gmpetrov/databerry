@@ -165,7 +165,7 @@ export default function CrispConfig(props: { agent: Agent }) {
                       <Stack>
                         You can find your API Key in your Chaindesk{' '}
                         <Link
-                          href={'https://app.chaindesk.ai/account'}
+                          href={'https://app.chaindesk.ai/settings/api-keys'}
                           target="_blank"
                         >
                           <Typography color="primary">

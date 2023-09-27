@@ -40,7 +40,7 @@ const tiers = [
   {
     name: 'Discover',
     id: 'tier-free',
-    href: 'https://app.chaindesk.ai/account',
+    href: 'https://app.chaindesk.ai/settings/billing',
     price: { monthly: '$0', annually: '$0' },
     description: 'The essentials to get started quickly.',
     features: [
@@ -64,7 +64,7 @@ const tiers = [
   {
     name: 'Startup',
     id: 'tier-startup',
-    href: 'https://app.chaindesk.ai/account',
+    href: 'https://app.chaindesk.ai/settings/billing',
     price: { monthly: '$49', annually: '$490' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
@@ -93,7 +93,7 @@ const tiers = [
   {
     name: 'Pro',
     id: 'tier-pro',
-    href: 'https://app.chaindesk.ai/account',
+    href: 'https://app.chaindesk.ai/settings/billing',
     price: { monthly: '$99', annually: '$990' },
     description: 'Dedicated support and for your company.',
     features: [
@@ -120,7 +120,7 @@ const tiers = [
   {
     name: 'Enterprise',
     id: 'tier-enterprise',
-    href: 'https://app.chaindesk.ai/account',
+    href: 'https://app.chaindesk.ai/settings/billing',
     price: { monthly: '$499', annually: '$4990' },
     description:
       'You’ve got a huge amount of assets but it’s not enough. To the moon.',

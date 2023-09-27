@@ -35,6 +35,7 @@ import { hasAdminRole } from '@app/utils/has-oneof-roles';
 import { fetcher } from '@app/utils/swr-fetcher';
 
 import IconInput from './ui/IconInput';
+import SettingCard from './ui/SettingCard';
 import Input from './Input';
 
 type Props = {};
@@ -237,13 +238,13 @@ function OrganizationForm({}: Props) {
   }, [getOrganizationQuery?.data]);
 
   return (
-    <Stack gap={2} id="team">
-      <Stack>
-        <Typography level="title-lg">Team Settings</Typography>
-      </Stack>
-      <Stack sx={{ p: 2 }} gap={5}>
+    <Stack gap={4} id="team">
+      <SettingCard
+        title="Team Settings"
+        description="Personalize your team name and icon."
+      >
         <form
-          className="space-y-4"
+          className="flex flex-col space-y-4"
           onSubmit={updateOrgMethods.handleSubmit(handleUpdateOrg)}
         >
           <Input
@@ -266,7 +267,7 @@ function OrganizationForm({}: Props) {
 
           <Input
             control={updateOrgMethods.control}
-            value={getOrganizationQuery?.data?.iconUrl!}
+            value={getOrganizationQuery?.data?.iconUrl! || ''}
             hidden
             {...updateOrgMethods.register('iconUrl')}
           ></Input>
@@ -287,99 +288,100 @@ function OrganizationForm({}: Props) {
             loading={state.isUpdatingOrg}
           />
         </form>
+      </SettingCard>
 
-        <Stack gap={2} sx={{ mt: 2 }}>
-          <Typography level="title-md">
-            Invite a new member to collaborate
-          </Typography>
-          <form onSubmit={methods.handleSubmit(submitInvite)} className="p-2">
-            <Stack gap={2}>
-              <Input
-                control={methods.control}
-                {...methods.register('email')}
-                label="Email"
-                endDecorator={
-                  <Button type="submit" loading={state.isSubmitting}>
-                    Invite
-                  </Button>
-                }
-              />
+      <SettingCard
+        title="Team Members"
+        description="Invite a new member to collaborate"
+      >
+        <form onSubmit={methods.handleSubmit(submitInvite)} className="p-2">
+          <Stack gap={2}>
+            <Input
+              control={methods.control}
+              {...methods.register('email')}
+              label="Email"
+              endDecorator={
+                <Button type="submit" loading={state.isSubmitting}>
+                  Invite
+                </Button>
+              }
+            />
 
-              {/* <Button sx={{ ml: 'auto' }}>Invite</Button> */}
-            </Stack>
-          </form>
-        </Stack>
-      </Stack>
+            {/* <Button sx={{ ml: 'auto' }}>Invite</Button> */}
+          </Stack>
+        </form>
 
-      {Number(getMembershipsQuery?.data?.length) > 0 && (
-        <Stack sx={{ px: 2 }} gap={1}>
-          <Typography
-            level="body-md"
-            fontWeight={'bold'}
-            color={
-              Number(getMembershipsQuery?.data?.length) >=
+        {Number(getMembershipsQuery?.data?.length) > 0 && (
+          <Stack sx={{ px: 2 }} gap={1}>
+            <Typography
+              level="body-md"
+              fontWeight={'bold'}
+              color={
+                Number(getMembershipsQuery?.data?.length) >=
+                accountConfig[session?.organization?.currentPlan!]?.limits
+                  ?.maxSeats
+                  ? 'danger'
+                  : 'success'
+              }
+            >{`${getMembershipsQuery?.data?.length}/${
               accountConfig[session?.organization?.currentPlan!]?.limits
                 ?.maxSeats
-                ? 'danger'
-                : 'success'
-            }
-          >{`${getMembershipsQuery?.data?.length}/${
-            accountConfig[session?.organization?.currentPlan!]?.limits?.maxSeats
-          } seats used`}</Typography>
-          <Sheet sx={{ borderRadius: 'md' }}>
-            <Table variant="outlined">
-              <thead>
-                <tr>
-                  <th style={{ width: '40%' }}>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {getMembershipsQuery?.data?.map((member) => (
-                  <tr key={member?.id}>
-                    <td>{member?.invitedEmail || member?.user?.email}</td>
-                    <td>
-                      <Chip size="sm" variant="soft" color="neutral">
-                        {member?.role}
-                      </Chip>
-                    </td>
-                    <td>
-                      <Chip
-                        size={'sm'}
-                        variant="soft"
-                        color={member?.userId ? 'success' : 'warning'}
-                      >
-                        {member?.userId ? 'Joined' : 'Pending'}
-                      </Chip>
-                    </td>
-                    <td>
-                      <IconButton
-                        size="sm"
-                        color="danger"
-                        variant="plain"
-                        onClick={() => handleDeleteMember(member?.id)}
-                        disabled={
-                          state.isDeletingMember ||
-                          member.role === MembershipRole.OWNER ||
-                          !hasAdminRole(session?.roles)
-                        }
-                      >
-                        {state.isDeletingMember ? (
-                          <CircularProgress size="sm" />
-                        ) : (
-                          <DeleteIcon />
-                        )}
-                      </IconButton>
-                    </td>
+            } seats used`}</Typography>
+            <Sheet sx={{ borderRadius: 'md' }}>
+              <Table variant="outlined">
+                <thead>
+                  <tr>
+                    <th style={{ width: '40%' }}>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Sheet>
-        </Stack>
-      )}
+                </thead>
+                <tbody>
+                  {getMembershipsQuery?.data?.map((member) => (
+                    <tr key={member?.id}>
+                      <td>{member?.invitedEmail || member?.user?.email}</td>
+                      <td>
+                        <Chip size="sm" variant="soft" color="neutral">
+                          {member?.role}
+                        </Chip>
+                      </td>
+                      <td>
+                        <Chip
+                          size={'sm'}
+                          variant="soft"
+                          color={member?.userId ? 'success' : 'warning'}
+                        >
+                          {member?.userId ? 'Joined' : 'Pending'}
+                        </Chip>
+                      </td>
+                      <td>
+                        <IconButton
+                          size="sm"
+                          color="danger"
+                          variant="plain"
+                          onClick={() => handleDeleteMember(member?.id)}
+                          disabled={
+                            state.isDeletingMember ||
+                            member.role === MembershipRole.OWNER ||
+                            !hasAdminRole(session?.roles)
+                          }
+                        >
+                          {state.isDeletingMember ? (
+                            <CircularProgress size="sm" />
+                          ) : (
+                            <DeleteIcon />
+                          )}
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Sheet>
+          </Stack>
+        )}
+      </SettingCard>
 
       {/* <stripe-pricing-table
         pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_SEAT_ID}

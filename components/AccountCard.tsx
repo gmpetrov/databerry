@@ -262,7 +262,7 @@ function AccountCard({}: Props) {
         </Stack>
       </Card>
 
-      <Link href={RouteNames.ACCOUNT} style={{ width: '100%' }}>
+      <Link href={RouteNames.BILLING} style={{ width: '100%' }}>
         <Button
           size="sm"
           color="warning"
