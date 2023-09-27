@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.15"></a>
+## 0.1.15 (2023-09-27)
+
+### Fixed
+
+- 🐛 empty message when conversation is new [[b65ab24](https://github.com/gmpetrov/databerry/commit/b65ab245efb1ce62d98ab96474b29403e14695a8)]
+- 🐛 fix export conversations [[e50f2a4](https://github.com/gmpetrov/databerry/commit/e50f2a44423c8882d520c018d5119fd98b7590d0)]
+
+### Miscellaneous
+
+- 🤖 publish new version chat-bubble widget [[f3c82ed](https://github.com/gmpetrov/databerry/commit/f3c82ed58125fccef5b0a0d1575c03ff8fe3533a)]
+- 🎸 upgrade to Joy UI v5 [[fbda166](https://github.com/gmpetrov/databerry/commit/fbda166287ec8032e4b99103685ee8ad640b43d6)]
+
+
 <a name="0.1.14"></a>
 ## 0.1.14 (2023-09-26)
 
