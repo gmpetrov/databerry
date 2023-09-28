@@ -9,7 +9,8 @@ const agentToolFormat = (
 
   if (tool.type === ToolType.datastore) {
     format = {
-      id: tool.datastoreId,
+      id: tool.id,
+      datastoreId: tool.datastoreId,
       name: tool?.datastore?.name,
       description: tool?.datastore?.description,
     };

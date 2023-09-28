@@ -246,57 +246,61 @@ function OrganizationForm({}: Props) {
       <SettingCard
         title="Team Settings"
         description="Personalize your team name and icon."
+        disableSubmitButton
       >
         <form
-          className="flex flex-col space-y-4"
+          className="flex flex-col"
           onSubmit={updateOrgMethods.handleSubmit(handleUpdateOrg)}
         >
           <Input
             control={updateOrgMethods.control}
-            label="Team Name"
-            defaultValue={getOrganizationQuery?.data?.name!}
-            disabled={!hasAdminRole(session?.roles) || state.isUpdatingOrg}
-            {...updateOrgMethods.register('name')}
-          />
-
-          <Button
-            type="submit"
-            size="sm"
-            sx={{ ml: 'auto' }}
-            disabled={!hasAdminRole(session?.roles)}
-            loading={state.isUpdatingOrg}
-          >
-            Update
-          </Button>
-
-          <Input
-            control={updateOrgMethods.control}
             value={getOrganizationQuery?.data?.iconUrl! || ''}
             hidden
+            sx={{ height: 0 }}
             {...updateOrgMethods.register('iconUrl')}
           />
 
-          <IconInput
-            innerIcon={<CorporateFareRoundedIcon />}
-            defaultIconUrl={getOrganizationQuery?.data?.iconUrl!}
-            value={
-              getOrganizationQuery?.data?.iconUrl
-                ? `${
-                    getOrganizationQuery?.data?.iconUrl
-                  }?timestamp=${Date.now()}`
-                : ''
-            }
-            onChange={handleUploadIcon}
-            onDelete={handleDeleteIcon}
-            disabled={!hasAdminRole(session?.roles)}
-            loading={state.isUpdatingOrg}
-          />
+          <Stack gap={2}>
+            <IconInput
+              innerIcon={<CorporateFareRoundedIcon />}
+              defaultIconUrl={getOrganizationQuery?.data?.iconUrl!}
+              value={
+                getOrganizationQuery?.data?.iconUrl
+                  ? `${
+                      getOrganizationQuery?.data?.iconUrl
+                    }?timestamp=${Date.now()}`
+                  : ''
+              }
+              onChange={handleUploadIcon}
+              onDelete={handleDeleteIcon}
+              disabled={!hasAdminRole(session?.roles)}
+              loading={state.isUpdatingOrg}
+            />
+            <Input
+              control={updateOrgMethods.control}
+              label="Team Name"
+              defaultValue={getOrganizationQuery?.data?.name!}
+              disabled={!hasAdminRole(session?.roles) || state.isUpdatingOrg}
+              {...updateOrgMethods.register('name')}
+            />
+
+            <Button
+              type="submit"
+              size="sm"
+              sx={{ ml: 'auto' }}
+              disabled={!hasAdminRole(session?.roles)}
+              loading={state.isUpdatingOrg}
+            >
+              Update
+            </Button>
+          </Stack>
         </form>
       </SettingCard>
 
       <SettingCard
         title="Team Members"
         description="Invite a new member to collaborate"
+        disableSubmitButton
       >
         <form onSubmit={methods.handleSubmit(submitInvite)} className="p-2">
           <Stack gap={2}>

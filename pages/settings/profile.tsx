@@ -66,13 +66,15 @@ export default function ProfileSettingsPage() {
       <SettingCard
         title="Profile Settings"
         description="Your personal information and settings."
-        sxProps={{ maxWidth: 'md', mx: 'auto', width: '100%' }}
-        onSubmit={() => updateProfile(methods.getValues())}
-        submitButtonText="Update"
-        submitButtonLoading={state.isUpdatingProfile}
-        submitButtonDisabled={
-          !methods.formState?.isValid || !methods?.formState?.isDirty
-        }
+        cardProps={{
+          sx: { maxWidth: 'md', mx: 'auto', width: '100%' },
+        }}
+        submitButtonProps={{
+          loading: state.isUpdatingProfile,
+          disabled: !methods.formState?.isValid || !methods?.formState?.isDirty,
+          children: 'Update',
+          onClick: () => updateProfile(methods.getValues()),
+        }}
       >
         <form
           className="space-y-4"
