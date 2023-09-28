@@ -3,7 +3,6 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {
-  Alert,
   Box,
   Breadcrumbs,
   Button,
@@ -12,6 +11,7 @@ import {
   Link as JoyLink,
   Modal,
   Sheet,
+  Stack,
   Typography,
 } from '@mui/joy';
 import { Agent, Prisma } from '@prisma/client';
@@ -25,6 +25,8 @@ import * as React from 'react';
 import useSWR from 'swr';
 
 import AgentForm from '@app/components/AgentForm';
+import GeneralInput from '@app/components/AgentInputs/GeneralInput';
+import ToolsInput from '@app/components/AgentInputs/ToolsInput';
 import AgentTable from '@app/components/AgentTable';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
@@ -36,13 +38,6 @@ import { withAuth } from '@app/utils/withAuth';
 
 import { getAgents } from '../api/agents';
 import { getDatastores } from '../api/datastores';
-
-const CreateDatastoreModal = dynamic(
-  () => import('@app/components/CreateDatastoreModal'),
-  {
-    ssr: false,
-  }
-);
 
 export default function AgentsPage() {
   const router = useRouter();
@@ -190,7 +185,27 @@ export default function AgentsPage() {
                 router.push(`${RouteNames.AGENTS}/${agent.id}`);
               }
             }}
-          />
+          >
+            {({ mutation }) => (
+              <Stack gap={4}>
+                <GeneralInput />
+
+                <ToolsInput />
+
+                <Button
+                  type="submit"
+                  variant="solid"
+                  color="primary"
+                  loading={mutation.isMutating}
+                  sx={{ ml: 'auto', mt: 2 }}
+                  // disabled={!methods.formState.isValid}
+                  // startDecorator={<SaveRoundedIcon />}
+                >
+                  {'Create'}
+                </Button>
+              </Stack>
+            )}
+          </AgentForm>
         </Sheet>
       </Modal>
       <UsageLimitModal

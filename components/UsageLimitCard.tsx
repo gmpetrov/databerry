@@ -56,7 +56,7 @@ const UsageLimitCard = ({ title, description, handleClose }: Props) => {
           <Button
             endDecorator={<ArrowForwardRoundedIcon />}
             color="success"
-            variant="outlined"
+            variant="solid"
           >
             Upgrade Plan
           </Button>

@@ -258,8 +258,15 @@ export const CreateAgentSchema = z.object({
   tools: z
     .array(
       z.object({
-        id: z.string().cuid(),
+        id: z
+          .string()
+          .cuid()
+          .optional(),
         type: z.nativeEnum(ToolType),
+        datastoreId: z
+          .string()
+          .cuid()
+          .optional(),
         name: z
           .string()
           .trim()

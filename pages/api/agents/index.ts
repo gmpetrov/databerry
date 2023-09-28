@@ -76,13 +76,13 @@ export const createAgent = async (
             type: tool.type,
             ...(tool.type === ToolType.datastore
               ? {
-                datastoreId: tool.id,
-              }
+                  datastoreId: tool.datastoreId,
+                }
               : {}),
           })),
         },
       },
-    }
+    },
   });
 };
 

@@ -1,57 +1,54 @@
 import { Button, CardOverflow, Typography } from '@mui/joy';
 import { Box, Card, CardActions, Divider, Stack } from '@mui/joy';
-import { SxProps } from '@mui/joy/styles/types';
-import React from 'react';
+import React, { ComponentProps, forwardRef } from 'react';
 
 type Props = {
-  sxProps?: SxProps;
   children: React.ReactNode;
   title?: string;
   description?: string;
-  submitButtonDisabled?: boolean;
-  onSubmit?: any;
-  submitButtonText?: string;
-  submitButtonLoading?: boolean;
+  disableSubmitButton?: boolean;
+
+  cardProps?: ComponentProps<typeof Card>;
+  submitButtonProps?: ComponentProps<typeof Button>;
 };
 
-function SettingCard(props: Props) {
+export default forwardRef(function SettingCard(props: Props, ref) {
   return (
-    <Card
-      sx={{
-        ...props?.sxProps,
-      }}
-    >
-      <Box sx={{ mb: 1 }}>
-        {props.title && <Typography level="title-md">{props.title}</Typography>}
-        {props.description && (
-          <Typography level="body-sm">{props.description}</Typography>
-        )}
-      </Box>
-
-      <Divider />
+    <Card {...props.cardProps} ref={ref as any}>
+      {(props.title || props.description) && (
+        <CardOverflow
+          sx={{ borderBottom: '1px solid', borderColor: 'divider', p: 2 }}
+        >
+          <Box sx={{ mb: 1 }}>
+            {props.title && (
+              <Typography level="title-md">{props.title}</Typography>
+            )}
+            {props.description && (
+              <Typography level="body-sm">{props.description}</Typography>
+            )}
+          </Box>
+        </CardOverflow>
+      )}
       <Stack spacing={2} sx={{ my: 1 }}>
         {props.children}
       </Stack>
-      {props.onSubmit && (
+      {!props.disableSubmitButton && (
         <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
           <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
             {/* <Button size="sm" variant="outlined" color="neutral">
             Cancel
           </Button> */}
             <Button
-              loading={props.submitButtonLoading}
-              disabled={props.submitButtonDisabled}
+              type="submit"
               size="sm"
               variant="solid"
-              onClick={props.onSubmit}
+              {...props.submitButtonProps}
             >
-              {props.submitButtonText || 'Submit'}
+              {props?.submitButtonProps?.children || 'Submit'}
             </Button>
           </CardActions>
         </CardOverflow>
       )}
     </Card>
   );
-}
-
-export default SettingCard;
+});

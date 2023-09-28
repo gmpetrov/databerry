@@ -103,7 +103,10 @@ export default function ApiKeysPage() {
         <SettingCard
           title="API Keys"
           description="Use the api key to access the Chaindesk API"
-          sxProps={{ maxWidth: 'md', mx: 'auto' }}
+          cardProps={{
+            sx: { maxWidth: 'md', mx: 'auto' },
+          }}
+          disableSubmitButton
         >
           <Stack direction={'column'} gap={2} mt={2}>
             <Alert

@@ -60,7 +60,7 @@ function SettingsLayout(props: Props) {
             position: 'sticky',
             top: -16,
             backgroundColor: 'background.popup',
-            zIndex: 9999,
+            zIndex: 999,
           }}
         >
           <Tabs
