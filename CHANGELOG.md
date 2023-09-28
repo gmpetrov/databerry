@@ -1,5 +1,16 @@
 # Changelog
 
+<a name="0.1.17"></a>
+## 0.1.17 (2023-09-28)
+
+### Miscellaneous
+
+- 🎸 refacto agent settings ([#168](https://github.com/gmpetrov/databerry/issues/168)) [[c287625](https://github.com/gmpetrov/databerry/commit/c28762594c08625782c0efc2fa5bc0cb9583fc0c)]
+- 🤖 import typing [[2880965](https://github.com/gmpetrov/databerry/commit/2880965fa4da8131a68461ceec8d2f1f893b7303)]
+- 🤖 get app version from next/config [[9d8a6c9](https://github.com/gmpetrov/databerry/commit/9d8a6c92ffa477eb35f649ce3e7535affc9e6bc5)]
+-  clean changelog [[c9540db](https://github.com/gmpetrov/databerry/commit/c9540db1050136cdad11ad5f9ba668e86446822f)]
+
+
 <a name="0.1.16"></a>
 ## 0.1.16 (2023-09-27)
 
