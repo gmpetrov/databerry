@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.18"></a>
+## 0.1.18 (2023-09-28)
+
+### Fixed
+
+- 🐛 deep navigation active state [[dabee54](https://github.com/gmpetrov/databerry/commit/dabee545b290817ce11733503f1472f98c446eb7)]
+
+
 <a name="0.1.17"></a>
 ## 0.1.17 (2023-09-28)
 
