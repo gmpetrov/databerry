@@ -123,14 +123,14 @@ export default function Navigation() {
         label: 'Agents',
         route: RouteNames.AGENTS,
         icon: <SmartToyRoundedIcon fontSize="md" />,
-        active: router.route === RouteNames.AGENTS,
+        active: router.route.startsWith(RouteNames.AGENTS),
         isExperimental: false,
       },
       {
         label: 'Datastores',
         route: RouteNames.DATASTORES,
         icon: <StorageRoundedIcon fontSize="md" />,
-        active: router.route === RouteNames.DATASTORES,
+        active: router.route.startsWith(RouteNames.DATASTORES),
       },
       {
         label: 'Chat',
