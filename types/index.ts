@@ -17,6 +17,7 @@ export enum RouteNames {
   MAINTENANCE = '/maintenance',
   SETTINGS = '/settings',
   BILLING = '/settings/billing',
+  PROFILE = '/settings/profile',
   APPS = '/apps',
   CHAT_SITE = '/products/crisp-plugin',
   SLACK_BOT = '/products/slack-bot',

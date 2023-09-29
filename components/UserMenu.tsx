@@ -7,8 +7,11 @@ import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import React from 'react';
+
+import { RouteNames } from '@app/types';
 
 type Props = {};
 
@@ -64,7 +67,9 @@ function UserMenu({}: Props) {
             }
           }
         >
-          <MenuItem>{session?.user?.email}</MenuItem>
+          <Link href={RouteNames.PROFILE}>
+            <MenuItem>{session?.user?.email}</MenuItem>
+          </Link>
           <Divider />
           <MenuItem onClick={() => signOut()}>Logout</MenuItem>
         </Menu>
