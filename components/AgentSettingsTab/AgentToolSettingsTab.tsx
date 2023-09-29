@@ -1,14 +1,17 @@
+import Checkbox from '@mui/joy/Checkbox';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
 import Stack from '@mui/joy/Stack';
+import Typography from '@mui/joy/Typography';
 import { Agent, AppDatasource as Datasource } from '@prisma/client';
 import router from 'next/router';
 import React from 'react';
 
+import AgentForm from '@app/components/AgentForm';
+import ToolsInput from '@app/components/AgentInputs/ToolsInput';
+import ConnectForm from '@app/components/ConnectForm';
+import SettingCard from '@app/components/ui/SettingCard';
 import { CreateAgentSchema } from '@app/types/dtos';
-
-import AgentForm from '../AgentForm';
-import ToolsInput from '../AgentInputs/ToolsInput';
-import ConnectForm from '../ConnectForm';
-import SettingCard from '../ui/SettingCard';
 
 type Props = {
   defaultValues?: CreateAgentSchema;
@@ -24,8 +27,8 @@ export default function AgentToolSettingsTab(props: Props) {
           <ConnectForm<CreateAgentSchema>>
             {({ formState }) => (
               <SettingCard
-                title="Datastore"
-                description="The Datastore your Agent can access."
+                title="Tools"
+                description="Give tools to your Agent to make it smarter"
                 submitButtonProps={{
                   loading: mutation.isMutating,
                   disabled: !formState.isDirty || !formState.isValid,
@@ -35,6 +38,42 @@ export default function AgentToolSettingsTab(props: Props) {
                 <ToolsInput />
               </SettingCard>
             )}
+          </ConnectForm>
+        )}
+      </AgentForm>
+      <AgentForm agentId={router.query.agentId as string}>
+        {({ query, mutation }) => (
+          <ConnectForm<CreateAgentSchema>>
+            {({ formState, register, watch }) => {
+              const includeSources = watch('includeSources');
+              return (
+                <SettingCard
+                  title="Sources"
+                  description="View content pulled from your Datastores to generate answers."
+                  submitButtonProps={{
+                    loading: mutation.isMutating,
+                    disabled: !formState.isDirty || !formState.isValid,
+                    children: 'Save',
+                  }}
+                >
+                  <Stack direction="row" mb={2}>
+                    <FormControl className="flex flex-row space-x-4">
+                      <Checkbox
+                        {...register('includeSources')}
+                        checked={!!includeSources}
+                      />
+                      <div className="flex flex-col">
+                        <FormLabel>Include sources in Agent Answer</FormLabel>
+                        <Typography level="body-xs">
+                          When activated, your agent will include sources used
+                          to generate the answer.
+                        </Typography>
+                      </div>
+                    </FormControl>
+                  </Stack>
+                </SettingCard>
+              );
+            }}
           </ConnectForm>
         )}
       </AgentForm>

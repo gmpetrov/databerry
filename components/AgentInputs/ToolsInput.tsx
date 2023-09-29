@@ -1,12 +1,12 @@
 import AddIcon from '@mui/icons-material/Add';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import Alert from '@mui/joy/Alert';
 import Button from '@mui/joy/Button';
-import Checkbox from '@mui/joy/Checkbox';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
+import Card from '@mui/joy/Card';
+import Chip from '@mui/joy/Chip';
+import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
@@ -15,13 +15,15 @@ import Typography from '@mui/joy/Typography';
 import { AppDatasource as Datasource, Prisma, ToolType } from '@prisma/client';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
 
+import useModal from '@app/hooks/useModal';
 import { getDatastores } from '@app/pages/api/datastores';
 import { RouteNames } from '@app/types';
 import { CreateAgentSchema } from '@app/types/dtos';
+import { createTool, NormalizedTool } from '@app/utils/agent-tool-format';
 import { fetcher } from '@app/utils/swr-fetcher';
 type Props = {};
 
@@ -32,18 +34,69 @@ const CreateDatastoreModal = dynamic(
   }
 );
 
+type ToolCardProps = Partial<NormalizedTool> & {
+  children?: React.ReactNode;
+  onClick?: any;
+  link?: string;
+};
+
+const ToolCard = (props: ToolCardProps) => {
+  return (
+    <Card
+      variant="outlined"
+      sx={{ borderRadius: 10, width: '100%' }}
+      size="sm"
+      onClick={props.onClick}
+    >
+      <Stack direction={'row'} alignItems={'center'} gap={2}>
+        {props.children}
+
+        <Stack direction={'column'} spacing={0} width={'100%'}>
+          <Stack
+            direction="row"
+            spacing={2}
+            justifyContent={'space-between'}
+            alignItems={'center'}
+          >
+            <Stack sx={{ minWidth: 0 }}>
+              {props.link ? (
+                <Link href={props.link} className="underline">
+                  <Typography level="body-md">{props.name}</Typography>
+                </Link>
+              ) : (
+                <Typography level="body-md">{props.name}</Typography>
+              )}
+            </Stack>
+            {props.type && (
+              <Stack ml="auto">
+                <Chip variant="soft" size="md" color="primary">
+                  {props.type}
+                </Chip>
+              </Stack>
+            )}
+          </Stack>
+          <Typography className="truncate" level="body-sm">
+            {props.description}
+          </Typography>
+        </Stack>
+      </Stack>
+    </Card>
+  );
+};
+
 function ToolsInput({}: Props) {
   const { watch, setValue, register } = useFormContext<CreateAgentSchema>();
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] = useState(
     false
   );
 
+  const newDatastoreModal = useModal();
+
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
   >('/api/datastores', fetcher);
 
   const tools = watch('tools') || [];
-  const includeSources = watch('includeSources');
 
   return (
     <Stack gap={1}>
@@ -58,80 +111,113 @@ function ToolsInput({}: Props) {
         </Alert>
       )}
 
-      <Stack direction="row" width="100%" gap={1}>
-        {tools?.length > 0 && (
-          <IconButton
-            color="neutral"
-            variant="outlined"
-            onClick={(e) => {
-              setValue('tools', [], {
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-            }}
+      <Stack direction={'row'} gap={1} flexWrap={'wrap'}>
+        {tools.map((tool) => (
+          <ToolCard
+            key={tool.id}
+            id={tool.id}
+            type={tool.type}
+            name={tool.name!}
+            description={tool.description!}
+            link={`${RouteNames.DATASTORES}/${tool.datastoreId}`}
           >
-            <DeleteRoundedIcon />
-          </IconButton>
-        )}
-
-        <Select
-          sx={{ width: '100%' }}
-          value={tools[0]?.datastoreId || ''}
-          placeholder="Choose a Datastore"
-          onChange={(_, value) => {
-            const datastore = getDatastoresQuery?.data?.find(
-              (one) => one.id === value
-            );
-
-            if (datastore) {
-              setValue(
-                'tools',
-                [
+            <IconButton
+              variant="plain"
+              color="danger"
+              size="sm"
+              onClick={() => {
+                setValue(
+                  'tools',
+                  tools.filter((each) => each.datastoreId !== tool.datastoreId),
                   {
-                    datastoreId: datastore.id,
-                    type: ToolType.datastore,
-                  },
-                ],
-                {
-                  shouldDirty: true,
-                  shouldValidate: true,
-                }
-              );
-            }
-
-            // const isAgent = getAgentsQuery?.data?.find(
-            //   (one) => one.id === value
-            // );
-            // setState({
-            //   currentChatInstance: {
-            //     id: value as string,
-            //     type: isAgent ? 'agent' : 'datastore',
-            //   },
-            // });
-          }}
-        >
-          {/* <Typography level="body-sm" sx={{ pl: 1 }}>
-              Agents:
-            </Typography> */}
-          {getDatastoresQuery.data?.map((datastore) => (
-            <Option key={datastore.id} value={datastore.id}>
-              {datastore.name}
-            </Option>
-          ))}
-          {/* <Divider sx={{ my: 2 }}></Divider>
-            <Typography level="body-sm" sx={{ pl: 1 }}>
-              Datastores:
-            </Typography>
-            {getDatastoresQuery?.data?.map((datastore) => (
-              <Option key={datastore.id} value={datastore.id}>
-                {datastore.name}
-                </Option>
-              ))} */}
-        </Select>
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  }
+                );
+              }}
+            >
+              <RemoveCircleOutlineRoundedIcon />
+            </IconButton>
+          </ToolCard>
+        ))}
       </Stack>
 
-      <Stack direction={'row'} gap={1}>
-        {tools?.length === 0 && (
+      <Divider sx={{ my: 2 }} />
+
+      <ToolCard
+        id="42"
+        name={'Datastore'}
+        description={'Connect custom data to your Agent'}
+      >
+        <IconButton
+          size="sm"
+          variant="plain"
+          color="success"
+          onClick={() => {
+            newDatastoreModal.open();
+          }}
+        >
+          <AddCircleOutlineRoundedIcon />
+        </IconButton>
+      </ToolCard>
+
+      <newDatastoreModal.component
+        title="Datastore"
+        description="Connect a Datastore to your Agent."
+        dialogProps={{
+          sx: {
+            maxWidth: 'sm',
+            height: 'auto',
+          },
+        }}
+      >
+        <Stack direction="row" width="100%" gap={1}>
+          <Select
+            sx={{ width: '100%' }}
+            // value={tools[0]?.datastoreId || ''}
+            placeholder="Choose a Datastore"
+            onChange={(_, value) => {
+              const datastore = getDatastoresQuery?.data?.find(
+                (one) => one.id === value
+              );
+
+              if (datastore) {
+                setValue(
+                  'tools',
+                  [
+                    ...tools,
+                    createTool({
+                      type: ToolType.datastore,
+                      datastoreId: datastore.id,
+                      name: datastore?.name,
+                      description: datastore?.description!,
+                    }),
+                  ],
+                  {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  }
+                );
+
+                newDatastoreModal.close();
+              }
+            }}
+          >
+            {getDatastoresQuery.data
+              ?.filter(
+                // Don't show already selected datastores
+                (each) => !tools.find((one) => one.datastoreId === each.id)
+              )
+              ?.map((datastore) => (
+                <Option key={datastore.id} value={datastore.id}>
+                  {datastore.name}
+                </Option>
+              ))}
+          </Select>
+        </Stack>
+
+        <Stack direction={'row'} gap={1}>
+          {/* {tools?.length === 0 && ( */}
           <Button
             sx={{ mr: 'auto' }}
             variant="plain"
@@ -142,55 +228,25 @@ function ToolsInput({}: Props) {
           >
             Create a Datastore
           </Button>
-        )}
-
-        {tools?.[0]?.datastoreId && (
-          <Link
-            href={`${RouteNames.DATASTORES}/${tools?.[0]?.datastoreId}`}
-            style={{ marginLeft: 'auto' }}
-          >
-            <Button
-              variant="plain"
-              endDecorator={<ArrowForwardRoundedIcon />}
-              size="sm"
-            >
-              Go to Datastore
-            </Button>
-          </Link>
-        )}
-      </Stack>
-
-      {tools[0]?.datastoreId && <Stack direction={'row'} gap={1}></Stack>}
-
-      {tools[0]?.datastoreId && (
-        <Stack direction="row" mb={2}>
-          <FormControl className="flex flex-row space-x-4">
-            <Checkbox
-              {...register('includeSources')}
-              checked={!!includeSources}
-            />
-            <div className="flex flex-col">
-              <FormLabel>Include sources in Agent Answer</FormLabel>
-              <Typography level="body-xs">
-                When activated, your agent will include sources used to generate
-                the answer.
-              </Typography>
-            </div>
-          </FormControl>
         </Stack>
-      )}
+      </newDatastoreModal.component>
 
       <CreateDatastoreModal
         isOpen={isCreateDatastoreModalOpen}
         onSubmitSuccess={(newDatatore) => {
           getDatastoresQuery.mutate();
           setIsCreateDatastoreModalOpen(false);
+          newDatastoreModal.close();
 
           setValue(
             'tools',
             [
+              ...tools,
               {
+                id: newDatatore.id!,
                 datastoreId: newDatatore.id!,
+                name: newDatatore.name!,
+                description: newDatatore.description!,
                 type: ToolType.datastore,
               },
             ],
