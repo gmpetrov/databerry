@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.19"></a>
+## 0.1.19 (2023-10-01)
+
+### Miscellaneous
+
+- 🎸 Agent can use multiple datastores ([#169](https://github.com/gmpetrov/databerry/issues/169)) [[db9d791](https://github.com/gmpetrov/databerry/commit/db9d791538fa25a40786b47c988b8ce1b7d34fae)]
+- 🤖 add link to profile [[e3e9822](https://github.com/gmpetrov/databerry/commit/e3e98222c0416032bc888572db835ca6570d9125)]
+
+
 <a name="0.1.18"></a>
 ## 0.1.18 (2023-09-28)
 
