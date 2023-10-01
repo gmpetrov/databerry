@@ -29,6 +29,7 @@ import GeneralInput from '@app/components/AgentInputs/GeneralInput';
 import ToolsInput from '@app/components/AgentInputs/ToolsInput';
 import AgentTable from '@app/components/AgentTable';
 import Layout from '@app/components/Layout';
+import SettingCard from '@app/components/ui/SettingCard';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { RouteNames } from '@app/types';
@@ -189,8 +190,13 @@ export default function AgentsPage() {
             {({ mutation }) => (
               <Stack gap={4}>
                 <GeneralInput />
-
-                <ToolsInput />
+                <SettingCard
+                  title="Tools"
+                  disableSubmitButton
+                  description="Give tools to your Agent to make it smarter"
+                >
+                  <ToolsInput />
+                </SettingCard>
 
                 <Button
                   type="submit"

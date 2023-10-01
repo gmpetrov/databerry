@@ -73,99 +73,83 @@ export default class AgentManager {
         })
       : input;
 
-    if (this.agent.tools.length <= 1) {
-      const _promptType = promptType || this.agent.promptType;
-      const _promptTemplate = promptTemplate || (this.agent.prompt as string);
+    const _promptType = promptType || this.agent.promptType;
+    const _promptTemplate = promptTemplate || (this.agent.prompt as string);
 
-      let initialMessages: any = [];
-      if (_promptType === PromptType.customer_support) {
-        initialMessages = [
-          new HumanMessage(`${_promptTemplate}
+    let initialMessages: any = [];
+    if (_promptType === PromptType.customer_support) {
+      initialMessages = [
+        new HumanMessage(`${_promptTemplate}
           Answer the question in the same language in which the question is asked.
           If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
           Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
               `),
-          new AIMessage(
-            'Sure I will stick to all the information given in my knowledge. I won’t answer any question that is outside my knowledge. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in my knowledge. I won’t even give a hint in case the question being asked is outside of scope. I will answer in the same language in which the question is asked'
-          ),
-        ];
-      }
+        new AIMessage(
+          'Sure I will stick to all the information given in my knowledge. I won’t answer any question that is outside my knowledge. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in my knowledge. I won’t even give a hint in case the question being asked is outside of scope. I will answer in the same language in which the question is asked'
+        ),
+      ];
+    }
 
-      const SIMILARITY_THRESHOLD = 0.7;
+    const SIMILARITY_THRESHOLD = 0.7;
 
-      return chatRetrieval({
-        ...otherProps,
-        getPrompt(chunks) {
-          if (_promptType === PromptType.customer_support) {
-            return promptInject({
-              // template: CUSTOMER_SUPPORT,
-              template: `YOUR KNOWLEDGE:
+    const _filters = {
+      ...filters,
+      datastore_ids: [
+        ...this.agent?.tools
+          ?.filter((each) => !!each?.datastoreId)
+          ?.map((each) => each?.datastoreId),
+        ...(filters?.datastore_ids || [])!,
+      ],
+    } as AgentManagerProps['filters'];
+
+    return chatRetrieval({
+      ...otherProps,
+      getPrompt(chunks) {
+        if (_promptType === PromptType.customer_support) {
+          return promptInject({
+            // template: CUSTOMER_SUPPORT,
+            template: `YOUR KNOWLEDGE:
               {context}
               END OF YOUR KNOWLEDGE
 
               Question: {query}
 
               Answer: `,
-              query: _query,
-              context: createPromptContext(
-                chunks.filter(
-                  (each) => each.metadata.score! > SIMILARITY_THRESHOLD
-                )
-              ),
-              extraInstructions: _promptTemplate,
-            });
-          }
-
-          return promptInject({
-            template: _promptTemplate || '',
             query: _query,
-            context: createPromptContext(chunks),
+            context: createPromptContext(
+              chunks.filter(
+                (each) => each.metadata.score! > SIMILARITY_THRESHOLD
+              )
+            ),
+            extraInstructions: _promptTemplate,
           });
-        },
-        // Retrieval
-        datastore: this.agent?.tools[0]?.datastore as any,
-        retrievalSearch:
-          _promptType === PromptType.raw &&
-          !_promptTemplate.includes('{context}')
-            ? undefined
-            : _query,
-        topK: this.topK,
-        filters,
-        includeSources: !!this.agent.includeSources,
+        }
 
-        // Model
-        modelName: this.agent.modelName,
-        temperature: temperature || this.agent.temperature,
+        return promptInject({
+          template: _promptTemplate || '',
+          query: _query,
+          context: createPromptContext(chunks),
+        });
+      },
+      // Retrieval
+      // datastore: this.agent?.tools[0]?.datastore as any,
+      retrievalSearch:
+        _promptType === PromptType.raw && !_promptTemplate.includes('{context}')
+          ? undefined
+          : _query,
+      topK: this.topK,
+      filters: _filters,
+      includeSources: !!this.agent.includeSources,
 
-        stream,
-        history,
-        abortController,
-        initialMessages,
-      });
-      // const { answer, sources } = await chat({
-      //   modelName: this.agent.modelName,
-      //   // promptTemplate: promptTemplate || (this.agent.prompt as string),
-      //   // promptType: promptType || this.agent.promptType,
-      //   datastore: this.agent?.tools[0]?.datastore as any,
-      //   query: input,
-      //   topK: this.topK,
-      //   temperature: temperature || this.agent.temperature,
-      //   stream,
-      //   history,
-      //   truncateQuery,
-      //   filters,
-      //   includeSources: !!this.agent.includeSources,
-      //   abortController,
-      // });
+      // Model
+      modelName: this.agent.modelName,
+      temperature: temperature || this.agent.temperature,
 
-      // return { answer, sources };
-    }
-
-    return {
-      // answer: await this.runChain(input),
-      answer: '',
-      sources: [],
-    };
+      stream,
+      history,
+      abortController,
+      initialMessages,
+    });
   }
 
   // async runChain(query: string) {

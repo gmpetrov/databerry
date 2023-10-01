@@ -1,8 +1,9 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, ToolType } from '@prisma/client';
 import useSWR, { SWRResponse } from 'swr';
 import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
 
 import { getAgent, updateAgent } from '@app/pages/api/agents/[id]';
+import agentToolFormat, { NormalizedTool } from '@app/utils/agent-tool-format';
 import {
   fetcher,
   generateActionFetcher,
@@ -13,17 +14,25 @@ type Props = {
   id?: string;
 };
 
-export type UseAgentQuery = SWRResponse<
-  Prisma.PromiseReturnType<typeof getAgent>
->;
+type GetAgentResponse = Prisma.PromiseReturnType<typeof getAgent> & {
+  tools: NormalizedTool[];
+};
+
+export type UseAgentQuery = SWRResponse<GetAgentResponse>;
 export type UseAgentMutation = SWRMutationResponse<
   Prisma.PromiseReturnType<typeof updateAgent>
 >;
 
 function useAgent({ id }: Props) {
-  const query = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
+  const query = useSWR<GetAgentResponse>(
     id ? `/api/agents/${id}` : null,
-    fetcher
+    (args: any) =>
+      fetcher(args).then((data) => {
+        return {
+          ...data,
+          tools: (data?.tools || [])?.map(agentToolFormat),
+        };
+      })
   );
 
   const mutation = useSWRMutation<Prisma.PromiseReturnType<typeof updateAgent>>(

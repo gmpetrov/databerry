@@ -18,7 +18,7 @@ import validate from '@app/utils/validate';
 
 const handler = createLazyAuthHandler();
 
-const agentInclude: Prisma.AgentInclude = {
+export const agentInclude: Prisma.AgentInclude = {
   tools: {
     include: {
       datastore: {
