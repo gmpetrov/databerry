@@ -76,6 +76,31 @@
     ]
   },
   {
+    "slug": "wordpress",
+    "name": "ChatGPT Chat Bot for Wordpress with Chaindesk: Supercharge Your Site",
+    "description": "Train a chatbot with your data on Chaindesk platform. Install the Wordpress plugin! Stay updated with auto-sync.",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg",
+    "CTA": "Create Your Bot",
+    "features": [
+      {
+        "name": "Just paste your website url",
+        "description": "We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)"
+      },
+      {
+        "name": "Training",
+        "description": "After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️"
+      },
+      {
+        "name": "Install Wordpress plugin",
+        "description": "The final step is to link your Wordpress website to your Chaindesk Agent via our plugin. Just install the plugin and follow the instructions."
+      },
+      {
+        "name": "Auto Sync",
+        "description": "We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch."
+      }
+    ]
+  },
+  {
     "slug": "slack-bot",
     "name": "ChatGPT Bot for Slack with Chaindesk: Elevate Your Workspace",
     "description": "Deploy a custom Chaindesk bot to your Slack workspace in minutes. Train with your company data, install the Slack plugin, and enjoy AI-driven interactions.",

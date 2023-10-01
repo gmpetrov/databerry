@@ -140,6 +140,25 @@ function AgentDeployTab(props: Props) {
               publicAgentRequired: true,
             },
             {
+              name: 'WordPress',
+              icon: (
+                <Image
+                  className="w-8"
+                  src="https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg"
+                  width={100}
+                  height={100}
+                  alt="Wordpress Logo"
+                />
+              ),
+              action: () => {
+                window.open(
+                  'https://wordpress.com/plugins/databerry',
+                  '_blank'
+                );
+              },
+              publicAgentRequired: true,
+            },
+            {
               name: 'Slack',
               icon: (
                 <Image

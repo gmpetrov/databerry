@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Chaindesk
+ * @package ChatbotGPT
  * @version 1.0
- * Plugin Name: Chaindesk
- * Plugin URI: http://wordpress.org/plugins/chaindesk/
- * Description: Chaindesk is a Livechat plugin
+ * Plugin Name: ChatbotGPT
+ * Plugin URI: http://wordpress.org/plugins/databerry/
+ * Description: Build ChatGPT Chat Bots trained on custom data
  * Author: Chaindesk
  * Version: 1.0
  * Author URI: https://chaindesk.ai

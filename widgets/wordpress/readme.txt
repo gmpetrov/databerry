@@ -1,10 +1,10 @@
-=== Chaindesk ===
+=== ChatbotGPT ===
 Contributors: chaindesk.ai
 Donate link: https://chaindesk.ai
 Tags: chatgpt, livechat, chat, live chat, free-live-chat, live-chat, live support, chat-plugin
 Requires at least: 3.0.1
 Tested up to: 6.3.1
-Stable tag: 4.7
+Stable tag: 0.0.2
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -12,7 +12,7 @@ Automate customer support with Chaindesk, the best custom ChatGPT Agent provider
 
 == Description ==
 
-Chaindesk is a no-code platform for building ChatGPT bots trained on custom data. To provide this functionality, the plugin requires a remote JavaScript file hosted on an external server for seamless integration. Rest assured, the remote file is essential for the proper operation of Chaindesk and has been carefully selected for safety and reliability.
+Chaindesk is a no-code platform for building ChatGPT Chat Bots trained on custom data. To provide this functionality, the plugin requires a remote JavaScript file hosted on an external server for seamless integration. Rest assured, the remote file is essential for the proper operation of Chaindesk and has been carefully selected for safety and reliability.
 
 **Important Note:** The remote file hosted at `https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest` is used to embed Chaindesk into your WordPress website. It is safe and integral to the functionality of the plugin, providing a smooth and secure chat experience for your users.
 
@@ -30,7 +30,7 @@ Chaindesk is a no-code platform for building ChatGPT bots trained on custom data
 
 == Changelog ==
 
-= 0.1 =
+= 0.0.1 =
 * Chaindesk first release
 
 == Important: External Resources ==

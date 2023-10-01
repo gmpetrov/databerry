@@ -56,3 +56,4 @@ packages/chat-bubble/chat-bubble*
 # Sentry Auth Token
 .sentryclirc
 .react-email
+svn
