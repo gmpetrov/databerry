@@ -337,6 +337,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
 function DatastoreSettings() {
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const { getDatastoreQuery } = useGetDatastoreQuery({});
 
@@ -346,9 +347,17 @@ function DatastoreSettings() {
         'Are you sure you want to delete this datastore? This action is irreversible.'
       )
     ) {
-      await axios.delete(`/api/datastores/${getDatastoreQuery?.data?.id}`);
+      try {
+        setIsDeleting(true);
 
-      router.push(RouteNames.DATASTORES);
+        await axios.delete(`/api/datastores/${getDatastoreQuery?.data?.id}`);
+
+        router.push(RouteNames.DATASTORES);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -487,6 +496,7 @@ function DatastoreSettings() {
           sx={{ mr: 'auto', mt: 2 }}
           startDecorator={<DeleteIcon />}
           onClick={handleDeleteDatastore}
+          loading={isDeleting}
         >
           Delete
         </Button>
