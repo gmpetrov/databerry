@@ -149,6 +149,9 @@ importers:
       bullmq:
         specifier: ^3.13.3
         version: 3.13.3
+      canvas-confetti:
+        specifier: ^1.7.0
+        version: 1.9.0
       clsx:
         specifier: ^1.2.1
         version: 1.2.1
@@ -309,6 +312,9 @@ importers:
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.0.0(react-dom@18.2.0)(react@18.2.0)
+      '@types/canvas-confetti':
+        specifier: ^1.6.1
+        version: 1.6.1
       '@types/cors':
         specifier: ^2.8.13
         version: 2.8.13
@@ -5462,6 +5468,10 @@ packages:
       '@types/responselike': 1.0.0
     dev: false
 
+  /@types/canvas-confetti@1.6.1:
+    resolution: {integrity: sha512-wTSI/k/586KnzL8Inm0yXe/U9x0sO2tc4j/osIAZVsE+hyj2S/M+sdR5zDDLygEkohhlG948zNVBG5QiI4Z2mw==}
+    dev: true
+
   /@types/classnames@2.3.1:
     resolution: {integrity: sha512-zeOWb0JGBoVmlQoznvqXbE0tEC/HONsnoUNH19Hc96NFsTAwTXbTqb8FMYkru1F/iqp7a18Ws3nWJvtA1sHD1A==}
     deprecated: This is a stub types definition. classnames provides its own type definitions, so you do not need this installed.
@@ -7040,6 +7050,10 @@ packages:
 
   /caniuse-lite@1.0.30001546:
     resolution: {integrity: sha512-zvtSJwuQFpewSyRrI3AsftF6rM0X80mZkChIt1spBGEvRglCrjTniXvinc8JKRoqTwXAgvqTImaN9igfSMtUBw==}
+    dev: false
+
+  /canvas-confetti@1.9.0:
+    resolution: {integrity: sha512-0UGU/T5Un/Cd4Aj4fu/p/oVQm8Il+brK5xcmY+y77u7PXuyNJD4ODUWe01A5o3GUI9Bb8lOBlQ10VdaDsY1FBA==}
     dev: false
 
   /canvas@2.11.2:

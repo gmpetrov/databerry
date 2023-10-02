@@ -125,6 +125,10 @@ export const authOptions = {
       },
     }),
   ],
+  pages: {
+    verifyRequest: '/auth/verify-request',
+    error: '/auth/error',
+  },
   callbacks: {
     async session(props) {
       const { session, trigger, newSession, token } = props;
