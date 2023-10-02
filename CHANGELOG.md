@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.20"></a>
+## 0.1.20 (2023-10-02)
+
+### Miscellaneous
+
+- 🤖 update wp plugin [[2d26f30](https://github.com/gmpetrov/databerry/commit/2d26f3055c5dd0a4fb32894012d6a17c248ac98f)]
+
+
 <a name="0.1.19"></a>
 ## 0.1.19 (2023-10-01)
 
