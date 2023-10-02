@@ -70,11 +70,6 @@ export type TaskRemoveDatastoreSchema = z.infer<
 >;
 
 export const FiltersSchema = z.object({
-  custom_id: z.string().optional(),
-  datasource_id: z
-    .string()
-    .cuid()
-    .optional(),
   datastore_ids: z.array(z.string().cuid()).optional(),
   datasource_ids: z.array(z.string().cuid()).optional(),
   custom_ids: z.array(z.string()).optional(),

@@ -33,6 +33,10 @@ export const queryURL = async (
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
+  if (data.filters?.datastore_ids) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+
   const datastore = await prisma.datastore.findUnique({
     where: {
       id: datastoreId,
@@ -64,6 +68,7 @@ export const queryURL = async (
     source: each.metadata.source_url,
     datasource_name: each.metadata.datasource_name,
     datasource_id: each.metadata.datasource_id,
+    custom_id: each.metadata.custom_id,
   }));
 };
 

@@ -102,6 +102,13 @@ export const chatAgentRequest = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
+  // Make sure the Agent has access to datastores passed as filters
+  for (const datastoreId of data.filters?.datastore_ids || []) {
+    if (!agent?.tools?.find((one) => one?.datastoreId === datastoreId)) {
+      throw new ApiError(ApiErrorType.UNAUTHORIZED);
+    }
+  }
+
   const orgSession =
     session?.organization || formatOrganizationSession(agent?.organization!);
   const usage = orgSession?.usage as Usage;

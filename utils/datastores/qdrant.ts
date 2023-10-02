@@ -256,36 +256,30 @@ export class QdrantManager extends ClientManager<DatastoreType> {
                   },
                 ]
               : []),
-            ...(props.filters?.custom_id
+            ...((props.filters?.custom_ids || [])?.length > 0
               ? [
                   {
                     key: MetadataFields.custom_id,
-                    match: { value: props.filters.custom_id },
+                    match: { any: props.filters?.custom_ids },
                   },
                 ]
               : []),
-            ...(props.filters?.datasource_id
+            ...((props.filters?.datasource_ids || [])?.length > 0
               ? [
                   {
                     key: MetadataFields.datasource_id,
-                    match: { value: props.filters.datasource_id },
+                    match: { any: props.filters?.datasource_ids },
                   },
                 ]
               : []),
-          ],
-          should: [
-            ...(props.filters?.custom_ids || [])?.map((each) => ({
-              key: MetadataFields.custom_id,
-              match: { value: each },
-            })),
-            ...(props.filters?.datasource_ids || [])?.map((each) => ({
-              key: MetadataFields.datasource_id,
-              match: { value: each },
-            })),
-            ...(props.filters?.datastore_ids || [])?.map((each) => ({
-              key: MetadataFields.datastore_id,
-              match: { value: each },
-            })),
+            ...((props.filters?.datastore_ids || [])?.length > 0
+              ? [
+                  {
+                    key: MetadataFields.datastore_id,
+                    match: { any: props.filters?.datastore_ids },
+                  },
+                ]
+              : []),
           ],
         },
       }

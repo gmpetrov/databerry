@@ -1,22 +1,5 @@
-import {
-  Agent,
-  Datastore,
-  Message,
-  MessageFrom,
-  PromptType,
-  Tool,
-  ToolType,
-} from '@prisma/client';
-import { AgentExecutor, ZeroShotAgent } from 'langchain/agents';
-import { LLMChain } from 'langchain/chains';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
-import {
-  ChatPromptTemplate,
-  HumanMessagePromptTemplate,
-  SystemMessagePromptTemplate,
-} from 'langchain/prompts';
-import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema';
-import { Tool as LangchainTool } from 'langchain/tools';
+import { Agent, Datastore, Message, PromptType, Tool } from '@prisma/client';
+import { AIMessage, HumanMessage } from 'langchain/schema';
 
 import { ChatRequest } from '@app/types/dtos';
 
@@ -92,14 +75,20 @@ export default class AgentManager {
 
     const SIMILARITY_THRESHOLD = 0.7;
 
+    const filterDatastoreIds = filters?.datastore_ids
+      ? filters?.datastore_ids
+      : this.agent?.tools
+          ?.filter((each) => !!each?.datastoreId)
+          ?.map((each) => each?.datastoreId);
+
+    // Only allow datasource filtering if datastore are present
+    const filterDatasourceIds =
+      filterDatastoreIds?.length > 0 ? filters?.datasource_ids : [];
+
     const _filters = {
       ...filters,
-      datastore_ids: [
-        ...this.agent?.tools
-          ?.filter((each) => !!each?.datastoreId)
-          ?.map((each) => each?.datastoreId),
-        ...(filters?.datastore_ids || [])!,
-      ],
+      datastore_ids: filterDatastoreIds,
+      datasource_ids: filterDatasourceIds,
     } as AgentManagerProps['filters'];
 
     return chatRetrieval({
