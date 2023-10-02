@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.21"></a>
+## 0.1.21 (2023-10-02)
+
+### Fixed
+
+- 🐛 filters bug [[4c5df81](https://github.com/gmpetrov/databerry/commit/4c5df81e78fd087d6bac5eb8ba1fc7cb252d7022)]
+- 🐛 notifcation badge color [[011eb8d](https://github.com/gmpetrov/databerry/commit/011eb8d32cffd2f8d9fa2f5a1dbae2433ba6e31a)]
+
+### Miscellaneous
+
+- 🎸 add loading state [[283ddee](https://github.com/gmpetrov/databerry/commit/283ddee15d5b24584236e96c59f16292bfba701f)]
+
+
 <a name="0.1.20"></a>
 ## 0.1.20 (2023-10-02)
 
