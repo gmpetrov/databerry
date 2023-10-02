@@ -235,14 +235,8 @@ export default function LogsPage() {
                           </Typography>
 
                           {each?._count?.messages > 0 && (
-                            <Chip
-                              // variant="soft"
-                              color="danger"
-                              size="sm"
-                            >
-                              <Typography textColor={'common.white'}>
-                                {each?._count?.messages}
-                              </Typography>
+                            <Chip variant="solid" color="danger" size="md">
+                              {each?._count?.messages}
                             </Chip>
                           )}
                         </Stack>
