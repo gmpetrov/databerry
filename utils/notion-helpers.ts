@@ -1,23 +1,20 @@
 import { APIResponseError, Client } from '@notionhq/client';
-import { Arguments } from 'swr';
+import { DatasourceType, Prisma } from '@prisma/client';
 
+import cuid from './cuid';
+import prisma from './prisma-client';
 import sleep from './sleep';
+import { DatasourceExtended } from './task-load-datasource';
+import triggerTaskLoadDatasource from './trigger-task-load-datasource';
 
 export const NOTION_RETRIABLE_ERRORS = ['rate_limited', 'internal_server_error'];
 
 const NotionBlocksContainers = ['database', 'page', 'child_page', 'child_database'] as const;
 
-interface MemoizedValue {
-    [key: string]: {
-        text: string;
-        url: string;
-    };
-}
 
-interface Args {
-    notebookId: string,
-    memoizedValue?: MemoizedValue,
-    processedBlocks?: { [key: string]: true }
+interface SelectedArgs {
+    selectedNotebooks: { id: string, title: string }[]
+    nestedPages?: Map<string, { id: string, title: string }>
 }
 
 export function getPlainText(obj: Record<string, any>): string {
@@ -39,7 +36,7 @@ export function getPlainText(obj: Record<string, any>): string {
 
 export function getNotebookTitle(notebook: Record<string, any>): string | undefined {
     if (notebook?.title) {
-        return getPlainText(notebook.title);
+        return getPlainText(notebook.title) || notebook?.title;
     }
 
     for (const key in notebook) {
@@ -62,51 +59,31 @@ export class NotionToolset {
 
     async getNotebookContent({
         notebookId,
-        memoizedValue = {},
-        processedBlocks = {}
-    }: Args): Promise<MemoizedValue> {
-        if (memoizedValue[notebookId]) {
-            return memoizedValue;
-        }
-        const isDatabase = await this.isDatabase(notebookId)
-
-        if (isDatabase) {
-            const pageIds = await retryFn(() => this.getPageIdsForDatabase(notebookId), 5)
-            const contentPromises = (pageIds || []).map((id) => {
-                return this.getNotebookContent({ notebookId: id, memoizedValue, processedBlocks })
-            })
-            await Promise.all(contentPromises)
-        } else {
-            const notebookUrl = await retryFn(() => this.getNotebookUrl(notebookId), 5)
-            memoizedValue[notebookId] = { text: '', url: notebookUrl || '' };
-
+    }: { notebookId: string }): Promise<string> {
+        let content = ''
+        try {
             const blocks = await this.getAllNotebookBlocks(notebookId);
 
             if (!blocks) {
-                return memoizedValue
+                return content
             }
 
             for (const block of blocks) {
-                if (processedBlocks[(block as any).id]) {
-                    continue;
-                }
+                content += ' ' + getPlainText(block);
 
-                memoizedValue[notebookId].text += ' ' + getPlainText(block);
-                processedBlocks[(block as any).id] = true;
-
-
-                if ((block as any).has_children || NotionBlocksContainers.includes((block as any).type)) {
-                    await this.getNotebookContent({
+                if ((block as any).has_children && !NotionBlocksContainers.includes((block as any).type)) {
+                    const nestedContent = await this.getNotebookContent({
                         notebookId: (block as any).id,
-                        memoizedValue,
-                        processedBlocks
                     });
+                    content += '' + nestedContent
                 }
             }
 
-        }
+            return content
 
-        return memoizedValue;
+        } catch (e) {
+            return content
+        }
     }
 
     private async isDatabase(notebookId: string): Promise<boolean> {
@@ -121,13 +98,13 @@ export class NotionToolset {
         }
     }
 
-    private async getNotebookUrl(notebookId: string): Promise<string> {
+    async getNotebookUrl(notebookId: string): Promise<string | undefined> {
         try {
             const response = await this.notionClient.pages.retrieve({ page_id: notebookId });
             return (response as any).url;
         } catch (e) {
             console.error(`could not get the url for ${notebookId}`);
-            return '';
+            return undefined;
         }
     }
 
@@ -152,14 +129,62 @@ export class NotionToolset {
         return blocks
     }
 
-    private async getPageIdsForDatabase(database_id: string) {
+    private async getPageIdsAndTitleForDatabase(database_id: string): Promise<{ id: string, title: string }[]> {
         const response = await this.notionClient.databases.query({
             database_id,
         })
+        const pages = (response as any).results.map((page: any) => ({ id: page.id, title: getNotebookTitle(page) }))
+        return pages as { id: string, title: string }[]
+    }
 
-        const pageIds = (response as any).results.map((page: any) => page.id)
+    async getAllPagesFromSelection({ selectedNotebooks, nestedPages = new Map<string, { id: string, title: string }>() }: SelectedArgs) {
+        const findNestedPages = async (notebookId: string, cursor: string | undefined = undefined): Promise<void> => {
+            try {
+                const isDatabase = await this.isDatabase(notebookId)
+                if (isDatabase) {
+                    const pages = await this.getPageIdsAndTitleForDatabase(notebookId)
+                    const pagesPromises = pages.map((page) => {
+                        if (!nestedPages.has(page.id)) {
+                            nestedPages.set(page.id, { id: page.id, title: page.title })
+                            return retryFn(() => findNestedPages(page.id), 5)
+                        }
+                    })
+                    await Promise.all(pagesPromises)
+                }
 
-        return pageIds as string[]
+                const response = await this.notionClient.blocks.children.list({
+                    block_id: notebookId,
+                    page_size: 100,
+                    start_cursor: cursor
+                });
+
+                const nestedPagesPromises = response.results.map((block) => {
+                    if (NotionBlocksContainers.includes((block as any)?.type)) {
+                        if (!nestedPages.has(block.id)) {
+                            const title = getNotebookTitle(block)
+                            nestedPages.set(block.id, { id: block.id, title: title! })
+                            return retryFn(() => findNestedPages(block.id), 5)
+                        }
+                    }
+                })
+                await Promise.all(nestedPagesPromises)
+
+                if (response.next_cursor) {
+                    return retryFn(() => findNestedPages(notebookId, response.next_cursor!), 5)
+                }
+            } catch (e) {
+                console.error(`notebook with id ${notebookId} was not found`)
+                return
+            }
+        }
+
+        const nestedPagesPromises = selectedNotebooks.map((notebook) => {
+            return retryFn(() => findNestedPages(notebook.id), 5)
+        })
+
+        await Promise.all(nestedPagesPromises)
+
+        return [...selectedNotebooks, ...nestedPages.values()]
     }
 }
 
@@ -176,4 +201,63 @@ export async function retryFn<Args extends any[] = any[], Response = any>(fn: (.
             }
         }
     }
+}
+
+export async function createAndTriggerDatasources(datasource: DatasourceExtended, ids: string[], notebooks: {
+    id: string;
+    title: string;
+}[]) {
+    await prisma.appDatasource.createMany({
+        data: notebooks.map((notebook, index) => ({
+            id: ids[index],
+            type: DatasourceType.notion_page,
+            name: `${notebook?.title}`,
+            config: {
+                notebookId: notebook?.id,
+                title: notebook?.title
+            },
+            organizationId: datasource?.organizationId!,
+            datastoreId: datasource?.datastoreId,
+            groupId: datasource?.id,
+            serviceProviderId: datasource?.serviceProviderId,
+        })),
+        skipDuplicates: true,
+    });
+
+    await triggerTaskLoadDatasource(
+        notebooks.map((_, index) => ({
+            organizationId: datasource?.organizationId!,
+            datasourceId: ids[index],
+            priority: 10,
+        }))
+    );
+}
+
+export async function getDatasourceIds(existingDatasources: {
+    id: string;
+    config: Prisma.JsonValue;
+}[], newNotebooks: {
+    id: string;
+    title: string;
+}[]) {
+    const datasourceLookup = new Map();
+    existingDatasources.forEach((datasource) => {
+        const notebookId = (datasource.config as any).notebookId;
+        datasourceLookup.set(notebookId, datasource);
+    });
+
+    const ids: string[] = [];
+    const newNotebookIds = new Set();
+    newNotebooks.forEach((page) => {
+        if (datasourceLookup.has(page.id)) {
+            ids.push(datasourceLookup.get(page.id).id);
+        } else {
+            ids.push(cuid());
+        }
+        newNotebookIds.add(page.id);
+    });
+
+    const datasourceIdsToRemove = existingDatasources.filter((d) => !newNotebookIds.has((d.config as any).notebookId)).map((datasource) => datasource.id);
+
+    return { datasourceIdsToRemove, allDatasourceIds: ids }
 }

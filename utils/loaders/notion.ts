@@ -1,10 +1,11 @@
-import { DatasourceStatus, DatasourceType } from '@prisma/client';
+import { DatasourceStatus } from '@prisma/client';
 
 import { AppDocument } from '@app/types/document';
 
+import cuid from '../cuid'
+import { createAndTriggerDatasources, getDatasourceIds, NotionToolset } from '../notion-helpers';
 import prisma from '../prisma-client';
 import { DatasourceExtended } from '../task-load-datasource';
-import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
 
 import { DatasourceLoaderBase } from './base';
 
@@ -27,31 +28,50 @@ export class NotionLoader extends DatasourceLoaderBase {
 
     async load() {
         try {
-            await prisma.appDatasource.createMany({
-                data: this.notebooks.map((notebook) => ({
-                    id: `${this.datasource.id}-${notebook.id}`,
-                    type: DatasourceType.notion_page,
-                    name: notebook.title,
-                    config: {
-                        notebookId: notebook.id,
-                        title: notebook.title
-                    },
-                    organizationId: this.datasource?.organizationId!,
-                    datastoreId: this.datasource?.datastoreId,
-                    groupId: this.datasource?.id,
-                    serviceProviderId: this.datasource?.serviceProviderId,
-                })),
-                skipDuplicates: true,
+            const notionToolset = new NotionToolset(this.datasource.serviceProvider?.accessToken!)
+            const allPagesFromSelection = await notionToolset.getAllPagesFromSelection({ selectedNotebooks: this.notebooks })
+
+            const existingDatasources = await prisma.appDatasource.findMany({
+                where: {
+                    groupId: this.datasource.id
+                },
+                select: {
+                    id: true,
+                    config: true
+                }
             });
 
-            await triggerTaskLoadDatasource(
-                this.notebooks.map((notebook) => ({
-                    organizationId: this.datasource?.organizationId!,
-                    datasourceId: `${this.datasource.id}-${notebook.id}`,
-                    priority: 10,
-                }))
-            );
+            if (existingDatasources.length > 0) {
+                const { datasourceIdsToRemove, allDatasourceIds: ids } = await getDatasourceIds(existingDatasources, allPagesFromSelection)
 
+                if (datasourceIdsToRemove.length > 0) {
+                    await prisma.appDatasource.deleteMany({
+                        where: {
+                            id: {
+                                in: datasourceIdsToRemove
+                            }
+                        }
+                    });
+
+                    await prisma.appDatasource.update({
+                        where: {
+                            id: this.datasource.id
+                        },
+                        data: {
+                            config: {
+                                notebooks: this.notebooks.filter((notebook) => datasourceIdsToRemove.includes(notebook.id))
+                            }
+                        }
+                    })
+                }
+
+                await createAndTriggerDatasources(this.datasource, ids, allPagesFromSelection)
+            }
+
+            else {
+                const ids = allPagesFromSelection.map(() => cuid())
+                await createAndTriggerDatasources(this.datasource, ids, allPagesFromSelection)
+            }
             await prisma.appDatasource.update({
                 where: {
                     id: this.datasource.id,

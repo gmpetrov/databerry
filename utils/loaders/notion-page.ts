@@ -1,6 +1,3 @@
-import { Client } from '@notionhq/client';
-import { DatasourceStatus } from '@prisma/client';
-
 import { AppDocument } from '@app/types/document';
 
 import { NotionToolset } from '../notion-helpers';
@@ -30,32 +27,28 @@ export class NotionPageLoader extends DatasourceLoaderBase {
     async load() {
         try {
             const notionToolset = new NotionToolset(this.datasource.serviceProvider?.accessToken!)
-            const notebooksCotent = await notionToolset.getNotebookContent({ notebookId: this.notebookId })
-            const Documents = []
-            for (const key in notebooksCotent) {
-                Documents.push(new AppDocument({
-                    pageContent: notebooksCotent[key].text,
-                    metadata: {
-                        datastore_id: this.datasource.datastoreId!,
-                        datasource_id: this.datasource.id,
-                        datasource_name: this.datasource.name,
-                        datasource_type: this.datasource.type,
-                        source_url: notebooksCotent[key].url,
-                        tags: [],
-                    },
-                }))
+            const pageContent = await notionToolset.getNotebookContent({ notebookId: this.notebookId })
+            if (pageContent.trim() === '') {
+                // delete if empty
+                await prisma.appDatasource.delete({
+                    where: {
+                        id: this.datasource.id
+                    }
+                })
+                return;
             }
-
-            await prisma.appDatasource.update({
-                where: {
-                    id: this.datasource.id,
+            const source_url = await notionToolset.getNotebookUrl(this.notebookId) || ''
+            return [new AppDocument({
+                pageContent,
+                metadata: {
+                    datastore_id: this.datasource.datastoreId!,
+                    datasource_id: this.datasource.id,
+                    datasource_name: this.datasource.name,
+                    datasource_type: this.datasource.type,
+                    source_url,
+                    tags: [],
                 },
-                data: {
-                    status: DatasourceStatus.synched,
-                },
-            });
-
-            return Documents;
+            })]
         } catch (e) {
             console.error(e)
             throw e
