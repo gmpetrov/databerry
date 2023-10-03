@@ -1,0 +1,28 @@
+{
+  "name": "@chaindesk/emails",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "lint": "eslint --fix src/*",
+    "dev": "email dev --port 8888 --dir src"
+  },
+  "dependencies": {
+    "@chaindesk/prisma": "workspace:*",
+    "@chaindesk/tsconfig": "workspace:*",
+    "@react-email/button": "0.0.10",
+    "@react-email/components": "^0.0.7",
+    "@react-email/html": "0.0.4",
+    "clsx": "^1.2.1",
+    "eslint-config-custom": "workspace:*",
+    "react-email": "1.9.5"
+  },
+  "devDependencies": {
+    "@types/node": "18.15.10",
+    "@types/react": "18.0.29"
+  },
+  "peerDependencies": {
+    "react": "18.2.0"
+  }
+}

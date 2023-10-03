@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  maildev:
+    extends:
+      file: docker-compose.all.yml
+      service: maildev
+  qdrant:
+    extends:
+      file: docker-compose.all.yml
+      service: qdrant
+  pgdb:
+    extends:
+      file: docker-compose.all.yml
+      service: pgdb
+  pgadmin:
+    extends:
+      file: docker-compose.all.yml
+      service: pgadmin
+  redis:
+    extends:
+      file: docker-compose.all.yml
+      service: redis
+  redis-ui:
+    extends:
+      file: docker-compose.all.yml
+      service: redis-ui
+  minio:
+    extends:
+      file: docker-compose.all.yml
+      service: minio
+  init_bucket:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      /usr/bin/mc config host add minio http://minio:9000 root password;
+      /usr/bin/mc mb minio/chaindesk;
+      /usr/bin/mc anonymous set public minio/chaindesk;
+      exit 0;
+      "
+
+volumes:
+  pgdb-data:
+  pgadmin-data:
+  redis-data:
+  redis-conf:
+  p3x-redis-ui-settings:
+  minio:

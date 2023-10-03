@@ -3,9 +3,7 @@
   "version": "1.0.79",
   "description": "Chaindesk Chat Bubble Widget",
   "main": "chat-bubble.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gmpetrov/databerry.git"

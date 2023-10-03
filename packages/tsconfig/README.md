@@ -1,0 +1,1 @@
+# `@chaindesk/tsconfig`
