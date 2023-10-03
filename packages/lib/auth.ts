@@ -22,6 +22,8 @@ import {
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
+import sendVerificationRequest from './verification-sender';
+
 const CustomPrismaProvider = (p: PrismaClient) => {
   return {
     ...PrismaAdapter(p),
@@ -108,6 +110,7 @@ export const authOptions = {
     EmailProvider({
       server: process.env.EMAIL_SERVER,
       from: process.env.EMAIL_FROM,
+      sendVerificationRequest: sendVerificationRequest,
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID!,

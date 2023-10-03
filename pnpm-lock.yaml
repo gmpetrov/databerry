@@ -565,6 +565,9 @@ importers:
       '@axiomhq/pino':
         specifier: ^0.1.3
         version: 0.1.3
+      '@chaindesk/emails':
+        specifier: workspace:*
+        version: link:../emails
       '@chaindesk/prisma':
         specifier: workspace:*
         version: link:../prisma
@@ -646,6 +649,9 @@ importers:
       next-connect:
         specifier: ^0.13.0
         version: 0.13.0
+      nodemailer:
+        specifier: ^6.9.1
+        version: 6.9.1
       p-map:
         specifier: ^5.5.0
         version: 5.5.0
@@ -670,6 +676,9 @@ importers:
       react:
         specifier: 18.2.0
         version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
       react-hot-toast:
         specifier: ^2.4.1
         version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
@@ -704,6 +713,9 @@ importers:
       '@types/react':
         specifier: 18.0.29
         version: 18.0.29
+      '@types/react-dom':
+        specifier: 18.0.11
+        version: 18.0.11
       '@types/uuid':
         specifier: ^9.0.1
         version: 9.0.1
