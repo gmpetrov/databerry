@@ -140,7 +140,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   }, [props.agentId]);
 
   useEffect(() => {
-    if (state.config?.initialMessage) {
+    if (state.config?.initialMessage && !state.config?.isInitMessagePopupDisabled) {
       setTimeout(() => {
         setState({
           showInitialMessage: true,
