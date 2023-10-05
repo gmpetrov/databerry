@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.25"></a>
+## 0.1.25 (2023-10-05)
+
+### Fixed
+
+- 🐛 use js-tiktoken instead of the wasm one [[c6d445c](https://github.com/gmpetrov/databerry/commit/c6d445c2250238533fa1918d5e2f76df6abfe234)]
+
+
 <a name="0.1.24"></a>
 ## 0.1.24 (2023-10-05)
 
