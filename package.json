@@ -12,6 +12,7 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "check": "pnpm list-mismatches && pnpm format && pnpm typecheck && pnpm lint",
     "docker:up": "docker compose -f docker/docker-compose.deps.yml --env-file docker/docker.env up -d",
+    "docker:nuke": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "list-packages": "npx syncpack list",
     "list-mismatches": "npx syncpack list-mismatches",
     "fix-mismatches": "npx syncpack fix-mismatches && pnpm install",
