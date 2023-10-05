@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.22"></a>
+## 0.1.22 (2023-10-05)
+
+### Fixed
+
+- 🐛 prisma seed command [[0a8678f](https://github.com/gmpetrov/databerry/commit/0a8678ff672aa2287c4569f4debe172000b80653)]
+
+### Miscellaneous
+
+- 🤖 setup localtunnel [[b167f7d](https://github.com/gmpetrov/databerry/commit/b167f7d0fdc598a5d505e5e171cf2ab1d9bc53d7)]
+- 🤖 add docker nuke cmd [[307b286](https://github.com/gmpetrov/databerry/commit/307b2864a7236bd8fadcfb16dd2e2c36d246c92c)]
+-  feat: turborepo ([#176](https://github.com/gmpetrov/databerry/issues/176)) [[9098c10](https://github.com/gmpetrov/databerry/commit/9098c10ed297acd6dddbcf995e17631dfc514569)]
+
+
 <a name="0.1.21"></a>
 ## 0.1.21 (2023-10-02)
 
