@@ -5,9 +5,10 @@
   "types": "./index.ts",
   "private": true,
   "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
+    "seed": "npx tsx seed.ts"
   },
   "scripts": {
+    "prisma:seed": "dotenv -e ../../.env.local -- npx prisma db seed",
     "prisma:generate": "dotenv -e ../../.env.local -- prisma generate",
     "prisma:push": "dotenv -e ../../.env.local -- prisma db push --skip-generate",
     "prisma:migrate:dev": "dotenv -e ../../.env.local -- prisma migrate dev",
