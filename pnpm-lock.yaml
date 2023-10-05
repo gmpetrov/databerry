@@ -559,9 +559,6 @@ importers:
       '@chaindesk/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@dqbd/tiktoken':
-        specifier: ^1.0.7
-        version: 1.0.7
       '@slack/web-api':
         specifier: ^6.8.1
         version: 6.8.1
@@ -607,6 +604,9 @@ importers:
       ioredis:
         specifier: ^5.3.1
         version: 5.3.2
+      js-tiktoken:
+        specifier: ^1.0.7
+        version: 1.0.7
       jszip:
         specifier: ^3.10.1
         version: 3.10.1
@@ -1153,10 +1153,6 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
-
-  /@dqbd/tiktoken@1.0.7:
-    resolution: {integrity: sha512-bhR5k5W+8GLzysjk8zTMVygQZsgvf7W1F0IlL4ZQ5ugjo5rCyiwGM5d8DYriXspytfu98tv59niang3/T+FoDw==}
-    dev: false
 
   /@effect/data@0.17.1:
     resolution: {integrity: sha512-QCYkLE5Y5Dm5Yax5R3GmW4ZIgTx7W+kSZ7yq5eqQ/mFWa8i4yxbLuu8cudqzdeZtRtTGZKlhDxfFfgVtMywXJg==}
