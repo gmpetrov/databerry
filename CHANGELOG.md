@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.24"></a>
+## 0.1.24 (2023-10-05)
+
+### Miscellaneous
+
+-  fix build [[2c60be5](https://github.com/gmpetrov/databerry/commit/2c60be5e9afa596d0bc3a6cebedeeb25d81b8f1e)]
+
+
 <a name="0.1.23"></a>
 ## 0.1.23 (2023-10-05)
 
