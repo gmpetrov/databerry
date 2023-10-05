@@ -6,9 +6,9 @@ kill_timeout = 5
 primary_region = "iad"
 
 [processes]
-web = "cd apps/dashboard && node server.js"
+web = "node apps/dashboard/server.js"
 # https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
-worker = "cd apps/dashboard && node --max-old-space-size=1536 .next/server/datasource-loader.js"
+worker = "node --max-old-space-size=1536 apps/dashboard/.next/server/datasource-loader.js"
 cron = "supercronic crontab"
 
 [build]
