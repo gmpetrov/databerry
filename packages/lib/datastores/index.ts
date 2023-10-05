@@ -26,10 +26,10 @@ export class DatastoreManager {
     ) as ClientManager<Datastore>;
   }
 
-  async upload(documents: AppDocument[]) {
+  async uploadDatasourceDocs(datasourceId: string, documents: AppDocument[]) {
     const chunks = await this.handleSplitDocs(documents);
 
-    return this.manager.upload(chunks);
+    return this.manager.uploadDatasourceDocs(datasourceId, chunks);
   }
 
   search(props: SearchRequestSchema) {
@@ -56,6 +56,9 @@ export class DatastoreManager {
 
   // Documents represents multiple units (pages) from a single datasource
   static async hash(documents: AppDocument[]) {
+    if (documents?.length <= 0) {
+      return '';
+    }
     const document = documents?.[0];
 
     const tags = document?.metadata?.tags || ([] as string[]);

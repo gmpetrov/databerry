@@ -101,6 +101,9 @@ importers:
       '@next/bundle-analyzer':
         specifier: ^13.3.0
         version: 13.3.0
+      '@notionhq/client':
+        specifier: ^2.2.13
+        version: 2.2.13
       '@pinecone-database/pinecone':
         specifier: ^0.0.11
         version: 0.0.11
@@ -193,7 +196,7 @@ importers:
         version: 3.10.1
       langchain:
         specifier: ^0.0.132
-        version: 0.0.132(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(ioredis@5.3.2)(playwright@1.32.3)
+        version: 0.0.132(@notionhq/client@2.2.13)(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(ioredis@5.3.2)(playwright@1.32.3)
       mime-types:
         specifier: ^2.1.35
         version: 2.1.35
@@ -574,6 +577,9 @@ importers:
       '@chaindesk/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
+      '@notionhq/client':
+        specifier: ^2.2.13
+        version: 2.2.13
       '@slack/web-api':
         specifier: ^6.8.1
         version: 6.8.1
@@ -627,7 +633,7 @@ importers:
         version: 3.10.1
       langchain:
         specifier: ^0.0.132
-        version: 0.0.132(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.2)(mammoth@1.5.1)(playwright@1.32.3)
+        version: 0.0.132(@notionhq/client@2.2.13)(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.2)(mammoth@1.5.1)(playwright@1.32.3)
       mammoth:
         specifier: ^1.5.1
         version: 1.5.1
@@ -688,6 +694,9 @@ importers:
       stripe:
         specifier: ^11.17.0
         version: 11.17.0
+      swr:
+        specifier: ^2.1.1
+        version: 2.1.1(react@18.2.0)
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -822,7 +831,7 @@ packages:
       digest-fetch: 1.3.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
-      node-fetch: 2.6.11
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -3118,6 +3127,16 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
+  /@notionhq/client@2.2.13:
+    resolution: {integrity: sha512-wJpEl30QUSy2K3/Q2c2knNiZlLXJ17JnQgaIiFbN68IMJy+2TE9fXLxvV1N/cMVs2+SpteAa6PlyrUgfGdlmDg==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@types/node-fetch': 2.6.4
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /@octokit/auth-token@3.0.4:
     resolution: {integrity: sha512-TWFX7cZF2LXoCvdmJWY7XVPi74aSY0+FfBZNSXEXFkMpjcqsQwDSYVv5FhRFaI0V1ECnwbz4j59T/G+rXNWaIQ==}
     engines: {node: '>= 14'}
@@ -3199,7 +3218,7 @@ packages:
       '@octokit/request-error': 3.0.3
       '@octokit/types': 9.3.2
       is-plain-object: 5.0.0
-      node-fetch: 2.6.11
+      node-fetch: 2.7.0
       universal-user-agent: 6.0.0
     transitivePeerDependencies:
       - encoding
@@ -5026,7 +5045,7 @@ packages:
     dependencies:
       https-proxy-agent: 5.0.1
       mkdirp: 0.5.6
-      node-fetch: 2.6.11
+      node-fetch: 2.7.0
       progress: 2.0.3
       proxy-from-env: 1.1.0
       which: 2.0.2
@@ -7639,7 +7658,7 @@ packages:
   /cross-fetch@3.1.6:
     resolution: {integrity: sha512-riRvo06crlE8HiqOwIpQhxwdOk4fOeR7FVM/wXoxchFEqMNUjvbs3bfo4OTgMEMHzppd4DxFBDbyySj8Cv781g==}
     dependencies:
-      node-fetch: 2.6.11
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -9870,7 +9889,7 @@ packages:
       extend: 3.0.2
       https-proxy-agent: 5.0.1
       is-stream: 2.0.1
-      node-fetch: 2.6.11
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -12153,7 +12172,7 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /langchain@0.0.132(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(ioredis@5.3.2)(playwright@1.32.3):
+  /langchain@0.0.132(@notionhq/client@2.2.13)(@pinecone-database/pinecone@0.0.11)(axios@1.3.4)(ioredis@5.3.2)(playwright@1.32.3):
     resolution: {integrity: sha512-gXnuiAhsQQqXheKQiaSmFa9s3S/Yhkkb9OCytu04OE0ecttvVvfjjqIoNVS9vor8V7kRUgYPKHJsMz2UFDoJNw==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -12376,6 +12395,7 @@ packages:
         optional: true
     dependencies:
       '@anthropic-ai/sdk': 0.5.10
+      '@notionhq/client': 2.2.13
       '@pinecone-database/pinecone': 0.0.11
       ansi-styles: 5.2.0
       axios: 1.3.4
@@ -12405,7 +12425,7 @@ packages:
       - encoding
     dev: false
 
-  /langchain@0.0.132(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.2)(mammoth@1.5.1)(playwright@1.32.3):
+  /langchain@0.0.132(@notionhq/client@2.2.13)(axios@1.3.4)(cheerio@1.0.0-rc.12)(google-auth-library@8.7.0)(ioredis@5.3.2)(mammoth@1.5.1)(playwright@1.32.3):
     resolution: {integrity: sha512-gXnuiAhsQQqXheKQiaSmFa9s3S/Yhkkb9OCytu04OE0ecttvVvfjjqIoNVS9vor8V7kRUgYPKHJsMz2UFDoJNw==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -12628,6 +12648,7 @@ packages:
         optional: true
     dependencies:
       '@anthropic-ai/sdk': 0.5.10
+      '@notionhq/client': 2.2.13
       ansi-styles: 5.2.0
       axios: 1.3.4
       binary-extensions: 2.2.0
@@ -14198,6 +14219,7 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
+    dev: false
 
   /node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
@@ -14209,7 +14231,6 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
-    dev: false
 
   /node-fetch@3.3.2:
     resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}

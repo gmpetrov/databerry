@@ -1,10 +1,11 @@
-import { Prisma } from '@chaindesk/prisma';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import { getDatastore } from '@app/pages/api/datastores/[id]';
+
 import config from '@chaindesk/lib/config';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import { Prisma } from '@chaindesk/prisma';
 
 type Props = {
   swrConfig?: {

@@ -115,7 +115,6 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
           },
         });
 
-        //
         await triggerTaskLoadDatasource([
           {
             organizationId: datasource.organizationId!,
@@ -145,9 +144,9 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     return;
   }
 
-  const chunks = await new DatastoreManager(datasource.datastore!).upload(
-    documents
-  );
+  const chunks = await new DatastoreManager(
+    datasource.datastore!
+  ).uploadDatasourceDocs(datasource.id, documents);
 
   const text = chunks?.map((each) => each.pageContent)?.join('');
   const textSize = text?.length || 0;

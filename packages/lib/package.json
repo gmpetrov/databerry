@@ -12,6 +12,7 @@
     "@chaindesk/prisma": "workspace:*",
     "@chaindesk/tsconfig": "workspace:*",
     "@chaindesk/emails": "workspace:*",
+    "@notionhq/client": "^2.2.13",
     "@slack/web-api": "^6.8.1",
     "@xmldom/xmldom": "^0.8.7",
     "aws-sdk": "^2.1343.0",
@@ -47,6 +48,7 @@
     "react-dom": "18.2.0",
     "rxjs": "^7.8.1",
     "stripe": "^11.17.0",
+    "swr": "^2.1.1",
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5",
     "zod": "3.21.4"
