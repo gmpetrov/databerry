@@ -93,27 +93,13 @@ pnpm worker:datasource-loader
 <!-- #### With docker compose -->
 
 <!-- First `cd .dev/databerry` then populate the config files `app.env` and `docker.env` as needed, then run the compose command: -->
-### Run locally (Docker)
+### Run locally (Docker required)
 ```shell
-cp .dev/databerry/app.env.example .dev/databerry/app.env
+cp .env.example .env.local
 # Add your own OPENAI_API_KEY
 
-pnpm docker:compose up
-
-# Alternatively run app and services separately
-pnpm docker:compose:deps up
-pnpm docker:compose:app up
-
-# create s3 bucket
-# go to http://localhost:9090 and create bucket databerry-dev
-# set bucket access policy to public
-# might need to add 127.0.0.1 minio to /etc/hosts in order to access public s3 files through http://minio...
+pnpm dev
 
 # Dev emails inbox (maildev)
 # visit http://localhost:1080
-```
-
-You can fully rebuild dockers with :
-```shell
-pnpm docker:compose up --build
 ```

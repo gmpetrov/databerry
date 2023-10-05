@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDotEnv": [".env.local"],
+  "pipeline": {
+    "prisma:generate": {
+      "cache": false
+    },
+    "prisma:push": {
+      "cache": false
+    },
+    "build": {
+      "dependsOn": ["^build", "@chaindesk/prisma#prisma:generate"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "outputMode": "new-only"
+    },
+    "dev": {
+      "dotEnv": [".env.local"],
+      "dependsOn": [
+        "^dev",
+        "@chaindesk/prisma#prisma:generate",
+        "@chaindesk/prisma#prisma:push"
+      ],
+      "cache": false
+    },
+    "lint": {},
+    "typecheck": {}
+  }
+}

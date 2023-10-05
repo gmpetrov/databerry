@@ -1,0 +1,8 @@
+{
+    "extends": "@chaindesk/tsconfig/react-library.json",
+    "include": ["."],
+    "exclude": ["dist", "build", "node_modules"],
+    "compilerOptions": {
+        "lib": ["dom", "ES2015"],
+    }
+  }

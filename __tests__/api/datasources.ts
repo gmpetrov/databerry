@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-import { UpsertDatasourceSchema } from '@app/types/models';
-import prisma from '@app/utils/prisma-client';
+import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { prisma } from '@chaindesk/prisma/client';
 import sleep from '@app/utils/sleep';
 import { testHttp } from '@app/utils/tests';
 
