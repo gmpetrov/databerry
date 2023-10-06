@@ -1,5 +1,22 @@
 # Changelog
 
+<a name="0.1.27"></a>
+## 0.1.27 (2023-10-06)
+
+### Fixed
+
+- 🐛 page named &quot;page&quot; conflict with latest next version [[07177e3](https://github.com/gmpetrov/databerry/commit/07177e3f3e1d952e757647315b9a2c2e7852210c)]
+- 🐛 canvas not deleted on vercel [[065f3db](https://github.com/gmpetrov/databerry/commit/065f3db38a0882eb08aff76a72b4bd7541912f48)]
+
+### Miscellaneous
+
+- 🤖 disable fly cron [[02fa75a](https://github.com/gmpetrov/databerry/commit/02fa75a5d4ee76234c75cd98c145a318f19aff70)]
+- 🤖 tmp patch missing modules [[d6825b2](https://github.com/gmpetrov/databerry/commit/d6825b24906a224637d2362a5f6c9c0e472006cb)]
+- 🤖 fix broken url in README [[b92b687](https://github.com/gmpetrov/databerry/commit/b92b687c1242d76cad6b4fb293ac6f685ea360f5)]
+- 🤖 add manual dispatch to gh actions [[2ad8cef](https://github.com/gmpetrov/databerry/commit/2ad8ceffab84ab75d62faffa00fbb441eebafb0b)]
+- 🤖 enable manual trigger [[e0c8ffd](https://github.com/gmpetrov/databerry/commit/e0c8ffd6c257a21b1355cc0cb0e9e6fcf20ab59a)]
+
+
 <a name="0.1.26"></a>
 ## 0.1.26 (2023-10-06)
 
