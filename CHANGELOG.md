@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.26"></a>
+## 0.1.26 (2023-10-06)
+
+### Miscellaneous
+
+- 🤖 workaround for module not found on docker [[93a565b](https://github.com/gmpetrov/databerry/commit/93a565b17f3981abf459ebfcc923edba842b0311)]
+
+
 <a name="0.1.25"></a>
 ## 0.1.25 (2023-10-05)
 
