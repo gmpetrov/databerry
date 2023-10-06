@@ -23,7 +23,6 @@ export const updateCrispConfig = async (
   res: NextApiResponse
 ) => {
   const data = req.body as z.infer<typeof schema>;
-
   // const websites = await getConnectedWebsites();
 
   let metadata = {} as any;
