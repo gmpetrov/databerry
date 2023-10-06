@@ -1,0 +1,22 @@
+name: Send daily leads email
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/dashboard
+    env:
+      DATABASE_URL: '${{ secrets.DATABASE_URL }}'
+      EMAIL_FROM: '${{ secrets.EMAIL_FROM }}'
+      EMAIL_SERVER: '${{ secrets.EMAIL_SERVER }}'
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.2.2
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm turbo run sendDailyLeads

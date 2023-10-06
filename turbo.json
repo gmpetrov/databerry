@@ -23,6 +23,10 @@
       "cache": false
     },
     "lint": {},
-    "typecheck": {}
+    "typecheck": {},
+    "sendDailyLeads": {
+      "dependsOn": ["@chaindesk/prisma#prisma:generate"],
+      "cache": false
+    }
   }
 }

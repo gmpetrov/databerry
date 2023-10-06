@@ -21,7 +21,8 @@
     "worker:datasource-loader": "npm run dotenv -- tsx -- --watch workers/datasource-loader.ts | pino-pretty --colorize",
     "dotenv": "dotenv -e ../../.env.local",
     "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set",
-    "stripe:dev": "stripe listen --forward-to localhost:3000/api/stripe/webhook"
+    "stripe:dev": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
+    "sendDailyLeads": "npm run dotenv -- tsx cron/daily-leads.tsx"
   },
   "alias": {
     "@app/components": "./components",
@@ -62,7 +63,6 @@
     "@types/react-dom": "18.0.11",
     "@vercel/og": "^0.5.11",
     "axios": "^1.3.4",
-    "bullmq": "^3.13.3",
     "clsx": "^1.2.1",
     "cors": "^2.8.5",
     "crisp-api": "^7.4.1",
@@ -107,7 +107,25 @@
     "typescript": "5.0.2",
     "uuid": "^9.0.0",
     "yaml": "^2.2.1",
-    "zod": "3.21.4"
+    "zod": "3.21.4",
+    "@axiomhq/pino": "^0.1.3",
+    "@xmldom/xmldom": "^0.8.7",
+    "aws-sdk": "^2.1343.0",
+    "bullmq": "^3.13.3",
+    "cheerio": "1.0.0-rc.12",
+    "exceljs": "^4.3.0",
+    "eslint-config-custom": "workspace:*",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^118.0.0",
+    "mammoth": "^1.5.1",
+    "msgpackr": "^1.9.3",
+    "nanoid": "^4.0.2",
+    "next-connect": "^0.13.0",
+    "pdfjs-dist": "3.4.120",
+    "playwright": "^1.32.3",
+    "pino": "^8.15.0",
+    "rxjs": "^7.8.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@chaindesk/tsconfig": "workspace:*",

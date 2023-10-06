@@ -1,12 +1,12 @@
-import { DatasourceStatus } from '@chaindesk/prisma';
 import Redis from 'ioredis';
 
-import { TaskQueue } from '@chaindesk/lib/types';
-import { TaskLoadDatasourceRequestSchema } from '@chaindesk/lib/types/dtos';
 import { WorkerPro } from '@chaindesk/lib/bullmq-pro';
 import logger from '@chaindesk/lib/logger';
-import { prisma } from '@chaindesk/prisma/client';
 import taskLoadDatasource from '@chaindesk/lib/task-load-datasource';
+import { TaskQueue } from '@chaindesk/lib/types';
+import { TaskLoadDatasourceRequestSchema } from '@chaindesk/lib/types/dtos';
+import { DatasourceStatus } from '@chaindesk/prisma';
+import { prisma } from '@chaindesk/prisma/client';
 
 const connection = new Redis(process.env.REDIS_URL!);
 

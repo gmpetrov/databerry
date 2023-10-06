@@ -1,11 +1,11 @@
-import { Lead, Organization, Prisma } from '@chaindesk/prisma';
 import pMap from 'p-map';
 import React from 'react';
 
-import { render, DailyLeads } from '@chaindesk/emails';
+import { DailyLeads, render } from '@chaindesk/emails';
 import { generateExcelBuffer } from '@chaindesk/lib/export/excel-export';
 import logger from '@chaindesk/lib/logger';
 import mailer from '@chaindesk/lib/mailer';
+import { Lead, Organization, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const createReport = async (org: Organization) => {

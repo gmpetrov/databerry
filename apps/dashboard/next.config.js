@@ -167,7 +167,7 @@ const nextConfig = {
   // outputFileTracingIgnores: ['canvas'],
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.externals.push({
-      playwright: true,
+      playwright: 'commonjs playwright',
       canvas: 'commonjs canvas',
       'pdf-parse/lib/pdf.js/v1.10.100/build/pdf.js': true,
       '@huggingface/inference': 'commonjs @huggingface/inference',
