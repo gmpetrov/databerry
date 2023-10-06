@@ -15,11 +15,6 @@ const nextConfig = {
   transpilePackages: ['@chaindesk/lib', '@chaindesk/emails'],
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../../'),
-    // legacyBrowsers: false,
-    // outputFileTracingIgnores: ['**canvas**'],
-    outputFileTracingExcludes: {
-      '*': ['node_modules/.pnpm/canvas@2.11.2'],
-    },
   },
   // eslint: {
   //   dirs: ['pages', 'utils', 'components', 'hooks', 'types', 'widgets'],

@@ -1,6 +1,6 @@
 <h1 align="center" style="font-weight: bold">
   <br>
-  <a href="https://chaindesk.ai"><img src="public/app-logo-icon.png" alt="WebTorrent" width="200"></a>
+  <a href="https://chaindesk.ai"><img src="apps/dashboard/public/app-logo-icon.png" alt="Chaindesk" width="200"></a>
   <br>
   Chaindesk
   <br>
@@ -12,7 +12,7 @@
 <!-- <h4 align="center">The no-code platform for semantic search and retrieval of personal or organizational documents.</h4> -->
 
 <h2 align="center">
-<img src="public/og-image.png" alt="Chaindesk" width="1000" style="max-width: 100%;">
+<img src="apps/dashboard/public/og-image.png" alt="Chaindesk" width="1000" style="max-width: 100%;">
 </h2>
 
 **[Chaindesk](https://chaindesk.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.
@@ -93,7 +93,9 @@ pnpm worker:datasource-loader
 <!-- #### With docker compose -->
 
 <!-- First `cd .dev/databerry` then populate the config files `app.env` and `docker.env` as needed, then run the compose command: -->
+
 ### Run locally (Docker required)
+
 ```shell
 cp .env.example .env.local
 # Add your own OPENAI_API_KEY
