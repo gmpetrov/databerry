@@ -70,7 +70,7 @@ const nextConfig = {
         },
         {
           source: '/@:path',
-          destination: '/agents/@:path/page',
+          destination: '/agents/@:path/standalone',
         },
         {
           source: '/privacy',

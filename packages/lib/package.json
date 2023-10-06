@@ -57,7 +57,7 @@
     "@types/uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "next": "13.2.4",
+    "next": "13.5.4",
     "next-auth": "^4.23.2",
     "react": "18.2.0"
   }

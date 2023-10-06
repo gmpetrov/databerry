@@ -22,7 +22,7 @@ import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
-function AgentPage(props: { agent: Agent }) {
+export default function AgentPage(props: { agent: Agent }) {
   const agentId = props.agent?.id;
 
   const [state, setState] = useStateReducer({
@@ -571,8 +571,6 @@ function AgentPage(props: { agent: Agent }) {
 AgentPage.getLayout = function getLayout(page: ReactElement) {
   return <SessionProvider>{page}</SessionProvider>;
 };
-
-export default AgentPage;
 
 export async function getStaticPaths() {
   const all: string[] = [];

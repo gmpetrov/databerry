@@ -211,7 +211,7 @@ export default function StandalonePageSettings(props: Props) {
                         src={`${process.env.NEXT_PUBLIC_DASHBOARD_URL?.replace(
                           'app.',
                           ''
-                        )}/agents/${query?.data?.id}/page?counter=${
+                        )}/agents/${query?.data?.id}/standalone?counter=${
                           state.counter
                         }`}
                         frameBorder="0"
