@@ -167,8 +167,8 @@ const nextConfig = {
   // outputFileTracingIgnores: ['canvas'],
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.externals.push({
-      playwright: 'commonjs playwright',
       canvas: 'commonjs canvas',
+      // Langchain fixes
       'pdf-parse/lib/pdf.js/v1.10.100/build/pdf.js': true,
       '@huggingface/inference': 'commonjs @huggingface/inference',
       replicate: 'commonjs replicate',
@@ -179,7 +179,16 @@ const nextConfig = {
       puppeteer: 'commonjs puppeteer',
       // 'html-to-text': 'commonjs html-to-text',
       epub2: 'commonjs epub2',
-      // bullmq: 'commonjs bullmq',
+
+      // TODO: Some dependency from @chaindesk/lib are not found in the Docker image. Find a fix!
+      // As a workaround we are adding the following dependencies dashboard's package.json
+      // bullmq, playwright, pdfjs-dist
+      // playwright and bullmq might be missing because they are marked as exeternal below
+      // pdfjs-dist maybe becase it is loaded as a sideEffect in @chaindesk/lib "import 'pdfjs-dist/build/pdf.worker.js';"
+
+      // To mute error: Critical dependency: the request of a dependency is an expression
+      playwright: 'commonjs playwright',
+      bullmq: 'commonjs bullmq',
     });
 
     if (isServer && config.name === 'server') {

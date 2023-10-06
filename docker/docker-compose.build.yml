@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  maildev:
+    extends:
+      file: docker-compose.all.yml
+      service: maildev
+  qdrant:
+    extends:
+      file: docker-compose.all.yml
+      service: qdrant
+  pgdb:
+    extends:
+      file: docker-compose.all.yml
+      service: pgdb
+  pgadmin:
+    extends:
+      file: docker-compose.all.yml
+      service: pgadmin
+  redis:
+    extends:
+      file: docker-compose.all.yml
+      service: redis
+  redis-ui:
+    extends:
+      file: docker-compose.all.yml
+      service: redis-ui
+  minio:
+    extends:
+      file: docker-compose.all.yml
+      service: minio
+  init_bucket:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      /usr/bin/mc config host add minio http://minio:9000 root password;
+      /usr/bin/mc mb minio/chaindesk;
+      /usr/bin/mc anonymous set public minio/chaindesk;
+      exit 0;
+      "
+  chaindesk_dashboard:
+    build:
+      context: ../
+      args:
+        - SCOPE=dashboard
+    depends_on:
+      - pgdb
+    ports:
+      - '3000:3000'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    env_file: ../.env.local
+  chaindesk_datasource_loader:
+    build:
+      context: ../
+      args:
+        - SCOPE=dashboard
+    depends_on:
+      - chaindesk_dashboard
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    env_file: ../.env.local
+    entrypoint: >
+      /bin/sh -c "
+      node apps/dashboard/.next/server/datasource-loader.js
+      "
+volumes:
+  pgdb-data:
+  pgadmin-data:
+  redis-data:
+  redis-conf:
+  p3x-redis-ui-settings:
+  minio:

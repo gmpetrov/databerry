@@ -68,8 +68,8 @@ COPY .npmrc ./
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
-RUN pnpm install
 RUN pnpx playwright install --with-deps chromium
+RUN pnpm install
 RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 COPY --from=pruner /app/out/full/ .

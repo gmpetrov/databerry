@@ -12,6 +12,8 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx}\"",
     "check": "pnpm list-mismatches && pnpm format && pnpm typecheck && pnpm lint",
     "docker:up": "docker compose -f docker/docker-compose.deps.yml --env-file docker/docker.env up -d",
+    "docker:down": "docker compose -f docker/docker-compose.deps.yml down",
+    "docker:build:up": "docker compose -f docker/docker-compose.build.yml --env-file docker/docker.env up",
     "docker:nuke": "docker compose -f docker-compose.dev.yml down --volumes --remove-orphans",
     "list-packages": "npx syncpack list",
     "list-mismatches": "npx syncpack list-mismatches",
@@ -38,7 +40,6 @@
     }
   },
   "devDependencies": {
-    "buffer": "^5.5.0||^6.0.0",
     "cz-emoji": "1.3.2-canary.2",
     "eslint": "8.36.0",
     "git-cz": "^4.9.0",
