@@ -1,5 +1,6 @@
 name: Chaindesk on Fly.io
 on:
+  workflow_dispatch:
   push:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'

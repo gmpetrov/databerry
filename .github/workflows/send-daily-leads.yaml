@@ -15,6 +15,7 @@ jobs:
       DATABASE_URL: '${{ secrets.DATABASE_URL }}'
       EMAIL_FROM: '${{ secrets.EMAIL_FROM }}'
       EMAIL_SERVER: '${{ secrets.EMAIL_SERVER }}'
+      NEXT_PUBLIC_DASHBOARD_URL: '${{ secrets.NEXT_PUBLIC_DASHBOARD_URL }}'
 
     steps:
       - uses: actions/checkout@v2
