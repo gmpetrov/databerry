@@ -1,4 +1,3 @@
-import Card from '@mui/joy/Card';
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
 import React, { ComponentProps } from 'react';

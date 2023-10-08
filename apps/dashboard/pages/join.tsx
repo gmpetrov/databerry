@@ -1,4 +1,5 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import CelebrationIcon from '@mui/icons-material/Celebration';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Divider from '@mui/joy/Divider';
@@ -10,6 +11,7 @@ import { useRouter } from 'next/router';
 import { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
+import FeedbackCard from '@app/components/FeedbackCard';
 import Logo from '@app/components/Logo';
 
 import { RouteNames } from '@chaindesk/lib/types';
@@ -24,50 +26,34 @@ export default function AccountPage(props: {
   const { data: session, update } = useSession();
   const router = useRouter();
 
+  function Cta() {
+    return (
+      <Button
+        onClick={async () => {
+          if (props.organizationId) {
+            await update({
+              orgId: props.organizationId,
+            });
+          }
+
+          router.push(RouteNames.AGENTS);
+        }}
+        endDecorator={<ArrowForwardRoundedIcon />}
+        sx={{ ml: 'auto' }}
+      >
+        Continue to Dashboard
+      </Button>
+    );
+  }
+
   return (
-    <Stack
-      sx={{
-        p: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-      }}
-    >
-      <Card sx={{ maxWidth: 'sm' }} variant="outlined">
-        <Stack gap={4} sx={{ p: 2 }}>
-          <Stack direction="row" sx={{ mx: 'auto', alignItems: 'end' }} gap={1}>
-            <Logo className="w-14 " />
-            <Typography level="h2">Chaindesk</Typography>
-          </Stack>
-
-          <Typography level="title-lg" sx={{ textAlign: 'center' }}>
-            🎉 You are now a member of{' '}
-            <Typography sx={{ fontWeight: 'bold' }} color="primary">
-              {' '}
-              {`${props.organizationName}`}
-            </Typography>
-          </Typography>
-        </Stack>
-
-        <Divider></Divider>
-
-        <Button
-          onClick={async () => {
-            if (props.organizationId) {
-              await update({
-                orgId: props.organizationId,
-              });
-            }
-
-            router.push(RouteNames.AGENTS);
-          }}
-          endDecorator={<ArrowForwardRoundedIcon />}
-          sx={{ ml: 'auto' }}
-        >
-          Continue to Dashboard
-        </Button>
-      </Card>
-    </Stack>
+    <FeedbackCard
+      Icon={<CelebrationIcon />}
+      header={'welcome aboard!'}
+      description={`You are now a member of ${props.organizationName}`}
+      Cta={<Cta />}
+      isConfettiActive
+    />
   );
 }
 
