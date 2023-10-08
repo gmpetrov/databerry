@@ -1,0 +1,42 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dashboard: server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./*": "${workspaceRoot}/apps/dashboard/*"
+      }
+    },
+    {
+      "name": "Dashboard: client-side",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost.3000",
+      "webRoot": "${workspaceFolder}/apps/dashboard"
+    },
+    {
+      "name": "Dashboard: full stack",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///./*": "${workspaceRoot}/apps/dashboard/*"
+      },
+      "serverReadyAction": {
+        "action": "startDebugging",
+        // Must me the same as **1**
+        "name": "Dashboard: client-side",
+        // Must be the same as the [ready] output from the server
+        "pattern": "on http://localhost:3000"
+      }
+    }
+  ]
+}
