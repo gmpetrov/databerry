@@ -59,6 +59,7 @@ export const AgentInterfaceConfig = z.object({
     })
     .optional(),
   initialMessage: z.string().trim().optional(),
+  isInitMessagePopupDisabled: z.boolean().optional(),
   messageTemplates: z.array(z.string()).optional(),
   position: z.enum(['left', 'right']).optional(),
   authorizedDomains: z.array(z.string()).optional(),

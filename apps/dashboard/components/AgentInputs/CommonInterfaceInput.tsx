@@ -3,19 +3,21 @@ import { useFormContext } from 'react-hook-form';
 
 import Input from '@app/components/Input';
 
+import InitialBubbleMessageCheckbox from './InitialBubbleMessageCheckbox';
 import InitMessageInput from './InitMessageInput';
 import SuggestionsInput from './SuggestionsInput';
 
 type Props = {};
 
 export default function CommonInterfaceInput(props: Props) {
-  const { watch, control, register, setValue } = useFormContext();
+  const { watch, control, register } = useFormContext();
 
   const config = watch('interfaceConfig');
 
   return (
     <>
       <InitMessageInput />
+      <InitialBubbleMessageCheckbox />
       <SuggestionsInput />
       <Input
         control={control}
