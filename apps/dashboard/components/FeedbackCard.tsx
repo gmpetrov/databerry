@@ -66,8 +66,8 @@ function FeedbackCard({
                   borderRadius: '100%',
                   border: '2px solid',
                   borderColor: 'divider',
-                  width: 60,
-                  height: 60,
+                  width: 45,
+                  height: 45,
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -82,33 +82,26 @@ function FeedbackCard({
                   className="w-full height-auto"
                 />
               </Box>
-              {/* <a href="/" target="_blank">
-                <Typography
-                  level="body-md"
-                  sx={{
-                    color: 'text.tertiary',
-                    '&:hover': {
-                      color: 'primary.300',
-                    },
-                  }}
-                >
-                  Chaindesk
-                </Typography>
-              </a> */}
+              {/* <Typography level="body-md" sx={{ color: 'text.tertiary' }}>
+                {header}
+              </Typography> */}
             </Stack>
           </Stack>
           <Divider inset="context" />
         </CardOverflow>
 
-        <Stack gap={1} sx={{ px: 2, py: 8 }}>
+        <Stack gap={1} sx={{ px: 2, py: 6 }}>
           <Stack
             direction="column"
             sx={{ mx: 'auto', alignItems: 'center' }}
             gap={3}
           >
-            <Stack direction="column" sx={{ mx: 'auto', alignItems: 'center' }}>
+            <Stack
+              direction="column"
+              sx={{ mx: 'auto', alignItems: 'center', gap: 1 }}
+            >
               {React.cloneElement(Icon, {
-                sx: { fontSize: '70px', color: 'primary.main' },
+                sx: { fontSize: '50px', color: 'primary.main' },
               })}
               <Typography
                 level="h2"
