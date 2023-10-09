@@ -34,6 +34,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
 
   const {
     history,
+    conversationId,
+    visitorId,
     handleChatSubmit,
     isLoadingConversation,
     hasMoreMessages,
@@ -143,6 +145,10 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         handleEvalAnswer={handleEvalAnswer}
         handleAbort={handleAbort}
         hideInternalSources
+        agentId={agentId}
+        conversationId={conversationId}
+        visitorId={visitorId}
+        withCapture={true}
       />
     </Box>
   );

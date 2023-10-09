@@ -39,17 +39,19 @@ import { withAuth } from '@chaindesk/lib/withAuth';
 
 export default function AgentPage() {
   const router = useRouter();
+  const agentId = router.query?.agentId as string;
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isUsageModalOpen: false,
   });
 
   const { query } = useAgent({
-    id: router.query?.agentId as string,
+    id: agentId,
   });
 
   const {
     history,
+    visitorId,
     handleChatSubmit,
     isLoadingConversation,
     hasMoreMessages,
@@ -59,9 +61,7 @@ export default function AgentPage() {
     handleEvalAnswer,
     handleAbort,
   } = useChat({
-    endpoint: router.query?.agentId
-      ? `/api/agents/${router.query?.agentId}/query`
-      : undefined,
+    endpoint: agentId ? `/api/agents/${agentId}/query` : undefined,
   });
 
   const handleChangeTab = (tab: string) => {
@@ -295,7 +295,7 @@ export default function AgentPage() {
                 })}
               >
                 <ConversationList
-                  agentId={router.query?.agentId as string}
+                  agentId={agentId}
                   rootSx={{
                     pt: 1,
                     height: '100%',
@@ -322,6 +322,10 @@ export default function AgentPage() {
                   handleEvalAnswer={handleEvalAnswer}
                   handleAbort={handleAbort}
                   userImgUrl={session?.user?.image!}
+                  withCapture={true}
+                  agentId={agentId}
+                  conversationId={conversationId}
+                  visitorId={visitorId}
                 />
               </Box>
 

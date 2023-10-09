@@ -290,6 +290,7 @@ export default function LogsPage() {
                 });
               }}
               userImgUrl={session?.user?.image!}
+              withCapture={false}
             />
           </Box>
         </Stack>

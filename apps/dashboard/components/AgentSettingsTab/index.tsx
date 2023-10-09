@@ -1,3 +1,4 @@
+import Person from '@mui/icons-material/Person';
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
@@ -20,6 +21,7 @@ import useStateReducer from '@app/hooks/useStateReducer';
 import { RouteNames } from '@chaindesk/lib/types';
 
 import AgentGeneralSettingsTab from './AgentGeneralSettingsTab';
+import AgentLeadSettingsTab from './AgentLeadSettingsTab';
 import AgentModelSettingsTab from './AgentModelSettingsTab';
 import AgentSecuritySettings from './AgentSecuritySettingsTab';
 import AgentToolSettingsTab from './AgentToolSettingsTab';
@@ -116,6 +118,22 @@ function AgentSettingsTab(props: Props) {
           </ListItem>
           <ListItem>
             <ListItemButton
+              selected={state.currentTab === 'leads'}
+              onClick={() =>
+                setState({
+                  currentTab: 'leads',
+                })
+              }
+            >
+              <ListItemDecorator>
+                <Person />
+              </ListItemDecorator>
+              <ListItemContent>Leads</ListItemContent>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem>
+            <ListItemButton
               selected={state.currentTab === 'security'}
               onClick={() =>
                 setState({
@@ -142,6 +160,10 @@ function AgentSettingsTab(props: Props) {
 
         {state.currentTab === 'tools' && (
           <AgentToolSettingsTab agentId={props.agentId} />
+        )}
+
+        {state.currentTab === 'leads' && (
+          <AgentLeadSettingsTab agentId={props.agentId} />
         )}
 
         {state.currentTab === 'security' && (

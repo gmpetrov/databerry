@@ -364,6 +364,7 @@ export default function ChatPage() {
                   />
                 }
                 userImgUrl={session?.user?.image!}
+                withCapture={false}
               />
             </Box>
 

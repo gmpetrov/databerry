@@ -64,7 +64,11 @@ export default function DatasourcesPage() {
           maxHeight: '100%',
         }}
       >
-        <ChatBox messages={history} onSubmit={handleChatSubmit} />
+        <ChatBox
+          messages={history}
+          onSubmit={handleChatSubmit}
+          withCapture={false}
+        />
       </Box>
     </Box>
   );

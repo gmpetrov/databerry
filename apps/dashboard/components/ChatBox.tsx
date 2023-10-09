@@ -28,6 +28,7 @@ import { z } from 'zod';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import type { Source } from '@chaindesk/lib/types/document';
 
+import Capture from './Capture';
 import SourceComponent from './Source';
 
 export type ChatBoxMessage = {
@@ -39,7 +40,7 @@ export type ChatBoxMessage = {
   sources?: Source[];
 };
 
-type Props = {
+type BaseProps = {
   messages: ChatBoxMessage[];
   onSubmit: (message: string) => Promise<any>;
   messageTemplates?: string[];
@@ -64,6 +65,22 @@ type Props = {
   hideInternalSources?: boolean;
   userImgUrl?: string;
 };
+
+interface WithCaptureProps extends BaseProps {
+  withCapture: true;
+  agentId: string;
+  conversationId: string;
+  visitorId: string;
+}
+
+interface WithoutCaptureProps extends BaseProps {
+  withCapture: false;
+  agentId?: never;
+  conversationId?: never;
+  visitorId?: never;
+}
+
+type Props = WithCaptureProps | WithoutCaptureProps;
 
 const Schema = z.object({ query: z.string().min(1) });
 
@@ -167,6 +184,10 @@ function ChatBox({
   hideInternalSources,
   renderBottom,
   userImgUrl,
+  withCapture,
+  agentId,
+  conversationId,
+  visitorId,
 }: Props) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -232,6 +253,13 @@ function ChatBox({
         mx: 'auto',
       }}
     >
+      {withCapture && (
+        <Capture
+          visitorId={visitorId}
+          agentId={agentId}
+          conversationId={conversationId}
+        />
+      )}
       <Stack
         ref={scrollableRef}
         direction={'column'}

@@ -521,6 +521,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   handleEvalAnswer={handleEvalAnswer}
                   handleAbort={handleAbort}
                   hideInternalSources
+                  withCapture={true}
+                  agentId={props.agentId}
+                  conversationId={conversationId}
+                  visitorId={visitorId}
                 />
               </Box>
             </Card>

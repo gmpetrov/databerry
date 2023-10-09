@@ -71,6 +71,7 @@ export const AgentInterfaceConfig = z.object({
   tiktokURL: z.string().optional(),
   githubURL: z.string().optional(),
   websiteURL: z.string().optional(),
+  isLeadCaptureEnabled: z.boolean().optional(),
   rateLimit: z
     .object({
       enabled: z.boolean().optional(),
