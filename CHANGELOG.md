@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.28"></a>
+## 0.1.28 (2023-10-08)
+
+### Miscellaneous
+
+- 🎸 Generic feedback card ([#171](https://github.com/gmpetrov/databerry/issues/171)) [[1cba130](https://github.com/gmpetrov/databerry/commit/1cba130df29eb413812c811ff40ec7d4a3566365)]
+- 🎸 Disable init message on bubble ([#174](https://github.com/gmpetrov/databerry/issues/174)) [[25ec398](https://github.com/gmpetrov/databerry/commit/25ec398327058dcef8b214204efb521fea7df248)]
+- 🤖 add debugger config [[aec718f](https://github.com/gmpetrov/databerry/commit/aec718f21296e9146e48906ca6a952112a82d5b9)]
+
+
 <a name="0.1.27"></a>
 ## 0.1.27 (2023-10-06)
 
