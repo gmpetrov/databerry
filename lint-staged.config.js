@@ -1,4 +1,8 @@
 module.exports = {
-  '*.{ts,tsx}': () => ['tsc-files --noEmit', 'pnpm lint'],
-  '*.{js,jsx}': () => 'pnpm lint',
+  '*.{ts,tsx}': (files) => [
+    'tsc-files --noEmit',
+    `prettier --write ${files.join(' ')}`,
+    'pnpm lint',
+  ],
+  '*.{js,jsx}': (files) => [`prettier --write ${files.join(' ')}`, 'pnpm lint'],
 };
