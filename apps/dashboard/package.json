@@ -22,7 +22,8 @@
     "dotenv": "dotenv -e ../../.env.local",
     "set-env:prod": "cat .env.prod.local | xargs flyctl --config fly/fly.toml secrets set",
     "stripe:dev": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
-    "sendDailyLeads": "npm run dotenv -- tsx cron/daily-leads.tsx"
+    "sendDailyLeads": "npm run dotenv -- tsx cron/daily-leads.tsx",
+    "syncDatasources": "npm run dotenv -- tsx cron/sync-datasources.tsx"
   },
   "alias": {
     "@app/components": "./components",

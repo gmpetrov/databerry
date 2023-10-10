@@ -1,19 +1,20 @@
-name: Send daily leads email
+name: Sync Datasources
 
 on:
   workflow_dispatch:
   schedule:
-    # every day 6am
-    - cron: '0 6 * * *'
+    # every day 2am
+    - cron: '0 2 * * *'
 
 jobs:
-  send:
+  run:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./apps/dashboard
     env:
       DATABASE_URL: '${{ secrets.DATABASE_URL }}'
+      REDIS_URL: '${{ secrets.REDIS_URL }}'
       EMAIL_FROM: '${{ secrets.EMAIL_FROM }}'
       EMAIL_SERVER: '${{ secrets.EMAIL_SERVER }}'
       NEXT_PUBLIC_DASHBOARD_URL: '${{ secrets.NEXT_PUBLIC_DASHBOARD_URL }}'
@@ -22,4 +23,4 @@ jobs:
       - uses: actions/checkout@v2
       - uses: pnpm/action-setup@v2.2.2
       - run: pnpm i --frozen-lockfile
-      - run: pnpm turbo run sendDailyLeads
+      - run: pnpm turbo run syncDatasources

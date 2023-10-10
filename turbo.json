@@ -27,6 +27,10 @@
     "sendDailyLeads": {
       "dependsOn": ["@chaindesk/prisma#prisma:generate"],
       "cache": false
+    },
+    "syncDatasources": {
+      "dependsOn": ["@chaindesk/prisma#prisma:generate"],
+      "cache": false
     }
   }
 }
