@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.31"></a>
+## 0.1.31 (2023-10-10)
+
+### Miscellaneous
+
+- 🎸 update datasource metadata without embedding [[78e0d36](https://github.com/gmpetrov/databerry/commit/78e0d36cab1d8091b5c6f37f376b66255f8a841c)]
+
+
 <a name="0.1.30"></a>
 ## 0.1.30 (2023-10-10)
 
