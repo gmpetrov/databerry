@@ -15,7 +15,7 @@
     "e2e:api:watch": "jest __tests__/api --watch",
     "widget:chat-bubble:dev": "concurrently \"npx serve tests/chat-bubble\" \"mkdir -p tests/chat-bubble/dist && NEXT_PUBLIC_DASHBOARD_URL=https://app.chaindesk.ai npx parcel watch widgets/chat-bubble.tsx --dist-dir tests/chat-bubble/dist\"",
     "widget:chat-bubble:build": "NEXT_PUBLIC_DASHBOARD_URL=https://app.chaindesk.ai npx parcel build widgets/chat-bubble.tsx",
-    "widget:chat-bubble:publish": "npm run build:widget:chat-bubble && cp dist/chat-bubble* ../../packages/chat-bubble/ && cd ../../packages/chat-bubble && npm version patch && npm publish --access public",
+    "widget:chat-bubble:publish": "npm run widget:chat-bubble:build && cp dist/chat-bubble* ../../packages/chat-bubble/ && cd ../../packages/chat-bubble && npm version patch && npm publish --access public",
     "build:widget:prestashop": "cd widgets/prestashop && bash build.sh",
     "build:widget:wordpress": "cd widgets/wordpress && bash build.sh",
     "worker:datasource-loader": "npm run dotenv -- tsx -- --watch workers/datasource-loader.ts | pino-pretty --colorize",
