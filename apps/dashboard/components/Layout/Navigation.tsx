@@ -8,6 +8,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import NewReleasesRoundedIcon from '@mui/icons-material/NewReleasesRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
