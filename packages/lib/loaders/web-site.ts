@@ -78,7 +78,20 @@ export class WebSiteLoader extends DatasourceLoaderBase {
 
       return cuid();
     });
-    const idsSitemaps = nestedSitemaps.map(() => cuid());
+    const childrenIdsToDelete =
+      children
+        ?.filter((each) => !urls?.includes((each as any)?.config?.source_url))
+        ?.map((each) => each.id) || [];
+
+    if (childrenIdsToDelete?.length > 0) {
+      await prisma.appDatasource.deleteMany({
+        where: {
+          id: {
+            in: childrenIdsToDelete,
+          },
+        },
+      });
+    }
 
     if (ids.length > 0) {
       await prisma.appDatasource.createMany({
@@ -98,6 +111,7 @@ export class WebSiteLoader extends DatasourceLoaderBase {
       });
     }
 
+    const idsSitemaps = nestedSitemaps.map(() => cuid());
     if (idsSitemaps.length > 0) {
       await prisma.appDatasource.createMany({
         data: nestedSitemaps.map((each, idx) => ({

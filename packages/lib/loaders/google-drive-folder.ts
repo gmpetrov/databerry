@@ -8,7 +8,6 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 import accountConfig from '../account-config';
-import generateFunId from '../generate-fun-id';
 import { GoogleDriveManager } from '../google-drive-manager';
 import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
 import { AppDocument } from '../types/document';
@@ -55,6 +54,8 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
       },
     });
 
+    const fileIds = files.map((f) => f.id);
+
     const ids = files.map((f) => {
       const found = children.find(
         (each) => (each as any)?.config?.objectId === f.id
@@ -66,6 +67,21 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
 
       return cuid();
     });
+
+    const childrenIdsToDelete =
+      children
+        ?.filter((each) => !fileIds?.includes((each as any)?.config?.objectId))
+        ?.map((each) => each.id) || [];
+
+    if (childrenIdsToDelete?.length > 0) {
+      await prisma.appDatasource.deleteMany({
+        where: {
+          id: {
+            in: childrenIdsToDelete,
+          },
+        },
+      });
+    }
 
     await prisma.appDatasource.createMany({
       data: files.map((each, idx) => ({
