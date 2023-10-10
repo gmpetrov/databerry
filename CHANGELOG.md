@@ -1,5 +1,16 @@
 # Changelog
 
+<a name="0.1.29"></a>
+## 0.1.29 (2023-10-10)
+
+### Miscellaneous
+
+-  feat: notion ([#154](https://github.com/gmpetrov/databerry/issues/154)) [[5657c2e](https://github.com/gmpetrov/databerry/commit/5657c2eb15376ab88a219389aa2c384c6fe7a307)]
+- 🎸 custom signin email ([#172](https://github.com/gmpetrov/databerry/issues/172)) [[1bfa260](https://github.com/gmpetrov/databerry/commit/1bfa2600b798deb1ae755da10e3b633b3ee53642)]
+-  chore: add prettier to lint-staged [[b264d35](https://github.com/gmpetrov/databerry/commit/b264d35b1f89a5e31f4379cc2daea899bbbd5117)]
+- 🤖 finetune feedback card [[39e83df](https://github.com/gmpetrov/databerry/commit/39e83df238de5c6c5bb04a066464eea7e34b4909)]
+
+
 <a name="0.1.28"></a>
 ## 0.1.28 (2023-10-08)
 
