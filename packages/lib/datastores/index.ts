@@ -54,6 +54,16 @@ export class DatastoreManager {
     return this.manager.getChunk(chunkId);
   }
 
+  updateDatasourceMetadata(props: {
+    datasourceId: string;
+    metadata: Partial<ChunkMetadata>;
+  }) {
+    return this.manager.updateDatasourceMetadata({
+      datasourceId: props.datasourceId,
+      metadata: props.metadata,
+    });
+  }
+
   // Documents represents multiple units (pages) from a single datasource
   static async hash(documents: AppDocument[]) {
     if (documents?.length <= 0) {
@@ -61,7 +71,7 @@ export class DatastoreManager {
     }
     const document = documents?.[0];
 
-    const tags = document?.metadata?.tags || ([] as string[]);
+    // const tags = document?.metadata?.tags || ([] as string[]);
     const source_url = document?.metadata?.source_url || '';
     const hasher = await createBLAKE3();
 
@@ -69,17 +79,17 @@ export class DatastoreManager {
     hasher.update(document.metadata?.datasource_id!);
     hasher.update(documents.map((each) => each.pageContent).join(''));
 
-    for (const tag of tags || []) {
-      hasher.update(tag);
-    }
+    // for (const tag of tags || []) {
+    //   hasher.update(tag);
+    // }
 
     if (source_url) {
       hasher.update(source_url);
     }
 
-    if (document.metadata?.datasource_name) {
-      hasher.update(document.metadata?.datasource_name!);
-    }
+    // if (document.metadata?.datasource_name) {
+    //   hasher.update(document.metadata?.datasource_name!);
+    // }
 
     return hasher.digest('hex');
   }

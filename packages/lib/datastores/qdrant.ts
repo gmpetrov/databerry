@@ -333,4 +333,50 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       },
     });
   }
+
+  async updateMetadata(props: {
+    filters: SearchRequestSchema['filters'];
+    payload: Partial<ChunkMetadata>;
+  }) {
+    return initHTTPClient().post(
+      `/collections/text-embedding-ada-002/points/payload`,
+      {
+        payload: {
+          ...props.payload,
+        },
+        filter: {
+          must: [
+            ...((props.filters?.datasource_ids || [])?.length > 0
+              ? [
+                  {
+                    key: MetadataFields.datasource_id,
+                    match: { any: props.filters?.datasource_ids },
+                  },
+                ]
+              : []),
+            ...((props.filters?.datastore_ids || [])?.length > 0
+              ? [
+                  {
+                    key: MetadataFields.datastore_id,
+                    match: { any: props.filters?.datastore_ids },
+                  },
+                ]
+              : []),
+          ],
+        },
+      }
+    );
+  }
+
+  async updateDatasourceMetadata(props: {
+    datasourceId: string;
+    metadata: Partial<ChunkMetadata>;
+  }) {
+    return this.updateMetadata({
+      payload: props.metadata,
+      filters: {
+        datasource_ids: [props.datasourceId],
+      },
+    });
+  }
 }

@@ -12,6 +12,7 @@ import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import { DatastoreManager } from '@chaindesk/lib/datastores';
 import generateFunId from '@chaindesk/lib/generate-fun-id';
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import guardDataProcessingUsage from '@chaindesk/lib/guard-data-processing-usage';
@@ -154,6 +155,9 @@ export const upsertDatasource = async (
       where: {
         id: data.id,
       },
+      include: {
+        datastore: true,
+      },
     });
 
     if (
@@ -198,6 +202,18 @@ export const upsertDatasource = async (
     };
 
     await s3.putObject(params).promise();
+  }
+
+  if (existingDatasource?.id && existingDatasource?.name !== data?.name) {
+    // Update metadata here as data loaders will not update chunks if the hash is the same
+    await new DatastoreManager(
+      existingDatasource?.datastore!
+    ).updateDatasourceMetadata({
+      datasourceId: existingDatasource?.id,
+      metadata: {
+        datasource_name: data?.name!,
+      },
+    });
   }
 
   const datasource = await prisma.appDatasource.upsert({

@@ -131,7 +131,8 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   const hash = await DatastoreManager.hash(documents);
 
   if (hash === datasource.hash) {
-    logger.info('No need to update, file has not changed');
+    logger.info('No need to process datasource, data has not changed');
+
     await prisma.appDatasource.update({
       where: {
         id: datasource.id,

@@ -28,4 +28,8 @@ export abstract class ClientManager<T extends Datastore> {
   abstract getChunk(
     chunkId: string
   ): Promise<AppDocument<ChunkMetadataRetrieved>>;
+  abstract updateDatasourceMetadata(props: {
+    datasourceId: string;
+    metadata: Partial<ChunkMetadata>;
+  }): Promise<any>;
 }
