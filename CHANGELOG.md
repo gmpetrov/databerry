@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.30"></a>
+## 0.1.30 (2023-10-10)
+
+### Fixed
+
+- 🐛 auto delete datasource group&#x27;s children [[98b7221](https://github.com/gmpetrov/databerry/commit/98b7221ff08ccdd090be77bd113545488e8ea93d)]
+
+### Miscellaneous
+
+- 🤖 publish new version chat-bubble [[d24e85e](https://github.com/gmpetrov/databerry/commit/d24e85ecdcfad5fe5b5f27817044d7e8345c0722)]
+
+
 <a name="0.1.29"></a>
 ## 0.1.29 (2023-10-10)
 
