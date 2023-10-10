@@ -73,5 +73,6 @@ export class AppDocument<
     super(props);
     // TOOO: FIND WHY METADATA IS NOT BEING SET VIA SUPER(PROPS) SINCE MIGRATION TO TURBOREPO
     this.metadata = props.metadata;
+    this.pageContent = props.pageContent;
   }
 }

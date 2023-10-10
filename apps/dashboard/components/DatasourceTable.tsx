@@ -71,7 +71,7 @@ const SynchButton = ({
     if (
       datasource.status === DatasourceStatus.running ||
       datasource.status === DatasourceStatus.pending ||
-      !!(datasource as any)?.children?.[0]
+      (datasource as any)?.children?.length > 0
     ) {
       loading = true;
     }
@@ -100,7 +100,7 @@ const SynchButton = ({
       buttonText,
       color,
     });
-  }, [datasource?.status]);
+  }, [datasource?.status, (datasource as any)?.children?.length]);
 
   if (
     ![
@@ -108,6 +108,8 @@ const SynchButton = ({
       DatasourceType.web_site,
       DatasourceType.google_drive_folder,
       DatasourceType.google_drive_file,
+      DatasourceType.notion_page,
+      DatasourceType.notion,
     ].includes(datasource.type as any)
   ) {
     return null;
@@ -603,13 +605,17 @@ export default function DatasourceTable({
                         error: 'danger',
                         usage_limit_reached: 'warning',
                       }[
-                        datasource?.children?.[0]
+                        /*
+                          To check if datasource group has a running job
+                          Backend returns children datasources only if status is running or pending, 
+                        */
+                        datasource?.children?.length > 0
                           ? DatasourceStatus.running
                           : datasource.status
                       ] as ColorPaletteProp
                     }
                   >
-                    {datasource?.children?.[0]
+                    {datasource?.children?.length > 0
                       ? DatasourceStatus.running
                       : datasource.status}
                   </Chip>

@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button } from '@mui/joy';
+import { Alert, Button, Option, Select } from '@mui/joy';
+import { FormLabel } from '@mui/joy';
 import Textarea from '@mui/joy/Textarea';
 import axios from 'axios';
 import cuid from 'cuid';
@@ -17,6 +18,7 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
+import { getNotebooks } from '@app/pages/api/integrations/notion/get-notebooks';
 
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import {
@@ -73,7 +75,7 @@ const DatasourceText = (props: {
 
   return (
     <Textarea
-      maxRows={21}
+      // maxRows={21}
       minRows={4}
       disabled={props.disabled}
       {...methods.register('datasourceText')}
@@ -218,15 +220,18 @@ export default function BaseForm(props: Props) {
 
         {props.children}
 
-        {!props.hideText && defaultValues?.datastoreId && (
-          <DatasourceText
-            datastoreId={defaultValues?.datastoreId}
-            datasourceId={defaultValues?.id}
-            disabled={
-              defaultValues.type !== DatasourceType.text &&
-              (defaultValues as any)?.config?.mime_type !== 'text/plain'
-            }
-          />
+        {!props.hideText && defaultValues?.datastoreId && defaultValues?.id && (
+          <details>
+            <summary>Extracted Text</summary>
+            <DatasourceText
+              datastoreId={defaultValues?.datastoreId}
+              datasourceId={defaultValues?.id}
+              disabled={
+                defaultValues.type !== DatasourceType.text &&
+                (defaultValues as any)?.config?.mime_type !== 'text/plain'
+              }
+            />
+          </details>
         )}
 
         {props?.customSubmitButton ? (

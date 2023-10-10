@@ -103,11 +103,20 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     documents: AppDocument<ChunkMetadata>[],
     ids?: string[]
   ): Promise<void> {
-    const texts = documents.map(({ pageContent }) => pageContent);
+    const nonEmptyIds: string[] = [];
+    const nonEmptyDocs = documents.filter(({ pageContent }, index) => {
+      if (pageContent?.trim() !== '') {
+        nonEmptyIds.push(ids?.[index]!);
+        return true;
+      }
+    });
+
+    const texts = nonEmptyDocs.map(({ pageContent }) => pageContent);
+
     return this.addVectors(
       await this.embeddings.embedDocuments(texts),
-      documents,
-      ids
+      nonEmptyDocs,
+      nonEmptyIds
     );
   }
 
@@ -214,9 +223,11 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     );
   }
 
-  async upload(documents: AppDocument<ChunkMetadata>[]) {
+  async uploadDatasourceDocs(
+    datasourceId: string,
+    documents: AppDocument<ChunkMetadata>[]
+  ) {
     const ids: string[] = documents.map((each) => each.metadata.chunk_id!);
-    const datasourceId = documents[0].metadata.datasource_id;
 
     try {
       await this.remove(datasourceId!);

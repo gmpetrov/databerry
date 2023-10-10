@@ -15,7 +15,8 @@ export abstract class ClientManager<T extends Datastore> {
     this.datastore = datastore;
   }
 
-  abstract upload(
+  abstract uploadDatasourceDocs(
+    datasourceId: string,
     documents: AppDocument<ChunkMetadata>[]
   ): Promise<AppDocument<ChunkMetadata>[]>;
   abstract remove(datasourceId: string): Promise<any>;
