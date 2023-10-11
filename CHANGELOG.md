@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.32"></a>
+## 0.1.32 (2023-10-11)
+
+### Fixed
+
+- 🐛 playwright binary not found [[ec92534](https://github.com/gmpetrov/databerry/commit/ec92534892339d3c65f9cae8370f89c26e0d86cb)]
+
+### Miscellaneous
+
+- 🎸 enable autosynch cron [[8a06ee3](https://github.com/gmpetrov/databerry/commit/8a06ee30755e293a3b7a5d064590e6a403e1487d)]
+
+
 <a name="0.1.31"></a>
 ## 0.1.31 (2023-10-10)
 
