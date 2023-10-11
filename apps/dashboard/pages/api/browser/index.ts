@@ -3,12 +3,9 @@ import { NextApiResponse } from 'next';
 import puppeteer from 'puppeteer-core';
 
 import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
-import { getTextFromHTML } from '@chaindesk/lib/loaders/web-page';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 
 const handler = createApiHandler();
-
-const LOCAL_CHROME_EXECUTABLE = '/opt/homebrew/bin/chromium';
 
 export const browser = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const url = req.query.url as string;
@@ -17,8 +14,9 @@ export const browser = async (req: AppNextApiRequest, res: NextApiResponse) => {
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36';
 
   const browser = await puppeteer.launch({
-    executablePath: await chromium.executablePath(),
-    args: chromium.args,
+    executablePath:
+      process.env.CHROMIUM_PATH || (await chromium.executablePath()),
+    args: process.env.CHROMIUM_PATH ? undefined : chromium.args,
     headless: true,
   });
 
@@ -27,18 +25,11 @@ export const browser = async (req: AppNextApiRequest, res: NextApiResponse) => {
   await page.goto(url, { waitUntil: 'networkidle0', timeout: 100000 });
 
   let content = await page.content();
-  let text = (await getTextFromHTML(content))?.trim();
 
-  if (!text) {
-    console.log("not text parssed from html, let's try again after 10 seconds");
-    await page.waitForTimeout(10000);
-  }
-
-  const result = await page.content();
+  await browser.close();
 
   return {
-    html: result,
-    text,
+    result: content,
   };
 };
 

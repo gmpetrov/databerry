@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { ConsoleCallbackHandler } from 'langchain/dist/callbacks';
-import playwright from 'playwright';
 import { z } from 'zod';
 
 import { AppDocument } from '@chaindesk/lib/types/document';
@@ -46,42 +45,10 @@ export const loadPageContent = async (url: string) => {
     return data as string;
   } catch (err) {
     console.log('Error: Trying Plawright fallback');
-    // const { default: playwright } = await import('playwright');
 
-    const customUserAgent =
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36';
+    const res = await axios.get(`${process.env.BROWSER_API}/text?url=${url}`);
 
-    const browser = await playwright.chromium.launch({
-      headless: true,
-    });
-
-    const context = await browser.newContext({
-      userAgent: customUserAgent,
-    });
-
-    const page = await context.newPage();
-    await page.goto(url, {
-      waitUntil: 'networkidle',
-      timeout: 100000,
-    });
-
-    let content = await page.content();
-    let text = (await getTextFromHTML(content))?.trim();
-
-    if (!text) {
-      console.log(
-        "not text parssed from html, let's try again after 10 seconds"
-      );
-      await page.waitForTimeout(10000);
-    }
-
-    content = await page.content();
-    text = (await getTextFromHTML(content))?.trim();
-
-    await context.close();
-    await browser.close();
-
-    return text;
+    return res?.data?.result || '';
   }
 };
 

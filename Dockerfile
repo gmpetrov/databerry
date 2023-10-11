@@ -1,34 +1,9 @@
-# FROM node:18-alpine AS base
-
-FROM ubuntu:focal as base
+FROM node:18-alpine AS base
 ARG SCOPE
 ENV SCOPE=${SCOPE}
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ENV PLAYWRIGHT_BROWSERS_PATH=/app/browsers
-RUN set -uex; \
-    apt-get update; \
-    apt-get install -y ca-certificates curl gnupg; \
-    mkdir -p /etc/apt/keyrings; \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key \
-    | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg; \
-    NODE_MAJOR=18; \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
-    > /etc/apt/sources.list.d/nodesource.list; \
-    apt-get update; \
-    apt-get install nodejs -y;
+
+
 RUN npm --global install pnpm
-
-# https://fly.io/docs/app-guides/supercronic/
-# Latest releases available at https://github.com/aptible/supercronic/releases
-ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.1/supercronic-linux-amd64 \
-    SUPERCRONIC=supercronic-linux-amd64 \
-    SUPERCRONIC_SHA1SUM=d7f4c0886eb85249ad05ed592902fa6865bb9d70
-
-RUN curl -fsSLO "$SUPERCRONIC_URL" \
-    && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
-    && chmod +x "$SUPERCRONIC" \
-    && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
-    && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
 
 FROM base AS pruner
@@ -37,26 +12,6 @@ WORKDIR /app
 COPY . .
 RUN turbo prune --scope=${SCOPE} --docker
 
-# Install dependencies only when needed
-# FROM base AS deps
-
-# # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-# # RUN apk add --no-cache libc6-compat
-
-# WORKDIR /app
-
-# # Install dependencies based on the preferred package manager
-# COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-# ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1
-# RUN \
-#     if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-#     elif [ -f package-lock.json ]; then npm ci; \
-#     elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i ; \
-#     else echo "Lockfile not found." && exit 1; \
-#     fi
-# RUN npx playwright install --with-deps chromium
-
-# RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -109,14 +64,6 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 
-# COPY --from=builder /app/public ./public
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-# COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-# COPY --from=builder --chown=nextjs:nodejs /app/.next/server ./server
-# COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-RUN npx playwright@1.32.3 install --with-deps chromium
-# COPY --from=builder --chown=nextjs:nodejs /app/browsers ./browsers
 COPY --from=builder /app/apps/${SCOPE}/public ./apps/${SCOPE}/public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/${SCOPE}/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/${SCOPE}/.next/static ./apps/${SCOPE}/.next/static

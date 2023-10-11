@@ -41,7 +41,6 @@
     "p-retry": "^5.1.2",
     "p-timeout": "^6.1.1",
     "pdfjs-dist": "3.4.120",
-    "playwright": "^1.32.3",
     "pino": "^8.15.0",
     "pino-pretty": "^10.2.0",
     "react-hot-toast": "^2.4.1",

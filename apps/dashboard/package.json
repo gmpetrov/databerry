@@ -97,7 +97,6 @@
     "pdfjs-dist": "3.4.120",
     "perf_hooks": "^0.0.1",
     "pino-pretty": "^10.2.0",
-    "playwright": "^1.32.3",
     "puppeteer-core": "10.1.0",
     "radash": "^10.7.1",
     "react": "18.2.0",

@@ -102,6 +102,9 @@ cp .env.example .env.local
 
 pnpm dev
 
+# pupeteer browser local
+brew install chromium --no-quarantine
+
 # Dev emails inbox (maildev)
 # visit http://localhost:1080
 ```

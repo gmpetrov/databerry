@@ -5,7 +5,6 @@ import pTimeout from 'p-timeout';
 import path from 'path';
 
 import addSlashUrl from './add-slash-url';
-import { fetchWithBrowser } from './browser';
 
 export const getUrlsFromSitemap = (data: any) => {
   const pages: string[] = [];
@@ -68,7 +67,11 @@ export const getSitemapPages = async (
       } catch (err) {
         console.log(err);
 
-        content = await fetchWithBrowser(sitemap);
+        const res = await axios.get(
+          `${process.env.BROWSER_API}?url=${sitemap}`
+        );
+
+        content = res?.data?.result || '';
       }
 
       const res = getUrlsFromSitemap(content);
