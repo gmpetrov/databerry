@@ -3,6 +3,8 @@
 FROM ubuntu:focal as base
 ARG SCOPE
 ENV SCOPE=${SCOPE}
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV PLAYWRIGHT_BROWSERS_PATH=/app/browsers
 RUN set -uex; \
     apt-get update; \
     apt-get install -y ca-certificates curl gnupg; \
@@ -61,7 +63,6 @@ FROM base AS builder
 # WORKDIR /app
 # COPY --from=deps /app/node_modules ./node_modules
 # COPY . .
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD 1
 WORKDIR /app
 COPY .gitignore .gitignore
 COPY .npmrc ./
@@ -69,7 +70,7 @@ COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 
 RUN pnpm install
-RUN pnpx playwright install --with-deps chromium
+
 RUN rm -rf node_modules/.pnpm/canvas@2.11.2
 
 COPY --from=pruner /app/out/full/ .
@@ -114,11 +115,13 @@ RUN adduser --system --uid 1001 nextjs
 # COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 # COPY --from=builder --chown=nextjs:nodejs /app/.next/server ./server
 # COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
+RUN npx playwright@1.32.3 install --with-deps chromium
+# COPY --from=builder --chown=nextjs:nodejs /app/browsers ./browsers
 COPY --from=builder /app/apps/${SCOPE}/public ./apps/${SCOPE}/public
 COPY --from=builder --chown=nextjs:nodejs /app/apps/${SCOPE}/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/apps/${SCOPE}/.next/static ./apps/${SCOPE}/.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/apps/${SCOPE}/.next/server ./apps/${SCOPE}/.next/server
+
 # # Prisma
 # COPY ./packages/prisma ./packages/prisma
 # COPY --from=builder /app/node_modules/.pnpm/@prisma+client@5.3.1_prisma@5.3.1/node_modules/@prisma/client ./node_modules/@prisma/client
