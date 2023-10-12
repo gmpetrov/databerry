@@ -4,6 +4,7 @@ import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ThreePRoundedIcon from '@mui/icons-material/ThreePRounded';
+import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
@@ -197,7 +198,13 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   const bubbleIcon = useMemo(() => {
     if (state.agent?.iconUrl) {
-      return <img src={state.agent?.iconUrl} width={30} height={30} />;
+      return (
+        <Avatar
+          src={state.agent?.iconUrl}
+          sx={{ width: '100%', height: '100%' }}
+        />
+      );
+      // return <img src={state.agent?.iconUrl} width="100%" height="100%" />;
     } else {
       return <AutoAwesomeIcon />;
     }
@@ -546,10 +553,11 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             borderRadius: '100%',
             color: textColor,
             transition: 'all 100ms ease-in-out',
-            borderWidth: '1px',
+            borderWidth: '0.5px',
             borderColor: theme.palette.divider,
             borderStyle: 'solid',
-
+            p: '0',
+            overflow: 'hidden',
             '&:hover': {
               backgroundColor: state.config.primaryColor,
               filter: 'brightness(0.9)',
