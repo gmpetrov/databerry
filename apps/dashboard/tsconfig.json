@@ -5,7 +5,8 @@
     "baseUrl": ".",
     "paths": {
       "@app/*": ["./*"],
-      "@chaindesk/lib/*": ["../../packages/lib/*"]
+      "@chaindesk/lib/*": ["../../packages/lib/*"],
+      "@chaindesk/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [
       {

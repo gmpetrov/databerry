@@ -28,8 +28,8 @@ import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgents } from '@app/pages/api/agents';
+import { getServiceProviders } from '@app/pages/api/service-providers';
 
-import { getAgentIntegrations } from '@chaindesk/integrations/_utils/default-agent-hanlder';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { Prisma } from '@chaindesk/prisma';
 
@@ -49,27 +49,20 @@ export default function CrispSettingsModal(props: Props) {
   });
   const router = useRouter();
   const getCrispIntegrationsQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getAgentIntegrations>
-  >(`/api/integrations/crisp/agent?agentId=${props.agentId}`, fetcher);
+    Prisma.PromiseReturnType<typeof getServiceProviders>
+  >(`/api/service-providers?type=crisp&agentId=${props.agentId}`, fetcher);
 
   const onSubmit = () => {
-    router.push(
-      `https://app.crisp.chat/initiate/plugin/${process.env.NEXT_PUBLIC_CRISP_PLUGIN_ID}/`
-    ),
-      '_blank';
+    window.open(
+      `https://app.crisp.chat/initiate/plugin/${process.env.NEXT_PUBLIC_CRISP_PLUGIN_ID}/`,
+      '_blank'
+    );
   };
 
   const handleDelete = async (id: string) => {
     try {
       setState({ isDeleteLoading: true });
-      await axios.delete(
-        `/api/integrations/crisp/agent?agentId=${props.agentId}`,
-        {
-          data: {
-            id,
-          },
-        }
-      );
+      await axios.delete(`/api/service-providers/${id}`);
       getCrispIntegrationsQuery.mutate();
     } catch (err) {
       console.log(err);

@@ -22,8 +22,8 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
+import { getServiceProviders } from '@app/pages/api/service-providers';
 
-import { getAgentIntegrations } from '@chaindesk/integrations/_utils/default-agent-hanlder';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { Prisma } from '@chaindesk/prisma';
 
@@ -42,9 +42,9 @@ export default function SlackSettingsModal(props: Props) {
     isDeleteLoading: false,
   });
   const router = useRouter();
-  const getSlackIntegrationsQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getAgentIntegrations>
-  >(`/api/integrations/slack/agent?agentId=${props.agentId}`, fetcher);
+  const getIntegrations = useSWR<
+    Prisma.PromiseReturnType<typeof getServiceProviders>
+  >(`/api/service-providers?type=slack&agentId=${props.agentId}`, fetcher);
 
   const onSubmit = async () => {
     const res = await axios.get(
@@ -53,21 +53,16 @@ export default function SlackSettingsModal(props: Props) {
 
     const url = res?.data?.url as string;
 
-    router.push(url), '_blank';
+    window.open(url, '_blank');
   };
 
   const handleDelete = async (id: string) => {
     try {
       setState({ isDeleteLoading: true });
-      await axios.delete(
-        `/api/integrations/slack/agent?agentId=${props.agentId}`,
-        {
-          data: {
-            id,
-          },
-        }
-      );
-      getSlackIntegrationsQuery.mutate();
+
+      await axios.delete(`/api/service-providers/${id}`);
+
+      getIntegrations.mutate();
     } catch (err) {
       console.log(err);
     } finally {
@@ -75,7 +70,7 @@ export default function SlackSettingsModal(props: Props) {
     }
   };
 
-  const isLoading = getSlackIntegrationsQuery.isLoading;
+  const isLoading = getIntegrations.isLoading;
 
   if (!props.agentId) {
     return null;
@@ -104,9 +99,9 @@ export default function SlackSettingsModal(props: Props) {
         ) : (
           <>
             <FormLabel>Active connections</FormLabel>
-            {getSlackIntegrationsQuery?.data?.length ? (
+            {getIntegrations?.data?.length ? (
               <List>
-                {getSlackIntegrationsQuery.data?.map((each, index) => (
+                {getIntegrations.data?.map((each, index) => (
                   <ListItem key={index}>
                     <Typography className="truncate">
                       {((each as any)?.config as any)?.team?.name ||

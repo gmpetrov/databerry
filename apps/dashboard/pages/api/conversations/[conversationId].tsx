@@ -2,7 +2,10 @@ import Cors from 'cors';
 import { NextApiResponse } from 'next';
 import z from 'zod';
 
+import IntegrationsEventDispatcher from '@app/utils/integrations-event-dispatcher';
+
 import { ConversationResolved, HelpRequest, render } from '@chaindesk/emails';
+import getHttpClient from '@chaindesk/integrations/zendesk/lib/get-http-client';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
   createLazyAuthHandler,
@@ -10,11 +13,20 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import mailer from '@chaindesk/lib/mailer';
 import runMiddleware from '@chaindesk/lib/run-middleware';
-import { ConversationStatusSchema } from '@chaindesk/lib/types/dtos';
-import { AppNextApiRequest } from '@chaindesk/lib/types/index';
-import { AgentVisibility, ConversationStatus, Prisma } from '@chaindesk/prisma';
+import {
+  ConversationStatusSchema,
+  ServiceProviderZendesk,
+} from '@chaindesk/lib/types/dtos';
+import { AppEventType, AppNextApiRequest } from '@chaindesk/lib/types/index';
+import {
+  Agent,
+  AgentVisibility,
+  Conversation,
+  ConversationStatus,
+  Prisma,
+  ServiceProvider,
+} from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
-
 const handler = createLazyAuthHandler();
 
 const cors = Cors({
@@ -80,7 +92,16 @@ export const updateConversation = async (
         id: conversationId,
       },
       include: {
-        agent: true,
+        agent: {
+          include: {
+            tools: {
+              include: {
+                serviceProvider: true,
+              },
+            },
+            serviceProviders: true,
+          },
+        },
       },
     });
     if (
@@ -152,6 +173,22 @@ export const updateConversation = async (
             />
           ),
         });
+
+        await IntegrationsEventDispatcher.dispatch(
+          [
+            ...((conversation?.agent?.serviceProviders ||
+              []) as ServiceProvider[]),
+          ],
+          {
+            type: AppEventType.MARKED_AS_RESOLVED,
+            payload: {
+              agent: conversation?.agent as Agent,
+              conversation: conversation as Conversation,
+              messages: updated?.messages,
+              visitorEmail: leadEmail,
+            },
+          }
+        );
       } else if (data.status === ConversationStatus.HUMAN_REQUESTED) {
         await mailer.sendMail({
           from: {
@@ -173,6 +210,22 @@ export const updateConversation = async (
             />
           ),
         });
+
+        await IntegrationsEventDispatcher.dispatch(
+          [
+            ...((conversation?.agent?.serviceProviders ||
+              []) as ServiceProvider[]),
+          ],
+          {
+            type: AppEventType.HUMAN_REQUESTED,
+            payload: {
+              agent: conversation?.agent as Agent,
+              conversation: conversation as Conversation,
+              messages: updated?.messages,
+              visitorEmail: leadEmail,
+            },
+          }
+        );
       }
     }
 

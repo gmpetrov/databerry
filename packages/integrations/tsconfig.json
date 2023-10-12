@@ -5,7 +5,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@chaindesk/integrations/*": ["./*"]
+      "@chaindesk/integrations/*": ["./*"],
+      "@chaindesk/ui/*": ["../ui/src/*"]
     }
   }
 }

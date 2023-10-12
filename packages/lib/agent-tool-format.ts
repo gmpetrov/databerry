@@ -2,6 +2,20 @@ import cuid from 'cuid';
 
 import { Datastore, Tool, ToolType } from '@chaindesk/prisma';
 
+import { ToolSchema } from './types/dtos';
+
+// export type NormalizedTool = {
+//   id?: string;
+//   type: ToolType;
+//   name?: string;
+//   description?: string;
+// };
+
+// interface CreateDatastoreTool extends NormalizedTool {
+//   type: 'datastore';
+//   datastoreId: string;
+// }
+
 export type NormalizedTool = {
   id?: string;
   type: ToolType;
@@ -9,36 +23,36 @@ export type NormalizedTool = {
   description?: string;
 };
 
-interface CreateDatastoreTool extends NormalizedTool {
-  type: 'datastore';
-  datastoreId: string;
-}
-
-export const createTool = (payload: CreateDatastoreTool) => ({
+export const createTool = (payload: ToolSchema) => ({
   ...payload,
   id: payload?.id || cuid(),
 });
 
-const agentToolFormat = (
-  tool: Tool & {
-    datastore: Datastore | null;
-  }
-) => {
-  let format = {};
+const agentToolFormat = (tool: ToolSchema) => {
+  let format = {
+    name: tool.type,
+    description: '',
+  } as any;
 
   if (tool.type === ToolType.datastore) {
     format = {
       id: tool.id!,
       datastoreId: tool.datastoreId!,
-      name: tool?.datastore?.name!,
-      description: tool?.datastore?.description,
+      name: (tool as any)?.datastore?.name!,
+      description: (tool as any)?.datastore?.description as string,
+    };
+  } else if (tool.type === ToolType.http) {
+    format = {
+      id: tool.id!,
+      name: 'HTTP Tool',
+      description: tool?.config?.description,
     };
   }
 
   return {
     ...tool,
     ...format,
-  } as NormalizedTool & Tool;
+  };
 };
 
 export default agentToolFormat;

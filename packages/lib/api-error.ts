@@ -6,6 +6,7 @@ export enum ApiErrorType {
   WEBPAGE_IS_SITEMAP = 'WEBPAGE_IS_SITEMAP',
   EMPTY_DATASOURCE = 'EMPTY_DATASOURCE',
   ALREADY_INVITED = 'ALREADY_INVITED',
+  INTEGRATION_CREDENTIALS_INVALID = 'INTEGRATION_CREDENTIALS_INVALID',
 }
 
 export class ApiError extends Error {
@@ -31,6 +32,9 @@ export class ApiError extends Error {
           break;
         case ApiErrorType.ALREADY_INVITED:
           this.status = 400;
+          break;
+        case ApiErrorType.INTEGRATION_CREDENTIALS_INVALID:
+          this.status = 403;
           break;
         default:
           this.status = 500;

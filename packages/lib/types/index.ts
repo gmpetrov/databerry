@@ -3,6 +3,14 @@ import { Session } from 'next-auth';
 import type { Logger } from 'pino';
 import { ReactElement, ReactNode } from 'react';
 
+import {
+  Agent,
+  Conversation,
+  Message,
+  ServiceProvider,
+  ServiceProviderType,
+} from '@chaindesk/prisma';
+
 export enum RouteNames {
   HOME = '/agents',
   SIGN_IN = '/signin',
@@ -70,3 +78,30 @@ export enum SSE_EVENT {
 export enum ChainType {
   qa = 'qa',
 }
+
+export enum AppEventType {
+  MARKED_AS_RESOLVED = 'MAKRED_AS_RESOLVED',
+  HUMAN_REQUESTED = 'HUMAN_REQUESTED',
+}
+
+export type AppEvent =
+  | {
+      type: AppEventType.HUMAN_REQUESTED;
+      payload: {
+        agent: Agent;
+        visitorEmail: string;
+        conversation: Conversation;
+        messages: Message[];
+        credentials: ServiceProvider;
+      };
+    }
+  | {
+      type: AppEventType.MARKED_AS_RESOLVED;
+      payload: {
+        agent: Agent;
+        visitorEmail: string;
+        conversation: Conversation;
+        messages: Message[];
+        credentials: ServiceProvider;
+      };
+    };

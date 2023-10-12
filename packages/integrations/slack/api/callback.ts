@@ -79,6 +79,11 @@ export const callback = async (
           id: metadata.agentId,
         },
       },
+      organization: {
+        connect: {
+          id: metadata.organizationId,
+        },
+      },
       externalId: teamId,
       accessToken,
       config: {
