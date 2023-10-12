@@ -255,7 +255,7 @@ function ChatBox({
             display: 'none',
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: 'rgba(0,0,0,.3)',
+            backgroundColor: 'rgba(0,0,0,.0)',
             borderRadius: '20px',
           },
         }}
@@ -540,7 +540,7 @@ function ChatBox({
                   display: 'none',
                 },
                 '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: 'rgba(0,0,0,.3)',
+                  backgroundColor: 'rgba(0,0,0,.0)',
                   borderRadius: '20px',
                 },
               }}
