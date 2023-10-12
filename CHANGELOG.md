@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.35"></a>
+## 0.1.35 (2023-10-12)
+
+### Fixed
+
+- 🐛 hide scrollbar chatbox [[f813556](https://github.com/gmpetrov/databerry/commit/f81355632d5e53340229847fe5d674fe756726af)]
+
+
 <a name="0.1.34"></a>
 ## 0.1.34 (2023-10-12)
 
