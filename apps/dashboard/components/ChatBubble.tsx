@@ -197,7 +197,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   const bubbleIcon = useMemo(() => {
     if (state.agent?.iconUrl) {
-      return <img src={state.agent?.iconUrl} width={30} height={30} />;
+      return <img src={state.agent?.iconUrl} width="100%" height="100%" />;
     } else {
       return <AutoAwesomeIcon />;
     }
@@ -546,10 +546,11 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
             borderRadius: '100%',
             color: textColor,
             transition: 'all 100ms ease-in-out',
-            borderWidth: '1px',
+            borderWidth: '0.5px',
             borderColor: theme.palette.divider,
             borderStyle: 'solid',
-
+            p: '0',
+            overflow: 'hidden',
             '&:hover': {
               backgroundColor: state.config.primaryColor,
               filter: 'brightness(0.9)',
