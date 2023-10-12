@@ -1,4 +1,5 @@
 import Box from '@mui/joy/Box';
+import CircularProgress from '@mui/joy/CircularProgress';
 import { useColorScheme } from '@mui/joy/styles';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
@@ -106,7 +107,20 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   //   }, []);
 
   if (!agent) {
-    return null;
+    return (
+      <Box
+        sx={{
+          width: '100dvw',
+          height: '100dvh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          background: 'transparent',
+        }}
+      >
+        <CircularProgress size="sm" variant="soft" color="neutral" />
+      </Box>
+    );
   }
 
   return (
