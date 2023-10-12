@@ -30,6 +30,7 @@ import AgentTable from '@app/components/AgentTable';
 import Layout from '@app/components/Layout';
 import SettingCard from '@app/components/ui/SettingCard';
 import UsageLimitModal from '@app/components/UsageLimitModal';
+import { getProductFromHostname } from '@app/hooks/useProduct';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import accountConfig from '@chaindesk/lib/account-config';
@@ -234,7 +235,9 @@ AgentsPage.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = withAuth(
   async (ctx: GetServerSidePropsContext) => {
     return {
-      props: {},
+      props: {
+        product: getProductFromHostname(ctx?.req?.headers?.host),
+      },
     };
   }
 );

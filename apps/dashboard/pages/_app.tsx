@@ -16,6 +16,11 @@ import React from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
+import {
+  getProductFromHostname,
+  ProductContext,
+  ProductType,
+} from '@app/hooks/useProduct';
 import useUTMTracking from '@app/hooks/useUTMTracking';
 import createEmotionCache from '@app/utils/create-emotion-cache';
 
@@ -41,8 +46,15 @@ export default function App({
 }: AppPropsWithLayout) {
   const router = useRouter();
   const getLayout = Component.getLayout ?? ((page) => page);
+  const [product, setProduct] = React.useState<ProductType>(pageProps.product);
 
   useUTMTracking();
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setProduct(getProductFromHostname(window.location.hostname));
+    }
+  }, []);
 
   // Redirect to new domain on front side as DNS redirect breaks some features
   React.useEffect(() => {
@@ -74,19 +86,23 @@ export default function App({
 
   if (router.pathname === '/agents/[agentId]/iframe') {
     return getLayout(
-      <SessionProvider>
-        <Component {...pageProps} />
-      </SessionProvider>
+      <ProductContext.Provider value={product}>
+        <SessionProvider>
+          <Component {...pageProps} />
+        </SessionProvider>
+      </ProductContext.Provider>
     );
   }
 
   return (
-    <DashboardThemeProvider {...otherProps}>
-      <TopProgressBar />
-      <SessionProvider>
-        <Toaster />
-        {getLayout(<Component {...pageProps} />)}
-      </SessionProvider>
-    </DashboardThemeProvider>
+    <ProductContext.Provider value={product}>
+      <DashboardThemeProvider {...otherProps}>
+        <TopProgressBar />
+        <SessionProvider>
+          <Toaster />
+          {getLayout(<Component {...pageProps} />)}
+        </SessionProvider>
+      </DashboardThemeProvider>
+    </ProductContext.Provider>
   );
 }
