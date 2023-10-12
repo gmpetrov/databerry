@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.33"></a>
+## 0.1.33 (2023-10-12)
+
+### Fixed
+
+- 🐛 playwright binary not found [[4919d9e](https://github.com/gmpetrov/databerry/commit/4919d9efd5a58119393c5ffd5c2a864deb952c4d)]
+
+### Miscellaneous
+
+- 🎸 Add loader to iframe widget [[c60801d](https://github.com/gmpetrov/databerry/commit/c60801d73204b64c1684292e672b710953f787d1)]
+- 🎸 remove playwright for web site loading [[6912835](https://github.com/gmpetrov/databerry/commit/691283565891f759476de44d129896677997ad2d)]
+- 🎸 serverless browser [[3d2415e](https://github.com/gmpetrov/databerry/commit/3d2415e298afb703b75a4247288d02ff770f3815)]
+
+
 <a name="0.1.32"></a>
 ## 0.1.32 (2023-10-11)
 
