@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.34"></a>
+## 0.1.34 (2023-10-12)
+
+### Fixed
+
+- 🐛 icon size on bubble ([#185](https://github.com/gmpetrov/databerry/issues/185)) [[24f1bf5](https://github.com/gmpetrov/databerry/commit/24f1bf51356df0f1354161a37e228c35323cf2e5)]
+
+
 <a name="0.1.33"></a>
 ## 0.1.33 (2023-10-12)
 
