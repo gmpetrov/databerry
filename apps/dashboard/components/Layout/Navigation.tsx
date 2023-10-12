@@ -403,7 +403,7 @@ export default function Navigation() {
                           </Chip>
                         }
                       >
-                        Work Assistant
+                        Search Assistant
                       </Button>
                     </Link>
                   </Stack>

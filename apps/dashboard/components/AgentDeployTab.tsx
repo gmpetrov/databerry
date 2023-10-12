@@ -6,6 +6,7 @@ import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import axios from 'axios';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -15,6 +16,7 @@ import useAgent from '@app/hooks/useAgent';
 import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
+import { IntegrationSettingsMap } from '@chaindesk/integrations/import.browser';
 import { AgentVisibility, DatastoreVisibility } from '@chaindesk/prisma';
 
 import SettingCard from './ui/SettingCard';
@@ -54,6 +56,12 @@ const StandalonePageWidgetSettings = dynamic(
     ssr: false,
   }
 );
+const ZendeskSettings = dynamic(
+  () => import('@app/components/ZendeskSettings'),
+  {
+    ssr: false,
+  }
+);
 
 type Props = {
   agentId: string;
@@ -71,6 +79,7 @@ function AgentDeployTab(props: Props) {
   const bubbleWidgetModal = useModal();
   const iframeWidgetModal = useModal();
   const standalonePageModal = useModal();
+  const zendeskModal = useModal();
 
   const { query, mutation } = useAgent({
     id: props.agentId as string,
@@ -156,6 +165,21 @@ function AgentDeployTab(props: Props) {
                 );
               },
               publicAgentRequired: true,
+            },
+            {
+              name: 'Zendesk',
+              isPremium: false,
+              icon: (
+                <img
+                  className="w-8"
+                  src="https://www.svgrepo.com/show/354598/zendesk-icon.svg"
+                  alt="zendesk logo"
+                ></img>
+              ),
+
+              action: async () => {
+                zendeskModal.open();
+              },
             },
             {
               name: 'Slack',
@@ -334,6 +358,17 @@ function AgentDeployTab(props: Props) {
           >
             <StandalonePageWidgetSettings agentId={query?.data?.id!} />
           </standalonePageModal.component>
+
+          <zendeskModal.component
+            title="Zendesk"
+            dialogProps={{
+              sx: {
+                maxWidth: 'sm',
+              },
+            }}
+          >
+            <ZendeskSettings agentId={props.agentId} />
+          </zendeskModal.component>
         </>
       )}
 

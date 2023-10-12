@@ -69,6 +69,11 @@ export const updateCrispConfig = async (
           id: data.agentId,
         },
       },
+      organization: {
+        connect: {
+          id: agent?.organization?.id,
+        },
+      },
       config: {
         ...metadata,
       },

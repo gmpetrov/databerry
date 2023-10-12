@@ -37,6 +37,7 @@
     "@chaindesk/integrations": "workspace:*",
     "@chaindesk/lib": "workspace:*",
     "@chaindesk/prisma": "workspace:*",
+    "@chaindesk/ui": "workspace:*",
     "@emotion/cache": "^11.10.5",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",

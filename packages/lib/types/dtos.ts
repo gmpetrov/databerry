@@ -9,6 +9,7 @@ import {
   Message,
   MessageEval,
   PromptType,
+  ServiceProviderType,
   ToolType,
 } from '@chaindesk/prisma';
 
@@ -181,6 +182,105 @@ export const ChatResponse = z.object({
 
 export type ChatResponse = z.infer<typeof ChatResponse>;
 
+const ServiceProviderBaseSchema = z.object({
+  id: z.string().cuid().optional(),
+  name: z.string().optional(),
+  accessToken: z.string().optional(),
+  refreshToken: z.string().optional(),
+});
+
+export const ServiceProviderZendeskSchema = ServiceProviderBaseSchema.extend({
+  type: z.literal(ServiceProviderType.zendesk),
+  config: z.object({
+    email: z.string().email(),
+    domain: z.string().min(1),
+    apiToken: z.string().min(1),
+  }),
+});
+
+export const ServiceProviderSchema = z.discriminatedUnion('type', [
+  ServiceProviderZendeskSchema,
+]);
+
+export type ServiceProviderSchema = z.infer<typeof ServiceProviderSchema>;
+export type ServiceProviderZendesk = Extract<
+  ServiceProviderSchema,
+  { type: 'zendesk' }
+>;
+
+const ToolBaseSchema = z.object({
+  id: z.string().cuid().optional(),
+  type: z.nativeEnum(ToolType),
+  serviceProviderId: z.string().cuid().optional().nullable(),
+  serviceProvider: z.any().optional(),
+});
+
+// export const ToolSchema = z.object({
+//   id: z.string().cuid().optional(),
+//   type: z.nativeEnum(ToolType),
+//   datastoreId: z.string().cuid().optional(),
+//   name: z.string().trim().optional(),
+//   description: z.string().trim().optional().nullable(),
+//   config: z.object({}).optional(),
+// });
+export const ToolSchema = z.discriminatedUnion('type', [
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.datastore),
+    datastoreId: z.string().cuid().optional(),
+    datastore: z.any().optional(),
+  }),
+
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.http),
+    config: z.object({
+      url: z.string().url(),
+      method: z.string(),
+      name: z.string().min(3),
+      description: z.string().min(3),
+      isApprovalRequired: z.boolean().optional(),
+      headers: z
+        .array(
+          z.object({
+            key: z.string().min(1),
+            value: z.string().optional(),
+            isUserProvided: z.boolean().optional(),
+          })
+        )
+        .optional(),
+      body: z
+        .array(
+          z.object({
+            key: z.string().min(1),
+            value: z.string().optional(),
+            isUserProvided: z.boolean().optional(),
+          })
+        )
+        .optional(),
+      queryParameters: z
+        .array(
+          z.object({
+            key: z.string().min(1),
+            value: z.string().optional(),
+            isUserProvided: z.boolean().optional(),
+          })
+        )
+        .optional(),
+    }),
+  }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.connector),
+    config: z.any({}),
+  }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.agent),
+    config: z.any({}),
+  }),
+]);
+
+export type ToolSchema = z.infer<typeof ToolSchema>;
+
+export type HttpToolSchema = Extract<ToolSchema, { type: 'http' }>;
+
 export const CreateAgentSchema = z.object({
   id: z.string().trim().cuid().optional(),
   name: z.string().trim().optional(),
@@ -197,17 +297,7 @@ export const CreateAgentSchema = z.object({
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
   includeSources: z.boolean().optional().nullable(),
   restrictKnowledge: z.boolean().optional().nullable(),
-  tools: z
-    .array(
-      z.object({
-        id: z.string().cuid().optional(),
-        type: z.nativeEnum(ToolType),
-        datastoreId: z.string().cuid().optional(),
-        name: z.string().trim().optional(),
-        description: z.string().trim().optional().nullable(),
-      })
-    )
-    .optional(),
+  tools: z.array(ToolSchema).optional(),
   // .max(1),
   handle: z
     .string()

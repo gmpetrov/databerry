@@ -1,4 +1,5 @@
 import Modal from '@mui/joy/Modal';
+import ModalClose from '@mui/joy/ModalClose';
 import ModalDialog from '@mui/joy/ModalDialog';
 import React, { ComponentProps } from 'react';
 
@@ -55,6 +56,8 @@ export default React.forwardRef(function AppModal(
             },
           }}
         >
+          <ModalClose variant="plain" />
+
           {children}
         </SettingCard>
       </ModalDialog>

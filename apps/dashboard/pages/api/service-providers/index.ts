@@ -24,11 +24,21 @@ export const getServiceProviders = async (
       where: {
         organizationId: req?.session?.organization?.id as string,
         ...(type ? { type } : {}),
-        ...(agentId ? { agents: { some: { id: agentId } } } : {}),
+        ...(agentId
+          ? {
+              agents: {
+                some: {
+                  AND: {
+                    id: agentId,
+                    organizationId: req?.session?.organization?.id,
+                  },
+                },
+              },
+            }
+          : {}),
       },
-      select: {
-        name: true,
-        id: true,
+      include: {
+        agents: true,
       },
     });
 

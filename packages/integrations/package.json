@@ -6,12 +6,23 @@
   "dependencies": {
     "@chaindesk/lib": "workspace:*",
     "@chaindesk/prisma": "workspace:*",
+    "@chaindesk/ui": "workspace:*",
+    "@emotion/cache": "^11.10.5",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@hookform/resolvers": "^3.0.0",
     "@notionhq/client": "^2.2.13",
+    "@mui/icons-material": "^5.14.1",
+    "@mui/joy": "5.0.0-beta.8",
+    "@mui/lab": "5.0.0-alpha.146",
+    "@mui/material": "^5.14.11",
+    "@mui/utils": "^5.14.11",
     "@slack/web-api": "^6.8.1",
     "axios": "^1.3.4",
     "crisp-api": "^7.4.1",
     "cuid": "^3.0.0",
     "i18next": "^23.6.0",
+    "react-hook-form": "^7.45.4",
     "zod": "3.21.4"
   },
   "devDependencies": {

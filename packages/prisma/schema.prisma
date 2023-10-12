@@ -318,6 +318,11 @@ model Tool {
   datastoreId String?    @map("datastore_id")
   datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
 
+  config Json?
+
+  serviceProviderId String?          @map("service_provider_id")
+  serviceProvider   ServiceProvider? @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -466,7 +471,7 @@ model ServiceProvider {
 
   appDatasources AppDatasource[]
   agents Agent[]
-
+  tools Tool[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -575,6 +580,7 @@ enum ServiceProviderType {
   website
   crisp
   slack
+  zendesk
 }
 
 enum DatastoreType {
@@ -586,6 +592,7 @@ enum ToolType {
   datastore
   connector
   agent
+  http
 }
 
 enum SubscriptionPlan {

@@ -16,6 +16,7 @@ const nextConfig = {
   transpilePackages: [
     '@chaindesk/lib',
     '@chaindesk/emails',
+    '@chaindesk/ui',
     '@chaindesk/integrations',
   ],
   experimental: {

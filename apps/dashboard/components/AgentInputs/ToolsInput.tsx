@@ -12,6 +12,7 @@ import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import cuid from 'cuid';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -21,15 +22,20 @@ import useSWR from 'swr';
 import useModal from '@app/hooks/useModal';
 import { getDatastores } from '@app/pages/api/datastores';
 
-import { createTool, NormalizedTool } from '@chaindesk/lib/agent-tool-format';
+import agentToolFormat, {
+  createTool,
+  NormalizedTool,
+} from '@chaindesk/lib/agent-tool-format';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
-import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
+import { CreateAgentSchema, ToolSchema } from '@chaindesk/lib/types/dtos';
 import {
   AppDatasource as Datasource,
   Prisma,
   ToolType,
 } from '@chaindesk/prisma';
+
+import APIToolForm from '../APIToolForm';
 type Props = {};
 
 const CreateDatastoreModal = dynamic(
@@ -95,12 +101,15 @@ function ToolsInput({}: Props) {
     useState(false);
 
   const newDatastoreModal = useModal();
+  const newApiToolForm = useModal();
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
   >('/api/datastores', fetcher);
 
   const tools = watch('tools') || [];
+
+  const formattedTools = tools.map(agentToolFormat);
 
   return (
     <Stack gap={1}>
@@ -116,14 +125,18 @@ function ToolsInput({}: Props) {
       )}
 
       <Stack direction={'row'} gap={1} flexWrap={'wrap'}>
-        {tools.map((tool) => (
+        {formattedTools.map((tool) => (
           <ToolCard
             key={tool.id}
             id={tool.id}
             type={tool.type}
             name={tool.name!}
             description={tool.description!}
-            link={`${RouteNames.DATASTORES}/${tool.datastoreId}`}
+            link={
+              tool.type === 'datastore'
+                ? `${RouteNames.DATASTORES}/${tool.datastoreId}`
+                : undefined
+            }
           >
             <IconButton
               variant="plain"
@@ -132,7 +145,7 @@ function ToolsInput({}: Props) {
               onClick={() => {
                 setValue(
                   'tools',
-                  tools.filter((each) => each.datastoreId !== tool.datastoreId),
+                  tools.filter((each) => each.id !== tool.id),
                   {
                     shouldDirty: true,
                     shouldValidate: true,
@@ -149,7 +162,7 @@ function ToolsInput({}: Props) {
       <Divider sx={{ my: 2 }} />
 
       <ToolCard
-        id="42"
+        id="datastore-tool"
         name={'Datastore'}
         description={'Connect custom data to your Agent'}
       >
@@ -164,6 +177,60 @@ function ToolsInput({}: Props) {
           <AddCircleOutlineRoundedIcon />
         </IconButton>
       </ToolCard>
+
+      {/* <ToolCard
+        id="http-tool"
+        name={'HTTP Tool'}
+        description={'Perform an HTTP request from your Agent'}
+      >
+        <IconButton
+          size="sm"
+          variant="plain"
+          color="success"
+          onClick={() => {
+            // newApiToolForm.open();
+
+            setValue(
+              'tools',
+              [
+                ...tools,
+                createTool({
+                  type: ToolType.http,
+                  // datastoreId: datastore.id,
+                  serviceProvider: {
+                    type: 'zendesk',
+                    name: 'georges@chaindesk.ai',
+                    config: {
+                      domain: 'XXX',
+                      email: 'XXX',
+                      apiToken: 'XXX',
+                    },
+                  },
+                  config: {
+                    name: 'function',
+                    description: 'Get order information',
+                    method: 'GET',
+                    url: 'https://dummyjson.com/products/1',
+                    isApprovalRequired: true,
+                    queryParameters: [
+                      {
+                        key: 'orderId',
+                        isUserProvided: true,
+                      },
+                    ],
+                  },
+                }),
+              ],
+              {
+                shouldDirty: true,
+                shouldValidate: true,
+              }
+            );
+          }}
+        >
+          <AddCircleOutlineRoundedIcon />
+        </IconButton>
+      </ToolCard> */}
 
       <newDatastoreModal.component
         title="Datastore"
@@ -193,8 +260,7 @@ function ToolsInput({}: Props) {
                     createTool({
                       type: ToolType.datastore,
                       datastoreId: datastore.id,
-                      name: datastore?.name,
-                      description: datastore?.description!,
+                      datastore,
                     }),
                   ],
                   {
@@ -210,7 +276,8 @@ function ToolsInput({}: Props) {
             {getDatastoresQuery.data
               ?.filter(
                 // Don't show already selected datastores
-                (each) => !tools.find((one) => one.datastoreId === each.id)
+                (each) =>
+                  !tools.find((one) => (one as any).datastoreId === each.id)
               )
               ?.map((datastore) => (
                 <Option key={datastore.id} value={datastore.id}>
@@ -235,6 +302,19 @@ function ToolsInput({}: Props) {
         </Stack>
       </newDatastoreModal.component>
 
+      <newApiToolForm.component
+        title="HTTP Tool"
+        description="Let your Agent call an HTTP endpoint."
+        dialogProps={{
+          sx: {
+            maxWidth: 'sm',
+            height: 'auto',
+          },
+        }}
+      >
+        <APIToolForm />
+      </newApiToolForm.component>
+
       <CreateDatastoreModal
         isOpen={isCreateDatastoreModalOpen}
         onSubmitSuccess={(newDatatore) => {
@@ -247,10 +327,8 @@ function ToolsInput({}: Props) {
             [
               ...tools,
               {
-                id: newDatatore.id!,
+                id: cuid(),
                 datastoreId: newDatatore.id!,
-                name: newDatatore.name!,
-                description: newDatatore.description!,
                 type: ToolType.datastore,
               },
             ],

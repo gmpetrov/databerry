@@ -1,8 +1,12 @@
 {
-    "extends": "@chaindesk/tsconfig/react-library.json",
-    "include": ["."],
-    "exclude": ["dist", "build", "node_modules"],
-    "compilerOptions": {
-        "lib": ["dom", "ES2015"],
+  "extends": "@chaindesk/tsconfig/react-library.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "lib": ["dom", "ES2015"],
+    "baseUrl": ".",
+    "paths": {
+      "@chaindesk/ui/*": ["./src/*"]
     }
   }
+}

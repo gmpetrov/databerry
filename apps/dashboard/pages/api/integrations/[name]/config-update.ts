@@ -62,6 +62,11 @@ export const updateIntegrationConfig = async (
           id: data.agentId,
         },
       },
+      organization: {
+        connect: {
+          id: session?.organization?.id,
+        },
+      },
       config: {
         ...metadata,
       },
