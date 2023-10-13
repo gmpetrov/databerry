@@ -47,16 +47,13 @@ const getMonthName = (num: number) =>
 
 export default function AnalyticsPage() {
   const [state, setState] = useStateReducer({
-    conversationCount: 0,
-    dislikedRepliesCount: 0,
-    leadCount: 0,
-    likedRepliesCount: 0,
-    mostUsedDatasource: {
-      name: '',
-      count: 0,
-    },
-    repliesMetrics: [],
-    conversationMetrics: [],
+    conversation_count: 0,
+    bad_message_count: 0,
+    good_message_count: 0,
+    lead_count: 0,
+    most_common_datasource: 'None',
+    repliesEvolution: [],
+    conversationEvolution: [],
     view: 'year',
   });
 
@@ -79,7 +76,7 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     fetchAnalytics();
-  }, [fetchAnalytics]);
+  }, []);
 
   return (
     <Box
@@ -151,32 +148,31 @@ export default function AnalyticsPage() {
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
             metric="Total Conversations"
-            quantity={state.conversationCount}
+            quantity={state.conversation_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
             metric="Liked Responses"
-            quantity={state.likedRepliesCount}
+            quantity={state.good_message_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
             metric="Disliked Responses"
-            quantity={state.dislikedRepliesCount}
+            quantity={state.bad_message_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
-          <AnalyticsCard metric="Leads Generated" quantity={state.leadCount} />
+          <AnalyticsCard metric="Leads Generated" quantity={state.lead_count} />
         </Box>
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
             metric="Most Used Datasource"
-            quantity={state.mostUsedDatasource.count}
-            metricSpecifier={state.mostUsedDatasource.name}
+            metricSpecifier={state.most_common_datasource}
           />
         </Box>
       </Box>
@@ -184,7 +180,7 @@ export default function AnalyticsPage() {
         <>
           <CustomLineChart<ReplieMetricBase & { month: string }>
             title="Replies Quality Performance"
-            data={state.repliesMetrics}
+            data={state.repliesEvolution}
             xkey="month"
             XAxisFormatter={getMonthName}
           >
@@ -205,7 +201,7 @@ export default function AnalyticsPage() {
 
           <CustomLineChart<ConversationMetricBase & { month: string }>
             title="Conversations Evolution"
-            data={state.conversationMetrics}
+            data={state.conversationEvolution}
             xkey="month"
             XAxisFormatter={getMonthName}
           >
@@ -221,7 +217,7 @@ export default function AnalyticsPage() {
         <>
           <CustomLineChart<ReplieMetricBase & { day: string }>
             title="Replies Quality Performance"
-            data={state.repliesMetrics}
+            data={state.repliesEvolution}
             xkey="day"
           >
             <CustomLineChart.Line
@@ -240,7 +236,7 @@ export default function AnalyticsPage() {
           </CustomLineChart>
           <CustomLineChart<ConversationMetricBase & { day: string }>
             title="Conversations Evolution"
-            data={state.conversationMetrics}
+            data={state.conversationEvolution}
             xkey="day"
           >
             <CustomLineChart.Line

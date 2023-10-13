@@ -3,11 +3,15 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 
-interface Props {
+interface base {
   metric: string;
-  metricSpecifier?: string;
-  quantity: number;
 }
+
+type Props = base &
+  (
+    | { metricSpecifier: string; quantity?: number }
+    | { metricSpecifier?: string; quantity: number }
+  );
 
 export default function AnalyticsCard({
   metric,
