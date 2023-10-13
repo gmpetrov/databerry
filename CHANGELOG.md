@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.36"></a>
+## 0.1.36 (2023-10-13)
+
+### Miscellaneous
+
+- 🎸 optimize crisp human handoff ([#178](https://github.com/gmpetrov/databerry/issues/178)) [[de04bdf](https://github.com/gmpetrov/databerry/commit/de04bdff89022a571e3e25d47f59e8ecd5c0a3f0)]
+- 🤖 add seed dev user account [[44d1fb6](https://github.com/gmpetrov/databerry/commit/44d1fb61f4fde753db7422d5d140663c94eeef7a)]
+-  update bubble widget version [[973a82a](https://github.com/gmpetrov/databerry/commit/973a82afaf64243b825936d8e02303b95bb40716)]
+
+
 <a name="0.1.35"></a>
 ## 0.1.35 (2023-10-12)
 
