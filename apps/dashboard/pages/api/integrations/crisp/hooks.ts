@@ -31,6 +31,23 @@ CrispClient.authenticateTier(
 // Set current RTM mode to Web Hooks
 CrispClient.setRtmMode(Crisp.RTM_MODES.WebHooks);
 
+enum AIStatus {
+  enabled = 'enabled',
+  disabled = 'disabled',
+}
+
+enum Action {
+  enable_ai = 'enable_ai',
+  request_human = 'request_human',
+  mark_as_resolved = 'mark_as_resolved',
+}
+
+type ConversationMetadata = {
+  aiStatus?: AIStatus;
+  choice?: Action;
+  aiDisabledDate?: Date;
+};
+
 type HookEventType =
   | 'message:send'
   | 'message:received'
@@ -79,7 +96,7 @@ type HookBodyMessageUpdated = HookBodyBase & {
       explain: string;
       value?: string;
       choices?: {
-        value: 'resolved' | 'request_human' | 'enable_ai';
+        value: Action;
         icon: string;
         label: string;
         selected: boolean;
@@ -241,13 +258,13 @@ const handleQuery = async (
       text: finalAnser,
       choices: [
         {
-          value: 'resolved',
+          value: Action.mark_as_resolved,
           icon: '✅',
           label: 'Mark as resolved',
           selected: false,
         },
         {
-          value: 'request_human',
+          value: Action.request_human,
           icon: '💬',
           label: 'Request a human operator',
           selected: false,
@@ -294,6 +311,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     // }
 
     if (req.headers['x-delivery-attempt-count'] !== '1') {
+      console.log('x-delivery-attempt-count abort');
       return "Not the first attempt, don't handle.";
     }
 
@@ -302,27 +320,37 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         body.website_id,
         body.data.session_id
       )
-    )?.data;
+    )?.data as ConversationMetadata;
 
-    const newChoice = body?.data?.content?.choices?.find(
-      (one: any) => one.selected
-    );
-
-    if (
-      metadata?.choice === 'request_human' &&
-      newChoice?.value !== 'enable_ai'
-    ) {
-      return 'User has requested a human operator, do not handle.';
-    }
+    // const newChoice = body?.data?.content?.choices?.find(
+    //   (one: any) => one.selected
+    // );
 
     switch (body.event) {
       case 'message:send':
         if (
           body.data.origin === 'chat' &&
           body.data.from === 'user' &&
-          body.data.type === 'text' &&
-          metadata?.choice !== 'request_human'
+          body.data.type === 'text'
         ) {
+          if (metadata?.aiStatus === AIStatus.disabled) {
+            const oneHourAgo = new Date().getTime() - 60 * 60 * 1000;
+
+            if (new Date(metadata?.aiDisabledDate!).getTime() < oneHourAgo) {
+              await CrispClient.website.updateConversationMetas(
+                body.website_id,
+                body.data.session_id,
+                {
+                  data: {
+                    aiStatus: AIStatus.enabled,
+                  } as ConversationMetadata,
+                }
+              );
+            } else {
+              return 'Converstaion disabled dot not proceed';
+            }
+          }
+
           CrispClient.website.composeMessageInConversation(
             body.website_id,
             body.data.session_id,
@@ -348,15 +376,16 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         if (
           body.data.from === 'operator' &&
           body.data.type === 'text' &&
-          metadata?.choice !== 'request_human'
+          metadata?.aiStatus === AIStatus.enabled
         ) {
           await CrispClient.website.updateConversationMetas(
             body.website_id,
             body.data.session_id,
             {
               data: {
-                choice: 'request_human',
-              },
+                aiStatus: AIStatus.disabled,
+                aiDisabledDate: new Date(),
+              } as ConversationMetadata,
             }
           );
         }
@@ -368,78 +397,122 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         const selected = choices?.find((one) => one.selected);
 
         switch (selected?.value) {
-          case 'request_human':
-            await CrispClient.website.updateConversationMetas(
-              body.website_id,
-              body.data.session_id,
-              {
-                data: {
-                  choice: 'request_human',
-                },
-              }
-            );
+          case Action.request_human:
+            const availibility =
+              await CrispClient.website.getWebsiteAvailabilityStatus(
+                body.data.website_id
+              );
+            const status = availibility?.status;
 
-            // const data =
-            //   await CrispClient.website.listLastActiveWebsiteOperators(
-            //     body.website_id
-            //   );
+            if (status === 'online') {
+              // Get last active operator
+              const active_operators: {
+                user_id: string;
+                avatar: string | null;
+                timestamp: number;
+              }[] = await CrispClient.website.listLastActiveWebsiteOperators(
+                body.data.website_id
+              );
 
-            // await CrispClient.website.sendMessageInConversation(
-            //   body.website_id,
-            //   body.data.session_id,
-            //   {
-            //     type: 'text',
-            //     from: 'operator',
-            //     origin: 'chat',
+              // const highly_active_operator = active_operators.filter(
+              //   (op) =>
+              //     op.timestamp ==
+              //     Math.min(...active_operators.map((o) => o.timestamp))
+              // )[0];
 
-            //     content: 'An operator will get back to you shortly.',
-            //     user: {
-            //       type: 'participant',
-            //       // nickname: agent?.name || 'Chaindesk',
-            //       avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
-            //     },
-            //     // mentions: [data?.[0]?.user_id],
-            //   }
-            // );
+              await CrispClient.website.updateConversationMetas(
+                body.website_id,
+                body.data.session_id,
+                {
+                  data: {
+                    aiStatus: AIStatus.disabled,
+                    aiDisabledDate: new Date(),
+                  } as ConversationMetadata,
+                }
+              );
 
-            await CrispClient.website.sendMessageInConversation(
-              body.website_id,
-              body.data.session_id,
-              {
-                type: 'picker',
-                from: 'operator',
-                origin: 'chat',
+              await CrispClient.website.sendMessageInConversation(
+                body.website_id,
+                body.data.session_id,
+                {
+                  type: 'picker',
+                  from: 'operator',
+                  origin: 'chat',
+                  content: {
+                    id: 'chaindesk-enable',
+                    text: 'An operator will get back to you shortly.',
+                    choices: [
+                      {
+                        value: Action.enable_ai,
+                        icon: '▶️',
+                        label: 'Re-enable AI',
+                        selected: false,
+                      },
+                    ],
+                  },
+                  // mentions: [highly_active_operator.user_id],
+                  mentions: active_operators.map((each) => each.user_id),
+                  user: {
+                    type: 'website',
+                    nickname: 'chaindesk',
+                  },
+                }
+              );
+            } else {
+              // website offline
+              await CrispClient.website.updateConversationMetas(
+                body.website_id,
+                body.data.session_id,
+                {
+                  data: {
+                    aiStatus: AIStatus.disabled,
+                  } as ConversationMetadata,
+                }
+              );
 
-                content: {
-                  id: 'chaindesk-enable',
-                  text: 'An operator will get back to you shortly.',
-                  choices: [
-                    {
-                      value: 'enable_ai',
-                      icon: '▶️',
-                      label: 'Re-enable AI',
-                      selected: false,
-                    },
-                  ],
-                },
-              }
-            );
+              await CrispClient.website.sendMessageInConversation(
+                body.website_id,
+                body.data.session_id,
+                {
+                  type: 'picker',
+                  from: 'operator',
+                  origin: 'chat',
 
+                  content: {
+                    id: 'chaindesk-answer',
+                    text: 'Unfortunately, no operators are available at the moment.',
+                    choices: [
+                      {
+                        value: Action.enable_ai,
+                        icon: '▶️',
+                        label: 'Re-enable AI',
+                        selected: false,
+                      },
+                    ],
+                  },
+                  // user: {
+                  //   type: 'participant',
+                  //   nickname: agent?.name || 'Chaindesk',
+                  //   avatar: agent.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
+                  // },
+                }
+              );
+            }
             break;
-          case 'resolved':
+          case Action.mark_as_resolved:
             await CrispClient.website.changeConversationState(
               body.website_id,
               body.data.session_id,
               'resolved'
             );
             break;
-          case 'enable_ai':
+          case Action.enable_ai:
             await CrispClient.website.updateConversationMetas(
               body.website_id,
               body.data.session_id,
               {
                 data: {
-                  choice: 'enable_ai',
+                  aiStatus: AIStatus.enabled,
                 },
               }
             );
