@@ -1,6 +1,6 @@
 {
   "name": "@databerry/chat-bubble",
-  "version": "1.0.84",
+  "version": "1.0.85",
   "description": "Chaindesk Chat Bubble Widget",
   "main": "chat-bubble.js",
   "scripts": {},
