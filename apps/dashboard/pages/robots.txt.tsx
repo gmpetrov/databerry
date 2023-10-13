@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const host = 'https://www.chaindesk.ai';
+  const host = 'https://dataup.ru';
 
   if (req.method !== 'GET') {
     res.statusCode = 405;
