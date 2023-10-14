@@ -60,6 +60,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   const initMessageRef = useRef(null);
   const chatBoxRef = useRef(null);
 
+  const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
+
   const [state, setState] = useStateReducer({
     isOpen: false,
     agent: undefined as Agent | undefined,
@@ -514,12 +516,12 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   padding: 0,
 
                   [theme.breakpoints.up('sm')]: {
-                    // maxHeight: '680px',
+                    minHeight: '680px',
+                    maxHeight: '680px',
                   },
                   [theme.breakpoints.only('xs')]: {
-                    // height: '100%',
-                    // maxHeight: '100%',
-                    // maxWidth: '100vw',
+                    height: '100%',
+                    maxWidth: '100vw',
                   },
 
                   '& .message-agent': {},
@@ -541,7 +543,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   messageTemplates={state.config.messageTemplates}
                   initialMessage={state.config.initialMessage}
                   renderBottom={Capture}
-                  agentIconUrl={state.agent?.iconUrl!}
+                  agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
                   isLoadingConversation={isLoadingConversation}
                   hasMoreMessages={hasMoreMessages}
                   handleLoadMoreMessages={handleLoadMoreMessages}
