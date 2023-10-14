@@ -88,7 +88,7 @@ const config: {
       maxAgentsQueries: 100000,
       maxDatastores: 100,
       maxDatasources: 500,
-      maxFileSize: 20000000,
+      maxFileSize: 50000000,
       maxDataProcessing: 500000000,
       maxSummary: 500,
       maxWebsiteURL: 10000,

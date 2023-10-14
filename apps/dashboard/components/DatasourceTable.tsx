@@ -441,9 +441,18 @@ export default function DatasourceTable({
             </tr>
           </thead>
           <tbody>
-            {items.map((datasource) => (
-              <tr key={datasource.id}>
-                {/* <td style={{ textAlign: 'center' }}>
+            {items.map((datasource) => {
+              const isRunning =
+                datasource.status === 'running' ||
+                datasource?.children?.length > 0;
+              /*
+                datasource?.children?.length > 0 is a trick to know if datasource group has a running child job
+                Backend returns children datasources only if status is running or pending, 
+              */
+
+              return (
+                <tr key={datasource.id}>
+                  {/* <td style={{ textAlign: 'center' }}>
                   <Checkbox
                     checked={selected.includes(row.id)}
                     color={selected.includes(row.id) ? 'primary' : undefined}
@@ -458,107 +467,109 @@ export default function DatasourceTable({
                     sx={{ verticalAlign: 'text-bottom' }}
                   />
                 </td> */}
-                {/* <td>
+                  {/* <td>
                   <Typography fontWeight="md">{row.id}</Typography>
                 </td> */}
-                <td>
-                  <div className="flex justify-center ">
-                    <Checkbox
-                      disabled={state.isBulkDeleting}
-                      checked={selected.includes(datasource.id)}
-                      onChange={(e) => {
-                        setSelected((ids) =>
-                          e.target.checked
-                            ? ids.concat(datasource.id)
-                            : ids.filter((itemId) => itemId !== datasource.id)
-                        );
-                      }}
-                    />
-                  </div>
-                </td>
-                <td>
-                  <div className="flex flex-col">
-                    <Stack
-                      direction="row"
-                      alignItems={'center'}
-                      spacing={2}
-                      className="max-w-full"
-                    >
-                      {datasource?._count?.children > 0 && (
-                        <Badge
-                          badgeContent={datasource?._count?.children}
-                          max={9999}
-                          size="sm"
-                          badgeInset={3}
-                        >
-                          <IconButton
-                            size="sm"
-                            variant="soft"
-                            color="primary"
-                            onClick={() => {
-                              router.query.offset = '0';
-                              router.query.groupId = datasource.id;
-                              router.query.groupName = datasource.name;
-                              router.replace(router, undefined, {
-                                shallow: true,
-                              });
-
-                              setSelected([]);
-                            }}
-                          >
-                            <ChevronRightIcon />
-                          </IconButton>
-                        </Badge>
-                        // </Link>
-                      )}
-                      <Link
-                        href={`${RouteNames.DATASTORES}/${datasource.datastoreId}/${datasource.id}`}
-                        className="truncate hover:underline"
+                  <td>
+                    <div className="flex justify-center ">
+                      <Checkbox
+                        disabled={state.isBulkDeleting}
+                        checked={selected.includes(datasource.id)}
+                        onChange={(e) => {
+                          setSelected((ids) =>
+                            e.target.checked
+                              ? ids.concat(datasource.id)
+                              : ids.filter((itemId) => itemId !== datasource.id)
+                          );
+                        }}
+                      />
+                    </div>
+                  </td>
+                  <td>
+                    <div className="flex flex-col">
+                      <Stack
+                        direction="row"
+                        alignItems={'center'}
+                        spacing={2}
+                        className="max-w-full"
                       >
-                        <Typography className="truncate" fontWeight={'bold'}>
-                          {datasource.name}
-                        </Typography>
-                      </Link>
-                    </Stack>
-                    {/* <Typography color="neutral" className="truncate">
+                        {datasource?._count?.children > 0 && (
+                          <Badge
+                            badgeContent={datasource?._count?.children}
+                            max={9999}
+                            size="sm"
+                            badgeInset={3}
+                          >
+                            <IconButton
+                              size="sm"
+                              variant="soft"
+                              color="primary"
+                              onClick={() => {
+                                router.query.offset = '0';
+                                router.query.groupId = datasource.id;
+                                router.query.groupName = datasource.name;
+                                router.replace(router, undefined, {
+                                  shallow: true,
+                                });
+
+                                setSelected([]);
+                              }}
+                            >
+                              <ChevronRightIcon />
+                            </IconButton>
+                          </Badge>
+                          // </Link>
+                        )}
+                        <Link
+                          href={`${RouteNames.DATASTORES}/${datasource.datastoreId}/${datasource.id}`}
+                          className="truncate hover:underline"
+                        >
+                          <Typography className="truncate" fontWeight={'bold'}>
+                            {datasource.name}
+                          </Typography>
+                        </Link>
+                      </Stack>
+                      {/* <Typography color="neutral" className="truncate">
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                       Iste sapiente aliquid ab iure laboriosam fuga! Magnam
                       quasi officiis sequi ea quis obcaecati quod consequatur,
                       fugiat tempore maiores perferendis doloribus natus!
                     </Typography> */}
-                  </div>
-                </td>
+                    </div>
+                  </td>
 
-                <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    // startDecorator={
-                    //   {
-                    //     Paid: <i data-feather="check" />,
-                    //     Refunded: <i data-feather="corner-up-left" />,
-                    //     Cancelled: <i data-feather="x" />,
-                    //   }[row.status]
-                    // }
-                    // color={
-                    //   {
-                    //     public: 'success',
-                    //     private: 'neutral',
-                    //   }[datastore.visibility] as ColorPaletteProp
-                    // }
-                    color={'neutral'}
-                  >
-                    {datasource.type}
-                  </Chip>
-                </td>
-                <td>
-                  {datasource?._count?.children <= 0 && (
-                    <Typography>{`${((datasource.nbTokens || 0) / 1000).toFixed(
-                      1
-                    )}K tokens / ${datasource.nbChunks} chunks`}</Typography>
-                  )}
-                </td>
-                {/* <td>
+                  <td>
+                    <Chip
+                      variant="soft"
+                      size="sm"
+                      // startDecorator={
+                      //   {
+                      //     Paid: <i data-feather="check" />,
+                      //     Refunded: <i data-feather="corner-up-left" />,
+                      //     Cancelled: <i data-feather="x" />,
+                      //   }[row.status]
+                      // }
+                      // color={
+                      //   {
+                      //     public: 'success',
+                      //     private: 'neutral',
+                      //   }[datastore.visibility] as ColorPaletteProp
+                      // }
+                      color={'neutral'}
+                    >
+                      {datasource.type}
+                    </Chip>
+                  </td>
+                  <td>
+                    {datasource?._count?.children <= 0 && (
+                      <Typography>{`${(
+                        (datasource.nbTokens || 0) / 1000
+                      ).toFixed(1)}K tokens / ${
+                        datasource.nbChunks
+                      } chunks`}</Typography>
+                    )}
+                  </td>
+                  {/* <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <Avatar size="sm">{row.customer.initial}</Avatar>
                     <div>
@@ -575,62 +586,68 @@ export default function DatasourceTable({
                     </div>
                   </Box>
                 </td> */}
-                {/* <td>{row.subscription}</td> */}
-                <td>
-                  <Typography className="truncate">
-                    {datasource?.lastSynch &&
-                      relativeDate(new Date(datasource.lastSynch))}
-                  </Typography>
-                </td>
-                <td>
-                  <Chip
-                    variant="soft"
-                    size="sm"
-                    // startDecorator={
-                    //   {
-                    //     Paid: <i data-feather="check" />,
-                    //     Refunded: <i data-feather="corner-up-left" />,
-                    //     Cancelled: <i data-feather="x" />,
-                    //   }[row.status]
-                    // }
-                    sx={{
-                      textTransform: 'capitalize2',
-                    }}
-                    color={
-                      {
-                        unsynched: 'neutral',
-                        pending: 'primary',
-                        running: 'neutral',
-                        synched: 'success',
-                        error: 'danger',
-                        usage_limit_reached: 'warning',
-                      }[
-                        /*
-                          To check if datasource group has a running job
-                          Backend returns children datasources only if status is running or pending, 
-                        */
-                        datasource?.children?.length > 0
-                          ? DatasourceStatus.running
-                          : datasource.status
-                      ] as ColorPaletteProp
-                    }
-                  >
-                    {datasource?.children?.length > 0
-                      ? DatasourceStatus.running
-                      : datasource.status}
-                  </Chip>
-                </td>
-                <td className="space-x-2">
-                  {/* <Button size="sm" variant="outlined">
+                  {/* <td>{row.subscription}</td> */}
+                  <td>
+                    <Typography className="truncate">
+                      {datasource?.lastSynch &&
+                        relativeDate(new Date(datasource.lastSynch))}
+                    </Typography>
+                  </td>
+                  <td>
+                    <Chip
+                      variant="soft"
+                      size="sm"
+                      // startDecorator={
+                      //   {
+                      //     Paid: <i data-feather="check" />,
+                      //     Refunded: <i data-feather="corner-up-left" />,
+                      //     Cancelled: <i data-feather="x" />,
+                      //   }[row.status]
+                      // }
+                      startDecorator={
+                        isRunning ? (
+                          <CircularProgress
+                            color="warning"
+                            size="sm"
+                            sx={{
+                              '--_root-size': '9px',
+                            }}
+                          />
+                        ) : null
+                      }
+                      sx={{
+                        textTransform: 'capitalize2',
+                      }}
+                      color={
+                        {
+                          unsynched: 'neutral',
+                          pending: 'primary',
+                          running: 'neutral',
+                          synched: 'success',
+                          error: 'danger',
+                          usage_limit_reached: 'warning',
+                        }[
+                          isRunning
+                            ? DatasourceStatus.running
+                            : datasource.status
+                        ] as ColorPaletteProp
+                      }
+                    >
+                      {isRunning ? DatasourceStatus.running : datasource.status}
+                    </Chip>
+                  </td>
+                  <td className="space-x-2">
+                    {/* <Button size="sm" variant="outlined">
                     Sync
                   </Button> */}
-                  <SynchButton
-                    datasource={datasource}
-                    onClick={() => handleSynch(datasource.id)}
-                  />
-                </td>
-              </tr>
-            ))}
+                    <SynchButton
+                      datasource={datasource}
+                      onClick={() => handleSynch(datasource.id)}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </Sheet>
