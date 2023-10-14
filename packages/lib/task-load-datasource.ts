@@ -85,6 +85,16 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
   if (loader.isGroup) {
     await loader.load();
 
+    await prisma.appDatasource.update({
+      where: {
+        id: datasource.id,
+      },
+      data: {
+        lastSynch: new Date(),
+        nbSynch: datasource?.nbSynch! + 1,
+      },
+    });
+
     logger.info(
       `${datasource?.id}: datasource group of type ${datasource?.type} runned successfully`
     );
@@ -139,6 +149,8 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
       },
       data: {
         status: DatasourceStatus.synched,
+        lastSynch: new Date(),
+        nbSynch: datasource?.nbSynch! + 1,
       },
     });
 
