@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.37"></a>
+## 0.1.37 (2023-10-14)
+
+### Miscellaneous
+
+- 🎸 increase upload file limit to 50MB for enterprise plan [[5a29d69](https://github.com/gmpetrov/databerry/commit/5a29d69c71bf5c9105de5dfe44df49adc2b068af)]
+
+
 <a name="0.1.36"></a>
 ## 0.1.36 (2023-10-13)
 
