@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.38"></a>
+## 0.1.38 (2023-10-14)
+
+### Fixed
+
+- 🐛 missing lastSynch update [[4fe008f](https://github.com/gmpetrov/databerry/commit/4fe008fded3cb443d9df623e62b07e75753dd21d)]
+
+
 <a name="0.1.37"></a>
 ## 0.1.37 (2023-10-14)
 
