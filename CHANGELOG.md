@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.39"></a>
+## 0.1.39 (2023-10-14)
+
+### Fixed
+
+- 🐛 multiple chat-bubble small style improvements [[f6e5e4c](https://github.com/gmpetrov/databerry/commit/f6e5e4c4afda40d5881f8d9a8bc2f549d6623470)]
+
+
 <a name="0.1.38"></a>
 ## 0.1.38 (2023-10-14)
 
