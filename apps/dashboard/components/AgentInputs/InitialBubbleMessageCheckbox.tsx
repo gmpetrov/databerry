@@ -2,7 +2,7 @@ import { Checkbox, Stack, Typography } from '@mui/joy';
 import { useFormContext } from 'react-hook-form';
 
 function InitialBubbleMessageCheckbox({
-  labelText = 'Hide initial message on chat bubble',
+  labelText = 'Disable initial message popup',
 }) {
   const { register, setValue, getValues } = useFormContext();
   const { interfaceConfig } = getValues();

@@ -16,6 +16,12 @@ export default function CommonInterfaceInput(props: Props) {
 
   return (
     <>
+      <Input
+        label="Window Title"
+        control={control}
+        placeholder="Agent Smith"
+        {...register('interfaceConfig.displayName')}
+      />
       <InitMessageInput />
       <InitialBubbleMessageCheckbox />
       <SuggestionsInput />
@@ -25,13 +31,6 @@ export default function CommonInterfaceInput(props: Props) {
         placeholder="#000000"
         label="Brand Color"
         {...register('interfaceConfig.primaryColor')}
-      />
-
-      <Input
-        label="Display Name"
-        control={control}
-        placeholder="Agent Smith"
-        {...register('interfaceConfig.displayName')}
       />
     </>
   );

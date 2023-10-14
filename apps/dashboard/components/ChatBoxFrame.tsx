@@ -126,7 +126,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   return (
     <Box
       sx={(theme) => ({
-        p: 2,
+        px: 2,
+        pb: 2,
         position: 'relative',
         width: '100vw',
         height: '100vh',

@@ -206,7 +206,13 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
       );
       // return <img src={state.agent?.iconUrl} width="100%" height="100%" />;
     } else {
-      return <AutoAwesomeIcon />;
+      // return <AutoAwesomeIcon />;
+      return (
+        <Avatar
+          src={`${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`}
+          sx={{ width: '100%', height: '100%' }}
+        />
+      );
     }
   }, [state.agent?.iconUrl]);
 
@@ -217,9 +223,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
       Component = (
         <Stack
           sx={{
-            mb: -1,
-            position: 'absolute',
-            bottom: 0,
+            mt: -3,
             width: '100%',
           }}
         >
@@ -433,6 +437,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 display: 'flex',
                 flexDirection: 'column',
                 boxSizing: 'border-box',
+                p: 0,
+                gap: 0,
                 // boxShadow: 'md',
 
                 transition: `opacity 150ms ease-in-out`,
@@ -472,38 +478,48 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 },
               })}
             >
-              <Box sx={{ width: '100%', mt: -2, py: 1 }}>
-                <Stack direction="row" alignItems={'center'}>
-                  {state.config?.displayName && (
-                    <Typography>{state.config?.displayName}</Typography>
-                  )}
+              <Stack
+                direction="row"
+                sx={{
+                  px: 2,
+                  py: 1,
+                  alignItems: 'center',
+                  borderBottom: '1px solid',
+                  borderBottomColor: 'divider',
+                }}
+              >
+                {state.config?.displayName && (
+                  <Typography>{state.config?.displayName}</Typography>
+                )}
 
-                  <IconButton
-                    variant="plain"
-                    sx={{ ml: 'auto' }}
-                    size="sm"
-                    onClick={() => setState({ isOpen: false })}
-                  >
-                    <CloseRoundedIcon />
-                  </IconButton>
-                </Stack>
-              </Box>
-              <Divider />
-              <Box
+                <IconButton
+                  variant="plain"
+                  sx={{ ml: 'auto' }}
+                  size="sm"
+                  onClick={() => setState({ isOpen: false })}
+                >
+                  <CloseRoundedIcon />
+                </IconButton>
+              </Stack>
+              <Stack
                 sx={(theme) => ({
                   // flex: 1,
                   // display: 'flex',
                   width: '100%',
                   position: 'relative',
 
-                  height: 'calc(100vh - 200px)',
+                  height: '100%',
+                  maxHeight: '100%',
+                  flex: 1,
+                  padding: 0,
 
                   [theme.breakpoints.up('sm')]: {
-                    maxHeight: '680px',
+                    // maxHeight: '680px',
                   },
                   [theme.breakpoints.only('xs')]: {
-                    height: '100%',
-                    maxWidth: '100vw',
+                    // height: '100%',
+                    // maxHeight: '100%',
+                    // maxWidth: '100vw',
                   },
 
                   '& .message-agent': {},
@@ -513,6 +529,10 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   '& .message-human *': {
                     color: textColor,
                   },
+
+                  overflowY: 'hidden',
+                  px: 2,
+                  pb: 1,
                 })}
               >
                 <ChatBox
@@ -529,7 +549,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   handleAbort={handleAbort}
                   hideInternalSources
                 />
-              </Box>
+              </Stack>
             </Card>
           )}
         </Transition>

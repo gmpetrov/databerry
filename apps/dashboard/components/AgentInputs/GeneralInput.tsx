@@ -38,7 +38,7 @@ function GeneralInput({}: Props) {
   const { watch, setValue, register, getValues, formState, control } =
     useFormContext<CreateAgentSchema>();
 
-  const defaultIconUrl = '/.well-known/logo.png';
+  const defaultIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
 
   const id = watch('id');
   const iconUrl = watch('iconUrl');

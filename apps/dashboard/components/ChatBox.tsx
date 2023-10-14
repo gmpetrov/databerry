@@ -230,6 +230,7 @@ function ChatBox({
         maxHeight: '100%',
         minHeight: '100%',
         mx: 'auto',
+        gap: 0,
       }}
     >
       <Stack
@@ -243,8 +244,9 @@ function ChatBox({
           flex: 1,
           maxHeight: '100%',
           overflowY: 'auto',
-          pb: 8,
+          pb: 4,
           pt: 2,
+          mb: -2,
 
           // Scrollbar
           scrollbarColor: 'rgba(0,0,0,.3) transparent',
