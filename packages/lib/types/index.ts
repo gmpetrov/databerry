@@ -23,6 +23,16 @@ export enum RouteNames {
   SLACK_BOT = '/products/slack-bot',
 }
 
+export type PageUnion =
+  | 'agents'
+  | 'analytics'
+  | 'products'
+  | 'settings'
+  | 'datastores'
+  | 'chat'
+  | 'maintenance'
+  | 'logs';
+
 export enum PromptTypesLabels {
   customer_support = 'Customer support',
   raw = 'Raw',

@@ -35,6 +35,10 @@ import useSWR from 'swr';
 
 import AccountCard from '@app/components/AccountCard';
 import UserMenu from '@app/components/UserMenu';
+import useSubdomain, {
+  allSubdomains,
+  getAllowedSubdomainsForPage,
+} from '@app/hooks/useSubdomain';
 import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getStatus } from '@app/pages/api/status';
 
@@ -45,7 +49,7 @@ import { Prisma } from '@chaindesk/prisma';
 export default function Navigation() {
   const router = useRouter();
   const { data: session } = useSession();
-
+  const { subdomain } = useSubdomain();
   const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
     fetcher,
@@ -126,12 +130,14 @@ export default function Navigation() {
         icon: <SmartToyRoundedIcon fontSize="md" />,
         active: router.route.startsWith(RouteNames.AGENTS),
         isExperimental: false,
+        allowedSubs: getAllowedSubdomainsForPage('agents'),
       },
       {
         label: 'Datastores',
         route: RouteNames.DATASTORES,
         icon: <StorageRoundedIcon fontSize="md" />,
         active: router.route.startsWith(RouteNames.DATASTORES),
+        allowedSubs: getAllowedSubdomainsForPage('datastores'),
       },
       {
         label: 'Chat',
@@ -139,6 +145,7 @@ export default function Navigation() {
         icon: <ChatRoundedIcon fontSize="md" />,
         active: router.route === RouteNames.CHAT,
         isExperimental: true,
+        allowedSubs: getAllowedSubdomainsForPage('chat'),
       },
       {
         label: 'Logs',
@@ -154,6 +161,7 @@ export default function Navigation() {
           </Badge>
         ),
         active: router.route === RouteNames.LOGS,
+        allowedSubs: getAllowedSubdomainsForPage('logs'),
       },
 
       // {
@@ -167,18 +175,21 @@ export default function Navigation() {
         route: RouteNames.SETTINGS,
         icon: <ManageAccountsRoundedIcon fontSize="small" />,
         active: router.route.startsWith(RouteNames.SETTINGS),
+        allowedSubs: getAllowedSubdomainsForPage('settings'),
       },
       {
         label: 'Help Center',
         route: 'https://chaindesk.ai/help',
         icon: <HelpRoundedIcon fontSize="small" />,
         target: 'blank',
+        allowedSubs: allSubdomains,
       },
       {
         label: 'API Documentation',
         route: 'https://docs.chaindesk.ai/',
         icon: <ApiRoundedIcon fontSize="small" />,
         target: 'blank',
+        allowedSubs: ['adam'],
       },
     ];
   }, [router.route, countUnreadQuery?.data]);
@@ -205,32 +216,38 @@ export default function Navigation() {
             }}
           >
             {items.map((each) => (
-              <Link key={each.route} href={each.route} target={each?.target}>
-                <ListItem>
-                  <ListItemButton
-                    variant={each.active ? 'soft' : 'plain'}
-                    color={each.active ? 'primary' : 'neutral'}
-                  >
-                    <ListItemDecorator
-                      sx={{ color: each.active ? 'inherit' : 'neutral.500' }}
-                    >
-                      {each.icon}
-                    </ListItemDecorator>
-                    <ListItemContent>{each.label}</ListItemContent>
-
-                    {each.isExperimental && (
-                      <Chip
-                        startDecorator={<NewReleasesRoundedIcon />}
-                        size="sm"
-                        variant="soft"
-                        color="warning"
+              <div key={each.route}>
+                {each.allowedSubs.includes(subdomain) && (
+                  <Link href={each.route} target={each?.target}>
+                    <ListItem>
+                      <ListItemButton
+                        variant={each.active ? 'soft' : 'plain'}
+                        color={each.active ? 'primary' : 'neutral'}
                       >
-                        Beta
-                      </Chip>
-                    )}
-                  </ListItemButton>
-                </ListItem>
-              </Link>
+                        <ListItemDecorator
+                          sx={{
+                            color: each.active ? 'inherit' : 'neutral.500',
+                          }}
+                        >
+                          {each.icon}
+                        </ListItemDecorator>
+                        <ListItemContent>{each.label}</ListItemContent>
+
+                        {each.isExperimental && (
+                          <Chip
+                            startDecorator={<NewReleasesRoundedIcon />}
+                            size="sm"
+                            variant="soft"
+                            color="warning"
+                          >
+                            Beta
+                          </Chip>
+                        )}
+                      </ListItemButton>
+                    </ListItem>
+                  </Link>
+                )}
+              </div>
             ))}
           </List>
         </ListItem>

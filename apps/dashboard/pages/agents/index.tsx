@@ -31,6 +31,7 @@ import Layout from '@app/components/Layout';
 import SettingCard from '@app/components/ui/SettingCard';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useStateReducer from '@app/hooks/useStateReducer';
+import useSubdomain from '@app/hooks/useSubdomain';
 
 import accountConfig from '@chaindesk/lib/account-config';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
@@ -44,6 +45,8 @@ import { getDatastores } from '../api/datastores';
 export default function AgentsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+
+  useSubdomain();
 
   const [state, setState] = useStateReducer({
     isCreateDatastoreModalOpen: false,
@@ -231,10 +234,10 @@ AgentsPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export const getServerSideProps = withAuth(
-  async (ctx: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  }
-);
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {},
+//     };
+//   }
+// );
