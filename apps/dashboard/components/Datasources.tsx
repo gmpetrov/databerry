@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React from 'react';
@@ -51,7 +52,7 @@ function Datasources(props: Props) {
   };
 
   if (!getDatastoreQuery.data && !Array.isArray(getDatastoreQuery.data)) {
-    return null;
+    return <CircularProgress />;
   }
 
   return (

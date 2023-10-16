@@ -1,7 +1,7 @@
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import type { ColorPaletteProp } from '@mui/joy';
+import { CircularProgress, type ColorPaletteProp, Stack } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import Button from '@mui/joy/Button';
@@ -62,7 +62,11 @@ export default function DatasourcePage() {
   };
 
   if (!getDatasourceQuery?.data) {
-    return null;
+    return (
+      <Stack sx={{ height: '100%' }}>
+        <CircularProgress size="sm" sx={{ m: 'auto' }} />
+      </Stack>
+    );
   }
 
   return (
