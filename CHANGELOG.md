@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.40"></a>
+## 0.1.40 (2023-10-16)
+
+### Fixed
+
+- 🐛 crisp - ai should be disabled when operator send msg [[586c011](https://github.com/gmpetrov/databerry/commit/586c0115149df5eb305d16d05a1b1ac6df92e786)]
+- 🐛 add loaders to dataasource tables [[e266915](https://github.com/gmpetrov/databerry/commit/e2669157aefabc43f872c95b61bfc7f18e219e0c)]
+- 🐛 chatbubble height [[8ef3280](https://github.com/gmpetrov/databerry/commit/8ef3280a77683e432a47aecfeb9b745b1f186b78)]
+
+
 <a name="0.1.39"></a>
 ## 0.1.39 (2023-10-14)
 
