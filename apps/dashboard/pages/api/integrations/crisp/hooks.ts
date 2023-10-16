@@ -376,7 +376,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         if (
           body.data.from === 'operator' &&
           body.data.type === 'text' &&
-          metadata?.aiStatus === AIStatus.enabled
+          metadata?.aiStatus !== AIStatus.enabled
         ) {
           await CrispClient.website.updateConversationMetas(
             body.website_id,
