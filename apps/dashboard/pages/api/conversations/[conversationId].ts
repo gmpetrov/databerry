@@ -1,5 +1,6 @@
 import Cors from 'cors';
 import { NextApiResponse } from 'next';
+import z from 'zod';
 
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
@@ -7,14 +8,15 @@ import {
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import runMiddleware from '@chaindesk/lib/run-middleware';
+import { ConversationStatusSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
-import { AgentVisibility } from '@chaindesk/prisma';
+import { AgentVisibility, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createLazyAuthHandler();
 
 const cors = Cors({
-  methods: ['GET', 'DELETE', 'HEAD'],
+  methods: ['GET', 'UPDATE', 'DELETE', 'HEAD'],
 });
 
 export const getConversation = async (
@@ -29,7 +31,8 @@ export const getConversation = async (
     where: {
       id: conversationId,
     },
-    include: {
+    select: {
+      status: true,
       agent: true,
       messages: {
         take: 50,
@@ -59,6 +62,57 @@ export const getConversation = async (
 };
 
 handler.get(respond(getConversation));
+
+export const updateConversation = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) => {
+  try {
+    const session = req.session;
+    const conversationId = req.query.conversationId as string;
+    const data = ConversationStatusSchema.parse(req.body);
+
+    const conversation = await prisma.conversation.findUnique({
+      where: {
+        id: conversationId,
+      },
+      include: {
+        agent: true,
+      },
+    });
+    if (
+      conversation?.agent?.visibility === AgentVisibility.private &&
+      conversation?.agent?.organizationId !== session?.organization?.id
+    ) {
+      throw new ApiError(ApiErrorType.UNAUTHORIZED);
+    }
+
+    const updated = await prisma.conversation.update({
+      where: {
+        id: conversationId,
+      },
+      data: {
+        status: data.status,
+      },
+    });
+
+    return updated;
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      return {
+        error: 'error invalid request query',
+        details: e.format(),
+      };
+    } else if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return {
+        error: e.meta,
+      };
+    }
+    throw e;
+  }
+};
+
+handler.put(respond(updateConversation));
 
 export const deleteConversation = async (
   req: AppNextApiRequest,

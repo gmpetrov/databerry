@@ -271,6 +271,8 @@ model Conversation {
 
   channel ConversationChannel @default(dashboard)
 
+  status ConversationStatus @default(UNRESOLVED)
+
   metadata Json?
 
   organizationId String?       @map("organization_id")
@@ -643,4 +645,9 @@ enum MembershipRole {
 enum GlobalRole {
   SUPERADMIN
   CUSTOMER
+}
+
+enum ConversationStatus {
+     RESOLVED
+     UNRESOLVED
 }

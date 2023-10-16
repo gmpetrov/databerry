@@ -70,6 +70,7 @@ export default function ChatPage() {
     handleLoadMoreMessages,
     setConversationId,
     conversationId: currentConversationId,
+    conversationStatus,
     handleAbort,
   } = useChat({
     endpoint: `/api/chains/run`,

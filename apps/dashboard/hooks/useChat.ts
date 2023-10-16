@@ -12,7 +12,12 @@ import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
-import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
+import {
+  ChatResponse,
+  ConversationStatus,
+  ConversationStatusUnion,
+  EvalAnswer,
+} from '@chaindesk/lib/types/dtos';
 import type { ConversationChannel, Prisma } from '@chaindesk/prisma';
 
 import useRateLimit from './useRateLimit';
@@ -56,6 +61,8 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
   const [state, setState] = useStateReducer({
     visitorId: '',
     conversationId: '',
+    conversationStatus:
+      ConversationStatus.UNRESOLVED as ConversationStatusUnion,
     hasMoreMessages: true,
     prevConversationId: '',
     mounted: false,
@@ -118,6 +125,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               createdAt: message?.createdAt!,
               sources: message?.sources as Source[],
             })),
+          conversationStatus: data[0]?.status ?? state.conversationStatus,
         });
       },
     }
@@ -413,6 +421,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     setVisitorId,
     handleEvalAnswer,
     handleAbort: state.handleAbort,
+    conversationStatus: state.conversationStatus as ConversationStatus,
   };
 };
 
