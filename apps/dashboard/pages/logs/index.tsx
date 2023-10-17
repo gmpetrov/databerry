@@ -1,6 +1,7 @@
+import { CloseRounded } from '@mui/icons-material';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import { Button } from '@mui/joy';
+import { Button, IconButton, Option, Select } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Badge from '@mui/joy/Badge';
@@ -36,7 +37,7 @@ import useStateReducer from '@app/hooks/useStateReducer';
 import relativeDate from '@chaindesk/lib/relative-date';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { withAuth } from '@chaindesk/lib/withAuth';
-import { Prisma } from '@chaindesk/prisma';
+import { MessageEval, Prisma } from '@chaindesk/prisma';
 
 import { getLogs } from '../api/logs';
 import { getConversation } from '../api/logs/[id]';
@@ -52,6 +53,7 @@ export default function LogsPage() {
     currentConversationId: undefined as string | undefined,
     hasReachedEnd: false,
     currentImproveAnswerID: undefined as string | undefined,
+    filter: '',
   });
   const getConversationsQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getLogs>
@@ -68,7 +70,7 @@ export default function LogsPage() {
 
     return `/api/logs?cursor=${cursor || ''}&conversationId=${
       router.query.conversationId || ''
-    }`;
+    }&filter=${state.filter}`;
   }, fetcher);
 
   const getConversationQuery = useSWR<
@@ -107,7 +109,11 @@ export default function LogsPage() {
 
   if (!session?.organization) return null;
 
-  if (!getConversationsQuery.isLoading && conversations.length === 0) {
+  if (
+    !getConversationsQuery.isLoading &&
+    conversations.length === 0 &&
+    state.filter === ''
+  ) {
     return (
       <Alert
         variant="outlined"
@@ -143,7 +149,51 @@ export default function LogsPage() {
         View all Agents conversations across all channels. Evaluate and improve
         answers.
       </Alert> */}
-      <ConversationExport />
+
+      <Stack
+        direction="row-reverse"
+        justifyItems="center"
+        spacing={1}
+        width="100%"
+      >
+        <ConversationExport />
+        <Select
+          placeholder="Filter by type"
+          value={state.filter}
+          onChange={(_, value) => {
+            if (value && typeof value === 'string') {
+              setState({ filter: value });
+            }
+          }}
+          sx={{ py: 0 }}
+          {...(state.filter && {
+            // display the button and remove select indicator
+            // when user has selected a value
+            endDecorator: (
+              <IconButton
+                size="sm"
+                variant="plain"
+                color="neutral"
+                onMouseDown={(event) => {
+                  // don't open the popup when clicking on this button
+                  event.stopPropagation();
+                }}
+                onClick={() => setState({ filter: '' })}
+              >
+                <CloseRounded />
+              </IconButton>
+            ),
+            indicator: null,
+          })}
+        >
+          <Option key={MessageEval.good} value={MessageEval.good}>
+            Good
+          </Option>
+          <Option key={MessageEval.bad} value={MessageEval.bad}>
+            Bad
+          </Option>
+        </Select>
+      </Stack>
 
       <Sheet
         variant="outlined"
@@ -193,10 +243,21 @@ export default function LogsPage() {
                     </React.Fragment>
                   )) as any
               }
+              style={{ height: '100%' }}
             >
               {/* Add fragment to remove InfiniteScroll warning when empty conversations */}
               <React.Fragment />
-
+              {conversations.length === 0 && (
+                <Box
+                  sx={{
+                    textAlign: 'center',
+                    height: '100%',
+                    my: '50%',
+                  }}
+                >
+                  No Conversations found
+                </Box>
+              )}
               {conversations.map((each) => (
                 <React.Fragment key={each.id}>
                   <ListItem
@@ -266,7 +327,15 @@ export default function LogsPage() {
             </InfiniteScroll>
 
             {getConversationsQuery.isLoading && (
-              <CircularProgress size="sm" sx={{ mx: 'auto', my: 2 }} />
+              <CircularProgress
+                size="sm"
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  zIndex: 99,
+                }}
+              />
             )}
           </List>
           <Divider orientation="vertical" />

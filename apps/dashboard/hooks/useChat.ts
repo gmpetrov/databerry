@@ -2,16 +2,18 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
-import type { ConversationChannel, Prisma } from '@chaindesk/prisma';
 import { useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
+import { MessageEvalUnion } from '@app/components/ChatBox';
 import { getConversation } from '@app/pages/api/conversations/[conversationId]';
+
+import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
-import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
-import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import type { ConversationChannel, Prisma } from '@chaindesk/prisma';
 
 import useRateLimit from './useRateLimit';
 import useStateReducer from './useStateReducer';
@@ -29,7 +31,7 @@ type Props = {
 };
 
 export const handleEvalAnswer = async (props: {
-  value: 'good' | 'bad';
+  value: MessageEvalUnion;
   messageId: string;
 }) => {
   await fetch(`${API_URL}/api/conversations/eval-answer`, {

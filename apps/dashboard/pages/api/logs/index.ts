@@ -1,4 +1,7 @@
+import { Prisma } from '@prisma/client';
 import { NextApiResponse } from 'next';
+
+import { MessageEvalUnion } from '@app/components/ChatBox';
 
 import {
   createAuthApiHandler,
@@ -13,9 +16,23 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
   const page = Number(req.query.page);
   const limit = Number(req.query.limit);
+  const filter = req.query.filter as MessageEvalUnion;
+
   const cursor = req.query.cursor as string;
 
-  const conversations = await prisma.conversation.findMany({
+  const filterClause = {
+    where: {
+      agent: {
+        organizationId: session.organization?.id,
+      },
+      messages: {
+        some: {
+          eval: filter,
+        },
+      },
+    },
+  };
+  const baseQuery = {
     where: {
       agent: {
         organizationId: session.organization?.id,
@@ -32,7 +49,6 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
           },
         }
       : {}),
-
     include: {
       agent: true,
       _count: {
@@ -47,14 +63,24 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
       messages: {
         take: 1,
         orderBy: {
-          createdAt: 'asc',
+          createdAt: 'asc' as Prisma.SortOrder,
         },
       },
     },
     orderBy: {
-      updatedAt: 'desc',
+      updatedAt: 'desc' as Prisma.SortOrder,
     },
-  });
+  };
+
+  if (filter) {
+    const conversations = await prisma.conversation.findMany({
+      ...baseQuery,
+      ...filterClause,
+    });
+    return conversations;
+  }
+
+  const conversations = await prisma.conversation.findMany({ ...baseQuery });
 
   return conversations;
 };
