@@ -2,16 +2,17 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
-import type { ConversationChannel, Prisma } from '@chaindesk/prisma';
 import { useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
 import { getConversation } from '@app/pages/api/conversations/[conversationId]';
+
+import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
-import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
-import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import type { ConversationChannel, Prisma } from '@chaindesk/prisma';
 
 import useRateLimit from './useRateLimit';
 import useStateReducer from './useStateReducer';
@@ -394,7 +395,8 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
   return {
     handleChatSubmit,
     history: state.history,
-    isLoadingConversation: getConversationQuery.isLoading,
+    isLoadingConversation:
+      getConversationQuery.isLoading || getConversationQuery.isValidating,
     hasMoreMessages: state.hasMoreMessages,
     handleLoadMoreMessages: handleLoadMoreMessages,
     visitorId: state.visitorId,

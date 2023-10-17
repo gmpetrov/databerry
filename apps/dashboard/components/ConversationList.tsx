@@ -21,13 +21,15 @@ import useSWRInfinite from 'swr/infinite';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getConversations } from '@app/pages/api/agents/[id]/c';
 
-import relativeDate from '@chaindesk/lib/relative-date';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
-import { Conversation, Prisma } from '@chaindesk/prisma';
+import { Prisma } from '@chaindesk/prisma';
 
 type Props = {
   agentId?: string;
   rootSx?: SxProps;
+  handleSelect?(conversationId: string): void;
+  conversationId?: string;
+  newChatHandler?(): void;
 };
 
 const Item = (props: {
@@ -66,10 +68,15 @@ const Item = (props: {
   );
 };
 
-function ConversationList({ agentId, rootSx }: Props) {
+function ConversationList({
+  agentId,
+  rootSx,
+  handleSelect,
+  conversationId,
+  newChatHandler,
+}: Props) {
   const scrollParentRef = useRef(null);
   const router = useRouter();
-  const conversationId = router.query.conversationId as string;
   const [state, setState] = useStateReducer({
     hasMore: true,
     hasLoadedOnce: false,
@@ -112,11 +119,6 @@ function ConversationList({ agentId, rootSx }: Props) {
 
   const conversations = getConversationsQuery?.data?.flat?.() || [];
 
-  const handleClick = (id: string) => {
-    router.query.conversationId = id;
-    router.replace(router, undefined, { shallow: true });
-  };
-
   if (!getConversationsQuery.isLoading && conversations.length === 0) {
     return null;
   }
@@ -135,10 +137,7 @@ function ConversationList({ agentId, rootSx }: Props) {
         size="sm"
         variant="outlined"
         color="neutral"
-        onClick={() => {
-          router.query.conversationId = undefined;
-          router.replace(router, undefined, { shallow: true });
-        }}
+        onClick={newChatHandler}
         startDecorator={<AddRoundedIcon fontSize="sm" />}
         sx={{ m: 1, whiteSpace: 'nowrap' }}
       >
@@ -194,7 +193,7 @@ function ConversationList({ agentId, rootSx }: Props) {
               id={each.id}
               text={each?.messages?.[0]?.text}
               selected={each.id === conversationId}
-              handleClick={handleClick}
+              handleClick={handleSelect}
             />
           ))}
         </InfiniteScroll>

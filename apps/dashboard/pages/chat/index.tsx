@@ -94,18 +94,6 @@ export default function ChatPage() {
     [router]
   );
 
-  React.useEffect(() => {
-    setConversationId(router.query.conversationId as string);
-    setState({
-      selectedKnowledgeOptions: [],
-    });
-  }, [router.query.conversationId]);
-
-  React.useEffect(() => {
-    router.query.conversationId = conversationId;
-    router.replace(router, undefined, { shallow: true });
-  }, [conversationId]);
-
   const ressources = React.useMemo(() => {
     if (!getRessources?.data) return [];
 
@@ -335,6 +323,13 @@ export default function ChatPage() {
                 rootSx={{
                   height: '100%',
                   width: '200px',
+                }}
+                handleSelect={(conversationId: string) =>
+                  setConversationId(conversationId)
+                }
+                conversationId={conversationId}
+                newChatHandler={() => {
+                  setConversationId('');
                 }}
               />
             </Box>
