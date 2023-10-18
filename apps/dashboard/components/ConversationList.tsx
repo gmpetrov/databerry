@@ -27,9 +27,9 @@ import { Prisma } from '@chaindesk/prisma';
 type Props = {
   agentId?: string;
   rootSx?: SxProps;
-  handleSelect?(conversationId: string): void;
-  conversationId?: string;
-  newChatHandler?(): void;
+  currentConversationId?: string;
+  handleSelectConversation?(conversationId: string): void;
+  handleCreateNewChat?(): void;
 };
 
 const Item = (props: {
@@ -71,9 +71,9 @@ const Item = (props: {
 function ConversationList({
   agentId,
   rootSx,
-  handleSelect,
-  conversationId,
-  newChatHandler,
+  handleSelectConversation,
+  currentConversationId,
+  handleCreateNewChat,
 }: Props) {
   const scrollParentRef = useRef(null);
   const router = useRouter();
@@ -107,11 +107,10 @@ function ConversationList({
       onSuccess: (data) => {
         const id = data?.[0]?.[0]?.id;
 
-        if (!state.hasLoadedOnce && !conversationId && id) {
+        if (!state.hasLoadedOnce && !currentConversationId && id) {
           // Focus on first conversation after first load if none set
           setState({ hasLoadedOnce: true });
-          router.query.conversationId = id;
-          router.replace(router, undefined, { shallow: true });
+          handleSelectConversation?.(id);
         }
       },
     }
@@ -137,7 +136,7 @@ function ConversationList({
         size="sm"
         variant="outlined"
         color="neutral"
-        onClick={newChatHandler}
+        onClick={handleCreateNewChat}
         startDecorator={<AddRoundedIcon fontSize="sm" />}
         sx={{ m: 1, whiteSpace: 'nowrap' }}
       >
@@ -192,8 +191,8 @@ function ConversationList({
               key={each.id}
               id={each.id}
               text={each?.messages?.[0]?.text}
-              selected={each.id === conversationId}
-              handleClick={handleSelect}
+              selected={each.id === currentConversationId}
+              handleClick={handleSelectConversation}
             />
           ))}
         </InfiniteScroll>

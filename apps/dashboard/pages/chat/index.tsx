@@ -324,12 +324,15 @@ export default function ChatPage() {
                   height: '100%',
                   width: '200px',
                 }}
-                handleSelect={(conversationId: string) =>
+                currentConversationId={conversationId}
+                handleSelectConversation={(conversationId: string) =>
                   setConversationId(conversationId)
                 }
-                conversationId={conversationId}
-                newChatHandler={() => {
+                handleCreateNewChat={() => {
                   setConversationId('');
+                  setState({
+                    selectedKnowledgeOptions: [],
+                  });
                 }}
               />
             </Box>

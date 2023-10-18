@@ -301,6 +301,13 @@ export default function AgentPage() {
                     height: '100%',
                     width: '200px',
                   }}
+                  currentConversationId={conversationId}
+                  handleSelectConversation={(conversationId: string) =>
+                    setConversationId(conversationId)
+                  }
+                  handleCreateNewChat={() => {
+                    setConversationId('');
+                  }}
                 />
               </Box>
 
