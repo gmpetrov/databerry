@@ -9,6 +9,11 @@ import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import formatSourcesRawText from '@chaindesk/lib/form-sources-raw-text';
 import getSubdomain from '@chaindesk/lib/get-subdomain';
 import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
+import {
+  Action,
+  AIStatus,
+  ConversationMetadata,
+} from '@chaindesk/lib/types/crisp';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
 import {
@@ -30,23 +35,6 @@ CrispClient.authenticateTier(
 
 // Set current RTM mode to Web Hooks
 CrispClient.setRtmMode(Crisp.RTM_MODES.WebHooks);
-
-enum AIStatus {
-  enabled = 'enabled',
-  disabled = 'disabled',
-}
-
-enum Action {
-  enable_ai = 'enable_ai',
-  request_human = 'request_human',
-  mark_as_resolved = 'mark_as_resolved',
-}
-
-type ConversationMetadata = {
-  aiStatus?: AIStatus;
-  choice?: Action;
-  aiDisabledDate?: Date;
-};
 
 type HookEventType =
   | 'message:send'
@@ -334,21 +322,23 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           body.data.type === 'text'
         ) {
           if (metadata?.aiStatus === AIStatus.disabled) {
-            const oneHourAgo = new Date().getTime() - 60 * 60 * 1000;
+            // const oneHourAgo = new Date().getTime() - 10 * 1000;
 
-            if (new Date(metadata?.aiDisabledDate!).getTime() < oneHourAgo) {
-              await CrispClient.website.updateConversationMetas(
-                body.website_id,
-                body.data.session_id,
-                {
-                  data: {
-                    aiStatus: AIStatus.enabled,
-                  } as ConversationMetadata,
-                }
-              );
-            } else {
-              return 'Converstaion disabled dot not proceed';
-            }
+            // if (new Date(metadata?.aiDisabledDate!).getTime() < oneHourAgo) {
+            //   console.log('CALLLED ----------------', 'ENABLED AI');
+            //   await CrispClient.website.updateConversationMetas(
+            //     body.website_id,
+            //     body.data.session_id,
+            //     {
+            //       data: {
+            //         aiStatus: AIStatus.enabled,
+            //       } as ConversationMetadata,
+            //     }
+            //   );
+            // } else {
+            //   return 'Converstaion disabled dot not proceed';
+            // }
+            return 'Converstaion disabled dot not proceed';
           }
 
           CrispClient.website.composeMessageInConversation(
@@ -373,11 +363,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
         break;
       case 'message:received':
-        if (
-          body.data.from === 'operator' &&
-          body.data.type === 'text' &&
-          metadata?.aiStatus !== AIStatus.enabled
-        ) {
+        if (body.data.from === 'operator' && body.data.type === 'text') {
           await CrispClient.website.updateConversationMetas(
             body.website_id,
             body.data.session_id,

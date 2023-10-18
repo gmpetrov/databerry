@@ -1,18 +1,10 @@
 import Cors from 'cors';
 import { NextApiResponse } from 'next';
 
-import {
-  createAuthApiHandler,
-  respond,
-} from '@chaindesk/lib/createa-api-handler';
-import runMiddleware from '@chaindesk/lib/run-middleware';
+import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 
-const cors = Cors({
-  methods: ['GET', 'HEAD'],
-});
-
-const handler = createAuthApiHandler();
+const handler = createApiHandler();
 
 export async function getCrisp(req: AppNextApiRequest, res: NextApiResponse) {
   const crisp_website_id = process.env.CRISP_WEBSITE_ID;
@@ -44,11 +36,4 @@ export async function getCrisp(req: AppNextApiRequest, res: NextApiResponse) {
 }
 handler.get(respond(getCrisp));
 
-export default async function wrapper(
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) {
-  await runMiddleware(req, res, cors);
-
-  return handler(req, res);
-}
+export default handler;

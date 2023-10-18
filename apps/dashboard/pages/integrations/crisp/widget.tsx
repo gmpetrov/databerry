@@ -3,71 +3,95 @@ import {
   Box,
   Button,
   Card,
+  Checkbox,
+  CircularProgress,
   Divider,
   FormControl,
   FormLabel,
   Input,
   Stack,
+  Switch,
+  Typography,
 } from '@mui/joy';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import useSWR from 'swr';
+import z from 'zod';
 
-import Logo from '@app/components/Logo';
+import useStateReducer from '@app/hooks/useStateReducer';
+import { getConversationMetadata } from '@app/pages/api/integrations/crisp/widget';
 
-import { getConnectedWebsites } from '@chaindesk/lib/crisp';
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import { AIStatus } from '@chaindesk/lib/types/crisp';
+import { CrispUpdateMetadataSchema } from '@chaindesk/lib/types/dtos';
+import { Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
-// query params website_id=5678ba03-6008-4fe3-aeef-aa78466c0bbc&session_id=session_f55e6731-51a4-4815-a1e3-655db78bb358&token=xxx&locale=en
-
 export default function CrispConfig(props: { isPremium?: boolean }) {
-  const [isLoading, setIsLoading] = useState(false);
-  // const [inputValue, setInputValue] = useState(props.apiKey);
+  const [state, setState] = useStateReducer({
+    isMetadataLoading: false,
+    isAiEnabled: true,
+  });
   const [submitError, setSubmitError] = useState('');
   const router = useRouter();
 
-  // const sendConfig = async (e: any) => {
-  //   e.stopPropagation();
-  //   try {
-  //     setIsLoading(true);
-  //     setSubmitError('');
+  const getConversationMetadataQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getConversationMetadata>
+  >(
+    `/api/integrations/crisp/widget?website_id=${router.query.website_id}&session_id=${router.query.session_id}&token=${router.query.token}&locale=${router.query.locale}`,
+    fetcher,
+    {
+      refreshInterval: 5000,
+      revalidateIfStale: true,
+    }
+  );
 
-  //     var _urlParams = new URLSearchParams(window.location.search);
-  //     const _message = inputValue;
-
-  //     fetch(window.location.origin + '/api/crisp/config-update', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         website_id: _urlParams.get('website_id'),
-  //         token: _urlParams.get('token'),
-  //         chaindeskApiKey: _message,
-  //       }),
-  //     }).then(() => {
-  //       console.log('worked');
-  //       alert('Settings saved! You can now close this window.');
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //     setSubmitError(JSON.stringify(error));
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-  const handleSummarize = async () => {
-    setIsLoading(true);
-    await axios.post('/api/crisp/widget', {
-      website_id: router.query.website_id,
-      session_id: router.query.session_id,
-      token: router.query.token,
-      locale: router.query.locale,
+  const handleUpdateMetadata = async (
+    values: Pick<z.infer<typeof CrispUpdateMetadataSchema>, 'aiStatus'>
+  ) => {
+    const toastId = toast.loading('saving', {
+      position: 'bottom-center',
     });
-    setIsLoading(false);
+    try {
+      setState({
+        isMetadataLoading: true,
+        isAiEnabled: values.aiStatus === AIStatus.enabled,
+      });
+
+      await axios.patch('/api/integrations/crisp/widget', {
+        website_id: router.query.website_id,
+        session_id: router.query.session_id,
+        token: router.query.token,
+        locale: router.query.locale,
+        ...values,
+      } as z.infer<typeof CrispUpdateMetadataSchema>);
+
+      await getConversationMetadataQuery.mutate();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setState({
+        isMetadataLoading: false,
+      });
+
+      toast.dismiss(toastId);
+    }
   };
+
+  useEffect(() => {
+    setState({
+      isAiEnabled:
+        !getConversationMetadataQuery?.data?.aiStatus ||
+        getConversationMetadataQuery?.data?.aiStatus === 'enabled',
+    });
+  }, [getConversationMetadataQuery?.data?.aiStatus]);
+
+  const isFormDisabled =
+    state.isMetadataLoading || getConversationMetadataQuery.isLoading;
 
   return (
     <>
@@ -87,18 +111,35 @@ export default function CrispConfig(props: { isPremium?: boolean }) {
             {submitError && <Alert color="danger">{submitError}</Alert>}
 
             <Card>
-              <form className="flex">
-                <Stack direction={'column'} spacing={1} width={'100%'}>
-                  <Button
-                    loading={isLoading}
-                    className="w-full max-w-xs mx-auto"
-                    size="sm"
-                    onClick={handleSummarize}
-                  >
-                    ✨ Summarize
-                  </Button>
-                </Stack>
-              </form>
+              {getConversationMetadataQuery?.isLoading ? (
+                <CircularProgress size="sm" />
+              ) : (
+                <form className="flex">
+                  <Stack direction={'column'} spacing={1} width={'100%'}>
+                    <Stack direction="row" mb={2}>
+                      <FormControl className="flex flex-row space-x-4">
+                        <Checkbox
+                          disabled={isFormDisabled}
+                          checked={state.isAiEnabled}
+                          onChange={async (event) => {
+                            await handleUpdateMetadata({
+                              aiStatus: event.target.checked
+                                ? AIStatus.enabled
+                                : AIStatus.disabled,
+                            });
+                          }}
+                        />
+                        <div className="flex flex-col">
+                          <FormLabel>AI Agent Enabled</FormLabel>
+                          <Typography level="body-xs">
+                            {`When enabled, your agent will answer customer's questions automatically.`}
+                          </Typography>
+                        </div>
+                      </FormControl>
+                    </Stack>
+                  </Stack>
+                </form>
+              )}
             </Card>
           </Stack>
         ) : (

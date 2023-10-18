@@ -11,6 +11,7 @@ import {
   ToolType,
 } from '@chaindesk/prisma';
 
+import { AIStatus } from './crisp';
 import {
   BaseDocumentMetadataSchema,
   FileMetadataSchema,
@@ -292,3 +293,14 @@ export const UpdateUserProfileSchema = z.object({
 });
 
 export type UpdateUserProfileSchema = z.infer<typeof UpdateUserProfileSchema>;
+
+export const CrispSchema = z.object({
+  website_id: z.string().min(1),
+  session_id: z.string().min(1),
+  token: z.string().min(1),
+  locale: z.string().optional(),
+});
+
+export const CrispUpdateMetadataSchema = CrispSchema.extend({
+  aiStatus: z.nativeEnum(AIStatus),
+});

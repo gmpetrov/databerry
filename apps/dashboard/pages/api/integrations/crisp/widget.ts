@@ -4,17 +4,15 @@ import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
 import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
+import { AIStatus, ConversationMetadata } from '@chaindesk/lib/types/crisp';
+import {
+  CrispSchema,
+  CrispUpdateMetadataSchema,
+} from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
 
 const handler = createApiHandler();
-
-const schema = z.object({
-  website_id: z.string().min(1),
-  session_id: z.string().min(1),
-  token: z.string().min(1),
-  locale: z.string().optional(),
-});
 
 const CrispClient = new Crisp();
 
@@ -28,7 +26,7 @@ export const widgetActions = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const data = req.body as z.infer<typeof schema>;
+  const data = req.body as z.infer<typeof CrispSchema>;
 
   //   const websites = await getConnectedWebsites();
 
@@ -88,8 +86,55 @@ export const widgetActions = async (
 
 handler.post(
   validate({
-    body: schema,
+    body: CrispSchema,
     handler: respond(widgetActions),
+  })
+);
+
+export const getConversationMetadata = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) => {
+  const data = req.query as z.infer<typeof CrispSchema>;
+
+  const metadata = (
+    await CrispClient.website.getConversationMetas(
+      data.website_id,
+      data.session_id
+    )
+  )?.data as ConversationMetadata;
+
+  return metadata;
+};
+handler.get(respond(getConversationMetadata));
+
+export const patchConversationMetadata = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) => {
+  const data = req.body as z.infer<typeof CrispUpdateMetadataSchema>;
+
+  const { website_id, session_id, token, locale, ...updateProps } = data;
+
+  return CrispClient.website.updateConversationMetas(
+    data.website_id,
+    data.session_id,
+    {
+      data: {
+        ...updateProps,
+        ...(updateProps.aiStatus === AIStatus.disabled
+          ? {
+              aiDisabledDate: new Date(),
+            }
+          : {}),
+      } as ConversationMetadata,
+    }
+  );
+};
+handler.patch(
+  validate({
+    body: CrispUpdateMetadataSchema,
+    handler: respond(patchConversationMetadata),
   })
 );
 
