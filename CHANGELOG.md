@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.41"></a>
+## 0.1.41 (2023-10-18)
+
+### Miscellaneous
+
+- 🎸 crisp toggle ai [[639550a](https://github.com/gmpetrov/databerry/commit/639550a6e64b3901376438125b54b19528a48ba6)]
+- 🎸 simplify crisp testing ([#198](https://github.com/gmpetrov/databerry/issues/198)) [[4b27895](https://github.com/gmpetrov/databerry/commit/4b27895c9cf382bf0f742de859c56c5525fc2a76)]
+
+
 <a name="0.1.40"></a>
 ## 0.1.40 (2023-10-16)
 
