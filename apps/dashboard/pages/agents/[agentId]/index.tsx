@@ -27,6 +27,7 @@ import * as React from 'react';
 import AgentDeployTab from '@app/components/AgentDeployTab';
 import AgentSettingsTab from '@app/components/AgentSettingsTab';
 import ChatBox from '@app/components/ChatBox';
+import ChatSection from '@app/components/ChatSection';
 import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
@@ -39,6 +40,7 @@ import { withAuth } from '@chaindesk/lib/withAuth';
 
 export default function AgentPage() {
   const router = useRouter();
+  const agentId = router.query?.agentId as string;
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isUsageModalOpen: false,
@@ -69,20 +71,26 @@ export default function AgentPage() {
     router.replace(router);
   };
 
+  const handleSelectConversation = (conversationId: string) => {
+    setConversationId(conversationId);
+    router.replace(
+      `/agents/${agentId}?tab=chat&conversationId=${conversationId}`,
+      undefined,
+      { shallow: true }
+    );
+  };
+  const handleCreateNewChat = () => {
+    setConversationId('');
+    router.replace(`/agents/${agentId}?tab=chat&conversationId=`, undefined, {
+      shallow: true,
+    });
+  };
+
   React.useEffect(() => {
     if (typeof window !== 'undefined' && !router.query.tab) {
       handleChangeTab('chat');
     }
   }, [router.query.tab]);
-
-  React.useEffect(() => {
-    setConversationId(router.query.conversationId as string);
-  }, [router.query.conversationId]);
-
-  React.useEffect(() => {
-    router.query.conversationId = conversationId;
-    router.replace(router, undefined, { shallow: true });
-  }, [conversationId]);
 
   if (!query?.data) {
     return null;
@@ -287,50 +295,22 @@ export default function AgentPage() {
               }}
               gap={1}
             >
-              <Box
-                sx={(theme) => ({
-                  [theme.breakpoints.down('sm')]: {
-                    display: 'none',
-                  },
-                })}
-              >
-                <ConversationList
-                  agentId={router.query?.agentId as string}
-                  rootSx={{
-                    pt: 1,
-                    height: '100%',
-                    width: '200px',
-                  }}
-                  currentConversationId={conversationId}
-                  handleSelectConversation={(conversationId: string) =>
-                    setConversationId(conversationId)
-                  }
-                  handleCreateNewChat={() => {
-                    setConversationId('');
-                  }}
-                />
-              </Box>
-
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  pb: 2,
-                }}
-              >
-                <ChatBox
-                  disableWatermark
-                  messages={history}
-                  onSubmit={handleChatSubmit}
-                  agentIconUrl={query?.data?.iconUrl!}
-                  isLoadingConversation={isLoadingConversation}
-                  hasMoreMessages={hasMoreMessages}
-                  handleLoadMoreMessages={handleLoadMoreMessages}
-                  handleEvalAnswer={handleEvalAnswer}
-                  handleAbort={handleAbort}
-                  userImgUrl={session?.user?.image!}
-                />
-              </Box>
+              <ChatSection
+                agentId={agentId}
+                handleSelectConversation={handleSelectConversation}
+                currentConversationId={conversationId}
+                handleCreateNewChat={handleCreateNewChat}
+                disableWatermark
+                messages={history}
+                onSubmit={handleChatSubmit}
+                agentIconUrl={query?.data?.iconUrl!}
+                isLoadingConversation={isLoadingConversation}
+                hasMoreMessages={hasMoreMessages}
+                handleLoadMoreMessages={handleLoadMoreMessages}
+                handleEvalAnswer={handleEvalAnswer}
+                handleAbort={handleAbort}
+                userImgUrl={session?.user?.image!}
+              />
 
               {(query?.data?.tools?.length || 0) > 0 && (
                 <Box

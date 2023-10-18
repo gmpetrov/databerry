@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
 import ChatBox from '@app/components/ChatBox';
+import ChatSection from '@app/components/ChatSection';
 import ConversationList from '@app/components/ConversationList';
 import DatasourceViewer from '@app/components/DatasourceViewer';
 import EmptyMainChatCard from '@app/components/EmptyMainChatCard';
@@ -67,7 +68,7 @@ export default function ChatPage() {
     hasMoreMessages,
     handleLoadMoreMessages,
     setConversationId,
-    conversationId,
+    conversationId: currentConversationId,
     handleAbort,
   } = useChat({
     endpoint: `/api/chains/run`,
@@ -191,6 +192,26 @@ export default function ChatPage() {
     </Stack>
   );
 
+  const handleSelectConversation = (conversationId: string) => {
+    setConversationId(conversationId);
+    router.replace(`/chat?conversationId=${conversationId}`, undefined, {
+      shallow: true,
+    });
+    setState({
+      selectedKnowledgeOptions: [],
+    });
+  };
+
+  const handleCreateNewChat = () => {
+    setConversationId('');
+    setState({
+      selectedKnowledgeOptions: [],
+    });
+    router.replace(`/chat?conversationId=`, undefined, {
+      shallow: true,
+    });
+  };
+
   React.useEffect(() => {
     const filters = {
       datastore_ids: [],
@@ -311,59 +332,26 @@ export default function ChatPage() {
             }}
             gap={1}
           >
-            <Box
-              sx={(theme) => ({
-                [theme.breakpoints.down('sm')]: {
-                  display: 'none',
-                },
-              })}
-            >
-              <ConversationList
-                agentId={'null'}
-                rootSx={{
-                  height: '100%',
-                  width: '200px',
-                }}
-                currentConversationId={conversationId}
-                handleSelectConversation={(conversationId: string) =>
-                  setConversationId(conversationId)
-                }
-                handleCreateNewChat={() => {
-                  setConversationId('');
-                  setState({
-                    selectedKnowledgeOptions: [],
-                  });
-                }}
-              />
-            </Box>
-
-            <Box
-              sx={{
-                width: '100%',
-                height: '100%',
-                pb: 2,
-              }}
-            >
-              <ChatBox
-                disableWatermark
-                messages={history}
-                onSubmit={handleChatSubmit}
-                // agentIconUrl={getAgentQuery?.data?.iconUrl!}
-                isLoadingConversation={isLoadingConversation}
-                hasMoreMessages={hasMoreMessages}
-                handleLoadMoreMessages={handleLoadMoreMessages}
-                // handleEvalAnswer={handleEvalAnswer}
-                topSettings={Settings}
-                handleSourceClick={handleSourceClick}
-                handleAbort={handleAbort}
-                emptyComponent={
-                  <EmptyMainChatCard
-                    handlePromptClick={handleExamplePromptClick}
-                  />
-                }
-                userImgUrl={session?.user?.image!}
-              />
-            </Box>
+            <ChatSection
+              currentConversationId={currentConversationId}
+              handleSelectConversation={handleSelectConversation}
+              handleCreateNewChat={handleCreateNewChat}
+              disableWatermark
+              messages={history}
+              onSubmit={handleChatSubmit}
+              isLoadingConversation={isLoadingConversation}
+              hasMoreMessages={hasMoreMessages}
+              handleLoadMoreMessages={handleLoadMoreMessages}
+              topSettings={Settings}
+              handleSourceClick={handleSourceClick}
+              handleAbort={handleAbort}
+              emptyComponent={
+                <EmptyMainChatCard
+                  handlePromptClick={handleExamplePromptClick}
+                />
+              }
+              userImgUrl={session?.user?.image!}
+            />
 
             {datasourceViewId && (
               <div className="w-full h-full">

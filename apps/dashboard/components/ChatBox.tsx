@@ -39,7 +39,7 @@ export type ChatBoxMessage = {
   sources?: Source[];
 };
 
-type Props = {
+export type ChatBoxProps = {
   messages: ChatBoxMessage[];
   onSubmit: (message: string) => Promise<any>;
   messageTemplates?: string[];
@@ -167,7 +167,7 @@ function ChatBox({
   hideInternalSources,
   renderBottom,
   userImgUrl,
-}: Props) {
+}: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<ChatBoxMessage>();
@@ -324,162 +324,163 @@ function ChatBox({
               </Stack>
             )}
 
-            {messages?.length <= 0 && emptyComponent}
+            {messages?.length <= 0 && !isLoadingConversation && emptyComponent}
 
-            {messages.map((each, index) => (
-              <Stack
-                key={index}
-                sx={{
-                  width: '100%',
-                  maxWidth: '100%',
-                  mr: each.from === 'agent' ? 'auto' : 'none',
-                  ml: each.from === 'human' ? 'auto' : 'none',
-                }}
-              >
+            {!isLoadingConversation &&
+              messages.map((each, index) => (
                 <Stack
+                  key={index}
                   sx={{
                     width: '100%',
                     maxWidth: '100%',
+                    mr: each.from === 'agent' ? 'auto' : 'none',
+                    ml: each.from === 'human' ? 'auto' : 'none',
                   }}
-                  direction={'row'}
-                  gap={1}
                 >
-                  {each.from === 'agent' && (
-                    <Avatar
-                      size="sm"
-                      variant="outlined"
-                      src={agentIconUrl || '/app-rounded-bg-white.png'}
-                    ></Avatar>
-                  )}
-
-                  {each.from === 'human' && (
-                    <Avatar
-                      size="sm"
-                      variant="outlined"
-                      src={userImgUrl || undefined}
-                    ></Avatar>
-                  )}
-
-                  <Stack>
-                    <Card
-                      size="sm"
-                      variant={'outlined'}
-                      className={clsx(
-                        each.from === 'agent'
-                          ? 'message-agent'
-                          : 'message-human'
-                      )}
-                      color={each.from === 'agent' ? 'primary' : 'neutral'}
-                      sx={(theme) => ({
-                        overflowY: 'hidden',
-                        overflowX: 'auto',
-                        marginRight: 'auto',
-                        gap: 0,
-                        maxWidth: '100%',
-                        // '.prose > *:first-child': {
-                        //   pt: 1,
-                        //   mt: 0,
-                        // },
-                        // '.prose > *:last-child': {
-                        //   pb: 1,
-                        //   mb: 0,
-                        // },
-                        py: 1,
-                        px: 2,
-                        [' p ']: {
-                          m: 0,
-                          // p: 0,
-                          maxWidth: '100%',
-                          // wordBreak: 'break-word',
-                        },
-
-                        'h1,h2,h3,h4,h5': {
-                          fontSize: theme.fontSize.sm,
-                        },
-                        table: {
-                          overflowX: 'auto',
-                        },
-                      })}
-                    >
-                      {each.from === 'agent' ? (
-                        <ReactMarkdown
-                          className="prose-sm prose dark:prose-invert"
-                          remarkPlugins={[remarkGfm]}
-                          linkTarget={'_blank'}
-                        >
-                          {each.message}
-                        </ReactMarkdown>
-                      ) : (
-                        <p className="prose-sm ">{each.message}</p>
-                      )}
-
-                      <Stack direction="row" justifyContent={'space-between'}>
-                        {((hideInternalSources
-                          ? filterInternalSources(each?.sources!)
-                          : each?.sources
-                        )?.length || 0) > 0 && (
-                          <Box
-                            sx={{
-                              mt: 2,
-                              width: '100%',
-                              maxWidth: '100%',
-                            }}
-                          >
-                            <details>
-                              <summary className="cursor-pointer">
-                                Sources
-                              </summary>
-                              <Stack
-                                direction={'column'}
-                                gap={1}
-                                sx={{ pt: 1 }}
-                              >
-                                {(hideInternalSources
-                                  ? filterInternalSources(each?.sources!)
-                                  : each?.sources
-                                )?.map((source) => (
-                                  <SourceComponent
-                                    key={source.chunk_id}
-                                    source={source}
-                                    onClick={handleSourceClick}
-                                  />
-                                ))}
-                              </Stack>
-                            </details>
-                          </Box>
-                        )}
-                      </Stack>
-                    </Card>
-                    {each.from === 'agent' && each?.id && (
-                      <Stack
-                        direction="row"
-                        marginLeft={'auto'}
-                        // marginBottom={'auto'}
-                      >
-                        <CopyButton text={each?.message} />
-                        <EvalButton
-                          messageId={each?.id!}
-                          handleEvalAnswer={handleEvalAnswer}
-                          eval={each?.eval}
-                        />
-
-                        {handleImprove && (
-                          <Button
-                            size="sm"
-                            variant="plain"
-                            color="neutral"
-                            startDecorator={<SchoolTwoToneIcon />}
-                            onClick={() => handleImprove(each)}
-                          >
-                            Improve
-                          </Button>
-                        )}
-                      </Stack>
+                  <Stack
+                    sx={{
+                      width: '100%',
+                      maxWidth: '100%',
+                    }}
+                    direction={'row'}
+                    gap={1}
+                  >
+                    {each.from === 'agent' && (
+                      <Avatar
+                        size="sm"
+                        variant="outlined"
+                        src={agentIconUrl || '/app-rounded-bg-white.png'}
+                      ></Avatar>
                     )}
+
+                    {each.from === 'human' && (
+                      <Avatar
+                        size="sm"
+                        variant="outlined"
+                        src={userImgUrl || undefined}
+                      ></Avatar>
+                    )}
+
+                    <Stack>
+                      <Card
+                        size="sm"
+                        variant={'outlined'}
+                        className={clsx(
+                          each.from === 'agent'
+                            ? 'message-agent'
+                            : 'message-human'
+                        )}
+                        color={each.from === 'agent' ? 'primary' : 'neutral'}
+                        sx={(theme) => ({
+                          overflowY: 'hidden',
+                          overflowX: 'auto',
+                          marginRight: 'auto',
+                          gap: 0,
+                          maxWidth: '100%',
+                          // '.prose > *:first-child': {
+                          //   pt: 1,
+                          //   mt: 0,
+                          // },
+                          // '.prose > *:last-child': {
+                          //   pb: 1,
+                          //   mb: 0,
+                          // },
+                          py: 1,
+                          px: 2,
+                          [' p ']: {
+                            m: 0,
+                            // p: 0,
+                            maxWidth: '100%',
+                            // wordBreak: 'break-word',
+                          },
+
+                          'h1,h2,h3,h4,h5': {
+                            fontSize: theme.fontSize.sm,
+                          },
+                          table: {
+                            overflowX: 'auto',
+                          },
+                        })}
+                      >
+                        {each.from === 'agent' ? (
+                          <ReactMarkdown
+                            className="prose-sm prose dark:prose-invert"
+                            remarkPlugins={[remarkGfm]}
+                            linkTarget={'_blank'}
+                          >
+                            {each.message}
+                          </ReactMarkdown>
+                        ) : (
+                          <p className="prose-sm ">{each.message}</p>
+                        )}
+
+                        <Stack direction="row" justifyContent={'space-between'}>
+                          {((hideInternalSources
+                            ? filterInternalSources(each?.sources!)
+                            : each?.sources
+                          )?.length || 0) > 0 && (
+                            <Box
+                              sx={{
+                                mt: 2,
+                                width: '100%',
+                                maxWidth: '100%',
+                              }}
+                            >
+                              <details>
+                                <summary className="cursor-pointer">
+                                  Sources
+                                </summary>
+                                <Stack
+                                  direction={'column'}
+                                  gap={1}
+                                  sx={{ pt: 1 }}
+                                >
+                                  {(hideInternalSources
+                                    ? filterInternalSources(each?.sources!)
+                                    : each?.sources
+                                  )?.map((source) => (
+                                    <SourceComponent
+                                      key={source.chunk_id}
+                                      source={source}
+                                      onClick={handleSourceClick}
+                                    />
+                                  ))}
+                                </Stack>
+                              </details>
+                            </Box>
+                          )}
+                        </Stack>
+                      </Card>
+                      {each.from === 'agent' && each?.id && (
+                        <Stack
+                          direction="row"
+                          marginLeft={'auto'}
+                          // marginBottom={'auto'}
+                        >
+                          <CopyButton text={each?.message} />
+                          <EvalButton
+                            messageId={each?.id!}
+                            handleEvalAnswer={handleEvalAnswer}
+                            eval={each?.eval}
+                          />
+
+                          {handleImprove && (
+                            <Button
+                              size="sm"
+                              variant="plain"
+                              color="neutral"
+                              startDecorator={<SchoolTwoToneIcon />}
+                              onClick={() => handleImprove(each)}
+                            >
+                              Improve
+                            </Button>
+                          )}
+                        </Stack>
+                      )}
+                    </Stack>
                   </Stack>
                 </Stack>
-              </Stack>
-            ))}
+              ))}
 
             {isLoading && (
               <CircularProgress

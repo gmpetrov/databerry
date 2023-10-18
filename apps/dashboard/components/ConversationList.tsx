@@ -55,7 +55,10 @@ const Item = (props: {
       >
         <ListItemButton
           selected={!!props.selected}
-          onClick={() => props.handleClick?.(props.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            props.handleClick?.(props.id);
+          }}
         >
           <Typography className="truncate" level="body-sm">
             {props.text}
@@ -108,15 +111,21 @@ function ConversationList({
         const id = data?.[0]?.[0]?.id;
 
         if (!state.hasLoadedOnce && !currentConversationId && id) {
-          // Focus on first conversation after first load if none set
           setState({ hasLoadedOnce: true });
-          handleSelectConversation?.(id);
         }
       },
     }
   );
 
   const conversations = getConversationsQuery?.data?.flat?.() || [];
+
+  useEffect(() => {
+    if (router.query?.conversationId) {
+      handleSelectConversation?.(router.query.conversationId as string);
+    } else {
+      handleSelectConversation?.(conversations[0]?.id);
+    }
+  }, [getConversationsQuery?.data]);
 
   if (!getConversationsQuery.isLoading && conversations.length === 0) {
     return null;

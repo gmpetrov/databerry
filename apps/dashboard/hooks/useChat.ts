@@ -122,6 +122,13 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     }
   );
 
+  // useSWRInfinite needs to be retriggered!
+  useEffect(() => {
+    if (state.conversationId) {
+      getConversationQuery.mutate();
+    }
+  }, [state.conversationId]);
+
   const handleLoadMoreMessages = () => {
     if (getConversationQuery.isLoading || getConversationQuery.isValidating)
       return;
