@@ -403,8 +403,8 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
   return {
     handleChatSubmit,
     history: state.history,
-    isLoadingConversation:
-      getConversationQuery.isLoading || getConversationQuery.isValidating,
+    isLoadingConversation: getConversationQuery.isLoading,
+    isValidatingConversation: getConversationQuery.isValidating,
     hasMoreMessages: state.hasMoreMessages,
     handleLoadMoreMessages: handleLoadMoreMessages,
     visitorId: state.visitorId,
