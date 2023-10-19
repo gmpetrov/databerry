@@ -261,6 +261,8 @@ export const EvalAnswer = z.object({
   eval: z.nativeEnum(MessageEval),
 });
 
+export const EvalSchema = z.union([z.literal('bad'), z.literal('good')]);
+
 export type EvalAnswer = z.infer<typeof EvalAnswer>;
 
 export type ConversationWithMessages = Conversation & {

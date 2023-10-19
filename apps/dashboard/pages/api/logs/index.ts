@@ -15,31 +15,32 @@ const handler = createAuthApiHandler();
 export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
   const page = Number(req.query.page);
-  const limit = Number(req.query.limit);
   const filter = req.query.filter as MessageEvalUnion;
 
   const cursor = req.query.cursor as string;
 
-  const filterClause = {
+  const conversations = await prisma.conversation.findMany({
     where: {
-      agent: {
-        organizationId: session.organization?.id,
-      },
-      messages: {
-        some: {
-          eval: filter,
+      AND: [
+        {
+          agent: {
+            organizationId: session.organization?.id,
+          },
         },
-      },
-    },
-  };
-  const baseQuery = {
-    where: {
-      agent: {
-        organizationId: session.organization?.id,
-      },
+        ...(filter
+          ? [
+              {
+                messages: {
+                  some: {
+                    eval: filter,
+                  },
+                },
+              },
+            ]
+          : []),
+      ],
     },
     take: 100,
-    // skip: page * limit,
 
     ...(cursor
       ? {
@@ -63,24 +64,14 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
       messages: {
         take: 1,
         orderBy: {
-          createdAt: 'asc' as Prisma.SortOrder,
+          createdAt: 'asc',
         },
       },
     },
     orderBy: {
-      updatedAt: 'desc' as Prisma.SortOrder,
+      updatedAt: 'desc',
     },
-  };
-
-  if (filter) {
-    const conversations = await prisma.conversation.findMany({
-      ...baseQuery,
-      ...filterClause,
-    });
-    return conversations;
-  }
-
-  const conversations = await prisma.conversation.findMany({ ...baseQuery });
+  });
 
   return conversations;
 };

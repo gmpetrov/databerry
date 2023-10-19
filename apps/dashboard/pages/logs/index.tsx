@@ -36,6 +36,7 @@ import useStateReducer from '@app/hooks/useStateReducer';
 
 import relativeDate from '@chaindesk/lib/relative-date';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import { EvalSchema } from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { MessageEval, Prisma } from '@chaindesk/prisma';
 
@@ -107,6 +108,18 @@ export default function LogsPage() {
     }
   }, [getSingleConversationQuery?.data?.id]);
 
+  useEffect(() => {
+    const result = EvalSchema.safeParse(router.query.filter);
+
+    if (result.success) {
+      setState({ filter: router.query.filter as string });
+    } else {
+      router.replace(`${router.basePath}`, undefined, {
+        shallow: true,
+      });
+    }
+  }, []);
+
   if (!session?.organization) return null;
 
   if (
@@ -163,6 +176,9 @@ export default function LogsPage() {
           onChange={(_, value) => {
             if (value && typeof value === 'string') {
               setState({ filter: value });
+              router.replace(`${router.basePath}?filter=${value}`, undefined, {
+                shallow: true,
+              });
             }
           }}
           sx={{ py: 0 }}
@@ -178,7 +194,12 @@ export default function LogsPage() {
                   // don't open the popup when clicking on this button
                   event.stopPropagation();
                 }}
-                onClick={() => setState({ filter: '' })}
+                onClick={() => {
+                  setState({ filter: '' });
+                  router.replace(`${router.basePath}`, undefined, {
+                    shallow: true,
+                  });
+                }}
               >
                 <CloseRounded />
               </IconButton>
