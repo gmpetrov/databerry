@@ -1,4 +1,3 @@
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import DownloadForOfflineRoundedIcon from '@mui/icons-material/DownloadForOfflineRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import { Alert, Button, Card, Stack } from '@mui/joy';
@@ -6,8 +5,6 @@ import axios from 'axios';
 import { saveAs } from 'file-saver';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-
-import { User } from '@chaindesk/prisma';
 
 interface Props {}
 
@@ -26,7 +23,7 @@ export function ConversationExport({}: Props) {
         ),
         {
           loading: 'Exporting...',
-          error: 'Ooop! something went wrong with your exort.',
+          error: 'something went wrong with your export.',
           success: 'Export finished!',
         }
       );
@@ -40,34 +37,15 @@ export function ConversationExport({}: Props) {
   };
 
   return (
-    <Card
-      variant="soft"
+    <Button
+      variant="outlined"
       color="neutral"
-      sx={{ justifyContent: 'center' }}
-      size="sm"
+      loading={isLoading}
+      onClick={exportConversations}
+      startDecorator={<DownloadForOfflineRoundedIcon fontSize="lg" />}
+      size="md"
     >
-      <Stack direction="row">
-        <Alert
-          variant="plain"
-          color="neutral"
-          startDecorator={<InfoRoundedIcon />}
-        >
-          View all Agents conversations across all channels. Evaluate and
-          improve answers.
-        </Alert>
-
-        <Button
-          variant="solid"
-          color="primary"
-          loading={isLoading}
-          sx={{ marginLeft: 'auto' }}
-          onClick={exportConversations}
-          startDecorator={<DownloadForOfflineRoundedIcon fontSize="lg" />}
-          size="sm"
-        >
-          Export Conversations
-        </Button>
-      </Stack>
-    </Card>
+      Export Conversations
+    </Button>
   );
 }

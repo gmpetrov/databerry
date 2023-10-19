@@ -5,6 +5,7 @@ import {
 import { useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
+import { MessageEvalUnion } from '@app/components/ChatBox';
 import { getConversation } from '@app/pages/api/conversations/[conversationId]';
 
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
@@ -30,7 +31,7 @@ type Props = {
 };
 
 export const handleEvalAnswer = async (props: {
-  value: 'good' | 'bad';
+  value: MessageEvalUnion;
   messageId: string;
 }) => {
   await fetch(`${API_URL}/api/conversations/eval-answer`, {

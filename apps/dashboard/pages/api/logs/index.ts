@@ -1,4 +1,7 @@
+import { Prisma } from '@prisma/client';
 import { NextApiResponse } from 'next';
+
+import { MessageEvalUnion } from '@app/components/ChatBox';
 
 import {
   createAuthApiHandler,
@@ -11,18 +14,42 @@ const handler = createAuthApiHandler();
 
 export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
-  const page = Number(req.query.page);
-  const limit = Number(req.query.limit);
+  const evalFilter = req.query.eval as MessageEvalUnion;
+  const agentId = req.query.agentId as MessageEvalUnion;
+
   const cursor = req.query.cursor as string;
 
   const conversations = await prisma.conversation.findMany({
     where: {
-      agent: {
-        organizationId: session.organization?.id,
-      },
+      AND: [
+        {
+          agent: {
+            organizationId: session.organization?.id,
+          },
+        },
+        ...(agentId
+          ? [
+              {
+                agent: {
+                  id: agentId,
+                },
+              },
+            ]
+          : []),
+        ...(evalFilter
+          ? [
+              {
+                messages: {
+                  some: {
+                    eval: evalFilter,
+                  },
+                },
+              },
+            ]
+          : []),
+      ],
     },
     take: 100,
-    // skip: page * limit,
 
     ...(cursor
       ? {
@@ -32,7 +59,6 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
           },
         }
       : {}),
-
     include: {
       agent: true,
       _count: {

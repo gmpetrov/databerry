@@ -30,9 +30,11 @@ import type { Source } from '@chaindesk/lib/types/document';
 
 import SourceComponent from './Source';
 
+export type MessageEvalUnion = 'good' | 'bad';
+
 export type ChatBoxMessage = {
   id?: string;
-  eval?: 'good' | 'bad' | null;
+  eval?: MessageEvalUnion | null;
   from: 'human' | 'agent';
   message: string;
   createdAt?: Date;
@@ -54,7 +56,7 @@ export type ChatBoxProps = {
   handleLoadMoreMessages?: () => void;
   handleEvalAnswer?: (props: {
     messageId: string;
-    value: 'good' | 'bad';
+    value: MessageEvalUnion;
   }) => any;
   handleImprove?: (message: ChatBoxMessage) => any;
   topSettings?: JSX.Element | null;
@@ -94,16 +96,16 @@ const CopyButton = (props: { text: string }) => {
 
 const EvalButton = (props: {
   messageId: string;
-  eval?: 'good' | 'bad' | null;
+  eval?: MessageEvalUnion | null;
   handleEvalAnswer?: (props: {
     messageId: string;
-    value: 'good' | 'bad';
+    value: MessageEvalUnion;
   }) => any;
 }) => {
   const [value, setValue] = useState(props.eval);
 
   const handleClick = useCallback(
-    async (value: 'good' | 'bad') => {
+    async (value: MessageEvalUnion) => {
       setValue(value);
 
       await props.handleEvalAnswer?.({
