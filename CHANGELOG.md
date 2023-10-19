@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.42"></a>
+## 0.1.42 (2023-10-19)
+
+### Fixed
+
+- 🐛 increase timeout for datastore deletion [[a7346fa](https://github.com/gmpetrov/databerry/commit/a7346fa238d3129181d1c0337aab4782ccb95122)]
+
+
 <a name="0.1.41"></a>
 ## 0.1.41 (2023-10-18)
 
