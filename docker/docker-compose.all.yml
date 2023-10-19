@@ -20,7 +20,7 @@ services:
       - minio
 
   qdrant:
-    image: qdrant/qdrant:v1.5.0
+    image: qdrant/qdrant:v1.6.1
     mem_limit: 450m
     ports:
       - '127.0.0.1:${QDRANT_PORT}:6333'
