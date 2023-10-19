@@ -197,9 +197,11 @@ export default function ChatPage() {
     router.replace(`/chat?conversationId=${conversationId}`, undefined, {
       shallow: true,
     });
-    setState({
-      selectedKnowledgeOptions: [],
-    });
+    if (currentConversationId !== conversationId) {
+      setState({
+        selectedKnowledgeOptions: [],
+      });
+    }
   };
 
   const handleCreateNewChat = () => {
