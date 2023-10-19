@@ -209,8 +209,7 @@ export const deleteDatastore = async (
       });
     },
     {
-      maxWait: 10000, // 10s
-      timeout: 60000, // 60s
+      timeout: 1000 * 60 * 2, // 2mins
     }
   );
 
