@@ -262,6 +262,7 @@ export const EvalAnswer = z.object({
 });
 
 export const EvalSchema = z.union([z.literal('bad'), z.literal('good')]);
+export type EvalSchema = z.infer<typeof EvalSchema>;
 
 export type EvalAnswer = z.infer<typeof EvalAnswer>;
 

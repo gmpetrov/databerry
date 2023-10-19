@@ -14,8 +14,8 @@ const handler = createAuthApiHandler();
 
 export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
-  const page = Number(req.query.page);
-  const filter = req.query.filter as MessageEvalUnion;
+  const evalFilter = req.query.eval as MessageEvalUnion;
+  const agentId = req.query.agentId as MessageEvalUnion;
 
   const cursor = req.query.cursor as string;
 
@@ -27,12 +27,21 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
             organizationId: session.organization?.id,
           },
         },
-        ...(filter
+        ...(agentId
+          ? [
+              {
+                agent: {
+                  id: agentId,
+                },
+              },
+            ]
+          : []),
+        ...(evalFilter
           ? [
               {
                 messages: {
                   some: {
-                    eval: filter,
+                    eval: evalFilter,
                   },
                 },
               },

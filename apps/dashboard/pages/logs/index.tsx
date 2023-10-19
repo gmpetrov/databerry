@@ -1,7 +1,14 @@
 import { CloseRounded } from '@mui/icons-material';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import { Button, IconButton, Option, Select } from '@mui/joy';
+import {
+  Button,
+  Card,
+  IconButton,
+  Option,
+  Select,
+  SelectProps,
+} from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Badge from '@mui/joy/Badge';
@@ -21,7 +28,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { getServerSession } from 'next-auth/next';
 import { useSession } from 'next-auth/react';
-import { ReactElement, useCallback, useEffect, useMemo } from 'react';
+import { ReactElement, use, useCallback, useEffect, useMemo } from 'react';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import useSWR from 'swr';
@@ -40,21 +47,73 @@ import { EvalSchema } from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { MessageEval, Prisma } from '@chaindesk/prisma';
 
+import { getAgents } from '../api/agents';
 import { getLogs } from '../api/logs';
 import { getConversation } from '../api/logs/[id]';
 
 const LIMIT = 20;
 
+interface SelectQueryParamFilterProps<T> {
+  filterName: string;
+}
+
+function SelectQueryParamFilter<T extends {}>(
+  props: SelectQueryParamFilterProps<T> & SelectProps<T>
+) {
+  const router = useRouter();
+  const currentValue = router.query[props.filterName] as T;
+
+  return (
+    <Select
+      value={currentValue}
+      onChange={(_, value) => {
+        if (value && typeof value === 'string') {
+          router.query[props.filterName] = value;
+          router.replace(router, undefined, {
+            shallow: true,
+          });
+        }
+      }}
+      {...(currentValue && {
+        // display the button and remove select indicator
+        // when user has selected a value
+        endDecorator: (
+          <IconButton
+            size="sm"
+            variant="plain"
+            color="neutral"
+            onMouseDown={(event) => {
+              // don't open the popup when clicking on this button
+              event.stopPropagation();
+            }}
+            onClick={() => {
+              router.query[props.filterName] = '';
+              router.replace(router, undefined, {
+                shallow: true,
+              });
+            }}
+          >
+            <CloseRounded />
+          </IconButton>
+        ),
+        indicator: null,
+      })}
+      {...props}
+    />
+  );
+}
+
 export default function LogsPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const conversationId = router.query.conversationId as string;
+  const evalFilter = router.query.eval as EvalSchema;
+
   const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
     hasReachedEnd: false,
     currentImproveAnswerID: undefined as string | undefined,
-    filter: '',
   });
   const getConversationsQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getLogs>
@@ -69,9 +128,14 @@ export default function LogsPage() {
     const cursor = previousPageData?.[previousPageData?.length - 1]
       ?.id as string;
 
-    return `/api/logs?cursor=${cursor || ''}&conversationId=${
-      router.query.conversationId || ''
-    }&filter=${state.filter}`;
+    const params = new URLSearchParams({
+      cursor: cursor || '',
+      conversationId: conversationId || '',
+      eval: (router.query.eval as string) || '',
+      agentId: (router.query.agentId as string) || '',
+    });
+
+    return `/api/logs?${params.toString()}`;
   }, fetcher);
 
   const getConversationQuery = useSWR<
@@ -80,6 +144,11 @@ export default function LogsPage() {
     state.currentConversationId
       ? `/api/logs/${state.currentConversationId}`
       : null,
+    fetcher
+  );
+
+  const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
+    '/api/agents',
     fetcher
   );
 
@@ -108,24 +177,12 @@ export default function LogsPage() {
     }
   }, [getSingleConversationQuery?.data?.id]);
 
-  useEffect(() => {
-    const result = EvalSchema.safeParse(router.query.filter);
-
-    if (result.success) {
-      setState({ filter: router.query.filter as string });
-    } else {
-      router.replace(`${router.basePath}`, undefined, {
-        shallow: true,
-      });
-    }
-  }, []);
-
   if (!session?.organization) return null;
 
   if (
     !getConversationsQuery.isLoading &&
     conversations.length === 0 &&
-    state.filter === ''
+    (evalFilter as string) === ''
   ) {
     return (
       <Alert
@@ -153,7 +210,7 @@ export default function LogsPage() {
   }
 
   return (
-    <Stack gap={2} sx={{ height: 'calc(100vh - 175px)' }}>
+    <Stack gap={1} sx={{ height: 'calc(100vh - 175px)' }}>
       {/* <Alert
         variant="soft"
         color="neutral"
@@ -162,58 +219,39 @@ export default function LogsPage() {
         View all Agents conversations across all channels. Evaluate and improve
         answers.
       </Alert> */}
-
       <Stack
-        direction="row-reverse"
         justifyItems="center"
         spacing={1}
         width="100%"
+        direction="row"
+        justifyContent={'space-between'}
       >
+        <Stack direction="row" spacing={1}>
+          <SelectQueryParamFilter<EvalSchema>
+            filterName="eval"
+            placeholder="Filter by Evaluation"
+          >
+            <Option key={MessageEval.good} value={MessageEval.good}>
+              🟢 Good
+            </Option>
+            <Option key={MessageEval.bad} value={MessageEval.bad}>
+              🔴 Bad
+            </Option>
+          </SelectQueryParamFilter>
+
+          <SelectQueryParamFilter<string>
+            filterName="agentId"
+            placeholder="Filter by Agent"
+          >
+            {getAgentsQuery.data?.map((each) => (
+              <Option key={each.id} value={each.id}>
+                {`🤖 ${each.name}`}
+              </Option>
+            ))}
+          </SelectQueryParamFilter>
+        </Stack>
+
         <ConversationExport />
-        <Select
-          placeholder="Filter by type"
-          value={state.filter}
-          onChange={(_, value) => {
-            if (value && typeof value === 'string') {
-              setState({ filter: value });
-              router.replace(`${router.basePath}?filter=${value}`, undefined, {
-                shallow: true,
-              });
-            }
-          }}
-          sx={{ py: 0 }}
-          {...(state.filter && {
-            // display the button and remove select indicator
-            // when user has selected a value
-            endDecorator: (
-              <IconButton
-                size="sm"
-                variant="plain"
-                color="neutral"
-                onMouseDown={(event) => {
-                  // don't open the popup when clicking on this button
-                  event.stopPropagation();
-                }}
-                onClick={() => {
-                  setState({ filter: '' });
-                  router.replace(`${router.basePath}`, undefined, {
-                    shallow: true,
-                  });
-                }}
-              >
-                <CloseRounded />
-              </IconButton>
-            ),
-            indicator: null,
-          })}
-        >
-          <Option key={MessageEval.good} value={MessageEval.good}>
-            Good
-          </Option>
-          <Option key={MessageEval.bad} value={MessageEval.bad}>
-            Bad
-          </Option>
-        </Select>
       </Stack>
 
       <Sheet
