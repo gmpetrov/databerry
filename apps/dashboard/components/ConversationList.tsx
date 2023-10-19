@@ -21,13 +21,15 @@ import useSWRInfinite from 'swr/infinite';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getConversations } from '@app/pages/api/agents/[id]/c';
 
-import relativeDate from '@chaindesk/lib/relative-date';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
-import { Conversation, Prisma } from '@chaindesk/prisma';
+import { Prisma } from '@chaindesk/prisma';
 
 type Props = {
   agentId?: string;
   rootSx?: SxProps;
+  currentConversationId?: string;
+  handleSelectConversation?(conversationId: string): void;
+  handleCreateNewChat?(): void;
 };
 
 const Item = (props: {
@@ -53,7 +55,10 @@ const Item = (props: {
       >
         <ListItemButton
           selected={!!props.selected}
-          onClick={() => props.handleClick?.(props.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            props.handleClick?.(props.id);
+          }}
         >
           <Typography className="truncate" level="body-sm">
             {props.text}
@@ -66,10 +71,15 @@ const Item = (props: {
   );
 };
 
-function ConversationList({ agentId, rootSx }: Props) {
+function ConversationList({
+  agentId,
+  rootSx,
+  handleSelectConversation,
+  currentConversationId,
+  handleCreateNewChat,
+}: Props) {
   const scrollParentRef = useRef(null);
   const router = useRouter();
-  const conversationId = router.query.conversationId as string;
   const [state, setState] = useStateReducer({
     hasMore: true,
     hasLoadedOnce: false,
@@ -100,11 +110,8 @@ function ConversationList({ agentId, rootSx }: Props) {
       onSuccess: (data) => {
         const id = data?.[0]?.[0]?.id;
 
-        if (!state.hasLoadedOnce && !conversationId && id) {
-          // Focus on first conversation after first load if none set
+        if (!state.hasLoadedOnce && !currentConversationId && id) {
           setState({ hasLoadedOnce: true });
-          router.query.conversationId = id;
-          router.replace(router, undefined, { shallow: true });
         }
       },
     }
@@ -112,10 +119,13 @@ function ConversationList({ agentId, rootSx }: Props) {
 
   const conversations = getConversationsQuery?.data?.flat?.() || [];
 
-  const handleClick = (id: string) => {
-    router.query.conversationId = id;
-    router.replace(router, undefined, { shallow: true });
-  };
+  useEffect(() => {
+    if (router.query?.conversationId) {
+      handleSelectConversation?.(router.query.conversationId as string);
+    } else {
+      handleSelectConversation?.(conversations[0]?.id);
+    }
+  }, [getConversationsQuery?.data]);
 
   if (!getConversationsQuery.isLoading && conversations.length === 0) {
     return null;
@@ -135,10 +145,7 @@ function ConversationList({ agentId, rootSx }: Props) {
         size="sm"
         variant="outlined"
         color="neutral"
-        onClick={() => {
-          router.query.conversationId = undefined;
-          router.replace(router, undefined, { shallow: true });
-        }}
+        onClick={handleCreateNewChat}
         startDecorator={<AddRoundedIcon fontSize="sm" />}
         sx={{ m: 1, whiteSpace: 'nowrap' }}
       >
@@ -193,8 +200,8 @@ function ConversationList({ agentId, rootSx }: Props) {
               key={each.id}
               id={each.id}
               text={each?.messages?.[0]?.text}
-              selected={each.id === conversationId}
-              handleClick={handleClick}
+              selected={each.id === currentConversationId}
+              handleClick={handleSelectConversation}
             />
           ))}
         </InfiniteScroll>
