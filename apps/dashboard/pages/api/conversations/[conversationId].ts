@@ -16,7 +16,7 @@ import { prisma } from '@chaindesk/prisma/client';
 const handler = createLazyAuthHandler();
 
 const cors = Cors({
-  methods: ['GET', 'UPDATE', 'DELETE', 'HEAD'],
+  methods: ['GET', 'PATCH', 'DELETE', 'HEAD'],
 });
 
 export const getConversation = async (
@@ -112,7 +112,7 @@ export const updateConversation = async (
   }
 };
 
-handler.put(respond(updateConversation));
+handler.patch(respond(updateConversation));
 
 export const deleteConversation = async (
   req: AppNextApiRequest,

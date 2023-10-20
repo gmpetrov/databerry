@@ -72,6 +72,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     hasOpenOnce: false,
     showInitialMessage: false,
     showHelp: false,
+    showResolveButton: false,
     showCaptureForm: false,
     isCaptureLoading: false,
     visitorEmail: '',
@@ -186,6 +187,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     if (conversationId) {
       setState({
         showHelp: true,
+        showResolveButton: true,
       });
     }
   }, [conversationId]);
@@ -375,11 +377,16 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
         }}
       >
         {Capture}
-        {history.length ? (
+        {state.showResolveButton ? (
           <ResolveButton
             conversationId={conversationId}
             conversationStatus={conversationStatus}
-            createNewConversation={() => setConversationId('')}
+            createNewConversation={() => {
+              setConversationId('');
+              setState({
+                showResolveButton: false,
+              });
+            }}
           />
         ) : null}
       </Box>

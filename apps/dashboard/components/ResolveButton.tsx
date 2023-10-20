@@ -26,7 +26,7 @@ const ResolveButton = ({
       const response = await fetch(
         `${API_URL}/api/conversations/${conversationId}`,
         {
-          method: 'PUT',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
           },
