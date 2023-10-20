@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.45"></a>
+## 0.1.45 (2023-10-20)
+
+### Fixed
+
+- 🐛 patch build bubble widget since resolve button [[ce05158](https://github.com/gmpetrov/databerry/commit/ce051588a6a233f626343f23880820dfd82c0951)]
+
+### Miscellaneous
+
+- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201))&quot; [[be8c5da](https://github.com/gmpetrov/databerry/commit/be8c5da3ffb487cae96de8cfa515c5c4d7f8a55d)]
+- 🎸 Resolve conversation ([#194](https://github.com/gmpetrov/databerry/issues/194)) [[c836476](https://github.com/gmpetrov/databerry/commit/c836476b67f2385185390531c25fa0f2278f88ec)]
+- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201)) [[744d304](https://github.com/gmpetrov/databerry/commit/744d304dd9df52a0b02b44c5a795dc74cfcde175)]
+
+
 <a name="0.1.44"></a>
 ## 0.1.44 (2023-10-20)
 
