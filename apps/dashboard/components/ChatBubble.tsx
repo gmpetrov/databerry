@@ -25,8 +25,11 @@ import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
+import { ConversationStatusUnion } from '@chaindesk/lib/types/dtos';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { Agent } from '@chaindesk/prisma';
+
+import ResolveButton from './ResolveButton';
 
 export const theme = extendTheme({
   cssVarPrefix: 'databerry-chat-bubble',
@@ -53,7 +56,7 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // messageTemplates: ["What's the pricing?"],
 };
 
-const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
+export const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
   // const { setMode } = useColorScheme();
@@ -69,6 +72,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     hasOpenOnce: false,
     showInitialMessage: false,
     showHelp: false,
+    showResolveButton: false,
     showCaptureForm: false,
     isCaptureLoading: false,
     visitorEmail: '',
@@ -78,6 +82,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     history,
     handleChatSubmit,
     conversationId,
+    setConversationId,
+    conversationStatus,
     visitorId,
     isLoadingConversation,
     hasMoreMessages,
@@ -181,6 +187,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     if (conversationId) {
       setState({
         showHelp: true,
+        showResolveButton: true,
       });
     }
   }, [conversationId]);
@@ -223,12 +230,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
     if (state.showHelp || state.visitorEmail) {
       Component = (
-        <Stack
-          sx={{
-            mt: -3,
-            width: '100%',
-          }}
-        >
+        <Box>
           {state.visitorEmail && (
             <Chip
               size="sm"
@@ -295,7 +297,17 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 }
               }}
             >
-              <Stack direction="row" gap={0.5} sx={{ width: '100%' }}>
+              <Stack
+                direction="row"
+                gap={0.5}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  backgroundColor: 'white',
+                  zIndex: 99,
+                }}
+              >
                 <IconButton
                   size="sm"
                   variant="plain"
@@ -334,7 +346,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               </Stack>
             </form>
           )}
-        </Stack>
+        </Box>
       );
     }
 
@@ -349,6 +361,37 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     visitorId,
   ]);
 
+  const BottomContent = ({
+    conversationId,
+    conversationStatus,
+  }: {
+    conversationId: string;
+    conversationStatus: ConversationStatusUnion;
+  }) => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          direction: 'column',
+          position: 'relative',
+        }}
+      >
+        {Capture}
+        {state.showResolveButton ? (
+          <ResolveButton
+            conversationId={conversationId}
+            conversationStatus={conversationStatus}
+            createNewConversation={() => {
+              setConversationId('');
+              setState({
+                showResolveButton: false,
+              });
+            }}
+          />
+        ) : null}
+      </Box>
+    );
+  };
   if (!state.agent) {
     return null;
   }
@@ -542,7 +585,12 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   onSubmit={handleChatSubmit}
                   messageTemplates={state.config.messageTemplates}
                   initialMessage={state.config.initialMessage}
-                  renderBottom={Capture}
+                  renderBottom={
+                    <BottomContent
+                      conversationId={conversationId}
+                      conversationStatus={conversationStatus}
+                    />
+                  }
                   agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
                   isLoadingConversation={isLoadingConversation}
                   hasMoreMessages={hasMoreMessages}

@@ -307,3 +307,18 @@ export const CrispSchema = z.object({
 export const CrispUpdateMetadataSchema = CrispSchema.extend({
   aiStatus: z.nativeEnum(AIStatus),
 });
+export type ConversationStatusUnion = 'RESOLVED' | 'UNRESOLVED';
+
+export enum ConversationStatus {
+  RESOLVED = 'RESOLVED',
+  UNRESOLVED = 'UNRESOLVED',
+}
+
+const conversationStatus = z.enum([
+  ConversationStatus.RESOLVED,
+  ConversationStatus.UNRESOLVED,
+]);
+
+export const ConversationStatusSchema = z.object({
+  status: conversationStatus,
+});

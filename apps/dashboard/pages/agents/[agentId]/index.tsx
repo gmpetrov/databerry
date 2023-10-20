@@ -59,6 +59,7 @@ export default function AgentPage() {
     handleLoadMoreMessages,
     setConversationId,
     conversationId,
+    conversationStatus,
     handleEvalAnswer,
     handleAbort,
   } = useChat({

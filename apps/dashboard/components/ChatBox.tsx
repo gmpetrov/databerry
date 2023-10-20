@@ -644,8 +644,9 @@ function ChatBox({
           </Stack>
         </form>
       )}
-
-      {renderBottom}
+      <Box sx={{ mt: !disableWatermark ? -3 : 1, position: 'relative' }}>
+        {renderBottom}
+      </Box>
     </Stack>
   );
 }
