@@ -35,7 +35,7 @@ import useSWR from 'swr';
 
 import AccountCard from '@app/components/AccountCard';
 import UserMenu from '@app/components/UserMenu';
-import useProduct from '@app/hooks/useProduct';
+import useProduct, { ProductType } from '@app/hooks/useProduct';
 import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getStatus } from '@app/pages/api/status';
 
@@ -176,13 +176,6 @@ export default function Navigation() {
               active: router.route.startsWith(RouteNames.DATASTORES),
             },
             {
-              label: 'Chat',
-              route: RouteNames.CHAT,
-              icon: <ChatRoundedIcon fontSize="md" />,
-              active: router.route === RouteNames.CHAT,
-              isExperimental: true,
-            },
-            {
               label: 'Logs',
               route: RouteNames.LOGS,
               icon: (
@@ -237,6 +230,12 @@ export default function Navigation() {
               icon: <ChatRoundedIcon fontSize="md" />,
               active: router.route === RouteNames.CHAT,
               isExperimental: true,
+            },
+            {
+              label: 'Datastores',
+              route: RouteNames.DATASTORES,
+              icon: <StorageRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.DATASTORES),
             },
           ]
         : []),
@@ -313,7 +312,7 @@ export default function Navigation() {
               />
             ))}
 
-            <Divider sx={{ my: 1, mt: 'auto' }} />
+            <Divider sx={{ my: 1 }} />
 
             {settingLinks.map((each) => (
               <NavigationLink
@@ -338,6 +337,78 @@ export default function Navigation() {
                 target={(each as any).target}
               />
             ))}
+            {(['chaindesk', 'cs', 'chat'] as ProductType[]).includes(
+              product
+            ) && (
+              <>
+                <Divider sx={{ my: 1 }} />
+                <Typography
+                  level="body-xs"
+                  sx={{ mt: 1, mb: 1, ml: 1, fontStyle: 'italic' }}
+                >
+                  Other Products
+                </Typography>
+
+                {(['chaindesk', 'cs'] as ProductType[]).includes(product) && (
+                  <Stack spacing={1}>
+                    <Link
+                      href={
+                        process.env.NODE_ENV === 'production'
+                          ? 'https://chat.chaindesk.ai/chat'
+                          : 'http://chat.localhost:3000/chat'
+                      }
+                    >
+                      <Button
+                        sx={{ width: '100%' }}
+                        color="neutral"
+                        variant="soft"
+                        endDecorator={
+                          <Chip
+                            className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+                            size="sm"
+                            sx={{
+                              color: 'white',
+                            }}
+                          >
+                            new
+                          </Chip>
+                        }
+                      >
+                        Work Assitant
+                      </Button>
+                    </Link>
+                  </Stack>
+                )}
+                {(['chat'] as ProductType[]).includes(product) && (
+                  <Link
+                    href={
+                      process.env.NODE_ENV === 'production'
+                        ? 'https://app.chaindesk.ai/agents'
+                        : 'http://app.localhost:3000/agents'
+                    }
+                  >
+                    <Button
+                      sx={{ width: '100%' }}
+                      color="neutral"
+                      variant="soft"
+                      endDecorator={
+                        <Chip
+                          className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+                          size="sm"
+                          sx={{
+                            color: 'white',
+                          }}
+                        >
+                          new
+                        </Chip>
+                      }
+                    >
+                      Chaindesk Agents
+                    </Button>
+                  </Link>
+                )}
+              </>
+            )}
           </List>
         </ListItem>
         {/* <ListItem nested sx={{ mt: 2 }}>

@@ -26,6 +26,7 @@ import { signOut, useSession } from 'next-auth/react';
 import React, { useEffect } from 'react';
 import useSWR from 'swr';
 
+import useProduct, { ProductType } from '@app/hooks/useProduct';
 import { getOrganizations } from '@app/pages/api/organizations';
 
 import accountConfig from '@chaindesk/lib/account-config';
@@ -92,6 +93,7 @@ type Props = {};
 function AccountCard({}: Props) {
   const router = useRouter();
   const session = useSession();
+  const { product } = useProduct();
 
   const targetOrgId = router.query?.targetOrgId as string;
 
@@ -240,14 +242,17 @@ function AccountCard({}: Props) {
               label={'Million words stored'}
               fixed={3}
             />
-            <UsageGauge
-              value={session?.data?.organization?.nbAgents || 0}
-              max={
-                accountConfig?.[session?.data?.organization?.currentPlan!]
-                  ?.limits?.maxAgents
-              }
-              label={'Agents'}
-            />
+
+            {['chaindesk'].includes(product) && (
+              <UsageGauge
+                value={session?.data?.organization?.nbAgents || 0}
+                max={
+                  accountConfig?.[session?.data?.organization?.currentPlan!]
+                    ?.limits?.maxAgents
+                }
+                label={'Agents'}
+              />
+            )}
 
             <UsageGauge
               value={session?.data?.organization?.nbDatastores || 0}
