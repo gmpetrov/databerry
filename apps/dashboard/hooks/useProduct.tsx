@@ -14,7 +14,7 @@ export const getProductFromHostname = (hostname?: string): ProductType => {
   ) {
     return 'cs';
   } else if (
-    ['app.chaindesk.ai', 'chat.localhost', 'chat.localhost:3000'].includes(
+    ['chat.chaindesk.ai', 'chat.localhost', 'chat.localhost:3000'].includes(
       hostname
     )
   ) {
