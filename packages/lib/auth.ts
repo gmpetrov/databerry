@@ -1,8 +1,9 @@
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { AuthOptions, Session } from 'next-auth';
 import { AdapterUser } from 'next-auth/adapters';
 import { getServerSession } from 'next-auth/next';
+import { Provider } from 'next-auth/providers';
 import EmailProvider from 'next-auth/providers/email';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
@@ -22,6 +23,7 @@ import {
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
+import getRootDomain from './get-root-domain';
 import sendVerificationRequest from './verification-sender';
 
 const CustomPrismaProvider = (p: PrismaClient) => {
@@ -104,118 +106,140 @@ const CustomPrismaProvider = (p: PrismaClient) => {
   };
 };
 
-export const authOptions = {
-  adapter: CustomPrismaProvider(prisma),
-  providers: [
-    EmailProvider({
-      server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM,
-      sendVerificationRequest: sendVerificationRequest,
-    }),
-    GithubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          prompt: 'consent',
-          access_type: 'offline',
-          response_type: 'code',
+export const authOptions = (req: NextApiRequest): AuthOptions => {
+  const hostname = req.headers.host;
+  const rootDomain = getRootDomain(hostname!);
+
+  return {
+    adapter: CustomPrismaProvider(prisma) as any,
+    cookies: {
+      sessionToken: {
+        name:
+          process.env.NODE_ENV === 'production'
+            ? `__Secure-next-auth.session-token`
+            : `next-auth.session-token`,
+        options: {
+          httpOnly: true,
+          sameSite: 'lax',
+          path: '/',
+          domain: hostname?.includes('localhost:3000')
+            ? undefined
+            : `.${rootDomain}`,
+          secure: process.env.NODE_ENV === 'production' ? true : false,
         },
       },
-    }),
-  ],
-  pages: {
-    verifyRequest: '/auth/verify-request',
-    error: '/auth/error',
-  },
-  callbacks: {
-    async session(props) {
-      const { session, trigger, newSession, token } = props;
-      const user = props.user as AdapterUser &
-        Prisma.UserGetPayload<{ include: typeof sessionUserInclude }> & {
-          sessionId: string;
-          organization: Prisma.OrganizationGetPayload<{
-            include: typeof sessionOrganizationInclude;
-          }>;
-        };
-
-      let organization = user?.organization;
-
-      const found = user?.memberships?.find(
-        (one) => one.organizationId === organization.id
-      );
-
-      const handleUpdateOrg = (orgId: string) => {
-        return prisma.session.update({
-          where: {
-            id: user?.sessionId,
+    },
+    providers: [
+      EmailProvider({
+        server: process.env.EMAIL_SERVER,
+        from: process.env.EMAIL_FROM,
+        sendVerificationRequest: sendVerificationRequest,
+      }),
+      GithubProvider({
+        clientId: process.env.GITHUB_ID!,
+        clientSecret: process.env.GITHUB_SECRET!,
+      }),
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID!,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        authorization: {
+          params: {
+            prompt: 'consent',
+            access_type: 'offline',
+            response_type: 'code',
           },
-          data: {
-            organization: {
-              connect: {
-                id: orgId,
-              },
-            },
-          },
-          include: {
-            organization: {
-              include: {
-                ...sessionOrganizationInclude,
-              },
-            },
-          },
-        });
-      };
+        },
+      }),
+    ],
+    pages: {
+      verifyRequest: '/auth/verify-request',
+      error: '/auth/error',
+    },
+    callbacks: {
+      async session(props) {
+        const { session, trigger, newSession, token } = props;
+        const user = props.user as AdapterUser &
+          Prisma.UserGetPayload<{ include: typeof sessionUserInclude }> & {
+            sessionId: string;
+            organization: Prisma.OrganizationGetPayload<{
+              include: typeof sessionOrganizationInclude;
+            }>;
+          };
 
-      if (!found) {
-        // User has no access to this organization anymore, update the session
-        const defaultOrgId = user?.memberships?.[0]?.organizationId;
+        let organization = user?.organization;
 
-        const updated = await handleUpdateOrg(defaultOrgId!);
-
-        organization = updated.organization!;
-      } else if (trigger === 'update' && newSession.orgId) {
         const found = user?.memberships?.find(
-          (one) => one.organizationId === newSession.orgId
+          (one) => one.organizationId === organization.id
         );
 
+        const handleUpdateOrg = (orgId: string) => {
+          return prisma.session.update({
+            where: {
+              id: user?.sessionId,
+            },
+            data: {
+              organization: {
+                connect: {
+                  id: orgId,
+                },
+              },
+            },
+            include: {
+              organization: {
+                include: {
+                  ...sessionOrganizationInclude,
+                },
+              },
+            },
+          });
+        };
+
         if (!found) {
-          throw new Error('Unauthorized');
+          // User has no access to this organization anymore, update the session
+          const defaultOrgId = user?.memberships?.[0]?.organizationId;
+
+          const updated = await handleUpdateOrg(defaultOrgId!);
+
+          organization = updated.organization!;
+        } else if (trigger === 'update' && newSession.orgId) {
+          const found = user?.memberships?.find(
+            (one) => one.organizationId === newSession.orgId
+          );
+
+          if (!found) {
+            throw new Error('Unauthorized');
+          }
+
+          const updated = await handleUpdateOrg(newSession.orgId!);
+
+          organization = updated.organization!;
         }
 
-        const updated = await handleUpdateOrg(newSession.orgId!);
+        const roles = [
+          user?.memberships?.find(
+            (one) => one.organizationId === organization?.id
+          )?.role,
+          user?.role,
+        ];
 
-        organization = updated.organization!;
-      }
+        return {
+          authType: 'session',
+          ...session,
+          roles,
+          organization: {
+            ...organization,
+            ...formatOrganizationSession(organization),
+          },
+          user: {
+            ...session.user,
 
-      const roles = [
-        user?.memberships?.find(
-          (one) => one.organizationId === organization?.id
-        )?.role,
-        user?.role,
-      ];
-
-      return {
-        authType: 'session',
-        ...session,
-        roles,
-        organization: {
-          ...organization,
-          ...formatOrganizationSession(organization),
-        },
-        user: {
-          ...session.user,
-
-          ...formatUserSession(user),
-        },
-      };
+            ...formatUserSession(user),
+          },
+        };
+      },
     },
-  },
-} as AuthOptions;
+  };
+};
 
 export const sessionUserInclude: Prisma.UserInclude = {
   usage: true,
@@ -325,7 +349,7 @@ const handleGetSession = async (
       };
     }
   } else {
-    session = await getServerSession(req, res, authOptions);
+    session = await getServerSession(req, res, authOptions(req));
   }
 
   return session;
