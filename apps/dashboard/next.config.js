@@ -16,9 +16,6 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../../'),
   },
-  // eslint: {
-  //   dirs: ['pages', 'utils', 'components', 'hooks', 'types', 'widgets'],
-  // },
 
   async redirects() {
     return [

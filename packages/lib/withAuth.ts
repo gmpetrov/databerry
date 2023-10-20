@@ -8,7 +8,11 @@ export function withAuth<
   P extends { [key: string]: unknown } = { [key: string]: unknown }
 >(gssp: (context: GetServerSidePropsContext) => any) {
   return async (ctx: GetServerSidePropsContext) => {
-    const session = await getServerSession(ctx.req, ctx.res, authOptions);
+    const session = await getServerSession(
+      ctx.req,
+      ctx.res,
+      authOptions(ctx.req as any)
+    );
 
     if (!session) {
       return {

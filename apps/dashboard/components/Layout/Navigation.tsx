@@ -35,6 +35,7 @@ import useSWR from 'swr';
 
 import AccountCard from '@app/components/AccountCard';
 import UserMenu from '@app/components/UserMenu';
+import useProduct from '@app/hooks/useProduct';
 import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getStatus } from '@app/pages/api/status';
 
@@ -42,9 +43,48 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AppStatus, RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
 
+function NavigationLink(props: {
+  href: string;
+  target?: string;
+  active?: boolean;
+  icon?: React.ReactNode;
+  label?: string;
+  isExperimental?: boolean;
+}) {
+  return (
+    <Link key={props.href} href={props.href} target={props?.target}>
+      <ListItem>
+        <ListItemButton
+          variant={props.active ? 'soft' : 'plain'}
+          color={props.active ? 'primary' : 'neutral'}
+        >
+          <ListItemDecorator
+            sx={{ color: props.active ? 'inherit' : 'neutral.500' }}
+          >
+            {props.icon}
+          </ListItemDecorator>
+          <ListItemContent>{props.label}</ListItemContent>
+
+          {props.isExperimental && (
+            <Chip
+              startDecorator={<NewReleasesRoundedIcon />}
+              size="sm"
+              variant="soft"
+              color="warning"
+            >
+              Beta
+            </Chip>
+          )}
+        </ListItemButton>
+      </ListItem>
+    </Link>
+  );
+}
+
 export default function Navigation() {
   const router = useRouter();
   const { data: session } = useSession();
+  const { product } = useProduct();
 
   const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
@@ -118,44 +158,93 @@ export default function Navigation() {
     }
   }, [publicRuntimeConfig?.version, getStatusQuery?.data?.latestVersion]);
 
-  const items = React.useMemo(() => {
+  const appLinks = React.useMemo(() => {
     return [
-      {
-        label: 'Agents',
-        route: RouteNames.AGENTS,
-        icon: <SmartToyRoundedIcon fontSize="md" />,
-        active: router.route.startsWith(RouteNames.AGENTS),
-        isExperimental: false,
-      },
-      {
-        label: 'Datastores',
-        route: RouteNames.DATASTORES,
-        icon: <StorageRoundedIcon fontSize="md" />,
-        active: router.route.startsWith(RouteNames.DATASTORES),
-      },
-      {
-        label: 'Chat',
-        route: RouteNames.CHAT,
-        icon: <ChatRoundedIcon fontSize="md" />,
-        active: router.route === RouteNames.CHAT,
-        isExperimental: true,
-      },
-      {
-        label: 'Logs',
-        route: RouteNames.LOGS,
-        icon: (
-          <Badge
-            badgeContent={countUnreadQuery?.data}
-            size="sm"
-            color="danger"
-            invisible={!countUnreadQuery?.data || countUnreadQuery?.data <= 0}
-          >
-            <InboxRoundedIcon fontSize="md" />
-          </Badge>
-        ),
-        active: router.route === RouteNames.LOGS,
-      },
+      ...(product === 'chaindesk'
+        ? [
+            {
+              label: 'Agents',
+              route: RouteNames.AGENTS,
+              icon: <SmartToyRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.AGENTS),
+              isExperimental: false,
+            },
+            {
+              label: 'Datastores',
+              route: RouteNames.DATASTORES,
+              icon: <StorageRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.DATASTORES),
+            },
+            {
+              label: 'Chat',
+              route: RouteNames.CHAT,
+              icon: <ChatRoundedIcon fontSize="md" />,
+              active: router.route === RouteNames.CHAT,
+              isExperimental: true,
+            },
+            {
+              label: 'Logs',
+              route: RouteNames.LOGS,
+              icon: (
+                <Badge
+                  badgeContent={countUnreadQuery?.data}
+                  size="sm"
+                  color="danger"
+                  invisible={
+                    !countUnreadQuery?.data || countUnreadQuery?.data <= 0
+                  }
+                >
+                  <InboxRoundedIcon fontSize="md" />
+                </Badge>
+              ),
+              active: router.route === RouteNames.LOGS,
+            },
+          ]
+        : []),
+      ...(product === 'cs'
+        ? [
+            {
+              label: 'Inbox',
+              route: RouteNames.LOGS,
+              icon: (
+                <Badge
+                  badgeContent={countUnreadQuery?.data}
+                  size="sm"
+                  color="danger"
+                  invisible={
+                    !countUnreadQuery?.data || countUnreadQuery?.data <= 0
+                  }
+                >
+                  <InboxRoundedIcon fontSize="md" />
+                </Badge>
+              ),
+              active: router.route === RouteNames.LOGS,
+            },
+            {
+              label: 'Agents',
+              route: RouteNames.AGENTS,
+              icon: <SmartToyRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.AGENTS),
+              isExperimental: false,
+            },
+          ]
+        : []),
+      ...(product === 'chat'
+        ? [
+            {
+              label: 'Chat',
+              route: RouteNames.CHAT,
+              icon: <ChatRoundedIcon fontSize="md" />,
+              active: router.route === RouteNames.CHAT,
+              isExperimental: true,
+            },
+          ]
+        : []),
+    ];
+  }, [router.route, countUnreadQuery?.data, product]);
 
+  const settingLinks = React.useMemo(() => {
+    return [
       // {
       //   label: 'Apps',
       //   route: RouteNames.APPS,
@@ -167,21 +256,29 @@ export default function Navigation() {
         route: RouteNames.SETTINGS,
         icon: <ManageAccountsRoundedIcon fontSize="small" />,
         active: router.route.startsWith(RouteNames.SETTINGS),
+        isExperimental: false,
       },
+    ];
+  }, [router.route]);
+
+  const docLinks = React.useMemo(() => {
+    return [
       {
         label: 'Help Center',
         route: 'https://chaindesk.ai/help',
         icon: <HelpRoundedIcon fontSize="small" />,
         target: 'blank',
+        isExperimental: false,
       },
       {
         label: 'API Documentation',
         route: 'https://docs.chaindesk.ai/',
         icon: <ApiRoundedIcon fontSize="small" />,
         target: 'blank',
+        isExperimental: false,
       },
     ];
-  }, [router.route, countUnreadQuery?.data]);
+  }, [router.route]);
 
   return (
     <Stack sx={{ height: '100%' }}>
@@ -204,33 +301,42 @@ export default function Navigation() {
               '& .JoyListItemButton-root': { p: '8px' },
             }}
           >
-            {items.map((each) => (
-              <Link key={each.route} href={each.route} target={each?.target}>
-                <ListItem>
-                  <ListItemButton
-                    variant={each.active ? 'soft' : 'plain'}
-                    color={each.active ? 'primary' : 'neutral'}
-                  >
-                    <ListItemDecorator
-                      sx={{ color: each.active ? 'inherit' : 'neutral.500' }}
-                    >
-                      {each.icon}
-                    </ListItemDecorator>
-                    <ListItemContent>{each.label}</ListItemContent>
+            {appLinks.map((each) => (
+              <NavigationLink
+                key={each.route}
+                href={each.route}
+                active={each.active}
+                icon={each.icon}
+                label={each.label}
+                isExperimental={each.isExperimental}
+                target={(each as any).target}
+              />
+            ))}
 
-                    {each.isExperimental && (
-                      <Chip
-                        startDecorator={<NewReleasesRoundedIcon />}
-                        size="sm"
-                        variant="soft"
-                        color="warning"
-                      >
-                        Beta
-                      </Chip>
-                    )}
-                  </ListItemButton>
-                </ListItem>
-              </Link>
+            <Divider sx={{ my: 1, mt: 'auto' }} />
+
+            {settingLinks.map((each) => (
+              <NavigationLink
+                key={each.route}
+                href={each.route}
+                active={each.active}
+                icon={each.icon}
+                label={each.label}
+                isExperimental={each.isExperimental}
+                target={(each as any).target}
+              />
+            ))}
+            <Divider sx={{ my: 1 }} />
+            {docLinks.map((each) => (
+              <NavigationLink
+                key={each.route}
+                href={each.route}
+                active={(each as any).active}
+                icon={each.icon}
+                label={each.label}
+                isExperimental={each.isExperimental}
+                target={(each as any).target}
+              />
             ))}
           </List>
         </ListItem>
