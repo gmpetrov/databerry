@@ -57,18 +57,19 @@ interface SelectQueryParamFilterProps<T> {
   filterName: string;
 }
 
-function SelectQueryParamFilter<T extends {}>(
-  props: SelectQueryParamFilterProps<T> & SelectProps<T>
-) {
+function SelectQueryParamFilter<T extends {}>({
+  filterName,
+  ...otherProps
+}: SelectQueryParamFilterProps<T> & SelectProps<T>) {
   const router = useRouter();
-  const currentValue = router.query[props.filterName] as T;
+  const currentValue = router.query[filterName] as T;
 
   return (
     <Select
       value={currentValue}
       onChange={(_, value) => {
         if (value && typeof value === 'string') {
-          router.query[props.filterName] = value;
+          router.query[filterName] = value;
           router.replace(router, undefined, {
             shallow: true,
           });
@@ -87,7 +88,7 @@ function SelectQueryParamFilter<T extends {}>(
               event.stopPropagation();
             }}
             onClick={() => {
-              router.query[props.filterName] = '';
+              router.query[filterName] = '';
               router.replace(router, undefined, {
                 shallow: true,
               });
@@ -98,7 +99,7 @@ function SelectQueryParamFilter<T extends {}>(
         ),
         indicator: null,
       })}
-      {...props}
+      {...otherProps}
     />
   );
 }
