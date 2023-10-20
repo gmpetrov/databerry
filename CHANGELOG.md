@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.44"></a>
+## 0.1.44 (2023-10-20)
+
+### Fixed
+
+- 🐛 wrong app subdomain [[c18ddd5](https://github.com/gmpetrov/databerry/commit/c18ddd5a9daed3554f67c390eeebacdbfd3e0625)]
+
+### Miscellaneous
+
+- 🎸 add button to switch products from Navigtaion Panel [[24c146b](https://github.com/gmpetrov/databerry/commit/24c146b21863b355892852d543862b2de15a40cc)]
+-  Feature/multi product dashboard ([#200](https://github.com/gmpetrov/databerry/issues/200)) [[98abae1](https://github.com/gmpetrov/databerry/commit/98abae1f10eeb15fe38ef4343576ef8f3593517d)]
+
+
 <a name="0.1.43"></a>
 ## 0.1.43 (2023-10-19)
 
