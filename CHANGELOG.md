@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.43"></a>
+## 0.1.43 (2023-10-19)
+
+### Fixed
+
+- 🐛 chat lags ([#199](https://github.com/gmpetrov/databerry/issues/199)) [[762ec30](https://github.com/gmpetrov/databerry/commit/762ec307258e16548cd0260c70e327419b90f7f0)]
+- 🐛 lag and new chat lags ([#197](https://github.com/gmpetrov/databerry/issues/197)) [[b8731f3](https://github.com/gmpetrov/databerry/commit/b8731f32316b5881662c09bb762e39e56c4274b8)]
+
+### Miscellaneous
+
+- 🤖 upgrade qdrant local dev version [[07f07c3](https://github.com/gmpetrov/databerry/commit/07f07c33174f1dfebe8b828bd0ce484b4f71ae3b)]
+-  feat: filter conversations ([#195](https://github.com/gmpetrov/databerry/issues/195)) [[f261803](https://github.com/gmpetrov/databerry/commit/f261803e02bc327c065b7cea16ef72caffba6388)]
+
+
 <a name="0.1.42"></a>
 ## 0.1.42 (2023-10-19)
 
