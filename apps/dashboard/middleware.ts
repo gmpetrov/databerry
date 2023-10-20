@@ -5,8 +5,8 @@ export function middleware(req: NextRequest) {
     (!req.url.includes('datasources') &&
       !req.url.includes('datastores') &&
       req.url.includes('api')) ||
-    !req.url.includes('iframe') ||
-    !req.url.includes('standalone')
+    req.url.includes('iframe') ||
+    req.url.includes('standalone')
   ) {
     return NextResponse.next();
   }
