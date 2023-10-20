@@ -9,9 +9,15 @@ export const getProductFromHostname = (hostname?: string): ProductType => {
     return 'chaindesk';
   }
 
-  if (['cs.localhost', 'cs.localhost:3000'].includes(hostname)) {
+  if (
+    ['cs.chaindesk.ai', 'cs.localhost', 'cs.localhost:3000'].includes(hostname)
+  ) {
     return 'cs';
-  } else if (['chat.localhost', 'chat.localhost:3000'].includes(hostname)) {
+  } else if (
+    ['app.chaindesk.ai', 'chat.localhost', 'chat.localhost:3000'].includes(
+      hostname
+    )
+  ) {
     return 'chat';
   }
   // ['agents.localhost', 'localhost'].includes(window.location.hostname)
