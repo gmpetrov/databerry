@@ -25,9 +25,8 @@ import useChat from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
-import { ConversationStatusUnion } from '@chaindesk/lib/types/dtos';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
-import type { Agent } from '@chaindesk/prisma';
+import type { Agent, ConversationStatus } from '@chaindesk/prisma';
 
 import ResolveButton from './ResolveButton';
 
@@ -366,7 +365,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     conversationStatus,
   }: {
     conversationId: string;
-    conversationStatus: ConversationStatusUnion;
+    conversationStatus: ConversationStatus;
   }) => {
     return (
       <Box

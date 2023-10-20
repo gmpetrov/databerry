@@ -1,11 +1,8 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button, Chip, CircularProgress } from '@mui/joy';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 
-import {
-  ConversationStatus,
-  ConversationStatusUnion,
-} from '@chaindesk/lib/types/dtos';
+import type { ConversationStatus } from '@chaindesk/prisma';
 
 import { API_URL } from './ChatBubble';
 
@@ -15,7 +12,7 @@ const ResolveButton = ({
   createNewConversation,
 }: {
   conversationId: string;
-  conversationStatus: ConversationStatusUnion;
+  conversationStatus: ConversationStatus;
   createNewConversation(): void;
 }) => {
   const [pending, setPending] = useState(false);
@@ -31,7 +28,7 @@ const ResolveButton = ({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            status: ConversationStatus.RESOLVED,
+            status: 'RESOLVED' as ConversationStatus,
           }),
         }
       );
@@ -44,7 +41,7 @@ const ResolveButton = ({
       setPending(false);
     }
   };
-  if (conversationStatus === ConversationStatus.RESOLVED || isResolved) {
+  if (conversationStatus === 'RESOLVED' || isResolved) {
     return (
       <Chip variant="soft" size="md" color="success">
         Resolved !
