@@ -1,5 +1,6 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Button, Chip, CircularProgress } from '@mui/joy';
+import { Button, Chip, CircularProgress, ExtendButton } from '@mui/joy';
+import { SxProps } from '@mui/joy/styles/types';
 import { useState } from 'react';
 
 import type { ConversationStatus } from '@chaindesk/prisma';
@@ -10,10 +11,12 @@ const ResolveButton = ({
   conversationId,
   conversationStatus,
   createNewConversation,
+  sx,
 }: {
   conversationId: string;
   conversationStatus: ConversationStatus;
   createNewConversation(): void;
+  sx?: SxProps;
 }) => {
   const [pending, setPending] = useState(false);
   const [isResolved, setResolved] = useState(false);
@@ -54,7 +57,7 @@ const ResolveButton = ({
       variant="plain"
       color="neutral"
       startDecorator={pending ? <CircularProgress /> : <CheckCircleIcon />}
-      sx={{ mr: 'auto' }}
+      sx={{ whiteSpace: 'nowrap', ...sx }}
       onClick={handleResolve}
     >
       Mark As Resolved

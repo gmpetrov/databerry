@@ -11,7 +11,7 @@ import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor'
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, ConversationChannel } from '@chaindesk/prisma';
 
-import ResolveButton from './ResolveButton';
+import CustomerSupportActions from './CustomerSupportActions';
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
@@ -44,8 +44,9 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     handleEvalAnswer,
     handleAbort,
     conversationId,
-    setConversationId,
     conversationStatus,
+    visitorId,
+    setConversationId,
   } = useChat({
     endpoint: `${API_URL}/api/agents/${router.query?.agentId}/query`,
 
@@ -107,10 +108,6 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     }
   }, [props.initConfig]);
 
-  //   useEffect(() => {
-  //     setMode(config.theme!);
-  //   }, []);
-
   if (!agent) {
     return (
       <Box
@@ -164,13 +161,15 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         handleAbort={handleAbort}
         hideInternalSources
         renderBottom={
-          history.length ? (
-            <ResolveButton
-              conversationId={conversationId}
-              conversationStatus={conversationStatus}
-              createNewConversation={() => setConversationId('')}
-            />
-          ) : null
+          <CustomerSupportActions
+            conversationId={conversationId}
+            agentId={agentId}
+            conversationStatus={conversationStatus}
+            visitorId={visitorId}
+            handleCreateNewConversation={() => {
+              setConversationId('');
+            }}
+          />
         }
       />
     </Box>

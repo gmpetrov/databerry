@@ -143,21 +143,6 @@ const nextConfig = {
           source: '/datastores/file-upload/:path*',
           destination: '/api/external/datastores/file-upload/:path*',
         },
-        {
-          //TODO: REMOVE AFTER API REFACTOR
-          source: '/api/external/agents/:path*',
-          destination: '/api/agents/:path*',
-        },
-
-        {
-          source: '/api/external/datastores',
-          destination: '/api/datastores',
-        },
-        {
-          source: '/api/external/me',
-          destination: '/api/me',
-        },
-        // END REMOVE AFTER API REFACTOR
       ],
     };
   },
