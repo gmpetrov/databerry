@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.47"></a>
+## 0.1.47 (2023-10-21)
+
+### Fixed
+
+- 🐛 missing NEXT_PUBLIC_AWS_ENDPOINT in front build [[d6be071](https://github.com/gmpetrov/databerry/commit/d6be071d744fd3c59b652f1f17900d745d041058)]
+
+
 <a name="0.1.46"></a>
 ## 0.1.46 (2023-10-21)
 
