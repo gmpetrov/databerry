@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.48"></a>
+## 0.1.48 (2023-10-21)
+
+### Fixed
+
+- 🐛 cs actions layout [[26ba787](https://github.com/gmpetrov/databerry/commit/26ba78742029e5213cfed30fa09bc19f259f19f6)]
+- 🐛 router replace hardcoded query param [[1d1e9f7](https://github.com/gmpetrov/databerry/commit/1d1e9f75fb4dd50c6fb125d2374a444e1d33c51f)]
+
+
 <a name="0.1.47"></a>
 ## 0.1.47 (2023-10-21)
 
@@ -17,10 +26,7 @@
 
 ### Miscellaneous
 
-- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201))&quot;&quot;&quot; [[a535b04](https://github.com/gmpetrov/databerry/commit/a535b04dfbf13267b33b09eb264e4f926b673692)]
 - 🎸 migrate to eu servers [[04a9570](https://github.com/gmpetrov/databerry/commit/04a957093a66cce4a751d916355eb5e698ff2fa6)]
-- 🎸 migrate to eu servers [[57312d4](https://github.com/gmpetrov/databerry/commit/57312d44c3a1b8f11b1f005a6b4c39320f0d8a45)]
-- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201))&quot;&quot; [[f3fb93d](https://github.com/gmpetrov/databerry/commit/f3fb93d90ad575f94cf71100376faf755cccb761)]
 
 
 <a name="0.1.45"></a>
@@ -32,9 +38,7 @@
 
 ### Miscellaneous
 
-- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201))&quot; [[be8c5da](https://github.com/gmpetrov/databerry/commit/be8c5da3ffb487cae96de8cfa515c5c4d7f8a55d)]
 - 🎸 Resolve conversation ([#194](https://github.com/gmpetrov/databerry/issues/194)) [[c836476](https://github.com/gmpetrov/databerry/commit/c836476b67f2385185390531c25fa0f2278f88ec)]
-- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201)) [[744d304](https://github.com/gmpetrov/databerry/commit/744d304dd9df52a0b02b44c5a795dc74cfcde175)]
 
 
 <a name="0.1.44"></a>
