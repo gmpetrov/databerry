@@ -143,7 +143,6 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
     Key: `datastores/${datastore.id}/${datasourceId}/${s3FileName}`,
     Body: file.buffer,
     ContentType: file.mimetype,
-    ACL: 'public-read',
   };
 
   await s3.putObject(params).promise();

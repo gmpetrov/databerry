@@ -5,10 +5,10 @@ export const s3 = new S3({
   accessKeyId: process.env.APP_AWS_ACCESS_KEY,
   secretAccessKey: process.env.APP_AWS_SECRET_KEY,
   region: process.env.APP_AWS_REGION,
-  ...(process.env.NEXT_PUBLIC_AWS_ENDPOINT
+  ...(process.env.APP_AWS_S3_ENDPOINT
     ? {
-        endpoint: process.env.NEXT_PUBLIC_AWS_ENDPOINT,
-        s3ForcePathStyle: true,
+        endpoint: process.env.APP_AWS_S3_ENDPOINT,
+        s3ForcePathStyle: process.env.APP_AWS_S3_FORCE_PATH_STYLE === 'true',
       }
     : {}),
 });

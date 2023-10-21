@@ -14,7 +14,6 @@ const prepareSourceForWorker = (props: {
       Body: props.text,
       CacheControl: 'no-cache',
       ContentType: 'text/plain',
-      ACL: 'public-read',
     })
     .promise();
 };
