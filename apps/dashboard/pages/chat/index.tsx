@@ -196,7 +196,8 @@ export default function ChatPage() {
 
   const handleSelectConversation = (conversationId: string) => {
     setConversationId(conversationId);
-    router.replace(`/chat?conversationId=${conversationId}`, undefined, {
+    router.query.conversationId = conversationId || '';
+    router.replace(router, undefined, {
       shallow: true,
     });
     if (currentConversationId !== conversationId) {
@@ -211,7 +212,8 @@ export default function ChatPage() {
     setState({
       selectedKnowledgeOptions: [],
     });
-    router.replace(`/chat?conversationId=`, undefined, {
+    router.query.conversationId = '';
+    router.replace(router, undefined, {
       shallow: true,
     });
   };

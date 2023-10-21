@@ -75,15 +75,13 @@ export default function AgentPage() {
 
   const handleSelectConversation = (conversationId: string) => {
     setConversationId(conversationId);
-    router.replace(
-      `/agents/${agentId}?tab=chat&conversationId=${conversationId}`,
-      undefined,
-      { shallow: true }
-    );
+    router.query.conversationId = conversationId || '';
+    router.replace(router, undefined, { shallow: true });
   };
   const handleCreateNewChat = () => {
     setConversationId('');
-    router.replace(`/agents/${agentId}?tab=chat&conversationId=`, undefined, {
+    router.query.conversationId = '';
+    router.replace(router, undefined, {
       shallow: true,
     });
   };
