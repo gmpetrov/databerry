@@ -209,7 +209,6 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     ),
     CacheControl: 'no-cache',
     ContentType: 'application/json',
-    ACL: 'public-read',
   };
 
   await s3.putObject(params).promise();

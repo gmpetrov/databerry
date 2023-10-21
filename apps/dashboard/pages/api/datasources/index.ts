@@ -198,7 +198,6 @@ export const upsertDatasource = async (
       Key: s3Key,
       Body: file.buffer,
       ContentType: file.mimetype,
-      ACL: 'public-read',
     };
 
     await s3.putObject(params).promise();
