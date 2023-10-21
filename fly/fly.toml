@@ -3,7 +3,7 @@
 app = "databerry"
 kill_signal = "SIGINT"
 kill_timeout = 5
-primary_region = "iad"
+primary_region = "fra"
 
 [processes]
 web = "node apps/dashboard/server.js"
