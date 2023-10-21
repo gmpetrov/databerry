@@ -622,31 +622,42 @@ function ChatBox({
               {...methods.register('query')}
             />
 
-            {!disableWatermark && (
-              <a
-                href="https://chaindesk.ai"
-                target="_blank"
-                style={{
-                  textDecoration: 'none',
-                  marginLeft: 'auto',
-                }}
-              >
-                <Box sx={{ mt: 1 }}>
-                  <Typography level="body-xs">
-                    Powered by{' '}
-                    <Typography color="primary" fontWeight={'bold'}>
-                      Chaindesk
+            <Stack
+              direction="row"
+              sx={{
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                maxWidth: '100%',
+                overflowX: 'hidden',
+              }}
+            >
+              {renderBottom}
+
+              {!disableWatermark && (
+                <a
+                  href="https://chaindesk.ai"
+                  target="_blank"
+                  style={{
+                    textDecoration: 'none',
+                    marginLeft: 'auto',
+                  }}
+                >
+                  <Box className="truncate" sx={{ whiteSpace: 'nowrap' }}>
+                    <Typography level="body-xs">
+                      Powered by{' '}
+                      <Typography color="primary" fontWeight={'bold'}>
+                        Chaindesk
+                      </Typography>
                     </Typography>
-                  </Typography>
-                </Box>
-              </a>
-            )}
+                  </Box>
+                </a>
+              )}
+            </Stack>
           </Stack>
         </form>
       )}
-      <Box sx={{ mt: !disableWatermark ? -3 : 1, position: 'relative' }}>
-        {renderBottom}
-      </Box>
     </Stack>
   );
 }

@@ -28,7 +28,7 @@ import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor'
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { Agent, ConversationStatus } from '@chaindesk/prisma';
 
-import ResolveButton from './ResolveButton';
+import CustomerSupportActions from './CustomerSupportActions';
 
 export const theme = extendTheme({
   cssVarPrefix: 'databerry-chat-bubble',
@@ -70,11 +70,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     config: props.initConfig || defaultChatBubbleConfig,
     hasOpenOnce: false,
     showInitialMessage: false,
-    showHelp: false,
-    showResolveButton: false,
-    showCaptureForm: false,
-    isCaptureLoading: false,
-    visitorEmail: '',
   });
 
   const {
@@ -168,35 +163,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     }
   }, [props.initConfig]);
 
-  useEffect(() => {
-    if (localStorage) {
-      try {
-        const visitorEmail = localStorage.getItem('visitorEmail');
-
-        if (visitorEmail) {
-          setState({
-            visitorEmail,
-          });
-        }
-      } catch {}
-    }
-  }, []);
-
-  useEffect(() => {
-    if (conversationId) {
-      setState({
-        showHelp: true,
-        showResolveButton: true,
-      });
-    }
-  }, [conversationId]);
-
-  // useEffect(() => {
-  //   if (config?.theme) {
-  //     setMode(config.theme!);
-  //   }
-  // }, [config.theme]);
-
   const transitionStyles = {
     entering: { opacity: 0 },
     entered: { opacity: 1 },
@@ -224,173 +190,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     }
   }, [state.agent?.iconUrl]);
 
-  const Capture = useMemo(() => {
-    let Component = null;
-
-    if (state.showHelp || state.visitorEmail) {
-      Component = (
-        <Box>
-          {state.visitorEmail && (
-            <Chip
-              size="sm"
-              color="success"
-              variant="soft"
-              sx={{ mr: 'auto' }}
-              endDecorator={<CheckRoundedIcon />}
-            >
-              help requested
-            </Chip>
-          )}
-
-          {!state.visitorEmail && !state.showCaptureForm && (
-            <Button
-              size="sm"
-              variant="plain"
-              color="neutral"
-              startDecorator={<ThreePRoundedIcon />}
-              sx={{ mr: 'auto' }}
-              onClick={() => setState({ showCaptureForm: true })}
-            >
-              Help
-            </Button>
-          )}
-
-          {!state.visitorEmail && state.showCaptureForm && (
-            <form
-              onSubmit={async (e) => {
-                console.log(e.target);
-                e.preventDefault();
-                e.stopPropagation();
-
-                const form = e.target as HTMLFormElement;
-
-                const email = form.email.value;
-
-                if (email) {
-                  setState({ isCaptureLoading: true });
-
-                  await fetch(
-                    `${API_URL}/api/agents/${props.agentId}/capture`,
-                    {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({
-                        visitorEmail: email,
-                        conversationId,
-                        visitorId,
-                      }),
-                    }
-                  );
-
-                  setState({
-                    showHelp: false,
-                    isCaptureLoading: false,
-                    visitorEmail: email,
-                  });
-
-                  try {
-                    localStorage.setItem('visitorEmail', email);
-                  } catch {}
-                }
-              }}
-            >
-              <Stack
-                direction="row"
-                gap={0.5}
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  position: 'absolute',
-                  backgroundColor: 'white',
-                  zIndex: 99,
-                }}
-              >
-                <IconButton
-                  size="sm"
-                  variant="plain"
-                  onClick={() => {
-                    setState({
-                      showCaptureForm: false,
-                    });
-                  }}
-                >
-                  <ArrowBackRoundedIcon />
-                </IconButton>
-
-                <Input
-                  sx={{ width: '100%' }}
-                  size="sm"
-                  name="email"
-                  type="email"
-                  placeholder="Leave your email to get contacted by the team"
-                  required
-                  // startDecorator={<AlternateEmailRoundedIcon />}
-                  disabled={state.isCaptureLoading}
-                  endDecorator={
-                    <IconButton
-                      color="neutral"
-                      type="submit"
-                      disabled={state.isCaptureLoading}
-                    >
-                      {state.isCaptureLoading ? (
-                        <CircularProgress size="sm" variant="soft" />
-                      ) : (
-                        <CheckRoundedIcon />
-                      )}
-                    </IconButton>
-                  }
-                ></Input>
-              </Stack>
-            </form>
-          )}
-        </Box>
-      );
-    }
-
-    return Component;
-  }, [
-    state.showHelp,
-    props.agentId,
-    state.isCaptureLoading,
-    state.showCaptureForm,
-    setState,
-    state.visitorEmail,
-    visitorId,
-  ]);
-
-  const BottomContent = ({
-    conversationId,
-    conversationStatus,
-  }: {
-    conversationId: string;
-    conversationStatus: ConversationStatus;
-  }) => {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          direction: 'column',
-          position: 'relative',
-        }}
-      >
-        {Capture}
-        {state.showResolveButton ? (
-          <ResolveButton
-            conversationId={conversationId}
-            conversationStatus={conversationStatus}
-            createNewConversation={() => {
-              setConversationId('');
-              setState({
-                showResolveButton: false,
-              });
-            }}
-          />
-        ) : null}
-      </Box>
-    );
-  };
   if (!state.agent) {
     return null;
   }
@@ -584,12 +383,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   onSubmit={handleChatSubmit}
                   messageTemplates={state.config.messageTemplates}
                   initialMessage={state.config.initialMessage}
-                  renderBottom={
-                    <BottomContent
-                      conversationId={conversationId}
-                      conversationStatus={conversationStatus}
-                    />
-                  }
                   agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
                   isLoadingConversation={isLoadingConversation}
                   hasMoreMessages={hasMoreMessages}
@@ -597,6 +390,17 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   handleEvalAnswer={handleEvalAnswer}
                   handleAbort={handleAbort}
                   hideInternalSources
+                  renderBottom={
+                    <CustomerSupportActions
+                      conversationId={conversationId}
+                      agentId={props.agentId}
+                      conversationStatus={conversationStatus}
+                      visitorId={visitorId}
+                      handleCreateNewConversation={() => {
+                        setConversationId('');
+                      }}
+                    />
+                  }
                 />
               </Stack>
             </Card>
