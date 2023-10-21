@@ -199,7 +199,7 @@ export function HeroChatGPTPlugin() {
                   </Typography>
                 </Stack>
                 <Typography textColor="text.secondary">
-                  <b>+8K</b> companies have successfully <br></br>built their
+                  <b>+10K</b> companies have successfully <br></br>built their
                   custom AI Agent with Chaindesk
                 </Typography>
               </Stack>

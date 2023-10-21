@@ -100,14 +100,26 @@ const navigation = {
       href: 'https://chaindesk.ai/help',
       target: '_blank',
     },
-    { name: 'Pricing', href: '/pricing' },
     {
       name: 'Documentation',
       href: 'https://docs.chaindesk.ai',
       target: '_blank',
     },
-    { name: 'Privacy', href: '/privacy' },
-    { name: 'Terms', href: '/terms' },
+    {
+      name: 'GDPR',
+      href: 'https://www.chaindesk.ai/help/gdpr',
+      target: '_blank',
+    },
+    {
+      name: 'Privacy',
+      href: 'https://www.chaindesk.ai/help/privacy-policy',
+      target: '_blank',
+    },
+    {
+      name: 'Terms',
+      href: 'https://www.chaindesk.ai/help/terms-conditions',
+      target: '_blank',
+    },
     // { name: 'Guides', href: '#' },
     // { name: 'API Status', href: '#' },
   ],
@@ -117,7 +129,23 @@ const navigation = {
     // { name: 'Jobs', href: '#' },
     // { name: 'Press', href: '#' },
   ],
-  legal: [{ name: 'Affiliates', href: 'https://databerry.getrewardful.com' }],
+  legal: [
+    {
+      name: 'Affiliates',
+      href: 'https://databerry.getrewardful.com',
+      target: '_blank',
+    },
+    {
+      name: 'GitHub',
+      href: 'https://github.com/gmpetrov/databerry',
+      target: '_blank',
+    },
+    {
+      name: 'Discord',
+      href: 'https://discord.gg/FSWKj49ckX',
+      target: '_blank',
+    },
+  ],
   social: [
     // {
     //   name: 'Facebook',
@@ -246,6 +274,7 @@ export function Footer() {
                     <li key={item.name}>
                       <a
                         href={item.href}
+                        target={item.target}
                         className="text-sm leading-6 text-gray-300 hover:text-white"
                       >
                         {item.name}
@@ -263,6 +292,7 @@ export function Footer() {
                     <li key={item.name}>
                       <a
                         href={item.href}
+                        target={item.target}
                         className="text-sm leading-6 text-gray-300 hover:text-white"
                       >
                         {item.name}

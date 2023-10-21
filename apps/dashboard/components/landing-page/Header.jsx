@@ -1,4 +1,5 @@
 import { Popover, Transition } from '@headlessui/react';
+import { CheckIcon, StarIcon } from '@heroicons/react/20/solid';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Button from '@mui/joy/Button';
 import clsx from 'clsx';
@@ -117,15 +118,36 @@ function MobileNavigation() {
 
 export function Header() {
   return (
-    <header className="py-10 bg-black">
-      <Container>
-        <nav className="relative z-50 flex justify-between">
-          <div className="flex items-center md:gap-x-12">
-            <Link href="/" aria-label="Home">
-              <Logo className="w-auto h-10" />
-            </Link>
-            <div className="hidden md:flex md:gap-x-6">
-              {/* <Link href={RouteNames.CHAT_SITE}>
+    <>
+      {/* #112F8A */}
+      <div className="p-1 text-sm text-center text-white bg-[#220E11]  flex-row items-center justify-center hidden sm:flex">
+        <div className="flex flex-row space-x-12">
+          <div className="inline-flex items-center space-x-1">
+            <CheckIcon className="w-4 font-bold text-yellow-400" />
+
+            <span>Founded in France. We respect your privacy.</span>
+          </div>
+          <div className="inline-flex items-center space-x-1">
+            <div className="inline-flex items-center">
+              <StarIcon className="w-3 font-bold text-yellow-400" />
+              <StarIcon className="w-3 font-bold text-yellow-400" />
+              <StarIcon className="w-3 font-bold text-yellow-400" />
+              <StarIcon className="w-3 font-bold text-yellow-400" />
+              <StarIcon className="w-3 font-bold text-yellow-400" />
+            </div>
+            <span>Used by 10,042 happy customers</span>
+          </div>
+        </div>
+      </div>
+      <header className="py-10 bg-black">
+        <Container>
+          <nav className="relative z-50 flex justify-between">
+            <div className="flex items-center md:gap-x-12">
+              <Link href="/" aria-label="Home">
+                <Logo className="w-auto h-10" />
+              </Link>
+              <div className="hidden md:flex md:gap-x-6">
+                {/* <Link href={RouteNames.CHAT_SITE}>
                 <Button
                   href="/products/crisp-plugin"
                   size="sm"
@@ -138,46 +160,47 @@ export function Header() {
                 </Button>
               </Link> */}
 
-              <Menu />
+                <Menu />
 
-              <NavLink href="/help">Help Center</NavLink>
-              <NavLink href="/pricing">Pricing</NavLink>
-              {/* <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
+                <NavLink href="/help">Help Center</NavLink>
+                <NavLink href="/pricing">Pricing</NavLink>
+                {/* <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
                 GitHub
               </NavLink> */}
-              {/* <NavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
+                {/* <NavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
                 Docs
               </NavLink> */}
-              <NavLink
-                href="https://databerry.getrewardful.com/"
-                target={'_blank'}
-              >
-                Affiliates
-              </NavLink>
-              {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
+                <NavLink
+                  href="https://databerry.getrewardful.com/"
+                  target={'_blank'}
+                >
+                  Affiliates
+                </NavLink>
+                {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-x-5 md:gap-x-8">
-            {/* <div className="hidden md:block">
+            <div className="flex items-center gap-x-5 md:gap-x-8">
+              {/* <div className="hidden md:block">
               <NavLink href="https://app.chaindesk.ai">Sign in</NavLink>
             </div> */}
-            {/* <Button target="_blank" href="https://app.chaindesk.ai/signin" color="blue">
+              {/* <Button target="_blank" href="https://app.chaindesk.ai/signin" color="blue">
               <span>
                 Sign In
               </span>
             </Button> */}
-            {/* Change following link href with /signin for local signin */}
-            <Link href="https://app.chaindesk.ai/signin">
-              <Button variant="outlined" sx={{ borderRadius: 100 }}>
-                Sign In
-              </Button>
-            </Link>
-            <div className="-mr-1 md:hidden">
-              <MobileNavigation />
+              {/* Change following link href with /signin for local signin */}
+              <Link href="https://app.chaindesk.ai/signin">
+                <Button variant="outlined" sx={{ borderRadius: 100 }}>
+                  Sign In
+                </Button>
+              </Link>
+              <div className="-mr-1 md:hidden">
+                <MobileNavigation />
+              </div>
             </div>
-          </div>
-        </nav>
-      </Container>
-    </header>
+          </nav>
+        </Container>
+      </header>
+    </>
   );
 }
