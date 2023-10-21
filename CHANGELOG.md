@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.46"></a>
+## 0.1.46 (2023-10-21)
+
+### Fixed
+
+- 🐛 patch s3 after migration to cloudflare r2 [[132566b](https://github.com/gmpetrov/databerry/commit/132566bacc8c30d0c60526b0b1ed0596fbff4513)]
+
+### Miscellaneous
+
+- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201))&quot;&quot;&quot; [[a535b04](https://github.com/gmpetrov/databerry/commit/a535b04dfbf13267b33b09eb264e4f926b673692)]
+- 🎸 migrate to eu servers [[04a9570](https://github.com/gmpetrov/databerry/commit/04a957093a66cce4a751d916355eb5e698ff2fa6)]
+- 🎸 migrate to eu servers [[57312d4](https://github.com/gmpetrov/databerry/commit/57312d44c3a1b8f11b1f005a6b4c39320f0d8a45)]
+- 🎸 temp middleware ([#201](https://github.com/gmpetrov/databerry/issues/201))&quot;&quot; [[f3fb93d](https://github.com/gmpetrov/databerry/commit/f3fb93d90ad575f94cf71100376faf755cccb761)]
+
+
 <a name="0.1.45"></a>
 ## 0.1.45 (2023-10-20)
 
