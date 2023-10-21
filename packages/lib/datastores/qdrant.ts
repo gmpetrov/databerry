@@ -334,7 +334,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     });
   }
 
-  async updateMetadata(props: {
+  static async updateMetadata(props: {
     filters: SearchRequestSchema['filters'];
     payload: Partial<ChunkMetadata>;
   }) {
@@ -372,7 +372,7 @@ export class QdrantManager extends ClientManager<DatastoreType> {
     datasourceId: string;
     metadata: Partial<ChunkMetadata>;
   }) {
-    return this.updateMetadata({
+    return QdrantManager.updateMetadata({
       payload: props.metadata,
       filters: {
         datasource_ids: [props.datasourceId],
