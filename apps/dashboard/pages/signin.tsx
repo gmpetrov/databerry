@@ -50,9 +50,12 @@ export default function SignInPage() {
       const redirect = router.query.redirect as string | undefined;
 
       if (redirect) {
-        router.push(redirect);
+        // https://github.com/gmpetrov/databerry/issues/204
+        // router.push(redirect);
+        window.location.href = redirect;
       } else {
-        router.push(RouteNames.HOME);
+        // router.push(RouteNames.HOME);
+        window.location.href = RouteNames.HOME;
       }
     }
   }, [status, router]);

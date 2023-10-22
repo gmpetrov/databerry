@@ -81,6 +81,8 @@ model User {
 
   role GlobalRole @default(CUSTOMER)
 
+  viaProduct String? @default("chaindesk") @map("via_product")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

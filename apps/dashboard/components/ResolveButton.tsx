@@ -3,6 +3,8 @@ import { Button, Chip, CircularProgress, ExtendButton } from '@mui/joy';
 import { SxProps } from '@mui/joy/styles/types';
 import { useState } from 'react';
 
+import useConfetti from '@app/hooks/useConfetti';
+
 import type { ConversationStatus } from '@chaindesk/prisma';
 
 import { API_URL } from './ChatBubble';
@@ -20,6 +22,9 @@ const ResolveButton = ({
 }) => {
   const [pending, setPending] = useState(false);
   const [isResolved, setResolved] = useState(false);
+  const triggerConfetti = useConfetti({
+    zIndex: 10000000000,
+  });
   const handleResolve = async () => {
     try {
       setPending(true);
@@ -38,6 +43,7 @@ const ResolveButton = ({
       createNewConversation();
       if (response.ok) {
         setResolved(true);
+        triggerConfetti();
       }
     } catch (e) {
     } finally {

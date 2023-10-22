@@ -26,7 +26,7 @@ import { prisma } from '@chaindesk/prisma/client';
 import getRootDomain from './get-root-domain';
 import sendVerificationRequest from './verification-sender';
 
-const CustomPrismaProvider = (p: PrismaClient) => {
+const CustomPrismaProvider = (req: NextApiRequest) => (p: PrismaClient) => {
   return {
     ...PrismaAdapter(p),
     createSession: async (data: Prisma.SessionCreateArgs['data']) => {
@@ -43,10 +43,18 @@ const CustomPrismaProvider = (p: PrismaClient) => {
         } as Prisma.SessionCreateArgs['data'],
       });
     },
-    createUser: (data: Prisma.UserCreateArgs['data']) =>
-      p.user.create({
+    createUser: (data: Prisma.UserCreateArgs['data']) => {
+      let product = undefined as string | undefined;
+      try {
+        product = new URL(req.query.callbackUrl as string)?.searchParams?.get(
+          'product'
+        ) as string;
+      } catch (err) {}
+
+      return p.user.create({
         data: {
           ...data,
+          ...(product ? { viaProduct: product } : {}),
           memberships: {
             create: {
               role: 'OWNER',
@@ -65,17 +73,9 @@ const CustomPrismaProvider = (p: PrismaClient) => {
               },
             },
           },
-          // TODO: REMOVE AFTER MIGRATIOM
-          // usage: {
-          //   create: {},
-          // },
-          // apiKeys: {
-          //   create: {
-          //     key: uuidv4(),
-          //   },
-          // },
         },
-      }),
+      });
+    },
     async getSessionAndUser(sessionToken: string) {
       const userAndSession = await p.session.findUnique({
         where: { sessionToken },
@@ -111,7 +111,7 @@ export const authOptions = (req: NextApiRequest): AuthOptions => {
   const rootDomain = getRootDomain(hostname!);
 
   return {
-    adapter: CustomPrismaProvider(prisma) as any,
+    adapter: CustomPrismaProvider(req)(prisma) as any,
     cookies: {
       sessionToken: {
         name:

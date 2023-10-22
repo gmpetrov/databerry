@@ -17,7 +17,7 @@ export function Logo(props) {
         alt=""
       />
       <span className="text-xl">Chaindesk</span>
-      {/* <Image width="80" height="100" className={clsx(props.className)} src="/app-logo-dark-2.png" alt="" /> */}
+      {/* <Image width="80" height="100" className={clsx(props.className)} src="/app-logo-dark-chatgpt.png" alt="" /> */}
     </div>
   );
 }
