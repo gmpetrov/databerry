@@ -46,8 +46,34 @@ const nextConfig = {
     return {
       beforeFiles: [
         {
+          source: '/',
+          destination: '/use-cases/customer-support',
+          has: [
+            {
+              type: 'host',
+              value: 'www.chatbotgpt.ai',
+            },
+          ],
+        },
+        {
           source: '/sitemap.xml',
-          destination: '/api/sitemap',
+          destination: '/api/sitemaps/chaindesk',
+          has: [
+            {
+              type: 'host',
+              value: 'www.chaindesk.ai',
+            },
+          ],
+        },
+        {
+          source: '/sitemap.xml',
+          destination: '/api/sitemaps/chatbotgpt',
+          has: [
+            {
+              type: 'host',
+              value: 'www.chatbotgpt.ai',
+            },
+          ],
         },
         {
           source: '/blog',

@@ -141,7 +141,7 @@ function Languages({}: Props) {
       <Stack>
         <Stack sx={{ textAlign: 'center' }}>
           <span className="text-base font-semibold leading-7 text-indigo-500">
-            Global Reach
+            MULTILINGUAL
           </span>
           <h3 className="mb-6 text-3xl font-bold text-center sm:text-4xl">
             +100 languages supported

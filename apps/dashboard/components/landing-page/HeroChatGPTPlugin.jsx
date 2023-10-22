@@ -27,14 +27,6 @@ export function HeroChatGPTPlugin() {
         alt=""
       />
       <div className="relative z-10">
-        <Link href={RouteNames.CHAT_SITE}>
-          {/* <Button sx={{borderRadius: 100, boxShadow: 'md', mb: 4}} size="sm" endDecorator={<ArrowForwardRoundedIcon />} variant='soft' color="success">✨ New: ChatGPT Bot trained on your website</Button> */}
-
-          {/* <div className='inline-flex items-center justify-center max-w-2xl p-2 mx-auto mb-4 border-2 border-indigo-400 rounded-full bg-black/30'>
-          <h2 className="text-xs font-semibold leading-none text-indigo-300 ">Open Source</h2>
-        </div> */}
-        </Link>
-
         {/* <Alert
           sx={{
             maxWidth: 'sm',

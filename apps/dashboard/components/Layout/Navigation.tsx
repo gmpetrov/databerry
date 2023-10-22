@@ -163,20 +163,7 @@ export default function Navigation() {
       ...(product === 'chaindesk'
         ? [
             {
-              label: 'Agents',
-              route: RouteNames.AGENTS,
-              icon: <SmartToyRoundedIcon fontSize="md" />,
-              active: router.route.startsWith(RouteNames.AGENTS),
-              isExperimental: false,
-            },
-            {
-              label: 'Datastores',
-              route: RouteNames.DATASTORES,
-              icon: <StorageRoundedIcon fontSize="md" />,
-              active: router.route.startsWith(RouteNames.DATASTORES),
-            },
-            {
-              label: 'Logs',
+              label: 'Inbox',
               route: RouteNames.LOGS,
               icon: (
                 <Badge
@@ -191,6 +178,19 @@ export default function Navigation() {
                 </Badge>
               ),
               active: router.route === RouteNames.LOGS,
+            },
+            {
+              label: 'Agents',
+              route: RouteNames.AGENTS,
+              icon: <SmartToyRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.AGENTS),
+              isExperimental: false,
+            },
+            {
+              label: 'Datastores',
+              route: RouteNames.DATASTORES,
+              icon: <StorageRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.DATASTORES),
             },
           ]
         : []),

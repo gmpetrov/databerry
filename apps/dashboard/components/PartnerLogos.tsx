@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function PartnerLogos() {
   return (
-    <div className="py-24 bg-black sm:py-32">
+    <div className="py-24 bg-black">
       <div className="flex flex-col justify-center px-6 mx-auto max-w-7xl lg:px-8">
         <h2 className="text-xl text-center text-white font-display leading-12 pb-9">
           Trusted by the world&apos;s most innovative teams
