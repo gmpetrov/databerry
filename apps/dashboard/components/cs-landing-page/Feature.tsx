@@ -100,8 +100,9 @@ export default function Feature(props: Props) {
                   className="w-full max-w-none rounded-xl shadow-xl ring-1 ring-white/10 sm:w-[37rem] "
                   loop
                   muted
+                  controls
                   autoPlay
-                  controls={false}
+                  playsInline
                 />
               ) : (
                 <img
