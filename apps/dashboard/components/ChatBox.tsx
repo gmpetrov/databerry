@@ -1,7 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
-import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
-import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
@@ -28,6 +25,7 @@ import { z } from 'zod';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import type { Source } from '@chaindesk/lib/types/document';
 
+import CopyButton from './CopyButton';
 import SourceComponent from './Source';
 
 export type MessageEvalUnion = 'good' | 'bad';
@@ -68,31 +66,6 @@ export type ChatBoxProps = {
 };
 
 const Schema = z.object({ query: z.string().min(1) });
-
-const CopyButton = (props: { text: string }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(props.text);
-      setCopied(true);
-
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    } catch (err) {}
-  }, [props.text]);
-
-  return copied ? (
-    <IconButton size="sm" color="neutral" variant="plain">
-      <DoneRoundedIcon fontSize={'sm'} />
-    </IconButton>
-  ) : (
-    <IconButton size="sm" color="neutral" variant="plain" onClick={handleCopy}>
-      <ContentPasteRoundedIcon fontSize={'sm'} />
-    </IconButton>
-  );
-};
 
 const EvalButton = (props: {
   messageId: string;
@@ -460,6 +433,7 @@ function ChatBox({
                           // marginBottom={'auto'}
                         >
                           <CopyButton text={each?.message} />
+
                           <EvalButton
                             messageId={each?.id!}
                             handleEvalAnswer={handleEvalAnswer}

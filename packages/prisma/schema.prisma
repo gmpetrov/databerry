@@ -280,6 +280,8 @@ model Conversation {
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
+  lead Lead?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -498,6 +500,9 @@ model Lead {
   agent   Agent?  @relation(fields: [agentId], references: [id], onDelete: Cascade)
   agentId String? @map("agent_id")
 
+  conversation Conversation? @relation(fields: [conversationId], references: [id])
+  conversationId String?  @unique @map("conversation_id")
+
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("leads")
@@ -652,4 +657,5 @@ enum GlobalRole {
 enum ConversationStatus {
      RESOLVED
      UNRESOLVED
+     HUMAN_REQUESTED
 }
