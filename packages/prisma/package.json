@@ -12,7 +12,8 @@
     "prisma:generate": "dotenv -e ../../.env.local -- prisma generate",
     "prisma:push": "dotenv -e ../../.env.local -- prisma db push --skip-generate",
     "prisma:migrate:dev": "dotenv -e ../../.env.local -- prisma migrate dev",
-    "prisma:migrate:prod": "dotenv -e ../../.env.local -- prisma migrate deploy"
+    "prisma:migrate:prod": "dotenv -e ../../.env.local -- prisma migrate deploy",
+    "prisma": "dotenv -e ../../.env.local -- prisma"
   },
   "dependencies": {
     "@prisma/client": "5.3.1"

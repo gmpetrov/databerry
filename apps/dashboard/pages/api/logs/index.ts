@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { ConversationStatus, Prisma } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { MessageEvalUnion } from '@app/components/ChatBox';
@@ -15,7 +15,9 @@ const handler = createAuthApiHandler();
 export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
   const evalFilter = req.query.eval as MessageEvalUnion;
-  const agentId = req.query.agentId as MessageEvalUnion;
+  const agentId = req.query.agentId as string;
+  const conversationStatus = req.query.status as ConversationStatus | undefined;
+  const unread = req.query.unread;
 
   const cursor = req.query.cursor as string;
 
@@ -47,6 +49,32 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
               },
             ]
           : []),
+
+        ...(conversationStatus
+          ? [
+              {
+                OR: [
+                  ...(conversationStatus === ConversationStatus.UNRESOLVED
+                    ? [{ status: ConversationStatus.HUMAN_REQUESTED }]
+                    : []),
+                  {
+                    status: conversationStatus,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(unread
+          ? [
+              {
+                messages: {
+                  some: {
+                    read: false,
+                  },
+                },
+              },
+            ]
+          : []),
       ],
     },
     take: 100,
@@ -61,6 +89,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
       : {}),
     include: {
       agent: true,
+      lead: true,
       _count: {
         select: {
           messages: {

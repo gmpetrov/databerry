@@ -91,6 +91,11 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
             id: agent?.organizationId!,
           },
         },
+        conversation: {
+          connect: {
+            id: data.conversationId,
+          },
+        },
       },
     }),
     mailer.sendMail({

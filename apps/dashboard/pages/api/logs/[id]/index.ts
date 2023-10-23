@@ -17,12 +17,13 @@ export const getConversation = async (
   const session = req.session;
   const id = req.query.id as string;
 
-  const conversastion = await prisma.conversation.findUnique({
+  const conversation = await prisma.conversation.findUnique({
     where: {
       id,
     },
     include: {
       agent: true,
+      lead: true,
       _count: {
         select: {
           messages: {
@@ -41,7 +42,7 @@ export const getConversation = async (
     },
   });
 
-  if (conversastion?.agent?.organizationId !== session?.organization?.id) {
+  if (conversation?.agent?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
@@ -54,7 +55,7 @@ export const getConversation = async (
     },
   });
 
-  return conversastion;
+  return conversation;
 };
 
 handler.get(respond(getConversation));
