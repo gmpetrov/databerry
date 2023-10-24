@@ -517,7 +517,17 @@ export default function LogsPage() {
         })}
       >
         <Stack direction={'row'} sx={{ height: '100%' }}>
-          <Stack direction={'column'} sx={{ width: '40%' }}>
+          <Stack
+            direction={'column'}
+            sx={(theme) => ({
+              [theme.breakpoints.down('sm')]: {
+                width: '100px',
+              },
+              [theme.breakpoints.up('sm')]: {
+                width: '300px',
+              },
+            })}
+          >
             <List
               // sx={{ '--ListItemDecorator-size': '56px' }}
               ref={parentRef as any}
@@ -686,22 +696,6 @@ export default function LogsPage() {
           <Box sx={{ width: '100%', overflow: 'hidden' }}>
             {getConversationQuery.data && (
               <>
-                {/* <Box
-                  sx={(theme) => ({
-                    width: '100%',
-                    height: 4,
-                    // background: theme.palette.success[500],
-
-                    background: {
-                      [ConversationStatus.RESOLVED]:
-                        theme.palette.success.solidActiveBg,
-                      [ConversationStatus.UNRESOLVED]:
-                        theme.palette.danger.softActiveBg,
-                      [ConversationStatus.HUMAN_REQUESTED]:
-                        theme.palette.warning.solidActiveBg,
-                    }[getConversationQuery?.data?.status!] as ColorPaletteProp,
-                  })}
-                ></Box> */}
                 <Alert
                   // color="neutral"
                   color="neutral"
@@ -756,6 +750,10 @@ export default function LogsPage() {
                   createdAt: each.createdAt,
                   eval: each.eval,
                 })) || []
+              }
+              isLoadingConversation={
+                getConversationQuery?.isLoading ||
+                getConversationQuery?.isValidating
               }
               onSubmit={async () => {}}
               readOnly={true}
