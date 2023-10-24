@@ -1,7 +1,7 @@
 import { ConversationStatus, Prisma } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
-import { MessageEvalUnion } from '@app/components/ChatBox';
+import { MessageEvalUnion } from '@app/hooks/useChat';
 
 import {
   createAuthApiHandler,

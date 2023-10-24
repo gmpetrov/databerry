@@ -64,26 +64,6 @@ interface SelectQueryParamFilterProps<T> {
   filterName: string;
 }
 
-function LeadButton({
-  email,
-  ...sxProps
-}: {
-  email: string;
-  sxProps?: SxProps;
-}) {
-  return (
-    <Input
-      endDecorator={<CopyButton text={email} />}
-      variant="outlined"
-      // sx={{
-      //   ...sxProps,
-      // }}
-      value={email}
-      // disabled
-    ></Input>
-  );
-}
-
 function SelectQueryParamFilter<T extends {}>({
   filterName,
   ...otherProps
@@ -345,7 +325,7 @@ export default function LogsPage() {
           ></Input>
         )}
 
-        {props.status === ConversationStatus.HUMAN_REQUESTED && (
+        {props.email && props.status === ConversationStatus.HUMAN_REQUESTED && (
           <Button
             size="sm"
             color="neutral"

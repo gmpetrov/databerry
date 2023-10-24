@@ -34,6 +34,7 @@ export const getConversation = async (
     select: {
       status: true,
       agent: true,
+      lead: true,
       messages: {
         take: 50,
         ...(cursor

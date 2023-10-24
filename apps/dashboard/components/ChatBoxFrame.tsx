@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
-import useChat from '@app/hooks/useChat';
+import useChat, { ChatContext } from '@app/hooks/useChat';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
@@ -35,25 +35,23 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     props.initConfig || defaultChatBubbleConfig
   );
 
-  const {
-    history,
-    handleChatSubmit,
-    isLoadingConversation,
-    hasMoreMessages,
-    handleLoadMoreMessages,
-    handleEvalAnswer,
-    handleAbort,
-    conversationId,
-    conversationStatus,
-    visitorId,
-    setConversationId,
-  } = useChat({
+  const methods = useChat({
     endpoint: `${API_URL}/api/agents/${router.query?.agentId}/query`,
 
     channel: ConversationChannel.website,
     agentId,
     localStorageConversationIdKey: 'iFrameConversationId',
   });
+
+  const {
+    history,
+    isLoadingConversation,
+    hasMoreMessages,
+    handleAbort,
+    handleChatSubmit,
+    handleLoadMoreMessages,
+    handleEvalAnswer,
+  } = methods;
 
   const primaryColor =
     (router?.query?.primaryColor as string) || config.primaryColor || '#ffffff';
@@ -126,53 +124,49 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   }
 
   return (
-    <Box
-      sx={(theme) => ({
-        px: 2,
-        pb: 2,
-        position: 'relative',
-        width: '100vw',
-        height: '100vh',
-        maxHeight: '100%',
-        boxSizing: 'border-box',
-        backgroundColor: config?.isBgTransparent
-          ? 'transparent'
-          : theme.palette.background.default,
-
-        '& .message-agent': {},
-        '& .message-human': {
-          backgroundColor: primaryColor,
-        },
-        '& .message-human *': {
-          color: textColor,
-        },
-      })}
+    <ChatContext.Provider
+      value={{
+        ...methods,
+      }}
     >
-      <ChatBox
-        messages={history}
-        onSubmit={handleChatSubmit}
-        messageTemplates={config.messageTemplates}
-        initialMessage={config.initialMessage}
-        agentIconUrl={agent?.iconUrl!}
-        isLoadingConversation={isLoadingConversation}
-        hasMoreMessages={hasMoreMessages}
-        handleLoadMoreMessages={handleLoadMoreMessages}
-        handleEvalAnswer={handleEvalAnswer}
-        handleAbort={handleAbort}
-        hideInternalSources
-        renderBottom={
-          <CustomerSupportActions
-            conversationId={conversationId}
-            agentId={agentId}
-            conversationStatus={conversationStatus}
-            visitorId={visitorId}
-            handleCreateNewConversation={() => {
-              setConversationId('');
-            }}
-          />
-        }
-      />
-    </Box>
+      <Box
+        sx={(theme) => ({
+          px: 2,
+          pb: 2,
+          position: 'relative',
+          width: '100vw',
+          height: '100vh',
+          maxHeight: '100%',
+          boxSizing: 'border-box',
+          backgroundColor: config?.isBgTransparent
+            ? 'transparent'
+            : theme.palette.background.default,
+
+          '& .message-agent': {},
+          '& .message-human': {
+            backgroundColor: primaryColor,
+          },
+          '& .message-human *': {
+            color: textColor,
+          },
+        })}
+      >
+        <ChatBox
+          messages={history}
+          onSubmit={handleChatSubmit}
+          messageTemplates={config.messageTemplates}
+          initialMessage={config.initialMessage}
+          agentIconUrl={agent?.iconUrl!}
+          isLoadingConversation={isLoadingConversation}
+          hasMoreMessages={hasMoreMessages}
+          handleLoadMoreMessages={handleLoadMoreMessages}
+          handleEvalAnswer={handleEvalAnswer}
+          handleAbort={handleAbort}
+          hideInternalSources
+          renderBottom={<CustomerSupportActions />}
+        />
+      </Box>
+    </ChatContext.Provider>
   );
 }
 
