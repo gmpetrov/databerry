@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.52"></a>
+## 0.1.52 (2023-10-24)
+
+### Fixed
+
+- 🐛 add loader when switching conversation inbox (log) [[e4e7765](https://github.com/gmpetrov/databerry/commit/e4e776539f47a3e432a2fe9acdfe0b2924509170)]
+
+
 <a name="0.1.51"></a>
 ## 0.1.51 (2023-10-24)
 
