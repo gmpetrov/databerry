@@ -1,5 +1,22 @@
 # Changelog
 
+<a name="0.1.49"></a>
+## 0.1.49 (2023-10-24)
+
+### Fixed
+
+- 🐛 video autoplay on mobile [[40517f3](https://github.com/gmpetrov/databerry/commit/40517f348ebf6d79f2648984aa8fb41fd4c63a06)]
+- 🐛 dashboard not loaded correctly when navigating from lp [[b0123f8](https://github.com/gmpetrov/databerry/commit/b0123f813a7735d4ea5670b685fee283d4bf73b3)]
+
+### Miscellaneous
+
+- 🎸 Improve Lead Flow [[fda1c9e](https://github.com/gmpetrov/databerry/commit/fda1c9ec6d2e05693bf2500b446ad6f723691214)]
+-  WIP [[5036fda](https://github.com/gmpetrov/databerry/commit/5036fdab19addeae664479a8b460e1f21cc33f9b)]
+- 🎸 tabs on log conversations [[39fc5fc](https://github.com/gmpetrov/databerry/commit/39fc5fca40b805b80b4bef1e665860776ac6e16e)]
+- 🎸 CS Landing Page [[bc68842](https://github.com/gmpetrov/databerry/commit/bc6884200b712f1f15e9d94fdf587a83740eca38)]
+- 🎸 add GDPR links + trust banner to landing page [[f98650e](https://github.com/gmpetrov/databerry/commit/f98650eeaf140096115dbbcfda4f80899b6af7d3)]
+
+
 <a name="0.1.48"></a>
 ## 0.1.48 (2023-10-21)
 
