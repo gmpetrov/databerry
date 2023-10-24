@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.53"></a>
+## 0.1.53 (2023-10-24)
+
+### Fixed
+
+- 🐛 only send notification when action triggered by visitor [[c1f34db](https://github.com/gmpetrov/databerry/commit/c1f34db7932a437fa07133b464ca7268b217aae5)]
+
+
 <a name="0.1.52"></a>
 ## 0.1.52 (2023-10-24)
 
