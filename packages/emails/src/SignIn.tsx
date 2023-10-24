@@ -58,7 +58,7 @@ export const SignIn = ({ url, host }: Props) => {
             </Section>
             <Text className="text-[#666666] text-[12px] leading-[24px] mt-4">
               If you have any issues with signing in, feel free to
-              <Link href="https://www.chaindesk.ai/help" className="underline">
+              <Link href="mailto:support@chaindesk.ai" className="underline">
                 {' '}
                 contact us
               </Link>

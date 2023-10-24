@@ -2,15 +2,17 @@ import Cors from 'cors';
 import { NextApiResponse } from 'next';
 import z from 'zod';
 
+import { ConversationResolved, HelpRequest, render } from '@chaindesk/emails';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
   createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import mailer from '@chaindesk/lib/mailer';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import { ConversationStatusSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
-import { AgentVisibility, Prisma } from '@chaindesk/prisma';
+import { AgentVisibility, ConversationStatus, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createLazyAuthHandler();
@@ -95,7 +97,78 @@ export const updateConversation = async (
       data: {
         status: data.status,
       },
+      include: {
+        lead: true,
+        agent: true,
+        messages: {
+          take: -20,
+          orderBy: {
+            createdAt: 'asc',
+          },
+        },
+        organization: {
+          include: {
+            memberships: {
+              where: {
+                role: 'OWNER',
+              },
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    const onwerEmail = updated?.organization?.memberships?.[0]?.user?.email!;
+    const leadEmail = updated?.lead?.email!;
+    const agent = updated?.agent!;
+
+    if (data.status === ConversationStatus.RESOLVED) {
+      await mailer.sendMail({
+        from: {
+          name: 'Chaindesk',
+          address: process.env.EMAIL_FROM!,
+        },
+        to: onwerEmail,
+        subject: `✅ Conversation resolved automatically by ${
+          agent?.name || ''
+        }`,
+        html: render(
+          <ConversationResolved
+            agentName={agent.name}
+            messages={updated?.messages}
+            ctaLink={`${
+              process.env.NEXT_PUBLIC_DASHBOARD_URL
+            }/logs?tab=all&conversationId=${encodeURIComponent(
+              conversationId
+            )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
+          />
+        ),
+      });
+    } else if (data.status === ConversationStatus.HUMAN_REQUESTED) {
+      await mailer.sendMail({
+        from: {
+          name: 'Chaindesk',
+          address: process.env.EMAIL_FROM!,
+        },
+        to: onwerEmail,
+        subject: `❓ Assistance requested from Agent ${agent?.name || ''}`,
+        html: render(
+          <HelpRequest
+            visitorEmail={leadEmail}
+            agentName={agent.name}
+            messages={updated?.messages}
+            ctaLink={`${
+              process.env.NEXT_PUBLIC_DASHBOARD_URL
+            }/logs?tab=human_requested&conversationId=${encodeURIComponent(
+              conversationId
+            )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
+          />
+        ),
+      });
+    }
 
     return updated;
   } catch (e) {

@@ -2,7 +2,7 @@ import Cors from 'cors';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
-import { HelpRequest, render } from '@chaindesk/emails';
+import { NewLead, render } from '@chaindesk/emails';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
 import mailer from '@chaindesk/lib/mailer';
@@ -104,15 +104,15 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
         address: process.env.EMAIL_FROM!,
       },
       to: onwerEmail,
-      subject: '❓ Visitor requested assistance',
+      subject: `🎯 New lead captured by Agent ${agent?.name || ''}`,
       html: render(
-        <HelpRequest
+        <NewLead
           visitorEmail={data.visitorEmail}
           agentName={agent.name}
           messages={agent?.conversations?.[0]?.messages}
           ctaLink={`${
             process.env.NEXT_PUBLIC_DASHBOARD_URL
-          }/logs?conversationId=${encodeURIComponent(
+          }/logs?tab=all&conversationId=${encodeURIComponent(
             data.conversationId
           )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
         />

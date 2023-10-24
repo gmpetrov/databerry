@@ -226,7 +226,7 @@ export const chatAgentRequest = async (
             ]}
             ctaLink={`${
               process.env.NEXT_PUBLIC_DASHBOARD_URL
-            }/logs?conversationId=${encodeURIComponent(
+            }/logs?tab=all&conversationId=${encodeURIComponent(
               conversationId
             )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
           />
