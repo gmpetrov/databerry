@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import useConfetti from '@app/hooks/useConfetti';
 
-import { ConversationStatus } from '@chaindesk/prisma';
+import type { ConversationStatus } from '@chaindesk/prisma';
 
 import { API_URL } from './ChatBubble';
 
@@ -49,7 +49,7 @@ const ResolveButton = ({
       setPending(true);
       const response = await updateConversationStatus(
         conversationId,
-        ConversationStatus.RESOLVED
+        'RESOLVED'
       );
       if (response.ok) {
         setResolved(true);

@@ -102,14 +102,14 @@ function SelectQueryParamFilter<T extends {}>({
           });
         }
       }}
-      sx={{
+      sx={(theme) => ({
         width: 175,
         height: 2,
         fontSize: 14,
-        '@media (max-width: 900px)': {
+        [theme.breakpoints.down('sm')]: {
           width: '100%',
         },
-      }}
+      })}
       {...(currentValue && {
         // display the button and remove select indicator
         // when user has selected a value
