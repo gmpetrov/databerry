@@ -121,53 +121,59 @@ export const updateConversation = async (
       },
     });
 
-    const onwerEmail = updated?.organization?.memberships?.[0]?.user?.email!;
-    const leadEmail = updated?.lead?.email!;
-    const agent = updated?.agent!;
+    const isAuthenticatedUser = !!session;
 
-    if (data.status === ConversationStatus.RESOLVED) {
-      await mailer.sendMail({
-        from: {
-          name: 'Chaindesk',
-          address: process.env.EMAIL_FROM!,
-        },
-        to: onwerEmail,
-        subject: `✅ Conversation resolved automatically by ${
-          agent?.name || ''
-        }`,
-        html: render(
-          <ConversationResolved
-            agentName={agent.name}
-            messages={updated?.messages}
-            ctaLink={`${
-              process.env.NEXT_PUBLIC_DASHBOARD_URL
-            }/logs?tab=all&conversationId=${encodeURIComponent(
-              conversationId
-            )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
-          />
-        ),
-      });
-    } else if (data.status === ConversationStatus.HUMAN_REQUESTED) {
-      await mailer.sendMail({
-        from: {
-          name: 'Chaindesk',
-          address: process.env.EMAIL_FROM!,
-        },
-        to: onwerEmail,
-        subject: `❓ Assistance requested from Agent ${agent?.name || ''}`,
-        html: render(
-          <HelpRequest
-            visitorEmail={leadEmail}
-            agentName={agent.name}
-            messages={updated?.messages}
-            ctaLink={`${
-              process.env.NEXT_PUBLIC_DASHBOARD_URL
-            }/logs?tab=human_requested&conversationId=${encodeURIComponent(
-              conversationId
-            )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
-          />
-        ),
-      });
+    if (!isAuthenticatedUser) {
+      // Only send notification if action performed by a visitor
+
+      const onwerEmail = updated?.organization?.memberships?.[0]?.user?.email!;
+      const leadEmail = updated?.lead?.email!;
+      const agent = updated?.agent!;
+
+      if (data.status === ConversationStatus.RESOLVED) {
+        await mailer.sendMail({
+          from: {
+            name: 'Chaindesk',
+            address: process.env.EMAIL_FROM!,
+          },
+          to: onwerEmail,
+          subject: `✅ Conversation resolved automatically by ${
+            agent?.name || ''
+          }`,
+          html: render(
+            <ConversationResolved
+              agentName={agent.name}
+              messages={updated?.messages}
+              ctaLink={`${
+                process.env.NEXT_PUBLIC_DASHBOARD_URL
+              }/logs?tab=all&conversationId=${encodeURIComponent(
+                conversationId
+              )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
+            />
+          ),
+        });
+      } else if (data.status === ConversationStatus.HUMAN_REQUESTED) {
+        await mailer.sendMail({
+          from: {
+            name: 'Chaindesk',
+            address: process.env.EMAIL_FROM!,
+          },
+          to: onwerEmail,
+          subject: `❓ Assistance requested from Agent ${agent?.name || ''}`,
+          html: render(
+            <HelpRequest
+              visitorEmail={leadEmail}
+              agentName={agent.name}
+              messages={updated?.messages}
+              ctaLink={`${
+                process.env.NEXT_PUBLIC_DASHBOARD_URL
+              }/logs?tab=human_requested&conversationId=${encodeURIComponent(
+                conversationId
+              )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
+            />
+          ),
+        });
+      }
     }
 
     return updated;
