@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.51"></a>
+## 0.1.51 (2023-10-24)
+
+### Miscellaneous
+
+- 🎸 email notifications resolved &amp; assistance [[037b5a5](https://github.com/gmpetrov/databerry/commit/037b5a5622571318fb2490b9cff4b13749d15f43)]
+
+
 <a name="0.1.50"></a>
 ## 0.1.50 (2023-10-24)
 
