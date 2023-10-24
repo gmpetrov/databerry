@@ -22,25 +22,16 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { z } from 'zod';
 
+import { ChatMessage, MessageEvalUnion } from '@app/hooks/useChat';
+
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import type { Source } from '@chaindesk/lib/types/document';
 
 import CopyButton from './CopyButton';
 import SourceComponent from './Source';
 
-export type MessageEvalUnion = 'good' | 'bad';
-
-export type ChatBoxMessage = {
-  id?: string;
-  eval?: MessageEvalUnion | null;
-  from: 'human' | 'agent';
-  message: string;
-  createdAt?: Date;
-  sources?: Source[];
-};
-
 export type ChatBoxProps = {
-  messages: ChatBoxMessage[];
+  messages: ChatMessage[];
   onSubmit: (message: string) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
@@ -56,7 +47,7 @@ export type ChatBoxProps = {
     messageId: string;
     value: MessageEvalUnion;
   }) => any;
-  handleImprove?: (message: ChatBoxMessage) => any;
+  handleImprove?: (message: ChatMessage) => any;
   topSettings?: JSX.Element | null;
   handleSourceClick?: (source: Source) => any;
   handleAbort?: any;
@@ -145,7 +136,7 @@ function ChatBox({
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [firstMsg, setFirstMsg] = useState<ChatBoxMessage>();
+  const [firstMsg, setFirstMsg] = useState<ChatMessage>();
   const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
   const lastMessageLength =
     messages?.length > 0
@@ -389,6 +380,8 @@ function ChatBox({
                           <p className="prose-sm ">{each.message}</p>
                         )}
 
+                        {each?.component}
+
                         <Stack direction="row" justifyContent={'space-between'}>
                           {((hideInternalSources
                             ? filterInternalSources(each?.sources!)
@@ -426,33 +419,34 @@ function ChatBox({
                           )}
                         </Stack>
                       </Card>
-                      {each.from === 'agent' && each?.id && (
-                        <Stack
-                          direction="row"
-                          marginLeft={'auto'}
-                          // marginBottom={'auto'}
-                        >
-                          <CopyButton text={each?.message} />
+                      {each.from === 'agent' &&
+                        each?.id &&
+                        !each?.disableActions && (
+                          <Stack
+                            direction="row"
+                            marginLeft={'auto'}
+                            // marginBottom={'auto'}
+                          >
+                            <CopyButton text={each?.message} />
+                            <EvalButton
+                              messageId={each?.id!}
+                              handleEvalAnswer={handleEvalAnswer}
+                              eval={each?.eval}
+                            />
 
-                          <EvalButton
-                            messageId={each?.id!}
-                            handleEvalAnswer={handleEvalAnswer}
-                            eval={each?.eval}
-                          />
-
-                          {handleImprove && (
-                            <Button
-                              size="sm"
-                              variant="plain"
-                              color="neutral"
-                              startDecorator={<SchoolTwoToneIcon />}
-                              onClick={() => handleImprove(each)}
-                            >
-                              Improve
-                            </Button>
-                          )}
-                        </Stack>
-                      )}
+                            {handleImprove && (
+                              <Button
+                                size="sm"
+                                variant="plain"
+                                color="neutral"
+                                startDecorator={<SchoolTwoToneIcon />}
+                                onClick={() => handleImprove(each)}
+                              >
+                                Improve
+                              </Button>
+                            )}
+                          </Stack>
+                        )}
                     </Stack>
                   </Stack>
                 </Stack>

@@ -1,3 +1,4 @@
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button, Chip, CircularProgress, ExtendButton } from '@mui/joy';
 import { SxProps } from '@mui/joy/styles/types';
@@ -32,52 +33,61 @@ const ResolveButton = ({
   conversationId,
   conversationStatus,
   createNewConversation,
+  refreshConversation,
   sx,
 }: {
   conversationId: string;
   conversationStatus: ConversationStatus;
   createNewConversation(): void;
+  refreshConversation(): void;
   sx?: SxProps;
 }) => {
   const [pending, setPending] = useState(false);
-  const [isResolved, setResolved] = useState(false);
+
   const triggerConfetti = useConfetti({
     zIndex: 10000000000,
   });
-  const handleResolve = async () => {
+  const handleUpdateStatus = async (status: ConversationStatus) => {
     try {
       setPending(true);
-      const response = await updateConversationStatus(
-        conversationId,
-        'RESOLVED'
-      );
+      const response = await updateConversationStatus(conversationId, status);
       if (response.ok) {
-        setResolved(true);
-        createNewConversation();
-        triggerConfetti();
+        if (status === 'RESOLVED') {
+          createNewConversation();
+          triggerConfetti();
+        } else {
+          await refreshConversation();
+        }
       }
     } catch (e) {
     } finally {
       setPending(false);
     }
   };
-  if (conversationStatus === 'RESOLVED' || isResolved) {
-    return (
-      <Chip variant="soft" size="md" color="success">
-        Resolved !
-      </Chip>
-    );
-  }
+
   return (
     <Button
       size="sm"
       variant="plain"
-      color="neutral"
-      startDecorator={pending ? <CircularProgress /> : <CheckCircleIcon />}
+      color={conversationStatus === 'RESOLVED' ? 'danger' : 'success'}
+      startDecorator={
+        pending ? (
+          <CircularProgress />
+        ) : conversationStatus !== 'RESOLVED' ? (
+          <CheckCircleIcon />
+        ) : (
+          <CancelRoundedIcon />
+        )
+      }
       sx={{ whiteSpace: 'nowrap', ...sx }}
-      onClick={handleResolve}
+      onClick={
+        conversationStatus !== 'RESOLVED'
+          ? () => handleUpdateStatus('RESOLVED')
+          : () => handleUpdateStatus('UNRESOLVED')
+      }
     >
-      Mark As Resolved
+      {conversationStatus === 'RESOLVED' && 'Mark as Unresolved'}
+      {conversationStatus !== 'RESOLVED' && 'Mark As Resolved'}
     </Button>
   );
 };

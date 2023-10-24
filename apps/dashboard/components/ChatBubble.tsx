@@ -1,15 +1,9 @@
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ThreePRoundedIcon from '@mui/icons-material/ThreePRounded';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
-import Chip from '@mui/joy/Chip';
-import CircularProgress from '@mui/joy/CircularProgress';
 import colors from '@mui/joy/colors';
 import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
@@ -21,7 +15,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
-import useChat from '@app/hooks/useChat';
+import useChat, { ChatContext } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
@@ -70,27 +64,27 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
     config: props.initConfig || defaultChatBubbleConfig,
     hasOpenOnce: false,
     showInitialMessage: false,
+    visitorEmail: '',
+    showLeadFormAfterMessageId: '',
   });
 
-  const {
-    history,
-    handleChatSubmit,
-    conversationId,
-    setConversationId,
-    conversationStatus,
-    visitorId,
-    isLoadingConversation,
-    hasMoreMessages,
-    handleLoadMoreMessages,
-    handleEvalAnswer,
-    handleAbort,
-  } = useChat({
+  const methods = useChat({
     endpoint: `${API_URL}/api/agents/${props.agentId}/query`,
     channel: 'website',
     // channel: ConversationChannel.website // not working with bundler parcel,
     agentId: props?.agentId,
     localStorageConversationIdKey: 'chatBubbleConversationId',
   });
+
+  const {
+    history,
+    handleChatSubmit,
+    isLoadingConversation,
+    hasMoreMessages,
+    handleLoadMoreMessages,
+    handleEvalAnswer,
+    handleAbort,
+  } = methods;
 
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(
@@ -196,251 +190,247 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
 
   return (
     <>
-      <Transition
-        nodeRef={initMessageRef}
-        in={state.showInitialMessage && !state.hasOpenOnce}
-        timeout={0}
-        mountOnEnter
-        unmountOnExit
-      >
-        {(s) => (
-          <Stack
-            ref={initMessageRef}
-            sx={{
-              position: 'fixed',
-              bottom: 100,
-              maxWidth: 'calc(100% - 75px)',
-
-              transition: `opacity 300ms ease-in-out`,
-              opacity: 0,
-              zIndex: 9999999998,
-              ...(transitionStyles as any)[s],
-
-              ...(state.config.position === 'left'
-                ? {
-                    left: '20px',
-                  }
-                : {}),
-              ...(state.config.position === 'right'
-                ? {
-                    right: '20px',
-                  }
-                : {}),
-            }}
-          >
-            <Card
-              sx={{
-                maxWidth: 1000,
-                display: 'flex',
-              }}
-              variant="outlined"
-            >
-              <Typography>{state.config?.initialMessage}</Typography>
-            </Card>
-          </Stack>
-        )}
-      </Transition>
-
-      <Box
-        sx={{
-          // bgcolor: 'red',
-          overflow: 'visible',
-          position: 'fixed',
-          height: '60px',
-          bottom: '20px',
-          zIndex: 9999999999,
-
-          ...(state.config.position === 'left'
-            ? {
-                left: '20px',
-              }
-            : {}),
-          ...(state.config.position === 'right'
-            ? {
-                right: '20px',
-              }
-            : {}),
+      <ChatContext.Provider
+        value={{
+          ...methods,
         }}
       >
         <Transition
-          nodeRef={chatBoxRef}
-          in={state.isOpen}
+          nodeRef={initMessageRef}
+          in={state.showInitialMessage && !state.hasOpenOnce}
           timeout={0}
           mountOnEnter
           unmountOnExit
         >
           {(s) => (
-            <Card
-              ref={chatBoxRef}
-              variant="outlined"
-              sx={(theme) => ({
-                zIndex: 9999,
-                position: 'absolute',
-                bottom: '80px',
-                display: 'flex',
-                flexDirection: 'column',
-                boxSizing: 'border-box',
-                p: 0,
-                gap: 0,
-                // boxShadow: 'md',
+            <Stack
+              ref={initMessageRef}
+              sx={{
+                position: 'fixed',
+                bottom: 100,
+                maxWidth: 'calc(100% - 75px)',
 
-                transition: `opacity 150ms ease-in-out`,
+                transition: `opacity 300ms ease-in-out`,
                 opacity: 0,
+                zIndex: 9999999998,
                 ...(transitionStyles as any)[s],
 
-                ...(state.config.position === 'right'
+                ...(state.config.position === 'left'
                   ? {
-                      transform: `translateX(${-500 + 50}px)`,
+                      left: '20px',
                     }
                   : {}),
-
-                [theme.breakpoints.up('sm')]: {
-                  width: '500px',
-                },
-                [theme.breakpoints.only('xs')]: {
-                  width: '100vw',
-                  height: '100dvh',
-                  maxWidth: '100vw',
-                  position: 'fixed',
-
-                  left: 0,
-                  top: 0,
-                  transform: `translateX(0px)`,
-
-                  // ...(state.config.position === 'left'
-                  //   ? {
-                  //       left: '-20px',
-                  //     }
-                  //   : {}),
-                  // ...(state.config.position === 'right'
-                  //   ? {
-                  //       transform: `translateX(0px)`,
-                  //       right: '-20px',
-                  //     }
-                  //   : {}),
-                },
-              })}
+                ...(state.config.position === 'right'
+                  ? {
+                      right: '20px',
+                    }
+                  : {}),
+              }}
             >
-              <Stack
-                direction="row"
+              <Card
                 sx={{
-                  px: 2,
-                  py: 1,
-                  alignItems: 'center',
-                  borderBottom: '1px solid',
-                  borderBottomColor: 'divider',
+                  maxWidth: 1000,
+                  display: 'flex',
                 }}
+                variant="outlined"
               >
-                {state.config?.displayName && (
-                  <Typography>{state.config?.displayName}</Typography>
-                )}
-
-                <IconButton
-                  variant="plain"
-                  sx={{ ml: 'auto' }}
-                  size="sm"
-                  onClick={() => setState({ isOpen: false })}
-                >
-                  <CloseRoundedIcon />
-                </IconButton>
-              </Stack>
-              <Stack
-                sx={(theme) => ({
-                  // flex: 1,
-                  // display: 'flex',
-                  width: '100%',
-                  position: 'relative',
-
-                  height: '100%',
-                  maxHeight: '100%',
-                  flex: 1,
-                  padding: 0,
-
-                  [theme.breakpoints.up('sm')]: {
-                    minHeight: '680px',
-                    maxHeight: '680px',
-                  },
-                  [theme.breakpoints.only('xs')]: {
-                    height: '100%',
-                    maxWidth: '100vw',
-                  },
-
-                  '& .message-agent': {},
-                  '& .message-human': {
-                    backgroundColor: state.config.primaryColor,
-                  },
-                  '& .message-human *': {
-                    color: textColor,
-                  },
-
-                  overflowY: 'hidden',
-                  px: 2,
-                  pb: 1,
-                })}
-              >
-                <ChatBox
-                  messages={history}
-                  onSubmit={handleChatSubmit}
-                  messageTemplates={state.config.messageTemplates}
-                  initialMessage={state.config.initialMessage}
-                  agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
-                  isLoadingConversation={isLoadingConversation}
-                  hasMoreMessages={hasMoreMessages}
-                  handleLoadMoreMessages={handleLoadMoreMessages}
-                  handleEvalAnswer={handleEvalAnswer}
-                  handleAbort={handleAbort}
-                  hideInternalSources
-                  renderBottom={
-                    <CustomerSupportActions
-                      conversationId={conversationId}
-                      agentId={props.agentId}
-                      conversationStatus={conversationStatus}
-                      visitorId={visitorId}
-                      handleCreateNewConversation={() => {
-                        setConversationId('');
-                      }}
-                    />
-                  }
-                />
-              </Stack>
-            </Card>
+                <Typography>{state.config?.initialMessage}</Typography>
+              </Card>
+            </Stack>
           )}
         </Transition>
-        <IconButton
-          // color={'neutral'}
-          variant="solid"
-          onClick={() =>
-            setState({
-              isOpen: !state.isOpen,
-              ...(!state.isOpen
-                ? {
-                    hasOpenOnce: true,
-                  }
-                : {}),
-            })
-          }
-          sx={(theme) => ({
-            backgroundColor: state.config.primaryColor,
-            width: '60px',
+
+        <Box
+          sx={{
+            // bgcolor: 'red',
+            overflow: 'visible',
+            position: 'fixed',
             height: '60px',
-            borderRadius: '100%',
-            color: textColor,
-            transition: 'all 100ms ease-in-out',
-            borderWidth: '0.5px',
-            borderColor: theme.palette.divider,
-            borderStyle: 'solid',
-            p: '0',
-            overflow: 'hidden',
-            '&:hover': {
-              backgroundColor: state.config.primaryColor,
-              filter: 'brightness(0.9)',
-              transform: 'scale(1.05)',
-            },
-          })}
+            bottom: '20px',
+            zIndex: 9999999999,
+
+            ...(state.config.position === 'left'
+              ? {
+                  left: '20px',
+                }
+              : {}),
+            ...(state.config.position === 'right'
+              ? {
+                  right: '20px',
+                }
+              : {}),
+          }}
         >
-          {state.isOpen ? <ClearRoundedIcon /> : bubbleIcon}
-        </IconButton>
-      </Box>
+          <Transition
+            nodeRef={chatBoxRef}
+            in={state.isOpen}
+            timeout={0}
+            mountOnEnter
+            unmountOnExit
+          >
+            {(s) => (
+              <Card
+                ref={chatBoxRef}
+                variant="outlined"
+                sx={(theme) => ({
+                  zIndex: 9999,
+                  position: 'absolute',
+                  bottom: '80px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxSizing: 'border-box',
+                  p: 0,
+                  gap: 0,
+                  // boxShadow: 'md',
+
+                  transition: `opacity 150ms ease-in-out`,
+                  opacity: 0,
+                  ...(transitionStyles as any)[s],
+
+                  ...(state.config.position === 'right'
+                    ? {
+                        transform: `translateX(${-500 + 50}px)`,
+                      }
+                    : {}),
+
+                  [theme.breakpoints.up('sm')]: {
+                    width: '500px',
+                  },
+                  [theme.breakpoints.only('xs')]: {
+                    width: '100vw',
+                    height: '100dvh',
+                    maxWidth: '100vw',
+                    position: 'fixed',
+
+                    left: 0,
+                    top: 0,
+                    transform: `translateX(0px)`,
+
+                    // ...(state.config.position === 'left'
+                    //   ? {
+                    //       left: '-20px',
+                    //     }
+                    //   : {}),
+                    // ...(state.config.position === 'right'
+                    //   ? {
+                    //       transform: `translateX(0px)`,
+                    //       right: '-20px',
+                    //     }
+                    //   : {}),
+                  },
+                })}
+              >
+                <Stack
+                  direction="row"
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    alignItems: 'center',
+                    borderBottom: '1px solid',
+                    borderBottomColor: 'divider',
+                  }}
+                >
+                  {state.config?.displayName && (
+                    <Typography>{state.config?.displayName}</Typography>
+                  )}
+
+                  <IconButton
+                    variant="plain"
+                    sx={{ ml: 'auto' }}
+                    size="sm"
+                    onClick={() => setState({ isOpen: false })}
+                  >
+                    <CloseRoundedIcon />
+                  </IconButton>
+                </Stack>
+                <Stack
+                  sx={(theme) => ({
+                    // flex: 1,
+                    // display: 'flex',
+                    width: '100%',
+                    position: 'relative',
+
+                    height: '100%',
+                    maxHeight: '100%',
+                    flex: 1,
+                    padding: 0,
+
+                    [theme.breakpoints.up('sm')]: {
+                      minHeight: '680px',
+                      maxHeight: '680px',
+                    },
+                    [theme.breakpoints.only('xs')]: {
+                      height: '100%',
+                      maxWidth: '100vw',
+                    },
+
+                    '& .message-agent': {},
+                    '& .message-human': {
+                      backgroundColor: state.config.primaryColor,
+                    },
+                    '& .message-human *': {
+                      color: textColor,
+                    },
+
+                    overflowY: 'hidden',
+                    px: 2,
+                    pb: 1,
+                  })}
+                >
+                  <ChatBox
+                    messages={history}
+                    onSubmit={handleChatSubmit}
+                    messageTemplates={state.config.messageTemplates}
+                    initialMessage={state.config.initialMessage}
+                    agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
+                    isLoadingConversation={isLoadingConversation}
+                    hasMoreMessages={hasMoreMessages}
+                    handleLoadMoreMessages={handleLoadMoreMessages}
+                    handleEvalAnswer={handleEvalAnswer}
+                    handleAbort={handleAbort}
+                    hideInternalSources
+                    renderBottom={<CustomerSupportActions />}
+                  />
+                </Stack>
+              </Card>
+            )}
+          </Transition>
+          <IconButton
+            // color={'neutral'}
+            variant="solid"
+            onClick={() =>
+              setState({
+                isOpen: !state.isOpen,
+                ...(!state.isOpen
+                  ? {
+                      hasOpenOnce: true,
+                    }
+                  : {}),
+              })
+            }
+            sx={(theme) => ({
+              backgroundColor: state.config.primaryColor,
+              width: '60px',
+              height: '60px',
+              borderRadius: '100%',
+              color: textColor,
+              transition: 'all 100ms ease-in-out',
+              borderWidth: '0.5px',
+              borderColor: theme.palette.divider,
+              borderStyle: 'solid',
+              p: '0',
+              overflow: 'hidden',
+              '&:hover': {
+                backgroundColor: state.config.primaryColor,
+                filter: 'brightness(0.9)',
+                transform: 'scale(1.05)',
+              },
+            })}
+          >
+            {state.isOpen ? <ClearRoundedIcon /> : bubbleIcon}
+          </IconButton>
+        </Box>
+      </ChatContext.Provider>
     </>
   );
 }
