@@ -66,6 +66,9 @@ function CustomerSupportActions({}: Props) {
           variant={'plain'}
           disabled={conversationStatus === 'HUMAN_REQUESTED'}
           loading={state.isHumanRequestLoading}
+          sx={{
+            whiteSpace: 'nowrap',
+          }}
           color="neutral"
           // color={
           //   (
