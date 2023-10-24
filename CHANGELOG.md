@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.50"></a>
+## 0.1.50 (2023-10-24)
+
+### Fixed
+
+- 🐛 Request Human button not inline [[b58cabc](https://github.com/gmpetrov/databerry/commit/b58cabc431ac9646d6564d7a7f5d9b9cf41cea4a)]
+
+
 <a name="0.1.49"></a>
 ## 0.1.49 (2023-10-24)
 
