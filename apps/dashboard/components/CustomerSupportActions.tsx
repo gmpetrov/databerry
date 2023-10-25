@@ -7,14 +7,15 @@ import { useFrame } from 'react-frame-component';
 import { ChatContext, ChatMessage } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
+import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { ConversationStatus } from '@chaindesk/prisma';
 
 import { InjectLeadForm, LEAD_FORM_ID } from './LeadForm';
 import ResolveButton, { updateConversationStatus } from './ResolveButton';
 
-type Props = {};
+type Props = { config: AgentInterfaceConfig };
 
-function CustomerSupportActions({}: Props) {
+function CustomerSupportActions({ config }: Props) {
   const {
     conversationId,
     conversationStatus,
@@ -42,7 +43,7 @@ function CustomerSupportActions({}: Props) {
 
   return (
     <>
-      <InjectLeadForm />
+      {!config.isLeadCaptureDisabled && <InjectLeadForm />}
 
       <Stack
         direction="row"
@@ -52,86 +53,92 @@ function CustomerSupportActions({}: Props) {
           justifyContent: 'start',
         }}
       >
-        <ResolveButton
-          conversationId={conversationId!}
-          conversationStatus={conversationStatus!}
-          refreshConversation={refreshConversation}
-          createNewConversation={() => {
-            createNewConversation?.();
-          }}
-        />
+        {!config.isMarkAsResolvedDisabled && (
+          <ResolveButton
+            conversationId={conversationId!}
+            conversationStatus={conversationStatus!}
+            refreshConversation={refreshConversation}
+            createNewConversation={() => {
+              createNewConversation?.();
+            }}
+          />
+        )}
 
-        <Button
-          size="sm"
-          variant={'plain'}
-          disabled={conversationStatus === 'HUMAN_REQUESTED'}
-          loading={state.isHumanRequestLoading}
-          sx={{
-            whiteSpace: 'nowrap',
-          }}
-          color="neutral"
-          // color={
-          //   (
-          //     {
-          //       ['HUMAN_REQUESTED']: 'warning',
-          //       ['RESOLVED']: 'neutral',
-          //       ['UNRESOLVED']: 'neutral',
-          //     } as Record<ConversationStatus, ColorPaletteProp>
-          //   )[conversationStatus]
-          // }
-          startDecorator={
-            <AccountCircleRoundedIcon
-              color={
-                conversationStatus === 'HUMAN_REQUESTED' ? 'warning' : 'neutral'
-              }
-            />
-          }
-          onClick={async () => {
-            try {
-              setState({
-                isHumanRequestLoading: true,
-              });
-              if (!visitorEmail) {
-                const input = document?.getElementById(LEAD_FORM_ID);
-                input?.focus();
-              } else {
-                await updateConversationStatus(
-                  conversationId,
-                  'HUMAN_REQUESTED'
-                );
-
-                await refreshConversation();
-              }
-            } catch {
-            } finally {
-              setState({
-                isHumanRequestLoading: false,
-              });
-
-              // const id = 'human-requested';
-
-              // setHistory?.([
-              //   ...history,
-              //   {
-              //     id,
-              //     from: 'agent',
-              //     message: 'Operator requested',
-              //     disableActions: true,
-              //   },
-              // ] as ChatMessage[]);
+        {!config.isHumanRequestedDisabled && (
+          <Button
+            size="sm"
+            variant={'plain'}
+            disabled={conversationStatus === 'HUMAN_REQUESTED'}
+            loading={state.isHumanRequestLoading}
+            sx={{
+              whiteSpace: 'nowrap',
+            }}
+            color="neutral"
+            // color={
+            //   (
+            //     {
+            //       ['HUMAN_REQUESTED']: 'warning',
+            //       ['RESOLVED']: 'neutral',
+            //       ['UNRESOLVED']: 'neutral',
+            //     } as Record<ConversationStatus, ColorPaletteProp>
+            //   )[conversationStatus]
+            // }
+            startDecorator={
+              <AccountCircleRoundedIcon
+                color={
+                  conversationStatus === 'HUMAN_REQUESTED'
+                    ? 'warning'
+                    : 'neutral'
+                }
+              />
             }
-          }}
-        >
-          {
-            (
-              {
-                ['HUMAN_REQUESTED']: 'Human Requested',
-                ['RESOLVED']: 'Request Human',
-                ['UNRESOLVED']: 'Request Human',
-              } as Record<ConversationStatus, string>
-            )[conversationStatus]
-          }
-        </Button>
+            onClick={async () => {
+              try {
+                setState({
+                  isHumanRequestLoading: true,
+                });
+                if (!visitorEmail) {
+                  const input = document?.getElementById(LEAD_FORM_ID);
+                  input?.focus();
+                } else {
+                  await updateConversationStatus(
+                    conversationId,
+                    'HUMAN_REQUESTED'
+                  );
+
+                  await refreshConversation();
+                }
+              } catch {
+              } finally {
+                setState({
+                  isHumanRequestLoading: false,
+                });
+
+                // const id = 'human-requested';
+
+                // setHistory?.([
+                //   ...history,
+                //   {
+                //     id,
+                //     from: 'agent',
+                //     message: 'Operator requested',
+                //     disableActions: true,
+                //   },
+                // ] as ChatMessage[]);
+              }
+            }}
+          >
+            {
+              (
+                {
+                  ['HUMAN_REQUESTED']: 'Human Requested',
+                  ['RESOLVED']: 'Request Human',
+                  ['UNRESOLVED']: 'Request Human',
+                } as Record<ConversationStatus, string>
+              )[conversationStatus]
+            }
+          </Button>
+        )}
       </Stack>
     </>
   );

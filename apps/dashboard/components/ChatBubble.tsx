@@ -389,7 +389,9 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                     handleEvalAnswer={handleEvalAnswer}
                     handleAbort={handleAbort}
                     hideInternalSources
-                    renderBottom={<CustomerSupportActions />}
+                    renderBottom={
+                      <CustomerSupportActions config={state.config} />
+                    }
                   />
                 </Stack>
               </Card>

@@ -1,10 +1,11 @@
+import { Divider } from '@mui/joy';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Input from '@app/components/Input';
 
-import InitialBubbleMessageCheckbox from './InitialBubbleMessageCheckbox';
 import InitMessageInput from './InitMessageInput';
+import InterfaceConfigCheckbox from './InterfaceConfigCheckbox';
 import SuggestionsInput from './SuggestionsInput';
 
 type Props = {};
@@ -13,7 +14,6 @@ export default function CommonInterfaceInput(props: Props) {
   const { watch, control, register } = useFormContext();
 
   const config = watch('interfaceConfig');
-
   return (
     <>
       <Input
@@ -23,7 +23,22 @@ export default function CommonInterfaceInput(props: Props) {
         {...register('interfaceConfig.displayName')}
       />
       <InitMessageInput />
-      <InitialBubbleMessageCheckbox />
+      <InterfaceConfigCheckbox
+        field="isInitMessagePopupDisabled"
+        label="Disable initial message popup"
+      />
+      <InterfaceConfigCheckbox
+        field="isHumanRequestedDisabled"
+        label="Disable the ability to request a human operator"
+      />
+      <InterfaceConfigCheckbox
+        field="isLeadCaptureDisabled"
+        label="Disable the ability to capture a visitor's emails"
+      />
+      <InterfaceConfigCheckbox
+        field="isMarkAsResolvedDisabled"
+        label="Disable the ability to mark a conversation as resolved"
+      />
       <SuggestionsInput />
       <Input
         control={control}
@@ -32,6 +47,7 @@ export default function CommonInterfaceInput(props: Props) {
         label="Brand Color"
         {...register('interfaceConfig.primaryColor')}
       />
+      <Divider />
     </>
   );
 }
