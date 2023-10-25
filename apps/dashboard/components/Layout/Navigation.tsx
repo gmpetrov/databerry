@@ -43,6 +43,8 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AppStatus, RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
 
+import ActionsModal from '../ActionsModal';
+
 function NavigationLink(props: {
   href: string;
   target?: string;
@@ -85,7 +87,7 @@ export default function Navigation() {
   const router = useRouter();
   const { data: session } = useSession();
   const { product } = useProduct();
-
+  const [IsQuickModalOpen, setIsQuickModalOpen] = React.useState(false);
   const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
     fetcher,
@@ -300,6 +302,15 @@ export default function Navigation() {
               '& .JoyListItemButton-root': { p: '8px' },
             }}
           >
+            <Button sx={{ my: 2 }} onClick={() => setIsQuickModalOpen(true)}>
+              Quick Actions
+            </Button>
+            <ActionsModal
+              isOpen={IsQuickModalOpen}
+              handleCloseModal={() => {
+                setIsQuickModalOpen(false);
+              }}
+            />
             {appLinks.map((each) => (
               <NavigationLink
                 key={each.route}
