@@ -203,7 +203,12 @@ export default function CreateDatastoreModal(props: Props) {
     <Modal
       onClose={props.handleClose}
       open={props.isOpen!}
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        my: 3,
+      }}
     >
       <Sheet
         variant="outlined"
@@ -213,6 +218,8 @@ export default function CreateDatastoreModal(props: Props) {
           borderRadius: 'md',
           p: 3,
           boxShadow: 'lg',
+          maxHeight: '100%',
+          overflowY: 'auto',
         }}
       >
         <Stepper activeStep={state.activeStep} orientation="vertical">
