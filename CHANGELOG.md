@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.55"></a>
+## 0.1.55 (2023-10-25)
+
+### Miscellaneous
+
+- 🎸 disable actions on widgets ([#215](https://github.com/gmpetrov/databerry/issues/215)) [[7550e74](https://github.com/gmpetrov/databerry/commit/7550e74ef0fcbd9e8a42d853892d51580a92384a)]
+- 🤖 improve cs landing page [[1dd7626](https://github.com/gmpetrov/databerry/commit/1dd76261aa434f0368239df4ffb29bc28f6ebae3)]
+- 🤖 setup domain resolveai.io [[38656fb](https://github.com/gmpetrov/databerry/commit/38656fb97f7ad253d2f2c44cf60be8835219f4ab)]
+
+
 <a name="0.1.54"></a>
 ## 0.1.54 (2023-10-25)
 
