@@ -21,9 +21,11 @@ import {
 import React from 'react';
 
 import Cta from '../landing-page/Cta';
+import FAQ from '../landing-page/FAQ';
 import { Footer } from '../landing-page/Footer';
 import Languages from '../landing-page/Languages';
 import PartnerLogos from '../PartnerLogos';
+import SEO from '../SEO';
 
 import Feature from './Feature';
 import { Header } from './Header';
@@ -34,9 +36,26 @@ type Props = {};
 function CSLandingPage({}: Props) {
   return (
     <>
+      <SEO
+        title="Resolve AI - Resolve 50% of your support tickets instantly"
+        description="Resolve AI brings a no-code platform to create custom AI chatbots trained on your data. Our solution makes customer support easy and simplifies team workflow."
+        uri="/"
+      />
+
       <Header />
+
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
+        id="clgtujkqh022j0u0zw3ut8vk3"
+        data-name="databerry-chat-bubble"
+      ></script>
+
       <Hero />
+
       <PartnerLogos />
+
+      {/* <Feature3Cols /> */}
 
       <Feature
         label="Productivity Boost"
@@ -126,6 +145,14 @@ function CSLandingPage({}: Props) {
         mediaUrl="/landing-page/demo-handoff.mp4"
         inversed
       />
+
+      <Feature
+        label="Tranform visitors into customers"
+        title={'Generate Leads'}
+        description="Leverage the prowess of our autonomous customer support agent to not just resolve queries but also identify and nurture potential leads."
+        mediaUrl="/landing-page/demo-lead.jpg"
+      />
+
       <Feature
         label="Fine-tuning"
         title={'Review and improve your AI'}
@@ -149,14 +176,9 @@ function CSLandingPage({}: Props) {
           },
         ]}
         mediaUrl="/landing-page/inbox.jpg"
+        inversed
       />
 
-      {/* <Feature
-        label="Tranform visitors into customers"
-        title={'Generate Leads'}
-        description="Leverage the prowess of our autonomous customer support agent to not just resolve queries but also identify and nurture potential leads. Our AI technology intelligently engages with every customer interaction to recognize opportunities for lead generation. It captures essential data from promising prospects and seamlessly integrates this information into your CRM system. This proactive lead generation feature ensures that while addressing support queries, the AI agent is also contributing to building a robust sales pipeline for your business. Experience a dual advantage of superior customer support and enhanced lead capture, all driven by intelligent automation."
-        mediaUrl="/landing-page/demo-leads.mp4"
-      /> */}
       {/* 
       <Feature
         label="No-coding required"
@@ -187,7 +209,6 @@ function CSLandingPage({}: Props) {
         }
         // description="Our autonomous agent seamlessly integrates across multiple communication platforms—be it email, chat, social media, or phone—providing a consistent and efficient support experience. No matter where your customers reach out, our AI-driven agent is there to assist, ensuring every interaction is handled with precision and understanding. Elevate your customer service to a new level of excellence, with streamlined operations and satisfied customers across all channels."
         mediaUrl="/landing-page/deploy.jpg"
-        inversed
       />
 
       <Feature
@@ -204,7 +225,7 @@ function CSLandingPage({}: Props) {
           },
           {
             name: 'Beyond canned responses',
-            description: `over a new realm of customer support with our autonomous agent that goes beyond mere FAQ interactions.`,
+            description: `Discover a new realm of customer support with our autonomous agent that goes beyond mere FAQ interactions.`,
             icon: ArrowsPointingOutIcon,
           },
           {
@@ -213,6 +234,7 @@ function CSLandingPage({}: Props) {
             icon: CpuChipIcon,
           },
         ]}
+        inversed
       />
 
       <Feature
@@ -237,8 +259,9 @@ function CSLandingPage({}: Props) {
             icon: FaceSmileIcon,
           },
         ]}
-        inversed
       />
+
+      <FAQ />
 
       <Cta />
 

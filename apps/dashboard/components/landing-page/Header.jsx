@@ -162,6 +162,17 @@ export function Header() {
 
                 <Menu />
 
+                {/* <Button
+                  href="/products/crisp-plugin"
+                  size="sm"
+                  variant="outlined"
+                  color="success"
+                  sx={{ borderRadius: 100 }}
+                  endDecorator={<ArrowForwardRoundedIcon />}
+                >
+                  Discover ResolveAI
+                </Button> */}
+
                 {/* <NavLink href="/help">Help Center</NavLink> */}
                 <NavLink href="/pricing">Pricing</NavLink>
                 {/* <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>

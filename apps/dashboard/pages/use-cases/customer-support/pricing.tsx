@@ -1,10 +1,10 @@
+import { Header } from '@app/components/cs-landing-page/Header';
 import { Footer } from '@app/components/landing-page/Footer';
-import { Header } from '@app/components/landing-page/Header';
 import PricingSection from '@app/components/landing-page/PricingSection';
 import PartnerLogos from '@app/components/PartnerLogos';
 import SEO from '@app/components/SEO';
 
-export default function Pricing() {
+export default function CSPricingPage() {
   return (
     <>
       <SEO
@@ -15,9 +15,10 @@ export default function Pricing() {
       <Header />
       <main className="flex flex-col min-h-full mb-auto bg-black">
         <PricingSection />
+
         <PartnerLogos />
       </main>
-      <Footer />
+      <Footer disableProductColumn />
     </>
   );
 }

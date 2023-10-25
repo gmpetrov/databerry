@@ -56,8 +56,28 @@ const nextConfig = {
           ],
         },
         {
+          source: '/pricing',
+          destination: '/use-cases/customer-support/pricing',
+          has: [
+            {
+              type: 'host',
+              value: 'www.chatbotgpt.ai',
+            },
+          ],
+        },
+        {
           source: '/',
           destination: '/use-cases/customer-support',
+          has: [
+            {
+              type: 'host',
+              value: 'www.resolveai.io',
+            },
+          ],
+        },
+        {
+          source: '/pricing',
+          destination: '/use-cases/customer-support/pricing',
           has: [
             {
               type: 'host',

@@ -5,7 +5,9 @@ import Button from '@mui/joy/Button';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect } from 'react';
+import { useState } from 'react';
 
 // import { Button } from '@app/components/landing-page/Button'
 import { Container } from '@app/components/landing-page/Container';
@@ -118,6 +120,23 @@ function MobileNavigation() {
 }
 
 export function Header() {
+  const router = useRouter();
+  const [hostname, setHostname] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setHostname(window.location.hostname);
+    }
+  }, []);
+
+  let logoUrl = '/logo-resolveai-dark.png';
+
+  if (hostname?.includes('resolveai.io')) {
+    logoUrl = '/logo-resolveai-dark.png';
+  } else if (hostname?.includes('chatbotgpt.ai')) {
+    logoUrl = '/logo-chatbotgpt-dark.png';
+  }
+
   return (
     <>
       {/* #112F8A */}
@@ -151,7 +170,8 @@ export function Header() {
                   width="80"
                   height="100"
                   // className={clsx(props.className)}
-                  src="/app-logo-dark-chatbotgpt.png"
+                  // src="/logo-chatbotgpt-dark.png"
+                  src={logoUrl}
                   alt=""
                 />
               </Link>

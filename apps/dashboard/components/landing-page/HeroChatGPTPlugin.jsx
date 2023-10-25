@@ -82,11 +82,12 @@ export function HeroChatGPTPlugin() {
               <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
                 <span>New</span>
               </span>
-              Chat with any document
+              Discover ResolveAI
               <Link
-                href="/products/chat"
+                href="https://www.resolveai.io"
                 style={{ background: 'none' }}
                 className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
+                target="_blank"
               >
                 Learn More{' '}
                 <svg

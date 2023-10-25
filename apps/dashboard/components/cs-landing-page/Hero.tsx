@@ -83,7 +83,7 @@ export default function Hero() {
               <div className="inline-flex items-center space-x-2">
                 <CheckBadgeIcon className="w-5 h-5 text-green-400" />
                 <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
-                  No hallucinations or measleading answers
+                  No hallucinations or misleading answers
                 </p>
               </div>
               <div className="inline-flex items-center space-x-2">
