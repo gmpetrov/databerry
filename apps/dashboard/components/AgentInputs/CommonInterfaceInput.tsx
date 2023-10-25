@@ -29,15 +29,15 @@ export default function CommonInterfaceInput(props: Props) {
       />
       <InterfaceConfigCheckbox
         field="isHumanRequestedDisabled"
-        label="Disable the ability to request human operator."
+        label="Disable the ability to request a human operator"
       />
       <InterfaceConfigCheckbox
         field="isLeadCaptureDisabled"
-        label="Disable the ability to capture user's emails."
+        label="Disable the ability to capture a visitor's emails"
       />
       <InterfaceConfigCheckbox
         field="isMarkAsResolvedDisabled"
-        label="Disable the ability to mark a conversation as resolved."
+        label="Disable the ability to mark a conversation as resolved"
       />
       <SuggestionsInput />
       <Input
