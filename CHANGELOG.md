@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.54"></a>
+## 0.1.54 (2023-10-25)
+
+### Fixed
+
+- 🐛 icon size [[cbe85ca](https://github.com/gmpetrov/databerry/commit/cbe85cad78f3bf8b59693c61a9043afe4ad34006)]
+
+
 <a name="0.1.53"></a>
 ## 0.1.53 (2023-10-24)
 
