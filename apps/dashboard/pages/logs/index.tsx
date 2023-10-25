@@ -619,14 +619,23 @@ export default function LogsPage() {
                         ) : (
                           <>
                             {each?.status === ConversationStatus.RESOLVED && (
-                              <CheckCircleRoundedIcon color="success" />
+                              <CheckCircleRoundedIcon
+                                color="success"
+                                fontSize="xl2"
+                              />
                             )}
                             {each?.status ===
                               ConversationStatus.HUMAN_REQUESTED && (
-                              <AccountCircleRoundedIcon color="warning" />
+                              <AccountCircleRoundedIcon
+                                color="warning"
+                                fontSize="xl2"
+                              />
                             )}
                             {each?.status === ConversationStatus.UNRESOLVED && (
-                              <ArrowCircleRightRoundedIcon color="danger" />
+                              <ArrowCircleRightRoundedIcon
+                                color="danger"
+                                fontSize="xl2"
+                              />
                             )}
                           </>
                         )
