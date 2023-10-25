@@ -1,13 +1,23 @@
 import { Checkbox, Stack, Typography } from '@mui/joy';
 import { useFormContext } from 'react-hook-form';
 
-function InitialBubbleMessageCheckbox({
-  labelText = 'Disable initial message popup',
+type CheckboxField =
+  | 'isInitMessagePopupDisabled'
+  | 'isHumanRequestedDisabled'
+  | 'isMarkAsResolvedDisabled'
+  | 'isLeadCaptureDisabled';
+
+function InterfaceConfigCheckbox({
+  label,
+  field,
+}: {
+  label: string;
+  field: CheckboxField;
 }) {
   const { register, setValue, getValues } = useFormContext();
   const { interfaceConfig } = getValues();
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue('interfaceConfig.isInitMessagePopupDisabled', e.target.checked, {
+    setValue(`interfaceConfig.${field}`, e.target.checked, {
       shouldDirty: true,
       shouldValidate: true,
     });
@@ -15,14 +25,14 @@ function InitialBubbleMessageCheckbox({
   return (
     <Stack direction="row" spacing={1} alignItems="center">
       <Checkbox
-        {...register('interfaceConfig.isInitMessagePopupDisabled')}
+        {...register(`interfaceConfig.${field}`)}
         onChange={handleCheckboxChange}
-        checked={Boolean(interfaceConfig?.isInitMessagePopupDisabled)}
-        aria-label={labelText}
+        checked={Boolean(interfaceConfig?.[field])}
+        aria-label={label}
       />
-      <Typography>{labelText}</Typography>
+      <Typography>{label}</Typography>
     </Stack>
   );
 }
 
-export default InitialBubbleMessageCheckbox;
+export default InterfaceConfigCheckbox;

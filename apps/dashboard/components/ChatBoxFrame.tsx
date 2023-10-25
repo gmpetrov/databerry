@@ -163,7 +163,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           handleEvalAnswer={handleEvalAnswer}
           handleAbort={handleAbort}
           hideInternalSources
-          renderBottom={<CustomerSupportActions />}
+          renderBottom={<CustomerSupportActions config={config} />}
         />
       </Box>
     </ChatContext.Provider>
