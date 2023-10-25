@@ -56,6 +56,16 @@ const nextConfig = {
           ],
         },
         {
+          source: '/',
+          destination: '/use-cases/customer-support',
+          has: [
+            {
+              type: 'host',
+              value: 'www.resolveai.io',
+            },
+          ],
+        },
+        {
           source: '/sitemap.xml',
           destination: '/api/sitemaps/chaindesk',
           has: [
@@ -72,6 +82,16 @@ const nextConfig = {
             {
               type: 'host',
               value: 'www.chatbotgpt.ai',
+            },
+          ],
+        },
+        {
+          source: '/sitemap.xml',
+          destination: '/api/sitemaps/resolveai',
+          has: [
+            {
+              type: 'host',
+              value: 'www.resolveai.io',
             },
           ],
         },
