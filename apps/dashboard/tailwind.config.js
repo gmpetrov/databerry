@@ -13,6 +13,16 @@ module.exports = {
       fontFamily: {
         sans: ['"Josefin Sans"', ...defaultTheme.fontFamily.sans],
       },
+      keyframes: {
+        typewriterCursor: {
+          '0%': { opacity: '1' },
+          '50%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
+      animation: {
+        typewriterCursor: 'typewriterCursor 1s infinite',
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],

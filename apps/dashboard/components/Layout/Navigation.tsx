@@ -219,6 +219,12 @@ export default function Navigation() {
       ...(product === 'chaindesk'
         ? [
             {
+              label: 'Conversational Forms',
+              route: RouteNames.FORMS,
+              icon: <InboxRoundedIcon fontSize="md" />,
+              active: router.route === RouteNames.FORMS,
+            },
+            {
               label: 'Inbox',
               route: RouteNames.LOGS,
               icon: (

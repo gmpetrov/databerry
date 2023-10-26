@@ -98,6 +98,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     handleAbort: undefined as any,
     isStreaming: false,
     isAiEnabled: true,
+    isFormValid: false,
   });
 
   // TODO: Remove when rate limit implemented from backend
@@ -214,7 +215,6 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         let bufferToolCall = '';
         class RetriableError extends Error {}
         class FatalError extends Error {}
-
         await fetchEventSource(endpoint, {
           method: 'POST',
           headers: {
@@ -279,8 +279,15 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               console.log('[response]', bufferEndpointResponse);
 
               try {
-                const { sources, conversationId, visitorId, messageId } =
-                  JSON.parse(bufferEndpointResponse) as ChatResponse;
+                const {
+                  sources,
+                  conversationId,
+                  visitorId,
+                  messageId,
+                  isValid,
+                } = JSON.parse(bufferEndpointResponse) as ChatResponse & {
+                  isValid: boolean;
+                };
 
                 const h = [...history];
 
@@ -301,6 +308,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                   conversationId,
                   prevConversationId: state.conversationId,
                   visitorId,
+                  isFormValid: isValid,
                 });
 
                 try {
@@ -554,6 +562,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     history: state.history,
     isLoadingConversation: getConversationQuery.isLoading,
     isValidatingConversation: getConversationQuery.isValidating,
+    isFomValid: state.isFormValid,
     hasMoreMessages: state.hasMoreMessages,
     visitorId: state.visitorId,
     conversationId: state.conversationId,

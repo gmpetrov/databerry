@@ -450,3 +450,30 @@ export const ConversationMetadataSlack = z.object({
 export type ConversationMetadataSlack = z.infer<
   typeof ConversationMetadataSlack
 >;
+export const CreateFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  datastoreId: z.string().optional(),
+  draftConfig: z
+    .object({
+      fields: z.array(
+        z.object({
+          id: z.union([z.string(), z.number()]).optional(),
+          fieldName: z.string().min(5),
+          required: z.boolean().optional(),
+        })
+      ),
+      introScreen: z
+        .object({
+          introText: z.string(),
+          ctaText: z.string(),
+        })
+        .optional(),
+    })
+    .optional(),
+  publishedConfig: z.record(z.any()).optional(),
+});
+export type CreateFormSchema = z.infer<typeof CreateFormSchema>;
+
+export const UpdateFormSchema = CreateFormSchema.partial();
+export type UpdateFormSchema = z.infer<typeof UpdateFormSchema>;

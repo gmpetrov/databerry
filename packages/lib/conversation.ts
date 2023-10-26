@@ -4,6 +4,7 @@ import {
   Agent,
   ConversationChannel,
   Datastore,
+  FormStatus,
   Message,
   ServiceProviderType,
   Tool,
@@ -38,7 +39,7 @@ type ExternalConfig = {
 };
 
 export default class ConversationManager {
-  organizationId: string;
+  organizationId?: string;
   userId?: string;
   visitorId?: string;
   conversationId?: string;
@@ -48,6 +49,8 @@ export default class ConversationManager {
   metadata?: Record<PropertyKey, any> = {};
   channelExternalId?: string;
   channelCredentialsId?: string;
+  formId?: string;
+  formtStatus?: FormStatus;
 
   constructor({
     organizationId,
@@ -59,8 +62,9 @@ export default class ConversationManager {
     metadata,
     channelExternalId,
     channelCredentialsId,
+    formId,
   }: {
-    organizationId: string;
+    organizationId?: string;
     agentId?: string;
     channel: ConversationChannel;
     conversationId?: string;
@@ -69,6 +73,7 @@ export default class ConversationManager {
     metadata?: Record<PropertyKey, any>;
     channelExternalId?: string;
     channelCredentialsId?: string;
+    formId?: string;
   }) {
     this.messages = [];
     this.userId = userId;
@@ -80,6 +85,7 @@ export default class ConversationManager {
     this.organizationId = organizationId;
     this.channelExternalId = channelExternalId;
     this.channelCredentialsId = channelCredentialsId;
+    this.formId = formId;
   }
 
   push(message: MessageExtended) {
@@ -117,26 +123,30 @@ export default class ConversationManager {
       create: {
         id: this.conversationId,
         channel: this.channel,
-        channelExternalId: this.channelExternalId,
-        ...(this.channelCredentialsId
+
+        ...(this.organizationId
           ? {
-              channelCredentials: {
+              organization: {
                 connect: {
-                  id: this.channelCredentialsId,
+                  id: this.organizationId,
                 },
               },
             }
           : {}),
-        organization: {
-          connect: {
-            id: this.organizationId,
-          },
-        },
         ...(this.agentId
           ? {
               agent: {
                 connect: {
                   id: this.agentId,
+                },
+              },
+            }
+          : {}),
+        ...(this.formId
+          ? {
+              form: {
+                connect: {
+                  id: this.formId,
                 },
               },
             }
@@ -186,6 +196,7 @@ export default class ConversationManager {
               visitorId: this.visitorId,
             }
           : {}),
+
         ...(this.userId
           ? {
               user: {
@@ -193,6 +204,11 @@ export default class ConversationManager {
                   id: this.userId,
                 },
               },
+            }
+          : {}),
+        ...(this.formtStatus
+          ? {
+              formStatus: this.formtStatus,
             }
           : {}),
       },

@@ -32,6 +32,7 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "ioredis": "^5.3.1",
     "js-tiktoken": "^1.0.7",
+    "json-schema": "^0.4.0",
     "jszip": "^3.10.1",
     "langchain": "0.0.196",
     "mammoth": "^1.5.1",
@@ -62,6 +63,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
+    "@types/json-schema": "^7.0.14",
     "@types/mime-types": "^2.1.1",
     "@types/node": "18.15.10",
     "@types/nodemailer": "^6.4.7",

@@ -25,6 +25,7 @@ model Organization {
   subscriptions    Subscription[]
   appDatasources   AppDatasource[]
   serviceProviders ServiceProvider[]
+  forms            Form[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -122,6 +123,7 @@ model Datastore {
   visibility  DatastoreVisibility @default(private)
   apiKeys     DatastoreApiKey[]
   tool        Tool[]
+  forms       Form[]
 
   pluginIconUrl              String? @map("plugin_icon_url")
   pluginName                 String? @map("plugin_name")
@@ -322,6 +324,11 @@ model Conversation {
 
   lead Lead?
  
+
+  formStatus FormStatus @map("form_status") @default(IN_PROGRESS)
+  form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId  String?   @map("form_id")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -568,6 +575,46 @@ model Lead {
 
   @@map("leads")
 }
+model Form {
+  id          String  @id @default(cuid())
+
+  name        String
+
+  draftConfig Json?
+  publishedConfig Json?
+  
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // responses FormResponse[]
+ 
+  datastore            Datastore?            @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+  datastoreId          String?               @map("datastore_id")
+  
+  
+  conversations Conversation[]
+
+  // agent   Agent?  @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  // agentId String? @map("agent_id")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("forms")
+}
+
+// model FormResponse {
+//   id          String  @id @default(cuid())
+
+//   data Json?
+
+//   formId String?       @map("form_id")
+//   form   Form? @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+//   createdAt DateTime @default(now()) @map("created_at")
+//   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+//   @@map("form_responses")
+// }
 
 model XPBNPEval {
   id             String  @id @default(cuid())
@@ -749,4 +796,9 @@ enum ConversationStatus {
      RESOLVED
      UNRESOLVED
      HUMAN_REQUESTED
+}
+enum FormStatus {
+  COMPLETED
+  IN_PROGRESS
+  ABANDONED
 }
