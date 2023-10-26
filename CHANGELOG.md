@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.56"></a>
+## 0.1.56 (2023-10-26)
+
+### Fixed
+
+- 🐛 loading issues [[24201ff](https://github.com/gmpetrov/databerry/commit/24201ffaf83dceb21d72413f76216375175a8540)]
+- 🐛 add scroll to  modal [[46b733d](https://github.com/gmpetrov/databerry/commit/46b733dd3aba2e220c5007255038db00f4563ac1)]
+- 🐛 header link [[e743642](https://github.com/gmpetrov/databerry/commit/e743642892a1ff87349bdfb84dbaaba37c2b8dba)]
+
+
 <a name="0.1.55"></a>
 ## 0.1.55 (2023-10-25)
 
