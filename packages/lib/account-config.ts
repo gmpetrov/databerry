@@ -83,7 +83,6 @@ const config: {
     type: SubscriptionPlan.level_3,
     label: 'Enterprise',
     limits: {
-      //  No limits
       maxAgents: 100,
       maxAgentsQueries: 100000,
       maxDatastores: 100,
@@ -94,6 +93,22 @@ const config: {
       maxWebsiteURL: 10000,
       maxSeats: 10,
       maxStoredTokens: 300000000,
+    },
+  },
+  [SubscriptionPlan.level_4]: {
+    type: SubscriptionPlan.level_4,
+    label: 'Ultimate',
+    limits: {
+      maxAgents: 200,
+      maxAgentsQueries: 200000,
+      maxDatastores: 200,
+      maxDatasources: 1000,
+      maxFileSize: 90000000,
+      maxDataProcessing: 500000000,
+      maxSummary: 500,
+      maxWebsiteURL: 20000,
+      maxSeats: 20,
+      maxStoredTokens: 600000000,
     },
   },
 };

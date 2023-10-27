@@ -35,40 +35,40 @@ const tiers = [
       // `Data processing limited to ${accountConfig['level_0'].limits
       //   .maxDataProcessing / 1000000}MB / month`,
       'Manual data synching',
-      'Access to Chaindesk API',
+      // 'Access to Chaindesk API',
       // 'ChatGPT plugin',
     ],
     mostPopular: false,
   },
-  {
-    name: 'Startup',
-    id: 'tier-startup',
-    href: 'https://app.chaindesk.ai/settings/billing',
-    price: { monthly: '$49', annually: '$490' },
-    description: 'A plan that scales with your rapidly growing business.',
-    features: [
-      `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_1'].limits.maxAgentsQueries} GPT-3.5 or ${
-        accountConfig['level_1'].limits.maxAgentsQueries / 20
-      } GPT-4 agents queries / month`,
-      `${formatter.format(
-        accountConfig['level_1'].limits.maxStoredTokens
-      )} words storage`,
-      `File upload limited to ${
-        accountConfig['level_1'].limits.maxFileSize / 1000000
-      }MB / file`,
-      // `Data processing limited to ${accountConfig['level_1'].limits
-      //   .maxDataProcessing / 1000000}MB / month`,
-      'Manual data synching',
-      'ChatGPT plugin',
-      `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
-      'Access to Crisp Plugin',
-      'Access to Slack Bot',
-      `${accountConfig['level_1'].limits.maxSeats} Team seat(s) included`,
-    ],
-    mostPopular: false,
-  },
+  // {
+  //   name: 'Startup',
+  //   id: 'tier-startup',
+  //   href: 'https://app.chaindesk.ai/settings/billing',
+  //   price: { monthly: '$49', annually: '$490' },
+  //   description: 'A plan that scales with your rapidly growing business.',
+  //   features: [
+  //     `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
+  //     `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
+  //     `${accountConfig['level_1'].limits.maxAgentsQueries} GPT-3.5 or ${
+  //       accountConfig['level_1'].limits.maxAgentsQueries / 20
+  //     } GPT-4 agents queries / month`,
+  //     `${formatter.format(
+  //       accountConfig['level_1'].limits.maxStoredTokens
+  //     )} words storage`,
+  //     `File upload limited to ${
+  //       accountConfig['level_1'].limits.maxFileSize / 1000000
+  //     }MB / file`,
+  //     // `Data processing limited to ${accountConfig['level_1'].limits
+  //     //   .maxDataProcessing / 1000000}MB / month`,
+  //     'Manual data synching',
+  //     'ChatGPT plugin',
+  //     `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
+  //     'Access to Crisp Plugin',
+  //     'Access to Slack Bot',
+  //     `${accountConfig['level_1'].limits.maxSeats} Team seat(s) included`,
+  //   ],
+  //   mostPopular: false,
+  // },
   {
     name: 'Pro',
     id: 'tier-pro',
@@ -89,12 +89,13 @@ const tiers = [
       }MB / file`,
       // `Data processing limited to ${accountConfig['level_2'].limits
       //   .maxDataProcessing / 1000000}MB / month`,
-      'auto synch datasources',
-      'ChatGPT plugin',
+      'Access to Chaindesk API',
+      'Auto synch datasources',
+      // 'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
       `${accountConfig['level_2'].limits.maxSeats} Team seat(s) included`,
     ],
-    mostPopular: true,
+    mostPopular: false,
   },
   {
     name: 'Enterprise',
@@ -117,10 +118,40 @@ const tiers = [
       }MB / file`,
       // `Data processing limited to ${accountConfig['level_3'].limits
       //   .maxDataProcessing / 1000000}MB / month`,
-      'auto synch datasources',
-      'ChatGPT plugin',
+      'Access to Chaindesk API',
+      'Auto synch datasources',
+      // 'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
       `${accountConfig['level_3'].limits.maxSeats} Team seat(s) included`,
+    ],
+    mostPopular: true,
+  },
+  {
+    name: 'Ultimate',
+    id: 'tier-ultimate',
+    href: 'https://app.chaindesk.ai/settings/billing',
+    price: { monthly: '$999', annually: '$9990' },
+    description:
+      'You’ve got a huge amount of assets but it’s not enough. To the moon.',
+    features: [
+      `${accountConfig['level_4'].limits.maxAgents} agent(s)`,
+      `${accountConfig['level_4'].limits.maxDatastores} datastore(s)`,
+      `${accountConfig['level_4'].limits.maxAgentsQueries} GPT-3.5 or ${
+        accountConfig['level_4'].limits.maxAgentsQueries / 20
+      } GPT-4 agents queries / month`,
+      `${formatter.format(
+        accountConfig['level_4'].limits.maxStoredTokens
+      )} words storage`,
+      `File upload limited to ${
+        accountConfig['level_4'].limits.maxFileSize / 1000000
+      }MB / file`,
+      // `Data processing limited to ${accountConfig['level_4'].limits
+      //   .maxDataProcessing / 1000000}MB / month`,
+      'Access to Chaindesk API',
+      'Auto synch datasources',
+      // 'ChatGPT plugin',
+      `Website loader limited to  ${accountConfig['level_4'].limits.maxWebsiteURL} Pages`,
+      `${accountConfig['level_4'].limits.maxSeats} Team seat(s) included`,
     ],
     mostPopular: false,
   },
@@ -262,7 +293,8 @@ export default function PricingSection() {
                     key={feature}
                     className={clsx('flex gap-x-3', {
                       'text-green-400':
-                        feature.includes('auto synch') ||
+                        feature.includes('Access to Chaindesk API') ||
+                        feature.includes('Auto synch') ||
                         feature.includes('ChatGPT') ||
                         feature.includes('Crisp Plugin') ||
                         feature.includes('Slack Bot') ||
