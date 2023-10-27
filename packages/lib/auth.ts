@@ -29,6 +29,7 @@ import sendVerificationRequest from './verification-sender';
 const CustomPrismaProvider = (req: NextApiRequest) => (p: PrismaClient) => {
   return {
     ...PrismaAdapter(p),
+    debug: true,
     createSession: async (data: Prisma.SessionCreateArgs['data']) => {
       const membership = await p.membership.findFirst({
         where: {
