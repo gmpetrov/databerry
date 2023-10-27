@@ -1,5 +1,6 @@
 import ErrorIcon from '@mui/icons-material/Error';
 import Button from '@mui/joy/Button';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -20,7 +21,11 @@ function AuthError() {
   }, [router.query]);
 
   function Cta() {
-    return <Button href="/api/auth/signin">Sign in</Button>;
+    return (
+      <Link href="/signin">
+        <Button>Sign in</Button>
+      </Link>
+    );
   }
 
   switch (errorType) {
