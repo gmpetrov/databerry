@@ -21,7 +21,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/chat',
+        destination: '/agents',
         permanent: true,
         has: [
           {
