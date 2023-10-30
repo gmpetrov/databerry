@@ -436,7 +436,7 @@ function DatastoreSettings() {
         </Stack>
       </FormControl>
 
-      {/* <Divider sx={{ my: 4 }} />
+      <Divider sx={{ my: 4 }} />
 
       <Box id="chatgpt-plugin">
         {getDatastoreQuery?.data?.id && (
@@ -484,7 +484,7 @@ function DatastoreSettings() {
             </UserPremium>
           </FormControl>
         )}
-      </Box> */}
+      </Box>
 
       <Divider sx={{ my: 4 }} />
 
