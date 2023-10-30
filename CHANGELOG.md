@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.57"></a>
+## 0.1.57 (2023-10-30)
+
+### Fixed
+
+- 🐛 add back datastore&#x27;s chatgpt plugin settings [[e543859](https://github.com/gmpetrov/databerry/commit/e5438593986b71b2ace031e5a1e5749a3df910f5)]
+- 🐛 wrong redirection [[b0c040c](https://github.com/gmpetrov/databerry/commit/b0c040c9bbfdfbe9c11e629b187ce6cb5cb79ad4)]
+- 🐛 signin link broken from error page [[9fedf20](https://github.com/gmpetrov/databerry/commit/9fedf20e4074221370b6c0e8955b04252b00f656)]
+
+### Miscellaneous
+
+- 🤖 enable debug next-auth [[500bad5](https://github.com/gmpetrov/databerry/commit/500bad519139430dec4473c9d0d331223181afb0)]
+- 🤖 update pricing plans [[62019ca](https://github.com/gmpetrov/databerry/commit/62019ca9a014371cd894740bffadd71b41dd3d42)]
+
+
 <a name="0.1.56"></a>
 ## 0.1.56 (2023-10-26)
 
