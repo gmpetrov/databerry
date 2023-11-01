@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import accountConfig from '@chaindesk/lib/account-config';
+import { appUrl } from '@chaindesk/lib/config';
 
 let formatter = Intl.NumberFormat('en');
 
@@ -18,7 +19,7 @@ const tiers = [
   {
     name: 'Discover',
     id: 'tier-free',
-    href: 'https://app.chaindesk.ai/settings/billing',
+    href: `${appUrl}/settings/billing`,
     price: { monthly: '$0', annually: '$0' },
     description: 'The essentials to get started quickly.',
     features: [
@@ -72,7 +73,7 @@ const tiers = [
   {
     name: 'Pro',
     id: 'tier-pro',
-    href: 'https://app.chaindesk.ai/settings/billing',
+    href: `${appUrl}/settings/billing`,
     price: { monthly: '$99', annually: '$990' },
     description: 'Dedicated support and for your company.',
     features: [
@@ -100,7 +101,7 @@ const tiers = [
   {
     name: 'Enterprise',
     id: 'tier-enterprise',
-    href: 'https://app.chaindesk.ai/settings/billing',
+    href: `${appUrl}/settings/billing`,
     price: { monthly: '$499', annually: '$4990' },
     description:
       'You’ve got a huge amount of assets but it’s not enough. To the moon.',
@@ -129,7 +130,7 @@ const tiers = [
   {
     name: 'Ultimate',
     id: 'tier-ultimate',
-    href: 'https://app.chaindesk.ai/settings/billing',
+    href: `${appUrl}/settings/billing`,
     price: { monthly: '$999', annually: '$9990' },
     description:
       'You’ve got a huge amount of assets but it’s not enough. To the moon.',

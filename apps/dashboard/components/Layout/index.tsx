@@ -8,6 +8,8 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
+import { appUrl } from '@chaindesk/lib/config';
+
 import Logo from '../Logo';
 import SEO from '../SEO';
 
@@ -53,7 +55,7 @@ export default function Layout(props: Props) {
       <SEO
         title="Dashboard | Chaindesk."
         description="Build your own ChatGPT Chat Bot for your business."
-        baseUrl="https://app.chaindesk.ai"
+        baseUrl={appUrl}
         uri={router.pathname}
       />
       {drawerOpen && (

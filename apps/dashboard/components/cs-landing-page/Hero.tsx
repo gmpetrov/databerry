@@ -17,6 +17,8 @@ import React from 'react';
 
 import { Container } from '@app/components/landing-page/Container';
 
+import { appUrl } from '@chaindesk/lib/config';
+
 export default function Hero() {
   return (
     <Container className="relative z-10 pt-20 pb-16 mb-12 text-center lg:pt-10">
@@ -157,7 +159,7 @@ export default function Hero() {
               mt={6}
               className="justify-center sm:justify-start"
             >
-              <Link target="_blank" href={'https://app.chaindesk.ai/signin'}>
+              <Link target="_blank" href={`${appUrl}/signin`}>
                 <Button
                   variant="solid"
                   size="lg"
@@ -191,7 +193,7 @@ export default function Hero() {
             /> */}
             <div className="w-full h-[500px] overflow-hidden rounded-3xl bg-white">
               <iframe
-                src="https://app.chaindesk.ai/agents/clgtujkqh022j0u0zw3ut8vk3/iframe"
+                src={`${appUrl}/agents/clgtujkqh022j0u0zw3ut8vk3/iframe`}
                 width="100%"
                 height="100%"
                 frameBorder="0"

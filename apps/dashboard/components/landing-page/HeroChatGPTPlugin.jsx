@@ -16,6 +16,7 @@ import React from 'react';
 
 import { Container } from '@app/components/landing-page/Container';
 
+import { appUrl } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
 
 export function HeroChatGPTPlugin() {
@@ -207,7 +208,7 @@ export function HeroChatGPTPlugin() {
               mt={6}
               className="justify-center sm:justify-start"
             >
-              <Link target="_blank" href={'https://app.chaindesk.ai/signin'}>
+              <Link target="_blank" href={`${appUrl}/signin`}>
                 <Button
                   variant="solid"
                   size="lg"
@@ -240,7 +241,7 @@ export function HeroChatGPTPlugin() {
             />
             <div className="w-full h-[500px] overflow-hidden rounded-3xl bg-white">
               <iframe
-                src="https://app.chaindesk.ai/agents/clgtujkqh022j0u0zw3ut8vk3/iframe"
+                src={`${appUrl}/agents/clgtujkqh022j0u0zw3ut8vk3/iframe`}
                 width="100%"
                 height="100%"
                 frameBorder="0"

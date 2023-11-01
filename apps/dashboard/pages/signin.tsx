@@ -16,6 +16,7 @@ import Input from '@app/components/Input';
 import Logo from '@app/components/Logo';
 import SEO from '@app/components/SEO';
 
+import { appUrl } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
 
 type Props = {
@@ -79,7 +80,7 @@ export default function SignInPage() {
       <SEO
         title="Sign-in"
         description="Sign-in to your Chaindesk account."
-        baseUrl="https://app.chaindesk.ai"
+        baseUrl={appUrl}
         uri={RouteNames.SIGN_IN}
       />
       <Head>

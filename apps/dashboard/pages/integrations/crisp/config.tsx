@@ -20,6 +20,7 @@ import superjson from 'superjson';
 
 import Logo from '@app/components/Logo';
 
+import { appUrl } from '@chaindesk/lib/config';
 import { getConnectedWebsites } from '@chaindesk/lib/crisp';
 import { Agent, Subscription } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -166,7 +167,7 @@ export default function CrispConfig(props: { agent: Agent }) {
                       <Stack>
                         You can find your API Key in your Chaindesk{' '}
                         <Link
-                          href={'https://app.chaindesk.ai/settings/api-keys'}
+                          href={`${appUrl}/settings/api-keys`}
                           target="_blank"
                         >
                           <Typography color="primary">

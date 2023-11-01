@@ -15,6 +15,7 @@ import { Logo } from '@app/components/landing-page/Logo';
 import Menu from '@app/components/landing-page/Menu';
 import { NavLink } from '@app/components/landing-page/NavLink';
 
+import { appUrl } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
 
 function MobileNavLink({ href, children }) {
@@ -109,9 +110,7 @@ function MobileNavigation() {
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
             {/* <MobileNavLink href="#pricing">Pricing</MobileNavLink> */}
             <hr className="m-2 border-slate-300/40" />
-            <MobileNavLink href="https://app.chaindesk.ai">
-              Sign in
-            </MobileNavLink>
+            <MobileNavLink href={appUrl}>Sign in</MobileNavLink>
           </Popover.Panel>
         </Transition.Child>
       </Transition.Root>
@@ -219,9 +218,7 @@ export function Header() {
             </Button> */}
               {/* Change following link href with /signin for local signin */}
               {/* <Link href="https://app.chaindesk.ai/signin?product=chatbotgpt"> */}
-              <Link
-                href={`https://app.chaindesk.ai/signin?product=${hostname}`}
-              >
+              <Link href={`${appUrl}/signin?product=${hostname}`}>
                 <Button variant="outlined" sx={{ borderRadius: 100 }}>
                   Sign In
                 </Button>
