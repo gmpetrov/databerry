@@ -40,35 +40,35 @@ const tiers = [
     ],
     mostPopular: false,
   },
-  // {
-  //   name: 'Startup',
-  //   id: 'tier-startup',
-  //   href: 'https://app.chaindesk.ai/settings/billing',
-  //   price: { monthly: '$49', annually: '$490' },
-  //   description: 'A plan that scales with your rapidly growing business.',
-  //   features: [
-  //     `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
-  //     `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
-  //     `${accountConfig['level_1'].limits.maxAgentsQueries} GPT-3.5 or ${
-  //       accountConfig['level_1'].limits.maxAgentsQueries / 20
-  //     } GPT-4 agents queries / month`,
-  //     `${formatter.format(
-  //       accountConfig['level_1'].limits.maxStoredTokens
-  //     )} words storage`,
-  //     `File upload limited to ${
-  //       accountConfig['level_1'].limits.maxFileSize / 1000000
-  //     }MB / file`,
-  //     // `Data processing limited to ${accountConfig['level_1'].limits
-  //     //   .maxDataProcessing / 1000000}MB / month`,
-  //     'Manual data synching',
-  //     'ChatGPT plugin',
-  //     `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
-  //     'Access to Crisp Plugin',
-  //     'Access to Slack Bot',
-  //     `${accountConfig['level_1'].limits.maxSeats} Team seat(s) included`,
-  //   ],
-  //   mostPopular: false,
-  // },
+  {
+    name: 'Startup',
+    id: 'tier-startup',
+    href: 'https://app.chaindesk.ai/settings/billing',
+    price: { monthly: '$49', annually: '$490' },
+    description: 'A plan that scales with your rapidly growing business.',
+    features: [
+      `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
+      `${accountConfig['level_1'].limits.maxDatastores} datastore(s)`,
+      `${accountConfig['level_1'].limits.maxAgentsQueries} GPT-3.5 or ${
+        accountConfig['level_1'].limits.maxAgentsQueries / 20
+      } GPT-4 agents queries / month`,
+      `${formatter.format(
+        accountConfig['level_1'].limits.maxStoredTokens
+      )} words storage`,
+      `File upload limited to ${
+        accountConfig['level_1'].limits.maxFileSize / 1000000
+      }MB / file`,
+      // `Data processing limited to ${accountConfig['level_1'].limits
+      //   .maxDataProcessing / 1000000}MB / month`,
+      'Manual data synching',
+      'ChatGPT plugin',
+      `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
+      'Access to Crisp Plugin',
+      'Access to Slack Bot',
+      `${accountConfig['level_1'].limits.maxSeats} Team seat(s) included`,
+    ],
+    mostPopular: false,
+  },
   {
     name: 'Pro',
     id: 'tier-pro',
@@ -95,37 +95,37 @@ const tiers = [
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
       `${accountConfig['level_2'].limits.maxSeats} Team seat(s) included`,
     ],
-    mostPopular: false,
-  },
-  {
-    name: 'Enterprise',
-    id: 'tier-enterprise',
-    href: 'https://app.chaindesk.ai/settings/billing',
-    price: { monthly: '$499', annually: '$4990' },
-    description:
-      'You’ve got a huge amount of assets but it’s not enough. To the moon.',
-    features: [
-      `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_3'].limits.maxAgentsQueries} GPT-3.5 or ${
-        accountConfig['level_3'].limits.maxAgentsQueries / 20
-      } GPT-4 agents queries / month`,
-      `${formatter.format(
-        accountConfig['level_3'].limits.maxStoredTokens
-      )} words storage`,
-      `File upload limited to ${
-        accountConfig['level_3'].limits.maxFileSize / 1000000
-      }MB / file`,
-      // `Data processing limited to ${accountConfig['level_3'].limits
-      //   .maxDataProcessing / 1000000}MB / month`,
-      'Access to Chaindesk API',
-      'Auto synch datasources',
-      // 'ChatGPT plugin',
-      `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
-      `${accountConfig['level_3'].limits.maxSeats} Team seat(s) included`,
-    ],
     mostPopular: true,
   },
+  // {
+  //   name: 'Enterprise',
+  //   id: 'tier-enterprise',
+  //   href: 'https://app.chaindesk.ai/settings/billing',
+  //   price: { monthly: '$499', annually: '$4990' },
+  //   description:
+  //     'You’ve got a huge amount of assets but it’s not enough. To the moon.',
+  //   features: [
+  //     `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
+  //     `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,
+  //     `${accountConfig['level_3'].limits.maxAgentsQueries} GPT-3.5 or ${
+  //       accountConfig['level_3'].limits.maxAgentsQueries / 20
+  //     } GPT-4 agents queries / month`,
+  //     `${formatter.format(
+  //       accountConfig['level_3'].limits.maxStoredTokens
+  //     )} words storage`,
+  //     `File upload limited to ${
+  //       accountConfig['level_3'].limits.maxFileSize / 1000000
+  //     }MB / file`,
+  //     // `Data processing limited to ${accountConfig['level_3'].limits
+  //     //   .maxDataProcessing / 1000000}MB / month`,
+  //     'Access to Chaindesk API',
+  //     'Auto synch datasources',
+  //     // 'ChatGPT plugin',
+  //     `Website loader limited to  ${accountConfig['level_3'].limits.maxWebsiteURL} Pages`,
+  //     `${accountConfig['level_3'].limits.maxSeats} Team seat(s) included`,
+  //   ],
+  //   mostPopular: false,
+  // },
   {
     name: 'Ultimate',
     id: 'tier-ultimate',
