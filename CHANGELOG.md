@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.58"></a>
+## 0.1.58 (2023-11-02)
+
+### Fixed
+
+- 🐛 max token limit checker [[124d788](https://github.com/gmpetrov/databerry/commit/124d788ca107a335bc9a3944087c9b6311413a50)]
+
+
 <a name="0.1.57"></a>
 ## 0.1.57 (2023-10-30)
 
