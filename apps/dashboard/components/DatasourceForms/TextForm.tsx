@@ -7,35 +7,21 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
-type Props = DatasourceFormProps & {};
+type DatasourceText = Extract<DatasourceSchema, { type: 'text' }>;
 
-export const TextSourceSchema = UpsertDatasourceSchema.extend({
-  config: z
-    .object({
-      source_url: z.string().trim().optional(),
-    })
-    .optional(),
-});
+type Props = DatasourceFormProps<DatasourceText> & {};
 
 function Nested() {
-  const { control, register } =
-    useFormContext<z.infer<typeof TextSourceSchema>>();
+  const { control, register } = useFormContext<DatasourceText>();
 
   return (
     <>
-      <Input
-        label="Source URL (optional)"
-        control={control as any}
-        placeholder="https://news.ycombinator.com"
-        {...register('config.source_url')}
-      />
-
       <FormControl>
         <FormLabel>Text</FormLabel>
         <Textarea maxRows={21} minRows={4} {...register('datasourceText')} />
@@ -49,7 +35,7 @@ export default function TextForm(props: Props) {
 
   return (
     <Base
-      schema={TextSourceSchema}
+      schema={DatasourceSchema}
       {...rest}
       defaultValues={{
         ...props.defaultValues!,

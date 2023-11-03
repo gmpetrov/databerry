@@ -13,21 +13,26 @@ import { z } from 'zod';
 import Input from '@app/components/Input';
 
 import config from '@chaindesk/lib/config';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import {
+  DatasourceBaseSchema,
+  DatasourceSchema,
+} from '@chaindesk/lib/types/models';
 import { QAConfig } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
-type Props = DatasourceFormProps & {};
+type DatasourceQA = Extract<DatasourceSchema, { type: 'qa' }>;
+type Props = DatasourceFormProps<DatasourceQA> & {};
 
 const enc = getEncoding('cl100k_base');
 const countTokens = (text?: string) => {
   return enc?.encode(text || '').length;
 };
 
-export const QASourceSchema = UpsertDatasourceSchema.extend({
+export const QASourceSchema = DatasourceBaseSchema.extend({
+  type: z.literal(DatasourceType.qa),
   config: QAConfig.refine(
     (v) => {
       const count = countTokens(v.question) + countTokens(v.answer);
@@ -42,7 +47,7 @@ export const QASourceSchema = UpsertDatasourceSchema.extend({
 
 function Nested() {
   const { control, register, watch, trigger, formState, setValue } =
-    useFormContext<z.infer<typeof QASourceSchema>>();
+    useFormContext<DatasourceQA>();
 
   const question = watch('config.question');
   const answer = watch('config.answer');
@@ -76,7 +81,8 @@ function Nested() {
       <Input
         label="Source URL (optional)"
         control={control as any}
-        placeholder="https://news.ycombinator.com"
+        placeholder="https://en.wikipedia.org/wiki/Nuclear_fusion"
+        helperText='The URL to use for the "sources" section of an Agent answer'
         {...register('config.source_url')}
       />
 

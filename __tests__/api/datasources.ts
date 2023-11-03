@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import { prisma } from '@chaindesk/prisma/client';
 import sleep from '@app/utils/sleep';
 import { testHttp } from '@app/utils/tests';
@@ -36,7 +36,7 @@ describe('Datasources - Create', () => {
         config: {
           source_url: 'https://www.chaindesk.ai/',
         },
-      } as UpsertDatasourceSchema);
+      } as DatasourceSchema);
 
       expect(!!result.data?.id).toBe(true);
 

@@ -1,32 +1,23 @@
 import AddIcon from '@mui/icons-material/Add';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
-import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import axios from 'axios';
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
-
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
-import { DatasourceType, Prisma, ServiceProviderType } from '@chaindesk/prisma';
-
-import Base from './Base';
-import type { DatasourceFormProps } from './types';
-
-type Props = DatasourceFormProps & {};
-
 import Autocomplete from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
+import Button from '@mui/joy/Button';
 import CircularProgress from '@mui/joy/CircularProgress';
+import FormControl from '@mui/joy/FormControl';
 import FormHelperText from '@mui/joy/FormHelperText';
+import FormLabel from '@mui/joy/FormLabel';
 import IconButton from '@mui/joy/IconButton';
 import ListItemContent from '@mui/joy/ListItemContent';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
+import axios from 'axios';
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
+import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import type { getServiceProviders } from '@app/pages/api/accounts/service-providers';
@@ -34,19 +25,22 @@ import getDrives from '@app/pages/api/integrations/google-drive/get-drives';
 import { listFolder } from '@app/pages/api/integrations/google-drive/list-folder';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceType, Prisma, ServiceProviderType } from '@chaindesk/prisma';
 
-export const GoogleDriveSourceSchema = UpsertDatasourceSchema.extend({
-  config: z.object({
-    mime_type: z.string().min(1),
-    serviceProviderId: z.string().min(1),
-    objectId: z.string().min(1),
-    source_url: z.string().trim().optional(),
-  }),
-});
+import Base from './Base';
+import type { DatasourceFormProps } from './types';
+
+type Props = DatasourceFormProps<DatasourceGoogleDrive> & {};
+
+type DatasourceGoogleDrive = Extract<
+  DatasourceSchema,
+  { type: 'google_drive_file' | 'google_drive_folder' }
+>;
 
 function Nested() {
   const { control, register, setValue, formState, trigger } =
-    useFormContext<z.infer<typeof GoogleDriveSourceSchema>>();
+    useFormContext<DatasourceGoogleDrive>();
 
   const [state, setState] = useStateReducer({
     currentProviderId: '',
@@ -196,7 +190,7 @@ function Nested() {
                     setValue('name', value?.label! || '', {
                       shouldDirty: true,
                     });
-                    setValue('config.source_url', value?.label! || '', {
+                    setValue('config.source_url', '', {
                       shouldDirty: true,
                     });
                     setValue('config.objectId', value?.id! || '', {
@@ -272,7 +266,7 @@ export default function GoogleDriveForm(props: Props) {
 
   return (
     <Base
-      schema={GoogleDriveSourceSchema}
+      schema={DatasourceSchema}
       {...rest}
       defaultValues={{
         ...props.defaultValues!,

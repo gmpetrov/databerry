@@ -13,7 +13,7 @@ import { z } from 'zod';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import accountConfig from '@chaindesk/lib/account-config';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
 
 import UsageLimitModal from '../UsageLimitModal';
@@ -21,17 +21,8 @@ import UsageLimitModal from '../UsageLimitModal';
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
-type Props = DatasourceFormProps & {};
-
-export const FileForm = UpsertDatasourceSchema.extend({
-  file: z.any(),
-  config: z.object({
-    source_url: z.string(),
-    mime_type: z.string(),
-    fileSize: z.number().optional(),
-    fileUploadPath: z.string().optional(),
-  }),
-});
+type DatasourceFile = Extract<DatasourceSchema, { type: 'file' }>;
+type Props = DatasourceFormProps<DatasourceFile> & {};
 
 const acceptedFileTypes = [
   'text/csv',
@@ -47,7 +38,7 @@ const acceptedFileTypes = [
 function Nested() {
   const { data: session, status } = useSession();
   const { control, register, setValue, reset, watch, trigger } =
-    useFormContext<z.infer<typeof FileForm>>();
+    useFormContext<DatasourceFile>();
   const fileInputRef = useRef();
 
   const [state, setState] = useStateReducer({
@@ -78,7 +69,7 @@ function Nested() {
 
     setValue('name', file?.name, { shouldDirty: true });
     setValue('file', file, { shouldDirty: true });
-    setValue('config.source_url', file?.name, { shouldDirty: true });
+    setValue('config.file_url', file?.name, { shouldDirty: true });
     setValue('config.mime_type', file?.type, { shouldDirty: true });
     setValue('config.fileSize', file?.size, { shouldDirty: true });
     trigger();
@@ -118,7 +109,7 @@ function Nested() {
         type="file"
         hidden
         accept={acceptedFileTypes.join(',')}
-        {...register('config.source_url')}
+        {...register('config.file_url')}
         onChange={handleFileInputChange}
         ref={fileInputRef as any}
       />
@@ -191,7 +182,7 @@ export default function WebPageForm(props: Props) {
 
   return (
     <Base
-      schema={FileForm}
+      schema={DatasourceSchema}
       {...rest}
       defaultValues={{
         ...props.defaultValues!,

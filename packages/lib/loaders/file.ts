@@ -81,7 +81,7 @@ export class FileLoader extends DatasourceLoaderBase {
         datasource_id: this.datasource.id,
         datasource_name: this.datasource.name,
         datasource_type: this.datasource.type,
-        source_url: `${getS3RootDomain()}/${s3Key}`,
+        source_url: (this.datasource.config as any)?.source_url,
         mime_type: mimeType,
         custom_id: (this.datasource?.config as any)?.custom_id,
         tags: [],
