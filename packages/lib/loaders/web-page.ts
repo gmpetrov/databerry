@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { ConsoleCallbackHandler } from 'langchain/dist/callbacks';
-import { z } from 'zod';
 
 import { AppDocument } from '@chaindesk/lib/types/document';
-import { WebPageSourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 
 import { ApiError, ApiErrorType } from '../api-error';
 import cleanTextForEmbeddings from '../clean-text-for-embeddings';
@@ -52,11 +50,13 @@ export const loadPageContent = async (url: string) => {
   }
 };
 
+type DatasourceWebPage = Extract<DatasourceSchema, { type: 'web_page' }>;
+
 export class WebPageLoader extends DatasourceLoaderBase {
   getSize = async () => {
-    const url: string = (
-      this.datasource.config as z.infer<typeof WebPageSourceSchema>['config']
-    )['source_url'];
+    const url: string = (this.datasource.config as DatasourceWebPage['config'])[
+      'source_url'
+    ];
 
     const res = await axios.head(url);
 
@@ -64,9 +64,9 @@ export class WebPageLoader extends DatasourceLoaderBase {
   };
 
   async load() {
-    const url: string = (
-      this.datasource.config as z.infer<typeof WebPageSourceSchema>['config']
-    )['source_url'];
+    const url: string = (this.datasource.config as DatasourceWebPage['config'])[
+      'source_url'
+    ];
 
     const content = await loadPageContent(url);
 

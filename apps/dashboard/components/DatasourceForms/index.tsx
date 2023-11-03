@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { DatasourceType } from '@chaindesk/prisma';
 
@@ -41,7 +41,7 @@ const DatasourceFormsMap = {
   [DatasourceType.qa]: QAForm,
   [DatasourceType.notion]: NotionForm,
   [DatasourceType.notion_page]: NotionForm,
-};
+} as Record<DatasourceType, any>;
 
 type Props = {
   type: DatasourceType;

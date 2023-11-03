@@ -28,30 +28,18 @@ import { getNotebooks } from '@app/pages/api/integrations/notion/get-notebooks';
 import { getProviders } from '@app/pages/api/integrations/notion/get-notion-providers';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 
 import Base from './Base';
 import { DatasourceFormProps } from './types';
 
-type Props = DatasourceFormProps & {};
+type DatasourceNotion = Extract<DatasourceSchema, { type: 'notion' }>;
 
-const NotionSourceSchema = UpsertDatasourceSchema.extend({
-  config: z.object({
-    serviceProviderId: z.string().min(1),
-    notebooks: z.array(
-      z.object({
-        id: z.string().min(1),
-        title: z.string(),
-        url: z.string().optional(),
-      })
-    ),
-  }),
-});
+type Props = DatasourceFormProps<DatasourceNotion> & {};
 
 function Nested() {
   const { data: session } = useSession();
-  const { register, setValue, trigger } =
-    useFormContext<z.infer<typeof NotionSourceSchema>>();
+  const { register, setValue, trigger } = useFormContext<DatasourceNotion>();
 
   const [state, setState] = useStateReducer({
     currentProviderId: '',
@@ -198,7 +186,7 @@ function NotionForm(props: Props) {
 
   return (
     <Base
-      schema={NotionSourceSchema}
+      schema={DatasourceSchema}
       {...rest}
       defaultValues={{
         ...props.defaultValues!,
