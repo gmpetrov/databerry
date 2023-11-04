@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.59"></a>
+## 0.1.59 (2023-11-04)
+
+### Changed
+
+- 💄 remove vector datrabase provider column [[1f91be6](https://github.com/gmpetrov/databerry/commit/1f91be671b1f194a30a1053fa745f7e16a0cb57b)]
+
+### Miscellaneous
+
+- 🎸 add metadata to embeddings 😱 [[1f99222](https://github.com/gmpetrov/databerry/commit/1f99222ae2477b92fa026e6c6aa82ffc690acd38)]
+- 🎸 datasource tags [[2187ed8](https://github.com/gmpetrov/databerry/commit/2187ed8524eae9a4b1dc162387800db1633a102c)]
+- 🎸 better datasource config typing with zod [[c305445](https://github.com/gmpetrov/databerry/commit/c305445c420152b1b5362f5215e32fb2395e672d)]
+- 🤖 update pricing section [[9affc5f](https://github.com/gmpetrov/databerry/commit/9affc5fda3274b4743f42cad73f0f7bdcfed0135)]
+
+
 <a name="0.1.58"></a>
 ## 0.1.58 (2023-11-02)
 
