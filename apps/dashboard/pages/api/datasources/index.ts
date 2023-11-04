@@ -214,6 +214,10 @@ export const upsertDatasource = async (
     });
   }
 
+  const tags = (((data.config as any)?.tags || []) as string[]).filter(
+    (each) => !!each.trim()
+  );
+
   const datasource = await prisma.appDatasource.upsert({
     where: {
       id,
@@ -224,6 +228,7 @@ export const upsertDatasource = async (
       name: data.name || generateFunId(),
       config: {
         ...data.config,
+        tags,
         ...(file
           ? {
               mime_type: file.mimetype,
@@ -257,6 +262,7 @@ export const upsertDatasource = async (
 
       config: {
         ...data.config,
+        tags,
         ...(file
           ? {
               mime_type: file.mimetype,

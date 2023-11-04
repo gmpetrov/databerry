@@ -1,6 +1,7 @@
 import { AppDatasource as Datasource, Prisma } from '@chaindesk/prisma';
 
 import { AppDocument } from '../types/document';
+import { DatasourceSchema } from '../types/models';
 
 const datasourceExtended = Prisma.validator<Prisma.AppDatasourceArgs>()({
   include: {
@@ -19,15 +20,14 @@ const datasourceExtended = Prisma.validator<Prisma.AppDatasourceArgs>()({
   },
 });
 
-type DatasourceExtended = Prisma.AppDatasourceGetPayload<
-  typeof datasourceExtended
->;
+type DatasourceExtended<T extends {} = DatasourceSchema> =
+  Prisma.AppDatasourceGetPayload<typeof datasourceExtended> & T;
 
-export abstract class DatasourceLoaderBase {
+export abstract class DatasourceLoaderBase<T extends {} = DatasourceSchema> {
   isGroup?: boolean;
-  datasource: DatasourceExtended;
+  datasource: DatasourceExtended<T>;
 
-  constructor(datasource: DatasourceExtended) {
+  constructor(datasource: DatasourceExtended<T>) {
     this.datasource = datasource;
   }
 

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button, Option, Select } from '@mui/joy';
+import { Alert, Button, Option, Select, Stack } from '@mui/joy';
 import { FormLabel } from '@mui/joy';
 import Textarea from '@mui/joy/Textarea';
 import axios from 'axios';
@@ -33,6 +33,8 @@ import {
   DatasourceType,
   Prisma,
 } from '@chaindesk/prisma';
+
+import DatasourceTagsInput from '../DatasourceTagsInput';
 
 import type { DatasourceFormProps } from './types';
 
@@ -232,6 +234,14 @@ export default function BaseForm(props: Props) {
           )}
 
         {props.children}
+
+        <details>
+          <summary>Advanced Settings</summary>
+
+          <Stack sx={{ pl: 2, pt: 2 }}>
+            <DatasourceTagsInput />
+          </Stack>
+        </details>
 
         {!props.hideText && defaultValues?.datastoreId && defaultValues?.id && (
           <details>

@@ -2,12 +2,14 @@ import { NotionToolset } from '@chaindesk/lib/notion-helpers';
 import { DatasourceExtended } from '@chaindesk/lib/task-load-datasource';
 import { AppDocument } from '@chaindesk/lib/types/document';
 
+import { DatasourceNotion } from '../types/models';
+
 import { DatasourceLoaderBase } from './base';
 
-export class NotionPageLoader extends DatasourceLoaderBase {
+export class NotionPageLoader extends DatasourceLoaderBase<DatasourceNotion> {
   private notebookId: string;
 
-  constructor(datasource: DatasourceExtended) {
+  constructor(datasource: DatasourceExtended<DatasourceNotion>) {
     super(datasource);
     const accessToken = datasource?.serviceProvider?.accessToken;
     if (!accessToken) {
@@ -42,7 +44,7 @@ export class NotionPageLoader extends DatasourceLoaderBase {
             datasource_name: this.datasource.name,
             datasource_type: this.datasource.type,
             source_url,
-            tags: [],
+            tags: this.datasource?.config?.tags || [],
           },
         }),
       ];

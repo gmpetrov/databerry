@@ -4,18 +4,19 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 
-import { DatasourceSchema } from '@chaindesk/lib/types/models';
+import {
+  DatasourceSchema,
+  DatasourceWebPage,
+} from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
-type DatasourceWebpage = Extract<DatasourceSchema, { type: 'web_page' }>;
-
-type Props = DatasourceFormProps<DatasourceWebpage> & {};
+type Props = DatasourceFormProps<DatasourceWebPage> & {};
 
 function Nested() {
-  const { control, register } = useFormContext<DatasourceWebpage>();
+  const { control, register } = useFormContext<DatasourceWebPage>();
 
   return (
     <Input

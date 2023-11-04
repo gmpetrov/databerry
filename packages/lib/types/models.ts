@@ -48,9 +48,10 @@ export const DatasourceBaseSchema = z.object({
 
 export const DatasourceConfigBaseSchema = z.object({
   custom_id: z.string().optional(),
+  tags: z.array(z.string().max(25)).optional(),
 });
 
-export const QAConfig = z.object({
+export const QAConfig = DatasourceConfigBaseSchema.extend({
   question: z.string().min(1).trim(),
   answer: z.string().min(1).trim(),
   source_url: z.union([z.string().url().nullish(), z.literal('')]),
@@ -165,6 +166,17 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
 ]);
 
 export type DatasourceSchema = z.infer<typeof DatasourceSchema>;
+
+export type DatasourceNotion = Extract<DatasourceSchema, { type: 'notion' }>;
+export type DatasourceQA = Extract<DatasourceSchema, { type: 'qa' }>;
+export type DatasourceFile = Extract<DatasourceSchema, { type: 'file' }>;
+export type DatasourceText = Extract<DatasourceSchema, { type: 'text' }>;
+export type DatasourceWebPage = Extract<DatasourceSchema, { type: 'web_page' }>;
+export type DatasourceWebSite = Extract<DatasourceSchema, { type: 'web_site' }>;
+export type DatasourceGoogleDrive = Extract<
+  DatasourceSchema,
+  { type: 'google_drive_file' | 'google_drive_folder' }
+>;
 
 export const AgentInterfaceConfig = z.object({
   displayName: z.string().trim().optional(),

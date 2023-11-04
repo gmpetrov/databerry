@@ -6,6 +6,7 @@ import getS3RootDomain from '../get-s3-root-domain';
 import pdfToDocs from '../pdf-to-docs';
 import pptxToDocs from '../pptx-to-docs';
 import { AppDocument, FileMetadataSchema } from '../types/document';
+import { DatasourceFile } from '../types/models';
 import wordToDocs from '../word-to-docs';
 
 import { DatasourceLoaderBase } from './base';
@@ -47,7 +48,7 @@ export const fileBufferToDocs = async (props: {
   return docs;
 };
 
-export class FileLoader extends DatasourceLoaderBase {
+export class FileLoader extends DatasourceLoaderBase<DatasourceFile> {
   async getSize(text: string) {
     return new Blob([text]).size;
   }
@@ -55,7 +56,7 @@ export class FileLoader extends DatasourceLoaderBase {
   async load() {
     const mimeType =
       (this.datasource?.config as any)?.type ||
-      (this.datasource?.config as any)?.mime_type;
+      this.datasource?.config?.mime_type;
     const s3Key = `datastores/${this.datasource.datastoreId}/${
       this.datasource.id
     }/${this.datasource.id}.${mime.extension(mimeType)}`;
@@ -81,10 +82,10 @@ export class FileLoader extends DatasourceLoaderBase {
         datasource_id: this.datasource.id,
         datasource_name: this.datasource.name,
         datasource_type: this.datasource.type,
-        source_url: (this.datasource.config as any)?.source_url,
         mime_type: mimeType,
-        custom_id: (this.datasource?.config as any)?.custom_id,
-        tags: [],
+        source_url: this.datasource.config?.source_url!,
+        custom_id: this.datasource?.config?.custom_id!,
+        tags: this.datasource?.config?.tags || [],
       },
     }));
   }

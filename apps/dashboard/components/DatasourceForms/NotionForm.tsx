@@ -28,12 +28,13 @@ import { getNotebooks } from '@app/pages/api/integrations/notion/get-notebooks';
 import { getProviders } from '@app/pages/api/integrations/notion/get-notion-providers';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
-import { DatasourceSchema } from '@chaindesk/lib/types/models';
+import {
+  DatasourceNotion,
+  DatasourceSchema,
+} from '@chaindesk/lib/types/models';
 
 import Base from './Base';
 import { DatasourceFormProps } from './types';
-
-type DatasourceNotion = Extract<DatasourceSchema, { type: 'notion' }>;
 
 type Props = DatasourceFormProps<DatasourceNotion> & {};
 

@@ -12,10 +12,11 @@ import accountConfig from '../account-config';
 import findDomainPages, { getSitemapPages } from '../find-domain-pages';
 import findSitemap from '../find-sitemap';
 import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
+import { DatasourceWebSite } from '../types/models';
 
 import { DatasourceLoaderBase } from './base';
 
-export class WebSiteLoader extends DatasourceLoaderBase {
+export class WebSiteLoader extends DatasourceLoaderBase<DatasourceWebSite> {
   isGroup = true;
 
   getSize = async () => {
@@ -25,8 +26,8 @@ export class WebSiteLoader extends DatasourceLoaderBase {
   async load() {
     let urls: string[] = [];
     let nestedSitemaps: string[] = [];
-    const sitemap = (this.datasource.config as any).sitemap;
-    const source = (this.datasource.config as any).source_url;
+    const sitemap = this.datasource.config.sitemap;
+    const source = this.datasource.config.source_url;
     const currentPlan =
       this.datasource?.organization?.subscriptions?.[0]?.plan ||
       SubscriptionPlan.level_0;
