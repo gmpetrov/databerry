@@ -65,7 +65,6 @@ export default function ChatPage() {
     history,
     handleChatSubmit,
     isLoadingConversation,
-    isValidatingConversation,
     hasMoreMessages,
     handleLoadMoreMessages,
     setConversationId,
@@ -345,9 +344,7 @@ export default function ChatPage() {
               disableWatermark
               messages={history}
               onSubmit={handleChatSubmit}
-              isLoadingConversation={
-                isLoadingConversation || isValidatingConversation
-              }
+              isLoadingConversation={isLoadingConversation}
               hasMoreMessages={hasMoreMessages}
               handleLoadMoreMessages={handleLoadMoreMessages}
               topSettings={Settings}
