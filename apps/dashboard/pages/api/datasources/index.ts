@@ -202,17 +202,18 @@ export const upsertDatasource = async (
     await s3.putObject(params).promise();
   }
 
-  if (existingDatasource?.id && existingDatasource?.name !== data?.name) {
-    // Update metadata here as data loaders will not update chunks if the hash is the same
-    await new DatastoreManager(
-      existingDatasource?.datastore!
-    ).updateDatasourceMetadata({
-      datasourceId: existingDatasource?.id,
-      metadata: {
-        datasource_name: data?.name!,
-      },
-    });
-  }
+  // Disable this for now as we're now embedding metadata too
+  // if (existingDatasource?.id && existingDatasource?.name !== data?.name) {
+  //   // Update metadata here as data loaders will not update chunks if the hash is the same
+  //   await new DatastoreManager(
+  //     existingDatasource?.datastore!
+  //   ).updateDatasourceMetadata({
+  //     datasourceId: existingDatasource?.id,
+  //     metadata: {
+  //       datasource_name: data?.name!,
+  //     },
+  //   });
+  // }
 
   const tags = (((data.config as any)?.tags || []) as string[]).filter(
     (each) => !!each.trim()
