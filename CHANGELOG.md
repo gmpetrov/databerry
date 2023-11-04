@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.60"></a>
+## 0.1.60 (2023-11-04)
+
+### Fixed
+
+- 🐛 inbox conversation shows unecessary loaders [[70dd04c](https://github.com/gmpetrov/databerry/commit/70dd04c270a29770a1e053c25b1ef257bbf3b350)]
+
+
 <a name="0.1.59"></a>
 ## 0.1.59 (2023-11-04)
 
