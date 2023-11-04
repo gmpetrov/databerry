@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.61"></a>
+## 0.1.61 (2023-11-04)
+
+### Fixed
+
+- 🐛 unecessary agent conversation loader [[0e04d6b](https://github.com/gmpetrov/databerry/commit/0e04d6b57972f1882f7051c2a2d86be394ac451a)]
+
+
 <a name="0.1.60"></a>
 ## 0.1.60 (2023-11-04)
 
