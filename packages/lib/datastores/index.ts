@@ -71,7 +71,7 @@ export class DatastoreManager {
     }
     const document = documents?.[0];
 
-    // const tags = document?.metadata?.tags || ([] as string[]);
+    const tags = document?.metadata?.tags || ([] as string[]);
     const source_url = document?.metadata?.source_url || '';
     const hasher = await createBLAKE3();
 
@@ -79,17 +79,17 @@ export class DatastoreManager {
     hasher.update(document.metadata?.datasource_id!);
     hasher.update(documents.map((each) => each.pageContent).join(''));
 
-    // for (const tag of tags || []) {
-    //   hasher.update(tag);
-    // }
-
     if (source_url) {
       hasher.update(source_url);
     }
 
-    // if (document.metadata?.datasource_name) {
-    //   hasher.update(document.metadata?.datasource_name!);
-    // }
+    if (document.metadata?.datasource_name) {
+      hasher.update(document.metadata?.datasource_name!);
+    }
+
+    for (const tag of tags || []) {
+      hasher.update(tag);
+    }
 
     return hasher.digest('hex');
   }

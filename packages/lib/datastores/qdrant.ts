@@ -111,7 +111,28 @@ export class QdrantManager extends ClientManager<DatastoreType> {
       }
     });
 
-    const texts = nonEmptyDocs.map(({ pageContent }) => pageContent);
+    // Add metadata to chunk embedding to enhance similarity search context
+    const enhChunkEmbedding = (props: {
+      text: string;
+      datasourceName: string;
+      tags?: string[];
+    }) => {
+      return [
+        `from: ${props.datasourceName}`,
+        ...(props.tags && props.tags?.length > 0
+          ? [`tags: ${props.tags.join(', ')}`]
+          : []),
+        `content: ${props.text}`,
+      ].join('\n');
+    };
+
+    const texts = nonEmptyDocs.map(({ pageContent, metadata }) =>
+      enhChunkEmbedding({
+        text: pageContent,
+        datasourceName: metadata.datasource_name!,
+        tags: metadata.tags,
+      })
+    );
 
     return this.addVectors(
       await this.embeddings.embedDocuments(texts),
