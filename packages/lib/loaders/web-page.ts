@@ -52,11 +52,9 @@ export const loadPageContent = async (url: string) => {
 
 type DatasourceWebPage = Extract<DatasourceSchema, { type: 'web_page' }>;
 
-export class WebPageLoader extends DatasourceLoaderBase {
+export class WebPageLoader extends DatasourceLoaderBase<DatasourceWebPage> {
   getSize = async () => {
-    const url: string = (this.datasource.config as DatasourceWebPage['config'])[
-      'source_url'
-    ];
+    const url = this.datasource.config['source_url'];
 
     const res = await axios.head(url);
 
@@ -64,9 +62,7 @@ export class WebPageLoader extends DatasourceLoaderBase {
   };
 
   async load() {
-    const url: string = (this.datasource.config as DatasourceWebPage['config'])[
-      'source_url'
-    ];
+    const url = this.datasource.config['source_url'];
 
     const content = await loadPageContent(url);
 
@@ -85,8 +81,8 @@ export class WebPageLoader extends DatasourceLoaderBase {
           datasource_id: this.datasource.id,
           datasource_name: this.datasource.name,
           datasource_type: this.datasource.type,
-          custom_id: (this.datasource?.config as any)?.custom_id,
-          tags: [],
+          custom_id: this.datasource?.config?.custom_id,
+          tags: this.datasource?.config?.tags || [],
         },
       }),
     ];

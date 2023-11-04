@@ -7,20 +7,21 @@ import { DatasourceStatus, DatasourceType } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
 import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
+import { DatasourceNotion } from '../types/models';
 
 import { DatasourceLoaderBase } from './base';
 
-export class NotionLoader extends DatasourceLoaderBase {
+export class NotionLoader extends DatasourceLoaderBase<DatasourceNotion> {
   isGroup = true;
   private notebooks: { id: string; title: string }[];
 
-  constructor(datasource: DatasourceExtended) {
+  constructor(datasource: DatasourceExtended<DatasourceNotion>) {
     super(datasource);
     const accessToken = datasource?.serviceProvider?.accessToken;
     if (!accessToken) {
       throw new Error('Notion accessToken must be provided');
     }
-    this.notebooks = (this.datasource as any)?.config?.notebooks;
+    this.notebooks = this.datasource?.config?.notebooks;
   }
 
   async getSize(text: string) {
@@ -117,6 +118,7 @@ export class NotionLoader extends DatasourceLoaderBase {
             config: {
               notebookId: notebook?.id,
               title: notebook?.title,
+              tags: this.datasource?.config?.tags || [],
             },
             organizationId: this.datasource?.organizationId!,
             datastoreId: this.datasource?.datastoreId,

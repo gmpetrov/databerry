@@ -3,17 +3,12 @@ import FormLabel from '@mui/joy/FormLabel';
 import Textarea from '@mui/joy/Textarea';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { z } from 'zod';
 
-import Input from '@app/components/Input';
-
-import { DatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema, DatasourceText } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
-
-type DatasourceText = Extract<DatasourceSchema, { type: 'text' }>;
 
 type Props = DatasourceFormProps<DatasourceText> & {};
 

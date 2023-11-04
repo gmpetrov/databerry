@@ -5,6 +5,7 @@ import { AppDocument, FileMetadataSchema } from '@chaindesk/lib/types/document';
 import { AcceptedDatasourceMimeTypes } from '@chaindesk/lib/types/dtos';
 
 import { GoogleDriveManager } from '../google-drive-manager';
+import { DatasourceGoogleDrive } from '../types/models';
 
 import { DatasourceLoaderBase } from './base';
 import { fileBufferToDocs } from './file';
@@ -17,7 +18,7 @@ export const gMimeTypeFallback = {
   'application/vnd.google-apps.spreadsheet':
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 };
-export class GoogleDriveFileLoader extends DatasourceLoaderBase {
+export class GoogleDriveFileLoader extends DatasourceLoaderBase<DatasourceGoogleDrive> {
   async getSize(text: string) {
     // return new Blob([text]).size;
     return 0;
@@ -31,7 +32,7 @@ export class GoogleDriveFileLoader extends DatasourceLoaderBase {
 
     await driveManager.refreshAuth();
 
-    const fileId = (this.datasource as any)?.config?.objectId as string;
+    const fileId = this.datasource?.config?.objectId as string;
 
     const mtRes = await driveManager.drive.files.get({
       fileId: fileId,
@@ -123,8 +124,8 @@ export class GoogleDriveFileLoader extends DatasourceLoaderBase {
             datasource_type: this.datasource.type as 'google_drive_file',
             source_url: webViewLink as string,
             mime_type: gMimeType as string,
-            custom_id: (this.datasource?.config as any)?.custom_id,
-            tags: [],
+            custom_id: this.datasource?.config?.custom_id,
+            tags: this.datasource?.config?.tags || [],
           },
         })
     );

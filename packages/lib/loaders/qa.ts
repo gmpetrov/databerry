@@ -1,18 +1,16 @@
 import { AppDocument } from '@chaindesk/lib/types/document';
-import { QAConfig } from '@chaindesk/lib/types/models';
+import { DatasourceQA, QAConfig } from '@chaindesk/lib/types/models';
 
 import { DatasourceLoaderBase } from './base';
 
-export class QALoader extends DatasourceLoaderBase {
+export class QALoader extends DatasourceLoaderBase<DatasourceQA> {
   // TODO: REMOVE UNUSED FUNCTION
   async getSize(text: string) {
     return new Blob([text]).size;
   }
 
   async load() {
-    const text = `${(this.datasource.config as QAConfig)?.question}\n${
-      (this.datasource.config as QAConfig)?.answer
-    }`;
+    const text = `${this.datasource.config?.question}\n${this.datasource.config?.answer}`;
 
     return [
       new AppDocument({
@@ -22,9 +20,9 @@ export class QALoader extends DatasourceLoaderBase {
           datasource_id: this.datasource.id,
           datasource_name: this.datasource.name,
           datasource_type: this.datasource.type,
-          source_url: (this.datasource?.config as QAConfig)?.source_url!,
-          custom_id: (this.datasource?.config as any)?.custom_id,
-          tags: [],
+          source_url: this.datasource?.config?.source_url!,
+          custom_id: this.datasource?.config?.custom_id,
+          tags: this.datasource?.config?.tags || [],
         },
       }),
     ];

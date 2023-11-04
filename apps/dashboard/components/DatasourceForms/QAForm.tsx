@@ -15,7 +15,7 @@ import Input from '@app/components/Input';
 import config from '@chaindesk/lib/config';
 import {
   DatasourceBaseSchema,
-  DatasourceSchema,
+  DatasourceQA,
 } from '@chaindesk/lib/types/models';
 import { QAConfig } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
@@ -23,7 +23,6 @@ import { DatasourceType } from '@chaindesk/prisma';
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
-type DatasourceQA = Extract<DatasourceSchema, { type: 'qa' }>;
 type Props = DatasourceFormProps<DatasourceQA> & {};
 
 const enc = getEncoding('cl100k_base');

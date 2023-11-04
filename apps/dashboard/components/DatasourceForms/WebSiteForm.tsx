@@ -9,19 +9,20 @@ import { z } from 'zod';
 import Input from '@app/components/Input';
 
 import accountConfig from '@chaindesk/lib/account-config';
-import { DatasourceSchema } from '@chaindesk/lib/types/models';
+import {
+  DatasourceSchema,
+  DatasourceWebSite,
+} from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
-type DatasourceWebsite = Extract<DatasourceSchema, { type: 'web_site' }>;
-
-type Props = DatasourceFormProps<DatasourceWebsite> & {};
+type Props = DatasourceFormProps<DatasourceWebSite> & {};
 
 function Nested() {
   const { data: session, status } = useSession();
-  const { control, register } = useFormContext<DatasourceWebsite>();
+  const { control, register } = useFormContext<DatasourceWebSite>();
 
   return (
     <Stack gap={1}>

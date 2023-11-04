@@ -25,18 +25,16 @@ import getDrives from '@app/pages/api/integrations/google-drive/get-drives';
 import { listFolder } from '@app/pages/api/integrations/google-drive/list-folder';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
-import { DatasourceSchema } from '@chaindesk/lib/types/models';
+import {
+  DatasourceGoogleDrive,
+  DatasourceSchema,
+} from '@chaindesk/lib/types/models';
 import { DatasourceType, Prisma, ServiceProviderType } from '@chaindesk/prisma';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
 type Props = DatasourceFormProps<DatasourceGoogleDrive> & {};
-
-type DatasourceGoogleDrive = Extract<
-  DatasourceSchema,
-  { type: 'google_drive_file' | 'google_drive_folder' }
->;
 
 function Nested() {
   const { control, register, setValue, formState, trigger } =

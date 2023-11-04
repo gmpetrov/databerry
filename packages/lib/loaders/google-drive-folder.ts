@@ -11,11 +11,11 @@ import accountConfig from '../account-config';
 import { GoogleDriveManager } from '../google-drive-manager';
 import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
 import { AppDocument } from '../types/document';
-import { AcceptedDatasourceMimeTypes } from '../types/dtos';
+import { DatasourceGoogleDrive } from '../types/models';
 
 import { DatasourceLoaderBase } from './base';
 
-export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
+export class GoogleDriveFolderLoader extends DatasourceLoaderBase<DatasourceGoogleDrive> {
   isGroup = true;
 
   async getSize(text: string) {
@@ -37,7 +37,7 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
 
     const files = (
       await driveManager.listFilesRecursive({
-        folderId: (this.datasource as any)?.config?.objectId as string,
+        folderId: this.datasource?.config?.objectId as string,
       })
     )?.filter(
       (each) =>
@@ -90,6 +90,7 @@ export class GoogleDriveFolderLoader extends DatasourceLoaderBase {
         name: each?.name!,
         config: {
           objectId: each?.id,
+          tags: this.datasource?.config?.tags || [],
         },
         organizationId: this.datasource?.organizationId,
         datastoreId: this.datasource?.datastoreId,
