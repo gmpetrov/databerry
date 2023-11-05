@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.62"></a>
+## 0.1.62 (2023-11-05)
+
+### Fixed
+
+- 🐛 wording [[1737280](https://github.com/gmpetrov/databerry/commit/173728032277b29b1f6be15bc047412be9bf386c)]
+
+
 <a name="0.1.61"></a>
 ## 0.1.61 (2023-11-04)
 
