@@ -8,6 +8,7 @@ import Link from 'next/link';
 
 import { Container } from '@app/components/landing-page/Container';
 
+import { appUrl } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
 
 export function Hero() {
@@ -59,7 +60,7 @@ export function Hero() {
           gap={2}
           mt={6}
         >
-          <Link target="_blank" href={'https://app.chaindesk.ai/signin'}>
+          <Link target="_blank" href={`${appUrl}/signin`}>
             <Button
               variant="solid"
               size="lg"

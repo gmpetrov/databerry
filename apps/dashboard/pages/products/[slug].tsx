@@ -8,6 +8,7 @@ import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
 import SEO from '@app/components/SEO';
 
+import { appUrl } from '@chaindesk/lib/config';
 import products from '@chaindesk/lib/data/products.json';
 import { RouteNames } from '@chaindesk/lib/types';
 
@@ -79,7 +80,7 @@ export default function ProductPage({ product }: PageProps) {
             </Stack>
           )}
 
-          <Link href={'https://app.chaindesk.ai/signin'} className="w-full">
+          <Link href={`${appUrl}/signin`} className="w-full">
             <Button
               variant="solid"
               size="lg"

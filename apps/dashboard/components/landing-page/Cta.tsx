@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { appUrl } from '@chaindesk/lib/config';
+
 export default function Cta() {
   return (
     <div className="relative overflow-hidden bg-black isolate">
@@ -15,7 +17,7 @@ export default function Cta() {
           </p>
           <div className="flex items-center justify-center mt-10 gap-x-6">
             <a
-              href="https://app.chaindesk.ai/agents"
+              href={`${appUrl}/agents`}
               className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Get started Now →

@@ -18,6 +18,7 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import { appUrl } from '@chaindesk/lib/config';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
@@ -36,7 +37,7 @@ type Props = {
 
 export default function BubbleWidgetSettings(props: Props) {
   const installScript = `<iframe
-  src="https://app.chaindesk.ai/agents/${props.agentId}/iframe"
+  src="${appUrl}/agents/${props.agentId}/iframe"
   width="100%"
   height="100%"
   frameborder="0"

@@ -39,6 +39,7 @@ import useProduct, { ProductType } from '@app/hooks/useProduct';
 import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getStatus } from '@app/pages/api/status';
 
+import { appUrl } from '@chaindesk/lib/config';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AppStatus, RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
@@ -383,7 +384,7 @@ export default function Navigation() {
                   <Link
                     href={
                       process.env.NODE_ENV === 'production'
-                        ? 'https://app.chaindesk.ai/agents'
+                        ? `${appUrl}/agents`
                         : 'http://app.localhost:3000/agents'
                     }
                   >

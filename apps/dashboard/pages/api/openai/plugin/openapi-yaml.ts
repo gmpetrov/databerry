@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import path from 'path';
 import { parseDocument } from 'yaml';
 
+import { apiUrl } from '@chaindesk/lib/config';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import getSubdomain from '@chaindesk/lib/get-subdomain';
 import runMiddleware from '@chaindesk/lib/run-middleware';
@@ -48,7 +49,7 @@ export const generateOpenApiYaml = async (
   doc.setIn(['info', 'description'], datastore.description);
   doc.setIn(
     ['info', 'servers', 0, 'url'],
-    `https://api.chaindesk.ai/datastores/query/${datastore.id}`
+    `${apiUrl}/datastores/query/${datastore.id}`
     // `http://localhost:3000`
   );
 
