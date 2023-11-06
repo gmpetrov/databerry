@@ -1,5 +1,16 @@
 # Changelog
 
+<a name="0.1.63"></a>
+## 0.1.63 (2023-11-06)
+
+### Miscellaneous
+
+- 🤖 increase limit website loader [[f63893e](https://github.com/gmpetrov/databerry/commit/f63893e6b80b44021fcadf05980bb501d5a863d7)]
+- 🤖 upgrade nextjs to v14&quot; [[917f9de](https://github.com/gmpetrov/databerry/commit/917f9de4488290986851b6c5463a632db73a7a30)]
+- 🤖 upgrade nextjs to v14 [[48e3770](https://github.com/gmpetrov/databerry/commit/48e37703e29d39a82af3f23692389b731cd7bd5f)]
+-  removed hard-coded app urls in the code and made it an exported variable in configs ([#222](https://github.com/gmpetrov/databerry/issues/222)) [[df02f56](https://github.com/gmpetrov/databerry/commit/df02f5613a7ff4345feda5719d99cb1d532f0856)]
+
+
 <a name="0.1.62"></a>
 ## 0.1.62 (2023-11-05)
 
