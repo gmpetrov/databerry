@@ -12,6 +12,7 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import WarningIcon from '@mui/icons-material/Warning';
 import { ColorPaletteProp } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Badge from '@mui/joy/Badge';
@@ -654,10 +655,19 @@ export default function Navigation() {
 
       {/* <UsageLimitModal isOpen={isShowUpgradeModal} handleClose={() => {}} /> */}
       <upgradeModal.component>
-        <Alert color="warning" variant="solid">
-          Upgrade
+        <Alert
+          color="warning"
+          variant="solid"
+          startDecorator={
+            <WarningIcon sx={{ mt: '2px', mx: '4px' }} fontSize="xl2" />
+          }
+        >
+          Upgrade your or start a free trial in order to start using the
+          platform
         </Alert>
-        <StripePricingTable />
+        <Stack sx={{ py: 4 }}>
+          <StripePricingTable />
+        </Stack>
       </upgradeModal.component>
     </Stack>
   );
