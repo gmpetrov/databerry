@@ -42,7 +42,7 @@ const config: {
       maxFileSize: 1000000, // 1 MB
       maxDataProcessing: 5000000, // 5 MB
       maxSummary: 10,
-      maxWebsiteURL: 10,
+      maxWebsiteURL: 25,
       maxSeats: 1,
       maxStoredTokens: 20000,
     },
@@ -58,7 +58,7 @@ const config: {
       maxFileSize: 5000000, // 5 MB
       maxDataProcessing: 50000000, // 50 MB
       maxSummary: 100,
-      maxWebsiteURL: 50,
+      maxWebsiteURL: 250,
       maxSeats: 1,
       maxStoredTokens: 30000000,
     },
@@ -74,7 +74,7 @@ const config: {
       maxFileSize: 10000000, // 10 MB
       maxDataProcessing: 100000000, // 100 MB
       maxSummary: 200,
-      maxWebsiteURL: 500,
+      maxWebsiteURL: 1000,
       maxSeats: 3,
       maxStoredTokens: 60000000,
     },
