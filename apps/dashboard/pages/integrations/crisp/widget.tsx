@@ -180,7 +180,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
             include: {
               subscriptions: {
                 where: {
-                  status: 'active',
+                  status: {
+                    in: ['active', 'trialing'],
+                  },
                 },
               },
               apiKeys: true,

@@ -48,7 +48,9 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
           },
           subscriptions: {
             where: {
-              status: 'active',
+              status: {
+                in: ['active', 'trialing'],
+              },
             },
           },
         },

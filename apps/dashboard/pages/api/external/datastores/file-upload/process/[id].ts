@@ -57,7 +57,9 @@ export const processUpload = async (
           apiKeys: true,
           subscriptions: {
             where: {
-              status: 'active',
+              status: {
+                in: ['active', 'trialing'],
+              },
             },
           },
         },

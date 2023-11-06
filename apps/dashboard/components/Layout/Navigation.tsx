@@ -13,6 +13,7 @@ import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons 
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import { ColorPaletteProp } from '@mui/joy';
+import Alert from '@mui/joy/Alert';
 import Badge from '@mui/joy/Badge';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -37,6 +38,7 @@ import useSWR from 'swr';
 
 import AccountCard from '@app/components/AccountCard';
 import UserMenu from '@app/components/UserMenu';
+import useModal from '@app/hooks/useModal';
 import useProduct, { ProductType } from '@app/hooks/useProduct';
 import { countUnread } from '@app/pages/api/logs/count-unread';
 import { getStatus } from '@app/pages/api/status';
@@ -45,6 +47,9 @@ import { appUrl } from '@chaindesk/lib/config';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AppStatus, RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
+
+import StripePricingTable from '../StripePricingTable';
+import UsageLimitModal from '../UsageLimitModal';
 
 function NavigationLink(props: {
   href: string;
@@ -88,6 +93,10 @@ export default function Navigation() {
   const router = useRouter();
   const { data: session } = useSession();
   const { product } = useProduct();
+  const [isShowUpgradeModal, setIsShowUpgradeModal] = React.useState(false);
+  const upgradeModal = useModal({
+    disableClose: !session?.user?.isPremium,
+  });
 
   const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
@@ -135,6 +144,20 @@ export default function Navigation() {
       );
     }
   }, [getStatusQuery?.data?.status]);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!session?.user?.isPremium) {
+        upgradeModal.open();
+      } else {
+        upgradeModal.close();
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [session?.user?.isPremium]);
 
   React.useEffect(() => {
     if (
@@ -628,6 +651,14 @@ export default function Navigation() {
       <Divider sx={{ my: 2 }}></Divider>
 
       <UserMenu />
+
+      {/* <UsageLimitModal isOpen={isShowUpgradeModal} handleClose={() => {}} /> */}
+      <upgradeModal.component>
+        <Alert color="warning" variant="solid">
+          Upgrade
+        </Alert>
+        <StripePricingTable />
+      </upgradeModal.component>
     </Stack>
   );
 }

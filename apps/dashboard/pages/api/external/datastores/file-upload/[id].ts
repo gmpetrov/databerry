@@ -93,7 +93,9 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
           usage: true,
           subscriptions: {
             where: {
-              status: 'active',
+              status: {
+                in: ['active', 'trialing'],
+              },
             },
           },
         },

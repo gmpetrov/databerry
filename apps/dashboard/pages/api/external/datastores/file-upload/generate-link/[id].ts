@@ -59,7 +59,9 @@ export const generateLink = async (
           usage: true,
           subscriptions: {
             where: {
-              status: 'active',
+              status: {
+                in: ['active', 'trialing'],
+              },
             },
           },
         },

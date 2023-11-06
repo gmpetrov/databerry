@@ -23,6 +23,7 @@ import * as React from 'react';
 import Admin from '@app/components/Admin';
 import { AnalyticsContext } from '@app/components/Analytics';
 import SettingsLayout from '@app/components/SettingsLayout';
+import StripePricingTable from '@app/components/StripePricingTable';
 import UserFree from '@app/components/UserFree';
 import UserPremium from '@app/components/UserPremium';
 
@@ -114,23 +115,10 @@ export default function BillingSettingsPage() {
 
   return (
     <Stack>
-      <Head>
-        <script
-          id="stripe-pricing-table"
-          async
-          src="https://js.stripe.com/v3/pricing-table.js"
-        ></script>
-      </Head>
-
       <Box mb={4}>
         <UserFree>
           <Card variant="outlined" sx={{ bgcolor: 'black' }}>
-            <stripe-pricing-table
-              pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
-              publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
-              client-reference-id={session?.organization?.id}
-              customer-email={session?.user?.email}
-            ></stripe-pricing-table>
+            <StripePricingTable />
           </Card>
         </UserFree>
       </Box>
