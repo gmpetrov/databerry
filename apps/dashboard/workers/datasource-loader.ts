@@ -33,7 +33,8 @@ const datasourceLoadQueue = new WorkerPro(
         },
       });
 
-      throw new Error(JSON.stringify(err));
+      return;
+      //throw new Error(JSON.stringify(err));
     }
   },
   {
