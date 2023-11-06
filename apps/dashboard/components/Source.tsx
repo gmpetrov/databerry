@@ -69,7 +69,7 @@ function SourceComponent({ source, onClick }: Props) {
       onClick={onClick ? handleClick : undefined}
     >
       {source.source_url && !onClick ? (
-        <a href={source.source_url || '#'} target="_blank">
+        <a href={source.source_url} target="_blank">
           {source.datasource_name || source.source_url}
         </a>
       ) : (

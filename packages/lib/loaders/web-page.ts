@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { ConsoleCallbackHandler } from 'langchain/dist/callbacks';
-import { z } from 'zod';
 
 import { AppDocument } from '@chaindesk/lib/types/document';
-import { WebPageSourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 
 import { ApiError, ApiErrorType } from '../api-error';
 import cleanTextForEmbeddings from '../clean-text-for-embeddings';
@@ -52,11 +50,11 @@ export const loadPageContent = async (url: string) => {
   }
 };
 
-export class WebPageLoader extends DatasourceLoaderBase {
+type DatasourceWebPage = Extract<DatasourceSchema, { type: 'web_page' }>;
+
+export class WebPageLoader extends DatasourceLoaderBase<DatasourceWebPage> {
   getSize = async () => {
-    const url: string = (
-      this.datasource.config as z.infer<typeof WebPageSourceSchema>['config']
-    )['source_url'];
+    const url = this.datasource.config['source_url'];
 
     const res = await axios.head(url);
 
@@ -64,9 +62,7 @@ export class WebPageLoader extends DatasourceLoaderBase {
   };
 
   async load() {
-    const url: string = (
-      this.datasource.config as z.infer<typeof WebPageSourceSchema>['config']
-    )['source_url'];
+    const url = this.datasource.config['source_url'];
 
     const content = await loadPageContent(url);
 
@@ -85,8 +81,8 @@ export class WebPageLoader extends DatasourceLoaderBase {
           datasource_id: this.datasource.id,
           datasource_name: this.datasource.name,
           datasource_type: this.datasource.type,
-          custom_id: (this.datasource?.config as any)?.custom_id,
-          tags: [],
+          custom_id: this.datasource?.config?.custom_id,
+          tags: this.datasource?.config?.tags || [],
         },
       }),
     ];

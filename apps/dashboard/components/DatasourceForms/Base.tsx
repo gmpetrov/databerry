@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button, Option, Select } from '@mui/joy';
+import { Alert, Button, Option, Select, Stack } from '@mui/joy';
 import { FormLabel } from '@mui/joy';
 import Textarea from '@mui/joy/Textarea';
 import axios from 'axios';
@@ -27,12 +27,14 @@ import {
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
 import { GenerateUploadLinkRequest } from '@chaindesk/lib/types/dtos';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import {
   AppDatasource as Datasource,
   DatasourceType,
   Prisma,
 } from '@chaindesk/prisma';
+
+import DatasourceTagsInput from '../DatasourceTagsInput';
 
 import type { DatasourceFormProps } from './types';
 
@@ -90,7 +92,7 @@ const DatasourceText = (props: {
 
 export default function BaseForm(props: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const methods = useForm<UpsertDatasourceSchema>({
+  const methods = useForm<DatasourceSchema>({
     resolver: zodResolver(props.schema),
     mode: props.mode,
     defaultValues: {
@@ -110,10 +112,10 @@ export default function BaseForm(props: Props) {
     Prisma.PromiseReturnType<typeof upsertDatasource>
   >(
     `/api/datasources`,
-    generateActionFetcher(HTTP_METHOD.POST)<UpsertDatasourceSchema>
+    generateActionFetcher(HTTP_METHOD.POST)<DatasourceSchema>
   );
 
-  const onSubmit = async (values: UpsertDatasourceSchema) => {
+  const onSubmit = async (values: DatasourceSchema) => {
     try {
       setIsLoading(true);
       const datasourceText = !dirtyFields['datasourceText']
@@ -129,7 +131,7 @@ export default function BaseForm(props: Props) {
         },
         isUpdateText: !!datasourceText,
         file: undefined,
-      } as UpsertDatasourceSchema;
+      } as DatasourceSchema;
 
       if (
         datasourceText ||
@@ -218,7 +220,28 @@ export default function BaseForm(props: Props) {
           {...register('name')}
         />
 
+        {props?.defaultValues?.type &&
+          [DatasourceType.file, DatasourceType.text].includes(
+            props.defaultValues.type as any
+          ) && (
+            <Input
+              label="Source URL (optional)"
+              control={control as any}
+              placeholder="https://en.wikipedia.org/wiki/Nuclear_fusion"
+              helperText='The URL to use for the "sources" section of an Agent answer'
+              {...register('config.source_url')}
+            />
+          )}
+
         {props.children}
+
+        <details>
+          <summary>Advanced Settings</summary>
+
+          <Stack sx={{ pl: 2, pt: 2 }}>
+            <DatasourceTagsInput />
+          </Stack>
+        </details>
 
         {!props.hideText && defaultValues?.datastoreId && defaultValues?.id && (
           <details>

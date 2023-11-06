@@ -5,6 +5,7 @@ import { AgentModelName, Message, MessageFrom } from '@chaindesk/prisma';
 
 import { ChatModelConfigSchema, ChatResponse } from './types/dtos';
 import { ModelConfig } from './config';
+import truncateChatMessages from './truncateChatMessages';
 
 export type ChatProps = ChatModelConfigSchema & {
   prompt: string;
@@ -56,16 +57,23 @@ const chat = async ({
     };
   }
 
-  const prevMessages = (history || [])?.map((each) => {
-    if (each.from === MessageFrom.human) {
-      return new HumanMessage(each.text);
-    }
-    return new AIMessage(each.text);
-  });
+  const truncatedHistory = (
+    await truncateChatMessages({
+      messages: (history || [])
+        ?.map((each) => {
+          if (each.from === MessageFrom.human) {
+            return new HumanMessage(each.text);
+          }
+          return new AIMessage(each.text);
+        })
+        .reverse(),
+      maxTokens: ModelConfig[modelName]?.maxTokens * 0.3, // 30% tokens limit for history
+    })
+  ).reverse();
 
   const messages = [
     ...initialMessages,
-    ...prevMessages,
+    ...truncatedHistory,
     new HumanMessage(prompt),
   ];
 

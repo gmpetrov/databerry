@@ -1,5 +1,52 @@
 # Changelog
 
+<a name="0.1.62"></a>
+## 0.1.62 (2023-11-05)
+
+### Fixed
+
+- 🐛 wording [[1737280](https://github.com/gmpetrov/databerry/commit/173728032277b29b1f6be15bc047412be9bf386c)]
+
+
+<a name="0.1.61"></a>
+## 0.1.61 (2023-11-04)
+
+### Fixed
+
+- 🐛 unecessary agent conversation loader [[0e04d6b](https://github.com/gmpetrov/databerry/commit/0e04d6b57972f1882f7051c2a2d86be394ac451a)]
+
+
+<a name="0.1.60"></a>
+## 0.1.60 (2023-11-04)
+
+### Fixed
+
+- 🐛 inbox conversation shows unecessary loaders [[70dd04c](https://github.com/gmpetrov/databerry/commit/70dd04c270a29770a1e053c25b1ef257bbf3b350)]
+
+
+<a name="0.1.59"></a>
+## 0.1.59 (2023-11-04)
+
+### Changed
+
+- 💄 remove vector datrabase provider column [[1f91be6](https://github.com/gmpetrov/databerry/commit/1f91be671b1f194a30a1053fa745f7e16a0cb57b)]
+
+### Miscellaneous
+
+- 🎸 add metadata to embeddings 😱 [[1f99222](https://github.com/gmpetrov/databerry/commit/1f99222ae2477b92fa026e6c6aa82ffc690acd38)]
+- 🎸 datasource tags [[2187ed8](https://github.com/gmpetrov/databerry/commit/2187ed8524eae9a4b1dc162387800db1633a102c)]
+- 🎸 better datasource config typing with zod [[c305445](https://github.com/gmpetrov/databerry/commit/c305445c420152b1b5362f5215e32fb2395e672d)]
+- 🤖 update pricing section [[9affc5f](https://github.com/gmpetrov/databerry/commit/9affc5fda3274b4743f42cad73f0f7bdcfed0135)]
+
+
+<a name="0.1.58"></a>
+## 0.1.58 (2023-11-02)
+
+### Fixed
+
+- 🐛 max token limit checker [[124d788](https://github.com/gmpetrov/databerry/commit/124d788ca107a335bc9a3944087c9b6311413a50)]
+
+
 <a name="0.1.57"></a>
 ## 0.1.57 (2023-10-30)
 

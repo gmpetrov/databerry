@@ -6,7 +6,7 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import { DatasourceLoader } from '@chaindesk/lib/loaders';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import validate from '@chaindesk/lib/validate';
 import { AppDatasource } from '@chaindesk/prisma';
 
@@ -16,7 +16,7 @@ export const checkDatasource = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const data = req.body as UpsertDatasourceSchema;
+  const data = req.body as DatasourceSchema;
   const session = req.session;
   let isValid = true;
   let message = '';
@@ -49,7 +49,7 @@ export const checkDatasource = async (
 
 handler.post(
   validate({
-    body: UpsertDatasourceSchema,
+    body: DatasourceSchema,
     handler: respond(checkDatasource),
   })
 );

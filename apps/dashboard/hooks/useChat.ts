@@ -91,53 +91,30 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
 
   const getConversationQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getConversation>
-  >(
-    (pageIndex, previousPageData) => {
-      if (!state.conversationId) {
-        if (state.hasMoreMessages) {
-          setState({ hasMoreMessages: false });
-        }
-
-        return null;
+  >((pageIndex, previousPageData) => {
+    if (!state.conversationId) {
+      if (state.hasMoreMessages) {
+        setState({ hasMoreMessages: false });
       }
 
-      if (previousPageData && previousPageData?.messages?.length === 0) {
-        setState({
-          hasMoreMessages: false,
-        });
-        return null;
-      }
-
-      const cursor = previousPageData?.messages?.[
-        previousPageData?.messages?.length - 1
-      ]?.id as string;
-
-      return `${API_URL}/api/conversations/${state.conversationId}?cursor=${
-        cursor || ''
-      }`;
-    },
-    fetcher,
-    {
-      onSuccess: (data) => {
-        setState({
-          history: data
-            ?.filter((each) => !!each)
-            ?.map((each) => each?.messages)
-            ?.flat()
-            ?.reverse()
-            ?.map((message) => ({
-              id: message?.id!,
-              eval: message?.eval,
-              from: message?.from!,
-              message: message?.text!,
-              createdAt: message?.createdAt!,
-              sources: message?.sources as Source[],
-            })),
-          conversationStatus: data[0]?.status ?? state.conversationStatus,
-        });
-      },
+      return null;
     }
-  );
+
+    if (previousPageData && previousPageData?.messages?.length === 0) {
+      setState({
+        hasMoreMessages: false,
+      });
+      return null;
+    }
+
+    const cursor = previousPageData?.messages?.[
+      previousPageData?.messages?.length - 1
+    ]?.id as string;
+
+    return `${API_URL}/api/conversations/${state.conversationId}?cursor=${
+      cursor || ''
+    }`;
+  }, fetcher);
 
   const handleLoadMoreMessages = useCallback(() => {
     if (getConversationQuery.isLoading || getConversationQuery.isValidating)
@@ -419,6 +396,28 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     },
     [setState]
   );
+
+  useEffect(() => {
+    if (getConversationQuery.data) {
+      setState({
+        history: getConversationQuery.data
+          ?.filter((each) => !!each)
+          ?.map((each) => each?.messages)
+          ?.flat()
+          ?.reverse()
+          ?.map((message) => ({
+            id: message?.id!,
+            eval: message?.eval,
+            from: message?.from!,
+            message: message?.text!,
+            createdAt: message?.createdAt!,
+            sources: message?.sources as Source[],
+          })),
+        conversationStatus:
+          getConversationQuery.data[0]?.status ?? state.conversationStatus,
+      });
+    }
+  }, [getConversationQuery.data]);
 
   // useSWRInfinite needs to be retriggered!
   useEffect(() => {

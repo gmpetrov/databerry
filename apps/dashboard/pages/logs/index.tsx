@@ -760,10 +760,7 @@ export default function LogsPage() {
                   eval: each.eval,
                 })) || []
               }
-              isLoadingConversation={
-                getConversationQuery?.isLoading ||
-                getConversationQuery?.isValidating
-              }
+              isLoadingConversation={getConversationQuery?.isLoading}
               onSubmit={async () => {}}
               readOnly={true}
               handleEvalAnswer={handleEvalAnswer}

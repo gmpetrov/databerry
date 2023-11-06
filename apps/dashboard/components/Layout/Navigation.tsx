@@ -375,7 +375,7 @@ export default function Navigation() {
                           </Chip>
                         }
                       >
-                        Work Assitant
+                        Work Assistant
                       </Button>
                     </Link>
                   </Stack>

@@ -28,7 +28,6 @@ import {
 } from '@chaindesk/prisma';
 
 import DatasourceOptions from './DatasourceForms/DatasourceOptions';
-import { DatasourceFormProps } from './DatasourceForms/types';
 import { DatastoreFormProps } from './DatastoreForms/types';
 import { DatastoreFormsMap } from './DatastoreForms';
 

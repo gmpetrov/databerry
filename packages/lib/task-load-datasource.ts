@@ -9,6 +9,7 @@ import { prisma } from '@chaindesk/prisma/client';
 
 import { AppDocument } from './types/document';
 import { TaskLoadDatasourceRequestSchema } from './types/dtos';
+import { DatasourceSchema } from './types/models';
 import { ApiError, ApiErrorType } from './api-error';
 import { s3 } from './aws';
 import countTokens from './count-tokens';
@@ -19,9 +20,8 @@ import logger from './logger';
 import refreshStoredTokensUsage from './refresh-stored-tokens-usage';
 import triggerTaskLoadDatasource from './trigger-task-load-datasource';
 
-export type DatasourceExtended = Prisma.AppDatasourceGetPayload<
-  typeof updateDatasourceArgs
->;
+export type DatasourceExtended<T extends {} = DatasourceSchema> =
+  Prisma.AppDatasourceGetPayload<typeof updateDatasourceArgs> & T;
 
 const updateDatasourceArgs = Prisma.validator<Prisma.AppDatasourceArgs>()({
   include: {

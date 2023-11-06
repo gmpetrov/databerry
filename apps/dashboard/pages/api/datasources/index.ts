@@ -20,7 +20,7 @@ import runMiddleware from '@chaindesk/lib/run-middleware';
 import triggerTaskLoadDatasource from '@chaindesk/lib/trigger-task-load-datasource';
 import { AcceptedDatasourceMimeTypes } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import validate from '@chaindesk/lib/validate';
 import { DatasourceStatus, DatasourceType, Usage } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -78,8 +78,8 @@ export const upsertDatasource = async (
   const session = req.session;
   const file = (req as any).file as z.infer<typeof FileSchema>;
 
-  let data: UpsertDatasourceSchema;
-  let sourceUrl = '';
+  let data: DatasourceSchema;
+  let fileUrl;
 
   if (file) {
     try {
@@ -88,12 +88,11 @@ export const upsertDatasource = async (
       throw new ApiError(ApiErrorType.INVALID_REQUEST);
     }
 
-    const formData = req.body as UpsertDatasourceSchema;
+    const formData = req.body as DatasourceSchema;
 
     data = {
-      // @ts-ignore
+      ...(req.body as DatasourceSchema),
       type: DatasourceType.file,
-      ...(req.body as UpsertDatasourceSchema),
       name:
         (req.body as any)?.fileName ||
         file?.originalname ||
@@ -107,7 +106,7 @@ export const upsertDatasource = async (
     const buf = await buffer(req);
     const rawBody = buf.toString('utf8');
 
-    data = JSON.parse(rawBody) as UpsertDatasourceSchema;
+    data = JSON.parse(rawBody) as DatasourceSchema;
 
     if ((data as any)?.custom_id) {
       data.config = {
@@ -118,7 +117,7 @@ export const upsertDatasource = async (
   }
 
   try {
-    await UpsertDatasourceSchema.parseAsync(data);
+    await DatasourceSchema.parseAsync(data);
   } catch (err) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
@@ -191,7 +190,7 @@ export const upsertDatasource = async (
     const fileExt = mime.extension(file.mimetype);
     const s3FileName = `${id}${fileExt ? `.${fileExt}` : ''}`;
     const s3Key = `datastores/${datastore.id}/${id}/${s3FileName}`;
-    sourceUrl = `${getS3RootDomain()}/${s3Key}`;
+    fileUrl = `${getS3RootDomain()}/${s3Key}`;
 
     const params = {
       Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
@@ -203,17 +202,22 @@ export const upsertDatasource = async (
     await s3.putObject(params).promise();
   }
 
-  if (existingDatasource?.id && existingDatasource?.name !== data?.name) {
-    // Update metadata here as data loaders will not update chunks if the hash is the same
-    await new DatastoreManager(
-      existingDatasource?.datastore!
-    ).updateDatasourceMetadata({
-      datasourceId: existingDatasource?.id,
-      metadata: {
-        datasource_name: data?.name!,
-      },
-    });
-  }
+  // Disable this for now as we're now embedding metadata too
+  // if (existingDatasource?.id && existingDatasource?.name !== data?.name) {
+  //   // Update metadata here as data loaders will not update chunks if the hash is the same
+  //   await new DatastoreManager(
+  //     existingDatasource?.datastore!
+  //   ).updateDatasourceMetadata({
+  //     datasourceId: existingDatasource?.id,
+  //     metadata: {
+  //       datasource_name: data?.name!,
+  //     },
+  //   });
+  // }
+
+  const tags = (((data.config as any)?.tags || []) as string[]).filter(
+    (each) => !!each.trim()
+  );
 
   const datasource = await prisma.appDatasource.upsert({
     where: {
@@ -225,10 +229,11 @@ export const upsertDatasource = async (
       name: data.name || generateFunId(),
       config: {
         ...data.config,
+        tags,
         ...(file
           ? {
               mime_type: file.mimetype,
-              source_url: sourceUrl,
+              file_url: fileUrl,
             }
           : {}),
       },
@@ -258,10 +263,11 @@ export const upsertDatasource = async (
 
       config: {
         ...data.config,
+        tags,
         ...(file
           ? {
               mime_type: file.mimetype,
-              source_url: sourceUrl,
+              file_url: fileUrl,
             }
           : {}),
       },
@@ -283,7 +289,7 @@ export const upsertDatasource = async (
 handler.use(multer().single('file')).post(
   respond(upsertDatasource)
   // validate({
-  //   body: UpsertDatasourceSchema,
+  //   body: DatasourceSchema,
   //   handler: respond(upsertDatasource),
   // })
 );

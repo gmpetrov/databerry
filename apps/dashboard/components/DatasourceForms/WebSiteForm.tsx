@@ -9,51 +9,20 @@ import { z } from 'zod';
 import Input from '@app/components/Input';
 
 import accountConfig from '@chaindesk/lib/account-config';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
+import {
+  DatasourceSchema,
+  DatasourceWebSite,
+} from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';
 
-type Props = DatasourceFormProps & {};
-
-export const WebSiteSourceSchema = UpsertDatasourceSchema.extend({
-  config: z
-    .object({
-      source_url: z.string().trim().optional(),
-      sitemap: z.string().trim().optional(),
-    })
-    .refine(
-      (data) => {
-        if (data.sitemap) {
-          return !!z
-            .string()
-            .url()
-            .parse(data.sitemap, {
-              path: ['config.sitemap'],
-            });
-        } else if (data.source_url) {
-          return !!z
-            .string()
-            .url()
-            .parse(data.source_url, {
-              path: ['config.source_url'],
-            });
-        }
-
-        return false;
-      },
-      {
-        message: 'You must provide either a web site URL or a sitemap URL',
-        path: ['config.sitemap', 'config.source_url'],
-      }
-    ),
-});
+type Props = DatasourceFormProps<DatasourceWebSite> & {};
 
 function Nested() {
   const { data: session, status } = useSession();
-  const { control, register } =
-    useFormContext<z.infer<typeof WebSiteSourceSchema>>();
+  const { control, register } = useFormContext<DatasourceWebSite>();
 
   return (
     <Stack gap={1}>
@@ -115,7 +84,7 @@ export default function WebSiteForm(props: Props) {
 
   return (
     <Base
-      schema={WebSiteSourceSchema}
+      schema={DatasourceSchema}
       {...rest}
       defaultValues={{
         ...props.defaultValues!,

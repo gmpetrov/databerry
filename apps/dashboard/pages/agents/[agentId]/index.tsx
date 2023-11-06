@@ -54,12 +54,10 @@ export default function AgentPage() {
     history,
     handleChatSubmit,
     isLoadingConversation,
-    isValidatingConversation,
     hasMoreMessages,
     handleLoadMoreMessages,
     setConversationId,
     conversationId,
-    conversationStatus,
     handleEvalAnswer,
     handleAbort,
   } = useChat({
@@ -304,9 +302,7 @@ export default function AgentPage() {
                 messages={history}
                 onSubmit={handleChatSubmit}
                 agentIconUrl={query?.data?.iconUrl!}
-                isLoadingConversation={
-                  isLoadingConversation || isValidatingConversation
-                }
+                isLoadingConversation={isLoadingConversation}
                 hasMoreMessages={hasMoreMessages}
                 handleLoadMoreMessages={handleLoadMoreMessages}
                 handleEvalAnswer={handleEvalAnswer}

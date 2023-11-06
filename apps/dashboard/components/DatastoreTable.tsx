@@ -43,7 +43,7 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
             <tr>
               <th style={{ width: 120, padding: 12 }}>Name</th>
               <th style={{ width: 120, padding: 12 }}>Nb Datasources</th>
-              <th style={{ width: 220, padding: 12 }}>Provider</th>
+              {/* <th style={{ width: 220, padding: 12 }}>Provider</th> */}
               <th style={{ width: 220, padding: 12 }}>Visibility</th>
               {/* <th style={{ width: 120, padding: 12 }}>Subscription</th> */}
               <th style={{ width: 160, padding: 12 }}> </th>
@@ -71,7 +71,7 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
                     {(datastore as any)?._count?.datasources}
                   </Typography>
                 </td>
-                <td>
+                {/* <td>
                   <Chip
                     variant="soft"
                     size="sm"
@@ -82,7 +82,7 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
                   >
                     qdrant
                   </Chip>
-                </td>
+                </td> */}
                 <td>
                   <Chip
                     variant="soft"

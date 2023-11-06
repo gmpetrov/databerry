@@ -13,7 +13,6 @@ import { DatastoreManager } from '@chaindesk/lib/datastores';
 import { DatasourceLoader } from '@chaindesk/lib/loaders';
 import refreshStoredTokensUsage from '@chaindesk/lib/refresh-stored-tokens-usage';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
-import { UpsertDatasourceSchema } from '@chaindesk/lib/types/models';
 import validate from '@chaindesk/lib/validate';
 import { prisma } from '@chaindesk/prisma/client';
 
