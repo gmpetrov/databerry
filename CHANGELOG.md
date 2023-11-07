@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.64"></a>
+## 0.1.64 (2023-11-07)
+
+### Miscellaneous
+
+- 🎸 upgrade openai models [[afb0ac2](https://github.com/gmpetrov/databerry/commit/afb0ac2fc5b8c73f93c68b21fd4a1c96536d16cd)]
+
+
 <a name="0.1.63"></a>
 ## 0.1.63 (2023-11-06)
 
