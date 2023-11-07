@@ -2,13 +2,13 @@ import cuid from 'cuid';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { NewConversation, render } from '@chaindesk/emails';
-import { queryCountConfig } from '@chaindesk/lib/account-config';
 import AgentManager from '@chaindesk/lib/agent';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
   formatOrganizationSession,
   sessionOrganizationInclude,
 } from '@chaindesk/lib/auth';
+import { ModelConfig } from '@chaindesk/lib/config';
 import ConversationManager from '@chaindesk/lib/conversation';
 import {
   createLazyAuthHandler,
@@ -177,7 +177,7 @@ export const chatAgentRequest = async (
       data: {
         nbAgentQueries:
           (agent?.organization?.usage?.nbAgentQueries || 0) +
-          (queryCountConfig?.[agent?.modelName] || 1),
+          (ModelConfig?.[agent?.modelName].cost || 1),
       },
     }),
   ]);

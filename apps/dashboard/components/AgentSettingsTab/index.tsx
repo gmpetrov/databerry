@@ -42,10 +42,16 @@ function AgentSettingsTab(props: Props) {
 
   useEffect(() => {
     if (router.query.settingTab) {
-      delete router.query.settingTab;
-      router.replace(router, undefined, { shallow: true });
+      setState({
+        currentTab: router.query.settingTab as string,
+      });
     }
-  }, []);
+  }, [router.query.settingTab]);
+
+  const handleChangeTab = (tab: string) => {
+    router.query.settingTab = tab;
+    router.replace(router, undefined, { shallow: true });
+  };
 
   if (!agent) {
     return null;
@@ -72,11 +78,7 @@ function AgentSettingsTab(props: Props) {
           <ListItem>
             <ListItemButton
               selected={state.currentTab === 'general'}
-              onClick={() =>
-                setState({
-                  currentTab: 'general',
-                })
-              }
+              onClick={() => handleChangeTab('general')}
             >
               <ListItemDecorator>
                 <SettingsRoundedIcon />
@@ -87,11 +89,7 @@ function AgentSettingsTab(props: Props) {
           <ListItem>
             <ListItemButton
               selected={state.currentTab === 'model'}
-              onClick={() =>
-                setState({
-                  currentTab: 'model',
-                })
-              }
+              onClick={() => handleChangeTab('model')}
             >
               <ListItemDecorator>
                 <SmartToyRoundedIcon />
@@ -102,11 +100,7 @@ function AgentSettingsTab(props: Props) {
           <ListItem>
             <ListItemButton
               selected={state.currentTab === 'tools'}
-              onClick={() =>
-                setState({
-                  currentTab: 'tools',
-                })
-              }
+              onClick={() => handleChangeTab('tools')}
             >
               <ListItemDecorator>
                 <SpokeRoundedIcon />
@@ -117,11 +111,7 @@ function AgentSettingsTab(props: Props) {
           <ListItem>
             <ListItemButton
               selected={state.currentTab === 'security'}
-              onClick={() =>
-                setState({
-                  currentTab: 'security',
-                })
-              }
+              onClick={() => handleChangeTab('security')}
             >
               <ListItemDecorator>
                 <SecurityRoundedIcon />

@@ -637,6 +637,8 @@ enum AgentModelName {
   gpt_3_5_turbo_16k
   gpt_4
   gpt_4_32k
+  gpt_4_turbo
+  gpt_4_turbo_vision
 }
 
 enum MessageEval {

@@ -13,7 +13,7 @@ import Link from 'next/link';
 import * as React from 'react';
 
 import { RouteNames } from '@chaindesk/lib/types';
-import { Agent, Datastore } from '@chaindesk/prisma';
+import { Agent } from '@chaindesk/prisma';
 
 export default function AgentTable({ items }: { items: Agent[] }) {
   return (
@@ -46,8 +46,8 @@ export default function AgentTable({ items }: { items: Agent[] }) {
             <tr>
               <th style={{ width: 120, padding: 12 }}>Name</th>
               <th style={{ width: 120, padding: 12 }}>Description</th>
+              <th style={{ width: 120, padding: 12 }}>Model</th>
               <th style={{ width: 220, padding: 12 }}>Visibility</th>
-              {/* <th style={{ width: 120, padding: 12 }}>Subscription</th> */}
               <th style={{ width: 160, padding: 12 }}> </th>
             </tr>
           </thead>
@@ -85,6 +85,11 @@ export default function AgentTable({ items }: { items: Agent[] }) {
                   </Typography>
                 </td>
 
+                <td>
+                  <Chip variant="soft" size="sm" color={'neutral'}>
+                    {agent.modelName}
+                  </Chip>
+                </td>
                 <td>
                   <Chip
                     variant="soft"

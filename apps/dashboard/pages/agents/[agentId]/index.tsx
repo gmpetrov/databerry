@@ -185,12 +185,29 @@ export default function AgentPage() {
               <Chip
                 size="sm"
                 variant="soft"
+                color={'primary'}
+                onClick={() => {
+                  router.query.tab = 'settings';
+                  router.query.settingTab = 'model';
+                  router.push(router);
+                }}
+              >
+                {query?.data?.modelName}
+              </Chip>
+              <Chip
+                size="sm"
+                variant="soft"
                 color={
                   {
                     public: 'success',
                     private: 'neutral',
                   }[query?.data?.visibility!] as ColorPaletteProp
                 }
+                onClick={() => {
+                  router.query.tab = 'settings';
+                  router.query.settingTab = 'security';
+                  router.push(router);
+                }}
               >
                 {query?.data?.visibility}
               </Chip>

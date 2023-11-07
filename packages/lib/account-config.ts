@@ -21,13 +21,6 @@ type Plan = {
   };
 };
 
-export const queryCountConfig = {
-  [AgentModelName.gpt_3_5_turbo]: 1,
-  [AgentModelName.gpt_3_5_turbo_16k]: 15,
-  [AgentModelName.gpt_4]: 20,
-  [AgentModelName.gpt_4_32k]: 30,
-};
-
 const config: {
   [key in SubscriptionPlan]: Plan;
 } = {

@@ -20,6 +20,7 @@ import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { ModelConfig } from '@chaindesk/lib/config';
 import { CUSTOMER_SUPPORT } from '@chaindesk/lib/prompt-templates';
 import { PromptTypesLabels, RouteNames } from '@chaindesk/lib/types';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
@@ -106,19 +107,22 @@ export default function ModelInput({}: Props) {
           }}
         >
           <Option value={AgentModelName.gpt_3_5_turbo}>
-            OpenAI gpt-3.5-turbo
-          </Option>
-          <Option
-            value={AgentModelName.gpt_3_5_turbo_16k}
-            disabled={!session?.data?.organization?.isPremium}
-          >
-            OpenAI gpt-3.5-turbo 16k (premium)
+            gpt-3.5-turbo - 16K -{' '}
+            {ModelConfig[AgentModelName.gpt_3_5_turbo].cost} credit/query
           </Option>
           <Option
             value={AgentModelName.gpt_4}
             disabled={!session?.data?.organization?.isPremium}
           >
-            OpenAI gpt-4 (premium)
+            gpt-4 - 8K - {ModelConfig[AgentModelName.gpt_4].cost} credits/query
+            (premium)
+          </Option>
+          <Option
+            value={AgentModelName.gpt_4_turbo}
+            disabled={!session?.data?.organization?.isPremium}
+          >
+            gpt-4-turbo - 128k - {ModelConfig[AgentModelName.gpt_4_turbo].cost}{' '}
+            credits/query (premium)
           </Option>
         </Select>
       </FormControl>
