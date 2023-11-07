@@ -9,6 +9,7 @@
   },
   "scripts": {
     "prisma:seed": "dotenv -e ../../.env.local -- npx prisma db seed",
+    "upgrade:org": "dotenv -e ../../.env.local -- npx tsx upgrade.ts",
     "prisma:generate": "dotenv -e ../../.env.local -- prisma generate",
     "prisma:push": "dotenv -e ../../.env.local -- prisma db push --skip-generate",
     "prisma:migrate:dev": "dotenv -e ../../.env.local -- prisma migrate dev",
