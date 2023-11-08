@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.65"></a>
+## 0.1.65 (2023-11-08)
+
+### Miscellaneous
+
+- 🎸 add openai status check [[381a27f](https://github.com/gmpetrov/databerry/commit/381a27f9041fba8bc93a38752161b675cd5b4cd4)]
+
+
 <a name="0.1.64"></a>
 ## 0.1.64 (2023-11-07)
 
