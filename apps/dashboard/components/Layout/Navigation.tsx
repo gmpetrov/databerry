@@ -11,6 +11,7 @@ import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import TwitterIcon from '@mui/icons-material/Twitter';
+import { ColorPaletteProp } from '@mui/joy';
 import Badge from '@mui/joy/Badge';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -104,8 +105,22 @@ export default function Navigation() {
   );
 
   const { publicRuntimeConfig } = getConfig();
-  const isStatusOK = getStatusQuery?.data?.status === AppStatus.OK;
   const isMaintenance = !!getStatusQuery?.data?.isMaintenance;
+
+  React.useEffect(() => {
+    if (
+      getStatusQuery?.data?.status &&
+      getStatusQuery?.data?.status !== AppStatus.OK
+    ) {
+      toast.error(
+        "We're experiencing some issues. Please try again later. Sorry for the inconvenience!",
+        {
+          duration: 100000,
+          id: 'status-error',
+        }
+      );
+    }
+  }, [getStatusQuery?.data?.status]);
 
   React.useEffect(() => {
     if (
@@ -547,26 +562,46 @@ export default function Navigation() {
             v{publicRuntimeConfig?.version}
           </Chip>
 
-          <Link href={'https://status.chaindesk.ai/'} target={'_blank'}>
-            <Chip
-              color={isStatusOK ? 'success' : 'danger'}
-              variant="soft"
-              sx={{ cursor: 'pointer' }}
-              endDecorator={<ArrowForwardRoundedIcon />}
-            >
-              <Stack direction="row" alignItems={'center'} gap={1}>
-                <Box
-                  sx={{
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '99px',
-                    bgcolor: isStatusOK ? 'success.300' : 'danger.500',
-                  }}
-                />
-                <Typography level="body-sm">system status</Typography>
-              </Stack>
-            </Chip>
-          </Link>
+          {getStatusQuery?.data?.status && (
+            <Link href={'https://status.chaindesk.ai/'} target={'_blank'}>
+              <Chip
+                color={
+                  (
+                    {
+                      [AppStatus.OK]: 'success',
+                      [AppStatus.WARNING]: 'warning',
+                      [AppStatus.KO]: 'danger',
+                    } as Record<AppStatus, ColorPaletteProp>
+                  )[getStatusQuery?.data?.status]
+                }
+                variant="soft"
+                sx={{ cursor: 'pointer' }}
+                endDecorator={<ArrowForwardRoundedIcon />}
+              >
+                <Stack direction="row" alignItems={'center'} gap={1}>
+                  <Box
+                    sx={{
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '99px',
+                      // bgcolor: isStatusOK ? 'success.300' : 'danger.500',
+                      ...(getStatusQuery?.data?.status === AppStatus.OK && {
+                        bgcolor: 'success.300',
+                      }),
+                      ...(getStatusQuery?.data?.status === AppStatus.KO && {
+                        bgcolor: 'danger.500',
+                      }),
+                      ...(getStatusQuery?.data?.status ===
+                        AppStatus.WARNING && {
+                        bgcolor: 'warning.500',
+                      }),
+                    }}
+                  />
+                  <Typography level="body-sm">system status</Typography>
+                </Stack>
+              </Chip>
+            </Link>
+          )}
         </Stack>
       </Stack>
 
