@@ -28,7 +28,7 @@ services:
       - ./data/qdrant_storage:/qdrant/storage
 
   pgdb:
-    image: postgres:12
+    image: postgres:15
     restart: unless-stopped
     volumes:
       - type: volume
