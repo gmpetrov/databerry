@@ -61,12 +61,10 @@ export class FileLoader extends DatasourceLoaderBase<DatasourceFile> {
       this.datasource.id
     }/${this.datasource.id}.${mime.extension(mimeType)}`;
 
-    const res = await s3
-      .getObject({
-        Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-        Key: s3Key,
-      })
-      .promise();
+    const res = await s3.getObject({
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+      Key: s3Key,
+    });
 
     const buffer = (res as any).Body.buffer;
 

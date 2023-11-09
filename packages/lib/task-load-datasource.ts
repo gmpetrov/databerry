@@ -213,7 +213,7 @@ const taskLoadDatasource = async (data: TaskLoadDatasourceRequestSchema) => {
     ContentType: 'application/json',
   };
 
-  await s3.putObject(params).promise();
+  await s3.putObject(params);
 
   await refreshStoredTokensUsage(datasource.organizationId!);
 

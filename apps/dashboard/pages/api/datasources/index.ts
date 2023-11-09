@@ -201,7 +201,7 @@ export const upsertDatasource = async (
       ContentType: file.mimetype,
     };
 
-    await s3.putObject(params).promise();
+    await s3.putObject(params);
   }
 
   // Disable this for now as we're now embedding metadata too
