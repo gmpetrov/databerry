@@ -1,0 +1,1 @@
+{"crisp":{"choices":{"resolve":"解決とマーク","request":"人間のオペレータを要求","enableAi":"AIを再度有効にする"},"instructions":{"callback":"オペレータがすぐに返信します。","unavailable":"申し訳ありませんが、現在利用可能なオペレータはいません。"}},"chatbubble":{"actions":{"resolve":"解決とマーク","request":"人間を要求"},"lead":{"instruction":"連絡先を教えてください","email":"メール","required":"人間のオペレータを要求するために必要です"}}}

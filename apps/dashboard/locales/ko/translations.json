@@ -1,0 +1,1 @@
+{"crisp":{"choices":{"resolve":"해결됨으로 표시","request":"인적 자원 요청","enableAi":"AI 다시 활성화"},"instructions":{"callback":"연산자가 곧 연락드릴 것입니다.","unavailable":"죄송합니다. 현재 사용 가능한 연산자가 없습니다."}},"chatbubble":{"actions":{"resolve":"해결됨으로 표시","request":"인적자원 요청"},"lead":{"instruction":"연락 방법을 알려주세요","email":"이메일","required":"인적 자원 요청을 위해 필요합니다"}}}

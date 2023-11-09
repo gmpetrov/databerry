@@ -1,0 +1,24 @@
+{
+  "crisp": {
+    "choices": {
+      "resolve": "Mark as resolved",
+      "request": "Request a human operator",
+      "enableAi": "Re-enable AI"
+    },
+    "instructions": {
+      "callback": "Ажилтан таньд багааз ч мэдээлэл илгээхгүй байх болно.",
+      "unavailable": "Уучлаарай, одоогоор ажилтан байхгүй байна."
+    }
+  },
+  "chatbubble": {
+    "actions": {
+      "resolve": "Mark As Resolved",
+      "request": "Request  Human"
+    },
+    "lead": {
+      "instruction": "Бидтэйтэй холбогдох тул дахин холбоо бариад асуулт/санал хүсэлтээ илгээхийх шаардах юм.",
+      "email": "email",
+      "required": "required"
+    }
+  }
+}
