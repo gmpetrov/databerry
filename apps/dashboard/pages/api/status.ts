@@ -27,7 +27,7 @@ export const getStatus = async (
     const { data } = await axios.get(
       'https://status.openai.com/api/v2/status.json'
     );
-    if (data.status.indicator !== 'none') {
+    if (data.status.indicator === 'major') {
       openAICheck = AppStatus.KO;
     }
   } catch {
@@ -65,6 +65,7 @@ export const getStatus = async (
     status,
     db: dbCheck,
     vectorDb: vectorDbCheck,
+    openAI: openAICheck,
     isMaintenance: process.env.MAINTENANCE_MODE === 'true',
     latestVersion: publicRuntimeConfig.version,
   };
