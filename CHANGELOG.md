@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.66"></a>
+## 0.1.66 (2023-11-09)
+
+### Fixed
+
+- 🐛 status KO [[78de29d](https://github.com/gmpetrov/databerry/commit/78de29d172181454e9e049ba5771a4a2e75c057b)]
+
+### Miscellaneous
+
+- 🤖 upgrade postgresql version [[4115d0d](https://github.com/gmpetrov/databerry/commit/4115d0db886effb34727b5351695f38e94dbddc2)]
+
+
 <a name="0.1.65"></a>
 ## 0.1.65 (2023-11-08)
 
