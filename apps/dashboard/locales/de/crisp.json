@@ -1,0 +1,11 @@
+{
+  "choices": {
+    "resolve": "Als gelöst markieren",
+    "request": "Einen menschlichen Operator anfordern",
+    "enableAi": "AI erneut aktivieren"
+  },
+  "instructions": {
+    "callback": "Ein Operator wird sich in Kürze bei Ihnen melden.",
+    "unavailable": "Leider sind zurzeit keine Operatoren verfügbar."
+  }
+}

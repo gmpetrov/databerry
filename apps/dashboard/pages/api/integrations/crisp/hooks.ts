@@ -2,6 +2,8 @@ import Crisp from 'crisp-api';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 
+import i18n from '@app/locales/i18next';
+
 import AgentManager from '@chaindesk/lib/agent';
 import ConversationManager from '@chaindesk/lib/conversation';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
@@ -232,9 +234,11 @@ const handleQuery = async (
     history: conversation?.messages,
   });
 
-  const finalAnser = `${answer}\n\n${formatSourcesRawText(
+  const finalAnswer = `${answer}\n\n${formatSourcesRawText(
     filterInternalSources(sources)!
   )}`.trim();
+
+  CrispClient.website.visitorId;
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
     type: 'picker',
@@ -243,18 +247,18 @@ const handleQuery = async (
 
     content: {
       id: 'chaindesk-answer',
-      text: finalAnser,
+      text: finalAnswer,
       choices: [
         {
           value: Action.mark_as_resolved,
           icon: '✅',
-          label: 'Mark as resolved',
+          label: i18n.t('crisp:choices.resolve'),
           selected: false,
         },
         {
           value: Action.request_human,
           icon: '💬',
-          label: 'Request a human operator',
+          label: i18n.t('crisp:choices.request'),
           selected: false,
         },
       ],
@@ -276,6 +280,7 @@ const handleQuery = async (
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   let body = {} as HookBody;
+
   try {
     res.status(200).send('Handling...');
     // const host = req?.headers?.['host'];
@@ -303,13 +308,16 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       return "Not the first attempt, don't handle.";
     }
 
-    const metadata = (
-      await CrispClient.website.getConversationMetas(
-        body.website_id,
-        body.data.session_id
-      )
-    )?.data as ConversationMetadata;
+    const metas = await CrispClient.website.getConversationMetas(
+      body.website_id,
+      body.data.session_id
+    );
 
+    const visitorLanguage = metas.device.locales[0];
+
+    i18n.changeLanguage(visitorLanguage); // fall back on english if not supported
+
+    const metadata = metas?.data as ConversationMetadata;
     // const newChoice = body?.data?.content?.choices?.find(
     //   (one: any) => one.selected
     // );
@@ -426,12 +434,12 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
                   origin: 'chat',
                   content: {
                     id: 'chaindesk-enable',
-                    text: 'An operator will get back to you shortly.',
+                    text: i18n.t('crisp:instructions.callback'),
                     choices: [
                       {
                         value: Action.enable_ai,
                         icon: '▶️',
-                        label: 'Re-enable AI',
+                        label: i18n.t('crisp:choices.enableAi'),
                         selected: false,
                       },
                     ],
@@ -466,12 +474,12 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
                   content: {
                     id: 'chaindesk-answer',
-                    text: 'Unfortunately, no operators are available at the moment.',
+                    text: i18n.t('crisp:instructions.unavailable'),
                     choices: [
                       {
                         value: Action.enable_ai,
                         icon: '▶️',
-                        label: 'Re-enable AI',
+                        label: i18n.t('crisp:choices.enableAi'),
                         selected: false,
                       },
                     ],

@@ -3,8 +3,10 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button, Chip, CircularProgress, ExtendButton } from '@mui/joy';
 import { SxProps } from '@mui/joy/styles/types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import useConfetti from '@app/hooks/useConfetti';
+import i18n from '@app/locales/i18next';
 
 import type { ConversationStatus } from '@chaindesk/prisma';
 
@@ -43,7 +45,7 @@ const ResolveButton = ({
   sx?: SxProps;
 }) => {
   const [pending, setPending] = useState(false);
-
+  const { t } = useTranslation('', { i18n });
   const triggerConfetti = useConfetti({
     zIndex: 10000000000,
   });
@@ -87,7 +89,7 @@ const ResolveButton = ({
       }
     >
       {conversationStatus === 'RESOLVED' && 'Mark as Unresolved'}
-      {conversationStatus !== 'RESOLVED' && 'Mark As Resolved'}
+      {conversationStatus !== 'RESOLVED' && t('chatbubble:actions:resolve')}
     </Button>
   );
 };

@@ -1,0 +1,11 @@
+{
+  "actions": {
+    "resolve": "Als Gelöst Markieren",
+    "request": "Menschenoperator anfordern"
+  },
+  "lead": {
+    "instruction": "Lassen Sie uns wissen, wie wir Sie kontaktieren können",
+    "email": "email",
+    "required": "Erforderlich, um einen Menschenoperator anzufordern"
+  }
+}
