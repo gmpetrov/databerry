@@ -1,0 +1,1 @@
+{"crisp":{"choices":{"resolve":"標記為已解決","request":"申請人工操作員","enableAi":"啟用 AI"},"instructions":{"callback":"操作員將會儘快與您聯絡。","unavailable":"很抱歉，目前沒有可用的操作員。"}},"chatbubble":{"actions":{"resolve":"標記為已解決","request":"申請人工操作員"},"lead":{"instruction":"請告訴我們如何聯絡您","email":"電子郵件","required":"申請人工操作員時需要"}}}

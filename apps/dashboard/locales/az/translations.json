@@ -1,0 +1,24 @@
+{
+  "crisp": {
+    "choices": {
+      "resolve": "Həll edildi kimi qeyd edin",
+      "request": "İnsan operator istəyin",
+      "enableAi": "AI-nı yenidən aktivləşdirin"
+    },
+    "instructions": {
+      "callback": "Bir operator sizə tezliklə geri dönəcək.",
+      "unavailable": "Təəssüf ki, indi heç bir operator mövcud deyil."
+    }
+  },
+  "chatbubble": {
+    "actions": {
+      "resolve": "Həll edildi kimi qeyd edin",
+      "request": "İnsan istəyin"
+    },
+    "lead": {
+      "instruction": "Bizimlə əlaqə qurma yolunu bildirin",
+      "email": "Email",
+      "required": "İnsan operatorunu taleb etmək üçün vacibdir"
+    }
+  }
+}

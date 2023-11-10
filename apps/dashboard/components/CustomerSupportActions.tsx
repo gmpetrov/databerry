@@ -3,9 +3,11 @@ import { Button, ColorPaletteProp } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
 import React, { useContext } from 'react';
 import { useFrame } from 'react-frame-component';
+import { useTranslation } from 'react-i18next';
 
 import { ChatContext, ChatMessage } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
+import i18n from '@app/locales/i18next';
 
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { ConversationStatus } from '@chaindesk/prisma';
@@ -25,7 +27,7 @@ function CustomerSupportActions({ config }: Props) {
     createNewConversation,
     refreshConversation,
   } = useContext(ChatContext);
-
+  const { t } = useTranslation();
   const { document } = useFrame();
 
   const [state, setState] = useStateReducer({
@@ -132,8 +134,8 @@ function CustomerSupportActions({ config }: Props) {
               (
                 {
                   ['HUMAN_REQUESTED']: 'Human Requested',
-                  ['RESOLVED']: 'Request Human',
-                  ['UNRESOLVED']: 'Request Human',
+                  ['RESOLVED']: `${t('chatbubble:actions.request')}`,
+                  ['UNRESOLVED']: `${t('chatbubble:actions.request')}`,
                 } as Record<ConversationStatus, string>
               )[conversationStatus]
             }

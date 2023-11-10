@@ -8,10 +8,12 @@ import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { visit } from 'yaml/dist/parse/cst-visit';
 
 import { ChatContext, ChatMessage } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
+import i18n from '@app/locales/i18next';
 
 import { API_URL } from './ChatBubble';
 
@@ -25,7 +27,7 @@ export default function LeadForm(props: {
   onSubmitSucess?: (email: string) => any;
 }) {
   const ref = useRef<HTMLInputElement>(null);
-
+  const { t } = useTranslation('', { i18n });
   const [state, setState] = useStateReducer({
     isCaptureLoading: false,
     isCaptureSuccess: false,
@@ -78,7 +80,7 @@ export default function LeadForm(props: {
         level="body-sm"
         fontWeight={600}
       >
-        Let us know how to contact you
+        {t('chatbubble:lead.instruction')}
       </Typography>
       <Input
         slotProps={{
@@ -91,7 +93,7 @@ export default function LeadForm(props: {
         size="sm"
         name="email"
         type="email"
-        placeholder="Email"
+        placeholder={t('chatbubble:lead.email')}
         required
         // startDecorator={<AlternateEmailRoundedIcon />}
         onChange={(e) => setState({ emailInputValue: e.target.value })}
@@ -131,7 +133,7 @@ export default function LeadForm(props: {
       ></Input>
 
       <FormHelperText sx={{ fontSize: 'xs', fontStyle: 'italic' }}>
-        Required to request a human operator
+        {t('chatbubble:lead.required')}
       </FormHelperText>
 
       {/* <Button

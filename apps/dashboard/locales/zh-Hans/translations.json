@@ -1,0 +1,1 @@
+{"crisp":{"choices":{"resolve":"标记为已解决","request":"请求人工操作员","enableAi":"重新启用AI"},"instructions":{"callback":"一个操作员将很快回复您。","unavailable":"很抱歉，目前没有可用的操作员。"}},"chatbubble":{"actions":{"resolve":"标记为已解决","request":"请求人工操作员"},"lead":{"instruction":"告诉我们如何联系您","email":"电子邮件","required":"请求人工操作员所需"}}}

@@ -554,7 +554,7 @@ function ChatBox({
                 flexDirection: 'row',
                 alignItems: 'center',
                 '.MuiTextarea-endDecorator': {
-                  'margin-block-start': 'auto',
+                  marginBlockStart: 'auto',
                 },
               }}
               // disabled={!state.currentDatastoreId || state.loading}
@@ -598,7 +598,7 @@ function ChatBox({
                 justifyContent: 'space-between',
                 width: '100%',
                 maxWidth: '100%',
-                overflowX: 'hidden',
+                overflowX: 'auto',
               }}
             >
               {renderBottom}
