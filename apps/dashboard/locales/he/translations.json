@@ -1,1 +1,24 @@
-{"crisp":{"choices":{"resolve":"وضع علامة كمحلول","request":"طلب مشغل إنسان","enableAi":"تمكين الذكاء الاصطناعي"},"instructions":{"callback":"سيتصل بك مشغل قريبًا.","unavailable":"عذرًا، لا تتوفر أي مشغلين حاليًا."}},"chatbubble":{"actions":{"resolve":"وضع علامة كمحلول","request":"طلب مشغل إنسان"},"lead":{"instruction":"أخبرنا كيف يمكننا التواصل معك","email":"البريد الإلكتروني","required":"مطلوب لطلب مشغل إنسان"}}}
+{
+  "crisp": {
+    "choices": {
+      "resolve": "סמן כנפתר",
+      "request": "בקש מפעיל אנושי",
+      "enableAi": "הפעל מחדש את הAI"
+    },
+    "instructions": {
+      "callback": "מפעיל יחזור אליך בקרוב.",
+      "unavailable": "לצערנו, אין מפעילים זמינים ברגע זה."
+    }
+  },
+  "chatbubble": {
+    "actions": {
+      "resolve": "סמן כנפתר",
+      "request": "בקש אדם"
+    },
+    "lead": {
+      "instruction": "ספר לנו איך נוכל ליצור איתך קשר",
+      "email": "דואר אלקטרוני",
+      "required": "נדרש כדי לבקש מפעיל אנושי"
+    }
+  }
+}
