@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.68"></a>
+## 0.1.68 (2023-11-11)
+
+### Miscellaneous
+
+- 🤖 analtyics setup [[6391cc6](https://github.com/gmpetrov/databerry/commit/6391cc662aa4b78653976f4bf5d8f89d3a0ee236)]
+
+
 <a name="0.1.67"></a>
 ## 0.1.67 (2023-11-10)
 
