@@ -11,10 +11,10 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
-import { useEffect } from 'react';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
 
+import Analytics from '@app/components/Analytics';
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
 import {
   getProductFromHostname,
@@ -68,27 +68,13 @@ export default function App({
     }
   }, []);
 
-  React.useEffect(() => {
-    function onRouteChangeComplete(url: string) {
-      if (process.env.NEXT_PUBLIC_GA_ID) {
-        window?.gtag?.('event', 'page_view', {
-          page_location: url,
-        });
-      }
-    }
-
-    router.events.on('routeChangeComplete', onRouteChangeComplete);
-
-    return () => {
-      router.events.off('routeChangeComplete', onRouteChangeComplete);
-    };
-  }, [router.events]);
-
   if (router.pathname === '/agents/[agentId]/iframe') {
     return getLayout(
       <ProductContext.Provider value={product}>
         <SessionProvider>
-          <Component {...pageProps} />
+          <Analytics>
+            <Component {...pageProps} />
+          </Analytics>
         </SessionProvider>
       </ProductContext.Provider>
     );
@@ -99,8 +85,10 @@ export default function App({
       <DashboardThemeProvider {...otherProps}>
         <TopProgressBar />
         <SessionProvider>
-          <Toaster />
-          {getLayout(<Component {...pageProps} />)}
+          <Analytics>
+            <Toaster />
+            {getLayout(<Component {...pageProps} />)}
+          </Analytics>
         </SessionProvider>
       </DashboardThemeProvider>
     </ProductContext.Provider>

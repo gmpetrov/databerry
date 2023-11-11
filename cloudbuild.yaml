@@ -1,28 +1,42 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: [
-      'build',
-      '-t',
-      'gcr.io/databerry-378819/dashboard',
-      '--build-arg=NEXT_PUBLIC_S3_BUCKET_NAME=$_NEXT_PUBLIC_S3_BUCKET_NAME',
-      '--build-arg=NEXT_PUBLIC_DASHBOARD_URL=$_NEXT_PUBLIC_DASHBOARD_URL',
-      '--build-arg=NEXT_PUBLIC_SLACK_CLIENT_ID=$_NEXT_PUBLIC_SLACK_CLIENT_ID',
-      '--build-arg=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
-      '--build-arg=NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1=$_NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1',
-      '--build-arg=NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=$_NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID',
-      '--build-arg=NEXT_PUBLIC_CRISP_PLUGIN_ID=$_NEXT_PUBLIC_CRISP_PLUGIN_ID',
-      '--build-arg=NEXT_PUBLIC_GA_ID=$_NEXT_PUBLIC_GA_ID',
-      '--build-arg=NEXT_PUBLIC_HOTJAR_ID=$_NEXT_PUBLIC_HOTJAR_ID',
-      '--build-arg=SCOPE=$_SCOPE',
-      '.'
-    ]
+    args:
+      [
+        'build',
+        '-t',
+        'gcr.io/databerry-378819/dashboard',
+        '--build-arg=NEXT_PUBLIC_S3_BUCKET_NAME=$_NEXT_PUBLIC_S3_BUCKET_NAME',
+        '--build-arg=NEXT_PUBLIC_DASHBOARD_URL=$_NEXT_PUBLIC_DASHBOARD_URL',
+        '--build-arg=NEXT_PUBLIC_SLACK_CLIENT_ID=$_NEXT_PUBLIC_SLACK_CLIENT_ID',
+        '--build-arg=NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$_NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
+        '--build-arg=NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1=$_NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1',
+        '--build-arg=NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID=$_NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID',
+        '--build-arg=NEXT_PUBLIC_CRISP_PLUGIN_ID=$_NEXT_PUBLIC_CRISP_PLUGIN_ID',
+        '--build-arg=NEXT_PUBLIC_GA_ID=$_NEXT_PUBLIC_GA_ID',
+        '--build-arg=NEXT_PUBLIC_HOTJAR_ID=$_NEXT_PUBLIC_HOTJAR_ID',
+        '--build-arg=NEXT_PUBLIC_FATHOM_SITE_ID=$_NEXT_PUBLIC_FATHOM_SITE_ID',
+        '--build-arg=NEXT_PUBLIC_POSTHOG_KEY=$_NEXT_PUBLIC_POSTHOG_KEY',
+        '--build-arg=NEXT_PUBLIC_POSTHOG_HOST=$_NEXT_PUBLIC_POSTHOG_HOST',
+        '--build-arg=NEXT_PUBLIC_MIXPANEL_TOKEN=$_NEXT_PUBLIC_MIXPANEL_TOKEN',
+        '--build-arg=SCOPE=$_SCOPE',
+        '.',
+      ]
   # push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/databerry-378819/dashboard']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'databerry', '--image', 'gcr.io/databerry-378819/dashboard', '--region', 'us-east4']
+    args:
+      [
+        'run',
+        'deploy',
+        'databerry',
+        '--image',
+        'gcr.io/databerry-378819/dashboard',
+        '--region',
+        'us-east4',
+      ]
   # - name: gcr.io/google.com/cloudsdktool/cloud-sdk
   #   script: |
   #     #!/usr/bin/env bash
@@ -36,15 +50,19 @@ images:
   - 'gcr.io/databerry-378819/dashboard'
 # timeout: 1200s
 # options:
-  # machineType: 'E2_STANDARD_8'
+# machineType: 'E2_STANDARD_8'
 substitutions:
-  _SCOPE: "dashboard"
-  _NEXT_PUBLIC_S3_BUCKET_NAME: "databerry"
-  _NEXT_PUBLIC_DASHBOARD_URL: "https://app.chaindesk.ai"
-  _NEXT_PUBLIC_SLACK_CLIENT_ID: "15098575894.5085094124864"
-  _NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_live_51MsM5yIDmvRZDzsDzI5S7mTun6KE8Q1jVZf0yBRsvQldW4fGyWve1dpwVDt1yDV9DUQOK5fB1kSqScnThDfckrEd008M2OEgFp"
-  _NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1: "https://buy.stripe.com/4gw17tegmdAp04UcMM"
-  _NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID: "prctbl_1N7Hu2IDmvRZDzsDlOYpGt04"
-  _NEXT_PUBLIC_CRISP_PLUGIN_ID: "a52b874e-489f-40f1-a00a-1b1f4bdad545"
-  _NEXT_PUBLIC_GA_ID: "G-QTN3QP6PKB"
-  _NEXT_PUBLIC_HOTJAR_ID: "3480619"
+  _SCOPE: 'dashboard'
+  _NEXT_PUBLIC_S3_BUCKET_NAME: 'databerry'
+  _NEXT_PUBLIC_DASHBOARD_URL: 'https://app.chaindesk.ai'
+  _NEXT_PUBLIC_SLACK_CLIENT_ID: '15098575894.5085094124864'
+  _NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: 'pk_live_51MsM5yIDmvRZDzsDzI5S7mTun6KE8Q1jVZf0yBRsvQldW4fGyWve1dpwVDt1yDV9DUQOK5fB1kSqScnThDfckrEd008M2OEgFp'
+  _NEXT_PUBLIC_STRIPE_PAYMENT_LINK_LEVEL_1: 'https://buy.stripe.com/4gw17tegmdAp04UcMM'
+  _NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID: 'prctbl_1N7Hu2IDmvRZDzsDlOYpGt04'
+  _NEXT_PUBLIC_CRISP_PLUGIN_ID: 'a52b874e-489f-40f1-a00a-1b1f4bdad545'
+  _NEXT_PUBLIC_GA_ID: 'G-QTN3QP6PKB'
+  _NEXT_PUBLIC_HOTJAR_ID: '3480619'
+  _NEXT_PUBLIC_FATHOM_SITE_ID: 'SAENWHQM'
+  _NEXT_PUBLIC_POSTHOG_KEY: 'phc_p3uvX6R1Fvcm67AunUsNpXK78DV5ePoTxGz7oun38sJ'
+  _NEXT_PUBLIC_POSTHOG_HOST: 'https://eu.posthog.com'
+  _NEXT_PUBLIC_MIXPANEL_TOKEN: '94455b8b9fa77f7189a8a7f2cde402ea'

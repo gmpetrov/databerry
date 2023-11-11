@@ -23,6 +23,10 @@ worker = "node --max-old-space-size=1536 apps/dashboard/.next/server/datasource-
     NEXT_PUBLIC_CRISP_PLUGIN_ID="a52b874e-489f-40f1-a00a-1b1f4bdad545"
     NEXT_PUBLIC_GA_ID="G-QTN3QP6PKB"
     NEXT_PUBLIC_HOTJAR_ID="3480619"
+    NEXT_PUBLIC_FATHOM_SITE_ID="SAENWHQM"
+    NEXT_PUBLIC_POSTHOG_KEY="phc_p3uvX6R1Fvcm67AunUsNpXK78DV5ePoTxGz7oun38sJ"
+    NEXT_PUBLIC_POSTHOG_HOST="https://eu.posthog.com"
+    NEXT_PUBLIC_MIXPANEL_TOKEN="94455b8b9fa77f7189a8a7f2cde402ea"
 
 
 [http_service]
