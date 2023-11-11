@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.69"></a>
+## 0.1.69 (2023-11-11)
+
+### Fixed
+
+- 🐛 wrong he translations [[50fa506](https://github.com/gmpetrov/databerry/commit/50fa50674e017a924876d558fa3feb6ccef8fc47)]
+
+
 <a name="0.1.68"></a>
 ## 0.1.68 (2023-11-11)
 
