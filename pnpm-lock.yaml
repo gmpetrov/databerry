@@ -701,6 +701,9 @@ importers:
       mime-types:
         specifier: ^2.1.35
         version: 2.1.35
+      mixpanel:
+        specifier: ^0.18.0
+        version: 0.18.0
       msgpackr:
         specifier: ^1.9.3
         version: 1.9.3
@@ -14067,6 +14070,15 @@ packages:
 
   /mixpanel-browser@2.47.0:
     resolution: {integrity: sha512-Ldrva0fRBEIFWmEibBQO1PulfpJVF3pf28Guk09lDirDaSQqqU/xs9zQLwN2rL5VwVtsP1aD3JaCgaa98EjojQ==}
+    dev: false
+
+  /mixpanel@0.18.0:
+    resolution: {integrity: sha512-VyUoiLB/S/7abYYHGD5x0LijeuJCUabG8Hb+FvYU3Y99xHf1Qh+s4/pH9lt50fRitAHncWbU1FE01EknUfVVjQ==}
+    engines: {node: '>=10.0'}
+    dependencies:
+      https-proxy-agent: 5.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /mkdirp-classic@0.5.3:

@@ -23,6 +23,7 @@ import {
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
+import { AnalyticsEvents, capture, profile } from './analytics-server';
 import getRootDomain from './get-root-domain';
 import sendVerificationRequest from './verification-sender';
 
@@ -44,7 +45,7 @@ const CustomPrismaProvider = (req: NextApiRequest) => (p: PrismaClient) => {
         } as Prisma.SessionCreateArgs['data'],
       });
     },
-    createUser: (data: Prisma.UserCreateArgs['data']) => {
+    createUser: async (data: Prisma.UserCreateArgs['data']) => {
       let product = undefined as string | undefined;
       try {
         product = new URL(req.query.callbackUrl as string)?.searchParams?.get(
@@ -52,7 +53,7 @@ const CustomPrismaProvider = (req: NextApiRequest) => (p: PrismaClient) => {
         ) as string;
       } catch (err) {}
 
-      return p.user.create({
+      const user = await p.user.create({
         data: {
           ...data,
           ...(product ? { viaProduct: product } : {}),
@@ -76,6 +77,24 @@ const CustomPrismaProvider = (req: NextApiRequest) => (p: PrismaClient) => {
           },
         },
       });
+
+      capture({
+        event: AnalyticsEvents.USER_SIGNUP,
+        payload: {
+          userId: user.id,
+        },
+      });
+
+      profile({
+        userId: user.id,
+        email: user.email,
+        createdAt: user.createdAt,
+        firstName: user.name!,
+        plan: SubscriptionPlan.level_0,
+        product: user.viaProduct,
+      });
+
+      return user;
     },
     async getSessionAndUser(sessionToken: string) {
       const userAndSession = await p.session.findUnique({

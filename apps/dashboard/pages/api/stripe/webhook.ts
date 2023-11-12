@@ -1,5 +1,10 @@
 import Stripe from 'stripe';
 
+import {
+  AnalyticsEvents,
+  capture,
+  profile,
+} from '@chaindesk/lib/analytics-server';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import { stripe } from '@chaindesk/lib/stripe-client';
 import {
@@ -122,10 +127,26 @@ handler.post(async (req, res) => {
         case 'customer.subscription.deleted': {
           const data = event.data.object as Stripe.Subscription;
 
-          await prisma.subscription.delete({
+          const deleted = await prisma.subscription.delete({
             where: {
               id: data.id,
             },
+            include: {
+              organization: {
+                include: {
+                  memberships: {
+                    where: {
+                      role: 'OWNER',
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+          profile?.({
+            userId: deleted?.organization?.memberships[0]?.userId!,
+            plan: SubscriptionPlan.level_0,
           });
 
           break;
@@ -139,7 +160,17 @@ handler.post(async (req, res) => {
 
           const plan = product?.metadata?.plan as SubscriptionPlan;
 
-          await prisma.subscription.update({
+          const current = await prisma.subscription.findUnique({
+            where: {
+              id: data.id,
+            },
+          });
+
+          if (!current) {
+            return;
+          }
+
+          const updated = await prisma.subscription.update({
             where: {
               id: data.id,
             },
@@ -160,7 +191,59 @@ handler.post(async (req, res) => {
               trial_start: timestampToDate(data.trial_start!),
               trial_end: timestampToDate(data.trial_end!),
             },
+            include: {
+              organization: {
+                include: {
+                  memberships: {
+                    where: {
+                      role: 'OWNER',
+                    },
+                  },
+                },
+              },
+            },
           });
+
+          const userId = updated?.organization?.memberships[0]?.userId!;
+          const hasCanceled = !!updated.canceled_at && !current?.canceled_at;
+          const hasRenewed = !updated.canceled_at && !!current?.canceled_at;
+
+          if (current?.plan !== updated?.plan) {
+            capture?.({
+              event: AnalyticsEvents.USER_SWITCHED_PLAN,
+              payload: {
+                userId: userId,
+                from: current?.plan,
+                to: updated?.plan,
+              },
+            });
+            profile?.({
+              userId: userId,
+              plan: updated?.plan,
+            });
+          }
+
+          if (hasCanceled) {
+            capture?.({
+              event: AnalyticsEvents.USER_UNSUBSCRIBED,
+              payload: {
+                userId: userId,
+                cancellationDetails: JSON.stringify(
+                  data.cancellation_details || '{}'
+                ),
+              },
+            });
+          }
+
+          if (hasRenewed) {
+            capture?.({
+              event: AnalyticsEvents.USER_RENEWED_PLAN,
+              payload: {
+                userId: userId,
+              },
+            });
+          }
+
           break;
         }
         case 'checkout.session.completed':
@@ -187,7 +270,7 @@ handler.post(async (req, res) => {
 
             const couponName = subscription?.discount?.coupon?.name;
 
-            await prisma.subscription.upsert({
+            const created = await prisma.subscription.upsert({
               where: {
                 id: subscription.id,
               },
@@ -252,6 +335,29 @@ handler.post(async (req, res) => {
                 trial_start: timestampToDate(subscription.trial_start!),
                 trial_end: timestampToDate(subscription.trial_end!),
               },
+              include: {
+                organization: {
+                  include: {
+                    memberships: {
+                      where: {
+                        role: 'OWNER',
+                      },
+                    },
+                  },
+                },
+              },
+            });
+
+            capture?.({
+              event: AnalyticsEvents.USER_SUBSCRIBED,
+              payload: {
+                userId: created?.organization?.memberships[0]?.userId!,
+                plan,
+              },
+            });
+            profile?.({
+              userId: created?.organization?.memberships[0]?.userId!,
+              plan,
             });
           }
 

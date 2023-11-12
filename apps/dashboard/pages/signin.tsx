@@ -8,10 +8,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { signIn, useSession } from 'next-auth/react';
 // import { parseCookies } from 'nookies';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { AnalyticsContext } from '@app/components/Analytics';
 import Input from '@app/components/Input';
 import Logo from '@app/components/Logo';
 import SEO from '@app/components/SEO';
@@ -41,12 +42,13 @@ export default function SignInPage() {
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { capture } = useContext(AnalyticsContext);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       setIsReady(true);
     } else if (status === 'authenticated') {
-      window?.gtag?.('event', 'login');
+      capture?.({ event: 'login' });
 
       const redirect = router.query.redirect as string | undefined;
 

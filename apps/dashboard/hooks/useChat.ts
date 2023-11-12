@@ -52,6 +52,11 @@ export const handleEvalAnswer = async (props: {
   value: MessageEvalUnion;
   messageId: string;
 }) => {
+  let visitorId = '';
+  try {
+    visitorId = localStorage.getItem('visitorId') as string;
+  } catch {}
+
   await fetch(`${API_URL}/api/conversations/eval-answer`, {
     method: 'POST',
     headers: {
@@ -60,6 +65,7 @@ export const handleEvalAnswer = async (props: {
     body: JSON.stringify({
       eval: props.value,
       messageId: props.messageId,
+      visitorId,
     } as EvalAnswer),
   });
 };

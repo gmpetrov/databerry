@@ -21,6 +21,7 @@ import { ReactElement } from 'react';
 import * as React from 'react';
 
 import Admin from '@app/components/Admin';
+import { AnalyticsContext } from '@app/components/Analytics';
 import SettingsLayout from '@app/components/SettingsLayout';
 import UserFree from '@app/components/UserFree';
 import UserPremium from '@app/components/UserPremium';
@@ -32,6 +33,7 @@ import { Prisma, SubscriptionPlan } from '@chaindesk/prisma';
 export default function BillingSettingsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { capture } = React.useContext(AnalyticsContext);
 
   const handleClickManageSubscription = async () => {
     try {
@@ -72,10 +74,14 @@ export default function BillingSettingsPage() {
 
         if (checkoutData) {
           console.debug(checkoutData);
-          window?.gtag?.('event', 'purchase', {
-            transaction_id: checkoutData.id,
-            value: checkoutData.amount_total,
-            currency: checkoutData.currency / 100,
+
+          capture?.({
+            event: 'purchase',
+            payload: {
+              transaction_id: checkoutData.id,
+              value: checkoutData.amount_total,
+              currency: checkoutData.currency / 100,
+            },
           });
         }
       } catch (err) {

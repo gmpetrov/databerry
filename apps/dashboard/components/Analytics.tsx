@@ -27,14 +27,13 @@ if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_MIXPANEL_TOKEN) {
 }
 
 type AnalyticsContext = {
-  capture?: (props: { event: string; payload: Record<string, unknown> }) => any;
+  capture?: (props: {
+    event: string;
+    payload?: Record<string, unknown>;
+  }) => any;
 };
 
-type AnalyticsProviderProps = AnalyticsContext & {
-  children?: any;
-};
-
-const AnalyticsContext = createContext<AnalyticsContext>({});
+export const AnalyticsContext = createContext<AnalyticsContext>({});
 
 type Props = {
   children?: any;

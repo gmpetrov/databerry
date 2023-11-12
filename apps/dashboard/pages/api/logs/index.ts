@@ -3,6 +3,7 @@ import { NextApiResponse } from 'next';
 
 import { MessageEvalUnion } from '@app/hooks/useChat';
 
+import { AnalyticsEvents, capture } from '@chaindesk/lib/analytics-server';
 import {
   createAuthApiHandler,
   respond,
@@ -108,6 +109,17 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
     orderBy: {
       updatedAt: 'desc',
+    },
+  });
+
+  capture?.({
+    event: AnalyticsEvents.INBOX_FILTER,
+    payload: {
+      userId: session.user?.id,
+      evalFilter,
+      agentId,
+      conversationStatus,
+      unread,
     },
   });
 

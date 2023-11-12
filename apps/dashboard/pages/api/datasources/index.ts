@@ -6,6 +6,7 @@ import { NextApiResponse } from 'next';
 import { Readable } from 'node:stream';
 import { z } from 'zod';
 
+import { AnalyticsEvents, capture } from '@chaindesk/lib/analytics-server';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { s3 } from '@chaindesk/lib/aws';
 import {
@@ -282,6 +283,15 @@ export const upsertDatasource = async (
       priority: 1,
     },
   ]);
+
+  capture?.({
+    event: AnalyticsEvents.DATASOURCE_CREATED,
+    payload: {
+      userId: session?.user?.id,
+      datasourceType: datasource.type,
+      datasourceConfig: JSON.stringify(datasource.config || '{}'),
+    },
+  });
 
   return datasource;
 };

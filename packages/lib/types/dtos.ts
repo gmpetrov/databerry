@@ -260,6 +260,7 @@ export type GenerateUploadLinkRequest = z.infer<
 
 export const EvalAnswer = z.object({
   messageId: z.string().cuid(),
+  visitorId: z.string().optional(),
   eval: z.nativeEnum(MessageEval),
 });
 
