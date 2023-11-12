@@ -287,7 +287,7 @@ export const upsertDatasource = async (
   capture?.({
     event: AnalyticsEvents.DATASOURCE_CREATED,
     payload: {
-      userId: session?.user?.id,
+      userId: session?.user?.id || session?.organization?.id,
       datasourceType: datasource.type,
       datasourceConfig: JSON.stringify(datasource.config || '{}'),
     },
