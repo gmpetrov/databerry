@@ -45,7 +45,7 @@ function Analytics({ children }: Props) {
   const userId = session?.data?.user?.id;
 
   const capture = React.useCallback(
-    (data: { event: string; payload: Record<string, unknown> }) => {
+    (data: { event: string; payload?: Record<string, unknown> }) => {
       try {
         if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
           posthog.capture(data.event, data.payload);
