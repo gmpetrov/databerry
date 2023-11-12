@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.70"></a>
+## 0.1.70 (2023-11-12)
+
+### Miscellaneous
+
+- 🤖 tracking plan first draft [[cf7090d](https://github.com/gmpetrov/databerry/commit/cf7090d47610c8ef871c3969cfe80f4086c7710a)]
+
+
 <a name="0.1.69"></a>
 ## 0.1.69 (2023-11-11)
 
