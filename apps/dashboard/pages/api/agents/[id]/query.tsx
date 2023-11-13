@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { NewConversation, render } from '@chaindesk/emails';
 import AgentManager from '@chaindesk/lib/agent';
+import { AnalyticsEvents, capture } from '@chaindesk/lib/analytics-server';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
   formatOrganizationSession,
@@ -236,6 +237,17 @@ export const chatAgentRequest = async (
       req.logger.error(err);
     }
   }
+
+  capture?.({
+    event: session?.user?.id
+      ? AnalyticsEvents.INTERNAL_AGENT_QUERY
+      : AnalyticsEvents.EXTERNAL_AGENT_QUERY,
+    payload: {
+      userId: session?.user?.id,
+      agentId: agent?.id,
+      organizationId: session?.organization?.id,
+    },
+  });
 
   if (data.streaming) {
     streamData({

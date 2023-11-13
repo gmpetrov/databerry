@@ -116,6 +116,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
     event: AnalyticsEvents.INBOX_FILTER,
     payload: {
       userId: session.user?.id,
+      organizationId: session.organization?.id,
       evalFilter,
       agentId,
       conversationStatus,

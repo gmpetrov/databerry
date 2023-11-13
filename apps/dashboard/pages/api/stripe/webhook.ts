@@ -213,6 +213,7 @@ handler.post(async (req, res) => {
               event: AnalyticsEvents.USER_SWITCHED_PLAN,
               payload: {
                 userId: userId,
+                organizationId: updated?.organizationId,
                 from: current?.plan,
                 to: updated?.plan,
               },
@@ -228,6 +229,7 @@ handler.post(async (req, res) => {
               event: AnalyticsEvents.USER_UNSUBSCRIBED,
               payload: {
                 userId: userId,
+                organizationId: updated?.organizationId,
                 cancellationDetails: JSON.stringify(
                   data.cancellation_details || '{}'
                 ),
@@ -240,6 +242,7 @@ handler.post(async (req, res) => {
               event: AnalyticsEvents.USER_RENEWED_PLAN,
               payload: {
                 userId: userId,
+                organizationId: updated?.organizationId,
               },
             });
           }
@@ -352,6 +355,7 @@ handler.post(async (req, res) => {
               event: AnalyticsEvents.USER_SUBSCRIBED,
               payload: {
                 userId: created?.organization?.memberships[0]?.userId!,
+                organizationId: created?.organizationId,
                 plan,
               },
             });

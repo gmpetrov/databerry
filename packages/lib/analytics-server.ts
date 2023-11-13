@@ -8,6 +8,10 @@ export enum AnalyticsEvents {
   USER_RENEWED_PLAN = 'User Renewed Plan',
 
   DATASOURCE_CREATED = 'Datasource Created',
+  INTERNAL_AGENT_QUERY = 'Internal Agent Query',
+  EXTERNAL_AGENT_QUERY = 'External Agent Query',
+  DATASTORE_QUERY = 'Datastore Query',
+
   INBOX_FILTER = 'Inbox Filter',
   BUTTON_CLICK = 'Button Click',
 }

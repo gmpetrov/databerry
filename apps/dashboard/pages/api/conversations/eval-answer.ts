@@ -64,6 +64,7 @@ export const evalAnswer = async (
       event: AnalyticsEvents.BUTTON_CLICK,
       payload: {
         userId: session?.user?.id || data.visitorId,
+        organizationId: session?.organization?.id,
         action: 'Eval Answer',
         value: data.eval,
       },

@@ -284,14 +284,17 @@ export const upsertDatasource = async (
     },
   ]);
 
-  capture?.({
-    event: AnalyticsEvents.DATASOURCE_CREATED,
-    payload: {
-      userId: session?.user?.id || session?.organization?.id,
-      datasourceType: datasource.type,
-      datasourceConfig: JSON.stringify(datasource.config || '{}'),
-    },
-  });
+  if (!data?.id) {
+    capture?.({
+      event: AnalyticsEvents.DATASOURCE_CREATED,
+      payload: {
+        userId: session?.user?.id,
+        organizationId: session?.organization?.id,
+        datasourceType: datasource.type,
+        datasourceConfig: JSON.stringify(datasource.config || '{}'),
+      },
+    });
+  }
 
   return datasource;
 };
