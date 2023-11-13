@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.71"></a>
+## 0.1.71 (2023-11-13)
+
+### Fixed
+
+- 🐛 missing id [[1b1d4fa](https://github.com/gmpetrov/databerry/commit/1b1d4fa56634e25f32d415d574d2a16d3ed23c21)]
+
+### Miscellaneous
+
+- 🤖 improve analytics [[12ca61d](https://github.com/gmpetrov/databerry/commit/12ca61db4fcce97ffa431beeb403ff372d44a7b1)]
+- 🤖 fix type [[39f90db](https://github.com/gmpetrov/databerry/commit/39f90dba8a66237668b9a967bc12024164ca4fc5)]
+
+
 <a name="0.1.70"></a>
 ## 0.1.70 (2023-11-12)
 
