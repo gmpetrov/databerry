@@ -108,6 +108,19 @@ export default function Navigation() {
   const isMaintenance = !!getStatusQuery?.data?.isMaintenance;
 
   React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (
+        window.location.hostname === 'app.databerry.ai' ||
+        window.location.hostname === 'www.chaindesk.ai' ||
+        window.location.hostname === 'chaindesk.ai'
+      ) {
+        window.location.href =
+          'https://app.chaindesk.ai' + window.location.pathname;
+      }
+    }
+  }, []);
+
+  React.useEffect(() => {
     if (
       getStatusQuery?.data?.status &&
       getStatusQuery?.data?.status !== AppStatus.OK

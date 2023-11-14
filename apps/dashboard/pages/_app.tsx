@@ -56,18 +56,6 @@ export default function App({
     }
   }, []);
 
-  // Redirect to new domain on front side as DNS redirect breaks some features
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (window.location.host === 'app.databerry.ai') {
-        window.location.href = window.location.href.replace(
-          'app.databerry.ai',
-          'app.chaindesk.ai'
-        );
-      }
-    }
-  }, []);
-
   if (router.pathname === '/agents/[agentId]/iframe') {
     return getLayout(
       <ProductContext.Provider value={product}>
