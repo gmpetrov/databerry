@@ -8,7 +8,9 @@ import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
+import Chip from '@mui/joy/Chip';
 import CircularProgress from '@mui/joy/CircularProgress';
+import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
@@ -590,37 +592,48 @@ function ChatBox({
               {...methods.register('query')}
             />
 
-            <Stack
-              direction="row"
-              sx={{
-                position: 'relative',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                width: '100%',
-                maxWidth: '100%',
-                overflowX: 'auto',
-              }}
-            >
-              {renderBottom}
-
+            <Stack>
+              <Stack
+                direction="row"
+                sx={{
+                  position: 'relative',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  maxWidth: '100%',
+                  overflowX: 'auto',
+                  // Scrollbar
+                  '&::-webkit-scrollbar': {
+                    height: '0',
+                  },
+                }}
+              >
+                {renderBottom}
+              </Stack>
               {!disableWatermark && (
-                <a
-                  href="https://chaindesk.ai"
-                  target="_blank"
-                  style={{
-                    textDecoration: 'none',
-                    marginLeft: 'auto',
-                  }}
-                >
-                  <Box className="truncate" sx={{ whiteSpace: 'nowrap' }}>
-                    <Typography level="body-xs">
-                      Powered by{' '}
-                      <Typography color="primary" fontWeight={'bold'}>
-                        Chaindesk
-                      </Typography>
-                    </Typography>
-                  </Box>
-                </a>
+                <Stack>
+                  <a
+                    href="https://chaindesk.ai"
+                    target="_blank"
+                    style={{
+                      textDecoration: 'none',
+                      marginLeft: 'auto',
+                      marginRight: 'auto',
+                      marginBottom: '2px',
+                    }}
+                  >
+                    <Chip variant="outlined" size="sm" color="neutral">
+                      <Box className="truncate" sx={{ whiteSpace: 'nowrap' }}>
+                        <Typography level="body-xs" fontSize={'10px'}>
+                          Powered by{' '}
+                          <Typography color="primary" fontWeight={'bold'}>
+                            ⚡️ Chaindesk
+                          </Typography>
+                        </Typography>
+                      </Box>
+                    </Chip>
+                  </a>
+                </Stack>
               )}
             </Stack>
           </Stack>
