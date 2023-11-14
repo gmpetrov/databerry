@@ -24,6 +24,21 @@ import type { DatasourceFormProps } from './types';
 type DatasourceFile = Extract<DatasourceSchema, { type: 'file' }>;
 type Props = DatasourceFormProps<DatasourceFile> & {};
 
+const audioMimeTypes = [
+  // Audio File Types
+  'audio/aac',
+  'audio/midi',
+  'audio/x-midi',
+  'audio/mpeg',
+  'audio/ogg',
+  'audio/opus',
+  'audio/wav',
+  'audio/webm',
+  'audio/3gpp',
+  'audio/3gpp2',
+  'audio/mp4',
+];
+
 const acceptedFileTypes = [
   'text/csv',
   'text/plain',
@@ -33,6 +48,19 @@ const acceptedFileTypes = [
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+  // audio
+  'audio/aac',
+  'audio/midi',
+  'audio/x-midi',
+  'audio/mpeg',
+  'audio/ogg',
+  'audio/opus',
+  'audio/wav',
+  'audio/webm',
+  'audio/3gpp',
+  'audio/3gpp2',
+  'audio/mp4',
 ];
 
 function Nested() {
@@ -49,12 +77,11 @@ function Nested() {
   });
 
   const datasourceText = watch('datasourceText');
-
+  const name = watch('name');
   const handleSetFile = async (file: File) => {
     if (!file) {
       return;
     }
-
     if (
       file.size >
       accountConfig[session?.organization?.currentPlan!]?.limits?.maxFileSize
@@ -63,16 +90,49 @@ function Nested() {
       return;
     }
 
-    setState({
-      file,
-    });
+    // TODO: expand to video type too.
+    if (audioMimeTypes.includes(file.type)) {
+      const audioContext = new window.AudioContext();
+      const reader = new FileReader();
+      setState({
+        file,
+      });
+      reader.onload = (fileEvent) => {
+        const arrayBuffer = fileEvent?.target?.result;
+        audioContext?.decodeAudioData(
+          arrayBuffer as ArrayBuffer,
+          (audioBuffer) => {
+            setValue('config.fileDuration', audioBuffer.duration, {
+              shouldDirty: true,
+            });
+            if (!name) {
+              setValue('name', file?.name, { shouldDirty: true });
+            }
+            setValue('file', file, { shouldDirty: true });
+            setValue('config.file_url', file?.name, { shouldDirty: true });
+            setValue('config.mime_type', file?.type, { shouldDirty: true });
+            setValue('config.fileSize', file?.size, { shouldDirty: true });
+            trigger();
+          },
+          (e) => {
+            console.log('Error decoding audio data: ' + e);
+          }
+        );
+      };
 
-    setValue('name', file?.name, { shouldDirty: true });
-    setValue('file', file, { shouldDirty: true });
-    setValue('config.file_url', file?.name, { shouldDirty: true });
-    setValue('config.mime_type', file?.type, { shouldDirty: true });
-    setValue('config.fileSize', file?.size, { shouldDirty: true });
-    trigger();
+      reader.readAsArrayBuffer(file);
+    } else {
+      setState({
+        file,
+      });
+
+      setValue('name', file?.name, { shouldDirty: true });
+      setValue('file', file, { shouldDirty: true });
+      setValue('config.file_url', file?.name, { shouldDirty: true });
+      setValue('config.mime_type', file?.type, { shouldDirty: true });
+      setValue('config.fileSize', file?.size, { shouldDirty: true });
+      trigger();
+    }
   };
 
   const handleFileDrop = (event: any) => {
@@ -177,7 +237,7 @@ function Nested() {
   );
 }
 
-export default function WebPageForm(props: Props) {
+export default function FileForm(props: Props) {
   const { defaultValues, ...rest } = props;
 
   return (

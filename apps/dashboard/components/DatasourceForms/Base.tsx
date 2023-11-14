@@ -1,5 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button, Option, Select, Stack } from '@mui/joy';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
+  Button,
+  Option,
+  Select,
+  Stack,
+  Typography,
+} from '@mui/joy';
 import { FormLabel } from '@mui/joy';
 import Textarea from '@mui/joy/Textarea';
 import axios from 'axios';
@@ -18,6 +28,7 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
+import uploadToS3Bucket from '@app/utils/aws/upload-to-s3';
 
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import {
@@ -158,21 +169,11 @@ export default function BaseForm(props: Props) {
           fileName = `${payload.id}/${payload.id}.${mime.extension(mime_type)}`;
           file = (values as any)?.file as File;
         }
-
         if (file) {
-          // upload text from file to AWS
-          const uploadLinkRes = await axios.post(
-            `/api/datastores/${props.defaultValues?.datastoreId}/generate-upload-link`,
-            {
-              fileName,
-              type: mime_type,
-            } as GenerateUploadLinkRequest
-          );
-
-          await axios.put(uploadLinkRes.data, file, {
-            headers: {
-              'Content-Type': mime_type,
-            },
+          await uploadToS3Bucket({
+            generatorUrl: `/api/datastores/${props.defaultValues?.datastoreId}/generate-upload-link`,
+            fileName,
+            file,
           });
         }
       }
@@ -233,17 +234,23 @@ export default function BaseForm(props: Props) {
           )}
 
         {props.children}
-
-        <details>
-          <summary>Advanced Settings</summary>
-
-          <Stack sx={{ pl: 2, pt: 2 }}>
-            <DatasourceTagsInput />
-          </Stack>
-        </details>
+        <Accordion>
+          <AccordionSummary
+            // expandIcon={<ExpandMoreIcon />}
+            aria-controls="advanced-settings-content"
+            id="advanced-settings-header"
+          >
+            <Typography>Advanced Settings</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Stack sx={{ pl: 2, pt: 2 }}>
+              <DatasourceTagsInput />
+            </Stack>
+          </AccordionDetails>
+        </Accordion>
 
         {!props.hideText && defaultValues?.datastoreId && defaultValues?.id && (
-          <details>
+          <details className="cursor-pointer">
             <summary>Extracted Text</summary>
             <DatasourceText
               datastoreId={defaultValues?.datastoreId}

@@ -22,6 +22,7 @@ import useSWR, { mutate } from 'swr';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getMemberships } from '@app/pages/api/memberships';
 import { getOrg } from '@app/pages/api/organizations/[id]';
+import uploadToS3Bucket from '@app/utils/aws/upload-to-s3';
 
 import accountConfig from '@chaindesk/lib/account-config';
 import { ApiErrorType } from '@chaindesk/lib/api-error';
@@ -169,19 +170,10 @@ function OrganizationForm({}: Props) {
       const file = event.target.files[0];
       const fileName = `icon.${mime.extension(file.type)}`;
 
-      // upload text from file to AWS
-      const uploadLinkRes = await axios.post(
-        `/api/organizations/${session?.organization?.id}/generate-upload-link`,
-        {
-          fileName,
-          type: file.type,
-        } as GenerateUploadLinkRequest
-      );
-
-      await axios.put(uploadLinkRes.data, file, {
-        headers: {
-          'Content-Type': file.type,
-        },
+      await uploadToS3Bucket({
+        generatorUrl: `/api/organizations/${session?.organization?.id}/generate-upload-link`,
+        fileName,
+        file,
       });
 
       const iconUrl = `${getS3RootDomain()}/organizations/${

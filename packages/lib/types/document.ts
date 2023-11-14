@@ -18,8 +18,6 @@ export const FileMetadataSchema = BaseDocumentMetadataSchema.extend({
     z.literal(DatasourceType.file),
     z.literal(DatasourceType.google_drive_file),
   ]),
-
-  // TODO: Rename to mime_type
   mime_type: z.string(),
   page_number: z.number().optional(),
   total_pages: z.number().optional(),

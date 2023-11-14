@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import Input from '@app/components/Input';
 import useAgent from '@app/hooks/useAgent';
 import useStateReducer from '@app/hooks/useStateReducer';
+import uploadToS3Bucket from '@app/utils/aws/upload-to-s3';
 
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import { RouteNames } from '@chaindesk/lib/types';
@@ -69,19 +70,10 @@ function GeneralInput({}: Props) {
       const file = event.target.files[0];
       const fileName = `agent-icon.${mime.extension(file.type)}`;
 
-      // upload text from file to AWS
-      const uploadLinkRes = await axios.post(
-        `/api/agents/${id}/generate-upload-link`,
-        {
-          fileName,
-          type: file.type,
-        } as GenerateUploadLinkRequest
-      );
-
-      await axios.put(uploadLinkRes.data, file, {
-        headers: {
-          'Content-Type': file.type,
-        },
+      await uploadToS3Bucket({
+        generatorUrl: `/api/agents/${id}/generate-upload-link`,
+        fileName,
+        file,
       });
 
       const iconUrl = `${getS3RootDomain()}/agents/${id}/${fileName}`;
