@@ -639,7 +639,7 @@ i18n
       'zhHant',
       'zu',
     ],
-    nonExplicitSupportedLngs: false,
+    nonExplicitSupportedLngs: true,
     interpolation: {
       escapeValue: false,
     },

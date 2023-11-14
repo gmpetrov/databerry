@@ -1,5 +1,6 @@
 import Crisp from 'crisp-api';
 import cuid from 'cuid';
+import { TFunction } from 'i18next';
 import { NextApiResponse } from 'next';
 
 import i18n from '@app/locales/i18next';
@@ -166,7 +167,8 @@ const getAgent = async (websiteId: string) => {
 const handleQuery = async (
   websiteId: string,
   sessionId: string,
-  query: string
+  query: string,
+  t: TFunction<'translation', undefined>
 ) => {
   const agent = await getAgent(websiteId);
 
@@ -252,13 +254,13 @@ const handleQuery = async (
         {
           value: Action.mark_as_resolved,
           icon: '✅',
-          label: i18n.t('crisp:choices.resolve'),
+          label: t('crisp:choices.resolve'),
           selected: false,
         },
         {
           value: Action.request_human,
           icon: '💬',
-          label: i18n.t('crisp:choices.request'),
+          label: t('crisp:choices.request'),
           selected: false,
         },
       ],
@@ -313,9 +315,11 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       body.data.session_id
     );
 
-    const visitorLanguage = metas.device.locales[0];
+    const visitorLanguage = metas?.device?.locales?.[0] || 'en';
 
-    i18n.changeLanguage(visitorLanguage); // fall back on english if not supported
+    // TODO: Find a better way to handle i18n concurrency
+    const i18nClone = i18n.cloneInstance();
+    const t = await i18nClone.changeLanguage(visitorLanguage); // fall back on english if not supported
 
     const metadata = metas?.data as ConversationMetadata;
     // const newChoice = body?.data?.content?.choices?.find(
@@ -362,7 +366,8 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             await handleQuery(
               body.website_id,
               body.data.session_id,
-              body.data.content
+              body.data.content,
+              t
             );
           } catch (err) {
             req.logger.error(err);
@@ -434,12 +439,12 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
                   origin: 'chat',
                   content: {
                     id: 'chaindesk-enable',
-                    text: i18n.t('crisp:instructions.callback'),
+                    text: t('crisp:instructions.callback'),
                     choices: [
                       {
                         value: Action.enable_ai,
                         icon: '▶️',
-                        label: i18n.t('crisp:choices.enableAi'),
+                        label: t('crisp:choices.enableAi'),
                         selected: false,
                       },
                     ],
@@ -474,12 +479,12 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
                   content: {
                     id: 'chaindesk-answer',
-                    text: i18n.t('crisp:instructions.unavailable'),
+                    text: t('crisp:instructions.unavailable'),
                     choices: [
                       {
                         value: Action.enable_ai,
                         icon: '▶️',
-                        label: i18n.t('crisp:choices.enableAi'),
+                        label: t('crisp:choices.enableAi'),
                         selected: false,
                       },
                     ],
