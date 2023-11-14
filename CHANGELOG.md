@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.73"></a>
+## 0.1.73 (2023-11-14)
+
+### Fixed
+
+- 🐛 chatbox cs actions scrollbar [[dd3e5c1](https://github.com/gmpetrov/databerry/commit/dd3e5c1712f2d05a1ee75cf2b76e7855d3805b07)]
+- 🐛 await changeLanguage [[2aaa6c3](https://github.com/gmpetrov/databerry/commit/2aaa6c3dae4d4048c204b63eecfb76890ae0d55a)]
+
+
 <a name="0.1.72"></a>
 ## 0.1.72 (2023-11-14)
 
