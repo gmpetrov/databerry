@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.72"></a>
+## 0.1.72 (2023-11-14)
+
+### Fixed
+
+- 🐛 prevent access dashboard from wrong domain [[6d1127c](https://github.com/gmpetrov/databerry/commit/6d1127c083f6a66d9d6577e38d6327aaab4396b0)]
+
+
 <a name="0.1.71"></a>
 ## 0.1.71 (2023-11-13)
 
