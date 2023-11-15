@@ -3,8 +3,9 @@ import { CheckIcon, StarIcon } from '@heroicons/react/20/solid';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import Button from '@mui/joy/Button';
 import clsx from 'clsx';
+import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 
 // import { Button } from '@app/components/landing-page/Button'
 import { Container } from '@app/components/landing-page/Container';
@@ -116,6 +117,20 @@ function MobileNavigation() {
 }
 
 export function Header() {
+  const [hostname, setHostname] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setHostname(window.location.hostname);
+    }
+  }, []);
+
+  let logoUrl = '';
+
+  if (hostname?.includes('chatbotgpt.ai')) {
+    logoUrl = '/logo-chatbotgpt-dark.png';
+  }
+
   return (
     <>
       {/* #112F8A */}
@@ -143,7 +158,18 @@ export function Header() {
           <nav className="relative z-50 flex justify-between">
             <div className="flex items-center md:gap-x-12">
               <Link href="/" aria-label="Home">
-                <Logo className="w-auto h-10" />
+                {!logoUrl && <Logo className="w-auto h-10" />}
+                {logoUrl && (
+                  <Image
+                    className="w-32"
+                    width="80"
+                    height="100"
+                    // className={clsx(props.className)}
+                    // src="/logo-chatbotgpt-dark.png"
+                    src={logoUrl}
+                    alt=""
+                  />
+                )}
               </Link>
               <div className="hidden md:flex md:gap-x-6">
                 {/* <Link href={RouteNames.CHAT_SITE}>
