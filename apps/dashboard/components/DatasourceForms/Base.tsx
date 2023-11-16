@@ -18,7 +18,6 @@ import { z } from 'zod';
 
 import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
-import { getNotebooks } from '@app/pages/api/integrations/notion/get-notebooks';
 
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import {

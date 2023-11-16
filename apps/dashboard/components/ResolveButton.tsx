@@ -6,8 +6,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import useConfetti from '@app/hooks/useConfetti';
-import i18n from '@app/locales/i18next';
 
+import i18n from '@chaindesk/lib/locales/i18next';
 import type { ConversationStatus } from '@chaindesk/prisma';
 
 import { API_URL } from './ChatBubble';

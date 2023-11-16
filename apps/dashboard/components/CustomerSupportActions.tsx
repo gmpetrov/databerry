@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 
 import { ChatContext, ChatMessage } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
-import i18n from '@app/locales/i18next';
 
+import i18n from '@chaindesk/lib/locales/i18next';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { ConversationStatus } from '@chaindesk/prisma';
 

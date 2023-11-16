@@ -40,10 +40,12 @@ export function respond<T>(f: Handle<T>) {
     try {
       const result = await f(req, res);
 
-      if (!req?.body?.streaming) {
-        res.json(result);
-      } else {
-        res.end();
+      if (!res.writableEnded) {
+        if (!req?.body?.streaming) {
+          res.json(result);
+        } else {
+          res.end();
+        }
       }
     } catch (err) {
       console.log(err);

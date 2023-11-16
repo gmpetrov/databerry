@@ -21,9 +21,9 @@ import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import type { getServiceProviders } from '@app/pages/api/accounts/service-providers';
-import getDrives from '@app/pages/api/integrations/google-drive/get-drives';
-import { listFolder } from '@app/pages/api/integrations/google-drive/list-folder';
 
+import getDrives from '@chaindesk/integrations/google-drive/api/drives';
+import { listFolder } from '@chaindesk/integrations/google-drive/api/folders';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import {
   DatasourceGoogleDrive,
@@ -60,14 +60,14 @@ function Nested() {
 
   const getDrivesQuery = useSWR<Prisma.PromiseReturnType<typeof getDrives>>(
     state.currentProviderId
-      ? `/api/integrations/google-drive/get-drives?providerId=${state.currentProviderId}`
+      ? `/api/integrations/google-drive/drives?providerId=${state.currentProviderId}`
       : null,
     fetcher
   );
 
   const listFolderQuery = useSWR<Prisma.PromiseReturnType<typeof listFolder>>(
     state.currentProviderId
-      ? `/api/integrations/google-drive/list-folder?providerId=${state.currentProviderId}&folderId=${state.currentFolderId}`
+      ? `/api/integrations/google-drive/folders?providerId=${state.currentProviderId}&folderId=${state.currentFolderId}`
       : null,
     fetcher
   );
@@ -76,9 +76,9 @@ function Nested() {
     e.preventDefault();
     e.stopPropagation();
 
-    const res = await axios.get('/api/integrations/google-drive/get-auth-url');
+    const res = await axios.get('/api/integrations/google-drive/add');
 
-    const url = res.data?.authUrl;
+    const url = res.data?.url;
 
     window.open(url, '_blank', 'width=800,height=800');
   };

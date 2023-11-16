@@ -6,29 +6,24 @@ import {
   Card,
   CircularProgress,
   Divider,
-  FormControl,
   FormLabel,
   IconButton,
   List,
   ListItem,
   Modal,
-  Option,
-  Select,
   Stack,
   Typography,
 } from '@mui/joy';
 import axios from 'axios';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getSlackIntegrations } from '@app/pages/api/integrations/slack/integrations';
 
+import { getAgentIntegrations } from '@chaindesk/integrations/_utils/default-agent-hanlder';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { Prisma } from '@chaindesk/prisma';
 
@@ -48,27 +43,23 @@ export default function SlackSettingsModal(props: Props) {
   });
   const router = useRouter();
   const getSlackIntegrationsQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getSlackIntegrations>
-  >(`/api/integrations/slack/integrations/${props.agentId}`, fetcher);
+    Prisma.PromiseReturnType<typeof getAgentIntegrations>
+  >(`/api/integrations/slack/agent?agentId=${props.agentId}`, fetcher);
 
-  const onSubmit = () => {
-    router.push(
-      `https://slack.com/oauth/v2/authorize?client_id=${
-        process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
-      }&scope=app_mentions:read,channels:history,groups:history,chat:write,commands,users:read&redirect_uri=${
-        process.env.NEXT_PUBLIC_DASHBOARD_URL
-      }/api/integrations/slack/auth-callback&state=${JSON.stringify({
-        organizationId: session?.organization.id,
-        agentId: props.agentId,
-      })}`
-    ),
-      '_blank';
+  const onSubmit = async () => {
+    const res = await axios.get(
+      `/api/integrations/slack/add?agentId=${props.agentId}`
+    );
+
+    const url = res?.data?.url as string;
+
+    router.push(url), '_blank';
   };
 
   const handleDelete = async (id: string) => {
     try {
       setState({ isDeleteLoading: true });
-      await axios.delete(`/api/integrations/slack/integrations`, {
+      await axios.delete(`/api/integrations/slack`, {
         data: {
           id,
         },

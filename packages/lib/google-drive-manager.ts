@@ -7,7 +7,7 @@ const getAuth = () =>
   new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/integrations/google-drive/auth-callback`
+    `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/integrations/google-drive/callback`
   );
 
 export class GoogleDriveManager {

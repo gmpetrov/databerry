@@ -13,7 +13,8 @@ import { visit } from 'yaml/dist/parse/cst-visit';
 
 import { ChatContext, ChatMessage } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
-import i18n from '@app/locales/i18next';
+
+import i18n from '@chaindesk/lib/locales/i18next';
 
 import { API_URL } from './ChatBubble';
 

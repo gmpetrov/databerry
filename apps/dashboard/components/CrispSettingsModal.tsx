@@ -28,8 +28,8 @@ import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgents } from '@app/pages/api/agents';
-import { getCrispIntegrations } from '@app/pages/api/integrations/crisp/[agentId]';
 
+import { getAgentIntegrations } from '@chaindesk/integrations/_utils/default-agent-hanlder';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { Prisma } from '@chaindesk/prisma';
 
@@ -49,8 +49,8 @@ export default function CrispSettingsModal(props: Props) {
   });
   const router = useRouter();
   const getCrispIntegrationsQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getCrispIntegrations>
-  >(`/api/integrations/crisp/${props.agentId}`, fetcher);
+    Prisma.PromiseReturnType<typeof getAgentIntegrations>
+  >(`/api/integrations/crisp/agent?agentId=${props.agentId}`, fetcher);
 
   const onSubmit = () => {
     router.push(
@@ -62,11 +62,14 @@ export default function CrispSettingsModal(props: Props) {
   const handleDelete = async (id: string) => {
     try {
       setState({ isDeleteLoading: true });
-      await axios.delete(`/api/integrations/crisp/${props.agentId}`, {
-        data: {
-          id,
-        },
-      });
+      await axios.delete(
+        `/api/integrations/crisp/agent?agentId=${props.agentId}`,
+        {
+          data: {
+            id,
+          },
+        }
+      );
       getCrispIntegrationsQuery.mutate();
     } catch (err) {
       console.log(err);

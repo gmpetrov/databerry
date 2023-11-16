@@ -23,8 +23,8 @@ import useSWR from 'swr';
 import z from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getConversationMetadata } from '@app/pages/api/integrations/crisp/widget';
 
+import { getConversationMetadata } from '@chaindesk/integrations/crisp/api/widget';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
 import { CrispUpdateMetadataSchema } from '@chaindesk/lib/types/dtos';

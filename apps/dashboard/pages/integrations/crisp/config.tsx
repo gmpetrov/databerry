@@ -103,7 +103,7 @@ export default function CrispConfig(props: { agent: Agent }) {
 
       var _urlParams = new URLSearchParams(window.location.search);
 
-      fetch(window.location.origin + '/api/integrations/crisp/config-update', {
+      fetch(window.location.origin + '/api/integrations/crisp/config', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
