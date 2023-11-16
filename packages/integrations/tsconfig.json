@@ -1,0 +1,11 @@
+{
+  "extends": "@chaindesk/tsconfig/nextjs.json",
+  "include": ["**/*.ts", "**/*.tsx", "../../packages/lib/**/*.d.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@chaindesk/integrations/*": ["./*"]
+    }
+  }
+}

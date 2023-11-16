@@ -8,19 +8,22 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 import prisma from '@chaindesk/prisma/client';
+import { ServiceProviderType } from '@chaindesk/prisma';
 
 const handler = createAuthApiHandler();
 
-export const getProviders = async (
+export const getServiceProviders = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
   try {
+    const type = req.query.type as ServiceProviderType;
+
     const providers = await prisma.serviceProvider.findMany({
       where: {
         organizationId: req?.session?.organization?.id as string,
         AND: {
-          type: 'notion',
+          type,
         },
       },
       select: {
@@ -38,6 +41,6 @@ export const getProviders = async (
   }
 };
 
-handler.get(respond(getProviders));
+handler.get(respond(getServiceProviders));
 
 export default handler;

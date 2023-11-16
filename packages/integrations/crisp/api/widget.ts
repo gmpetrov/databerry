@@ -1,5 +1,5 @@
 import Crisp from 'crisp-api';
-import { OpenAI } from 'langchain/llms/openai';
+// import { OpenAI } from 'langchain/llms/openai';
 import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
@@ -22,74 +22,74 @@ CrispClient.authenticateTier(
   process.env.CRISP_TOKEN_KEY!
 );
 
-export const widgetActions = async (
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) => {
-  const data = req.body as z.infer<typeof CrispSchema>;
+// export const widgetActions = async (
+//   req: AppNextApiRequest,
+//   res: NextApiResponse
+// ) => {
+//   const data = req.body as z.infer<typeof CrispSchema>;
 
-  //   const websites = await getConnectedWebsites();
+//   //   const websites = await getConnectedWebsites();
 
-  //   if (data.token !== websites[data.website_id]?.token) {
-  //     throw new Error('Invalid website token');
-  //   }
+//   //   if (data.token !== websites[data.website_id]?.token) {
+//   //     throw new Error('Invalid website token');
+//   //   }
 
-  const messages = await CrispClient.website.getMessagesInConversation(
-    data.website_id,
-    data.session_id
-  );
+//   const messages = await CrispClient.website.getMessagesInConversation(
+//     data.website_id,
+//     data.session_id
+//   );
 
-  const messagesStr = messages
-    .map((msg: any) =>
-      msg?.content && typeof msg?.content === 'string'
-        ? `FROM: ${msg?.from} ${msg?.user?.nickname || ''} \nMESSAGE: ${
-            msg.content
-          }\n`
-        : ``
-    )
-    .filter((msg: any) => msg !== ``)
-    .join('\n\n');
+//   const messagesStr = messages
+//     .map((msg: any) =>
+//       msg?.content && typeof msg?.content === 'string'
+//         ? `FROM: ${msg?.from} ${msg?.user?.nickname || ''} \nMESSAGE: ${
+//             msg.content
+//           }\n`
+//         : ``
+//     )
+//     .filter((msg: any) => msg !== ``)
+//     .join('\n\n');
 
-  const model = new OpenAI({
-    temperature: 0,
-    modelName: 'gpt-3.5-turbo',
-  });
+//   const model = new OpenAI({
+//     temperature: 0,
+//     modelName: 'gpt-3.5-turbo',
+//   });
 
-  const prompt = `The following is conversation between a customer and a customer suport operator. Generate a summary of the conversation that would be useful to the operator.
-  ${messagesStr}
+//   const prompt = `The following is conversation between a customer and a customer suport operator. Generate a summary of the conversation that would be useful to the operator.
+//   ${messagesStr}
 
-  SUMMARY: 
-  `;
+//   SUMMARY:
+//   `;
 
-  const output = await model.call(prompt);
+//   const output = await model.call(prompt);
 
-  await CrispClient.website.sendMessageInConversation(
-    data.website_id,
-    data.session_id,
-    {
-      type: 'text',
-      from: 'operator',
-      origin: 'chat',
-      user: {
-        nickname: 'Chaindesk',
-        avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
-      },
-      stealth: true,
-      content: `Summary:\n${output}`,
-    }
-  );
+//   await CrispClient.website.sendMessageInConversation(
+//     data.website_id,
+//     data.session_id,
+//     {
+//       type: 'text',
+//       from: 'operator',
+//       origin: 'chat',
+//       user: {
+//         nickname: 'Chaindesk',
+//         avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
+//       },
+//       stealth: true,
+//       content: `Summary:\n${output}`,
+//     }
+//   );
 
-  return {
-    success: true,
-  };
-};
+//   return {
+//     success: true,
+//   };
+// };
 
-handler.post(
-  validate({
-    body: CrispSchema,
-    handler: respond(widgetActions),
-  })
-);
+// handler.post(
+//   validate({
+//     body: CrispSchema,
+//     handler: respond(widgetActions),
+//   })
+// );
 
 export const getConversationMetadata = async (
   req: AppNextApiRequest,

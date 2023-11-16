@@ -24,9 +24,9 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getNotebooks } from '@app/pages/api/integrations/notion/get-notebooks';
-import { getProviders } from '@app/pages/api/integrations/notion/get-notion-providers';
+import { getServiceProviders } from '@app/pages/api/service-providers';
 
+import { getNotebooks } from '@chaindesk/integrations/notion/api/notebooks';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import {
   DatasourceNotion,
@@ -46,16 +46,16 @@ function Nested() {
     currentProviderId: '',
   });
 
-  const getProvidersQuery = useSWR<Awaited<ReturnType<typeof getProviders>>>(
-    session?.organization.id
-      ? `/api/integrations/notion/get-notion-providers`
-      : null,
+  const getProvidersQuery = useSWR<
+    Awaited<ReturnType<typeof getServiceProviders>>
+  >(
+    session?.organization.id ? `/api/service-providers?type=notion` : null,
     fetcher
   );
 
   const getNotebooksQuery = useSWR<Awaited<ReturnType<typeof getNotebooks>>>(
     state.currentProviderId
-      ? `/api/integrations/notion/get-notebooks?providerId=${state.currentProviderId}`
+      ? `/api/integrations/notion/notebooks?providerId=${state.currentProviderId}`
       : null,
     fetcher,
     {
@@ -78,7 +78,7 @@ function Nested() {
     e.preventDefault();
     e.stopPropagation();
 
-    const res = await axios.get('/api/integrations/notion/get-auth-url');
+    const res = await axios.get('/api/integrations/notion/add');
     window.open(res.data, '_blank', 'width=800,height=800');
   };
 
@@ -149,7 +149,7 @@ const DatasourceNotebook = (props: {
 }) => {
   const { register, setValue, trigger } = useFormContext();
   const getNotebooksQuery = useSWR<Awaited<ReturnType<typeof getNotebooks>>>(
-    `/api/integrations/notion/get-notebooks?providerId=${props.serviceProviderId}`,
+    `/api/integrations/notion/notebooks?providerId=${props.serviceProviderId}`,
     fetcher
   );
 

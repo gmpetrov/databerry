@@ -3,14 +3,13 @@ import cuid from 'cuid';
 import { TFunction } from 'i18next';
 import { NextApiResponse } from 'next';
 
-import i18n from '@app/locales/i18next';
+import i18n from '@chaindesk/lib/locales/i18next';
 
 import AgentManager from '@chaindesk/lib/agent';
 import ConversationManager from '@chaindesk/lib/conversation';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import formatSourcesRawText from '@chaindesk/lib/form-sources-raw-text';
-import getSubdomain from '@chaindesk/lib/get-subdomain';
 import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
 import {
   Action,

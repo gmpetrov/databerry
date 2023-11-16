@@ -81,7 +81,7 @@ export default function CrispConfig(props: { agent: Agent }) {
 
       fetch(
         window.location.origin +
-          `/api/integrations/${router.query.name}/config-update`,
+          `/api/integrations/${router.query.name}/config`,
         {
           method: 'POST',
           headers: {

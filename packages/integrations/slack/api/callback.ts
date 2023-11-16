@@ -9,7 +9,7 @@ import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createApiHandler();
 
-export const authCallback = async (
+export const callback = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
@@ -87,6 +87,6 @@ export const authCallback = async (
   return res.redirect(307, `/agents/${metadata.agentId}?tab=deploy`);
 };
 
-handler.get(authCallback);
+handler.get(callback);
 
 export default handler;
