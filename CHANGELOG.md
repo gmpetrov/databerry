@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.74"></a>
+## 0.1.74 (2023-11-17)
+
+### Miscellaneous
+
+- 🤖 refacto integrations architecture [[84dd640](https://github.com/gmpetrov/databerry/commit/84dd640649c3276787bd0214f460f28054cb6f75)]
+- 🤖 forward chatbotgpt.ai [[e3abdaf](https://github.com/gmpetrov/databerry/commit/e3abdaf30ee4f224c9cbae799903e8a8d55c7487)]
+
+
 <a name="0.1.73"></a>
 ## 0.1.73 (2023-11-14)
 
