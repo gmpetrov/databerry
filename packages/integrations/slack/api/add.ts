@@ -11,8 +11,7 @@ export const add = (req: AppNextApiRequest, res: NextApiResponse) => {
   const url = `https://slack.com/oauth/v2/authorize?client_id=${
     process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
   }&scope=app_mentions:read,channels:history,groups:history,chat:write,commands,users:read&redirect_uri=${
-    // process.env.NEXT_PUBLIC_DASHBOARD_URL
-    'https://gpetrov-chaindesk.loca.lt'
+    process.env.NEXT_PUBLIC_DASHBOARD_URL
   }/api/integrations/slack/callback&state=${JSON.stringify({
     organizationId: session?.organization.id,
     agentId,
