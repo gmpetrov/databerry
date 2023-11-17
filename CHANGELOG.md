@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.77"></a>
+## 0.1.77 (2023-11-17)
+
+### Fixed
+
+- 🐛 wrong url [[723ea49](https://github.com/gmpetrov/databerry/commit/723ea494df475acb84a708e6acca93eff79a813a)]
+
+
 <a name="0.1.76"></a>
 ## 0.1.76 (2023-11-17)
 
