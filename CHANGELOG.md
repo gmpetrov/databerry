@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.76"></a>
+## 0.1.76 (2023-11-17)
+
+### Miscellaneous
+
+- 🤖 refactor integration/servie providers [[724b590](https://github.com/gmpetrov/databerry/commit/724b590f1fd6e2cb9160f3c8b6cc2a8a026d1a6d)]
+
+
 <a name="0.1.75"></a>
 ## 0.1.75 (2023-11-17)
 
