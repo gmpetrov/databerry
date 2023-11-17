@@ -54,6 +54,7 @@
     "swr": "^2.1.1",
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5",
+    "youtube-transcript": "^1.0.6",
     "zod": "3.21.4"
   },
   "devDependencies": {

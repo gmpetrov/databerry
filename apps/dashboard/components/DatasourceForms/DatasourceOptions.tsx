@@ -38,6 +38,15 @@ const options: DatsourceOption[] = [
     icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/1024px-Google_Drive_icon_%282020%29.svg.png?20221103153031',
   },
   {
+    type: 'youtube_video',
+    label: 'Youtube',
+    description:
+      'Paste a youtube video, playlist or channel and make it your source of knowlege',
+    disabled: false,
+    icon: 'https://www.svgrepo.com/show/13671/youtube.svg',
+    isPremium: true,
+  },
+  {
     type: 'notion' as any,
     label: 'Notion',
     description: 'Connect your Notion workspace',

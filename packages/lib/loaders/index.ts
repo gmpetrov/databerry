@@ -12,6 +12,8 @@ import { QALoader } from './qa';
 import { TextLoader } from './text';
 import { WebPageLoader } from './web-page';
 import { WebSiteLoader } from './web-site';
+import { BulkYoutubesLoader } from './youtube-bulk';
+import { YoutubeVideoLoader } from './youtube-video';
 
 export class DatasourceLoader {
   datasource: Datasource;
@@ -29,12 +31,16 @@ export class DatasourceLoader {
     [DatasourceType.google_drive_folder]: GoogleDriveFolderLoader,
     [DatasourceType.qa]: QALoader,
     [DatasourceType.notion_page]: NotionPageLoader,
-    [DatasourceType.notion]: NotionLoader as any,
+    [DatasourceType.notion]: NotionLoader,
+    [DatasourceType.youtube_video]: YoutubeVideoLoader,
+    [DatasourceType.youtube_bulk]: BulkYoutubesLoader,
   };
 
   constructor(datasource: Datasource) {
     this.datasource = datasource;
-    this.manager = new this.loadersMap[this.datasource.type](this.datasource);
+    this.manager = new this.loadersMap[this.datasource.type](
+      this.datasource as any
+    );
     this.isGroup = this.manager.isGroup;
   }
 

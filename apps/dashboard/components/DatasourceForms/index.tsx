@@ -31,6 +31,10 @@ const NotionForm = dynamic(() => import('./NotionForm'), {
   ssr: false,
 });
 
+const YoutubeForm = dynamic(() => import('./YoutubeForm'), {
+  ssr: false,
+});
+
 const DatasourceFormsMap = {
   [DatasourceType.web_page]: WebPageForm,
   [DatasourceType.text]: TextForm,
@@ -41,6 +45,8 @@ const DatasourceFormsMap = {
   [DatasourceType.qa]: QAForm,
   [DatasourceType.notion]: NotionForm,
   [DatasourceType.notion_page]: NotionForm,
+  [DatasourceType.youtube_video]: YoutubeForm,
+  [DatasourceType.youtube_bulk]: YoutubeForm,
 } as Record<DatasourceType, any>;
 
 type Props = {

@@ -105,6 +105,30 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
     }),
   }),
   DatasourceBaseSchema.extend({
+    type: z.literal(DatasourceType.youtube_video),
+    config: DatasourceConfigBaseSchema.extend({
+      source_url: z
+        .string()
+        .trim()
+        .url()
+        .refine((url) => url.includes('youtube'), {
+          message: 'URL must be a YouTube URL',
+        }),
+    }),
+  }),
+  DatasourceBaseSchema.extend({
+    type: z.literal(DatasourceType.youtube_bulk),
+    config: DatasourceConfigBaseSchema.extend({
+      source_url: z
+        .string()
+        .trim()
+        .url()
+        .refine((url) => url.includes('youtube'), {
+          message: 'URL must be a YouTube URL',
+        }),
+    }),
+  }),
+  DatasourceBaseSchema.extend({
     type: z.literal(DatasourceType.file),
     file: z.any(),
     config: DatasourceConfigBaseSchema.extend({
@@ -173,6 +197,10 @@ export type DatasourceFile = Extract<DatasourceSchema, { type: 'file' }>;
 export type DatasourceText = Extract<DatasourceSchema, { type: 'text' }>;
 export type DatasourceWebPage = Extract<DatasourceSchema, { type: 'web_page' }>;
 export type DatasourceWebSite = Extract<DatasourceSchema, { type: 'web_site' }>;
+export type DatasourceYoutube = Extract<
+  DatasourceSchema,
+  { type: 'youtube_bulk' | 'youtube_video' }
+>;
 export type DatasourceGoogleDrive = Extract<
   DatasourceSchema,
   { type: 'google_drive_file' | 'google_drive_folder' }
