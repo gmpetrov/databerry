@@ -201,7 +201,6 @@ model DatastoreApiKey {
 
   datastoreId          String?               @map("datastore_id")
   datastore            Datastore?            @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
-  externalIntegrations ExternalIntegration[]
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -231,7 +230,6 @@ model Agent {
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  externalIntegration ExternalIntegration[]
   serviceProviders    ServiceProvider[]
 
   nbQueries Int? @default(0) @map("nb_queries")
@@ -366,24 +364,6 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model ExternalIntegration {
-  id   String          @id @default(cuid())
-  type IntegrationType
-
-  integrationId    String  @unique @map("integration_id")
-  integrationToken String? @map("integration_token")
-
-  agentId String? @map("agent_id")
-  agent   Agent?  @relation(fields: [agentId], references: [id])
-
-  // DEPRECATED
-  apiKeyId String?          @map("api_key_id")
-  apiKey   DatastoreApiKey? @relation(fields: [apiKeyId], references: [id])
-
-  metadata Json?
-
-  @@map("external_integrations")
-}
 
 model Product {
   id          String   @id @default(cuid())
