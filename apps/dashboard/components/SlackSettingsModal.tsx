@@ -59,11 +59,14 @@ export default function SlackSettingsModal(props: Props) {
   const handleDelete = async (id: string) => {
     try {
       setState({ isDeleteLoading: true });
-      await axios.delete(`/api/integrations/slack`, {
-        data: {
-          id,
-        },
-      });
+      await axios.delete(
+        `/api/integrations/slack/agent?agentId=${props.agentId}`,
+        {
+          data: {
+            id,
+          },
+        }
+      );
       getSlackIntegrationsQuery.mutate();
     } catch (err) {
       console.log(err);
