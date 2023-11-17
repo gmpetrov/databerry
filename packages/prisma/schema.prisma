@@ -565,6 +565,8 @@ enum DatasourceType {
   notion
   notion_page
   qa
+  youtube_video
+  youtube_bulk
 }
 
 enum ServiceProviderType {
