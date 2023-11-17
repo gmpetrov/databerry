@@ -4,11 +4,10 @@ import pMap from 'p-map';
 import pRetry, { AbortError } from 'p-retry';
 
 import arraySplitChunks from '@chaindesk/lib/array-split-chunks';
-import { prisma } from '@chaindesk/prisma/client';
-
-import { FileMetadataSchema } from '@chaindesk/lib/types/document';
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import { GoogleDriveManager } from '@chaindesk/lib/google-drive-manager';
+import { FileMetadataSchema } from '@chaindesk/lib/types/document';
+import { prisma } from '@chaindesk/prisma/client';
 
 /*
     // - rename source to source_url

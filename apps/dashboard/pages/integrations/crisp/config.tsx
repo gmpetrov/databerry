@@ -22,7 +22,7 @@ import Logo from '@app/components/Logo';
 
 import { appUrl } from '@chaindesk/lib/config';
 import { getConnectedWebsites } from '@chaindesk/lib/crisp';
-import { Agent, Subscription } from '@chaindesk/prisma';
+import { Agent, ServiceProviderType, Subscription } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 export default function CrispConfig(props: { agent: Agent }) {
@@ -275,12 +275,15 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   // const websites = await getConnectedWebsites();
 
   // if (token === websites[websiteId]?.token) {
-  const integration = await prisma.externalIntegration.findUnique({
+  const integration = await prisma.serviceProvider.findUnique({
     where: {
-      integrationId: websiteId,
+      unique_external_id: {
+        type: ServiceProviderType.crisp,
+        externalId: websiteId,
+      },
     },
     include: {
-      agent: {
+      agents: {
         include: {
           organization: {
             include: {
@@ -295,7 +298,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   return {
     props: {
-      agent: superjson.serialize(integration?.agent).json || null,
+      agent: superjson.serialize(integration?.agents?.[0]).json || null,
     },
   };
   // }

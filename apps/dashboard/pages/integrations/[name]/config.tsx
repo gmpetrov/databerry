@@ -30,8 +30,8 @@ import { getConnectedWebsites } from '@chaindesk/lib/crisp';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import {
   Agent,
-  ExternalIntegration,
   IntegrationType,
+  ServiceProviderType,
   Subscription,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -90,7 +90,7 @@ export default function CrispConfig(props: { agent: Agent }) {
           body: JSON.stringify({
             agentId: state.currentAgent?.id,
             siteurl: router.query.siteurl,
-            integrationType: IntegrationType.website,
+            integrationType: ServiceProviderType.website,
           }),
         }
       ).then(() => {
@@ -225,22 +225,27 @@ export const getServerSideProps = withAuth(async (ctx) => {
   let integration = null;
 
   if (agentId) {
-    integration = await prisma.externalIntegration.findUnique({
+    integration = await prisma.serviceProvider.findUnique({
       where: {
-        integrationId: await createIntegrationId({
-          organizationId: session?.organization?.id,
-          siteurl,
-        }),
+        unique_external_id: {
+          type: name as ServiceProviderType,
+          externalId: await createIntegrationId({
+            organizationId: session?.organization?.id,
+            siteurl,
+          }),
+        },
       },
       include: {
-        agent: true,
+        agents: true,
       },
     });
   }
 
   return {
     props: {
-      agent: integration ? superjson.serialize(integration?.agent).json : null,
+      agent: integration
+        ? superjson.serialize(integration?.agents?.[0]).json
+        : null,
     },
   };
 }) as any;

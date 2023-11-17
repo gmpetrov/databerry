@@ -18,11 +18,13 @@ export const getServiceProviders = async (
 ) => {
   try {
     const type = req.query.type as ServiceProviderType;
+    const agentId = req.query.agentId as ServiceProviderType;
 
     const providers = await prisma.serviceProvider.findMany({
       where: {
         organizationId: req?.session?.organization?.id as string,
         ...(type ? { type } : {}),
+        ...(agentId ? { agents: { some: { id: agentId } } } : {}),
       },
       select: {
         name: true,

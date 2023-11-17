@@ -232,6 +232,7 @@ model Agent {
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   externalIntegration ExternalIntegration[]
+  serviceProviders    ServiceProvider[]
 
   nbQueries Int? @default(0) @map("nb_queries")
 
@@ -453,6 +454,7 @@ model ServiceProvider {
   name         String?
   refreshToken String? @map("refresh_token")
   accessToken  String? @map("access_token")
+  externalId   String? @map("external_id")
 
   config Json?
 
@@ -463,10 +465,13 @@ model ServiceProvider {
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   appDatasources AppDatasource[]
+  agents Agent[]
+
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([type, externalId], name: "unique_external_id")
   @@map("service_providers")
 }
 
@@ -565,6 +570,9 @@ enum DatasourceType {
 enum ServiceProviderType {
   google_drive
   notion
+  website
+  crisp
+  slack
 }
 
 enum DatastoreType {

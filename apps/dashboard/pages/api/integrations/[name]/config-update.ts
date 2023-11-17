@@ -9,13 +9,13 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import { IntegrationType } from '@chaindesk/prisma';
+import { ServiceProviderType } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createAuthApiHandler();
 
 const schema = z.object({
-  integrationType: z.nativeEnum(IntegrationType),
+  integrationType: z.nativeEnum(ServiceProviderType),
   agentId: z.string().min(1),
   siteurl: z.string().min(1),
 });
@@ -47,29 +47,32 @@ export const updateIntegrationConfig = async (
     siteurl: data.siteurl,
   } as any;
 
-  await prisma.externalIntegration.upsert({
+  await prisma.serviceProvider.upsert({
     where: {
-      integrationId: integrationId,
+      unique_external_id: {
+        type: data.integrationType as ServiceProviderType,
+        externalId: integrationId,
+      },
     },
     create: {
-      type: data.integrationType,
-      integrationId: integrationId,
-      agent: {
+      type: data.integrationType as ServiceProviderType,
+      externalId: integrationId,
+      agents: {
         connect: {
           id: data.agentId,
         },
       },
-      metadata: {
+      config: {
         ...metadata,
       },
     },
     update: {
-      agent: {
+      agents: {
         connect: {
           id: data.agentId,
         },
       },
-      metadata: {
+      config: {
         ...metadata,
       },
     },

@@ -22,6 +22,7 @@ import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import {
   ConversationChannel,
   MessageFrom,
+  ServiceProviderType,
   SubscriptionPlan,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -94,12 +95,15 @@ class SlackUtils {
 }
 
 const getIntegrationByTeamId = async (teamId: string) => {
-  const integration = await prisma.externalIntegration.findUnique({
+  const service = await prisma.serviceProvider.findUnique({
     where: {
-      integrationId: `sl_${teamId}`,
+      unique_external_id: {
+        type: ServiceProviderType.slack,
+        externalId: teamId,
+      },
     },
     include: {
-      agent: {
+      agents: {
         include: {
           organization: {
             include: {
@@ -117,11 +121,11 @@ const getIntegrationByTeamId = async (teamId: string) => {
     },
   });
 
-  if (!integration?.agent) {
+  if (!service?.agents?.[0]) {
     throw new Error('No agent found');
   }
 
-  return integration;
+  return service;
 };
 
 const sendLoader = (props: {
@@ -148,7 +152,7 @@ const sendLoader = (props: {
 
 const handleMention = async (payload: MentionEvent) => {
   const integration = await getIntegrationByTeamId(payload.team_id);
-  const agent = integration?.agent;
+  const agent = integration?.agents?.[0];
 
   const args = payload.event.text.split(' ');
   // remove first element from array
@@ -156,7 +160,7 @@ const handleMention = async (payload: MentionEvent) => {
 
   const query = (args || []).join(' ');
   const cmd = args?.[0]?.toLowerCase();
-  const slackClient = new WebClient(integration?.integrationToken!);
+  const slackClient = new WebClient(integration?.accessToken!);
 
   try {
     const usage = agent?.organization?.usage!;
@@ -207,7 +211,7 @@ const handleAsk = async (payload: CommandEvent) => {
   }
 
   const integration = await getIntegrationByTeamId(payload.team_id);
-  const agent = integration?.agent!;
+  const agent = integration?.agents?.[0]!;
 
   const conversation = await prisma.conversation.findFirst({
     where: {

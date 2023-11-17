@@ -21,6 +21,7 @@ import validate from '@chaindesk/lib/validate';
 import {
   ConversationChannel,
   MessageFrom,
+  ServiceProviderType,
   SubscriptionPlan,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -101,12 +102,15 @@ type HookBodyMessageUpdated = HookBodyBase & {
 type HookBody = HookBodyBase | HookBodyMessageSent | HookBodyMessageUpdated;
 
 const getAgent = async (websiteId: string) => {
-  const integration = await prisma.externalIntegration.findUnique({
+  const integration = await prisma.serviceProvider.findUnique({
     where: {
-      integrationId: websiteId,
+      unique_external_id: {
+        type: ServiceProviderType.crisp,
+        externalId: websiteId,
+      },
     },
     include: {
-      agent: {
+      agents: {
         include: {
           organization: {
             include: {
@@ -124,10 +128,10 @@ const getAgent = async (websiteId: string) => {
     },
   });
 
-  const agent = integration?.agent;
+  const agent = integration?.agents?.[0];
 
   if (!agent) {
-    throw new Error('Datastore not found');
+    throw new Error('Agent not found');
   }
 
   return agent;

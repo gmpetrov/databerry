@@ -106,8 +106,8 @@ export default function SlackSettingsModal(props: Props) {
                 {getSlackIntegrationsQuery.data?.map((each, index) => (
                   <ListItem key={index}>
                     <Typography className="truncate">
-                      {((each as any)?.metadata as any)?.team?.name ||
-                        each.integrationId}
+                      {((each as any)?.config as any)?.team?.name ||
+                        each.externalId}
                     </Typography>
 
                     <IconButton

@@ -4,7 +4,7 @@ import { NextApiResponse } from 'next';
 import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import uuidv4 from '@chaindesk/lib/uuidv4';
-import { Datastore, IntegrationType, UserApiKey } from '@chaindesk/prisma';
+import { Datastore, ServiceProviderType, UserApiKey } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createApiHandler();
@@ -54,31 +54,34 @@ export const callback = async (
   const accessToken = data.access_token;
   const teamId = data.team.id;
 
-  await prisma.externalIntegration.upsert({
+  await prisma.serviceProvider.upsert({
     where: {
-      integrationId: `sl_${teamId}`,
+      unique_external_id: {
+        type: ServiceProviderType.slack,
+        externalId: teamId,
+      },
     },
     update: {
-      integrationToken: accessToken,
-      agent: {
+      accessToken,
+      agents: {
         connect: {
           id: metadata.agentId,
         },
       },
-      metadata: {
+      config: {
         team: data?.team,
       },
     },
     create: {
-      type: IntegrationType.slack,
-      agent: {
+      type: ServiceProviderType.slack,
+      agents: {
         connect: {
           id: metadata.agentId,
         },
       },
-      integrationId: `sl_${teamId}`,
-      integrationToken: accessToken,
-      metadata: {
+      externalId: teamId,
+      accessToken,
+      config: {
         team: data?.team,
       },
     },

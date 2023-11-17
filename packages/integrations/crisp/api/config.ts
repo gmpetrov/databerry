@@ -6,7 +6,7 @@ import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
 import { client } from '@chaindesk/lib/crisp';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import { IntegrationType } from '@chaindesk/prisma';
+import { ServiceProviderType } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createApiHandler();
@@ -54,29 +54,32 @@ export const updateCrispConfig = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  await prisma.externalIntegration.upsert({
+  await prisma.serviceProvider.upsert({
     where: {
-      integrationId: data.website_id,
+      unique_external_id: {
+        type: ServiceProviderType.crisp,
+        externalId: data.website_id,
+      },
     },
     create: {
-      type: IntegrationType.crisp,
-      integrationId: data.website_id,
-      agent: {
+      type: ServiceProviderType.crisp,
+      externalId: data.website_id,
+      agents: {
         connect: {
           id: data.agentId,
         },
       },
-      metadata: {
+      config: {
         ...metadata,
       },
     },
     update: {
-      agent: {
+      agents: {
         connect: {
           id: data.agentId,
         },
       },
-      metadata: {
+      config: {
         ...metadata,
       },
     },
