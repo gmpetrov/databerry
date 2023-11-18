@@ -31,6 +31,10 @@
     "syncDatasources": {
       "dependsOn": ["@chaindesk/prisma#prisma:generate"],
       "cache": false
+    },
+    "sendWeeklyAdminStats": {
+      "dependsOn": ["@chaindesk/prisma#prisma:generate"],
+      "cache": false
     }
   }
 }

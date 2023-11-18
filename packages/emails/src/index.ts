@@ -7,3 +7,4 @@ export { default as NewConversation } from './NewConversation';
 export { default as SignIn } from './SignIn';
 export { default as NewLead } from './NewLead';
 export { default as ConversationResolved } from './ConversationResolved';
+export { default as AdminStats } from './AdminStats';

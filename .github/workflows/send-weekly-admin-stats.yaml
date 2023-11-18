@@ -1,0 +1,26 @@
+name: Send admin stats
+
+on:
+  workflow_dispatch:
+  schedule:
+    # every day monday 6am
+    - cron: '0 6 * * 1'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/dashboard
+    env:
+      DATABASE_URL: '${{ secrets.DATABASE_URL }}'
+      EMAIL_FROM: '${{ secrets.EMAIL_FROM }}'
+      EMAIL_SERVER: '${{ secrets.EMAIL_SERVER }}'
+      NEXT_PUBLIC_DASHBOARD_URL: '${{ secrets.NEXT_PUBLIC_DASHBOARD_URL }}'
+      ADMIN_EMAIL: '${{ secrets.ADMIN_EMAIL }}'
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.2.2
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm turbo run sendWeeklyAdminStats
