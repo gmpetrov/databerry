@@ -108,22 +108,24 @@ export default function AgentPage() {
           // sm: `calc(${theme.spacing(2)} + var(--Header-height))`,
           // md: 3,
         },
-        pb: {
-          xs: 2,
-          sm: 2,
-          md: 3,
-        },
+        // pb: {
+        //   xs: 2,
+        //   sm: 2,
+        //   md: 3,
+        // },
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         minWidth: 0,
-        // height: '100dvh',
+        height: '100%',
+        maxHeight: '100%',
+        overflow: 'hidden',
         width: '100%',
-        ...(router.query.tab === 'chat'
-          ? {
-              height: '100%',
-            }
-          : {}),
+        // ...(router.query.tab === 'chat'
+        //   ? {
+        //       height: '100%',
+        //     }
+        //   : {}),
         gap: 1,
       })}
     >
@@ -297,7 +299,6 @@ export default function AgentPage() {
               maxHeight: '100%',
               overflow: 'hidden',
               mt: -3,
-              mb: -6,
             }}
           >
             <Stack
@@ -441,22 +442,52 @@ export default function AgentPage() {
         )}
 
         {
-          <Box
-            sx={(theme) => ({
-              width: '100%',
-              maxWidth: '100%',
-              // width: theme.breakpoints.values.md,
-              mx: 'auto',
-            })}
-          >
+          <>
             {router.query.tab === 'deploy' && (
-              <AgentDeployTab agentId={router.query.agentId as string} />
+              <Box
+                sx={(theme) => ({
+                  width: '100%',
+                  maxWidth: '100%',
+                  height: '100%',
+                  maxHeight: '100%',
+                  overflowY: 'hidden',
+                  mt: -3,
+                  // overflowY: 'auto',
+                  // width: theme.breakpoints.values.md,
+                  mx: 'auto',
+                })}
+              >
+                <Box
+                  sx={{
+                    height: '100%',
+                    maxHeight: '100%',
+                    py: 4,
+                    overflowY: 'auto',
+                  }}
+                >
+                  <AgentDeployTab agentId={router.query.agentId as string} />
+                </Box>
+              </Box>
             )}
 
             {router.query.tab === 'settings' && (
-              <AgentSettingsTab agentId={router.query.agentId as string} />
+              <Box
+                sx={(theme) => ({
+                  width: '100%',
+                  maxWidth: '100%',
+                  height: '100%',
+                  maxHeight: '100%',
+                  overflow: 'hidden',
+                  mt: -3,
+                  // overflowY: 'auto',
+                  // width: theme.breakpoints.values.md,
+                  mx: 'auto',
+                })}
+              >
+                <AgentSettingsTab agentId={router.query.agentId as string} />
+              </Box>
             )}
-          </Box>
+          </>
         }
       </>
 

@@ -702,7 +702,9 @@ export default function LogsPage() {
           </Stack>
 
           <Divider orientation="vertical" />
-          <Box sx={{ width: '100%', overflow: 'hidden' }}>
+          <Box
+            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 4 }}
+          >
             {getConversationQuery.data && (
               <>
                 <Alert

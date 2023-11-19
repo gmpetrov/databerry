@@ -17,7 +17,7 @@ export default function TeamSettingsPage() {
   }
 
   return (
-    <Stack sx={{ maxWidth: 'md', mx: 'auto' }}>
+    <Stack sx={{ maxWidth: 'md', mx: 'auto', height: '100%' }}>
       <OrganizationForm />
     </Stack>
   );

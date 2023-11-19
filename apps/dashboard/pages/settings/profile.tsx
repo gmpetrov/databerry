@@ -61,7 +61,11 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <Stack>
+    <Stack
+      sx={{
+        height: '100%',
+      }}
+    >
       {/* <OrganizationForm /> */}
 
       <SettingCard

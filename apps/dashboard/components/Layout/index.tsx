@@ -63,7 +63,9 @@ export default function Layout(props: Props) {
           onClose={() => setDrawerOpen(false)}
           className={mounted ? mode : ''}
         >
-          <Navigation />
+          <Box sx={{ height: '100%', overflowY: 'scroll' }}>
+            <Navigation />
+          </Box>
         </SideDrawer>
       )}
       <Root
@@ -73,7 +75,8 @@ export default function Layout(props: Props) {
             height: '100vh',
             overflow: 'hidden',
           }),
-          maxHeight: '100vh',
+          maxHeight: '100dvh',
+          overflow: 'hidden',
         }}
       >
         <Header>
@@ -221,8 +224,8 @@ export default function Layout(props: Props) {
         <Main
           sx={{
             height: '100%',
-            maxHeight: '100%',
-            overflowY: 'scroll',
+            maxheight: '100%',
+            overflowY: 'auto',
             backgroundColor: 'background.popup',
             ...props.mainSxProps,
           }}

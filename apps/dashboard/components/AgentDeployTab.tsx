@@ -98,8 +98,6 @@ function AgentDeployTab(props: Props) {
         <List
           variant="plain"
           sx={{
-            mt: 2,
-
             borderRadius: 'lg',
           }}
         >

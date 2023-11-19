@@ -12,6 +12,8 @@ export default function SideNav(props: BoxProps) {
           bgcolor: 'background.surface',
           borderRight: '1px solid',
           borderColor: 'divider',
+          height: '100%',
+          overflowY: 'auto',
           display: {
             xs: 'none',
             sm: 'initial',

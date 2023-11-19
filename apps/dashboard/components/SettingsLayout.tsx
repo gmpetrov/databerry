@@ -33,10 +33,11 @@ function SettingsLayout(props: Props) {
           },
           pt: {},
           pb: {
-            xs: 2,
-            sm: 2,
-            md: 3,
+            // xs: 2,
+            // sm: 2,
+            // md: 3,
           },
+          height: '100%',
           ...props.sxProps,
         }}
       >
@@ -157,11 +158,13 @@ function SettingsLayout(props: Props) {
         <Stack
           sx={{
             flex: 1,
-            p: {
+            pt: {
               xs: 2,
               sm: 2,
               md: 3,
             },
+            heigth: '100%',
+            overflowY: 'auto',
           }}
         >
           {props.children}

@@ -106,7 +106,7 @@ export default function DatastorePage() {
         display: 'flex',
         flexDirection: 'column',
         minWidth: 0,
-        // height: '100dvh',
+        height: '100%',
         width: '100%',
         gap: 1,
       })}
@@ -302,7 +302,16 @@ export default function DatastorePage() {
         )}
 
         {getDatastoreQuery?.data && router.query.tab === 'settings' && (
-          <DatastoreSettings />
+          <Box
+            sx={{
+              height: '100%',
+              overflowY: 'scroll',
+              mt: -5,
+              pt: 4,
+            }}
+          >
+            <DatastoreSettings />
+          </Box>
         )}
 
         <CreateDatasourceModal

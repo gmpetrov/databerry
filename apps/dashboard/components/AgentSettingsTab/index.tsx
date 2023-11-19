@@ -58,7 +58,7 @@ function AgentSettingsTab(props: Props) {
   }
 
   return (
-    <Stack direction="row" gap={4} sx={{ mt: -3, width: '100%' }}>
+    <Stack direction="row" gap={4} sx={{ width: '100%', height: '100%' }}>
       <Stack
         sx={{
           px: 2,
@@ -122,7 +122,17 @@ function AgentSettingsTab(props: Props) {
         </List>
       </Stack>
 
-      <Stack sx={{ pt: 4, width: '100%', maxWidth: 'md', mx: 'auto' }}>
+      <Stack
+        sx={{
+          width: '100%',
+          height: '100%',
+          maxHeight: '100%',
+          overflowY: 'auto',
+          maxWidwth: 'md',
+          mx: 'auto',
+          py: 4,
+        }}
+      >
         {state.currentTab === 'general' && (
           <AgentGeneralSettingsTab agentId={props.agentId} />
         )}

@@ -394,7 +394,6 @@ export default function DatasourceTable({
         sx={{
           width: '100%',
           borderRadius: 'md',
-          flex: 1,
           overflow: 'auto',
           minHeight: 0,
         }}
