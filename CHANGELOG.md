@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.79"></a>
+## 0.1.79 (2023-11-19)
+
+### Fixed
+
+- 🐛 timeout on bulk-delete datasources [[2d1d519](https://github.com/gmpetrov/databerry/commit/2d1d5199250dc0ebd51efb71103c62c589bb2d99)]
+
+
 <a name="0.1.78"></a>
 ## 0.1.78 (2023-11-19)
 
