@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.78"></a>
+## 0.1.78 (2023-11-19)
+
+### Fixed
+
+- 🐛 Layout issue on smaller desktop screens [[3ff7fa4](https://github.com/gmpetrov/databerry/commit/3ff7fa4b7e9e925f81eea69801e361f64d38b8b7)]
+
+### Miscellaneous
+
+- 🤖 admin stats [[8ca9c5a](https://github.com/gmpetrov/databerry/commit/8ca9c5a5ff6f1bffa6e0a0b14b463cc7aa7fb63b)]
+
+
 <a name="0.1.77"></a>
 ## 0.1.77 (2023-11-17)
 
