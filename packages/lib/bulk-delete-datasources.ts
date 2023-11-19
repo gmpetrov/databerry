@@ -22,35 +22,41 @@ const bulkDeleteDatasources = async (props: {
 
   const deleted = await prisma.$transaction(
     async (tx) => {
-      // Remove from QDrant
-      await new DatastoreManager(datastore!).removeBulk(props.datasourceIds);
+      const [_, __, deleted] = await Promise.all(
+        // Remove from QDrant
+        [
+          new DatastoreManager(datastore!).removeBulk(props.datasourceIds),
 
-      // Remove from S3
-      // TODO: how to bulk delete s3 folders
-      await pMap(
-        props.datasourceIds,
-        async (id) => {
-          return deleteFolderFromS3Bucket(
-            process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-            `datastores/${props.datastoreId}/${id}`
-          );
-        },
-        {
-          concurrency: 10,
-        }
+          // Remove from S3
+          // TODO: how to bulk delete s3 folders
+          pMap(
+            props.datasourceIds,
+            async (id) => {
+              return deleteFolderFromS3Bucket(
+                process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+                `datastores/${props.datastoreId}/${id}`
+              );
+            },
+            {
+              concurrency: 10,
+            }
+          ),
+
+          // Remove from DB
+          tx.appDatasource.deleteMany({
+            where: {
+              id: {
+                in: props.datasourceIds,
+              },
+            },
+          }),
+        ]
       );
 
-      // Remove from DB
-      return tx.appDatasource.deleteMany({
-        where: {
-          id: {
-            in: props.datasourceIds,
-          },
-        },
-      });
+      return deleted;
     },
     {
-      timeout: 1000 * 60, // 2 minutes
+      timeout: 1000 * 60 * 2, // 2 minutes
     }
   );
 

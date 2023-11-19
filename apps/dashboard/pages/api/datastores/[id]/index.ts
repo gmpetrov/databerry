@@ -200,13 +200,13 @@ export const deleteDatastore = async (
           process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
           `datastores/${datastore.id || 'UNKNOWN'}` // add UNKNOWN to avoid to delete all the folder 😅
         ),
-      ]);
 
-      await tx.datastore.delete({
-        where: {
-          id,
-        },
-      });
+        tx.datastore.delete({
+          where: {
+            id,
+          },
+        }),
+      ]);
     },
     {
       timeout: 1000 * 60 * 2, // 2mins
