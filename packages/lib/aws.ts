@@ -35,5 +35,5 @@ export async function deleteFolderFromS3Bucket(
     deleteParams.Delete.Objects.push({ Key });
   });
 
-  await s3.deleteObjects(deleteParams).promise();
+  return s3.deleteObjects(deleteParams).promise();
 }
