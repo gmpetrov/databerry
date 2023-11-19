@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.80"></a>
+## 0.1.80 (2023-11-19)
+
+### Fixed
+
+- 🐛 failing to delete datastore with 1K+ datasources [[38534ff](https://github.com/gmpetrov/databerry/commit/38534ffeb9ab97647baf831699aad6351f701733)]
+
+
 <a name="0.1.79"></a>
 ## 0.1.79 (2023-11-19)
 
