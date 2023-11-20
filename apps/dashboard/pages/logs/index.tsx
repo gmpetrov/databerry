@@ -170,7 +170,10 @@ export default function LogsPage() {
     hasReachedEnd: false,
     currentImproveAnswerID: undefined as string | undefined,
     currentConversationIndex: 0,
+    isImproveModalOpen: true,
+    currentImpoveQuestion: undefined as string | undefined,
   });
+
   const getConversationsQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getLogs>
   >((pageIndex, previousPageData) => {
@@ -203,6 +206,18 @@ export default function LogsPage() {
       : null,
     fetcher
   );
+
+  const messages = useMemo(() => {
+    return (
+      getConversationQuery?.data?.messages?.map((each) => ({
+        id: each.id,
+        from: each.from,
+        message: each.text,
+        createdAt: each.createdAt,
+        eval: each.eval,
+      })) || []
+    );
+  }, [getConversationQuery?.data?.messages]);
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
     '/api/agents',
@@ -271,10 +286,6 @@ export default function LogsPage() {
     }
     setState({ currentConversationIndex: 0 });
   }, [router.query.tab]);
-
-  // useEffect(() => {
-
-  // }, [state.currentConversationId]);
 
   if (!session?.organization) return null;
 
@@ -753,22 +764,19 @@ export default function LogsPage() {
             )}
 
             <ChatBox
-              messages={
-                getConversationQuery?.data?.messages?.map((each) => ({
-                  id: each.id,
-                  from: each.from,
-                  message: each.text,
-                  createdAt: each.createdAt,
-                  eval: each.eval,
-                })) || []
-              }
+              messages={messages}
               isLoadingConversation={getConversationQuery?.isLoading}
               onSubmit={async () => {}}
               readOnly={true}
               handleEvalAnswer={handleEvalAnswer}
               handleImprove={(message) => {
                 setState({
+                  isImproveModalOpen: true,
                   currentImproveAnswerID: message?.id,
+                  currentImpoveQuestion:
+                    messages[
+                      messages.findIndex((msg) => msg.id === message.id) - 1
+                    ].message,
                 });
               }}
               userImgUrl={session?.user?.image!}
@@ -778,11 +786,13 @@ export default function LogsPage() {
 
         {state.currentImproveAnswerID && (
           <ImproveAnswerModal
+            isOpen={state.isImproveModalOpen}
             handleCloseModal={() => {
               setState({
-                currentImproveAnswerID: '',
+                isImproveModalOpen: false,
               });
             }}
+            question={state.currentImpoveQuestion}
             messageId={state.currentImproveAnswerID}
           />
         )}

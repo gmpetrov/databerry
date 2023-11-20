@@ -2,7 +2,6 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import Alert from '@mui/joy/Alert';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Modal from '@mui/joy/Modal';
 import Stack from '@mui/joy/Stack';
@@ -10,7 +9,6 @@ import Link from 'next/link';
 import React from 'react';
 import useSWR from 'swr';
 
-import { getAgent } from '@app/pages/api/agents/[id]';
 import { getMessage } from '@app/pages/api/messages/[messageId]';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
@@ -21,6 +19,7 @@ import QAForm from './DatasourceForms/QAForm';
 
 type Props = {
   messageId: string;
+  question: string | undefined;
   isOpen?: boolean;
   handleCloseModal?: () => any;
 };
@@ -47,7 +46,7 @@ function ImproveAnswerModal(props: Props) {
 
   return (
     <Modal
-      open={!!props.messageId}
+      open={!!props.isOpen}
       onClose={props.handleCloseModal}
       sx={{
         display: 'flex',
@@ -95,6 +94,9 @@ function ImproveAnswerModal(props: Props) {
                 defaultValues={
                   {
                     datastoreId: currentDatastoreId,
+                    config: {
+                      question: props.question,
+                    },
                   } as any
                 }
               ></QAForm>
