@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.83"></a>
+## 0.1.83 (2023-11-20)
+
+### Miscellaneous
+
+- 🎸 Zendesk Integration [[8dfbe20](https://github.com/gmpetrov/databerry/commit/8dfbe2027d39da1c3387770e8a23e88277270ea2)]
+
+
 <a name="0.1.82"></a>
 ## 0.1.82 (2023-11-20)
 
