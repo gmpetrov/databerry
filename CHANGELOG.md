@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.82"></a>
+## 0.1.82 (2023-11-20)
+
+### Miscellaneous
+
+- 🎸 youtube video as datasource [[abe3e67](https://github.com/gmpetrov/databerry/commit/abe3e6713a030ee931cc7f9af9291c11814059a9)]
+
+
 <a name="0.1.81"></a>
 ## 0.1.81 (2023-11-19)
 
