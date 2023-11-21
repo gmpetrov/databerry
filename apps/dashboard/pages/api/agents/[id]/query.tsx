@@ -41,7 +41,6 @@ export const chatAgentRequest = async (
   const session = req.session;
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
-
   const conversationId = data.conversationId || cuid();
   const isNewConversation = !data.conversationId;
   if (session?.authType == 'apiKey') {
@@ -148,6 +147,11 @@ export const chatAgentRequest = async (
     userId: session?.user?.id,
     visitorId: data.visitorId!,
     conversationId,
+    ...(data?.visitorGeo
+      ? {
+          metadata: { visitiorGeo: data.visitorGeo },
+        }
+      : {}),
   });
 
   conversationManager.push({

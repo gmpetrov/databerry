@@ -71,6 +71,7 @@
     "canvas-confetti": "^1.7.0",
     "clsx": "^1.2.1",
     "cors": "^2.8.5",
+    "countries-and-timezones": "^3.5.2",
     "crisp-api": "^7.4.1",
     "cuid": "^3.0.0",
     "eslint-config-custom": "workspace:*",

@@ -13,6 +13,7 @@
     "prisma:push": "dotenv -e ../../.env.local -- prisma db push --skip-generate",
     "prisma:migrate:dev": "dotenv -e ../../.env.local -- prisma migrate dev",
     "prisma:migrate:prod": "dotenv -e ../../.env.local -- prisma migrate deploy",
+    "prisma:studio": "dotenv -e ../../.env.local -- npx prisma studio",
     "prisma": "dotenv -e ../../.env.local -- prisma"
   },
   "dependencies": {

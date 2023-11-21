@@ -2,6 +2,7 @@ import {
   EventStreamContentType,
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
+import ct from 'countries-and-timezones';
 import { createContext, useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 
@@ -12,7 +13,7 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
-import type {
+import {
   ConversationChannel,
   ConversationStatus,
   Prisma,
@@ -87,6 +88,14 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     mounted: false,
     handleAbort: undefined as any,
     isStreaming: false,
+    // add Geo if external channel
+    ...(channel && channel !== ConversationChannel.dashboard
+      ? {
+          visitorGeo: ct.getCountryForTimezone(
+            Intl.DateTimeFormat().resolvedOptions().timeZone
+          ),
+        }
+      : {}),
   });
 
   // TODO: Remove when rate limit implemented from backend
@@ -181,6 +190,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             streaming: true,
             query: message,
             visitorId: state.visitorId,
+            visitorGeo: state?.visitorGeo,
             conversationId: state.conversationId,
             channel,
           }),
