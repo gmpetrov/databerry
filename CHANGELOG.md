@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.85"></a>
+## 0.1.85 (2023-11-23)
+
+### Fixed
+
+- 🐛 improve prompt management [[2147783](https://github.com/gmpetrov/databerry/commit/2147783787c830fecbd77abfd9967e3641eadce1)]
+
+
 <a name="0.1.84"></a>
 ## 0.1.84 (2023-11-23)
 
