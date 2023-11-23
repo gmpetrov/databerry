@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.86"></a>
+## 0.1.86 (2023-11-23)
+
+### Fixed
+
+- 🐛 Missing migration files [[ec0155b](https://github.com/gmpetrov/databerry/commit/ec0155bccf50a547470b6a90e9dd352cb4c93dd5)]
+
+### Miscellaneous
+
+- 🎸 store completion usage [[83591c7](https://github.com/gmpetrov/databerry/commit/83591c7010566cdfc6c3d924b31fc6d336a3164b)]
+
+
 <a name="0.1.85"></a>
 ## 0.1.85 (2023-11-23)
 
