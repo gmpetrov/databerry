@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.87"></a>
+## 0.1.87 (2023-11-23)
+
+### Fixed
+
+- 🐛 cs template broken [[0c884c0](https://github.com/gmpetrov/databerry/commit/0c884c06658200d24a77709e7abc9ad94b4868ec)]
+
+
 <a name="0.1.86"></a>
 ## 0.1.86 (2023-11-23)
 
