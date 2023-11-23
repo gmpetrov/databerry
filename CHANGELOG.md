@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.88"></a>
+## 0.1.88 (2023-11-23)
+
+### Fixed
+
+- 🐛 rollback cs template [[8fd17c5](https://github.com/gmpetrov/databerry/commit/8fd17c587efae3c0d0620aae6eae173321695a7a)]
+
+
 <a name="0.1.87"></a>
 ## 0.1.87 (2023-11-23)
 
