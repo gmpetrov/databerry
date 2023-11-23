@@ -32,7 +32,7 @@ export abstract class DatasourceLoaderBase<T extends {} = DatasourceSchema> {
   }
 
   async importLoaders() {
-    return await import('langchain/document_loaders');
+    return await import('langchain/document_loaders/base');
   }
 
   abstract getSize(param?: any): Promise<number>;

@@ -50,7 +50,7 @@ const chatRetrieval = async ({
   const prompt = getPrompt(results);
 
   // Generate answer
-  const { answer } = await chat({
+  const { answer, usage } = await chat({
     modelName,
     prompt,
     stream,
@@ -88,6 +88,7 @@ const chatRetrieval = async ({
   return {
     answer,
     sources,
+    usage,
   };
 };
 

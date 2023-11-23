@@ -26,6 +26,10 @@ const chat = async ({
   abortController,
   ...otherProps
 }: ChatProps) => {
+  let totalCompletionTokens = 0;
+  let totalPromptTokens = 0;
+  let totalExecutionTokens = 0;
+
   const model = new ChatOpenAI({
     streaming: Boolean(stream),
     modelName: ModelConfig[modelName]?.name,
@@ -39,6 +43,14 @@ const chat = async ({
     callbacks: [
       {
         handleLLMNewToken: stream,
+        handleLLMEnd: (output, runId, parentRunId?, tags?) => {
+          const { completionTokens, promptTokens, totalTokens } =
+            output.llmOutput?.tokenUsage ||
+            output.llmOutput?.estimatedTokenUsage;
+          totalCompletionTokens += completionTokens ?? 0;
+          totalPromptTokens += promptTokens ?? 0;
+          totalExecutionTokens += totalTokens ?? 0;
+        },
       },
     ],
   });
@@ -81,10 +93,21 @@ const chat = async ({
     signal: abortController?.signal,
   });
 
-  const answer = output?.content.trim?.();
+  const answer = (output?.content as string)?.trim?.();
+
+  const usage = {
+    completionTokens: totalCompletionTokens,
+    promptTokens: totalPromptTokens,
+    totalTokens: totalExecutionTokens,
+    cost:
+      totalPromptTokens * ModelConfig[modelName]?.providerPriceByInputToken +
+      totalCompletionTokens *
+        ModelConfig[modelName]?.providerPricePriceByOutputToken,
+  };
 
   return {
     answer,
+    usage,
     sources: [] as any,
   } as ChatResponse;
 };

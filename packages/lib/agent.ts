@@ -244,7 +244,7 @@ export default class AgentManager {
         return this.defaultQuery(props);
       }
 
-      const answer = res?.content?.trim();
+      const answer = (res?.content as string)?.trim();
 
       return {
         answer,

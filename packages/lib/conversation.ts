@@ -10,6 +10,7 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 import { Source } from './types/document';
+import { ChatResponse } from './types/dtos';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -65,6 +66,7 @@ export default class ConversationManager {
       id?: string;
       createdAt?: Date;
       sources?: Source[];
+      usage?: ChatResponse['usage'];
     }
   ) {
     this.messages.push({

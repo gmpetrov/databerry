@@ -84,7 +84,7 @@
     "js-tiktoken": "^1.0.7",
     "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
-    "langchain": "^0.0.132",
+    "langchain": "0.0.196",
     "mime-types": "^2.1.35",
     "mixpanel-browser": "^2.47.0",
     "msgpackr": "^1.9.3",

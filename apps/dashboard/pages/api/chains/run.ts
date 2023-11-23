@@ -150,6 +150,7 @@ export const runChainRequest = async (
     from: MessageFrom.agent,
     text: chatRes.answer,
     sources: chatRes.sources,
+    usage: (chatRes as any).usage,
   });
 
   await conversationManager.save();

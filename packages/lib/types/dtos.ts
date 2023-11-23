@@ -178,6 +178,14 @@ export const ChatResponse = z.object({
   conversationId: z.string().cuid(),
   visitorId: z.string().optional(),
   messageId: z.string().cuid(),
+  usage: z
+    .object({
+      completionTokens: z.number(),
+      promptTokens: z.number(),
+      totalTokens: z.number(),
+      cost: z.number(),
+    })
+    .optional(),
 });
 
 export type ChatResponse = z.infer<typeof ChatResponse>;

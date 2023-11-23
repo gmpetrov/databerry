@@ -14,7 +14,7 @@ export default async function truncateChatMessages({
   let currentTokenCount = 0;
 
   for (const message of messages) {
-    const messageTokens = countTokens({ text: message.content });
+    const messageTokens = countTokens({ text: message.content as string });
 
     if (currentTokenCount + messageTokens <= maxTokens) {
       messagesWithinTokenLimit.push(message);
@@ -24,7 +24,7 @@ export default async function truncateChatMessages({
 
       if (remainingTokens > 0) {
         const chunks = await splitTextByToken({
-          text: message.content,
+          text: message.content as string,
           chunkSize: remainingTokens,
         });
 

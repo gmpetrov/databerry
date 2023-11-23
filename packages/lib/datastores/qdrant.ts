@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import { Embeddings } from 'langchain/embeddings';
+import { Embeddings } from 'langchain/embeddings/base';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { z } from 'zod';
 

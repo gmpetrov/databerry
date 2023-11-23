@@ -297,6 +297,7 @@ model Message {
   conversationId String?       @map("conversation_id")
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
+  usage          Json?
 
   eval MessageEval?
 
