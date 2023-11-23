@@ -316,11 +316,11 @@ export default class AgentManager {
             template: `${_promptTemplate || ''}
             Do not provide answers based on assumed knowledge or make up information not found in the given context, if you can't find an answer in the provided context, politely say that you don't know without mentioning the existence of a provided context.
             Always respond in the language of the inquiry.
-            Remember, accuracy and context relevance are paramount.
             Format your answer in the markdown rich format with proper bolds, line breaks, italics etc as per heirarchy and readability requirements.
 
             Context: ###
-           ### End of Context.
+            {context}
+           ###
           
 
           Question: {query}

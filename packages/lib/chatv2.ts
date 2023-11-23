@@ -39,7 +39,6 @@ const chat = async ({
     frequencyPenalty: otherProps.frequencyPenalty,
     presencePenalty: otherProps.presencePenalty,
     maxTokens: otherProps.maxTokens,
-
     callbacks: [
       {
         handleLLMNewToken: stream,
@@ -50,6 +49,9 @@ const chat = async ({
           totalCompletionTokens += completionTokens ?? 0;
           totalPromptTokens += promptTokens ?? 0;
           totalExecutionTokens += totalTokens ?? 0;
+        },
+        handleLLMError: async (err: Error) => {
+          console.error('handleLLMError', err);
         },
       },
     ],
