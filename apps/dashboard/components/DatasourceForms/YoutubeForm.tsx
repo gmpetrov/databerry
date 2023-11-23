@@ -36,7 +36,7 @@ function Nested() {
     const type = getDatasourceType(url || '');
     if (type) {
       console.log(type);
-      setValue('type', type);
+      setValue('type', type, { shouldValidate: true, shouldDirty: true });
     }
   }, [url]);
 
