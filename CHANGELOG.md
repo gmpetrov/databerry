@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.84"></a>
+## 0.1.84 (2023-11-23)
+
+### Fixed
+
+- 🐛 YouTube form not dirty onchange [[ee69469](https://github.com/gmpetrov/databerry/commit/ee6946906f6c047c62fe89b435c5ab657f2e23d3)]
+
+
 <a name="0.1.83"></a>
 ## 0.1.83 (2023-11-20)
 
