@@ -1,16 +1,14 @@
 export const CUSTOMER_SUPPORT = `As a customer support agent, please provide a helpful and professional response to the user's question or issue.`;
 
-export const CUSTOMER_SUPPORT_V2 =
-  `Provide helpful answers using only data from the provided CONTEXT. 
-{extra}
-
-Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer
-CONTEXT:
+export const KNOWLEDGE_RESTRICTION = `Limit your knowledge to the following context and if you don't find an answer from the context, politely say that you don't know without mentioning the existence of a provided context.`;
+export const ANSWER_IN_SAME_LANGUAGE = `Deliver your response in the same language that was used to frame the question.`;
+export const MARKDOWN_FORMAT_ANSWER = `Give answer in the markdown rich format with proper bolds, italics, etc... as per heirarchy and readability requirements.`;
+export const QA_CONTEXT = `Context: ###
 {context}
-END OF CONTEXT
+###
 
-Question: {query}
+Question: ###
+{query}
+###
 
-YOU MUST ANSWER IN THE SAME LANGUAGE AS THE QUESTION IS ASKED IN.
-Answer:`.replace(/\n+/, ' ');
-// ONLY USE INFORMATION FROM THE ABOVE CONTEXT, IF YOU CAN'T FIND THE ANSWER IN THE CONTEXT POLITELY SAY THAT YOU DON'T KNOW. DON'T MAKE UP ANSWER.
+Answer: `;
