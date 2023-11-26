@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.90"></a>
+## 0.1.90 (2023-11-26)
+
+### Miscellaneous
+
+- 🤖 improve cs prompt [[55ccce0](https://github.com/gmpetrov/databerry/commit/55ccce0feb4c910502c7d70e0f3374754563b886)]
+
+
 <a name="0.1.89"></a>
 ## 0.1.89 (2023-11-26)
 
