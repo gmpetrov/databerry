@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.89"></a>
+## 0.1.89 (2023-11-26)
+
+### Fixed
+
+- 🐛 Can&#x27;t connect tool to agent [[878561b](https://github.com/gmpetrov/databerry/commit/878561b2949d09c4e35b8b90919444bb8655c16e)]
+
+
 <a name="0.1.88"></a>
 ## 0.1.88 (2023-11-23)
 
