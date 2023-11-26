@@ -221,6 +221,7 @@ const ToolBaseSchema = z.object({
   type: z.nativeEnum(ToolType),
   serviceProviderId: z.string().cuid().optional().nullable(),
   serviceProvider: z.any().optional(),
+  datastore: z.any().optional(),
 });
 
 // export const ToolSchema = z.object({
@@ -235,7 +236,6 @@ export const ToolSchema = z.discriminatedUnion('type', [
   ToolBaseSchema.extend({
     type: z.literal(ToolType.datastore),
     datastoreId: z.string().cuid().optional(),
-    datastore: z.any().optional(),
   }),
 
   ToolBaseSchema.extend({

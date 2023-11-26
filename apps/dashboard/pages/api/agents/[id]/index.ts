@@ -139,7 +139,12 @@ export const updateAgent = async (
       tools: {
         createMany: {
           data: newTools.map(
-            ({ serviceProviderId, serviceProvider, ...otherToolProps }) => ({
+            ({
+              serviceProviderId,
+              serviceProvider,
+              datastore, // ⚠️ do not remove datastore from spreading as passing the object to createMany will throw an error
+              ...otherToolProps
+            }) => ({
               ...otherToolProps,
               ...(serviceProviderId ? { serviceProviderId } : {}),
 
