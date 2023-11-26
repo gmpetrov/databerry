@@ -39,6 +39,10 @@ const chat = async ({
     frequencyPenalty: otherProps.frequencyPenalty,
     presencePenalty: otherProps.presencePenalty,
     maxTokens: otherProps.maxTokens,
+    timeout: 1000,
+    onFailedAttempt: (err) => {
+      console.log('onFailedAttempt------------>', err);
+    },
     callbacks: [
       {
         handleLLMNewToken: stream,
