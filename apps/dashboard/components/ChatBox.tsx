@@ -49,7 +49,7 @@ export type ChatBoxProps = {
     messageId: string;
     value: MessageEvalUnion;
   }) => any;
-  handleImprove?: (message: ChatMessage) => any;
+  handleImprove?: (message: ChatMessage, msgIndex: number) => any;
   topSettings?: JSX.Element | null;
   handleSourceClick?: (source: Source) => any;
   handleAbort?: any;
@@ -442,7 +442,7 @@ function ChatBox({
                                 variant="plain"
                                 color="neutral"
                                 startDecorator={<SchoolTwoToneIcon />}
-                                onClick={() => handleImprove(each)}
+                                onClick={() => handleImprove(each, index)}
                               >
                                 Improve
                               </Button>

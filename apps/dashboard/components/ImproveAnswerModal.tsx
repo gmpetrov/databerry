@@ -4,7 +4,11 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import CircularProgress from '@mui/joy/CircularProgress';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
 import Modal from '@mui/joy/Modal';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
 import Link from 'next/link';
 import React from 'react';
@@ -22,6 +26,7 @@ import QAForm from './DatasourceForms/QAForm';
 type Props = {
   messageId: string;
   isOpen?: boolean;
+  question?: string;
   handleCloseModal?: () => any;
 };
 
@@ -44,6 +49,11 @@ function ImproveAnswerModal(props: Props) {
     !getAgentQuery.data?.conversation?.agent?.tools?.find(
       (one) => !!one.datastoreId
     );
+
+  const nbDatastores =
+    getAgentQuery.data?.conversation?.agent?.tools?.filter(
+      (one) => !!one.datastoreId
+    )?.length || 0;
 
   return (
     <Modal
@@ -89,12 +99,35 @@ function ImproveAnswerModal(props: Props) {
               >
                 This action will add a new Q&A Datasource to your Datastore.
               </Alert>
+
+              {nbDatastores > 1 && (
+                <FormControl sx={{ mt: 2 }}>
+                  <FormLabel>Datastore</FormLabel>
+                  <Select
+                    value={currentDatastoreId}
+                    onChange={(_, value) => {
+                      setCurrentDatastoreId(value as string);
+                    }}
+                  >
+                    {getAgentQuery.data?.conversation?.agent?.tools
+                      ?.filter((one) => !!one.datastoreId)
+                      .map((one) => (
+                        <Option key={one.datastoreId} value={one.datastoreId}>
+                          {one?.datastore?.name}
+                        </Option>
+                      ))}
+                  </Select>
+                </FormControl>
+              )}
               <QAForm
                 key={currentDatastoreId}
                 onSubmitSuccess={props.handleCloseModal}
                 defaultValues={
                   {
                     datastoreId: currentDatastoreId,
+                    config: {
+                      question: props.question,
+                    },
                   } as any
                 }
               ></QAForm>

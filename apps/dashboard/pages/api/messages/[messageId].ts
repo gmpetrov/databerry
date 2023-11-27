@@ -26,7 +26,16 @@ export const getMessage = async (
         include: {
           agent: {
             include: {
-              tools: true,
+              tools: {
+                include: {
+                  datastore: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },

@@ -169,6 +169,7 @@ export default function LogsPage() {
     currentConversationId: undefined as string | undefined,
     hasReachedEnd: false,
     currentImproveAnswerID: undefined as string | undefined,
+    improveAnswerDefaultValue: '' as string | undefined,
     currentConversationIndex: 0,
   });
   const getConversationsQuery = useSWRInfinite<
@@ -766,9 +767,12 @@ export default function LogsPage() {
               onSubmit={async () => {}}
               readOnly={true}
               handleEvalAnswer={handleEvalAnswer}
-              handleImprove={(message) => {
+              handleImprove={(message, index) => {
+                const prev = getConversationQuery?.data?.messages?.[index - 1];
+
                 setState({
                   currentImproveAnswerID: message?.id,
+                  improveAnswerDefaultValue: prev?.text,
                 });
               }}
               userImgUrl={session?.user?.image!}
@@ -778,12 +782,14 @@ export default function LogsPage() {
 
         {state.currentImproveAnswerID && (
           <ImproveAnswerModal
+            isOpen={!!state.currentImproveAnswerID}
             handleCloseModal={() => {
               setState({
                 currentImproveAnswerID: '',
               });
             }}
             messageId={state.currentImproveAnswerID}
+            question={state.improveAnswerDefaultValue}
           />
         )}
       </Sheet>
