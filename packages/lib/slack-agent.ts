@@ -3,7 +3,6 @@ import { WebClient } from '@slack/web-api';
 import { Agent, Datastore } from '@chaindesk/prisma';
 
 import { AgentWithTools } from './agent';
-import chat from './chat';
 import summarize from './summarize';
 
 const slackAgent = async ({
