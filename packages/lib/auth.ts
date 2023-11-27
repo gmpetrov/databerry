@@ -8,6 +8,7 @@ import EmailProvider from 'next-auth/providers/email';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import { Middleware } from 'next-connect';
+import requestIp from 'request-ip';
 import { v4 as uuidv4 } from 'uuid';
 
 import generateFunId from '@chaindesk/lib/generate-fun-id';
@@ -24,6 +25,7 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 import { AnalyticsEvents, capture, profile } from './analytics-server';
+import getRequestCountry from './get-request-country';
 import getRootDomain from './get-root-domain';
 import sendVerificationRequest from './verification-sender';
 
@@ -414,6 +416,8 @@ export const withLogger: Middleware<
   req.logger = logger.child({
     requestId: req.requestId,
     requestPath: req.url,
+    requestIP: requestIp.getClientIp(req),
+    requestCountry: getRequestCountry(req),
   });
 
   req.logger.info(req.method);
