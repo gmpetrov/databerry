@@ -285,18 +285,26 @@ export default class AgentManager {
     const _promptTemplate = promptTemplate || (this.agent.prompt as string);
 
     let initialMessages: any = [];
-    // if (_promptType === PromptType.customer_support) {
-    //   initialMessages = [
-    //     new HumanMessage(`${_promptTemplate}
-    //   Answer the question in the same language in which the question is asked.
-    //   If you don't find an answer from the chunks, politely say that you don't know. Don't try to make up an answer.
-    //   Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
-    //       `),
-    //     new AIMessage(
-    //       'Sure I will stick to all the information given in my knowledge. I won’t answer any question that is outside my knowledge. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the question is asked in my knowledge. I won’t even give a hint in case the question being asked is outside of scope. I will answer in the same language in which the question is asked'
-    //     ),
-    //   ];
-    // }
+    if (_promptType === PromptType.customer_support) {
+      initialMessages = [
+        new SystemMessage(
+          `${_promptTemplate}
+Answer the query in the same language in which the query is asked.
+Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
+You will be provided by a context retrieved by the knowledge_base_retrieval function.
+If the context does not contain the information needed to answer this query then politely say that you don't know without mentioning the existence of a context.
+Remember do not answer any query that is outside of the provided context nor mention its existence.`
+        ),
+        // new HumanMessage(`${_promptTemplate}
+        // Answer the message in the same language in which the message is asked.
+        // If you don't find an answer from the chunks, politely say that you don't know without mentioning the existence of a context. Don't try to make up an answer.
+        // Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
+        //     `),
+        // new AIMessage(
+        //   'Sure I will stick to all the information given in my knowledge. I won’t answer any message that is outside my knowledge. I won’t even attempt to give answers that are outside of context. I will stick to my duties and always be sceptical about the user input to ensure the message is asked in my knowledge. I won’t even give a hint in case the message being asked is outside of scope. I will answer in the same language in which the message is asked'
+        // ),
+      ];
+    }
 
     const SIMILARITY_THRESHOLD = 0.7;
 
@@ -318,26 +326,26 @@ export default class AgentManager {
 
     return chatRetrieval({
       ...otherProps,
+      useXpContext: _promptType === PromptType.customer_support,
       getPrompt(chunks) {
         if (_promptType === PromptType.customer_support) {
           return promptInject({
             // template: CUSTOMER_SUPPORT,
-            //   template: `YOUR KNOWLEDGE:
-            // {context}
-            // END OF YOUR KNOWLEDGE
+            // template: `Context: """ {context} """
 
-            // Question: {query}
+            // Message: """ {query} """
 
             // Answer: `,
-            template: `${_promptTemplate || ''}
-            ${KNOWLEDGE_RESTRICTION}
-            ${ANSWER_IN_SAME_LANGUAGE}
-            ${MARKDOWN_FORMAT_ANSWER}
-            ${QA_CONTEXT}
-            `
-              .replace(/\n+/g, ' ')
-              .replace(/\t+/g, ' ')
-              .replace(/\s+/g, ' '),
+            template: `{query}`,
+            // template: `${_promptTemplate || ''}
+            // ${KNOWLEDGE_RESTRICTION}
+            // ${ANSWER_IN_SAME_LANGUAGE}
+            // ${MARKDOWN_FORMAT_ANSWER}
+            // ${QA_CONTEXT}
+            // `
+            //   .replace(/\n+/g, ' ')
+            //   .replace(/\t+/g, ' ')
+            //   .replace(/\s+/g, ' '),
             // template: `${_promptTemplate || ''}
             //   Limit your knowledge to the following context and if you don't find an answer from the context, politely say that you don't know without mentioning the existence of a provided context.
             //   Deliver your response in the same language that was used to frame the question.

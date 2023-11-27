@@ -7,6 +7,7 @@ import { ChatRequest } from '@chaindesk/lib/types/dtos';
 import { Datastore, MessageFrom } from '@chaindesk/prisma';
 
 import chat, { ChatProps } from '../chatv2';
+import createPromptContext from '../create-prompt-context';
 import retrieval from '../retrieval';
 
 export type ChatRetrievalChainProps = Omit<ChatProps, 'prompt'> & {
@@ -55,6 +56,20 @@ const chatRetrieval = async ({
     prompt,
     stream,
     history,
+    // history: [
+    //   ...(history || []),
+    //   {
+    //     id: '42',
+    //     from: 'function',
+    //     text: createPromptContext(
+    //       results.filter((each) => each.metadata.score! > 0.7)
+    //     ),
+    //   } as any,
+    // ],
+    // TODO: Find better way to inject context
+    context: createPromptContext(
+      results.filter((each) => each.metadata.score! > 0.7)
+    ),
     initialMessages,
     abortController,
     ...otherProps,

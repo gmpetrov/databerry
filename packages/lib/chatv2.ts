@@ -1,5 +1,11 @@
 import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { AIMessage, BaseMessage, HumanMessage } from 'langchain/schema';
+import {
+  AIMessage,
+  BaseMessage,
+  FunctionMessage,
+  HumanMessage,
+  MessageContent,
+} from 'langchain/schema';
 
 import { AgentModelName, Message, MessageFrom } from '@chaindesk/prisma';
 
@@ -15,6 +21,8 @@ export type ChatProps = ChatModelConfigSchema & {
   history?: Message[];
   abortController?: any;
   initialMessages?: BaseMessage[] | undefined;
+  context?: string;
+  useXpContext?: boolean;
 };
 
 const chat = async ({
@@ -25,6 +33,8 @@ const chat = async ({
   initialMessages = [],
   modelName = AgentModelName.gpt_3_5_turbo,
   abortController,
+  context,
+  useXpContext,
   ...otherProps
 }: ChatProps) => {
   let totalCompletionTokens = 0;
@@ -90,8 +100,18 @@ const chat = async ({
   const messages = [
     ...initialMessages,
     ...truncatedHistory,
+    ...(useXpContext && context
+      ? [
+          new FunctionMessage({
+            content: context,
+            name: 'knowledge_base_retrieval',
+          }),
+        ]
+      : []),
     new HumanMessage(prompt),
   ];
+
+  // console.log('messages ===--------c_>', messages);
 
   const output = await model.call(messages, {
     signal: abortController?.signal,
