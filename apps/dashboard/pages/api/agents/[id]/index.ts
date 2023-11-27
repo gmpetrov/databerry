@@ -7,6 +7,7 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
+import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
 import roles from '@chaindesk/lib/middlewares/roles';
 import { UpdateAgentSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
@@ -69,7 +70,15 @@ export const getAgent = async (
   return agent;
 };
 
-handler.get(respond(getAgent));
+handler.get(
+  pipe(
+    // rateLimit({
+    //   duration: 60,
+    //   limit: 30,
+    // }),
+    respond(getAgent)
+  )
+);
 
 export const updateAgent = async (
   req: AppNextApiRequest,

@@ -19,6 +19,7 @@ import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
 import mailer from '@chaindesk/lib/mailer';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
+import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
 import { AppNextApiRequest, SSE_EVENT } from '@chaindesk/lib/types';
@@ -277,6 +278,15 @@ export const chatAgentRequest = async (
   }
 };
 
-handler.post(respond(chatAgentRequest));
+handler.post(
+  pipe(
+    // rateLimit({
+    //   duration: 60,
+    //   limit: 30,
+    //   // 30req/min
+    // }),
+    respond(chatAgentRequest)
+  )
+);
 
 export default pipe(cors({ methods: ['POST', 'HEAD'] }), handler);
