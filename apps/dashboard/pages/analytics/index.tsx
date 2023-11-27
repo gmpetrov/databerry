@@ -196,13 +196,14 @@ export default function AnalyticsPage() {
           >
             <CustomLineChart.Line
               type="monotone"
-              stroke="#f73a14"
+              stroke="#C41C1C"
               strokeWidth={2}
               dataKey="bad_count"
               name="Bad Replies"
             />
             <CustomLineChart.Line
               type="monotone"
+              stroke="#1F7A1F"
               strokeWidth={2}
               dataKey="good_count"
               name="Good Replies"
@@ -217,6 +218,7 @@ export default function AnalyticsPage() {
           >
             <CustomLineChart.Line
               type="monotone"
+              stroke="#814DDE"
               strokeWidth={2}
               dataKey="conversation_count"
               name="Total Conversations"
@@ -232,13 +234,14 @@ export default function AnalyticsPage() {
           >
             <CustomLineChart.Line
               type="monotone"
-              stroke="#f73a14"
+              stroke="#C41C1C"
               strokeWidth={2}
               dataKey="bad_count"
               name="Bad Replies"
             />
             <CustomLineChart.Line
               type="monotone"
+              stroke="#1F7A1F"
               strokeWidth={2}
               dataKey="good_count"
               name="Good Replies"
@@ -251,6 +254,7 @@ export default function AnalyticsPage() {
           >
             <CustomLineChart.Line
               type="monotone"
+              stroke="#814DDE"
               strokeWidth={2}
               dataKey="conversation_count"
               name="Total Conversations"
