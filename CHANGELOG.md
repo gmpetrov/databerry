@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.94"></a>
+## 0.1.94 (2023-11-27)
+
+### Miscellaneous
+
+- 🎸 Analytics page ([#184](https://github.com/gmpetrov/databerry/issues/184)) [[53157b3](https://github.com/gmpetrov/databerry/commit/53157b34d4aa253cdb627f93f8c887c31d684379)]
+- 🎸 Store conversion coutry origin [[44f2be9](https://github.com/gmpetrov/databerry/commit/44f2be9c99ff675ea758fb9455e53b0d71533c82)]
+
+
 <a name="0.1.93"></a>
 ## 0.1.93 (2023-11-27)
 
