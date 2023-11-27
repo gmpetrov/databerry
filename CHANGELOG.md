@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.91"></a>
+## 0.1.91 (2023-11-27)
+
+### Fixed
+
+- 🐛 failed attempt handler [[74b03be](https://github.com/gmpetrov/databerry/commit/74b03bed5d5ae4f94cb728ca92b146713f62cc8e)]
+
+### Miscellaneous
+
+-  debug retry logic [[5e0828a](https://github.com/gmpetrov/databerry/commit/5e0828a3ab29c2046ccaa290c1a18d2aa6f835ea)]
+
+
 <a name="0.1.90"></a>
 ## 0.1.90 (2023-11-26)
 
