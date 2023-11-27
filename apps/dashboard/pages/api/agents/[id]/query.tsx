@@ -15,6 +15,7 @@ import {
   createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import getRequestCountry from '@chaindesk/lib/get-request-country';
 import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
 import mailer from '@chaindesk/lib/mailer';
 import cors from '@chaindesk/lib/middlewares/cors';
@@ -149,6 +150,13 @@ export const chatAgentRequest = async (
     userId: session?.user?.id,
     visitorId: data.visitorId!,
     conversationId,
+    ...(!session?.user && !!isNewConversation
+      ? {
+          metadata: {
+            country: getRequestCountry(req),
+          },
+        }
+      : {}),
   });
 
   conversationManager.push({
