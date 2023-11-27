@@ -1,11 +1,9 @@
 import axios from 'axios';
-import { YoutubeTranscript } from 'youtube-transcript';
 
 import { AppDocument } from '@chaindesk/lib/types/document';
 import { DatasourceSchema } from '@chaindesk/lib/types/models';
 
-import { ApiError, ApiErrorType } from '../api-error';
-import cleanTextForEmbeddings from '../clean-text-for-embeddings';
+import YoutubeApi from '../youtube-api';
 
 import { DatasourceLoaderBase } from './base';
 
@@ -13,8 +11,6 @@ type DatasourceYoutubeVideo = Extract<
   DatasourceSchema,
   { type: 'youtube_video' }
 >;
-
-type YoutubeTranscriptType = { text: string; duration: number; offset: number };
 
 export class YoutubeVideoLoader extends DatasourceLoaderBase<DatasourceYoutubeVideo> {
   async getSize(text: string) {
@@ -30,8 +26,7 @@ export class YoutubeVideoLoader extends DatasourceLoaderBase<DatasourceYoutubeVi
 
     let docs = [];
     try {
-      const transcripts: YoutubeTranscriptType[] =
-        await YoutubeTranscript.fetchTranscript(url);
+      const transcripts = await YoutubeApi.transcribeVideo(url);
       docs = transcripts.map(({ text, offset }) => {
         return new AppDocument<any>({
           pageContent: text,

@@ -43,8 +43,14 @@ function SEO(props: Props) {
         }`}
       />
 
-      <meta property="og:image" content="/og-image.png" />
-      <meta property="twitter:image" content="/og-image.png" />
+      <meta
+        property="og:image"
+        content={`api/og?image=${props.image ?? 'og-image'}`}
+      />
+      <meta
+        property="twitter:image"
+        content={`api/og?image=${props.image ?? 'og-image'}`}
+      />
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="og:type" content="website" />
 

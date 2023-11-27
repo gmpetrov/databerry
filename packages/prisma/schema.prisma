@@ -542,6 +542,25 @@ model XPBNPEval {
   @@map("xp_bnp_evals")
 }
 
+model LLMTaskOutput {
+  id             String  @id @default(cuid())
+  type            LLMTaskOutputType
+
+  externalId     String? @map("external_id")
+
+
+  output Json?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([type, externalId], name: "unique_external_id")
+  @@map("llm_task_outputs")
+}
+
+enum LLMTaskOutputType {
+  youtube_summary
+}
+
 enum DatastoreVisibility {
   public
   private
