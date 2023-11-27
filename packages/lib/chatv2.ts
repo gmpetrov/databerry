@@ -40,7 +40,6 @@ const chat = async ({
     frequencyPenalty: otherProps.frequencyPenalty,
     presencePenalty: otherProps.presencePenalty,
     maxTokens: otherProps.maxTokens,
-    timeout: 1000,
     onFailedAttempt: failedAttemptHandler,
     callbacks: [
       {
