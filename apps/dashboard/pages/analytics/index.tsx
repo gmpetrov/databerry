@@ -1,7 +1,8 @@
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import EventIcon from '@mui/icons-material/Event';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import { Box, Breadcrumbs, Option, Select, Typography } from '@mui/joy';
+import InfoIcon from '@mui/icons-material/Info';
+import { Alert, Box, Breadcrumbs, Option, Select, Typography } from '@mui/joy';
 import axios from 'axios';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next/types';
@@ -120,7 +121,16 @@ export default function AnalyticsPage() {
         </Typography>
       </Breadcrumbs>
 
-      <Box display="flex" flexDirection="column" flexShrink="initial">
+      <Alert startDecorator={<InfoIcon />} color="primary" variant="soft">
+        This view is refreshed every hour
+      </Alert>
+
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexShrink="initial"
+        sx={{ mt: 2 }}
+      >
         <Typography level="body-xs">Date Range</Typography>
         <Select
           defaultValue="year"

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { NextApiResponse } from 'next';
 import { z, ZodError } from 'zod';
 
-import RedisClient from '@chaindesk/lib/cache/redis';
+import Cache from '@chaindesk/lib/cache';
 import {
   createAuthApiHandler,
   respond,
@@ -143,8 +143,8 @@ export const getAnalytics = async (
     const { view } = querySchema.parse(req.query);
     const { organization } = req.session;
     const cacheKey = `${view}:${organization.id}`;
-    const redisClient = new RedisClient();
-    const cachedValue = await redisClient.retriveKey(cacheKey);
+    const cache = new Cache();
+    const cachedValue = await cache.get(cacheKey);
     if (cachedValue) {
       return JSON.parse(cachedValue);
     }
@@ -176,7 +176,7 @@ export const getAnalytics = async (
       most_common_datasource,
     } = keyMetric[0];
 
-    redisClient.cacheKey({
+    cache.set({
       key: cacheKey,
       value: JSON.stringify({
         conversation_count,
@@ -189,8 +189,6 @@ export const getAnalytics = async (
       }),
       expiration: 60 * 60, // 1 hour
     });
-
-    await redisClient.disconnect();
 
     return {
       conversation_count,

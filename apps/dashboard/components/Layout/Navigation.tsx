@@ -222,6 +222,12 @@ export default function Navigation() {
               icon: <StorageRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.DATASTORES),
             },
+            // {
+            //   label: 'Analytics',
+            //   route: RouteNames.ANALYTICS,
+            //   icon: <ShowChartIcon fontSize="md" />,
+            //   active: router.route.startsWith(RouteNames.ANALYTICS),
+            // },
           ]
         : []),
       ...(product === 'cs'
