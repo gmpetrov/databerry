@@ -1,5 +1,16 @@
 # Changelog
 
+<a name="0.1.93"></a>
+## 0.1.93 (2023-11-27)
+
+### Miscellaneous
+
+- 🤖 log IP + Country [[ea66749](https://github.com/gmpetrov/databerry/commit/ea66749d551aca03c6e341334332a4ee7115c2ed)]
+- 🎸 Imrpove Anser: prefill with question [[5eb56c4](https://github.com/gmpetrov/databerry/commit/5eb56c43c0f864fa7aa6c88e6566c53f8ac99867)]
+- 🎸 rate limiter [[381470c](https://github.com/gmpetrov/databerry/commit/381470cf5eb05bccfc0d7e8c6efd22fb06a02619)]
+-  remove import [[4229856](https://github.com/gmpetrov/databerry/commit/42298565d640fef85ad9a4e19a689b8c37bafe08)]
+
+
 <a name="0.1.92"></a>
 ## 0.1.92 (2023-11-27)
 
