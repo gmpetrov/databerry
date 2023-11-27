@@ -14,6 +14,7 @@ import ColorSchemeToggle from '@app/components/Layout/ColorSchemeToggle';
 import Header from '@app/components/Layout/Header';
 import Logo from '@app/components/Logo';
 import SEO from '@app/components/SEO';
+import TopBar from '@app/components/TopBar';
 
 import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
 
@@ -35,6 +36,7 @@ type FormType = z.infer<typeof schema>;
 export default function Youtube() {
   const router = useRouter();
   const { register, handleSubmit, formState, trigger } = useForm<FormType>({
+    mode: 'onChange',
     resolver: zodResolver(schema),
   });
 
@@ -61,38 +63,18 @@ export default function Youtube() {
         uri={router.pathname}
         image={'og-image'}
       />
-      <Header>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 1.5,
-          }}
-        >
-          <Logo className="w-10" />
-          <Typography component="h1" fontWeight="xl">
-            Chaindesk
-          </Typography>
-        </Box>
+      <TopBar />
 
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
-          <ColorSchemeToggle />
-        </Box>
-      </Header>
-
-      <Box className="container mx-auto max-w-7xl p-4">
+      <Box className="container p-4 mx-auto max-w-7xl">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className=" md:flex flex-wrap items-center  space-y-2 md:space-y-0 md:space-x-2"
+          className="flex-wrap items-center space-y-2 md:flex md:space-y-0 md:space-x-2"
         >
           <Input
             className="flex-1"
             {...register('url')}
             placeholder="Paste your youtube video link here"
-            onChange={() => {
-              trigger();
-            }}
+            disabled={summaryMutation.isMutating}
           />
           <Button
             type="submit"
@@ -104,14 +86,14 @@ export default function Youtube() {
             Summarize
           </Button>
         </form>
-        <Box className="w-full  pt-4 ">
+        <Box className="w-full pt-4 ">
           {!formState.isValid && (
-            <Typography className="text-red-800 text-sm">
+            <Typography className="text-sm text-red-800">
               {(formState.errors as any)?.youtube_url?.message}
             </Typography>
           )}
           <ReactMarkdown
-            className="prose  dark:text-white  min-w-full"
+            className="min-w-full prose dark:text-white"
             remarkPlugins={[remarkGfm]}
           >
             {summary}

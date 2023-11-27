@@ -1,33 +1,49 @@
-import { BasePromptTemplate } from 'langchain/prompts';
+import OpenAIApi from 'openai';
 
-const summarize = async ({
-  text,
-  prompt,
-}: {
-  text: string;
-  prompt?: BasePromptTemplate;
-}) => {
-  const { AnalyzeDocumentChain, loadSummarizationChain } = await import(
-    'langchain/chains'
-  );
-  const { OpenAI } = await import('langchain/llms/openai');
-  const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
-  const combineDocsChain = loadSummarizationChain(model, {
-    combineMapPrompt: prompt,
-    combinePrompt: prompt,
-    type: 'map_reduce',
-  });
-  const chain = new AnalyzeDocumentChain({
-    combineDocumentsChain: combineDocsChain,
-  });
+import { ModelConfig } from './config';
+import countTokens from './count-tokens';
+import splitTextIntoChunks from './split-text-by-token';
 
-  const res = await chain.call({
-    input_document: text,
-  });
+const MAX_TOKENS = ModelConfig['gpt_3_5_turbo'].maxTokens * 0.7;
 
-  return {
-    answer: res.text,
-  };
+const generateSummary = async ({ text }: { text: string }) => {
+  const openai = new OpenAIApi();
+
+  const totalTokens = countTokens({ text });
+
+  let chunkedText = text;
+  if (totalTokens > MAX_TOKENS) {
+    const chunks = await splitTextIntoChunks({
+      text,
+      chunkSize: MAX_TOKENS,
+    });
+
+    chunkedText = chunks[0];
+  }
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are a helpful assistant. Your task is to summarize text in a comprehensive, educational way.',
+        },
+        {
+          role: 'user',
+          content: `Please summarize the following text: ${chunkedText}`,
+        },
+      ],
+    });
+    return {
+      summary: response.choices?.[0]?.message?.content,
+    };
+  } catch (error) {
+    return {
+      error: { message: 'An error occurred while generating summary.' },
+    };
+  }
 };
 
-export default summarize;
+export default generateSummary;
