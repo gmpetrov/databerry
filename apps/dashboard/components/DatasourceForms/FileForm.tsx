@@ -219,7 +219,8 @@ function Nested() {
             Select or Drop file
           </Button>
           <Typography level="body-xs" textAlign={'center'} mt={2}>
-            PDF, PowerPoint, Excel, Word, Text, Markdown,
+            PDF, PowerPoint, Excel, Word, Text, Markdown and
+            <span className="font-bold"> Audio !</span>
           </Typography>
           <UsageLimitModal
             isOpen={state.isUsageLimitModalOpen}

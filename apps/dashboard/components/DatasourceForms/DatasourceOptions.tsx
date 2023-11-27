@@ -63,7 +63,8 @@ const options: DatsourceOption[] = [
   {
     type: DatasourceType.file,
     label: 'File',
-    description: 'It can be: PDF, CSV, JSON, Text, PowerPoint, Word, Excel',
+    description:
+      'It can be: PDF, CSV, JSON, Text, PowerPoint, Word, Excel, Audio',
     disabled: false,
   },
   {

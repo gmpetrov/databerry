@@ -1,12 +1,15 @@
+import { path as ffmpegPath } from '@ffmpeg-installer/ffmpeg';
+import ffmpeg from 'fluent-ffmpeg';
 import { PassThrough, Readable } from 'stream';
-
-import ffmpeg from '../fluent-ffmpeg';
 
 interface Args {
   res: Readable;
   startTime: number;
   duration: number;
 }
+
+// pass the binary path to ffmpeg.
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 async function sliceAudioStream({ res, startTime, duration }: Args) {
   return new Promise((resolve, reject) => {
