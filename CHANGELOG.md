@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.92"></a>
+## 0.1.92 (2023-11-27)
+
+### Fixed
+
+- 🐛 remove timeout [[b78dcd2](https://github.com/gmpetrov/databerry/commit/b78dcd23db7c9a04569aaa35ce5c818723971e1f)]
+
+
 <a name="0.1.91"></a>
 ## 0.1.91 (2023-11-27)
 
