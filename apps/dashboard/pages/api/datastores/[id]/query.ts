@@ -93,6 +93,7 @@ export const queryURL = async (
     datasource_name: each.metadata.datasource_name,
     datasource_id: each.metadata.datasource_id,
     custom_id: each.metadata.custom_id,
+    offset: each.metadata.chunk_offset,
   }));
 };
 
