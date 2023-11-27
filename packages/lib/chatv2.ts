@@ -5,6 +5,7 @@ import { AgentModelName, Message, MessageFrom } from '@chaindesk/prisma';
 
 import { ChatModelConfigSchema, ChatResponse } from './types/dtos';
 import { ModelConfig } from './config';
+import failedAttemptHandler from './lc-failed-attempt-hanlder';
 import truncateChatMessages from './truncateChatMessages';
 
 export type ChatProps = ChatModelConfigSchema & {
@@ -40,9 +41,7 @@ const chat = async ({
     presencePenalty: otherProps.presencePenalty,
     maxTokens: otherProps.maxTokens,
     timeout: 1000,
-    onFailedAttempt: (err) => {
-      console.log('onFailedAttempt------------>', err);
-    },
+    onFailedAttempt: failedAttemptHandler,
     callbacks: [
       {
         handleLLMNewToken: stream,

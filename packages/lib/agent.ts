@@ -16,6 +16,7 @@ import { Source } from './types/document';
 import { ChatRequest, HttpToolSchema, ToolSchema } from './types/dtos';
 import { ChatModelConfigSchema } from './types/dtos';
 import createPromptContext from './create-prompt-context';
+import failedAttemptHandler from './lc-failed-attempt-hanlder';
 import promptInject from './prompt-inject';
 import {
   ANSWER_IN_SAME_LANGUAGE,
@@ -74,6 +75,7 @@ export default class AgentManager {
         modelName: 'gpt-4-1106-preview',
         temperature: 0,
         streaming: Boolean(props.stream),
+        onFailedAttempt: failedAttemptHandler,
         callbacks: [
           {
             handleLLMNewToken: props.stream,
@@ -166,6 +168,7 @@ export default class AgentManager {
         modelName: 'gpt-4',
         temperature: 0,
         streaming: Boolean(props.stream),
+        onFailedAttempt: failedAttemptHandler,
         callbacks: [
           {
             handleLLMNewToken: props.stream,

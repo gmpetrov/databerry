@@ -7,6 +7,7 @@ export enum ApiErrorType {
   EMPTY_DATASOURCE = 'EMPTY_DATASOURCE',
   ALREADY_INVITED = 'ALREADY_INVITED',
   INTEGRATION_CREDENTIALS_INVALID = 'INTEGRATION_CREDENTIALS_INVALID',
+  RATE_LIMIT = 'RATE_LIMIT',
 }
 
 export class ApiError extends Error {
@@ -35,6 +36,9 @@ export class ApiError extends Error {
           break;
         case ApiErrorType.INTEGRATION_CREDENTIALS_INVALID:
           this.status = 403;
+          break;
+        case ApiErrorType.RATE_LIMIT:
+          this.status = 429;
           break;
         default:
           this.status = 500;
