@@ -1,5 +1,21 @@
 # Changelog
 
+<a name="0.1.95"></a>
+## 0.1.95 (2023-11-28)
+
+### Changed
+
+- ⚡ better cs prompt [[db9bb68](https://github.com/gmpetrov/databerry/commit/db9bb6861f59d3c2bdf2fb923900b0a058005726)]
+
+### Fixed
+
+- 🐛 slack integration small history window [[9ffd14c](https://github.com/gmpetrov/databerry/commit/9ffd14cce8ea8de3d72020171727264b52e6c090)]
+
+### Miscellaneous
+
+- 🎸 datastore/query response contains chunk offset [[b5cbb72](https://github.com/gmpetrov/databerry/commit/b5cbb72c03220d6877b518bff09e7add3bb0a506)]
+
+
 <a name="0.1.94"></a>
 ## 0.1.94 (2023-11-27)
 
