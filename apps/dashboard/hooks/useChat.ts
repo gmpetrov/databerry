@@ -441,10 +441,12 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       return;
     }
 
-    // Conversation changed, reset history (for conversation switching)
-    setState({
-      history: [],
-    });
+    // New conversation, reset history (for conversation switching)
+    if (!state.conversationId) {
+      setState({
+        history: [],
+      });
+    }
   }, [state.conversationId]);
 
   useEffect(() => {
