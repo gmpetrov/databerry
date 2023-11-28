@@ -1,4 +1,5 @@
 const path = require('path');
+const os = require('os');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -233,37 +234,38 @@ const nextConfig = {
       bullmq: 'commonjs bullmq',
     });
 
-    // config.plugins.push(
-    //   new CopyWebpackPlugin({
-    //     patterns: [
-    //       {
-    //         from: '../../packages/integrations/**/static/**',
-    //         to({ context, absoluteFilename }) {
-    //           // Adds compatibility for windows path
-    //           if (os.platform() === 'win32') {
-    //             const absoluteFilenameWin = absoluteFilename.replaceAll(
-    //               '\\',
-    //               '/'
-    //             );
-    //             const contextWin = context.replaceAll('\\', '/');
-    //             const appName = /integrations\/(.*)\/static/.exec(
-    //               absoluteFilenameWin
-    //             );
-    //             return Promise.resolve(
-    //               `${contextWin}/public/integrations/${appName[1]}/[name][ext]`
-    //             );
-    //           }
-    //           const appName = /integrations\/(.*)\/static/.exec(
-    //             absoluteFilename
-    //           );
-    //           return Promise.resolve(
-    //             `${context}/public/integrations/${appName[1]}/[name][ext]`
-    //           );
-    //         },
-    //       },
-    //     ],
-    //   })
-    // );
+    config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: '../../packages/integrations/**/static/**',
+            to({ context, absoluteFilename }) {
+              // Adds compatibility for windows path
+              if (os.platform() === 'win32') {
+                const absoluteFilenameWin = absoluteFilename.replaceAll(
+                  '\\',
+                  '/'
+                );
+                const contextWin = context.replaceAll('\\', '/');
+                const appName = /integrations\/(.*)\/static/.exec(
+                  absoluteFilenameWin
+                );
+                return Promise.resolve(
+                  `${contextWin}/public/integrations/${appName[1]}/[name][ext]`
+                );
+              }
+              const appName = /integrations\/(.*)\/static/.exec(
+                absoluteFilename
+              );
+
+              return Promise.resolve(
+                `${context}/public/integrations/${appName[1]}/[name][ext]`
+              );
+            },
+          },
+        ],
+      })
+    );
 
     if (isServer && config.name === 'server') {
       const oldEntry = config.entry;

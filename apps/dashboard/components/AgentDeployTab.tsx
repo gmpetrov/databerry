@@ -172,7 +172,7 @@ function AgentDeployTab(props: Props) {
               icon: (
                 <img
                   className="w-8"
-                  src="https://www.svgrepo.com/show/354598/zendesk-icon.svg"
+                  src="/integrations/zendesk/icon.svg"
                   alt="zendesk logo"
                 ></img>
               ),
