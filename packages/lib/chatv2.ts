@@ -1,17 +1,11 @@
-import { ChatOpenAI } from 'langchain/chat_models/openai';
-import {
-  AIMessage,
-  BaseMessage,
-  FunctionMessage,
-  HumanMessage,
-  MessageContent,
-} from 'langchain/schema';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 import { AgentModelName, Message, MessageFrom } from '@chaindesk/prisma';
 
 import { ChatModelConfigSchema, ChatResponse } from './types/dtos';
+import ChatModel from './chat-model';
 import { ModelConfig } from './config';
-import failedAttemptHandler from './lc-failed-attempt-hanlder';
+import formatMessagesOpenAI from './format-messages-openai';
 import truncateChatMessages from './truncateChatMessages';
 
 export type ChatProps = ChatModelConfigSchema & {
@@ -20,7 +14,7 @@ export type ChatProps = ChatModelConfigSchema & {
   modelName?: AgentModelName;
   history?: Message[];
   abortController?: any;
-  initialMessages?: BaseMessage[] | undefined;
+  initialMessages?: ChatCompletionMessageParam[] | undefined;
   context?: string;
   useXpContext?: boolean;
 };
@@ -37,95 +31,55 @@ const chat = async ({
   useXpContext,
   ...otherProps
 }: ChatProps) => {
-  let totalCompletionTokens = 0;
-  let totalPromptTokens = 0;
-  let totalExecutionTokens = 0;
-
-  const model = new ChatOpenAI({
-    streaming: Boolean(stream),
-    modelName: ModelConfig[modelName]?.name,
-
-    temperature: temperature || 0,
-    topP: otherProps.topP,
-    frequencyPenalty: otherProps.frequencyPenalty,
-    presencePenalty: otherProps.presencePenalty,
-    maxTokens: otherProps.maxTokens,
-    onFailedAttempt: failedAttemptHandler,
-    callbacks: [
-      {
-        handleLLMNewToken: stream,
-        handleLLMEnd: (output, runId, parentRunId?, tags?) => {
-          const { completionTokens, promptTokens, totalTokens } =
-            output.llmOutput?.tokenUsage ||
-            output.llmOutput?.estimatedTokenUsage;
-          totalCompletionTokens += completionTokens ?? 0;
-          totalPromptTokens += promptTokens ?? 0;
-          totalExecutionTokens += totalTokens ?? 0;
-        },
-        handleLLMError: async (err: Error) => {
-          console.error('handleLLMError', err);
-        },
-      },
-    ],
-  });
-
-  if (process.env.APP_ENV === 'test') {
-    model.call = async (props: any) => {
-      const res = {
-        text: 'Hello world',
-      } as any;
-
-      if (stream) {
-        stream(res.text);
-      }
-
-      return res;
-    };
-  }
-
   const truncatedHistory = (
     await truncateChatMessages({
-      messages: (history || [])
-        ?.map((each) => {
-          if (each.from === MessageFrom.human) {
-            return new HumanMessage(each.text);
-          }
-          return new AIMessage(each.text);
-        })
-        .reverse(),
+      messages: formatMessagesOpenAI(history || []).reverse(),
       maxTokens: ModelConfig[modelName]?.maxTokens * 0.3, // 30% tokens limit for history
     })
   ).reverse();
 
-  const messages = [
+  const messages: ChatCompletionMessageParam[] = [
     ...initialMessages,
     ...truncatedHistory,
-    ...(useXpContext && context
+    ...((useXpContext && context
       ? [
-          new FunctionMessage({
-            content: context,
+          {
+            role: 'function',
+            content: context!,
             name: 'knowledge_base_retrieval',
-          }),
+          },
         ]
-      : []),
-    new HumanMessage(prompt),
+      : []) as ChatCompletionMessageParam[]),
+    { role: 'user', content: prompt },
   ];
 
   // console.log('messages ===--------c_>', messages);
 
-  const output = await model.call(messages, {
+  const model = new ChatModel({});
+
+  const output = await model.call({
+    handleStream: stream,
+    model: ModelConfig[modelName]?.name,
+    messages,
+
+    temperature: temperature || 0,
+    top_p: otherProps.topP,
+    frequency_penalty: otherProps.frequencyPenalty,
+    presence_penalty: otherProps.presencePenalty,
+    max_tokens: otherProps.maxTokens,
     signal: abortController?.signal,
   });
 
-  const answer = (output?.content as string)?.trim?.();
+  const answer = output?.answer;
 
   const usage = {
-    completionTokens: totalCompletionTokens,
-    promptTokens: totalPromptTokens,
-    totalTokens: totalExecutionTokens,
+    completionTokens: output?.usage?.completion_tokens,
+    promptTokens: output?.usage?.prompt_tokens,
+    totalTokens: output?.usage?.total_tokens,
     cost:
-      totalPromptTokens * ModelConfig[modelName]?.providerPriceByInputToken +
-      totalCompletionTokens *
+      (output?.usage?.prompt_tokens || 0) *
+        ModelConfig[modelName]?.providerPriceByInputToken +
+      (output?.usage?.completion_tokens || 0) *
         ModelConfig[modelName]?.providerPricePriceByOutputToken,
   };
 
