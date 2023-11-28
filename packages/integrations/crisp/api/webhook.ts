@@ -211,7 +211,7 @@ const handleQuery = async (
     },
     include: {
       messages: {
-        take: -4,
+        take: -24,
         orderBy: {
           createdAt: 'asc',
         },
