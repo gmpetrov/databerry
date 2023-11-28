@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.96"></a>
+## 0.1.96 (2023-11-28)
+
+### Fixed
+
+- 🐛 cs prompt give more weight to conversation history [[f586c5b](https://github.com/gmpetrov/databerry/commit/f586c5b5d7149d8d00a74e5bde34e1f3b0c41ab4)]
+- 🐛 conversation history not visible after switching [[ed677e7](https://github.com/gmpetrov/databerry/commit/ed677e77d8badf04a739a7e19d545576e8439506)]
+- ✏️ add info about zendesk + yt integrations [[a4739f9](https://github.com/gmpetrov/databerry/commit/a4739f968956768b44556162eafa944e6ed84b59)]
+
+
 <a name="0.1.95"></a>
 ## 0.1.95 (2023-11-28)
 
