@@ -7,8 +7,10 @@ import { ChatRequest } from '@chaindesk/lib/types/dtos';
 import { Datastore, MessageFrom } from '@chaindesk/prisma';
 
 import chat, { ChatProps } from '../chatv2';
+import { ModelConfig } from '../config';
 import createPromptContext from '../create-prompt-context';
 import retrieval from '../retrieval';
+import truncateArray from '../truncateArray';
 
 export type ChatRetrievalChainProps = Omit<ChatProps, 'prompt'> & {
   datastore?: Datastore;
@@ -39,7 +41,7 @@ const chatRetrieval = async ({
   abortController,
   ...otherProps
 }: ChatRetrievalChainProps) => {
-  const results = retrievalSearch
+  const _results = retrievalSearch
     ? await retrieval({
         datastore,
         filters,
@@ -47,6 +49,18 @@ const chatRetrieval = async ({
         query: retrievalSearch,
       })
     : [];
+
+  const results = await truncateArray<AppDocument<ChunkMetadataRetrieved>>({
+    items: _results,
+    getText: (item) => item.pageContent,
+    setText: (item, text) => {
+      return {
+        ...item,
+        pageContent: text,
+      };
+    },
+    maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
+  });
 
   const prompt = getPrompt(results);
 

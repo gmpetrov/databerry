@@ -31,7 +31,7 @@ const qa = async ({
   abortController,
 }: QAChainProps) => {
   return chatRetrieval({
-    modelName: 'gpt_3_5_turbo_16k',
+    modelName: 'gpt_3_5_turbo',
     retrievalSearch: query,
     getPrompt(chunks) {
       return promptInject({

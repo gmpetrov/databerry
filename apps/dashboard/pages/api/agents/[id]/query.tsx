@@ -128,7 +128,7 @@ export const chatAgentRequest = async (
     agent.modelName = data.modelName;
   }
 
-  const manager = new AgentManager({ agent, topK: 5 });
+  const manager = new AgentManager({ agent, topK: 50 });
   const ctrl = new AbortController();
 
   if (data.streaming) {

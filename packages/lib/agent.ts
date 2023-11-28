@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 import {
   Agent,
@@ -284,19 +285,30 @@ export default class AgentManager {
     const _promptType = promptType || this.agent.promptType;
     const _promptTemplate = promptTemplate || (this.agent.prompt as string);
 
-    let initialMessages: any = [];
+    let initialMessages: ChatCompletionMessageParam[] = [];
     if (_promptType === PromptType.customer_support) {
       initialMessages = [
-        new SystemMessage(
-          `${_promptTemplate}
-Answer the query in the same language in which the query is asked.
-Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
-You will be provided by a context retrieved by the knowledge_base_retrieval function.
-If the context does not contain the information needed to answer this query then politely say that you don't know without mentioning the existence of a context.
-Remember do not answer any query that is outside of the provided context nor mention its existence.
-You are allowed to use the following conversation history to answer the query.
-`
-        ),
+        {
+          role: 'system',
+          content: `${_promptTemplate}
+          Answer the query in the same language in which the query is asked.
+          Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
+          You will be provided by a context retrieved by the knowledge_base_retrieval function.
+          If the context does not contain the information needed to answer this query then politely say that you don't know without mentioning the existence of a context.
+          Remember do not answer any query that is outside of the provided context nor mention its existence.
+          You are allowed to use the following conversation history to answer the query.
+          `,
+        },
+        //         new SystemMessage(
+        //           `${_promptTemplate}
+        // Answer the query in the same language in which the query is asked.
+        // Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
+        // You will be provided by a context retrieved by the knowledge_base_retrieval function.
+        // If the context does not contain the information needed to answer this query then politely say that you don't know without mentioning the existence of a context.
+        // Remember do not answer any query that is outside of the provided context nor mention its existence.
+        // You are allowed to use the following conversation history to answer the query.
+        // `
+        //         ),
         // new HumanMessage(`${_promptTemplate}
         // Answer the message in the same language in which the message is asked.
         // If you don't find an answer from the chunks, politely say that you don't know without mentioning the existence of a context. Don't try to make up an answer.

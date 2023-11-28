@@ -14,4 +14,8 @@ const countTokens = ({
   return nbTokens;
 };
 
+export const countTokensEstimation = ({ text }: { text: string }) => {
+  return text?.length / 4;
+};
+
 export default countTokens;

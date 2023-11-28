@@ -100,9 +100,13 @@ export default class ChainManager {
 
     return chat({
       initialMessages: [
-        new SystemMessage(
-          `You are a productivity assistant. Please provide a helpful and professional response to the user's question or issue.`
-        ),
+        {
+          role: 'system',
+          content: `You are a productivity assistant. Please provide a helpful and professional response to the user's question or issue.`,
+        },
+        // new SystemMessage(
+        //   `You are a productivity assistant. Please provide a helpful and professional response to the user's question or issue.`
+        // ),
       ],
       prompt: input,
       temperature: temperature || 0.5,
