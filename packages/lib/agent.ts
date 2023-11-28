@@ -293,7 +293,9 @@ Answer the query in the same language in which the query is asked.
 Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
 You will be provided by a context retrieved by the knowledge_base_retrieval function.
 If the context does not contain the information needed to answer this query then politely say that you don't know without mentioning the existence of a context.
-Remember do not answer any query that is outside of the provided context nor mention its existence.`
+Remember do not answer any query that is outside of the provided context nor mention its existence.
+You are allowed to use the following conversation history to answer the query.
+`
         ),
         // new HumanMessage(`${_promptTemplate}
         // Answer the message in the same language in which the message is asked.
