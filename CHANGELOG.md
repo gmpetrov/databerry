@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.97"></a>
+## 0.1.97 (2023-11-28)
+
+### Changed
+
+- ⚡ Remove langchain for model calling [[73dd1dd](https://github.com/gmpetrov/databerry/commit/73dd1dd8ded61e351fed0a9d385483cafedee37d)]
+
+
 <a name="0.1.96"></a>
 ## 0.1.96 (2023-11-28)
 
