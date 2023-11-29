@@ -283,7 +283,7 @@ export default function PricingSection() {
                   'mt-6 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2'
                 )}
               >
-                {tier.id === 'tier-free' ? 'Sign Up' : 'Subscribe'}
+                {tier.id === 'tier-free' ? 'Sign Up' : 'Free Trial'}
               </Link>
               <ul
                 role="list"

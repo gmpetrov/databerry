@@ -214,7 +214,7 @@ export function HeroChatGPTPlugin() {
                   size="lg"
                   // startDecorator={<RocketLaunchRounded />}
                   sx={{ borderRadius: 100 }}
-                >{`⚡️ Get Started Now`}</Button>
+                >{`⚡️ Start Free Trial`}</Button>
               </Link>
               <Link
                 target="_blank"
