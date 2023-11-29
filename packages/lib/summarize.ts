@@ -1,14 +1,13 @@
-import OpenAIApi from 'openai';
+import { AgentModelName } from '@chaindesk/prisma';
 
+import ChatModel from './chat-model';
 import { ModelConfig } from './config';
 import countTokens from './count-tokens';
 import splitTextIntoChunks from './split-text-by-token';
 
-const MAX_TOKENS = ModelConfig['gpt_3_5_turbo'].maxTokens * 0.7;
+const MAX_TOKENS = ModelConfig[AgentModelName.gpt_3_5_turbo].maxTokens * 0.7;
 
 const generateSummary = async ({ text }: { text: string }) => {
-  const openai = new OpenAIApi();
-
   const totalTokens = countTokens({ text });
 
   let chunkedText = text;
@@ -21,29 +20,26 @@ const generateSummary = async ({ text }: { text: string }) => {
     chunkedText = chunks[0];
   }
 
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a helpful assistant. Your task is to summarize text in a comprehensive, educational way.',
-        },
-        {
-          role: 'user',
-          content: `Please summarize the following text: ${chunkedText}`,
-        },
-      ],
-    });
-    return {
-      summary: response.choices?.[0]?.message?.content,
-    };
-  } catch (error) {
-    return {
-      error: { message: 'An error occurred while generating summary.' },
-    };
-  }
+  const model = new ChatModel({});
+
+  const response = await model.call({
+    model: ModelConfig[AgentModelName.gpt_3_5_turbo].name,
+    messages: [
+      {
+        role: 'system',
+        content:
+          'You are a helpful assistant. Your task is to summarize text in a comprehensive, educational way.',
+      },
+      {
+        role: 'user',
+        content: `Text to summarize: ### ${chunkedText} ### Summary in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements:`,
+      },
+    ],
+  });
+
+  return {
+    summary: response.answer,
+  };
 };
 
 export default generateSummary;

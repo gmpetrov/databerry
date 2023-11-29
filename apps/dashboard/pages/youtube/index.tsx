@@ -53,7 +53,7 @@ export default function Youtube() {
       type: LLMTaskOutputType.youtube_summary,
     });
 
-    setSummary(response.summary);
+    setSummary(response.videoSummary);
   };
   return (
     <>

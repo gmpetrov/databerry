@@ -10,6 +10,7 @@ type Props = {
   url?: string;
   uri?: string;
   baseUrl?: string;
+  ogImage?: string;
 };
 
 function SEO(props: Props) {
@@ -45,12 +46,13 @@ function SEO(props: Props) {
 
       <meta
         property="og:image"
-        content={`api/og?image=${props.image ?? 'og-image'}`}
+        content={props.ogImage ? props.ogImage : '/og-image.png'}
       />
       <meta
         property="twitter:image"
-        content={`api/og?image=${props.image ?? 'og-image'}`}
+        content={props.ogImage ? props.ogImage : '/og-image.png'}
       />
+
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="og:type" content="website" />
 

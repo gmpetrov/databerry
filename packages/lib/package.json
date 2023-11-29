@@ -40,7 +40,7 @@
     "nanoid": "^4.0.2",
     "next-connect": "^0.13.0",
     "nodemailer": "^6.9.1",
-    "openai": "^4.2.0",
+    "openai": "^4.20.0",
     "p-map": "^5.5.0",
     "p-retry": "^5.1.2",
     "p-timeout": "^6.1.1",
@@ -57,7 +57,8 @@
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5",
     "youtube-transcript": "^1.0.6",
-    "zod": "3.21.4"
+    "zod": "3.21.4",
+    "zod-to-json-schema": "^3.22.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
