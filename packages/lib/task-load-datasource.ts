@@ -32,7 +32,9 @@ const updateDatasourceArgs = Prisma.validator<Prisma.AppDatasourceArgs>()({
         usage: true,
         subscriptions: {
           where: {
-            status: 'active',
+            status: {
+              in: ['active', 'trialing'],
+            },
           },
         },
       },

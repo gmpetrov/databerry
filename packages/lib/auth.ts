@@ -267,7 +267,9 @@ export const sessionUserInclude: Prisma.UserInclude = {
   usage: true,
   subscriptions: {
     where: {
-      status: 'active',
+      status: {
+        in: ['active', 'trialing'],
+      },
     },
   },
   memberships: {
@@ -291,7 +293,9 @@ export const sessionOrganizationInclude: Prisma.OrganizationInclude = {
   usage: true,
   subscriptions: {
     where: {
-      status: 'active',
+      status: {
+        in: ['active', 'trialing'],
+      },
     },
   },
   _count: {

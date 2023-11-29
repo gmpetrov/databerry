@@ -4,6 +4,7 @@ import type {
   GlobalRole,
   Membership,
   Organization,
+  Subscription,
   SubscriptionPlan,
   Usage,
 } from '@chaindesk/prisma';
@@ -18,6 +19,7 @@ declare module 'next-auth' {
     organization: Organization & {
       usage: Usage;
 
+      subscriptions?: Subscription[];
       isPremium: boolean;
       customerId: string;
       currentPlan: SubscriptionPlan;

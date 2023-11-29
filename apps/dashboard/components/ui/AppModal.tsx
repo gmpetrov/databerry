@@ -8,6 +8,7 @@ import SettingCard from './SettingCard';
 type Props = {
   title?: string;
   description?: string;
+  disableClose?: boolean;
 
   children?: React.ReactNode;
   modalProps?: Partial<ComponentProps<typeof Modal>>;
@@ -15,7 +16,14 @@ type Props = {
 };
 
 export default React.forwardRef(function AppModal(
-  { title, description, dialogProps, modalProps, children }: Props,
+  {
+    title,
+    description,
+    disableClose,
+    dialogProps,
+    modalProps,
+    children,
+  }: Props,
   ref
 ) {
   return (
@@ -56,7 +64,7 @@ export default React.forwardRef(function AppModal(
             },
           }}
         >
-          <ModalClose variant="plain" />
+          {!disableClose && <ModalClose variant="plain" />}
 
           {children}
         </SettingCard>

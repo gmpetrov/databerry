@@ -1,8 +1,11 @@
 import React, { ComponentProps, useCallback, useEffect, useMemo } from 'react';
 
 import AppModal from '@app/components/ui/AppModal';
+type Props = {
+  disableClose?: boolean;
+};
 
-function useModal() {
+function useModal({ disableClose }: Props = {}) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const open = useCallback(() => {
@@ -17,13 +20,14 @@ function useModal() {
     return (props: ComponentProps<typeof AppModal>) => (
       <AppModal
         {...props}
+        disableClose={disableClose}
         modalProps={{
           open: isOpen,
-          onClose: close,
+          onClose: !!disableClose ? () => {} : close,
         }}
       />
     );
-  }, [isOpen, close]);
+  }, [isOpen, close, disableClose]);
 
   return {
     isOpen,

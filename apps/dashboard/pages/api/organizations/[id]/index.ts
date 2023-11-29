@@ -24,7 +24,9 @@ export const getOrg = async (req: AppNextApiRequest, res: NextApiResponse) => {
     include: {
       subscriptions: {
         where: {
-          status: 'active',
+          status: {
+            in: ['active', 'trialing'],
+          },
         },
       },
       memberships: {

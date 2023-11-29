@@ -27,7 +27,9 @@ import { prisma } from '@chaindesk/prisma/client';
       organization: {
         subscriptions: {
           some: {
-            status: 'active',
+            status: {
+              in: ['active', 'trialing'],
+            },
           },
         },
       },
