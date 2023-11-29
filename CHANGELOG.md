@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.98"></a>
+## 0.1.98 (2023-11-29)
+
+### Miscellaneous
+
+-  Feature/enable trials ([#254](https://github.com/gmpetrov/databerry/issues/254)) [[e23538e](https://github.com/gmpetrov/databerry/commit/e23538e36cef2572a2733ff2728641345c09f37f)]
+-  update pricing table [[39bb60a](https://github.com/gmpetrov/databerry/commit/39bb60a7dfa1ea6c8092f5e2618fde301e9e4fbe)]
+
+
 <a name="0.1.97"></a>
 ## 0.1.97 (2023-11-28)
 
