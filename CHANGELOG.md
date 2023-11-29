@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.99"></a>
+## 0.1.99 (2023-11-29)
+
+### Miscellaneous
+
+- 🎸 wording [[7e92a39](https://github.com/gmpetrov/databerry/commit/7e92a3923bc618639b9306b4f49dbffd6b6f7691)]
+- 🤖 wording [[e4709e0](https://github.com/gmpetrov/databerry/commit/e4709e082c23d85f5641bf0396935cfcf1d77513)]
+
+
 <a name="0.1.98"></a>
 ## 0.1.98 (2023-11-29)
 
