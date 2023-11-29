@@ -667,8 +667,7 @@ export default function Navigation() {
             <WarningIcon sx={{ mt: '2px', mx: '4px' }} fontSize="xl2" />
           }
         >
-          Upgrade your account or start a free trial in order to start using the
-          platform
+          Choose a plan in order to access the platform
         </Alert>
 
         <Stack spacing={1}>
