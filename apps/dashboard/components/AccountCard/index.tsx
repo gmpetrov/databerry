@@ -1,7 +1,8 @@
 import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
 import CorporateFareRoundedIcon from '@mui/icons-material/CorporateFareRounded';
+import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import { CircularProgress } from '@mui/joy';
+import { Alert, CircularProgress } from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
@@ -20,6 +21,8 @@ import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
 import { SxProps } from '@mui/joy/styles/types';
 import Typography from '@mui/joy/Typography';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
@@ -34,7 +37,11 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { Prisma, SubscriptionPlan } from '@chaindesk/prisma';
 
-import ColorSchemeToggle from './Layout/ColorSchemeToggle';
+import ColorSchemeToggle from '../Layout/ColorSchemeToggle';
+
+import SelectOrganizationInput from './SelectOrganizationInput';
+
+dayjs.extend(relativeTime);
 
 type RenderOrgOptionProps = {
   name: string;
@@ -97,29 +104,9 @@ function AccountCard({}: Props) {
 
   const targetOrgId = router.query?.targetOrgId as string;
 
-  const getOrgsQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getOrganizations>
-  >('/api/organizations', fetcher);
-  const [isCreatingOrg, setIsCreatingOrg] = React.useState(false);
-
-  const [userMenuElement, setUserMenuElement] =
-    React.useState<null | HTMLElement>(null);
-
-  const [isUpdatingSession, setIsUpdatingSession] = React.useState(false);
-
-  const openUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setUserMenuElement(event.currentTarget);
-  };
-
-  const closeUserMenu = () => {
-    setUserMenuElement(null);
-  };
-
   const handleSwitchOrg = React.useCallback(
     async (id: string) => {
       try {
-        setIsUpdatingSession(true);
-
         await session.update({
           orgId: id,
         });
@@ -128,26 +115,10 @@ function AccountCard({}: Props) {
       } catch (err) {
         console.log(err);
       } finally {
-        setIsUpdatingSession(false);
       }
     },
     [session]
   );
-
-  const handleCreateOrg = React.useCallback(async () => {
-    try {
-      setIsCreatingOrg(true);
-
-      await fetch('/api/organizations', {
-        method: 'POST',
-      });
-
-      getOrgsQuery.mutate();
-    } catch {
-    } finally {
-      setIsCreatingOrg(false);
-    }
-  }, []);
 
   useEffect(() => {
     (async () => {
@@ -165,59 +136,29 @@ function AccountCard({}: Props) {
     })();
   }, [targetOrgId, session?.data?.organization?.id, handleSwitchOrg]);
 
-  const isMenuOpen = Boolean(userMenuElement);
+  const sub = session?.data?.organization?.subscriptions?.[0];
+  const isTrailing = sub?.status === 'trialing';
+  const trialEndDate = sub?.cancel_at ? sub?.trial_end : undefined;
 
   return (
     <Stack gap={1}>
-      <FormControl>
-        <Select
-          disabled={isUpdatingSession}
-          value={session?.data?.organization?.id}
-          placeholder={'Select a Team'}
-          endDecorator={
-            isUpdatingSession ? <CircularProgress size="sm" /> : null
-          }
-          renderValue={(option) => {
-            const org = getOrgsQuery?.data?.find(
-              (one) => one.id === option?.value
-            );
-
-            return (
-              <RenderOrgOption
-                name={org?.name!}
-                plan={org?.subscriptions?.[0]?.plan!}
-                avatarUrl={
-                  org?.iconUrl ? `${org?.iconUrl}?timestamp=${Date.now()}` : ''
-                }
-              />
-            );
-          }}
-          onChange={(_, value) => handleSwitchOrg(value as string)}
+      {isTrailing && !!trialEndDate && (
+        <Alert
+          size="sm"
+          color="warning"
+          variant="outlined"
+          startDecorator={<ErrorRoundedIcon fontSize="sm" />}
         >
-          {getOrgsQuery?.data?.map((org) => (
-            <Option key={org.id} value={org.id}>
-              <RenderOrgOption
-                rootSxProps={{ maxWidth: '250px' }}
-                name={org?.name!}
-                plan={org?.subscriptions?.[0]?.plan!}
-                avatarUrl={
-                  org?.iconUrl ? `${org?.iconUrl}?timestamp=${Date.now()}` : ''
-                }
-              />
-            </Option>
-          ))}
+          <Typography level="body-sm">
+            Free trial ends{' '}
+            <Typography color="warning">
+              {dayjs(trialEndDate).from(Date.now())}
+            </Typography>
+          </Typography>
+        </Alert>
+      )}
 
-          {/* <Divider sx={{ my: 1 }} />
-          <Button
-            sx={{ mx: 1 }}
-            size="sm"
-            onClick={handleCreateOrg}
-            loading={isCreatingOrg}
-          >
-            New Team
-          </Button> */}
-        </Select>
-      </FormControl>
+      <SelectOrganizationInput />
 
       <Card variant="outlined" size="sm">
         <Stack gap={2}>

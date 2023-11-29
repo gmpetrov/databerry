@@ -49,6 +49,7 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AppStatus, RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
 
+import SelectOrganizationInput from '../AccountCard/SelectOrganizationInput';
 import StripePricingTable from '../StripePricingTable';
 import UsageLimitModal from '../UsageLimitModal';
 
@@ -96,7 +97,7 @@ export default function Navigation() {
   const { product } = useProduct();
   const [isShowUpgradeModal, setIsShowUpgradeModal] = React.useState(false);
   const upgradeModal = useModal({
-    disableClose: !session?.user?.isPremium,
+    disableClose: !session?.organization?.isPremium,
   });
 
   const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
@@ -148,7 +149,7 @@ export default function Navigation() {
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      if (!session?.user?.isPremium) {
+      if (!session?.organization?.isPremium) {
         upgradeModal.open();
       } else {
         upgradeModal.close();
@@ -158,7 +159,7 @@ export default function Navigation() {
     return () => {
       clearTimeout(timeout);
     };
-  }, [session?.user?.isPremium]);
+  }, [session?.organization?.isPremium]);
 
   React.useEffect(() => {
     if (
@@ -654,7 +655,11 @@ export default function Navigation() {
       <UserMenu />
 
       {/* <UsageLimitModal isOpen={isShowUpgradeModal} handleClose={() => {}} /> */}
-      <upgradeModal.component>
+      <upgradeModal.component
+        dialogProps={{
+          maxWidth: 'lg',
+        }}
+      >
         <Alert
           color="warning"
           variant="solid"
@@ -662,9 +667,15 @@ export default function Navigation() {
             <WarningIcon sx={{ mt: '2px', mx: '4px' }} fontSize="xl2" />
           }
         >
-          Upgrade your or start a free trial in order to start using the
+          Upgrade your account or start a free trial in order to start using the
           platform
         </Alert>
+
+        <Stack spacing={1}>
+          <Typography level="body-md">Organization</Typography>
+          <SelectOrganizationInput />
+        </Stack>
+
         <Stack sx={{ py: 4 }}>
           <StripePricingTable />
         </Stack>

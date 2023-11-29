@@ -20,6 +20,7 @@ function useModal({ disableClose }: Props = {}) {
     return (props: ComponentProps<typeof AppModal>) => (
       <AppModal
         {...props}
+        disableClose={disableClose}
         modalProps={{
           open: isOpen,
           onClose: !!disableClose ? () => {} : close,
