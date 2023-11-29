@@ -84,6 +84,16 @@ export default class YoutubeApi {
     return videos;
   }
 
+  async getVideoSnippetById(videoId: string) {
+    const video = await this.Youtube.search.list({
+      part: 'snippet',
+      q: videoId,
+      type: 'video',
+      maxResults: 1,
+    });
+    return video?.data?.items?.[0]?.snippet;
+  }
+
   static getYoutubeLinkType(url: string): 'channel' | 'playlist' | 'unknown' {
     const channelRegex = /youtube\.com\/@/;
     const playlistRegex = /list=([a-zA-Z0-9_-]+)/;

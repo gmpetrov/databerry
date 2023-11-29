@@ -11,12 +11,13 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import ytTool, { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
 import runMiddleware from '@chaindesk/lib/run-middleware';
+import splitTextByToken from '@chaindesk/lib/split-text-by-token';
 import generateSummary from '@chaindesk/lib/summarize';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 import validate from '@chaindesk/lib/validate';
 import YoutubeApi from '@chaindesk/lib/youtube-api';
 import zodParseJSON from '@chaindesk/lib/zod-parse-json';
-import { LLMTaskOutputType } from '@chaindesk/prisma';
+import { AgentModelName, LLMTaskOutputType } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 const handler = createLazyAuthHandler();
 
@@ -37,8 +38,10 @@ export const queryFreeTools = async (
 
   switch (type) {
     case LLMTaskOutputType.youtube_summary:
+      const Youtube = new YoutubeApi();
       const videoId = YoutubeApi.extractVideoId(url);
       //TODO: get video name,  description date published
+      const videoSnippet = await Youtube.getVideoSnippetById(videoId!);
 
       if (!videoId) {
         throw new Error('The url is not a valid youtube video.');
@@ -62,6 +65,11 @@ export const queryFreeTools = async (
 
         const text = transcripts.reduce((acc, { text }) => acc + text, '');
 
+        const [chunkedText] = await splitTextByToken({
+          text,
+          chunkSize: ModelConfig[AgentModelName.gpt_3_5_turbo].maxTokens * 0.7,
+        });
+
         const model = new ChatModel();
 
         const result = await model.call({
@@ -81,7 +89,7 @@ export const queryFreeTools = async (
             },
             {
               role: 'user',
-              content: `Youtube video transcript: ### ${text} ###`,
+              content: `Youtube video transcript: ### ${chunkedText} ###`,
             },
           ],
         });
@@ -96,9 +104,10 @@ export const queryFreeTools = async (
             externalId: videoId,
             type,
             output: {
+              metadata: {
+                ...videoSnippet,
+              },
               en: {
-                title: 'YouTube video title',
-                description: 'YouTube video description',
                 ...data,
               },
             },

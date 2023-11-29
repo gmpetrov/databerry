@@ -1,22 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Input, Typography } from '@mui/joy';
+import { Box, Button, Input } from '@mui/joy';
 import { LLMTaskOutputType } from '@prisma/client';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import toast from 'react-hot-toast';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
-import CopyButton from '@app/components/CopyButton';
-import ColorSchemeToggle from '@app/components/Layout/ColorSchemeToggle';
-import Header from '@app/components/Layout/Header';
-import Logo from '@app/components/Logo';
 import SEO from '@app/components/SEO';
 import TopBar from '@app/components/TopBar';
 
 import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
+import YoutubeApi from '@chaindesk/lib/youtube-api';
 
 const schema = z.object({
   url: z.string().refine(
@@ -35,12 +30,10 @@ type FormType = z.infer<typeof schema>;
 
 export default function Youtube() {
   const router = useRouter();
-  const { register, handleSubmit, formState, trigger } = useForm<FormType>({
+  const { register, handleSubmit, formState } = useForm<FormType>({
     mode: 'onChange',
     resolver: zodResolver(schema),
   });
-
-  const [summary, setSummary] = useState('');
 
   const summaryMutation = useSWRMutation(
     '/api/chains/query',
@@ -48,12 +41,23 @@ export default function Youtube() {
   );
 
   const onSubmit = async (payload: FormType) => {
-    const response = await summaryMutation.trigger({
-      ...payload,
-      type: LLMTaskOutputType.youtube_summary,
-    });
+    try {
+      await toast.promise(
+        summaryMutation.trigger({
+          ...payload,
+          type: LLMTaskOutputType.youtube_summary,
+        }),
+        {
+          loading: 'Searching...',
+          success: 'Done!',
+          error: 'Something went wrong',
+        }
+      );
+      const regex = /(?:\?v=|&v=|youtu\.be\/)([^&#]+)/;
+      const match = payload.url.match(regex);
 
-    setSummary(response.videoSummary);
+      router.replace(`youtube/${match![1]}`);
+    } catch (e) {}
   };
   return (
     <>
@@ -65,13 +69,13 @@ export default function Youtube() {
       />
       <TopBar />
 
-      <Box className="container p-4 mx-auto max-w-7xl">
+      <Box className="container p-4 mx-auto max-w-7xl flex justify-center   min-h-[80vh]">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex-wrap items-center space-y-2 md:flex md:space-y-0 md:space-x-2"
+          className="flex-wrap items-center space-y-2 md:flex md:space-y-0 md:space-x-2  min-w-full"
         >
           <Input
-            className="flex-1"
+            className="flex-1 w-full"
             {...register('url')}
             placeholder="Paste your youtube video link here"
             disabled={summaryMutation.isMutating}
@@ -86,20 +90,6 @@ export default function Youtube() {
             Summarize
           </Button>
         </form>
-        <Box className="w-full pt-4 ">
-          {!formState.isValid && (
-            <Typography className="text-sm text-red-800">
-              {(formState.errors as any)?.youtube_url?.message}
-            </Typography>
-          )}
-          <ReactMarkdown
-            className="min-w-full prose dark:text-white"
-            remarkPlugins={[remarkGfm]}
-          >
-            {summary}
-          </ReactMarkdown>
-          <CopyButton text={summary} />
-        </Box>
       </Box>
     </>
   );
