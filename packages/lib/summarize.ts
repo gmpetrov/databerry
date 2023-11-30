@@ -1,33 +1,45 @@
-import { BasePromptTemplate } from 'langchain/prompts';
+import { AgentModelName } from '@chaindesk/prisma';
 
-const summarize = async ({
-  text,
-  prompt,
-}: {
-  text: string;
-  prompt?: BasePromptTemplate;
-}) => {
-  const { AnalyzeDocumentChain, loadSummarizationChain } = await import(
-    'langchain/chains'
-  );
-  const { OpenAI } = await import('langchain/llms/openai');
-  const model = new OpenAI({ temperature: 0, modelName: 'gpt-3.5-turbo' });
-  const combineDocsChain = loadSummarizationChain(model, {
-    prompt,
-    combineMapPrompt: prompt,
-    combinePrompt: prompt,
-  });
-  const chain = new AnalyzeDocumentChain({
-    combineDocumentsChain: combineDocsChain,
-  });
+import ChatModel from './chat-model';
+import { ModelConfig } from './config';
+import countTokens from './count-tokens';
+import splitTextIntoChunks from './split-text-by-token';
 
-  const res = await chain.call({
-    input_document: text,
+const MAX_TOKENS = ModelConfig[AgentModelName.gpt_3_5_turbo].maxTokens * 0.7;
+
+const generateSummary = async ({ text }: { text: string }) => {
+  const totalTokens = countTokens({ text });
+
+  let chunkedText = text;
+  if (totalTokens > MAX_TOKENS) {
+    const chunks = await splitTextIntoChunks({
+      text,
+      chunkSize: MAX_TOKENS,
+    });
+
+    chunkedText = chunks[0];
+  }
+
+  const model = new ChatModel({});
+
+  const response = await model.call({
+    model: ModelConfig[AgentModelName.gpt_3_5_turbo].name,
+    messages: [
+      {
+        role: 'system',
+        content:
+          'You are a helpful assistant. Your task is to summarize text in a comprehensive, educational way.',
+      },
+      {
+        role: 'user',
+        content: `Text to summarize: ### ${chunkedText} ### Summary in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements:`,
+      },
+    ],
   });
 
   return {
-    answer: res.text,
+    summary: response.answer,
   };
 };
 
-export default summarize;
+export default generateSummary;

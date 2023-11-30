@@ -1,26 +1,27 @@
 import { ImageResponse } from '@vercel/og';
-
+import { NextRequest } from 'next/server';
 export const config = {
   runtime: 'edge',
 };
 
 const JoseinSansRegularFontP = fetch(
-  new URL('../../public/fonts/JosefinSans-Regular.ttf', import.meta.url)
+  new URL('../../../public/fonts/JosefinSans-Regular.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer());
 
 const JoseinSansBoldFontP = fetch(
-  new URL('../../public/fonts/JosefinSans-Bold.ttf', import.meta.url)
+  new URL('../../../public/fonts/JosefinSans-Bold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer());
 
-export default async function handler() {
+export default async function handler(request: NextRequest) {
   const [JoseinSansRegularFont, JoseinSansBoldFont] = await Promise.all([
     JoseinSansRegularFontP,
     JoseinSansBoldFontP,
   ]);
+  const { searchParams } = request.nextUrl;
+  const image = searchParams.get('image');
 
   return new ImageResponse(
     (
-      // Modified based on https://tailwindui.com/components/marketing/sections/cta-sections
       <div
         style={{
           height: '100%',
@@ -34,7 +35,7 @@ export default async function handler() {
         }}
       >
         <img
-          src="https://chaindesk.ai/app-logo-dark.png"
+          src={`https://chaindesk.ai/${image ? image : 'app-logo-dark'}.png`}
           alt="Chaindesk logo"
           style={{
             objectFit: 'contain',

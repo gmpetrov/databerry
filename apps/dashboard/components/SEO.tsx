@@ -10,6 +10,7 @@ type Props = {
   url?: string;
   uri?: string;
   baseUrl?: string;
+  ogImage?: string;
 };
 
 function SEO(props: Props) {
@@ -29,24 +30,46 @@ function SEO(props: Props) {
       <link rel="icon" href={props.faviconUrl || '/favicon.png'} sizes="any" />
 
       <title>{props.title}</title>
-      <meta name="title" content={props.title} />
-      <meta property="og:title" content={props.title} />
+      <meta key="title" name="title" content={props.title} />
+      <meta key="og:title" property="og:title" content={props.title} />
 
-      <meta name="description" content={props.description} />
-      <meta property="og:description" content={props.description} />
-      <meta property="twitter:description" content={props.description} />
+      <meta key="description" name="description" content={props.description} />
+      <meta
+        key="og:description"
+        property="og:description"
+        content={props.description}
+      />
+      <meta
+        key="twitter:description"
+        property="twitter:description"
+        content={props.description}
+      />
 
       <meta
+        key="keywords"
         name="keywords"
         content={`"AI chatbot, No-code platform, Customer support, Onboarding, Slack AI chatbot, Automation, Chaindesk, ChatGPT Plugin, Chat PDF, Chat with any document, Custom ChatGPT Bot, Chatbot GPT, Chatbot, ChatGPT Chatbot" ${
           props.keywords || ''
         }`}
       />
 
-      <meta property="og:image" content="/og-image.png" />
-      <meta property="twitter:image" content="/og-image.png" />
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="og:type" content="website" />
+      <meta
+        key="og:image"
+        property="og:image"
+        content={props.ogImage ? props.ogImage : '/og-image.png'}
+      />
+      <meta
+        key="twitter:image"
+        property="twitter:image"
+        content={props.ogImage ? props.ogImage : '/og-image.png'}
+      />
+
+      <meta
+        key="twitter:card"
+        property="twitter:card"
+        content="summary_large_image"
+      />
+      <meta key="og:type" property="og:type" content="website" />
 
       {url && (
         <>

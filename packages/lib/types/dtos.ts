@@ -411,3 +411,17 @@ export const CrispUpdateMetadataSchema = CrispSchema.extend({
 export const ConversationStatusSchema = z.object({
   status: z.nativeEnum(ConversationStatus),
 });
+
+export const YoutubeSummarySchema = z.object({
+  url: z.string().refine(
+    (url) => {
+      const regex =
+        /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i;
+      console.log('TEST URL', regex.test(url));
+      return regex.test(url);
+    },
+    {
+      message: 'Invalid YouTube video URL',
+    }
+  ),
+});

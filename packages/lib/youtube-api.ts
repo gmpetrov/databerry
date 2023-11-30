@@ -1,6 +1,12 @@
 import { google } from 'googleapis';
+import { YoutubeTranscript } from 'youtube-transcript';
 
-import { DatasourceType } from '@chaindesk/prisma';
+export type YoutubeTranscriptType = {
+  text: string;
+  duration: number;
+  offset: number;
+};
+
 export default class YoutubeApi {
   // TODO: remove any when google types are fixed
   private Youtube: ReturnType<typeof google.youtube> | any;
@@ -78,6 +84,16 @@ export default class YoutubeApi {
     return videos;
   }
 
+  async getVideoSnippetById(videoId: string) {
+    const video = await this.Youtube.search.list({
+      part: 'snippet',
+      q: videoId,
+      type: 'video',
+      maxResults: 1,
+    });
+    return video?.data?.items?.[0]?.snippet;
+  }
+
   static getYoutubeLinkType(url: string): 'channel' | 'playlist' | 'unknown' {
     const channelRegex = /youtube\.com\/@/;
     const playlistRegex = /list=([a-zA-Z0-9_-]+)/;
@@ -91,6 +107,10 @@ export default class YoutubeApi {
     }
   }
 
+  static async transcribeVideo(url: string): Promise<YoutubeTranscriptType[]> {
+    return YoutubeTranscript.fetchTranscript(url);
+  }
+
   static extractHandle(url: string) {
     const regex = /https:\/\/www\.youtube\.com\/@([^\/]+)/;
     const match = url.match(regex);
@@ -100,6 +120,13 @@ export default class YoutubeApi {
 
   static extractPlaylistId(url: string) {
     const regex = /(?:\?|\&)list=([a-zA-Z0-9_-]+)/;
+    const match = url.match(regex);
+
+    return match ? match[1] : null;
+  }
+
+  static extractVideoId(url: string) {
+    const regex = /(?:\?v=|&v=|youtu\.be\/)([^&#]+)/;
     const match = url.match(regex);
 
     return match ? match[1] : null;

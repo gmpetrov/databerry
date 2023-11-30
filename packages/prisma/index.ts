@@ -5,6 +5,7 @@ export {
   AgentVisibility,
   DatasourceStatus,
   DatasourceType,
+  LLMTaskOutputType,
   ServiceProviderType,
   DatastoreType,
   ToolType,

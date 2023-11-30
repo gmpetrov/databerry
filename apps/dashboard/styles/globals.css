@@ -7,3 +7,8 @@
   outline: none;
 }
 
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+}
