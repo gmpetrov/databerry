@@ -21,6 +21,7 @@ import TopBar from '@app/components/TopBar';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
+import timeCodeToSeconds from '@chaindesk/lib/timeCodeToSeconds';
 import prisma from '@chaindesk/prisma/client';
 
 interface Thumbnail {
@@ -138,7 +139,9 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 <Box className="spac-y-4">
                   <Typography level="title-lg"> {title}</Typography>
                   <ReactMarkdown
-                    className="prose text-black dark:text-white min-w-full"
+                    className={`prose ${
+                      isDark ? 'text-white' : 'text-black'
+                    } min-w-full`}
                     remarkPlugins={[remarkGfm]}
                   >
                     {summary}
@@ -152,7 +155,9 @@ export default function SummaryPage({ output }: SummaryPageProps) {
         <Stack spacing={2} mt={2}>
           <Typography level="title-md">Overall Summary</Typography>
           <ReactMarkdown
-            className="prose text-black dark:text-white min-w-full"
+            className={`prose ${
+              isDark ? 'text-white' : 'text-black'
+            } min-w-full`}
             remarkPlugins={[remarkGfm]}
           >
             {output.videoSummary}
@@ -190,11 +195,9 @@ export default function SummaryPage({ output }: SummaryPageProps) {
             <Box>
               {/* Turn timecode to seconds */}
               <iframe
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&start=${output.chapters[
-                  state.currentChapter
-                ].startTimecode
-                  .split(':')
-                  .reduce((acc, val) => acc * 60 + parseInt(val), 0)}`}
+                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&start=${timeCodeToSeconds(
+                  output.chapters[state.currentChapter].startTimecode
+                )}`}
                 allowFullScreen
                 title={output.chapters[state.currentChapter].title}
                 className="min-h-[400px] sm:min-h-[200px] sm:h-full w-full  md:w-[500px] md:p-2 md:rounded-xl"
@@ -205,7 +208,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 {output.chapters[state.currentChapter].title}
               </Typography>
               <ReactMarkdown
-                className="min-w-full text-white"
+                className={`prose text-white min-w-full`}
                 remarkPlugins={[remarkGfm]}
               >
                 {output.chapters[state.currentChapter].summary}
