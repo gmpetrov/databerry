@@ -2,7 +2,7 @@ import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
-import { Box, Button, Divider, Typography } from '@mui/joy';
+import { Box, Button, Divider, Typography, useColorScheme } from '@mui/joy';
 import CircularProgress from '@mui/joy/CircularProgress';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -38,6 +38,7 @@ type Schema = z.infer<typeof Schema>;
 export default function SignInPage() {
   // const { handleRedirects, handleSignInSuccess } = useAuth();
   const [globalFormError, setGlobalFormError] = useState<string>();
+  const { mode, setMode } = useColorScheme();
   const [isLoading, setIsLoading] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
@@ -76,6 +77,10 @@ export default function SignInPage() {
   const handleSubmitEmail = (values: Schema) => {
     signIn('email', { email: values.email });
   };
+
+  React.useEffect(() => {
+    setMode('dark');
+  }, []);
 
   return (
     <>
