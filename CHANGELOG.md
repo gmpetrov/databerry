@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.102"></a>
+## 0.1.102 (2023-11-30)
+
+### Miscellaneous
+
+- 🤖 improve yt summary [[de0e21b](https://github.com/gmpetrov/databerry/commit/de0e21b49f9f61263584629a096c995bc9f7b2e5)]
+
+
 <a name="0.1.101"></a>
 ## 0.1.101 (2023-11-30)
 
