@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.100"></a>
+## 0.1.100 (2023-11-30)
+
+### Miscellaneous
+
+-  Feat/youtube summary 2 ([#256](https://github.com/gmpetrov/databerry/issues/256)) [[c42b37c](https://github.com/gmpetrov/databerry/commit/c42b37ce00fc6c921743a59e8b908f4bd08872df)]
+
+
 <a name="0.1.99"></a>
 ## 0.1.99 (2023-11-29)
 
