@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.101"></a>
+## 0.1.101 (2023-11-30)
+
+### Fixed
+
+- 🐛 datastore name missing when creating new agent [[c240dea](https://github.com/gmpetrov/databerry/commit/c240dea1c3dff0484366cb12dd6edb10087ac66c)]
+
+### Miscellaneous
+
+- 🎸 add admin refresh button to yt summary tool [[6c681c8](https://github.com/gmpetrov/databerry/commit/6c681c805bd11d5a20d0b9da4fd625d1607b67a3)]
+
+
 <a name="0.1.100"></a>
 ## 0.1.100 (2023-11-30)
 
