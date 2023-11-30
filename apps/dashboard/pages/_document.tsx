@@ -19,17 +19,11 @@ class CustomDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-
           <meta
-            property="og:image"
-            content="https://www.chaindesk.ai/og-image.png"
+            key="viewport"
+            name="viewport"
+            content="initial-scale=1, width=device-width"
           />
-          <meta
-            property="twitter:image"
-            content="https://www.chaindesk.ai/og-image.png"
-          />
-          <meta property="twitter:card" content="summary_large_image" />
 
           <link
             rel="stylesheet"

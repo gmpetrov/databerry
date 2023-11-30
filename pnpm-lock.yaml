@@ -332,9 +332,6 @@ importers:
       zod:
         specifier: 3.21.4
         version: 3.21.4
-      zod-to-json-schema:
-        specifier: ^3.22.1
-        version: 3.22.1(zod@3.21.4)
     devDependencies:
       '@chaindesk/tsconfig':
         specifier: workspace:*

@@ -6,14 +6,21 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import zodParseJSON from '../zod-parse-json';
 
 export const Schema = z.object({
-  chapters: z.array(
-    z.object({
-      title: z.string(),
-      summary: z.string(),
-      startTimecode: z.string(),
-      endTimecode: z.string(),
-    })
-  ),
+  chapters: z
+    .array(
+      z.object({
+        title: z.string(),
+        summary: z.string(),
+        offset: z
+          .string()
+          .describe(
+            'time position in seconds where the chapter starts e.g: "42s"'
+          ),
+      })
+    )
+    .describe(
+      'all chapters or topics mentionned in the conversation in chronological order'
+    ),
   videoSummary: z
     .string()
     .describe(

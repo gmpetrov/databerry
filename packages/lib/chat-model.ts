@@ -88,6 +88,8 @@ export default class ChatModel {
 
           const completion = await runner.finalChatCompletion();
 
+          usage.total_tokens = usage.prompt_tokens + usage.completion_tokens;
+
           return {
             answer: completion?.choices?.[0]?.message?.content?.trim?.(),
             usage,
@@ -120,6 +122,8 @@ export default class ChatModel {
               ...otherProps,
               stream: false,
             });
+
+            usage.total_tokens = usage.prompt_tokens + usage.completion_tokens;
 
             return {
               answer: response?.choices?.[0]?.message?.content?.trim?.(),

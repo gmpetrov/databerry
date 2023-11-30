@@ -16,6 +16,7 @@ import { Toaster } from 'react-hot-toast';
 
 import Analytics from '@app/components/Analytics';
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
+import DefaultSEOTags from '@app/components/DefaultSEOTags';
 import {
   getProductFromHostname,
   ProductContext,
@@ -61,6 +62,7 @@ export default function App({
       <ProductContext.Provider value={product}>
         <SessionProvider>
           <Analytics>
+            <DefaultSEOTags />
             <Component {...pageProps} />
           </Analytics>
         </SessionProvider>
@@ -75,6 +77,7 @@ export default function App({
         <SessionProvider>
           <Analytics>
             <Toaster />
+            <DefaultSEOTags />
             {getLayout(<Component {...pageProps} />)}
           </Analytics>
         </SessionProvider>
