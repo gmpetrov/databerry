@@ -1,8 +1,11 @@
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import IosShareRoundedIcon from '@mui/icons-material/IosShareRounded';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import {
   AspectRatio,
   Box,
+  Button,
   Chip,
   Divider,
   IconButton,
@@ -26,6 +29,7 @@ import useConfetti from '@app/hooks/useConfetti';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
+import writeClipboard from '@chaindesk/lib/write-clipboard';
 import prisma from '@chaindesk/prisma/client';
 
 export interface Thumbnail {
@@ -123,7 +127,38 @@ export default function SummaryPage({ output }: SummaryPageProps) {
             {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
             Youtube
           </Typography>
-          <Typography level="h3">{output?.metadata?.title}</Typography>
+
+          <Stack
+            direction="row"
+            sx={{ justifyContent: 'space-between', alignItems: 'start' }}
+            gap={1}
+          >
+            <Typography level="h3">{output?.metadata?.title}</Typography>
+            <IconButton
+              variant="outlined"
+              sx={{ borderRadius: '20px' }}
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: `AI YouTube Summary: ${output?.metadata?.title}`,
+                    text: output?.metadata?.description,
+                    url: window.location.href,
+                  });
+                } else if (navigator.clipboard) {
+                  writeClipboard({
+                    content: window.location.href,
+                  });
+                }
+              }}
+            >
+              <ContentCopyRoundedIcon />
+              {/* {!!navigator?.share ? (
+                <IosShareRoundedIcon />
+              ) : (
+                <ContentCopyRoundedIcon />
+              )} */}
+            </IconButton>
+          </Stack>
 
           <Box mt={1}>
             {content.thematics.map((tag, i) => (
@@ -133,6 +168,8 @@ export default function SummaryPage({ output }: SummaryPageProps) {
             ))}
           </Box>
         </Box>
+
+        <Divider />
 
         <Stack spacing={2} mt={2}>
           <Typography level="title-md" fontWeight={'bold'}>
