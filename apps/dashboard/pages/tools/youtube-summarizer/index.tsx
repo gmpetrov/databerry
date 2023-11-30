@@ -36,7 +36,6 @@ import {
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
 import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
-import YoutubeApi from '@chaindesk/lib/youtube-api';
 import { Prisma } from '@chaindesk/prisma';
 
 import { getLatestVideos } from '../../api/tools/youtube-summary';
@@ -53,12 +52,14 @@ export default function Youtube() {
     resolver: zodResolver(YoutubeSummarySchema),
   });
 
+  const apiUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
+
   const getLatestVideosQuery = useSWR<
     Prisma.PromiseReturnType<typeof getLatestVideos>
-  >('/api/tools/youtube-summary', fetcher);
+  >(`${apiUrl}/api/tools/youtube-summary`, fetcher);
 
   const summaryMutation = useSWRMutation(
-    '/api/tools/youtube-summary',
+    `${apiUrl}/api/tools/youtube-summary`,
     generateActionFetcher(HTTP_METHOD.POST)
   );
 
@@ -71,7 +72,11 @@ export default function Youtube() {
       const regex = /(?:\?v=|&v=|youtu\.be\/)([^&#]+)/;
       const match = payload.url.match(regex);
 
-      router.push(`/tools/youtube-summarizer/${match![1]}`);
+      router.push(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/tools/youtube-summarizer/${
+          match![1]
+        }`
+      );
     } catch (err) {
       toast.error(JSON.stringify(err));
     }

@@ -21,6 +21,11 @@ import YoutubeApi from '@chaindesk/lib/youtube-api';
 import zodParseJSON from '@chaindesk/lib/zod-parse-json';
 import { AgentModelName, LLMTaskOutputType } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
+
+const cors = Cors({
+  methods: ['GET', 'POST', 'HEAD'],
+});
+
 const handler = createLazyAuthHandler();
 
 export const getLatestVideos = async () => {
@@ -137,4 +142,11 @@ handler.post(
   })
 );
 
-export default handler;
+export default async function wrapper(
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) {
+  await runMiddleware(req, res, cors);
+
+  return handler(req, res);
+}
