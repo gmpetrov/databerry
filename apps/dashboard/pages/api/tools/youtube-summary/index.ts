@@ -1,5 +1,4 @@
 import { ConstructionOutlined } from '@mui/icons-material';
-import Cors from 'cors';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 import { z, ZodSchema } from 'zod';
@@ -11,6 +10,9 @@ import {
   createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import cors from '@chaindesk/lib/middlewares/cors';
+import pipe from '@chaindesk/lib/middlewares/pipe';
+import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
 import ytTool, { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import splitTextByToken from '@chaindesk/lib/split-text-by-token';
@@ -22,10 +24,6 @@ import YoutubeApi from '@chaindesk/lib/youtube-api';
 import zodParseJSON from '@chaindesk/lib/zod-parse-json';
 import { AgentModelName, LLMTaskOutputType, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
-
-const cors = Cors({
-  methods: ['GET', 'POST', 'HEAD'],
-});
 
 const handler = createLazyAuthHandler();
 
@@ -76,23 +74,68 @@ export const createYoutubeSummary = async (
   });
 
   if (found && !refresh) {
-    return {
-      ...(found.output as any)?.['en'],
-    };
+    return found;
   } else {
     const transcripts = await YoutubeApi.transcribeVideo(url);
 
-    const text = transcripts.reduce(
-      (acc, { text, offset }) =>
-        acc + `""" ${Math.ceil(offset / 1000)}s """ ${text} `,
-      ''
-    );
+    const groupBySentences = (t: typeof transcripts) => {
+      const groupedTranscripts: (typeof transcripts)[] = [];
+      let currentGroup = [] as any;
+
+      t.forEach((transcript) => {
+        if (transcript.text.trim().startsWith('-')) {
+          if (currentGroup.length > 0) {
+            groupedTranscripts.push(currentGroup);
+            currentGroup = [];
+          }
+        }
+        currentGroup.push(transcript);
+      });
+
+      // Add the last group if it's not empty
+      if (currentGroup.length > 0) {
+        groupedTranscripts.push(currentGroup);
+      }
+
+      return groupedTranscripts.map((each) => {
+        return each.reduce((acc, item, index) => {
+          if (index === 0) {
+            return {
+              ...item,
+            };
+          }
+          return {
+            ...acc,
+            text: `${acc.text} ${item.text}`,
+          };
+        }, {} as (typeof transcripts)[0]);
+      });
+    };
+
+    // const text = transcripts.reduce(
+    //   (acc, { text, offset }) =>
+    //     acc + `""" ${Math.ceil(offset / 1000)}s """ ${text} `,
+    //   ''
+    // );
+
+    const text = groupBySentences(transcripts)
+      .map((each) => ({
+        text: each.text?.replace(/^- /, ''),
+        offset: `${Math.ceil(each.offset / 1000)}s`,
+      }))
+      .map((each) => `[${each.offset}] ${each.text}`)
+      .join('\n');
 
     const modelName = AgentModelName.gpt_4_turbo;
     const [chunkedText] = await splitTextByToken({
       text,
       chunkSize: ModelConfig[modelName].maxTokens * 0.7,
     });
+
+    await rateLimit({
+      duration: 60,
+      limit: 2,
+    })(req, res);
 
     const model = new ChatModel();
 
@@ -108,12 +151,16 @@ export const createYoutubeSummary = async (
       messages: [
         {
           role: 'system',
-          content:
-            'You are a helpful assistant. Your task is generate a very detailed summary of a given text in a comprehensive, educational way. Answer in english.',
+          content: `Your task is generate a very detailed summary of a youtube video transcript.
+          Make sure your summary has useful and true information about the main points of the topic.
+          Begin with a short introduction explaining the topic. If you can, use bullet points to list important details,
+          and finish your summary with a concluding sentence.
+          Also make sure you identify all chapters of the video in chronological order from the beginning to the end.
+          Answer in English using rich markdown format.`,
         },
         {
           role: 'user',
-          content: `Youtube video transcript with timecodes surrounded by triple quotes: ${chunkedText}`,
+          content: `Youtube video transcript: ${chunkedText}`,
         },
       ],
     });
@@ -153,17 +200,12 @@ export const createYoutubeSummary = async (
 };
 
 handler.post(
-  validate({
-    handler: respond(createYoutubeSummary),
-    body: YoutubeSummarySchema,
-  })
+  pipe(
+    validate({
+      handler: respond(createYoutubeSummary),
+      body: YoutubeSummarySchema,
+    })
+  )
 );
 
-export default async function wrapper(
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) {
-  await runMiddleware(req, res, cors);
-
-  return handler(req, res);
-}
+export default pipe(cors({ methods: ['GET', 'POST', 'HEAD'] }), handler);

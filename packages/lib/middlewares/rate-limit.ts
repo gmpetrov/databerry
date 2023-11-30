@@ -10,14 +10,16 @@ import type { Middleware } from './pipe';
 const rateLimit = ({
   limit = 1,
   duration = 60,
+  disabledForCustomers = false,
 }: {
   duration?: number;
   limit?: number;
+  disabledForCustomers?: boolean;
 }): Middleware => {
   return async (req, res) => {
     const session = req.session;
 
-    if (!!session?.user) {
+    if (!!session?.user && disabledForCustomers) {
       // We don't apply rate limiting to dashboard authenticated users
       return;
     }

@@ -14,17 +14,17 @@ export const Schema = z.object({
         offset: z
           .string()
           .describe(
-            'time position in seconds where the chapter starts e.g: "42s"'
+            'Begining of the chapter in seconds. This is useful to jump to the chapter in the video: e.g. 42s'
           ),
       })
     )
     .describe(
-      'all chapters or topics mentionned in the conversation in chronological order'
+      'Detailed list of all chapters extracted from the video transcript in sorted in order of appearance in the transcript from the beginning to the end of the video.'
     ),
   videoSummary: z
     .string()
     .describe(
-      "The video's summary in rich markdown format with proper bolds, italics etc as per heirarchy and readability requirements."
+      `Useful summary containing true informations only about the main points of the topic. It has bullet points to list important details, and finishes with a concluding sentence`
     ),
   thematics: z.array(z.string()),
 });
@@ -35,8 +35,7 @@ const tool = {
   type: 'function',
   function: {
     name: 'youtube_summary',
-    description:
-      'Generate a structured summary for a youtube video with summary by chatpers and timecode for each chapter.',
+    description: 'Generates a detailed summary of a youtube video transcript.',
     parameters: zodToJsonSchema(Schema),
     parse: zodParseJSON(Schema),
     function: (data: z.infer<typeof Schema>) => data,

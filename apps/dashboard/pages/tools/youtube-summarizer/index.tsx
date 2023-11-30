@@ -16,6 +16,7 @@ import {
   useColorScheme,
 } from '@mui/joy';
 import { LLMTaskOutputType } from '@prisma/client';
+import { AxiosError } from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -78,7 +79,20 @@ export default function Youtube() {
         }`
       );
     } catch (err) {
-      toast.error(JSON.stringify(err));
+      if (err instanceof AxiosError) {
+        const msg = err?.response?.data;
+
+        if (msg) {
+          let text = msg;
+
+          if (msg?.includes?.('RATE_LIMIT')) {
+            text = 'Rate limit exceeded! Please try again in few minutes.';
+          }
+          return toast.error(JSON.stringify(text));
+        }
+      }
+
+      toast.error('An error occurred. Please try again in few minutes.');
     }
   };
 
