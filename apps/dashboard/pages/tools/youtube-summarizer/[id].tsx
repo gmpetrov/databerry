@@ -2,6 +2,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import IosShareRoundedIcon from '@mui/icons-material/IosShareRounded';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import {
   AspectRatio,
   Box,
@@ -17,10 +18,12 @@ import { LLMTaskOutput } from '@prisma/client';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import superjson from 'superjson';
+import useSWRMutation from 'swr/mutation';
 
 import PoweredByCard from '@app/components/PoweredByCard';
 import SEO from '@app/components/SEO';
@@ -29,6 +32,7 @@ import useConfetti from '@app/hooks/useConfetti';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
+import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
 import writeClipboard from '@chaindesk/lib/write-clipboard';
 import prisma from '@chaindesk/prisma/client';
 
@@ -64,6 +68,7 @@ export type SummaryPageProps = LLMTaskOutput & {
 export default function SummaryPage({ output }: SummaryPageProps) {
   const { mode, setMode } = useColorScheme();
   const router = useRouter();
+  const { data: session } = useSession();
   const videoId = router.query.id as string;
   const [state, setState] = useStateReducer({
     isBannerOpen: false,
@@ -81,6 +86,16 @@ export default function SummaryPage({ output }: SummaryPageProps) {
   }, []);
 
   const content = output[lang];
+
+  const summaryMutation = useSWRMutation(
+    `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/tools/youtube-summary?refresh=true`,
+    generateActionFetcher(HTTP_METHOD.POST),
+    {
+      onSuccess: () => {
+        window.location.reload();
+      },
+    }
+  );
 
   return (
     <>
@@ -134,30 +149,48 @@ export default function SummaryPage({ output }: SummaryPageProps) {
             gap={1}
           >
             <Typography level="h3">{output?.metadata?.title}</Typography>
-            <IconButton
-              variant="outlined"
-              sx={{ borderRadius: '20px' }}
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({
-                    title: `AI YouTube Summary: ${output?.metadata?.title}`,
-                    text: output?.metadata?.description,
-                    url: window.location.href,
-                  });
-                } else if (navigator.clipboard) {
-                  writeClipboard({
-                    content: window.location.href,
-                  });
-                }
-              }}
-            >
-              <ContentCopyRoundedIcon />
-              {/* {!!navigator?.share ? (
-                <IosShareRoundedIcon />
-              ) : (
+            <Stack direction="row" gap={1}>
+              <IconButton
+                variant="outlined"
+                sx={{ borderRadius: '20px' }}
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({
+                      title: `AI YouTube Summary: ${output?.metadata?.title}`,
+                      text: output?.metadata?.description,
+                      url: window.location.href,
+                    });
+                  } else if (navigator.clipboard) {
+                    writeClipboard({
+                      content: window.location.href,
+                    });
+                  }
+                }}
+              >
                 <ContentCopyRoundedIcon />
-              )} */}
-            </IconButton>
+                {/* {!!navigator?.share ? (
+                <IosShareRoundedIcon />
+                ) : (
+                  <ContentCopyRoundedIcon />
+                )} */}
+              </IconButton>
+
+              {session?.roles?.includes?.('SUPERADMIN') && (
+                <IconButton
+                  color="danger"
+                  variant="outlined"
+                  sx={{ borderRadius: '20px' }}
+                  disabled={summaryMutation.isMutating}
+                  onClick={() =>
+                    summaryMutation.trigger({
+                      url: `https://www.youtube.com/watch?v=${router.query.id}`,
+                    })
+                  }
+                >
+                  <RefreshIcon />
+                </IconButton>
+              )}
+            </Stack>
           </Stack>
 
           <Box mt={1}>

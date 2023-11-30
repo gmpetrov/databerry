@@ -417,7 +417,6 @@ export const YoutubeSummarySchema = z.object({
     (url) => {
       const regex =
         /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i;
-      console.log('TEST URL', regex.test(url));
       return regex.test(url);
     },
     {

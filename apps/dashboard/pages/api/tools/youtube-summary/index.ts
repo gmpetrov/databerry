@@ -1,5 +1,6 @@
 import { ConstructionOutlined } from '@mui/icons-material';
 import Cors from 'cors';
+import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 import { z, ZodSchema } from 'zod';
 
@@ -19,7 +20,7 @@ import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
 import YoutubeApi from '@chaindesk/lib/youtube-api';
 import zodParseJSON from '@chaindesk/lib/zod-parse-json';
-import { AgentModelName, LLMTaskOutputType } from '@chaindesk/prisma';
+import { AgentModelName, LLMTaskOutputType, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const cors = Cors({
@@ -28,7 +29,10 @@ const cors = Cors({
 
 const handler = createLazyAuthHandler();
 
-export const getLatestVideos = async () => {
+export const getLatestVideos = async (
+  req: AppNextApiRequest,
+  res: NextApiResponse
+) => {
   const outputs = await prisma.lLMTaskOutput.findMany({
     where: {
       type: LLMTaskOutputType.youtube_summary,
@@ -44,7 +48,7 @@ export const getLatestVideos = async () => {
 
 handler.get(respond(getLatestVideos));
 
-export const queryFreeTools = async (
+export const createYoutubeSummary = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
@@ -54,6 +58,9 @@ export const queryFreeTools = async (
   const videoId = YoutubeApi.extractVideoId(url);
   //TODO: get video name,  description date published
   const videoSnippet = await Youtube.getVideoSnippetById(videoId!);
+  const refresh =
+    req.query.refresh === 'true' &&
+    req?.session?.roles?.includes?.('SUPERADMIN');
 
   if (!videoId) {
     throw new Error('The url is not a valid youtube video.');
@@ -68,7 +75,7 @@ export const queryFreeTools = async (
     },
   });
 
-  if (found) {
+  if (found && !refresh) {
     return {
       ...(found.output as any)?.['en'],
     };
@@ -81,15 +88,16 @@ export const queryFreeTools = async (
       ''
     );
 
+    const modelName = AgentModelName.gpt_4_turbo;
     const [chunkedText] = await splitTextByToken({
       text,
-      chunkSize: ModelConfig[AgentModelName.gpt_4_turbo].maxTokens * 0.7,
+      chunkSize: ModelConfig[modelName].maxTokens * 0.7,
     });
 
     const model = new ChatModel();
 
     const result = await model.call({
-      model: ModelConfig[AgentModelName.gpt_4_turbo].name,
+      model: ModelConfig[modelName].name,
       tools: [ytTool],
       tool_choice: {
         type: 'function',
@@ -115,20 +123,29 @@ export const queryFreeTools = async (
         ?.arguments as string
     );
 
-    const output = await prisma.lLMTaskOutput.create({
-      data: {
-        externalId: videoId,
-        type: 'youtube_summary',
-        output: {
-          metadata: {
-            ...videoSnippet,
-          },
-          en: {
-            ...data,
-          },
+    const id = found?.id || cuid();
+
+    const payload = {
+      id,
+      externalId: videoId,
+      type: 'youtube_summary',
+      output: {
+        metadata: {
+          ...videoSnippet,
         },
-        usage: result?.usage as any,
+        en: {
+          ...data,
+        },
       },
+      usage: result?.usage as any,
+    } as Prisma.LLMTaskOutputCreateArgs['data'];
+
+    const output = await prisma.lLMTaskOutput.upsert({
+      where: {
+        id,
+      },
+      create: payload,
+      update: payload,
     });
 
     return output;
@@ -137,7 +154,7 @@ export const queryFreeTools = async (
 
 handler.post(
   validate({
-    handler: respond(queryFreeTools),
+    handler: respond(createYoutubeSummary),
     body: YoutubeSummarySchema,
   })
 );
