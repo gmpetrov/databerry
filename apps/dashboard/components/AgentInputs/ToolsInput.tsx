@@ -329,6 +329,7 @@ function ToolsInput({}: Props) {
               {
                 id: cuid(),
                 datastoreId: newDatatore.id!,
+                datastore: newDatatore,
                 type: ToolType.datastore,
               },
             ],
