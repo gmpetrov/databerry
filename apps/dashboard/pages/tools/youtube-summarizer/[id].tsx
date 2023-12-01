@@ -171,7 +171,6 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 {/* {!!navigator?.share ? (
                 <IosShareRoundedIcon />
                 ) : (
-                  <ContentCopyRoundedIcon />
                 )} */}
               </IconButton>
 
@@ -206,7 +205,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
 
         <Stack spacing={2} mt={2}>
           <Typography level="title-md" fontWeight={'bold'}>
-            Video Summary
+            Summary
           </Typography>
           <ReactMarkdown
             className="min-w-full prose text-gray-600 dark:text-white"
@@ -371,7 +370,7 @@ export async function getStaticProps({
   if (!llmTaskOutput) {
     return {
       redirect: {
-        destination: `/youtube`,
+        destination: `/tools/youtube-summarizer`,
       },
     };
   }

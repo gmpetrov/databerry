@@ -14,17 +14,17 @@ export const Schema = z.object({
         offset: z
           .string()
           .describe(
-            'Begining of the chapter in seconds. This is useful to jump to the chapter in the video: e.g. 42s'
+            'Offset in the video where the chapter starts. Format: 42s'
           ),
       })
     )
     .describe(
-      'Detailed list of all chapters extracted from the video transcript in sorted in order of appearance in the transcript from the beginning to the end of the video.'
+      'Detailed list of all chapters and topics in the video by chronological order. Useful for a table of contents.'
     ),
   videoSummary: z
     .string()
     .describe(
-      `Useful summary containing true informations only about the main points of the topic. It has bullet points to list important details, and finishes with a concluding sentence`
+      `Useful summary in rich markown format. It has bullet points to list keypoints.`
     ),
   thematics: z.array(z.string()),
 });

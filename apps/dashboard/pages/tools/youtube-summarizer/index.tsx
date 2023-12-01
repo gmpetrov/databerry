@@ -16,7 +16,7 @@ import {
   useColorScheme,
 } from '@mui/joy';
 import { LLMTaskOutputType } from '@prisma/client';
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -48,6 +48,7 @@ type FormType = z.infer<typeof YoutubeSummarySchema>;
 export default function Youtube() {
   const { mode, systemMode, setMode } = useColorScheme();
   const router = useRouter();
+  const [isProcessing, setIsProcessing] = React.useState(false);
   const { control, register, handleSubmit, formState } = useForm<FormType>({
     mode: 'onChange',
     resolver: zodResolver(YoutubeSummarySchema),
@@ -66,18 +67,38 @@ export default function Youtube() {
 
   const onSubmit = async (payload: FormType) => {
     try {
-      await summaryMutation.trigger({
+      const response = await summaryMutation.trigger({
         ...payload,
       });
 
       const regex = /(?:\?v=|&v=|youtu\.be\/)([^&#]+)/;
-      const match = payload.url.match(regex);
+      const videoId = payload.url.match(regex)?.[1];
+      const videoUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/tools/youtube-summarizer/${videoId}`;
 
-      router.push(
-        `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/tools/youtube-summarizer/${
-          match![1]
-        }`
-      );
+      if (response?.externalId) {
+        router.push(videoUrl);
+      } else {
+        setIsProcessing(true);
+
+        await new Promise((resolve, reject) => {
+          const interval = setInterval(async () => {
+            try {
+              const res = await axios.get(
+                `${apiUrl}/api/tools/youtube-summary/${videoId}`
+              );
+
+              if (res.data) {
+                router.push(videoUrl);
+                resolve(true);
+                clearInterval(interval);
+              }
+            } catch (err) {
+              console.log(err);
+              reject(err);
+            }
+          }, 1000 * 10);
+        });
+      }
     } catch (err) {
       if (err instanceof AxiosError) {
         const msg = err?.response?.data;
@@ -93,12 +114,16 @@ export default function Youtube() {
       }
 
       toast.error('An error occurred. Please try again in few minutes.');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   React.useEffect(() => {
     setMode('light');
   }, []);
+
+  const isLoading = summaryMutation.isMutating || isProcessing;
 
   return (
     <>
@@ -148,7 +173,7 @@ export default function Youtube() {
                     // className="flex-1 w-full"
                     {...register('url')}
                     placeholder="Paste your youtube video link here"
-                    disabled={summaryMutation.isMutating}
+                    disabled={isLoading}
                     startDecorator={<YouTubeIcon />}
                     size="lg"
                     sx={{ borderRadius: '20px' }}
@@ -159,7 +184,7 @@ export default function Youtube() {
                           variant="solid"
                           color="primary"
                           disabled={!formState.isValid}
-                          loading={summaryMutation.isMutating}
+                          loading={isLoading}
                           size="lg"
                           sx={{ borderRadius: '20px' }}
                           endDecorator={<EastRoundedIcon fontSize="md" />}
@@ -191,7 +216,7 @@ export default function Youtube() {
                     </Chip>
                   </a>
                 </Stack>
-                {summaryMutation.isMutating && (
+                {isLoading && (
                   <Alert sx={{ mx: 'auto' }} color="warning">
                     Please do not close the window while we process the video.
                     It can take 1-2mins.
