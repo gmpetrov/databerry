@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.104"></a>
+## 0.1.104 (2023-12-01)
+
+### Fixed
+
+- 🐛 Youtube Loader chunks [[d9670f1](https://github.com/gmpetrov/databerry/commit/d9670f12414783b532e51ebddf11e44653991c35)]
+
+### Miscellaneous
+
+- 🎸 add sitemap for yt summary tool [[96941de](https://github.com/gmpetrov/databerry/commit/96941defb5d9d8e81d2ebb5778476d271bc08a56)]
+
+
 <a name="0.1.103"></a>
 ## 0.1.103 (2023-12-01)
 
