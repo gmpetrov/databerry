@@ -14,6 +14,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const paths = [
     '/',
     '/pricing',
+    '/tools/youtube-summarizer',
     ...products.map((product) => `/products/${product.slug}`),
   ].map((each) => `${baseUrl}${each}`);
 
