@@ -1,7 +1,4 @@
-import axios from 'axios';
 import cuid from 'cuid';
-import { google } from 'googleapis';
-import { YoutubeTranscript } from 'youtube-transcript';
 
 import generateFunId from '@chaindesk/lib/generate-fun-id';
 import { AppDocument } from '@chaindesk/lib/types/document';
@@ -33,10 +30,14 @@ export class BulkYoutubesLoader extends DatasourceLoaderBase<BulkYoutubeDatasour
       throw new Error('Fatal: missing or invalid url');
     }
 
+    const Youtube = new YoutubeApi();
+    const name = await Youtube.getYoutubeDatasourceName(
+      (this.datasource?.config as any)?.source_url
+    );
+
     const type = YoutubeApi.getYoutubeLinkType(url);
 
     let videos: { id: string; title: string }[] = [];
-    const Youtube = new YoutubeApi();
 
     switch (type) {
       case 'channel':
@@ -73,6 +74,7 @@ export class BulkYoutubesLoader extends DatasourceLoaderBase<BulkYoutubeDatasour
           id: this.datasource.id,
         },
         data: {
+          name,
           status: DatasourceStatus.synched,
         },
       });

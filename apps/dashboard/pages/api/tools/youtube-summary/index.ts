@@ -78,36 +78,9 @@ export const createYoutubeSummary = async (
   } else {
     const transcripts = await YoutubeApi.transcribeVideo(url);
 
-    const groubBySeconds = (props: {
-      nbSeconds: number;
-      items: typeof transcripts;
-    }) => {
-      const groups = [] as any[];
-
-      let counter = 0;
-      let obj = { offset: 0, text: '' };
-      for (const each of props.items) {
-        const duration = Math.ceil(each.duration / 1000);
-
-        if (counter === 0) {
-          obj.offset = each.offset;
-        }
-
-        if (counter < props.nbSeconds) {
-          obj.text += each.text;
-          counter += duration;
-        } else {
-          groups.push(obj);
-          obj = { offset: 0, text: '' };
-          counter = 0;
-        }
-      }
-      return groups;
-    };
-
-    const text = groubBySeconds({
+    const text = YoutubeApi.groupTranscriptsBySeconds({
       nbSeconds: 60,
-      items: transcripts,
+      transcripts,
     }).reduce(
       (acc, { text, offset }) =>
         acc + `(${Math.ceil(offset / 1000)}s) ${text}\n`,
@@ -133,8 +106,10 @@ export const createYoutubeSummary = async (
       limit: 2,
     })(req, res);
 
-    // Trick to bypass cloudflare 100s timeout limit
-    res.json({ processing: true });
+    if (!refresh) {
+      // Trick to bypass cloudflare 100s timeout limit
+      res.json({ processing: true });
+    }
 
     const model = new ChatModel();
 
@@ -150,16 +125,11 @@ export const createYoutubeSummary = async (
       messages: [
         {
           role: 'system',
-          content: `Your task is generate a very detailed summary of a youtube video transcript.
-          Make sure your summary has useful and true information about the main points of the topic.
-          If you can, use bullet points to list important details, and finish your summary with a concluding sentence.
-          Most importantly group informations into chapters in order to produce a table of contents with related timecodes.
-          Thouroughly extract time offsets for each chapters in number of seconds, e.g. 42s, 120s, etc...
-          Always answer in english.`,
+          content: `Extract thoroughly all chapters from a given youtube video transcript.`,
         },
         {
           role: 'user',
-          content: `Youtube video transcript: ${chunkedText}`,
+          content: `Video transcript: ${chunkedText}`,
         },
       ],
     });

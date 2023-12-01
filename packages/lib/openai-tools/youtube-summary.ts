@@ -9,8 +9,8 @@ export const Schema = z.object({
   chapters: z
     .array(
       z.object({
-        title: z.string(),
-        summary: z.string(),
+        title: z.string().describe('Title of the chapter in english'),
+        summary: z.string().describe('Summary of the chapter in english'),
         offset: z
           .string()
           .describe(
@@ -19,14 +19,14 @@ export const Schema = z.object({
       })
     )
     .describe(
-      'Detailed list of all chapters and topics in the video by chronological order. Useful for a table of contents.'
+      'Summaries by order of appearance of all topics discussed. Make sure you go through all of them.'
     ),
-  videoSummary: z
-    .string()
-    .describe(
-      `Useful summary in rich markown format. It has bullet points to list keypoints.`
-    ),
-  thematics: z.array(z.string()),
+  // videoSummary: z
+  //   .string()
+  //   .describe(
+  //     `Very engaging summary of the video that highlights key informations structed with bullet points when possible`
+  //   ),
+  // thematics: z.array(z.string()),
 });
 
 export type Schema = z.infer<typeof Schema>;
@@ -35,7 +35,8 @@ const tool = {
   type: 'function',
   function: {
     name: 'youtube_summary',
-    description: 'Generates a detailed summary of a youtube video transcript.',
+    description:
+      'Extract thoroughly all chapters from a given youtube video transcript from the beginning to the end.',
     parameters: zodToJsonSchema(Schema),
     parse: zodParseJSON(Schema),
     function: (data: z.infer<typeof Schema>) => data,

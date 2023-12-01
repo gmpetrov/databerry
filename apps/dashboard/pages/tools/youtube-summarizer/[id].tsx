@@ -192,18 +192,18 @@ export default function SummaryPage({ output }: SummaryPageProps) {
             </Stack>
           </Stack>
 
-          <Box mt={1}>
+          {/* <Box mt={1}>
             {content.thematics.map((tag, i) => (
               <Chip key={i} size="sm" color="neutral" className="mx-1">
                 {tag}
               </Chip>
             ))}
-          </Box>
+          </Box> */}
         </Box>
 
         <Divider />
 
-        <Stack spacing={2} mt={2}>
+        {/* <Stack spacing={2} mt={2}>
           <Typography level="title-md" fontWeight={'bold'}>
             Summary
           </Typography>
@@ -215,7 +215,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
           </ReactMarkdown>
         </Stack>
 
-        <Divider />
+        <Divider /> */}
 
         <Stack direction="row" className="sm:space-x-12">
           <Box className="hidden sm:block">
