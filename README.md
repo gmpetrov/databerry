@@ -41,8 +41,8 @@
 
 ### Semantic Search Specs
 
-- Vector Datbase: Qdrant
-- Embeddigs: Openai's text-embedding-ada-002
+- Vector Database: Qdrant
+- Embeddings: Openai's text-embedding-ada-002
 - Chunk size: 256 tokens
 
 ### Stack
