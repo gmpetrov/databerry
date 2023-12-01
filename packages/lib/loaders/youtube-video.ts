@@ -1,7 +1,6 @@
-import axios from 'axios';
-
 import { AppDocument } from '@chaindesk/lib/types/document';
 import { DatasourceSchema } from '@chaindesk/lib/types/models';
+import prisma from '@chaindesk/prisma/client';
 
 import YoutubeApi from '../youtube-api';
 
@@ -27,11 +26,32 @@ export class YoutubeVideoLoader extends DatasourceLoaderBase<DatasourceYoutubeVi
     let docs = [];
     try {
       const transcripts = await YoutubeApi.transcribeVideo(url);
-      docs = transcripts.map(({ text, offset }) => {
+      const videoId = YoutubeApi.extractVideoId(url) as string;
+      const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+      if (!this.datasource?.groupId) {
+        const snippet = await new YoutubeApi().getVideoSnippetById(videoId);
+
+        await prisma.appDatasource.update({
+          where: {
+            id: this.datasource.id,
+          },
+          data: {
+            name: snippet?.title,
+          },
+        });
+
+        this.datasource.name = snippet?.title;
+      }
+
+      docs = YoutubeApi.groupTranscriptsBySeconds({
+        nbSeconds: 60,
+        transcripts,
+      }).map(({ text, offset }) => {
         return new AppDocument<any>({
           pageContent: text,
           metadata: {
-            source_url: `${url}&t=${Math.ceil(offset / 1000)}`,
+            source_url: `${videoUrl}&t=${Math.ceil(offset / 1000)}`,
           },
         });
       });

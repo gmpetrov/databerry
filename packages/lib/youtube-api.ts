@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { YoutubeTranscript } from 'youtube-transcript';
+import { TranscriptResponse, YoutubeTranscript } from 'youtube-transcript';
 
 export type YoutubeTranscriptType = {
   text: string;
@@ -107,6 +107,42 @@ export default class YoutubeApi {
     }
   }
 
+  async getYoutubeDatasourceName(url: string) {
+    const type = YoutubeApi.getYoutubeLinkType(url);
+
+    switch (type) {
+      case 'channel':
+        const handle = YoutubeApi.extractHandle(url);
+        if (!handle) {
+          throw new Error('Invalid Channel Url!');
+        }
+        const channel = await this.Youtube.search.list({
+          part: 'snippet',
+          q: handle,
+          type: 'channel',
+          maxResults: 1,
+        });
+        return channel?.data?.items[0]?.snippet?.title;
+      case 'playlist':
+        const playlistId = YoutubeApi.extractPlaylistId(url);
+        if (!playlistId) {
+          throw new Error('Unexpected Error occured, unable to get playlistId');
+        }
+        const playlistData = await this.Youtube.playlists.list({
+          id: playlistId,
+          part: 'snippet',
+        });
+
+        const { title, channelTitle } = playlistData?.data?.items?.[0]?.snippet;
+
+        return `${channelTitle} - ${title}`;
+
+        break;
+      default:
+        throw new Error('Uknown content type.');
+    }
+  }
+
   static async transcribeVideo(url: string): Promise<YoutubeTranscriptType[]> {
     return YoutubeTranscript.fetchTranscript(url);
   }
@@ -130,5 +166,32 @@ export default class YoutubeApi {
     const match = url.match(regex);
 
     return match ? match[1] : null;
+  }
+
+  static groupTranscriptsBySeconds(props: {
+    nbSeconds: number;
+    transcripts: TranscriptResponse[];
+  }) {
+    const groups = [] as { text: string; offset: number }[];
+
+    let counter = 0;
+    let obj = { offset: 0, text: '' } as (typeof groups)[0];
+    for (const each of props.transcripts) {
+      const duration = Math.ceil(each.duration / 1000);
+
+      if (counter === 0) {
+        obj.offset = each.offset;
+      }
+
+      if (counter < props.nbSeconds) {
+        obj.text += each.text;
+        counter += duration;
+      } else {
+        groups.push(obj);
+        obj = { offset: 0, text: '' };
+        counter = 0;
+      }
+    }
+    return groups;
   }
 }

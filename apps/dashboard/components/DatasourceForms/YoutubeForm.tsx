@@ -57,6 +57,7 @@ export default function YoutubeForm(props: Props) {
     <Base
       schema={DatasourceSchema}
       {...rest}
+      hideName
       defaultValues={{
         ...props.defaultValues!,
       }}

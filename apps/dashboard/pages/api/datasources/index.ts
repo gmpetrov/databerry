@@ -23,6 +23,7 @@ import { AcceptedDatasourceMimeTypes } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import validate from '@chaindesk/lib/validate';
+import YoutubeApi from '@chaindesk/lib/youtube-api';
 import { DatasourceStatus, DatasourceType, Usage } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
