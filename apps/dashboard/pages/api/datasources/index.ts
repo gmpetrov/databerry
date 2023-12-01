@@ -23,6 +23,7 @@ import { AcceptedDatasourceMimeTypes } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import validate from '@chaindesk/lib/validate';
+import YoutubeApi from '@chaindesk/lib/youtube-api';
 import { DatasourceStatus, DatasourceType, Usage } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
@@ -219,6 +220,14 @@ export const upsertDatasource = async (
   const tags = (((data.config as any)?.tags || []) as string[]).filter(
     (each) => !!each.trim()
   );
+
+  if (data.type === DatasourceType.youtube_bulk) {
+    const Youtube = new YoutubeApi();
+    const name = await Youtube.getYoutubeDatasourceName(
+      (data?.config as any)?.source_url
+    );
+    data.name ||= name;
+  }
 
   const datasource = await prisma.appDatasource.upsert({
     where: {

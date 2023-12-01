@@ -78,36 +78,9 @@ export const createYoutubeSummary = async (
   } else {
     const transcripts = await YoutubeApi.transcribeVideo(url);
 
-    const groubBySeconds = (props: {
-      nbSeconds: number;
-      items: typeof transcripts;
-    }) => {
-      const groups = [] as any[];
-
-      let counter = 0;
-      let obj = { offset: 0, text: '' };
-      for (const each of props.items) {
-        const duration = Math.ceil(each.duration / 1000);
-
-        if (counter === 0) {
-          obj.offset = each.offset;
-        }
-
-        if (counter < props.nbSeconds) {
-          obj.text += each.text;
-          counter += duration;
-        } else {
-          groups.push(obj);
-          obj = { offset: 0, text: '' };
-          counter = 0;
-        }
-      }
-      return groups;
-    };
-
-    const text = groubBySeconds({
+    const text = YoutubeApi.groupTranscriptsBySeconds({
       nbSeconds: 60,
-      items: transcripts,
+      transcripts,
     }).reduce(
       (acc, { text, offset }) =>
         acc + `(${Math.ceil(offset / 1000)}s) ${text}\n`,
@@ -133,8 +106,10 @@ export const createYoutubeSummary = async (
       limit: 2,
     })(req, res);
 
-    // Trick to bypass cloudflare 100s timeout limit
-    res.json({ processing: true });
+    if (!refresh) {
+      // Trick to bypass cloudflare 100s timeout limit
+      res.json({ processing: true });
+    }
 
     const model = new ChatModel();
 
