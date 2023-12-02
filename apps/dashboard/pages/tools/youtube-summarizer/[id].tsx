@@ -59,7 +59,9 @@ export interface Metadata {
 
 export type SummaryPageProps = LLMTaskOutput & {
   output: {
-    ['en']: Schema;
+    ['en']: Schema & {
+      videoSummary?: string;
+    };
   } & {
     metadata: Metadata;
   };
@@ -235,19 +237,23 @@ export default function SummaryPage({ output }: SummaryPageProps) {
 
         <Divider />
 
-        {/* <Stack spacing={2} mt={2}>
-          <Typography level="title-md" fontWeight={'bold'}>
-            Summary
-          </Typography>
-          <ReactMarkdown
-            className="min-w-full prose text-gray-600 dark:text-white"
-            remarkPlugins={[remarkGfm]}
-          >
-            {content.videoSummary}
-          </ReactMarkdown>
-        </Stack>
+        {content?.videoSummary && (
+          <>
+            <Stack spacing={2} mt={2}>
+              <Typography level="title-md" fontWeight={'bold'}>
+                Summary
+              </Typography>
+              <ReactMarkdown
+                className="min-w-full prose text-gray-600 dark:text-white"
+                remarkPlugins={[remarkGfm]}
+              >
+                {content.videoSummary}
+              </ReactMarkdown>
+            </Stack>
 
-        <Divider /> */}
+            <Divider />
+          </>
+        )}
 
         <Stack direction="row" className="sm:space-x-12">
           <Box className="hidden sm:block">
@@ -273,10 +279,11 @@ export default function SummaryPage({ output }: SummaryPageProps) {
               <Stack
                 direction="row"
                 key={index}
-                id={title}
                 justifyContent="flex-end"
-                className="flex w-full space-x-6 space-y-6"
+                className="flex justify-start w-full space-x-6 space-y-6"
               >
+                {/* fix anchor hidden by header */}
+                <div className="relative -top-16" id={title}></div>
                 <Box className="mt-5">
                   <IconButton
                     size="sm"

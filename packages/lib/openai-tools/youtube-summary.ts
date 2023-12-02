@@ -9,17 +9,23 @@ export const Schema = z.object({
   chapters: z
     .array(
       z.object({
-        title: z.string().describe('Title of the chapter in english'),
-        summary: z.string().describe('Summary of the chapter in english'),
+        title: z
+          .string()
+          .describe(
+            "Title of the chapter in english. It should be short and concise and give a good idea of what the chapter is about. It can't be call Chapter 1, Chapter 2, etc."
+          ),
+        summary: z
+          .string()
+          .describe('Detailed summary with key insights. In english.'),
         offset: z
           .string()
           .describe(
-            'Offset in the video where the chapter starts. Format: 42s'
+            'Offset in the video where the chapter starts. Format: 42s.'
           ),
       })
     )
     .describe(
-      'Summaries by order of appearance of all topics discussed. Make sure you go through all of them.'
+      'Identified Chapters by order of appearance. It is an array of objects with the following properties: title, summary, offset.'
     ),
   // videoSummary: z
   //   .string()
@@ -35,8 +41,7 @@ const tool = {
   type: 'function',
   function: {
     name: 'youtube_summary',
-    description:
-      'Extract thoroughly all chapters from a given youtube video transcript from the beginning to the end.',
+    description: 'Extract chapters from a given youtube video transcript.',
     parameters: zodToJsonSchema(Schema),
     parse: zodParseJSON(Schema),
     function: (data: z.infer<typeof Schema>) => data,

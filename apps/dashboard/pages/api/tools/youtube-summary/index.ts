@@ -1,6 +1,7 @@
 import { ConstructionOutlined } from '@mui/icons-material';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
+import pMap from 'p-map';
 import { z, ZodSchema } from 'zod';
 
 import ChatModel from '@chaindesk/lib/chat-model';
@@ -14,9 +15,7 @@ import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
 import ytTool, { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
-import runMiddleware from '@chaindesk/lib/run-middleware';
 import splitTextByToken from '@chaindesk/lib/split-text-by-token';
-import generateSummary from '@chaindesk/lib/summarize';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
@@ -83,7 +82,7 @@ export const createYoutubeSummary = async (
       transcripts,
     }).reduce(
       (acc, { text, offset }) =>
-        acc + `(${Math.ceil(offset / 1000)}s) ${text}\n`,
+        acc + `(offset: ${Math.ceil(offset / 1000)}s) ${text}\n`,
       ''
     );
 
@@ -95,10 +94,10 @@ export const createYoutubeSummary = async (
     //   .map((each) => `[starts at ${each.offset}] ${each.text}`)
     //   .join('\n');
 
-    const modelName = AgentModelName.gpt_4_turbo;
-    const [chunkedText] = await splitTextByToken({
+    const modelName = AgentModelName.gpt_3_5_turbo;
+    const chunks = await splitTextByToken({
       text,
-      chunkSize: ModelConfig[modelName].maxTokens * 0.7,
+      chunkSize: ModelConfig[modelName].maxTokens * 0.5,
     });
 
     await rateLimit({
@@ -113,31 +112,64 @@ export const createYoutubeSummary = async (
 
     const model = new ChatModel();
 
-    const result = await model.call({
-      model: ModelConfig[modelName].name,
-      tools: [ytTool],
-      tool_choice: {
-        type: 'function',
-        function: {
-          name: 'youtube_summary',
+    const results = Array(chunks.length) as Schema[];
+
+    const run = async (chunkedText: string, index: number) => {
+      const result = await model.call({
+        model: ModelConfig[modelName].name,
+        tools: [ytTool],
+        tool_choice: {
+          type: 'function',
+          function: {
+            name: 'youtube_summary',
+          },
         },
+        messages: [
+          {
+            role: 'system',
+            content: `Extract thoroughly all chapters from a given youtube video chunked transcript. Make sure you include time offsets. Use English language only.`,
+          },
+          {
+            role: 'user',
+            content: `Video transcript chunk number ${index} : ${chunkedText}`,
+          },
+        ],
+      });
+
+      results[index] = zodParseJSON(Schema)(
+        result?.completion?.choices?.[0]?.message?.tool_calls?.[0]?.function
+          ?.arguments as string
+      );
+    };
+
+    await pMap(chunks, run, { concurrency: chunks.length });
+
+    const data = results.reduce(
+      (acc, each) => {
+        acc.chapters.push(...each.chapters);
+        return acc;
       },
+      { chapters: [] as Schema['chapters'] }
+    );
+
+    const chaptersText = data.chapters.map((each) => each.summary).join(' ');
+
+    const summaryCall = await model.call({
+      model: ModelConfig[modelName].name,
       messages: [
         {
           role: 'system',
-          content: `Extract thoroughly all chapters from a given youtube video transcript.`,
+          content: `Generate a short summary of a given youtube video transcript. Provide your response in raw markdown format`,
         },
         {
           role: 'user',
-          content: `Video transcript: ${chunkedText}`,
+          content: `Video: ### ${chaptersText} ### Short summary that highlights most important informations for a TLDR section. Use bullet points: `,
         },
       ],
     });
 
-    const data = zodParseJSON(Schema)(
-      result?.completion?.choices?.[0]?.message?.tool_calls?.[0]?.function
-        ?.arguments as string
-    );
+    const videoSummary =
+      summaryCall?.completion?.choices?.[0]?.message?.content;
 
     const id = found?.id || cuid();
 
@@ -151,9 +183,10 @@ export const createYoutubeSummary = async (
         },
         en: {
           ...data,
+          videoSummary,
         },
       },
-      usage: result?.usage as any,
+      // usage: result?.usage as any,
     } as Prisma.LLMTaskOutputCreateArgs['data'];
 
     const output = await prisma.lLMTaskOutput.upsert({
@@ -163,6 +196,8 @@ export const createYoutubeSummary = async (
       create: payload,
       update: payload,
     });
+
+    req.logger.info(`Finished processing youtube video ${videoId}`);
 
     return output;
   }
