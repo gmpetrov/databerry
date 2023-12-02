@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.107"></a>
+## 0.1.107 (2023-12-02)
+
+### Fixed
+
+- 🐛 Color Mode conflicts Joy/Tailwind [[fdaa946](https://github.com/gmpetrov/databerry/commit/fdaa946924b42bbbcdc3214d7eff6a92ebce393b)]
+- 🐛 og image size [[00321a7](https://github.com/gmpetrov/databerry/commit/00321a7bab72635638b1cc579376ccb9d5c57ea4)]
+
+### Miscellaneous
+
+-  Add yt summary tool to footer [[bc5337f](https://github.com/gmpetrov/databerry/commit/bc5337fc0b24fe58bc740f133d54ec47b04cc6f5)]
+
+
 <a name="0.1.106"></a>
 ## 0.1.106 (2023-12-02)
 
