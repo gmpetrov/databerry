@@ -1,6 +1,8 @@
 import { google } from 'googleapis';
 import { TranscriptResponse, YoutubeTranscript } from 'youtube-transcript';
 
+import { YOUTUBE_VIDEO_URL_RE } from './lib';
+
 export type YoutubeTranscriptType = {
   text: string;
   duration: number;
@@ -162,8 +164,7 @@ export default class YoutubeApi {
   }
 
   static extractVideoId(url: string) {
-    const regex = /(?:\?v=|&v=|youtu\.be\/)([^&#]+)/;
-    const match = url.match(regex);
+    const match = url.match(YOUTUBE_VIDEO_URL_RE);
 
     return match ? match[1] : null;
   }

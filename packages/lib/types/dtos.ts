@@ -13,6 +13,8 @@ import {
   ToolType,
 } from '@chaindesk/prisma';
 
+import { YOUTUBE_VIDEO_URL_RE } from '../youtube-api/lib';
+
 import { AIStatus } from './crisp';
 import {
   BaseDocumentMetadataSchema,
@@ -415,9 +417,7 @@ export const ConversationStatusSchema = z.object({
 export const YoutubeSummarySchema = z.object({
   url: z.string().refine(
     (url) => {
-      const regex =
-        /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/i;
-      return regex.test(url);
+      return YOUTUBE_VIDEO_URL_RE.test(url);
     },
     {
       message: 'Invalid YouTube video URL',

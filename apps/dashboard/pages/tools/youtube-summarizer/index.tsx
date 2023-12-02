@@ -37,6 +37,7 @@ import {
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
 import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
+import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
 import { Prisma } from '@chaindesk/prisma';
 
 import { getLatestVideos } from '../../api/tools/youtube-summary';
@@ -71,8 +72,8 @@ export default function Youtube() {
         ...payload,
       });
 
-      const regex = /(?:\?v=|&v=|youtu\.be\/)([^&#]+)/;
-      const videoId = payload.url.match(regex)?.[1];
+      const videoId = payload.url.match(YOUTUBE_VIDEO_URL_RE)?.[1];
+
       const videoUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/tools/youtube-summarizer/${videoId}`;
 
       if (response?.externalId) {

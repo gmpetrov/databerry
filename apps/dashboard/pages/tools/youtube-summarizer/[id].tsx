@@ -65,6 +65,36 @@ export type SummaryPageProps = LLMTaskOutput & {
   };
 };
 
+var entities = {
+  amp: '&',
+  apos: "'",
+  '#x27': "'",
+  '#x2F': '/',
+  '#39': "'",
+  '#47': '/',
+  lt: '<',
+  gt: '>',
+  nbsp: ' ',
+  quot: '"',
+};
+
+function decodeHTMLEntities(text: string): string {
+  return text.replace(/&([^;]+);/gm, function (match: any, entity: any) {
+    return (entities as any)?.[entity] || match;
+  });
+}
+
+// function decodeHTMLEntities(str: string) {
+//   if (typeof window === 'undefined') {
+//     return str;
+//   }
+//   let txt = document.createElement('textarea');
+
+//   txt.innerHTML = str;
+
+//   return txt.value;
+// }
+
 export default function SummaryPage({ output }: SummaryPageProps) {
   const { mode, setMode } = useColorScheme();
   const router = useRouter();
@@ -97,6 +127,8 @@ export default function SummaryPage({ output }: SummaryPageProps) {
     }
   );
 
+  const title = decodeHTMLEntities(output?.metadata?.title);
+
   return (
     <>
       <TopBar href="/tools/youtube-summarizer" />
@@ -106,7 +138,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
         uri={router.asPath}
         ogImage={`https://www.chaindesk.ai/api/og/youtube-summary?state=${encodeURIComponent(
           JSON.stringify({
-            title: output?.metadata?.title,
+            title,
             // TODO: Do we really want another call in the youtubeApi Class for this ?
             channelThumbnail: output?.metadata?.thumbnails?.high?.url,
             videoThumbnail: output?.metadata?.thumbnails?.high?.url,
@@ -148,7 +180,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
             sx={{ justifyContent: 'space-between', alignItems: 'start' }}
             gap={1}
           >
-            <Typography level="h3">{output?.metadata?.title}</Typography>
+            <Typography level="h3">{title}</Typography>
             <Stack direction="row" gap={1}>
               <IconButton
                 variant="outlined"
@@ -156,7 +188,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 onClick={() => {
                   if (navigator.share) {
                     navigator.share({
-                      title: `AI YouTube Summary: ${output?.metadata?.title}`,
+                      title: `AI YouTube Summary: ${title}`,
                       text: output?.metadata?.description,
                       url: window.location.href,
                     });
@@ -228,7 +260,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                   <li key={index} className="hover:underline">
                     <a href={`#${title}`}>
                       <Typography level="body-md" color="neutral">
-                        {title}
+                        {decodeHTMLEntities(title)}
                       </Typography>
                     </a>
                   </li>
@@ -258,12 +290,12 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 </Box>
 
                 <Box className="spac-y-4">
-                  <Typography level="title-lg"> {title}</Typography>
+                  <Typography level="title-lg">{title}</Typography>
                   <ReactMarkdown
                     className="min-w-full prose text-gray-600 dark:text-white"
                     remarkPlugins={[remarkGfm]}
                   >
-                    {summary}
+                    {decodeHTMLEntities(summary)}
                   </ReactMarkdown>
                 </Box>
               </Stack>
