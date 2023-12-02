@@ -309,6 +309,7 @@ function OrganizationForm({}: Props) {
               control={methods.control}
               {...methods.register('email')}
               label="Email"
+              onBlur={(e) => {}} // // Otherwise got error when submiting with return key 🤷
               endDecorator={
                 <Button type="submit" loading={state.isSubmitting}>
                   Invite

@@ -171,6 +171,8 @@ export default function Youtube() {
                     control={control}
                     // className="flex-1 w-full"
                     {...register('url')}
+                    // Otherwise got error when submiting with return key 🤷
+                    onBlur={(e) => {}}
                     placeholder="Paste your youtube video link here"
                     disabled={isLoading}
                     startDecorator={<YouTubeIcon />}
