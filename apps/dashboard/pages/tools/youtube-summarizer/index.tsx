@@ -27,6 +27,7 @@ import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
 import Input from '@app/components/Input';
+import { Footer } from '@app/components/landing-page/Footer';
 import PoweredByCard from '@app/components/PoweredByCard';
 import SEO from '@app/components/SEO';
 import TopBar from '@app/components/TopBar';
@@ -121,7 +122,7 @@ export default function Youtube() {
   };
 
   React.useEffect(() => {
-    setMode('light');
+    setMode('dark');
   }, []);
 
   const isLoading = summaryMutation.isMutating || isProcessing;
@@ -134,11 +135,12 @@ export default function Youtube() {
         uri={router.asPath}
         ogImage={`https://www.chaindesk.ai/api/og/youtube-summary`}
       />
-      <Stack sx={{ width: '100vw', height: '100vh' }}>
+      <Stack sx={{ width: '100vw', minHeight: '100vh' }}>
         <TopBar />
 
         <Stack
           sx={{
+            flex: 1,
             width: '100%',
             height: '100%',
             overflowX: 'hidden',
@@ -305,6 +307,7 @@ export default function Youtube() {
             }}
           />
         </Stack>
+        <Footer />
       </Stack>
     </>
   );

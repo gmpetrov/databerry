@@ -1,8 +1,9 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { Box, Button, Stack, Typography } from '@mui/joy';
+import { Box, Button, Stack, Typography, useColorScheme } from '@mui/joy';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
 
 import { Footer } from '@app/components/landing-page/Footer';
 import { Header } from '@app/components/landing-page/Header';
@@ -17,6 +18,11 @@ type PageProps = {
 };
 
 export default function ProductPage({ product }: PageProps) {
+  const { mode, setMode } = useColorScheme();
+  React.useEffect(() => {
+    setMode('dark');
+  }, []);
+
   return (
     <>
       <SEO
@@ -42,12 +48,14 @@ export default function ProductPage({ product }: PageProps) {
             },
           }}
         >
-          <Stack gap={2}>
+          <Stack gap={2} sx={{ maxWidth: 'sm' }}>
             <Typography
               level="h2"
               fontWeight={'bold'}
               className="relative z-10 block"
-              sx={(theme) => theme.typography.display1}
+              sx={(theme) => ({
+                ...theme.typography.display1,
+              })}
             >
               {product.name}
             </Typography>

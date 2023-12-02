@@ -110,7 +110,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
   const lang = 'en';
 
   React.useEffect(() => {
-    setMode('light');
+    setMode('dark');
   }, []);
 
   useEffect(() => {

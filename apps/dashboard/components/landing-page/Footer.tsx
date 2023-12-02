@@ -16,10 +16,17 @@ const navigation = {
       name: product.name,
       href: `/products/${product.slug}`,
     })),
+
     // { name: 'Marketing', href: '#' },
     // { name: 'Analytics', href: '#' },
     // { name: 'Commerce', href: '#' },
     // { name: 'Insights', href: '#' },
+  ],
+  tools: [
+    {
+      name: 'Free YouTube Video Summarizer',
+      href: `/tools/youtube-summarizer`,
+    },
   ],
   support: [
     {
@@ -179,8 +186,8 @@ export function Footer({
           </div>
           <div className="grid grid-cols-1 gap-8 mt-16 xl:col-span-2 xl:mt-0">
             <div
-              className={clsx('md:grid md:grid-cols-2 md:gap-8', {
-                'md:grid-cols-3': !disableProductColumn,
+              className={clsx('md:grid md:grid-cols-3 md:gap-8', {
+                'md:grid-cols-4': !disableProductColumn,
               })}
             >
               {!disableProductColumn && (
@@ -202,6 +209,24 @@ export function Footer({
                   </ul>
                 </div>
               )}
+
+              <div>
+                <h3 className="text-sm font-semibold leading-6 text-white">
+                  Tools
+                </h3>
+                <ul role="list" className="mt-6 space-y-4">
+                  {navigation.tools.map((item) => (
+                    <li key={item.name}>
+                      <a
+                        href={item.href}
+                        className="text-sm leading-6 text-gray-300 hover:text-white"
+                      >
+                        {item.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="mt-10 md:mt-0">
                 <h3 className="text-sm font-semibold leading-6 text-white">
                   Help & Support
