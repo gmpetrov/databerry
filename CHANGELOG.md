@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.105"></a>
+## 0.1.105 (2023-12-02)
+
+### Fixed
+
+- 🐛 yt tool video id extraction [[08028c6](https://github.com/gmpetrov/databerry/commit/08028c6bf2172b1b5795b5a14b34fb91b82b82f6)]
+
+### Miscellaneous
+
+-  fix typos [[3fb50da](https://github.com/gmpetrov/databerry/commit/3fb50da22148979632a6ecc0b1a831b7f031e0d1)]
+- 🤖 add yt summarizer to sitemap [[21d7a8c](https://github.com/gmpetrov/databerry/commit/21d7a8c351871c80704478a32d8b64bf1ed6704f)]
+
+
 <a name="0.1.104"></a>
 ## 0.1.104 (2023-12-01)
 
