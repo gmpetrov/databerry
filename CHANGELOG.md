@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.108"></a>
+## 0.1.108 (2023-12-02)
+
+### Fixed
+
+- 🐛 tmp patch input crash submit with return key [[1de584a](https://github.com/gmpetrov/databerry/commit/1de584a2795554b8ac3b9565a8eb91270235abf4)]
+
+
 <a name="0.1.107"></a>
 ## 0.1.107 (2023-12-02)
 

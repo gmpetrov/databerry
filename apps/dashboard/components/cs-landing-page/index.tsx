@@ -18,7 +18,8 @@ import {
   ShieldCheckIcon,
   SparklesIcon,
 } from '@heroicons/react/20/solid';
-import React from 'react';
+import { useColorScheme } from '@mui/joy';
+import React, { useEffect } from 'react';
 
 import Cta from '../landing-page/Cta';
 import FAQ from '../landing-page/FAQ';
@@ -34,6 +35,12 @@ import Hero from './Hero';
 type Props = {};
 
 function CSLandingPage({}: Props) {
+  const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    setMode('dark');
+  }, []);
+
   return (
     <>
       <SEO
