@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.106"></a>
+## 0.1.106 (2023-12-02)
+
+### Changed
+
+- ⚡ try another strategy for the yt summary tool [[9758e3c](https://github.com/gmpetrov/databerry/commit/9758e3c1810bddcec43c1d621310faacb3fcb236)]
+
+
 <a name="0.1.105"></a>
 ## 0.1.105 (2023-12-02)
 
