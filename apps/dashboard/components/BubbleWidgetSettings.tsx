@@ -27,7 +27,7 @@ import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
 import InitMessageInput from './AgentInputs/InitMessageInput';
 import SuggestionsInput from './AgentInputs/SuggestionsInput';
 import AgentForm from './AgentForm';
-import ChatBubble, { theme } from './ChatBubble';
+import ChatBubble, { theme, widgetThemeKeys } from './ChatBubble';
 import ConnectForm from './ConnectForm';
 
 if (typeof window !== 'undefined') {
@@ -144,9 +144,7 @@ export default function BubbleWidgetSettings(props: Props) {
                                       <CssVarsProvider
                                         theme={theme}
                                         defaultMode="light"
-                                        modeStorageKey="databerry-chat-bubble"
-                                        // colorSchemeStorageKey="databerry-chat-bubble-scheme"
-                                        // attribute="databerry-chat-bubble-scheme"
+                                        {...widgetThemeKeys}
                                       >
                                         <CssBaseline />
                                         <Box

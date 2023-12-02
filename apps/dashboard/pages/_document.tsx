@@ -8,6 +8,8 @@ import Document, {
 } from 'next/document';
 import Script from 'next/script';
 
+import { themeKeys } from '@app/utils/theme';
+
 class CustomDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
@@ -77,7 +79,30 @@ class CustomDocument extends Document {
           </Script>
         </Head>
         <body>
-          {getInitColorSchemeScript()}
+          {getInitColorSchemeScript({
+            colorSchemeStorageKey: themeKeys.colorSchemeStorageKey,
+            attribute: themeKeys.attribute,
+            modeStorageKey: themeKeys.modeStorageKey,
+          })}
+          <script
+            id="bind-joy-and-tailwindcss"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    const mode = document.documentElement.getAttribute(
+                      '${themeKeys.attribute}'
+                    );
+    
+                    if (mode) {
+                      document.body.classList.add(mode);
+                    }
+    
+                  }catch {}
+                })()
+              `,
+            }}
+          ></script>
           <Main />
           <NextScript />
         </body>

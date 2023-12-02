@@ -24,6 +24,12 @@ import type { Agent, ConversationStatus } from '@chaindesk/prisma';
 
 import CustomerSupportActions from './CustomerSupportActions';
 
+export const widgetThemeKeys = {
+  modeStorageKey: 'databerry-chat-bubble',
+  colorSchemeStorageKey: 'databerry-chat-bubble-scheme',
+  attribute: 'data-databerry-chat-bubble',
+};
+
 export const theme = extendTheme({
   cssVarPrefix: 'databerry-chat-bubble',
   colorSchemes: {

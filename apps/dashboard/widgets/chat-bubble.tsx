@@ -11,7 +11,7 @@ import {
 import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import ChatBubble, { theme } from '@app/components/ChatBubble';
+import ChatBubble, { theme, widgetThemeKeys } from '@app/components/ChatBubble';
 
 document.addEventListener('DOMContentLoaded', () => {
   try {
@@ -41,10 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <CssVarsProvider
                 theme={theme}
                 defaultMode="light"
-                modeStorageKey="databerry-chat-bubble"
-                colorSchemeStorageKey="databerry-chat-bubble-scheme"
-                attribute="databerry-chat-bubble-scheme"
                 colorSchemeNode={div}
+                {...widgetThemeKeys}
               >
                 <ChatBubble agentId={me.id} />
               </CssVarsProvider>

@@ -299,4 +299,16 @@ mergedTheme.unstable_sxConfig = {
   ...joyTheme.unstable_sxConfig,
 };
 
+export const themeKeys = {
+  modeStorageKey: 'app-dashboard-mode',
+  colorSchemeStorageKey: 'app-dashboard-color-scheme',
+  attribute: 'data-app-dashboard-theme',
+};
+
+export const iframeWidgetThemeKeys = {
+  modeStorageKey: 'app-iframe-mode',
+  colorSchemeStorageKey: 'app-iframe-color-scheme',
+  attribute: 'data-app-iframe-mode',
+};
+
 export default mergedTheme;

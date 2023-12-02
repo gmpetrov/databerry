@@ -98,7 +98,7 @@ function decodeHTMLEntities(text: string): string {
 // }
 
 export default function SummaryPage({ output }: SummaryPageProps) {
-  const { mode, setMode } = useColorScheme();
+  const { mode } = useColorScheme();
   const router = useRouter();
   const { data: session } = useSession();
   const videoId = router.query.id as string;
@@ -108,10 +108,6 @@ export default function SummaryPage({ output }: SummaryPageProps) {
   });
   const triggerConfetti = useConfetti({});
   const lang = 'en';
-
-  React.useEffect(() => {
-    setMode('light');
-  }, []);
 
   useEffect(() => {
     triggerConfetti();
@@ -155,10 +151,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
         sx={{
           p: 2,
         }}
-        className={clsx('container relative max-w-6xl  mx-auto scroll-smooth', {
-          dark: mode === 'dark',
-          light: mode === 'light',
-        })}
+        className={clsx('container relative max-w-6xl  mx-auto scroll-smooth')}
       >
         <AspectRatio
           objectFit="cover"

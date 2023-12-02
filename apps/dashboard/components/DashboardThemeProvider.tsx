@@ -4,7 +4,7 @@ import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import React from 'react';
 
 import createEmotionCache from '@app/utils/create-emotion-cache';
-import theme from '@app/utils/theme';
+import theme, { themeKeys } from '@app/utils/theme';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -16,10 +16,9 @@ function DashboardThemeProvider(props: any) {
       <CacheProvider value={emotionCache}>
         <CssVarsProvider
           theme={theme}
-          defaultMode="dark"
-          modeStorageKey="chaindesk-dashboard-mode"
-          colorSchemeStorageKey="chaindesk-dashboard-color-scheme"
-          attribute="chaindesk-dashboard-color-scheme"
+          modeStorageKey={themeKeys.modeStorageKey}
+          colorSchemeStorageKey={themeKeys.colorSchemeStorageKey}
+          attribute={themeKeys.attribute}
         >
           <CssBaseline enableColorScheme />
           {props.children}

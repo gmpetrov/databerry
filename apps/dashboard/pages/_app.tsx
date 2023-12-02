@@ -11,12 +11,13 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import Analytics from '@app/components/Analytics';
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
 import DefaultSEOTags from '@app/components/DefaultSEOTags';
+import SynchTailwindColorMode from '@app/components/SynchTailwindColorMode';
 import {
   getProductFromHostname,
   ProductContext,
@@ -63,6 +64,7 @@ export default function App({
         <SessionProvider>
           <Analytics>
             <DefaultSEOTags />
+            <SynchTailwindColorMode />
             <Component {...pageProps} />
           </Analytics>
         </SessionProvider>
@@ -78,6 +80,7 @@ export default function App({
           <Analytics>
             <Toaster />
             <DefaultSEOTags />
+            <SynchTailwindColorMode />
             {getLayout(<Component {...pageProps} />)}
           </Analytics>
         </SessionProvider>

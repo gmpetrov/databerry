@@ -10,6 +10,7 @@ import {
 import React, { ReactElement } from 'react';
 
 import ChatBoxFrame from '@app/components/ChatBoxFrame';
+import { iframeWidgetThemeKeys } from '@app/utils/theme';
 
 export const theme = extendTheme({
   cssVarPrefix: 'chaindesk-chat-iframe',
@@ -41,7 +42,7 @@ const IframeTheme = (props: any) => {
           <CssVarsProvider
             theme={theme}
             defaultMode="light"
-            modeStorageKey="chaindesk-chat-iframe"
+            {...iframeWidgetThemeKeys}
           >
             {props.children}
           </CssVarsProvider>

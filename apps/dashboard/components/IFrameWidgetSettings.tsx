@@ -18,6 +18,8 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import { iframeWidgetThemeKeys } from '@app/utils/theme';
+
 import { appUrl } from '@chaindesk/lib/config';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 
@@ -120,7 +122,7 @@ export default function BubbleWidgetSettings(props: Props) {
                                       <CssVarsProvider
                                         theme={theme}
                                         defaultMode="light"
-                                        modeStorageKey="chaindesk-chat-iframe"
+                                        {...iframeWidgetThemeKeys}
                                       >
                                         <CssBaseline enableColorScheme />
                                         <Box

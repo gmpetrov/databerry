@@ -121,10 +121,6 @@ export default function Youtube() {
     }
   };
 
-  React.useEffect(() => {
-    setMode('dark');
-  }, []);
-
   const isLoading = summaryMutation.isMutating || isProcessing;
 
   return (
