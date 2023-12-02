@@ -56,6 +56,17 @@ function SEO(props: Props) {
       <meta
         key="og:image"
         property="og:image"
+        itemProp="image"
+        content={props.ogImage ? props.ogImage : '/og-image.png'}
+      />
+      <meta
+        key="og:image:url"
+        property="og:image:url"
+        content={props.ogImage ? props.ogImage : '/og-image.png'}
+      />
+      <meta
+        key="og:image:secure_url"
+        property="og:image:secure_url"
         content={props.ogImage ? props.ogImage : '/og-image.png'}
       />
       <meta

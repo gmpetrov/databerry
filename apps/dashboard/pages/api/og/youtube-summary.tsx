@@ -62,15 +62,15 @@ export default async function handler(request: NextRequest) {
             <div tw="w-1/2 flex h-full p-2 border-8 border-black">
               <div tw="flex flex-col justify-center items-center w-full text-center">
                 <div tw="flex flex-col w-full h-full justify-center items-center">
-                  <div tw="flex w-52 h-52 rounded-full border-8 border-black overflow-hidden ">
-                    <img
+                  {/* <div tw="flex w-52 h-52 rounded-full border-8 border-black overflow-hidden "> */}
+                  {/* <img
                       src={state?.channelThumbnail}
                       alt="Video thumbnail"
                       tw="w-42 h-auto aspect-squqre"
                       width={100}
                       height={100}
                     />
-                  </div>
+                  </div> */}
 
                   <h1 tw="flex flex-col text-2xl sm:text-3xl font-bold text-gray-900 justify-center">
                     <span>{state.title}</span>
@@ -106,8 +106,10 @@ export default async function handler(request: NextRequest) {
       </div>
     ),
     {
-      width: 1200,
-      height: 630,
+      // width: 1200,
+      // height: 630,
+      width: 600,
+      height: 315,
       fonts: [
         {
           name: 'Josefin Sans',

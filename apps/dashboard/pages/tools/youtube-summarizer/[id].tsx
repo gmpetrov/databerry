@@ -110,7 +110,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
   const lang = 'en';
 
   React.useEffect(() => {
-    setMode('dark');
+    setMode('light');
   }, []);
 
   useEffect(() => {
@@ -244,7 +244,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 Summary
               </Typography>
               <ReactMarkdown
-                className="min-w-full prose text-gray-600 dark:text-white"
+                className="min-w-full prose text-gray-700 dark:text-gray-300"
                 remarkPlugins={[remarkGfm]}
               >
                 {content.videoSummary}
@@ -299,7 +299,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 <Box className="spac-y-4">
                   <Typography level="title-lg">{title}</Typography>
                   <ReactMarkdown
-                    className="min-w-full prose text-gray-600 dark:text-white"
+                    className="min-w-full prose text-gray-700 dark:text-gray-300"
                     remarkPlugins={[remarkGfm]}
                   >
                     {decodeHTMLEntities(summary)}
