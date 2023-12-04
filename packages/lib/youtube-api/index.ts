@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { google } from 'googleapis';
 import { TranscriptResponse, YoutubeTranscript } from 'youtube-transcript';
 
@@ -7,6 +8,21 @@ export type YoutubeTranscriptType = {
   text: string;
   duration: number;
   offset: number;
+};
+
+export type YoutubeVideoMetadata = {
+  title: string;
+  author_name: string;
+  author_url: string;
+  type: string;
+  height: number;
+  width: number;
+  version: string;
+  provider_name: string;
+  provider_url: string;
+  thumbnail_height: number;
+  thumbnail_width: number;
+  thumbnail_url: string;
 };
 
 export default class YoutubeApi {
@@ -94,6 +110,14 @@ export default class YoutubeApi {
       maxResults: 1,
     });
     return video?.data?.items?.[0]?.snippet;
+  }
+
+  static async getVideoMetadataWithoutApiKeys(videoId: string) {
+    const response = await axios.get(
+      `https://youtube.com/oembed?url=http://www.youtube.com/watch?v=${videoId}&format=json`
+    );
+
+    return response?.data as YoutubeVideoMetadata;
   }
 
   static getYoutubeLinkType(url: string): 'channel' | 'playlist' | 'unknown' {

@@ -30,18 +30,20 @@ export class YoutubeVideoLoader extends DatasourceLoaderBase<DatasourceYoutubeVi
       const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
       if (!this.datasource?.groupId) {
-        const snippet = await new YoutubeApi().getVideoSnippetById(videoId);
+        const metadata = await YoutubeApi.getVideoMetadataWithoutApiKeys(
+          videoId
+        );
 
         await prisma.appDatasource.update({
           where: {
             id: this.datasource.id,
           },
           data: {
-            name: snippet?.title,
+            name: metadata?.title,
           },
         });
 
-        this.datasource.name = snippet?.title;
+        this.datasource.name = metadata?.title;
       }
 
       docs = YoutubeApi.groupTranscriptsBySeconds({

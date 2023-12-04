@@ -27,21 +27,6 @@ import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createLazyAuthHandler();
 
-type YoutubeVideoMetadata = {
-  title: string;
-  author_name: string;
-  author_url: string;
-  type: string;
-  height: number;
-  width: number;
-  version: string;
-  provider_name: string;
-  provider_url: string;
-  thumbnail_height: number;
-  thumbnail_width: number;
-  thumbnail_url: string;
-};
-
 export const getLatestVideos = async (
   req: AppNextApiRequest,
   res: NextApiResponse
@@ -80,11 +65,7 @@ export const createYoutubeSummary = async (
     req?.session?.roles?.includes?.('SUPERADMIN');
 
   // const videoSnippet = await Youtube.getVideoSnippetById(videoId!);
-  const metadataResponse = await axios.get(
-    `https://youtube.com/oembed?url=http://www.youtube.com/watch?v=${videoId}&format=json`
-  );
-
-  const metadata = metadataResponse.data as YoutubeVideoMetadata;
+  const metadata = await YoutubeApi.getVideoMetadataWithoutApiKeys(videoId);
 
   if (!metadata?.title) {
     throw new Error('Failed to fetch metadata for the video.');
