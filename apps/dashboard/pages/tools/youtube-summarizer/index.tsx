@@ -267,7 +267,7 @@ export default function Youtube() {
                             <img
                               src={
                                 (each as SummaryPageProps)?.output?.metadata
-                                  ?.thumbnails?.medium?.url
+                                  ?.thumbnails?.high?.url
                               }
                               alt=""
                             />

@@ -164,11 +164,13 @@ export default function SummaryPage({ output }: SummaryPageProps) {
           <img src={output?.metadata?.thumbnails?.high?.url} />
         </AspectRatio>
         <Box>
-          <Typography level="body-sm">
-            Published{' '}
-            {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
-            Youtube
-          </Typography>
+          {output?.metadata?.publishedAt && (
+            <Typography level="body-sm">
+              Published{' '}
+              {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
+              Youtube
+            </Typography>
+          )}
 
           <Stack
             direction="row"
@@ -184,7 +186,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                   if (navigator.share) {
                     navigator.share({
                       title: `AI YouTube Summary: ${title}`,
-                      text: output?.metadata?.description,
+                      text: output?.metadata?.title,
                       url: window.location.href,
                     });
                   } else if (navigator.clipboard) {
