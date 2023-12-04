@@ -1,11 +1,16 @@
 # Changelog
 
-<a name="0.1.108"></a>
-## 0.1.108 (2023-12-02)
+<a name="0.1.109"></a>
+## 0.1.109 (2023-12-04)
 
 ### Fixed
 
+- 🐛 remove call to youtube api [[471b5d4](https://github.com/gmpetrov/databerry/commit/471b5d4b6d85a2d2083aa21db2b6b599fec0965c)]
 - 🐛 tmp patch input crash submit with return key [[1de584a](https://github.com/gmpetrov/databerry/commit/1de584a2795554b8ac3b9565a8eb91270235abf4)]
+
+### Miscellaneous
+
+-  Release 0.1.108 [[801e2be](https://github.com/gmpetrov/databerry/commit/801e2beda922fb40aa45d87cca0352a55346b6e5)]
 
 
 <a name="0.1.107"></a>
