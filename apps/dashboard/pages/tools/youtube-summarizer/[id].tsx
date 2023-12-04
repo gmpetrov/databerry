@@ -239,7 +239,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 Summary
               </Typography>
               <ReactMarkdown
-                className="min-w-full prose text-gray-700 dark:text-gray-300"
+                className="min-w-full prose text-gray-700 dark:prose-invert dark:text-gray-300"
                 remarkPlugins={[remarkGfm]}
               >
                 {content.videoSummary}
