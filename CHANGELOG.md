@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.110"></a>
+## 0.1.110 (2023-12-04)
+
+### Fixed
+
+- 🐛 Use unofficial YT API with YT ds video loader [[e7ac84d](https://github.com/gmpetrov/databerry/commit/e7ac84d8e8190c981ab43571c60038a44a224192)]
+
+
 <a name="0.1.109"></a>
 ## 0.1.109 (2023-12-04)
 
