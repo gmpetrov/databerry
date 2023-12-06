@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.113"></a>
+## 0.1.113 (2023-12-06)
+
+### Fixed
+
+- 🐛 chat message img border radius [[3880a5d](https://github.com/gmpetrov/databerry/commit/3880a5dfb9cc826faac41779fd5e24c004576f85)]
+
+### Miscellaneous
+
+- 🎸 Account Clearning Warning Email [[a47553f](https://github.com/gmpetrov/databerry/commit/a47553f298d43119c4230bb258c155355a8505fc)]
+
+
 <a name="0.1.112"></a>
 ## 0.1.112 (2023-12-06)
 
