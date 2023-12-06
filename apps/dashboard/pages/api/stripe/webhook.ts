@@ -127,9 +127,13 @@ handler.post(async (req, res) => {
         case 'customer.subscription.deleted': {
           const data = event.data.object as Stripe.Subscription;
 
-          const deleted = await prisma.subscription.delete({
+          const deleted = await prisma.subscription.update({
             where: {
               id: data.id,
+            },
+            data: {
+              status: 'canceled',
+              ended_at: timestampToDate(data.ended_at!),
             },
             include: {
               organization: {

@@ -35,6 +35,10 @@
     "sendWeeklyAdminStats": {
       "dependsOn": ["@chaindesk/prisma#prisma:generate"],
       "cache": false
+    },
+    "sendAccountCleaningWarning": {
+      "dependsOn": ["@chaindesk/prisma#prisma:generate"],
+      "cache": false
     }
   }
 }
