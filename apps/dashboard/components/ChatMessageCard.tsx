@@ -35,7 +35,7 @@ function ChatMessage({ sx, children, className, ...otherProps }: Props) {
         [' img ']: {
           width: '100%',
           maxWidth: '300px',
-          borderRadius: 'md',
+          borderRadius: theme.radius.md,
           my: 1,
         },
 
