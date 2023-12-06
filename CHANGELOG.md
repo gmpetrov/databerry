@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.111"></a>
+## 0.1.111 (2023-12-06)
+
+### Fixed
+
+- 🐛 Move Chatbubble to Shadow Dom [[a6887d6](https://github.com/gmpetrov/databerry/commit/a6887d6ec3166d369254fa6d2446c65162e4d2de)]
+- 🐛 dark mode prose tailwind [[9a96486](https://github.com/gmpetrov/databerry/commit/9a9648643365a58a4897b8a848ba49dd0d3589d4)]
+
+### Miscellaneous
+
+- 🤖 upgrade chatbubble [[f2f9621](https://github.com/gmpetrov/databerry/commit/f2f9621d3615cbd51f06c3805910fa0878dbbfc0)]
+
+
 <a name="0.1.110"></a>
 ## 0.1.110 (2023-12-04)
 
