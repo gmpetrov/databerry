@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.112"></a>
+## 0.1.112 (2023-12-06)
+
+### Fixed
+
+- 🐛 streamed text not visible [[e280b12](https://github.com/gmpetrov/databerry/commit/e280b124649034ce8f096fc1acc23226fbac8922)]
+
+
 <a name="0.1.111"></a>
 ## 0.1.111 (2023-12-06)
 
