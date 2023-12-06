@@ -17,13 +17,14 @@ import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import clsx from 'clsx';
+import { motion } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { z } from 'zod';
 
+import ChatMessageCard from '@app/components/ChatMessageCard';
+import Markdown from '@app/components/Markdown';
 import { ChatMessage, MessageEvalUnion } from '@app/hooks/useChat';
 
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
@@ -259,19 +260,9 @@ function ChatBox({
                   variant="outlined"
                   src={agentIconUrl || '/app-rounded-bg-white.png'}
                 ></Avatar>
-                <Card
-                  size="sm"
-                  variant={'outlined'}
-                  color={'primary'}
-                  className="prose-sm message-agent"
-                  sx={{
-                    mr: 'auto',
-                    ml: 'none',
-                    whiteSpace: 'pre-wrap',
-                  }}
-                >
-                  {firstMsg?.message}
-                </Card>
+                <ChatMessageCard className="message-agent">
+                  <Markdown>{firstMsg?.message}</Markdown>
+                </ChatMessageCard>
               </Stack>
             )}
 
@@ -330,57 +321,14 @@ function ChatBox({
                     )}
 
                     <Stack>
-                      <Card
-                        size="sm"
-                        variant={'outlined'}
+                      <ChatMessageCard
                         className={clsx(
                           each.from === 'agent'
                             ? 'message-agent'
                             : 'message-human'
                         )}
-                        color={each.from === 'agent' ? 'primary' : 'neutral'}
-                        sx={(theme) => ({
-                          overflowY: 'hidden',
-                          overflowX: 'auto',
-                          marginRight: 'auto',
-                          gap: 0,
-                          maxWidth: '100%',
-                          // '.prose > *:first-child': {
-                          //   pt: 1,
-                          //   mt: 0,
-                          // },
-                          // '.prose > *:last-child': {
-                          //   pb: 1,
-                          //   mb: 0,
-                          // },
-                          py: 1,
-                          px: 2,
-                          [' p ']: {
-                            m: 0,
-                            // p: 0,
-                            maxWidth: '100%',
-                            // wordBreak: 'break-word',
-                          },
-
-                          'h1,h2,h3,h4,h5': {
-                            fontSize: theme.fontSize.sm,
-                          },
-                          table: {
-                            overflowX: 'auto',
-                          },
-                        })}
                       >
-                        {each.from === 'agent' ? (
-                          <ReactMarkdown
-                            className="prose-sm prose dark:prose-invert"
-                            remarkPlugins={[remarkGfm]}
-                            linkTarget={'_blank'}
-                          >
-                            {each.message}
-                          </ReactMarkdown>
-                        ) : (
-                          <p className="prose-sm ">{each.message}</p>
-                        )}
+                        <Markdown>{each.message}</Markdown>
 
                         {each?.component}
 
@@ -420,7 +368,7 @@ function ChatBox({
                             </Box>
                           )}
                         </Stack>
-                      </Card>
+                      </ChatMessageCard>
                       {each.from === 'agent' &&
                         each?.id &&
                         !each?.disableActions && (
@@ -453,7 +401,6 @@ function ChatBox({
                   </Stack>
                 </Stack>
               ))}
-
             {isLoading && (
               <CircularProgress
                 variant="soft"
@@ -611,7 +558,7 @@ function ChatBox({
                 {renderBottom}
               </Stack>
               {!disableWatermark && (
-                <Stack>
+                <Stack sx={{ mt: 1 }}>
                   <a
                     href="https://chaindesk.ai"
                     target="_blank"
@@ -619,7 +566,7 @@ function ChatBox({
                       textDecoration: 'none',
                       marginLeft: 'auto',
                       marginRight: 'auto',
-                      marginBottom: '2px',
+                      // marginBottom: '2px',
                     }}
                   >
                     <Chip variant="outlined" size="sm" color="neutral">

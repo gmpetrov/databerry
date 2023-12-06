@@ -185,7 +185,7 @@ function ChatBox({
                 },
               })}
             >
-              <ReactMarkdown remarkPlugins={[remarkGfm]} linkTarget={'_blank'}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {each.message}
               </ReactMarkdown>
             </Card>

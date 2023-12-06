@@ -21,13 +21,15 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import { theme, themeKeys } from '@app/utils/themes/chat-bubble';
+
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
 import InitMessageInput from './AgentInputs/InitMessageInput';
 import SuggestionsInput from './AgentInputs/SuggestionsInput';
 import AgentForm from './AgentForm';
-import ChatBubble, { theme, widgetThemeKeys } from './ChatBubble';
+import ChatBubble from './ChatBubble';
 import ConnectForm from './ConnectForm';
 
 if (typeof window !== 'undefined') {
@@ -140,29 +142,27 @@ export default function BubbleWidgetSettings(props: Props) {
                               return (
                                 <StyledEngineProvider injectFirst>
                                   <CacheProvider value={cache}>
-                                    <ThemeProvider theme={theme}>
-                                      <CssVarsProvider
-                                        theme={theme}
-                                        defaultMode="light"
-                                        {...widgetThemeKeys}
+                                    <CssVarsProvider
+                                      theme={theme}
+                                      defaultMode="light"
+                                      {...themeKeys}
+                                    >
+                                      <CssBaseline />
+                                      <Box
+                                        sx={{
+                                          width: '100vw',
+                                          height: '100vh',
+                                          maxHeight: '100%',
+                                          overflow: 'hidden',
+                                          p: 2,
+                                        }}
                                       >
-                                        <CssBaseline />
-                                        <Box
-                                          sx={{
-                                            width: '100vw',
-                                            height: '100vh',
-                                            maxHeight: '100%',
-                                            overflow: 'hidden',
-                                            p: 2,
-                                          }}
-                                        >
-                                          <ChatBubble
-                                            agentId={query?.data?.id!}
-                                            initConfig={config}
-                                          />
-                                        </Box>
-                                      </CssVarsProvider>
-                                    </ThemeProvider>
+                                        <ChatBubble
+                                          agentId={query?.data?.id!}
+                                          initConfig={config}
+                                        />
+                                      </Box>
+                                    </CssVarsProvider>
                                   </CacheProvider>
                                 </StyledEngineProvider>
                               );

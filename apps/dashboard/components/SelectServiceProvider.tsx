@@ -10,7 +10,7 @@ import useSWR from 'swr';
 import { getServiceProviders } from '@app/pages/api/service-providers';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
-type Props = SelectProps<string> & {
+type Props = SelectProps<string, false> & {
   label?: string;
   serviceProviderType?: ServiceProviderType;
 };

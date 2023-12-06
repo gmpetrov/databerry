@@ -68,7 +68,6 @@ export default function LeadForm(props: {
       sx={{
         width: '100%',
         height: '100%',
-        backgroundColor: 'white',
         pt: 1,
         pb: 2,
       }}

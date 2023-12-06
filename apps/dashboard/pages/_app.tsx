@@ -28,8 +28,6 @@ import createEmotionCache from '@app/utils/create-emotion-cache';
 
 import { NextPageWithLayout, RouteNames } from '@chaindesk/lib/types';
 
-const clientSideEmotionCache = createEmotionCache();
-
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
@@ -58,7 +56,10 @@ export default function App({
     }
   }, []);
 
-  if (router.pathname === '/agents/[agentId]/iframe') {
+  if (
+    router.pathname === '/agents/[agentId]/iframe' ||
+    router.pathname === '/agents/[agentId]/standalone'
+  ) {
     return getLayout(
       <ProductContext.Provider value={product}>
         <SessionProvider>

@@ -67,7 +67,7 @@ interface SelectQueryParamFilterProps<T> {
 function SelectQueryParamFilter<T extends {}>({
   filterName,
   ...otherProps
-}: SelectQueryParamFilterProps<T> & SelectProps<T>) {
+}: SelectQueryParamFilterProps<T> & SelectProps<T, false>) {
   const router = useRouter();
   const currentValue = router.query[filterName] as T;
 

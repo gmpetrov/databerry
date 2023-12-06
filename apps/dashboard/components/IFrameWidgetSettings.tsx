@@ -18,7 +18,7 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
-import { iframeWidgetThemeKeys } from '@app/utils/theme';
+import { theme, themeKeys } from '@app/utils/themes/iframe-widget';
 
 import { appUrl } from '@chaindesk/lib/config';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
@@ -26,7 +26,6 @@ import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
 import AgentForm from './AgentForm';
 import ChatBoxFrame from './ChatBoxFrame';
-import { theme } from './ChatBubble';
 import ConnectForm from './ConnectForm';
 
 if (typeof window !== 'undefined') {
@@ -118,29 +117,27 @@ export default function BubbleWidgetSettings(props: Props) {
                               return (
                                 <StyledEngineProvider injectFirst>
                                   <CacheProvider value={cache}>
-                                    <ThemeProvider theme={theme}>
-                                      <CssVarsProvider
-                                        theme={theme}
-                                        defaultMode="light"
-                                        {...iframeWidgetThemeKeys}
+                                    <CssVarsProvider
+                                      theme={theme}
+                                      defaultMode="light"
+                                      {...themeKeys}
+                                    >
+                                      <CssBaseline enableColorScheme />
+                                      <Box
+                                        style={{
+                                          width: '100vw',
+                                          height: '100vh',
+                                        }}
+                                        sx={{
+                                          body: {
+                                            padding: 0,
+                                            margin: 0,
+                                          },
+                                        }}
                                       >
-                                        <CssBaseline enableColorScheme />
-                                        <Box
-                                          style={{
-                                            width: '100vw',
-                                            height: '100vh',
-                                          }}
-                                          sx={{
-                                            body: {
-                                              padding: 0,
-                                              margin: 0,
-                                            },
-                                          }}
-                                        >
-                                          <ChatBoxFrame initConfig={config!} />
-                                        </Box>
-                                      </CssVarsProvider>
-                                    </ThemeProvider>
+                                        <ChatBoxFrame initConfig={config!} />
+                                      </Box>
+                                    </CssVarsProvider>
                                   </CacheProvider>
                                 </StyledEngineProvider>
                               );
