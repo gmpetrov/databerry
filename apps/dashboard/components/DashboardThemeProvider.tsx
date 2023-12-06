@@ -4,7 +4,7 @@ import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import React from 'react';
 
 import createEmotionCache from '@app/utils/create-emotion-cache';
-import theme, { themeKeys } from '@app/utils/theme';
+import theme, { themeKeys } from '@app/utils/themes/dashboard';
 
 const clientSideEmotionCache = createEmotionCache();
 

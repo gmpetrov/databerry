@@ -1,6 +1,7 @@
 import colors from '@mui/joy/colors';
 import {
   extendTheme as extendJoyTheme,
+  extendTheme,
   FontSize,
   Theme as JoyTheme,
   ThemeCssVar as JoyThemeCssVar,
@@ -37,18 +38,7 @@ import type {} from '@mui/material/themeCssVarsAugmentation';
 import { deepmerge } from '@mui/utils';
 import * as React from 'react';
 
-const purple = {
-  50: '#FDF7FF',
-  100: '#F4EAFF',
-  200: '#E1CBFF',
-  300: '#C69EFF',
-  400: '#A374F9',
-  500: '#814DDE',
-  600: '#5F35AE',
-  700: '#452382',
-  800: '#301761',
-  900: '#1D0A42',
-};
+import { purple } from './colors';
 
 // extends Joy theme to include tokens from Material UI
 declare module '@mui/joy/styles' {
@@ -303,12 +293,6 @@ export const themeKeys = {
   modeStorageKey: 'app-dashboard-mode',
   colorSchemeStorageKey: 'app-dashboard-color-scheme',
   attribute: 'data-app-dashboard-theme',
-};
-
-export const iframeWidgetThemeKeys = {
-  modeStorageKey: 'app-iframe-mode',
-  colorSchemeStorageKey: 'app-iframe-color-scheme',
-  attribute: 'data-app-iframe-mode',
 };
 
 export default mergedTheme;

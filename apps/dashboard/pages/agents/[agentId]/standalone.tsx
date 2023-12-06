@@ -12,6 +12,7 @@ import React, { ReactElement, useEffect, useMemo } from 'react';
 import superjson from 'superjson';
 import useSWR from 'swr';
 
+import IFrameThemeProvider from '@app/components/IFrameThemeProvider';
 import SEO from '@app/components/SEO';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
@@ -214,34 +215,14 @@ export default function AgentPage(props: { agent: Agent }) {
               >
                 {interfaceConfig?.instagramURL && (
                   <a href={`${interfaceConfig?.instagramURL}`} target="_blank">
-                    <IconButton
-                      size="sm"
-                      color="neutral"
-                      sx={{
-                        background: 'white',
-                        color: 'black',
-                        ['&:hover']: {
-                          background: '#000',
-                        },
-                      }}
-                    >
+                    <IconButton size="sm" color="neutral" variant="soft">
                       <InstagramIcon />
                     </IconButton>
                   </a>
                 )}
                 {interfaceConfig?.tiktokURL && (
                   <a href={`${interfaceConfig?.tiktokURL}`} target="_blank">
-                    <IconButton
-                      size="sm"
-                      color="neutral"
-                      sx={{
-                        background: 'white',
-                        color: 'black',
-                        ['&:hover']: {
-                          background: '#000',
-                        },
-                      }}
-                    >
+                    <IconButton size="sm" color="neutral" variant="soft">
                       <img
                         style={{ width: '20px', height: '20px' }}
                         src="https://i.pinimg.com/originals/b6/c9/dd/b6c9dda4b3983c5ecba8cf867a01bc6f.png"
@@ -252,68 +233,28 @@ export default function AgentPage(props: { agent: Agent }) {
                 )}
                 {interfaceConfig?.twitterURL && (
                   <a href={`${interfaceConfig?.twitterURL}`} target="_blank">
-                    <IconButton
-                      size="sm"
-                      color="neutral"
-                      sx={{
-                        background: 'white',
-                        color: 'black',
-                        ['&:hover']: {
-                          background: '#000',
-                        },
-                      }}
-                    >
+                    <IconButton size="sm" color="neutral" variant="soft">
                       <TwitterIcon />
                     </IconButton>
                   </a>
                 )}
                 {interfaceConfig?.youtubeURL && (
                   <a href={`${interfaceConfig?.youtubeURL}`} target="_blank">
-                    <IconButton
-                      size="sm"
-                      color="neutral"
-                      sx={{
-                        background: 'white',
-                        color: 'black',
-                        ['&:hover']: {
-                          background: '#000',
-                        },
-                      }}
-                    >
+                    <IconButton size="sm" color="neutral" variant="soft">
                       <YoutubeIcon />
                     </IconButton>
                   </a>
                 )}
                 {interfaceConfig?.githubURL && (
                   <a href={`${interfaceConfig?.githubURL}`} target="_blank">
-                    <IconButton
-                      size="sm"
-                      color="neutral"
-                      sx={{
-                        background: 'white',
-                        color: 'black',
-                        ['&:hover']: {
-                          background: '#000',
-                        },
-                      }}
-                    >
+                    <IconButton size="sm" color="neutral" variant="soft">
                       <GitHubIcon />
                     </IconButton>
                   </a>
                 )}
                 {interfaceConfig?.websiteURL && (
                   <a href={`${interfaceConfig?.websiteURL}`} target="_blank">
-                    <IconButton
-                      size="sm"
-                      color="neutral"
-                      sx={{
-                        background: 'white',
-                        color: 'black',
-                        ['&:hover']: {
-                          background: '#000',
-                        },
-                      }}
-                    >
+                    <IconButton size="sm" color="neutral" variant="soft">
                       <WebIcon />
                     </IconButton>
                   </a>
@@ -569,7 +510,7 @@ export default function AgentPage(props: { agent: Agent }) {
 }
 
 AgentPage.getLayout = function getLayout(page: ReactElement) {
-  return <SessionProvider>{page}</SessionProvider>;
+  return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
 };
 
 export async function getStaticPaths() {

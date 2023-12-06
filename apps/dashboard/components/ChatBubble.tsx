@@ -11,7 +11,9 @@ import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
 import { extendTheme, useColorScheme } from '@mui/joy/styles';
 import Typography from '@mui/joy/Typography';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useMemo, useRef } from 'react';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
@@ -20,31 +22,12 @@ import useStateReducer from '@app/hooks/useStateReducer';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
-import type { Agent, ConversationStatus } from '@chaindesk/prisma';
+import type { Agent } from '@chaindesk/prisma';
 
+import ChatMessageCard from './ChatMessageCard';
 import CustomerSupportActions from './CustomerSupportActions';
-
-export const widgetThemeKeys = {
-  modeStorageKey: 'databerry-chat-bubble',
-  colorSchemeStorageKey: 'databerry-chat-bubble-scheme',
-  attribute: 'data-databerry-chat-bubble',
-};
-
-export const theme = extendTheme({
-  cssVarPrefix: 'databerry-chat-bubble',
-  colorSchemes: {
-    dark: {
-      palette: {
-        primary: colors.grey,
-      },
-    },
-    light: {
-      palette: {
-        primary: colors.grey,
-      },
-    },
-  },
-});
+import Markdown from './Markdown';
+import Motion from './Motion';
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
@@ -201,25 +184,29 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           ...methods,
         }}
       >
-        <Transition
+        {/* <Transition
           nodeRef={initMessageRef}
           in={state.showInitialMessage && !state.hasOpenOnce}
           timeout={0}
           mountOnEnter
           unmountOnExit
         >
-          {(s) => (
+          {(s) => ( */}
+        {state.config?.initialMessage &&
+          state.showInitialMessage &&
+          !state.hasOpenOnce && (
             <Stack
               ref={initMessageRef}
+              className="chaindesk-widget"
               sx={{
                 position: 'fixed',
                 bottom: 100,
                 maxWidth: 'calc(100% - 75px)',
 
-                transition: `opacity 300ms ease-in-out`,
-                opacity: 0,
                 zIndex: 9999999998,
-                ...(transitionStyles as any)[s],
+                // opacity: 0,
+                // transition: `opacity 300ms ease-in-out`,
+                // ...(transitionStyles as any)[s],
 
                 ...(state.config.position === 'left'
                   ? {
@@ -233,20 +220,49 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   : {}),
               }}
             >
-              <Card
-                sx={{
-                  maxWidth: 1000,
-                  display: 'flex',
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      when: 'beforeChildren',
+                      staggerChildren: 0.3,
+                    },
+                  },
+                  hidden: {
+                    opacity: 0,
+                    y: 100,
+                    transition: {
+                      when: 'afterChildren',
+                    },
+                  },
                 }}
-                variant="outlined"
               >
-                <Typography>{state.config?.initialMessage}</Typography>
-              </Card>
+                <Stack spacing={1}>
+                  <motion.div
+                    variants={{
+                      visible: { opacity: 1, y: 0 },
+                      hidden: { opacity: 0, y: 100 },
+                    }}
+                  >
+                    <ChatMessageCard
+                      sx={{
+                        maxWidth: 1000,
+                      }}
+                    >
+                      <Markdown>{state.config?.initialMessage}</Markdown>
+                    </ChatMessageCard>
+                  </motion.div>
+                </Stack>
+              </motion.div>
             </Stack>
           )}
-        </Transition>
 
         <Box
+          className="chaindesk-widget"
           sx={{
             // bgcolor: 'red',
             overflow: 'visible',
@@ -267,31 +283,67 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
               : {}),
           }}
         >
-          <Transition
+          {/* <Transition
             nodeRef={chatBoxRef}
             in={state.isOpen}
             timeout={0}
             mountOnEnter
             unmountOnExit
           >
-            {(s) => (
+            {(s) => ( */}
+
+          {/* <motion.div
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: state.isOpen ? 1 : 0,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            style={
+              {
+                // transformOrigin: 'center',
+              }
+            }
+          > */}
+          <Motion
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: state.isOpen ? 1 : 0,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            transition={{
+              duration: 0.2,
+            }}
+          >
+            {({ ref }: any) => (
               <Card
-                ref={chatBoxRef}
+                //  ref={chatBoxRef}
+                ref={ref as any}
                 variant="outlined"
                 sx={(theme) => ({
+                  pointerEvents: state.isOpen ? 'all' : 'none',
+                  // visibility: state.isOpen ? 'visible' : 'hidden',
                   zIndex: 9999,
                   position: 'absolute',
                   bottom: '80px',
                   display: 'flex',
                   flexDirection: 'column',
                   boxSizing: 'border-box',
+                  background: 'white',
                   p: 0,
                   gap: 0,
                   // boxShadow: 'md',
 
-                  transition: `opacity 150ms ease-in-out`,
-                  opacity: 0,
-                  ...(transitionStyles as any)[s],
+                  opacity: 1,
+                  // transition: `opacity 150ms ease-in-out`,
+                  // ...(transitionStyles as any)[s],
 
                   ...(state.config.position === 'right'
                     ? {
@@ -353,7 +405,6 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                   sx={(theme) => ({
                     // flex: 1,
                     // display: 'flex',
-                    width: '100%',
                     position: 'relative',
 
                     height: '100%',
@@ -383,6 +434,15 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                     pb: 1,
                   })}
                 >
+                  {/* <iframe
+                    style={{
+                      width: '100%',
+                      height: '100vh',
+                    }}
+                    src={`http://localhost:3000/agents/${props.agentId}/iframe`}
+                    // src={`https://www.chaindesk.ai/agents/clgtujkqh022j0u0zw3ut8vk3/iframe`}
+                    frameBorder="0"
+                  /> */}
                   <ChatBox
                     messages={history}
                     onSubmit={handleChatSubmit}
@@ -402,41 +462,90 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 </Stack>
               </Card>
             )}
-          </Transition>
-          <IconButton
-            // color={'neutral'}
-            variant="solid"
-            onClick={() =>
-              setState({
-                isOpen: !state.isOpen,
-                ...(!state.isOpen
-                  ? {
-                      hasOpenOnce: true,
-                    }
-                  : {}),
-              })
-            }
-            sx={(theme) => ({
-              backgroundColor: state.config.primaryColor,
-              width: '60px',
-              height: '60px',
-              borderRadius: '100%',
-              color: textColor,
-              transition: 'all 100ms ease-in-out',
-              borderWidth: '0.5px',
-              borderColor: theme.palette.divider,
-              borderStyle: 'solid',
-              p: '0',
-              overflow: 'hidden',
-              '&:hover': {
-                backgroundColor: state.config.primaryColor,
-                filter: 'brightness(0.9)',
-                transform: 'scale(1.05)',
+          </Motion>
+          {/* </motion.div> */}
+          {/* )}
+          </Transition> */}
+
+          <Motion
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                y: 0,
+                transition: {
+                  when: 'beforeChildren',
+                  staggerChildren: 0.3,
+                },
               },
-            })}
+              hidden: {
+                y: 100,
+                transition: {
+                  when: 'afterChildren',
+                },
+              },
+            }}
           >
-            {state.isOpen ? <ClearRoundedIcon /> : bubbleIcon}
-          </IconButton>
+            {({ ref }) => (
+              <IconButton
+                // color={'neutral'}
+                ref={ref}
+                variant="solid"
+                onClick={() =>
+                  setState({
+                    isOpen: !state.isOpen,
+                    ...(!state.isOpen
+                      ? {
+                          hasOpenOnce: true,
+                        }
+                      : {}),
+                  })
+                }
+                sx={(theme) => ({
+                  backgroundColor: state.config.primaryColor,
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '100%',
+                  color: textColor,
+                  // transition: 'all 100ms ease-in-out',
+                  borderWidth: '0.5px',
+                  borderColor: theme.palette.divider,
+                  borderStyle: 'solid',
+                  p: '0',
+                  overflow: 'hidden',
+                  '&:hover': {
+                    backgroundColor: state.config.primaryColor,
+                    filter: 'brightness(0.9)',
+                    transform: 'scale(1.05)',
+                  },
+                })}
+              >
+                <AnimatePresence>
+                  {state.isOpen && (
+                    <Motion
+                      variants={{
+                        visible: {
+                          rotate: '0deg',
+                        },
+                        hidden: {
+                          rotate: '-180deg',
+                        },
+                      }}
+                    >
+                      {({ ref }) => <ClearRoundedIcon ref={ref} />}
+                    </Motion>
+                  )}
+
+                  {
+                    !state.isOpen &&
+                      // <motion.div style={{ width: '100%', height: '100%' }}>
+                      bubbleIcon
+                    // </motion.div>
+                  }
+                </AnimatePresence>
+              </IconButton>
+            )}
+          </Motion>
         </Box>
       </ChatContext.Provider>
     </>

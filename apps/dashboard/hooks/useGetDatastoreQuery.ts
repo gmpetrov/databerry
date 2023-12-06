@@ -17,10 +17,10 @@ const useGetDatastoreQuery = (props: Props) => {
   const router = useRouter();
   const limit = Number(router.query.limit || config.datasourceTable.limit);
   const offset = Number(router.query.offset || 0);
-  const search = router.query.search || '';
-  const status = router.query.status || '';
-  const type = router.query.type || '';
-  const groupId = router.query.groupId || '';
+  const search = (router.query.search || '') as string;
+  const status = (router.query.status || '') as string;
+  const type = (router.query.type || '') as string;
+  const groupId = (router.query.groupId || '') as string;
 
   const getDatastoreQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastore>
