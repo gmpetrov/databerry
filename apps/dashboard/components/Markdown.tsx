@@ -14,7 +14,7 @@ function Markdown({ children, className, ...otherProps }: Props) {
 
   useEffect(() => {
     setMarkdownSource(children);
-  }, []);
+  }, [children]);
 
   return (
     // <ReactMarkdown
