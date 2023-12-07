@@ -21,6 +21,7 @@ export const getTextFromHTML = async (html: string) => {
   $('link').remove();
   $('svg').remove();
   $('img').remove();
+  $('noscript').remove();
   const text = $('body').text();
 
   return text?.trim();
