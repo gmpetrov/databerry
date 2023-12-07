@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.115"></a>
+## 0.1.115 (2023-12-07)
+
+### Miscellaneous
+
+- 🎸 ChatBubble, Iframe CustomCSS [[9815387](https://github.com/gmpetrov/databerry/commit/9815387a9feb97304faf052d7e26c301c6cfda91)]
+
+
 <a name="0.1.114"></a>
 ## 0.1.114 (2023-12-07)
 
