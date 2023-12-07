@@ -43,7 +43,7 @@
 
 - Vector Database: Qdrant
 - Embeddings: Openai's text-embedding-ada-002
-- Chunk size: 256 tokens
+- Chunk size: 1024 tokens
 
 ### Stack
 

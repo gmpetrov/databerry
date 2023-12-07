@@ -1,7 +1,7 @@
 import { AgentModelName } from '@chaindesk/prisma';
 
 const config = {
-  defaultDatasourceChunkSize: 256,
+  defaultDatasourceChunkSize: 1024,
   datasourceTable: {
     limit: 20,
   },
