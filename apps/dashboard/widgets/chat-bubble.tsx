@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     shadowContainer.appendChild(shadowRootElement);
 
     const cache = createCache({
-      key: 'chat-bubble-test',
+      key: 'chat-bubble',
       prepend: true,
       // speedy: true,
       container: emotionRoot,
@@ -64,7 +64,19 @@ document.addEventListener('DOMContentLoaded', () => {
             {...themeKeys}
           >
             <ScopedCssBaseline>
-              <ChatBubble agentId={me.id} />
+              <ChatBubble
+                agentId={me.id}
+                onAgentLoaded={(agent) => {
+                  const customCSS = (agent?.interfaceConfig as any)
+                    ?.customCSS as string;
+
+                  if (customCSS) {
+                    const customStyle = document.createElement('style');
+                    customStyle.innerHTML = customCSS;
+                    shadowContainer.appendChild(customStyle);
+                  }
+                }}
+              />
             </ScopedCssBaseline>
           </CssVarsProvider>
         </CacheProvider>

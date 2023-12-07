@@ -40,7 +40,11 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 
 export const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
-function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
+function App(props: {
+  agentId: string;
+  initConfig?: AgentInterfaceConfig;
+  onAgentLoaded?: (agent: Agent) => any;
+}) {
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
   const chatBoxRef = useRef(null);
@@ -113,6 +117,8 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           ...agentConfig,
         },
       });
+
+      props?.onAgentLoaded?.(data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -197,7 +203,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
           !state.hasOpenOnce && (
             <Stack
               ref={initMessageRef}
-              className="chaindesk-widget"
+              className="chaindesk-init-messages"
               sx={{
                 position: 'fixed',
                 bottom: 100,
@@ -491,6 +497,7 @@ function App(props: { agentId: string; initConfig?: AgentInterfaceConfig }) {
                 // color={'neutral'}
                 ref={ref}
                 variant="solid"
+                className="chaindesk-launcher"
                 onClick={() =>
                   setState({
                     isOpen: !state.isOpen,

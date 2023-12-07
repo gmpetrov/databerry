@@ -26,8 +26,7 @@ import { theme, themeKeys } from '@app/utils/themes/chat-bubble';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
-import InitMessageInput from './AgentInputs/InitMessageInput';
-import SuggestionsInput from './AgentInputs/SuggestionsInput';
+import CustomCSSInput from './AgentInputs/CustomCSSInput';
 import AgentForm from './AgentForm';
 import ChatBubble from './ChatBubble';
 import ConnectForm from './ConnectForm';
@@ -121,55 +120,71 @@ export default function BubbleWidgetSettings(props: Props) {
                         </Button>
                       </Stack>
 
-                      {query?.data?.id && config && (
-                        <Frame
-                          style={{
-                            width: '100%',
-                            height: 600,
-                            border: '1px solid rgba(0, 0, 0, 0.2)',
-                            borderRadius: 20,
-                          }}
-                        >
-                          <FrameContextConsumer>
-                            {({ document }) => {
-                              const cache = createCache({
-                                key: 'iframe',
-                                container: document?.head,
-                                prepend: true,
-                                speedy: true,
-                              });
-
-                              return (
-                                <StyledEngineProvider injectFirst>
-                                  <CacheProvider value={cache}>
-                                    <CssVarsProvider
-                                      theme={theme}
-                                      defaultMode="light"
-                                      {...themeKeys}
-                                    >
-                                      <CssBaseline />
-                                      <Box
-                                        sx={{
-                                          width: '100vw',
-                                          height: '100vh',
-                                          maxHeight: '100%',
-                                          overflow: 'hidden',
-                                          p: 2,
-                                        }}
-                                      >
-                                        <ChatBubble
-                                          agentId={query?.data?.id!}
-                                          initConfig={config}
-                                        />
-                                      </Box>
-                                    </CssVarsProvider>
-                                  </CacheProvider>
-                                </StyledEngineProvider>
-                              );
+                      <Stack
+                        style={{
+                          width: '100%',
+                        }}
+                        spacing={2}
+                      >
+                        {query?.data?.id && config && (
+                          <Frame
+                            style={{
+                              width: '100%',
+                              height: 600,
+                              border: '1px solid rgba(0, 0, 0, 0.2)',
+                              borderRadius: 20,
                             }}
-                          </FrameContextConsumer>
-                        </Frame>
-                      )}
+                          >
+                            <FrameContextConsumer>
+                              {({ document }) => {
+                                const cache = createCache({
+                                  key: 'iframe',
+                                  container: document?.head,
+                                  prepend: true,
+                                  speedy: true,
+                                });
+
+                                return (
+                                  <StyledEngineProvider injectFirst>
+                                    <CacheProvider value={cache}>
+                                      <CssVarsProvider
+                                        theme={theme}
+                                        defaultMode="light"
+                                        {...themeKeys}
+                                      >
+                                        <CssBaseline />
+                                        <Box
+                                          sx={{
+                                            width: '100vw',
+                                            height: '100vh',
+                                            maxHeight: '100%',
+                                            overflow: 'hidden',
+                                            p: 2,
+                                          }}
+                                        >
+                                          <ChatBubble
+                                            agentId={query?.data?.id!}
+                                            initConfig={config}
+                                          />
+                                          {config?.customCSS && (
+                                            <style
+                                              dangerouslySetInnerHTML={{
+                                                __html: config?.customCSS || '',
+                                              }}
+                                            ></style>
+                                          )}
+                                        </Box>
+                                      </CssVarsProvider>
+                                    </CacheProvider>
+                                  </StyledEngineProvider>
+                                );
+                              }}
+                            </FrameContextConsumer>
+                          </Frame>
+                        )}
+
+                        <Stack>{<CustomCSSInput />}</Stack>
+                      </Stack>
                     </Stack>
 
                     <Stack id="embed" gap={2} mb={2}>

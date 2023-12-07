@@ -24,6 +24,7 @@ import { appUrl } from '@chaindesk/lib/config';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
+import CustomCSSInput from './AgentInputs/CustomCSSInput';
 import AgentForm from './AgentForm';
 import ChatBoxFrame from './ChatBoxFrame';
 import ConnectForm from './ConnectForm';
@@ -96,55 +97,72 @@ export default function BubbleWidgetSettings(props: Props) {
                         </Button>
                       </Stack>
 
-                      {query?.data?.id && (
-                        <Frame
-                          style={{
-                            width: '100%',
-                            height: 600,
-                            border: '1px solid rgba(0, 0, 0, 0.2)',
-                            borderRadius: 20,
-                          }}
-                        >
-                          <FrameContextConsumer>
-                            {({ document }) => {
-                              const cache = createCache({
-                                key: 'iframe',
-                                container: document?.head,
-                                prepend: true,
-                                speedy: true,
-                              });
-
-                              return (
-                                <StyledEngineProvider injectFirst>
-                                  <CacheProvider value={cache}>
-                                    <CssVarsProvider
-                                      theme={theme}
-                                      defaultMode="light"
-                                      {...themeKeys}
-                                    >
-                                      <CssBaseline enableColorScheme />
-                                      <Box
-                                        style={{
-                                          width: '100vw',
-                                          height: '100vh',
-                                        }}
-                                        sx={{
-                                          body: {
-                                            padding: 0,
-                                            margin: 0,
-                                          },
-                                        }}
-                                      >
-                                        <ChatBoxFrame initConfig={config!} />
-                                      </Box>
-                                    </CssVarsProvider>
-                                  </CacheProvider>
-                                </StyledEngineProvider>
-                              );
+                      <Stack
+                        style={{
+                          width: '100%',
+                        }}
+                        spacing={2}
+                      >
+                        {query?.data?.id && (
+                          <Frame
+                            style={{
+                              width: '100%',
+                              height: 600,
+                              border: '1px solid rgba(0, 0, 0, 0.2)',
+                              borderRadius: 20,
                             }}
-                          </FrameContextConsumer>
-                        </Frame>
-                      )}
+                          >
+                            <FrameContextConsumer>
+                              {({ document }) => {
+                                const cache = createCache({
+                                  key: 'iframe',
+                                  container: document?.head,
+                                  prepend: true,
+                                  speedy: true,
+                                });
+
+                                return (
+                                  <StyledEngineProvider injectFirst>
+                                    <CacheProvider value={cache}>
+                                      <CssVarsProvider
+                                        theme={theme}
+                                        defaultMode="light"
+                                        {...themeKeys}
+                                      >
+                                        <CssBaseline enableColorScheme />
+                                        <Box
+                                          style={{
+                                            width: '100vw',
+                                            height: '100vh',
+                                          }}
+                                          sx={{
+                                            body: {
+                                              padding: 0,
+                                              margin: 0,
+                                            },
+                                          }}
+                                        >
+                                          <ChatBoxFrame initConfig={config!} />
+                                        </Box>
+
+                                        {config?.customCSS && (
+                                          <style
+                                            dangerouslySetInnerHTML={{
+                                              __html: config?.customCSS || '',
+                                            }}
+                                          ></style>
+                                        )}
+                                      </CssVarsProvider>
+                                    </CacheProvider>
+                                  </StyledEngineProvider>
+                                );
+                              }}
+                            </FrameContextConsumer>
+                          </Frame>
+                        )}
+
+                        <CustomCSSInput />
+                      </Stack>
                     </Stack>
                   </Stack>
                   <Stack

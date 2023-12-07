@@ -130,6 +130,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
       }}
     >
       <Box
+        className="chaindesk-iframe"
         sx={(theme) => ({
           px: 2,
           pb: 2,

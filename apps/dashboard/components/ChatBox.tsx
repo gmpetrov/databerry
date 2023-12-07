@@ -187,6 +187,7 @@ function ChatBox({
 
   return (
     <Stack
+      className="chaindesk-chatbox"
       direction={'column'}
       gap={2}
       sx={{
