@@ -13,7 +13,8 @@ import prisma from '@chaindesk/prisma/client';
     where: {
       status: 'canceled',
       ended_at: {
-        lte: yesterday,
+        gte: yesterday,
+        lt: new Date().toISOString(),
       },
     },
     include: {
@@ -32,7 +33,7 @@ import prisma from '@chaindesk/prisma/client';
     },
   });
 
-  console.log('subscriptions', subscriptions);
+  console.log('subscriptions', JSON.stringify(subscriptions, null, 2));
   return;
 
   let counter = 0;

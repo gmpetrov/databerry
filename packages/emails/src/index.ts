@@ -9,3 +9,4 @@ export { default as NewLead } from './NewLead';
 export { default as ConversationResolved } from './ConversationResolved';
 export { default as AdminStats } from './AdminStats';
 export { default as AccountCleaningWarning } from './AccountCleaningWarning';
+export { default as GenericTemplate } from './GenericTemplate';

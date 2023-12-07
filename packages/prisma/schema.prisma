@@ -105,6 +105,9 @@ model Usage {
   nbModelTokens         Int @default(0) @map("nb_tokens")
   nbStoredTokens        Int @default(0) @map("nb_stored_tokens")
 
+  notifiedAgentQueriesLimitReached Boolean? @default(false) @map("notified_nb_agent_queries_limit_reached")
+  notifiedStoredTokenLimitReached Boolean? @default(false) @map("notified_nb_stored_tokens_limit_reached")
+
   @@map("usages")
 }
 

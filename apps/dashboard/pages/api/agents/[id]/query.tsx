@@ -1,7 +1,7 @@
 import cuid from 'cuid';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { NewConversation, render } from '@chaindesk/emails';
+import { GenericTemplate, NewConversation, render } from '@chaindesk/emails';
 import AgentManager from '@chaindesk/lib/agent';
 import { AnalyticsEvents, capture } from '@chaindesk/lib/analytics-server';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
@@ -118,10 +118,47 @@ export const chatAgentRequest = async (
     session?.organization || formatOrganizationSession(agent?.organization!);
   const usage = orgSession?.usage as Usage;
 
-  guardAgentQueryUsage({
-    usage,
-    plan: orgSession?.currentPlan,
-  });
+  try {
+    guardAgentQueryUsage({
+      usage,
+      plan: orgSession?.currentPlan,
+    });
+  } catch (err) {
+    const email = agent?.organization?.memberships?.[0]?.user?.email!;
+
+    if (!usage?.notifiedAgentQueriesLimitReached && email) {
+      await Promise.all([
+        mailer.sendMail({
+          from: {
+            name: 'Chaindesk',
+            address: process.env.EMAIL_FROM!,
+          },
+          to: email,
+          subject: `You've reached your usage limit`,
+          html: render(
+            <GenericTemplate
+              title={'🚨 Usage Limit Reached'}
+              description="You've reached your Agent queries quota. Your Agent will not be able to answer queries until you upgrade your account."
+              cta={{
+                label: 'Upgrade Account',
+                href: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/settings/billing`,
+              }}
+            />
+          ),
+        }),
+        prisma.usage.update({
+          where: {
+            id: usage?.id,
+          },
+          data: {
+            notifiedAgentQueriesLimitReached: true,
+          },
+        }),
+      ]);
+    }
+
+    throw err;
+  }
 
   if (data.modelName) {
     // override modelName

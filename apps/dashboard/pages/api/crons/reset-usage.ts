@@ -22,6 +22,8 @@ export const getAgents = async (
     data: {
       nbAgentQueries: 0,
       nbDataProcessingBytes: 0,
+      notifiedAgentQueriesLimitReached: false,
+      notifiedStoredTokenLimitReached: false,
     },
   });
 
