@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.116"></a>
+## 0.1.116 (2023-12-07)
+
+### Fixed
+
+- 🐛 remove noscript tag from web page loader [[f855799](https://github.com/gmpetrov/databerry/commit/f855799beab35a272a5d7cb5ba91e10cb03c23de)]
+
+### Miscellaneous
+
+- 🤖 increase synch datastore job period [[6b470fb](https://github.com/gmpetrov/databerry/commit/6b470fb7daf57723da7d89be54a029aa2add3320)]
+- 🤖 increase chunks size [[73444da](https://github.com/gmpetrov/databerry/commit/73444da2257a7b814fcd7111c6124ef8a4be70f9)]
+
+
 <a name="0.1.115"></a>
 ## 0.1.115 (2023-12-07)
 
