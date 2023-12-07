@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.114"></a>
+## 0.1.114 (2023-12-07)
+
+### Miscellaneous
+
+- 🎸 Usage Limit Reached email [[cb18cc6](https://github.com/gmpetrov/databerry/commit/cb18cc6c20bc68de0d739167fc32d026fcbf1ec5)]
+
+
 <a name="0.1.113"></a>
 ## 0.1.113 (2023-12-06)
 
