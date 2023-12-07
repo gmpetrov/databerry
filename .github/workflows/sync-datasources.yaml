@@ -3,8 +3,8 @@ name: Sync Datasources
 on:
   workflow_dispatch:
   schedule:
-    # every day 2am
-    - cron: '0 2 * * *'
+    # every monday 2am
+    - cron: '0 2 * * 1'
 
 jobs:
   run:
