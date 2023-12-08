@@ -6,6 +6,7 @@ import { ChatModelConfigSchema, ChatResponse } from './types/dtos';
 import ChatModel from './chat-model';
 import { ModelConfig } from './config';
 import formatMessagesOpenAI from './format-messages-openai';
+import getUsageCost from './get-usage-cost';
 import truncateChatMessages from './truncateChatMessages';
 
 export type ChatProps = ChatModelConfigSchema & {
@@ -76,11 +77,10 @@ const chat = async ({
     completionTokens: output?.usage?.completion_tokens,
     promptTokens: output?.usage?.prompt_tokens,
     totalTokens: output?.usage?.total_tokens,
-    cost:
-      (output?.usage?.prompt_tokens || 0) *
-        ModelConfig[modelName]?.providerPriceByInputToken +
-      (output?.usage?.completion_tokens || 0) *
-        ModelConfig[modelName]?.providerPricePriceByOutputToken,
+    cost: getUsageCost({
+      modelName,
+      usage: output?.usage!,
+    }),
   };
 
   return {
