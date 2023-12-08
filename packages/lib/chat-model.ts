@@ -1,13 +1,11 @@
 import OpenAI, { ClientOptions } from 'openai';
 import { RunnableToolFunction } from 'openai/lib/RunnableFunction';
-import {
-  ChatCompletionMessageParam,
-  ChatCompletionTool,
-  CompletionUsage,
-} from 'openai/resources';
+import { CompletionUsage } from 'openai/resources';
 import pRetry from 'p-retry';
 
+import { countTokensEstimation } from './count-tokens';
 import failedAttemptHandler from './lc-failed-attempt-hanlder';
+import { promptTokensEstimate } from './tokens-estimate';
 
 const list = () => ['mistery'];
 
@@ -42,16 +40,6 @@ export default class ChatModel {
     });
   }
 
-  static countTokensMessages(messages: ChatCompletionMessageParam[]) {
-    let counter = 0;
-
-    for (const each of messages) {
-      counter += each?.content?.length || 0;
-    }
-
-    return counter / 4;
-  }
-
   async call({
     handleStream,
     signal,
@@ -65,7 +53,14 @@ export default class ChatModel {
       async () => {
         let usage: CompletionUsage = {
           completion_tokens: 0,
-          prompt_tokens: ChatModel.countTokensMessages(otherProps?.messages),
+          prompt_tokens: promptTokensEstimate({
+            tools,
+            useFastApproximation: true,
+            tool_choice: otherProps?.tool_choice,
+            messages: otherProps?.messages,
+            functions: otherProps?.functions,
+            function_call: otherProps?.function_call,
+          }),
           total_tokens: 0,
         };
 
@@ -108,7 +103,10 @@ export default class ChatModel {
 
               handleStream?.(content);
               buffer += content;
-              usage.completion_tokens += 1;
+
+              usage.completion_tokens += countTokensEstimation({
+                text: content || '',
+              });
             }
 
             usage.total_tokens = usage.prompt_tokens + usage.completion_tokens;
@@ -121,6 +119,10 @@ export default class ChatModel {
             const response = await this.openai.chat.completions.create({
               ...otherProps,
               stream: false,
+            });
+
+            usage.completion_tokens = countTokensEstimation({
+              text: response?.choices?.[0]?.message?.content || '',
             });
 
             usage.total_tokens = usage.prompt_tokens + usage.completion_tokens;
