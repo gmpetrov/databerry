@@ -34,12 +34,11 @@ import prisma from '@chaindesk/prisma/client';
   });
 
   console.log('subscriptions', JSON.stringify(subscriptions, null, 2));
-  return;
 
   let counter = 0;
   await pMap(
     subscriptions,
-    async (s, index) => {
+    async (s) => {
       const email = s?.organization?.memberships?.[0].user?.email;
 
       if (!email) {
