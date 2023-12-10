@@ -1,3 +1,4 @@
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Button from '@mui/joy/Button';
 import FormControl from '@mui/joy/FormControl';
@@ -16,12 +17,10 @@ type Props = {};
 
 function DatasourceTagsInput({}: Props) {
   const { control, register } = useFormContext<DatasourceSchema>();
-
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      name: 'config.tags',
-    }
-  );
+  const [parent] = useAutoAnimate<HTMLDivElement>();
+  const { fields, append, remove } = useFieldArray({
+    name: 'config.tags',
+  });
 
   useEffect(() => {
     if (fields.length === 0) {
@@ -36,7 +35,7 @@ function DatasourceTagsInput({}: Props) {
         Use tags to attach extra context to a Datasource
       </FormHelperText>
       <Stack spacing={2} sx={{ mt: 1, display: 'flex' }}>
-        <Stack spacing={1}>
+        <Stack spacing={1} ref={parent}>
           {fields.map((field, index) => (
             <Input
               key={field.id} // important to include key with field's id

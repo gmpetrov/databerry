@@ -1,3 +1,4 @@
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { CloseRounded } from '@mui/icons-material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
@@ -69,7 +70,7 @@ function SelectQueryParamFilter<T extends {}>({
   ...otherProps
 }: SelectQueryParamFilterProps<T> & SelectProps<T, false>) {
   const router = useRouter();
-  const currentValue = router.query[filterName] as T;
+  const currentValue = router.query[filterName] as unknown as T;
 
   return (
     <Select
@@ -165,6 +166,10 @@ export default function LogsPage() {
     router.query.tab !== TabEnum.all;
 
   const parentRef = React.useRef();
+  const [animateRef] = useAutoAnimate({
+    easing: 'ease-in-out',
+    duration: 300,
+  });
   const [state, setState] = useStateReducer({
     currentConversationId: undefined as string | undefined,
     hasReachedEnd: false,
@@ -582,110 +587,118 @@ export default function LogsPage() {
                     No Conversations found
                   </Box>
                 )}
-                {conversations.map((each, index) => (
-                  <React.Fragment key={each.id}>
-                    <ListItem
-                      sx={(theme) => ({
-                        py: 1,
-                        '&:hover': {
-                          cursor: 'pointer',
-                          backgroundColor: theme.palette.action.hover,
-                          borderRadius: 0,
-                        },
+                <div ref={animateRef}>
+                  {conversations.map((each, index) => (
+                    <React.Fragment key={each.id}>
+                      <ListItem
+                        sx={(theme) => ({
+                          py: 1,
+                          '&:hover': {
+                            cursor: 'pointer',
+                            backgroundColor: theme.palette.action.hover,
+                            borderRadius: 0,
+                          },
 
-                        // backgroundColor: {
-                        //   [ConversationStatus.RESOLVED]:
-                        //     theme.palette.success.softActiveBg,
-                        //   [ConversationStatus.UNRESOLVED]:
-                        //     theme.palette.danger.softActiveBg,
-                        //   [ConversationStatus.HUMAN_REQUESTED]:
-                        //     theme.palette.warning.softActiveBg,
-                        // }[each?.status] as ColorPaletteProp,
-
-                        ...(state.currentConversationId === each.id && {
-                          backgroundColor: theme.palette.action.hover,
-                        }),
-                      })}
-                      onClick={() => {
-                        setState({
-                          currentConversationId: each.id,
-                          currentConversationIndex: index,
-                        });
-                      }}
-                      endAction={
-                        each?._count?.messages > 0 ? (
-                          <Chip variant="solid" color="danger" size="md">
-                            {each?._count?.messages}
-                          </Chip>
-                        ) : (
-                          <>
-                            {each?.status === ConversationStatus.RESOLVED && (
-                              <CheckCircleRoundedIcon
-                                color="success"
-                                fontSize="xl2"
-                              />
-                            )}
-                            {each?.status ===
-                              ConversationStatus.HUMAN_REQUESTED && (
-                              <AccountCircleRoundedIcon
-                                color="warning"
-                                fontSize="xl2"
-                              />
-                            )}
-                            {each?.status === ConversationStatus.UNRESOLVED && (
-                              <ArrowCircleRightRoundedIcon
-                                color="danger"
-                                fontSize="xl2"
-                              />
-                            )}
-                          </>
-                        )
-                      }
-                    >
-                      <ListItemContent>
-                        <Stack>
-                          <Stack
-                            direction="row"
-                            justifyContent={'space-between'}
-                          >
-                            <Typography>{each?.agent?.name}</Typography>
-
-                            <Typography level="body-xs">
-                              {relativeDate(each?.updatedAt)}
-                            </Typography>
-                          </Stack>
-                          <Stack
-                            direction="row"
-                            justifyContent={'space-between'}
-                            alignItems={'start'}
-                            gap={1}
-                          >
-                            <Typography level="body-sm" noWrap>
-                              {each?.messages?.[0]?.text}
-                            </Typography>
-                          </Stack>
-                          <Stack
-                            direction="row"
-                            sx={{
-                              mt: 1,
-                            }}
-                            gap={1}
-                          >
-                            <Chip size="sm" color="neutral" variant="outlined">
-                              {'🤖 '}
-                              {each?.agent?.name}
+                          ...(state.currentConversationId === each.id && {
+                            backgroundColor: theme.palette.action.hover,
+                          }),
+                          //  highlights the current conversation
+                          backgroundColor: `${
+                            each.id === getConversationQuery?.data?.id
+                              ? theme.palette.action.hover
+                              : ''
+                          }`,
+                        })}
+                        onClick={() => {
+                          setState({
+                            currentConversationId: each.id,
+                            currentConversationIndex: index,
+                          });
+                        }}
+                        endAction={
+                          each?._count?.messages > 0 ? (
+                            <Chip variant="solid" color="danger" size="md">
+                              {each?._count?.messages}
                             </Chip>
-                            <Chip size="sm" color="neutral" variant="outlined">
-                              {'🚀 '}
-                              {each?.channel}
-                            </Chip>
+                          ) : (
+                            <>
+                              {each?.status === ConversationStatus.RESOLVED && (
+                                <CheckCircleRoundedIcon
+                                  color="success"
+                                  fontSize="xl2"
+                                />
+                              )}
+                              {each?.status ===
+                                ConversationStatus.HUMAN_REQUESTED && (
+                                <AccountCircleRoundedIcon
+                                  color="warning"
+                                  fontSize="xl2"
+                                />
+                              )}
+                              {each?.status ===
+                                ConversationStatus.UNRESOLVED && (
+                                <ArrowCircleRightRoundedIcon
+                                  color="danger"
+                                  fontSize="xl2"
+                                />
+                              )}
+                            </>
+                          )
+                        }
+                      >
+                        <ListItemContent>
+                          <Stack>
+                            <Stack
+                              direction="row"
+                              justifyContent={'space-between'}
+                            >
+                              <Typography>{each?.agent?.name}</Typography>
+
+                              <Typography level="body-xs">
+                                {relativeDate(each?.updatedAt)}
+                              </Typography>
+                            </Stack>
+                            <Stack
+                              direction="row"
+                              justifyContent={'space-between'}
+                              alignItems={'start'}
+                              gap={1}
+                            >
+                              <Typography level="body-sm" noWrap>
+                                {each?.messages?.[0]?.text}
+                              </Typography>
+                            </Stack>
+                            <Stack
+                              direction="row"
+                              sx={{
+                                mt: 1,
+                              }}
+                              gap={1}
+                            >
+                              <Chip
+                                size="sm"
+                                color="neutral"
+                                variant="outlined"
+                              >
+                                {'🤖 '}
+                                {each?.agent?.name}
+                              </Chip>
+                              <Chip
+                                size="sm"
+                                color="neutral"
+                                variant="outlined"
+                              >
+                                {'🚀 '}
+                                {each?.channel}
+                              </Chip>
+                            </Stack>
                           </Stack>
-                        </Stack>
-                      </ListItemContent>
-                    </ListItem>
-                    <ListDivider />
-                  </React.Fragment>
-                ))}
+                        </ListItemContent>
+                      </ListItem>
+                      <ListDivider />
+                    </React.Fragment>
+                  ))}
+                </div>
               </InfiniteScroll>
 
               {getConversationsQuery.isLoading && (
@@ -752,7 +765,6 @@ export default function LogsPage() {
                 </Alert>
               </>
             )}
-
             <ChatBox
               messages={
                 getConversationQuery?.data?.messages?.map((each) => ({

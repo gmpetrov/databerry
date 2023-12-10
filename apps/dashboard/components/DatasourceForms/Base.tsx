@@ -1,3 +1,4 @@
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button, Option, Select, Stack } from '@mui/joy';
 import { FormLabel } from '@mui/joy';
@@ -34,6 +35,7 @@ import {
 } from '@chaindesk/prisma';
 
 import DatasourceTagsInput from '../DatasourceTagsInput';
+import Dropdown from '../Dropdown';
 
 import type { DatasourceFormProps } from './types';
 
@@ -98,7 +100,10 @@ export default function BaseForm(props: Props) {
       ...props?.defaultValues,
     },
   });
-
+  const [animationParentRef] = useAutoAnimate<HTMLDivElement>({
+    duration: 500,
+    easing: 'ease-in-out',
+  });
   const {
     register,
     control,
@@ -233,18 +238,12 @@ export default function BaseForm(props: Props) {
           )}
 
         {props.children}
-
-        <details>
-          <summary>Advanced Settings</summary>
-
-          <Stack sx={{ pl: 2, pt: 2 }}>
-            <DatasourceTagsInput />
-          </Stack>
-        </details>
+        <Dropdown title="Advanced Settings">
+          <DatasourceTagsInput />
+        </Dropdown>
 
         {!props.hideText && defaultValues?.datastoreId && defaultValues?.id && (
-          <details>
-            <summary>Extracted Text</summary>
+          <Dropdown title="Extracted Text">
             <DatasourceText
               datastoreId={defaultValues?.datastoreId}
               datasourceId={defaultValues?.id}
@@ -253,7 +252,7 @@ export default function BaseForm(props: Props) {
                 (defaultValues as any)?.config?.mime_type !== 'text/plain'
               }
             />
-          </details>
+          </Dropdown>
         )}
 
         {props?.customSubmitButton ? (
