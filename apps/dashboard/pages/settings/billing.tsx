@@ -232,10 +232,10 @@ BillingSettingsPage.getLayout = function getLayout(page: ReactElement) {
   return <SettingsLayout>{page}</SettingsLayout>;
 };
 
-export const getServerSideProps = withAuth(
-  async (ctx: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  }
-);
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {},
+//     };
+//   }
+// );

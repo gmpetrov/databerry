@@ -232,12 +232,12 @@ AgentsPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
 
-export const getServerSideProps = withAuth(
-  async (ctx: GetServerSidePropsContext) => {
-    return {
-      props: {
-        product: getProductFromHostname(ctx?.req?.headers?.host),
-      },
-    };
-  }
-);
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {
+//         product: getProductFromHostname(ctx?.req?.headers?.host),
+//       },
+//     };
+//   }
+// );
