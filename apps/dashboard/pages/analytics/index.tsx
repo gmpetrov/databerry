@@ -1,21 +1,39 @@
+import { CloseRounded } from '@mui/icons-material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import EventIcon from '@mui/icons-material/Event';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InfoIcon from '@mui/icons-material/Info';
-import { Alert, Box, Breadcrumbs, Option, Select, Typography } from '@mui/joy';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import {
+  Alert,
+  Box,
+  Breadcrumbs,
+  Card,
+  IconButton,
+  Option,
+  Select,
+  Stack,
+  Typography,
+} from '@mui/joy';
 import axios from 'axios';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next/types';
 import React, { useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import useSWR from 'swr';
 
 import AnalyticsCard from '@app/components/AnalyticsCard';
-import CustomLineChart from '@app/components/charts/CustomLineChart';
+import AreaChart from '@app/components/charts/AreaChart';
+import GeoChart from '@app/components/charts/GeoChart';
 import Layout from '@app/components/Layout';
 import useStateReducer from '@app/hooks/useStateReducer';
 
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
+import { Agent, Prisma } from '@chaindesk/prisma';
+
+import { getAgents } from '../api/agents';
 
 const ANALYTICS_API_URL = '/api/analytics';
 
@@ -54,30 +72,31 @@ export default function AnalyticsPage() {
     lead_count: 0,
     most_common_datasource: 'None',
     repliesEvolution: [],
+    visitsPerCountry: [],
     conversationEvolution: [],
     view: 'year',
+    agentId: '',
   });
+  const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
+    '/api/agents',
+    fetcher
+  );
 
-  const fetchAnalytics = useCallback(async (value?: string) => {
+  const fetchAnalytics = useCallback(async () => {
     try {
-      if (value === 'month') {
-        setState({ view: 'month' });
-        const response = await axios.get(`${ANALYTICS_API_URL}?view=month`);
-        setState(response.data);
-      } else {
-        setState({ view: 'year' });
-        const response = await axios.get(`${ANALYTICS_API_URL}?view=year`);
-        setState(response.data);
-      }
+      const response = await axios.get(
+        `${ANALYTICS_API_URL}?view=${state.view}&agent_id=${state.agentId}`
+      );
+      setState(response.data);
     } catch (e) {
       toast.error('Unable to fetch your analytics');
       console.error(e);
     }
-  }, []);
+  }, [state.view, state.agentId]);
 
   useEffect(() => {
     fetchAnalytics();
-  }, []);
+  }, [state.view, state.agentId]);
 
   return (
     <Box
@@ -125,27 +144,72 @@ export default function AnalyticsPage() {
         This view is refreshed every hour
       </Alert>
 
-      <Box
-        display="flex"
-        flexDirection="column"
-        flexShrink="initial"
-        sx={{ mt: 2 }}
-      >
-        <Typography level="body-xs">Date Range</Typography>
-        <Select
-          defaultValue="year"
-          startDecorator={<EventIcon fontSize="lg" />}
-          sx={{ width: 155 }}
-          onChange={(_, value) => {
-            if (value) {
-              fetchAnalytics(value);
-            }
-          }}
+      <Stack display="flex" direction="row" spacing={2} mt={1}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flexShrink="initial"
+          sx={{ mt: 2 }}
         >
-          <Option value="year">This Year</Option>
-          <Option value="month">This Month</Option>
-        </Select>
-      </Box>
+          <Typography level="body-xs">Date Range</Typography>
+          <Select
+            defaultValue="year"
+            startDecorator={<EventIcon fontSize="lg" />}
+            sx={{ width: 155, height: 30 }}
+            onChange={(_, value) => {
+              if (value) {
+                setState({ view: value });
+              }
+            }}
+          >
+            <Option value="year">All Time</Option>
+            <Option value="month">This Month</Option>
+          </Select>
+        </Box>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flexShrink="initial"
+          sx={{ mt: 2 }}
+        >
+          <Typography level="body-xs">Agent</Typography>
+          <Select
+            value={state.agentId}
+            placeholder="Filter by Agent"
+            startDecorator={<SupportAgentIcon fontSize="lg" />}
+            sx={{ width: 235, height: 30 }}
+            onChange={(_, value) => {
+              if (value) {
+                setState({ agentId: value });
+              }
+            }}
+            {...(state.agentId && {
+              endDecorator: (
+                <IconButton
+                  size="sm"
+                  variant="plain"
+                  color="neutral"
+                  onMouseDown={(event) => {
+                    event.stopPropagation();
+                  }}
+                  onClick={() => {
+                    setState({ agentId: '' });
+                  }}
+                >
+                  <CloseRounded />
+                </IconButton>
+              ),
+              indicator: null,
+            })}
+          >
+            {getAgentsQuery.data?.map(({ id, name }) => (
+              <Option value={id} key={id}>
+                {name}
+              </Option>
+            ))}
+          </Select>
+        </Box>
+      </Stack>
 
       <Box
         display="flex"
@@ -157,111 +221,80 @@ export default function AnalyticsPage() {
       >
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Total Conversations"
-            quantity={state.conversation_count}
+            label="Total Conversations"
+            value={state.conversation_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Liked Responses"
-            quantity={state.good_message_count}
+            label="Liked Responses"
+            value={state.good_message_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Disliked Responses"
-            quantity={state.bad_message_count}
+            label="Disliked Responses"
+            value={state.bad_message_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
-          <AnalyticsCard metric="Leads Generated" quantity={state.lead_count} />
+          <AnalyticsCard label="Leads Generated" value={state.lead_count} />
         </Box>
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Most Used Datasource"
-            metricSpecifier={state.most_common_datasource}
+            label="Most Used Datasource"
+            value={state.most_common_datasource}
           />
         </Box>
       </Box>
       {state.view === 'year' ? (
         <>
-          <CustomLineChart<ReplieMetricBase & { month: string }>
-            title="Replies Quality Performance"
+          <AreaChart<ReplieMetricBase & { month: string }>
             data={state.repliesEvolution}
             xkey="month"
+            positive_area_key="good_count"
+            negative_area_key="bad_count"
+            title="Replies Quality Performance"
             XAxisFormatter={getMonthName}
-          >
-            <CustomLineChart.Line
-              type="monotone"
-              stroke="#C41C1C"
-              strokeWidth={2}
-              dataKey="bad_count"
-              name="Bad Replies"
-            />
-            <CustomLineChart.Line
-              type="monotone"
-              stroke="#1F7A1F"
-              strokeWidth={2}
-              dataKey="good_count"
-              name="Good Replies"
-            />
-          </CustomLineChart>
+          />
 
-          <CustomLineChart<ConversationMetricBase & { month: string }>
-            title="Conversations Evolution"
+          <AreaChart<ConversationMetricBase & { month: string }>
             data={state.conversationEvolution}
             xkey="month"
+            area_key="conversation_count"
+            title="Conversations Evolution"
             XAxisFormatter={getMonthName}
-          >
-            <CustomLineChart.Line
-              type="monotone"
-              stroke="#814DDE"
-              strokeWidth={2}
-              dataKey="conversation_count"
-              name="Total Conversations"
-            />
-          </CustomLineChart>
+          />
         </>
       ) : (
         <>
-          <CustomLineChart<ReplieMetricBase & { day: string }>
-            title="Replies Quality Performance"
+          <AreaChart<ReplieMetricBase & { day: string }>
             data={state.repliesEvolution}
             xkey="day"
-          >
-            <CustomLineChart.Line
-              type="monotone"
-              stroke="#C41C1C"
-              strokeWidth={2}
-              dataKey="bad_count"
-              name="Bad Replies"
-            />
-            <CustomLineChart.Line
-              type="monotone"
-              stroke="#1F7A1F"
-              strokeWidth={2}
-              dataKey="good_count"
-              name="Good Replies"
-            />
-          </CustomLineChart>
-          <CustomLineChart<ConversationMetricBase & { day: string }>
-            title="Conversations Evolution"
+            positive_area_key="good_count"
+            negative_area_key="bad_count"
+            title="Replies Quality Performance"
+          />
+
+          <AreaChart<ConversationMetricBase & { day: string }>
             data={state.conversationEvolution}
             xkey="day"
-          >
-            <CustomLineChart.Line
-              type="monotone"
-              stroke="#814DDE"
-              strokeWidth={2}
-              dataKey="conversation_count"
-              name="Total Conversations"
-            />
-          </CustomLineChart>
+            area_key="conversation_count"
+            title="Conversations Evolution"
+          />
         </>
       )}
+      <Card variant="outlined" sx={{ px: 5, py: 2, mt: 4 }}>
+        <Typography textAlign="center">Conversations Per Country</Typography>
+        <GeoChart
+          label="visits"
+          data={state.visitsPerCountry}
+          totalConversation={state.conversation_count}
+        />
+      </Card>
     </Box>
   );
 }

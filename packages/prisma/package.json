@@ -9,6 +9,7 @@
   },
   "scripts": {
     "prisma:seed": "dotenv -e ../../.env.local -- npx prisma db seed",
+    "prisma:seed:analytics": "dotenv -e ../../.env.local -- npx tsx seed-analytics.ts",
     "prisma:generate": "dotenv -e ../../.env.local -- prisma generate",
     "prisma:push": "dotenv -e ../../.env.local -- prisma db push --skip-generate",
     "prisma:migrate:dev": "dotenv -e ../../.env.local -- prisma migrate dev",
@@ -20,6 +21,8 @@
   },
   "devDependencies": {
     "@chaindesk/tsconfig": "workspace:*",
+    "@faker-js/faker": "^8.3.1",
+    "@types/faker": "^6.6.9",
     "@types/node": "18.15.10",
     "dotenv-cli": "^7.1.0",
     "prisma": "5.3.1",
