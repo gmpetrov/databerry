@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.117"></a>
+## 0.1.117 (2023-12-13)
+
+### Fixed
+
+- 🐛 robot.tsxt [[9c5cefd](https://github.com/gmpetrov/databerry/commit/9c5cefd3f587d77a4696aff79211c67caf7de79c)]
+
+### Miscellaneous
+
+- 🎸 analytics v2 ([#266](https://github.com/gmpetrov/databerry/issues/266)) [[41b35b1](https://github.com/gmpetrov/databerry/commit/41b35b1a839e9901d5aa10de8a98f4089f0b4a2b)]
+- 🤖 enable cron account cleaning warning [[c016653](https://github.com/gmpetrov/databerry/commit/c016653957bd19c49599b539576d51e8b644d041)]
+- 🤖 use getUsageCost [[a2302f5](https://github.com/gmpetrov/databerry/commit/a2302f53e74f7c353eabcd25fcec62eda0b890bb)]
+- 🎸 compute token usage for function / tool streaming [[8bb36b4](https://github.com/gmpetrov/databerry/commit/8bb36b4cf01f0167d09b15623e8c88014a8cc49f)]
+
+
 <a name="0.1.116"></a>
 ## 0.1.116 (2023-12-07)
 
