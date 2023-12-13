@@ -38,6 +38,9 @@ export default function AreaChart<T>({
   title,
   XAxisFormatter,
 }: Props<T>) {
+  const c1 = '#ff7675';
+  const c2 = '#82ca9d';
+
   return (
     <Card variant="outlined" sx={{ px: 5, py: 2, mt: 4 }}>
       <Typography textAlign="center">{title}</Typography>
@@ -45,7 +48,7 @@ export default function AreaChart<T>({
       <ResponsiveContainer width="100%" aspect={3}>
         {data.length === 0 ? (
           <div className="h-[335px]">
-            <div className="flex flex-col justify-center items-center h-full">
+            <div className="flex flex-col items-center justify-center h-full">
               <QueryStatsIcon fontSize="xl5" color="primary" />
               <Typography color="primary">
                 Insufficient Data For The Selected filters.
@@ -61,12 +64,12 @@ export default function AreaChart<T>({
           >
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                <stop offset="5%" stopColor={c1} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={c1} stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                <stop offset="5%" stopColor={c2} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={c2} stopOpacity={0} />
               </linearGradient>
             </defs>
             <XAxis dataKey={xkey} tickFormatter={XAxisFormatter} />
@@ -76,9 +79,9 @@ export default function AreaChart<T>({
               <Area
                 type="monotone"
                 dataKey={area_key}
-                stroke="#82ca9d"
+                stroke={c2}
                 fillOpacity={1}
-                fill="url(#colorPv)"
+                fill={c2}
               />
             )}
             {negative_area_key && positive_area_key && (
@@ -86,14 +89,14 @@ export default function AreaChart<T>({
                 <Area
                   type="monotone"
                   dataKey={negative_area_key}
-                  stroke="#8884d8"
+                  stroke={c1}
                   fillOpacity={1}
                   fill="url(#colorUv)"
                 />
                 <Area
                   type="monotone"
                   dataKey={positive_area_key}
-                  stroke="#82ca9d"
+                  stroke={c2}
                   fillOpacity={1}
                   fill="url(#colorPv)"
                 />

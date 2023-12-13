@@ -162,7 +162,7 @@ export default function AnalyticsPage() {
               }
             }}
           >
-            <Option value="year">This Year</Option>
+            <Option value="year">All Time</Option>
             <Option value="month">This Month</Option>
           </Select>
         </Box>
@@ -175,7 +175,7 @@ export default function AnalyticsPage() {
           <Typography level="body-xs">Agent</Typography>
           <Select
             value={state.agentId}
-            placeholder="select an agent"
+            placeholder="Filter by Agent"
             startDecorator={<SupportAgentIcon fontSize="lg" />}
             sx={{ width: 235, height: 30 }}
             onChange={(_, value) => {
@@ -221,32 +221,32 @@ export default function AnalyticsPage() {
       >
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Total Conversations"
-            quantity={state.conversation_count}
+            label="Total Conversations"
+            value={state.conversation_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Liked Responses"
-            quantity={state.good_message_count}
+            label="Liked Responses"
+            value={state.good_message_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Disliked Responses"
-            quantity={state.bad_message_count}
+            label="Disliked Responses"
+            value={state.bad_message_count}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
-          <AnalyticsCard metric="Leads Generated" quantity={state.lead_count} />
+          <AnalyticsCard label="Leads Generated" value={state.lead_count} />
         </Box>
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            metric="Most Used Datasource"
-            metricSpecifier={state.most_common_datasource}
+            label="Most Used Datasource"
+            value={state.most_common_datasource}
           />
         </Box>
       </Box>
@@ -290,7 +290,7 @@ export default function AnalyticsPage() {
       <Card variant="outlined" sx={{ px: 5, py: 2, mt: 4 }}>
         <Typography textAlign="center">Conversations Per Country</Typography>
         <GeoChart
-          metric="visits"
+          label="visits"
           data={state.visitsPerCountry}
           totalConversation={state.conversation_count}
         />

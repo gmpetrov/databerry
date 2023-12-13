@@ -9,7 +9,9 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 async function main() {
   try {
     const products = await stripe.products.list();
-    const prices = await stripe.prices.list();
+    const prices = (await stripe.prices.list())?.data.filter(
+      (data) => data.type === 'recurring'
+    );
 
     await Promise.all(
       products.data.map((each) =>
@@ -37,7 +39,7 @@ async function main() {
     );
 
     await Promise.all(
-      prices.data.map((each) =>
+      prices.map((each) =>
         prisma.price.upsert({
           where: {
             id: each.id,
@@ -122,7 +124,7 @@ async function main() {
                       status: 'active',
                       plan: 'level_3',
                       customerId: '42',
-                      priceId: prices?.data?.[0]?.id,
+                      priceId: prices?.[0]?.id,
                     },
                   },
                 },

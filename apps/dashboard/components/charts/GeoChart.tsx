@@ -11,7 +11,7 @@ import React, { memo } from 'react';
 import { Chart } from 'react-google-charts';
 
 type Props = {
-  metric: string;
+  label: string;
   data: any[];
   totalConversation: number;
 };
@@ -110,7 +110,7 @@ const BarChartTable = ({
   );
 };
 
-function GeoChart({ metric, data, totalConversation }: Props) {
+function GeoChart({ label, data, totalConversation }: Props) {
   const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
   const convertedData = data.map(([country, chats]) => [
     regionNames.of(country),
@@ -122,7 +122,7 @@ function GeoChart({ metric, data, totalConversation }: Props) {
         <Chart
           chartType="GeoChart"
           height="400px"
-          data={[['Country', metric], ...data]}
+          data={[['Country', label], ...data]}
         />
       </Grid>
       <Grid xs={4}>

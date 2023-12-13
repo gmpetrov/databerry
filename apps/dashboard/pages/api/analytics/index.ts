@@ -351,7 +351,8 @@ export const getAnalytics = async (
     const cacheKey = `${view}:${organization.id}:${agent_id}`;
     const cache = new Cache();
     const cachedValue = await cache.get(cacheKey);
-    if (cachedValue) {
+
+    if (process.env.NODE_ENV === 'production' && cachedValue) {
       return JSON.parse(cachedValue);
     }
 
@@ -396,24 +397,22 @@ export const getAnalytics = async (
       most_common_datasource,
     } = keyMetric[0];
 
-    cache.set({
-      key: cacheKey,
-      value: JSON.stringify({
-        conversation_count,
-        bad_message_count,
-        good_message_count,
-        lead_count,
-        most_common_datasource,
-        repliesEvolution,
-        conversationEvolution,
-        visitsPerCountry: (
-          visitsPerCountry as { country: string; visits: number }[]
-        ).map((visit) => Object.values(visit)),
-      }),
-      expiration: 60 * 60, // 1 hour
-    });
+    const sortedVisitsPerCountry = (
+      visitsPerCountry as { country: string; visits: number }[]
+    )
+      .map((visit) => Object.values(visit))
+      .sort((a, b) => {
+        const byVisit = (b[1] as number) - (a[1] as number);
 
-    return {
+        if (byVisit === 0) {
+          // alphabetical order
+          return (a[0] as string)?.localeCompare(b[0] as string);
+        }
+        // order by visits desc
+        return byVisit;
+      });
+
+    const result = {
       conversation_count,
       bad_message_count,
       good_message_count,
@@ -421,10 +420,16 @@ export const getAnalytics = async (
       most_common_datasource,
       repliesEvolution,
       conversationEvolution,
-      visitsPerCountry: (
-        visitsPerCountry as { country: string; visits: number }[]
-      ).map((visit) => Object.values(visit)),
+      visitsPerCountry: sortedVisitsPerCountry,
     };
+
+    cache.set({
+      key: cacheKey,
+      value: JSON.stringify(result),
+      expiration: 60 * 60, // 1 hour
+    });
+
+    return result;
   } catch (e) {
     if (e instanceof ZodError) {
       throw { status: 400, message: e.formErrors.fieldErrors };
