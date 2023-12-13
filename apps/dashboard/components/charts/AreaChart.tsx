@@ -63,11 +63,11 @@ export default function AreaChart<T>({
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="c1" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={c1} stopOpacity={0.8} />
                 <stop offset="95%" stopColor={c1} stopOpacity={0} />
               </linearGradient>
-              <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="c2" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={c2} stopOpacity={0.8} />
                 <stop offset="95%" stopColor={c2} stopOpacity={0} />
               </linearGradient>
@@ -79,9 +79,9 @@ export default function AreaChart<T>({
               <Area
                 type="monotone"
                 dataKey={area_key}
-                stroke={c2}
+                stroke={'url(#c2)'}
                 fillOpacity={1}
-                fill={c2}
+                fill={'url(#c2)'}
               />
             )}
             {negative_area_key && positive_area_key && (
@@ -91,14 +91,14 @@ export default function AreaChart<T>({
                   dataKey={negative_area_key}
                   stroke={c1}
                   fillOpacity={1}
-                  fill="url(#colorUv)"
+                  fill="url(#c1)"
                 />
                 <Area
                   type="monotone"
                   dataKey={positive_area_key}
                   stroke={c2}
                   fillOpacity={1}
-                  fill="url(#colorPv)"
+                  fill="url(#c2)"
                 />
               </>
             )}

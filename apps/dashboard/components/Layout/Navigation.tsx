@@ -93,9 +93,10 @@ function NavigationLink(props: {
 
 export default function Navigation() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session } = useSession({
+    required: true,
+  });
   const { product } = useProduct();
-  const [isShowUpgradeModal, setIsShowUpgradeModal] = React.useState(false);
   const upgradeModal = useModal({
     disableClose: !session?.organization?.isPremium,
   });
@@ -154,7 +155,7 @@ export default function Navigation() {
       } else {
         upgradeModal.close();
       }
-    }, 2000);
+    }, 5000);
 
     return () => {
       clearTimeout(timeout);

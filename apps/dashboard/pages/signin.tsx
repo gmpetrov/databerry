@@ -77,11 +77,6 @@ export default function SignInPage() {
   const handleSubmitEmail = (values: Schema) => {
     signIn('email', { email: values.email });
   };
-
-  React.useEffect(() => {
-    setMode('dark');
-  }, []);
-
   return (
     <>
       <SEO
