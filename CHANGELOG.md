@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.118"></a>
+## 0.1.118 (2023-12-13)
+
+### Fixed
+
+- 🐛 bunch of ui fixes [[c457607](https://github.com/gmpetrov/databerry/commit/c457607c8d08f0ac7f7ad455fa3520ab708c1c55)]
+
+### Miscellaneous
+
+- 🤖 disable ssr for dashboard pages [[85368cd](https://github.com/gmpetrov/databerry/commit/85368cd2984d6e8a2d4f819c2cab76ebc55b64f0)]
+
+
 <a name="0.1.117"></a>
 ## 0.1.117 (2023-12-13)
 
