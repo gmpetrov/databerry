@@ -111,9 +111,9 @@ const BarChartTable = ({
 };
 
 function GeoChart({ label, data, totalConversation }: Props) {
-  const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-  const convertedData = data.map(([country, chats]) => [
-    regionNames.of(country),
+  const converter = new Intl.DisplayNames(['en'], { type: 'region' });
+  const convertedData = data?.map(([country, chats]) => [
+    typeof country === 'string' ? converter.of(country) : '',
     chats,
   ]);
   return (
