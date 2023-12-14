@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.119"></a>
+## 0.1.119 (2023-12-14)
+
+### Fixed
+
+- 🐛 analytics prod issue [[1188e6e](https://github.com/gmpetrov/databerry/commit/1188e6e190871533bdc057c1a220010ccc6ff21b)]
+
+
 <a name="0.1.118"></a>
 ## 0.1.118 (2023-12-13)
 
