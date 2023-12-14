@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.120"></a>
+## 0.1.120 (2023-12-14)
+
+### Fixed
+
+- 🐛 scale issue on bars [[2aba0ef](https://github.com/gmpetrov/databerry/commit/2aba0efc4853f27ea22ed3bb54051a61043c2df3)]
+
+
 <a name="0.1.119"></a>
 ## 0.1.119 (2023-12-14)
 
