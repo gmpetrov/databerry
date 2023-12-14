@@ -4,6 +4,7 @@ import {
   Divider,
   Grid,
   LinearProgress,
+  Skeleton,
   Stack,
   Typography,
 } from '@mui/joy';
@@ -13,7 +14,8 @@ import { Chart } from 'react-google-charts';
 type Props = {
   label: string;
   data: any[];
-  totalConversation: number;
+  highestChats: number;
+  loading?: boolean;
 };
 
 const ProgressBar = ({ total, amount }: { total: number; amount: number }) => {
@@ -32,11 +34,11 @@ const ProgressBar = ({ total, amount }: { total: number; amount: number }) => {
 const BarChartRow = ({
   country,
   chats,
-  totalConversation,
+  highestChats,
 }: {
   country: string;
   chats: number;
-  totalConversation: number;
+  highestChats: number;
 }) => {
   return (
     <Stack>
@@ -59,15 +61,15 @@ const BarChartRow = ({
           <Box sx={{ fontWeight: 'medium' }}>{chats}</Box>
         </Stack>
       </Stack>
-      <ProgressBar total={totalConversation} amount={chats} />
+      <ProgressBar total={highestChats} amount={chats} />
     </Stack>
   );
 };
 
 const BarChartTable = ({
   data,
-  totalConversation,
-}: Pick<Props, 'data' | 'totalConversation'>) => {
+  highestChats,
+}: Pick<Props, 'data' | 'highestChats'>) => {
   return (
     <Box
       sx={{
@@ -102,7 +104,7 @@ const BarChartTable = ({
             key={index}
             country={country}
             chats={chats}
-            totalConversation={totalConversation}
+            highestChats={highestChats}
           />
         ))}
       </Stack>
@@ -110,7 +112,10 @@ const BarChartTable = ({
   );
 };
 
-function GeoChart({ label, data, totalConversation }: Props) {
+function GeoChart({ label, data, highestChats, loading = false }: Props) {
+  const highestChatsPerConversation = Math.max(
+    ...data.map(([_, number]) => number)
+  );
   const converter = new Intl.DisplayNames(['en'], { type: 'region' });
   const convertedData = data?.map(([country, chats]) => [
     typeof country === 'string' ? converter.of(country) : '',
@@ -118,19 +123,27 @@ function GeoChart({ label, data, totalConversation }: Props) {
   ]);
   return (
     <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-      <Grid xs={8}>
-        <Chart
-          chartType="GeoChart"
-          height="400px"
-          data={[['Country', label], ...data]}
-        />
-      </Grid>
-      <Grid xs={4}>
-        <BarChartTable
-          data={convertedData}
-          totalConversation={totalConversation}
-        />
-      </Grid>
+      <Skeleton
+        loading={loading}
+        variant="rectangular"
+        width="100%"
+        height="400px"
+        animation="wave"
+      >
+        <Grid xs={8}>
+          <Chart
+            chartType="GeoChart"
+            height="400px"
+            data={[['Country', label], ...data]}
+          />
+        </Grid>
+        <Grid xs={4}>
+          <BarChartTable
+            data={convertedData}
+            highestChats={highestChatsPerConversation}
+          />
+        </Grid>
+      </Skeleton>
     </Grid>
   );
 }
