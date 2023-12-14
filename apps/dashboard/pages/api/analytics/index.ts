@@ -51,25 +51,30 @@ function getKeyMetrics({ organizationId, range, agentId }: DbGetterArgs) {
     SELECT 
       (SELECT CAST(COUNT(*) AS INTEGER) FROM conversations 
         WHERE created_at BETWEEN ${start_date}::timestamp AND ${end_date}::timestamp
+        AND organization_id = ${organizationId}
         AND agent_id = ${agentId})
       AS conversation_count,
-      (SELECT CAST(COUNT(*) AS INTEGER) 
+      (
+        SELECT CAST(COUNT(*) AS INTEGER) 
         FROM messages as msg 
         LEFT JOIN conversations AS conv 
         ON msg.conversation_id = conv.id
-          WHERE msg.created_at BETWEEN  ${start_date}::timestamp AND ${end_date}::timestamp
-          AND msg.created_at < ${end_date}::timestamp 
-          AND msg.eval = 'bad' 
-          AND conv.agent_id = ${agentId})
+          WHERE conv.organization_id = ${organizationId} 
+          AND conv.agent_id = ${agentId}
+          AND msg.created_at BETWEEN  ${start_date}::timestamp AND ${end_date}::timestamp
+          AND msg.eval = 'bad'
+        )
       AS bad_message_count,
-      (SELECT CAST(COUNT(*) AS INTEGER) 
+      (
+        SELECT CAST(COUNT(*) AS INTEGER) 
       FROM messages as msg 
       LEFT JOIN conversations AS conv 
       ON msg.conversation_id = conv.id
-        WHERE msg.created_at BETWEEN  ${start_date}::timestamp AND ${end_date}::timestamp
-        AND msg.created_at < ${end_date}::timestamp 
+        WHERE conv.organization_id = ${organizationId}
+        AND msg.created_at BETWEEN  ${start_date}::timestamp AND ${end_date}::timestamp
         AND msg.eval = 'good' 
-        AND conv.agent_id = ${agentId})
+        AND conv.agent_id = ${agentId}
+        )
       AS good_message_count,
       (
         SELECT CAST(COUNT(*) AS INTEGER) FROM leads 
@@ -82,7 +87,7 @@ function getKeyMetrics({ organizationId, range, agentId }: DbGetterArgs) {
         SELECT ads.type FROM data_sources ads 
          JOIN (
                 SELECT ds.id FROM data_stores ds 
-                JOIN  tools   ON ds.id = tools.datastore_id
+                JOIN  tools ON ds.id = tools.datastore_id
                 JOIN  data_sources source ON ds.id = source.datastore_id
                 WHERE tools.agent_id = ${agentId}
                 GROUP BY source.type , ds.id
@@ -100,19 +105,24 @@ function getKeyMetrics({ organizationId, range, agentId }: DbGetterArgs) {
       (
         SELECT CAST(COUNT(*) AS INTEGER) FROM conversations 
         WHERE created_at BETWEEN ${start_date}::timestamp AND ${end_date}::timestamp
+        AND organization_id = ${organizationId}
       )
       AS conversation_count,
       (
         SELECT CAST(COUNT(*) AS INTEGER) 
-        FROM messages 
-        WHERE created_at BETWEEN ${start_date}::timestamp AND ${end_date}::timestamp 
+        FROM messages as msg
+        LEFT JOIN conversations as conv  ON  msg.conversation_id = conv.id
+        WHERE conv.organization_id = ${organizationId}
+        AND msg.created_at BETWEEN ${start_date}::timestamp AND ${end_date}::timestamp 
         AND eval = 'bad'
       )
       AS bad_message_count,
       (
         SELECT CAST(COUNT(*) AS INTEGER) 
-        FROM messages 
-        WHERE created_at BETWEEN ${start_date}::timestamp  AND ${end_date}::timestamp 
+        FROM messages as msg
+        LEFT JOIN conversations as conv ON msg.conversation_id = conv.id
+        WHERE conv.organization_id = ${organizationId}
+        AND msg.created_at BETWEEN ${start_date}::timestamp  AND ${end_date}::timestamp 
         AND eval = 'good'
       ) 
       AS good_message_count,
@@ -124,12 +134,18 @@ function getKeyMetrics({ organizationId, range, agentId }: DbGetterArgs) {
       )  
       AS lead_count,
       (
-       SELECT source.type 
-       FROM data_sources source 
-          JOIN (
-              SELECT ds.id FROM data_stores ds JOIN data_sources source ON ds.id = source.datastore_id 
-              GROUP BY ds.id ORDER BY COUNT(source.type) DESC LIMIT 1
-            ) most_used_ds ON most_used_ds.id = source.datastore_id LIMIT 1
+        SELECT ads.type FROM data_sources ads 
+         JOIN (
+                SELECT ds.id FROM data_stores ds 
+                JOIN  tools ON ds.id = tools.datastore_id
+                JOIN  data_sources source ON ds.id = source.datastore_id
+                WHERE source.organization_id = ${organizationId}
+                GROUP BY source.type , ds.id
+               ORDER BY COUNT(*) DESC
+             )  
+         most_used_ds ON most_used_ds.id = ads.datastore_id  
+         GROUP BY ads.type
+         ORDER BY COUNT(*) DESC LIMIT 1
       ) 
       AS most_common_datasource
      `;
@@ -352,6 +368,9 @@ export const getAnalytics = async (
     const cacheKey = `${view}:${organization.id}:${agent_id}`;
     const cache = new Cache();
     const cachedValue = await cache.get(cacheKey);
+
+    const start_date = dayjs(new Date()).startOf('year').toISOString();
+    const end_date = dayjs(new Date()).endOf('year').toISOString();
 
     if (process.env.NODE_ENV === 'production' && cachedValue) {
       return JSON.parse(cachedValue);
