@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.121"></a>
+## 0.1.121 (2023-12-14)
+
+### Fixed
+
+- 🐛 retrocompatibility [[73d5f59](https://github.com/gmpetrov/databerry/commit/73d5f59436162f9cdff4414a4e2d163c03339f77)]
+
+
 <a name="0.1.120"></a>
 ## 0.1.120 (2023-12-14)
 
