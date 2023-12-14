@@ -99,7 +99,7 @@ const BarChartTable = ({
           <Typography level="title-lg">Chats</Typography>
         </Stack>
 
-        {data.map(([country, chats], index) => (
+        {data?.map(([country, chats], index) => (
           <BarChartRow
             key={index}
             country={country}
@@ -112,15 +112,32 @@ const BarChartTable = ({
   );
 };
 
-function GeoChart({ label, data, highestChats, loading = false }: Props) {
-  const highestChatsPerConversation = Math.max(
-    ...data.map(([_, number]) => number)
+// browser env.
+function convertToCountryName(countryCode: string) {
+  try {
+    const converter = new Intl.DisplayNames(['en'], { type: 'region' });
+    return converter.of(countryCode);
+  } catch (e) {
+    // invalid country code
+    return undefined;
+  }
+}
+
+function GeoChart({ label, data, loading = false }: Props) {
+  const newData = data?.reduce(
+    (acc, [country, chats]) => {
+      // filter out invalid country codes.
+      if (convertToCountryName(country)) {
+        acc.convertedData.push([convertToCountryName(country), chats]);
+        if (acc.highestChatsPerConversation < chats) {
+          acc.highestChatsPerConversation = chats;
+        }
+      }
+      return acc;
+    },
+    { highestChatsPerConversation: 0, convertedData: [] }
   );
-  const converter = new Intl.DisplayNames(['en'], { type: 'region' });
-  const convertedData = data?.map(([country, chats]) => [
-    typeof country === 'string' ? converter.of(country) : '',
-    chats,
-  ]);
+
   return (
     <Grid container spacing={2} sx={{ flexGrow: 1 }}>
       <Skeleton
@@ -134,13 +151,13 @@ function GeoChart({ label, data, highestChats, loading = false }: Props) {
           <Chart
             chartType="GeoChart"
             height="400px"
-            data={[['Country', label], ...data]}
+            data={[['Country', label], ...newData.convertedData]}
           />
         </Grid>
         <Grid xs={4}>
           <BarChartTable
-            data={convertedData}
-            highestChats={highestChatsPerConversation}
+            data={newData.convertedData}
+            highestChats={newData.highestChatsPerConversation}
           />
         </Grid>
       </Skeleton>
