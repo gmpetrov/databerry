@@ -347,6 +347,7 @@ export const getAnalytics = async (
     const { view, agent_id } = querySchema.parse(req.query);
 
     const { organization } = req.session;
+
     //TODO: generate cuid from cuids.
     const cacheKey = `${view}:${organization.id}:${agent_id}`;
     const cache = new Cache();

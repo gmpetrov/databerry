@@ -76,6 +76,7 @@ export default function AnalyticsPage() {
     conversationEvolution: [],
     view: 'year',
     agentId: '',
+    isLoading: false,
   });
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
     '/api/agents',
@@ -84,6 +85,7 @@ export default function AnalyticsPage() {
 
   const fetchAnalytics = useCallback(async () => {
     try {
+      setState({ isLoading: true });
       const response = await axios.get(
         `${ANALYTICS_API_URL}?view=${state.view}&agent_id=${state.agentId}`
       );
@@ -91,6 +93,8 @@ export default function AnalyticsPage() {
     } catch (e) {
       toast.error('Unable to fetch your analytics');
       console.error(e);
+    } finally {
+      setState({ isLoading: false });
     }
   }, [state.view, state.agentId]);
 
@@ -223,6 +227,7 @@ export default function AnalyticsPage() {
           <AnalyticsCard
             label="Total Conversations"
             value={state.conversation_count}
+            loading={state.isLoading}
           />
         </Box>
 
@@ -230,6 +235,7 @@ export default function AnalyticsPage() {
           <AnalyticsCard
             label="Liked Responses"
             value={state.good_message_count}
+            loading={state.isLoading}
           />
         </Box>
 
@@ -237,16 +243,22 @@ export default function AnalyticsPage() {
           <AnalyticsCard
             label="Disliked Responses"
             value={state.bad_message_count}
+            loading={state.isLoading}
           />
         </Box>
 
         <Box flexGrow={1} flexShrink={1}>
-          <AnalyticsCard label="Leads Generated" value={state.lead_count} />
+          <AnalyticsCard
+            label="Leads Generated"
+            value={state.lead_count}
+            loading={state.isLoading}
+          />
         </Box>
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
             label="Most Used Datasource"
             value={state.most_common_datasource}
+            loading={state.isLoading}
           />
         </Box>
       </Box>
@@ -259,6 +271,7 @@ export default function AnalyticsPage() {
             negative_area_key="bad_count"
             title="Replies Quality Performance"
             XAxisFormatter={getMonthName}
+            loading={state.isLoading}
           />
 
           <AreaChart<ConversationMetricBase & { month: string }>
@@ -267,6 +280,7 @@ export default function AnalyticsPage() {
             area_key="conversation_count"
             title="Conversations Evolution"
             XAxisFormatter={getMonthName}
+            loading={state.isLoading}
           />
         </>
       ) : (
@@ -277,6 +291,7 @@ export default function AnalyticsPage() {
             positive_area_key="good_count"
             negative_area_key="bad_count"
             title="Replies Quality Performance"
+            loading={state.isLoading}
           />
 
           <AreaChart<ConversationMetricBase & { day: string }>
@@ -284,6 +299,7 @@ export default function AnalyticsPage() {
             xkey="day"
             area_key="conversation_count"
             title="Conversations Evolution"
+            loading={state.isLoading}
           />
         </>
       )}
@@ -292,7 +308,8 @@ export default function AnalyticsPage() {
         <GeoChart
           label="visits"
           data={state.visitsPerCountry}
-          totalConversation={state.conversation_count}
+          highestChats={state.conversation_count}
+          loading={state.isLoading}
         />
       </Card>
     </Box>
