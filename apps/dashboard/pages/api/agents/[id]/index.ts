@@ -202,6 +202,10 @@ export const deleteAgent = async (
     },
   });
 
+  if (agent?.organizationId !== req.session?.organization?.id) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+
   await prisma.agent.delete({
     where: {
       id,

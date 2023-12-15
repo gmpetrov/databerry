@@ -370,7 +370,7 @@ const handleGetSession = async (
       session = {
         authType: 'apiKey',
         user: undefined,
-        roles: [MembershipRole.ADMIN],
+        roles: [MembershipRole.OWNER],
         organization: formatOrganizationSession(key.organization!),
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toDateString(),
       };

@@ -241,7 +241,7 @@ export function HeroChatGPTPlugin() {
             />
             <div className="w-full h-[500px] overflow-hidden rounded-3xl bg-white">
               <iframe
-                src={`${appUrl}/agents/clgtujkqh022j0u0zw3ut8vk3/iframe`}
+                src={`${appUrl}/agents/clq6g5cuv000wpv8iddswwvnd/iframe`}
                 width="100%"
                 height="100%"
                 frameBorder="0"

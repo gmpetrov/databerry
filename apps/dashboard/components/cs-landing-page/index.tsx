@@ -55,7 +55,7 @@ function CSLandingPage({}: Props) {
       <script
         defer
         src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-        id="clgtujkqh022j0u0zw3ut8vk3"
+        id="clq6g5cuv000wpv8iddswwvnd"
         data-name="databerry-chat-bubble"
       ></script>
 

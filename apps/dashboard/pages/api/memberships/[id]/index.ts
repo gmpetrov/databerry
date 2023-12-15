@@ -27,6 +27,10 @@ export const deleteMembership = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
+  if (membership?.organizationId !== req.session?.organization?.id) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+
   return prisma.membership.delete({
     where: {
       id: req.query.id as string,

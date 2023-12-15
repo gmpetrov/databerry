@@ -73,7 +73,7 @@ export default function Home() {
       <script
         defer
         src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-        id="clgtujkqh022j0u0zw3ut8vk3"
+        id="clq6g5cuv000wpv8iddswwvnd"
         data-name="databerry-chat-bubble"
       ></script>
 
@@ -81,7 +81,7 @@ export default function Home() {
         {`(function() {
       d = document;
       s = d.createElement('script');
-      s.id = 'clgtujkqh022j0u0zw3ut8vk3';
+      s.id = 'clq6g5cuv000wpv8iddswwvnd';
       s.setAttribute('data-name', 'databerry-chat-bubble');
       s.src = 'https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest';
       s.async = 1;
