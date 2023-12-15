@@ -97,9 +97,9 @@ export default function Navigation() {
     required: true,
   });
   const { product } = useProduct();
-  const upgradeModal = useModal({
-    disableClose: !session?.organization?.isPremium,
-  });
+  // const upgradeModal = useModal({
+  //   disableClose: !session?.organization?.isPremium,
+  // });
 
   const getStatusQuery = useSWR<Prisma.PromiseReturnType<typeof getStatus>>(
     '/api/status',
@@ -148,19 +148,19 @@ export default function Navigation() {
     }
   }, [getStatusQuery?.data?.status]);
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (!session?.organization?.isPremium) {
-        upgradeModal.open();
-      } else {
-        upgradeModal.close();
-      }
-    }, 5000);
+  // React.useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     if (!session?.organization?.isPremium) {
+  //       upgradeModal.open();
+  //     } else {
+  //       upgradeModal.close();
+  //     }
+  //   }, 5000);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [session?.organization?.isPremium]);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  // }, [session?.organization?.isPremium]);
 
   React.useEffect(() => {
     if (
@@ -656,7 +656,7 @@ export default function Navigation() {
       <UserMenu />
 
       {/* <UsageLimitModal isOpen={isShowUpgradeModal} handleClose={() => {}} /> */}
-      <upgradeModal.component
+      {/* <upgradeModal.component
         dialogProps={{
           maxWidth: 'lg',
         }}
@@ -679,7 +679,7 @@ export default function Navigation() {
         <Stack sx={{ py: 4 }}>
           <StripePricingTable />
         </Stack>
-      </upgradeModal.component>
+      </upgradeModal.component> */}
     </Stack>
   );
 }

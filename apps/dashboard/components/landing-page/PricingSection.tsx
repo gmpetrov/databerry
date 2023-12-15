@@ -16,31 +16,31 @@ const frequencies = [
   { value: 'annually', label: 'Annually', priceSuffix: '/year' },
 ];
 const tiers = [
-  // {
-  //   name: 'Discover',
-  //   id: 'tier-free',
-  //   href: `${appUrl}/settings/billing`,
-  //   price: { monthly: '$0', annually: '$0' },
-  //   description: 'The essentials to get started quickly.',
-  //   features: [
-  //     `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
-  //     `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
-  //     `${accountConfig['level_0'].limits.maxAgentsQueries} GPT-3.5 agents queries / month`,
-  //     `${formatter.format(
-  //       accountConfig['level_0'].limits.maxStoredTokens
-  //     )} words storage`,
-  //     `File upload limited to ${
-  //       accountConfig['level_0'].limits.maxFileSize / 1000000
-  //     }MB / file`,
+  {
+    name: 'Discover',
+    id: 'tier-free',
+    href: `${appUrl}/settings/billing`,
+    price: { monthly: '$0', annually: '$0' },
+    description: 'The essentials to get started quickly.',
+    features: [
+      `${accountConfig['level_0'].limits.maxAgents} agent(s)`,
+      `${accountConfig['level_0'].limits.maxDatastores} datastore(s)`,
+      `${accountConfig['level_0'].limits.maxAgentsQueries} GPT-3.5 agents queries / month`,
+      `${formatter.format(
+        accountConfig['level_0'].limits.maxStoredTokens
+      )} words storage`,
+      `File upload limited to ${
+        accountConfig['level_0'].limits.maxFileSize / 1000000
+      }MB / file`,
 
-  //     // `Data processing limited to ${accountConfig['level_0'].limits
-  //     //   .maxDataProcessing / 1000000}MB / month`,
-  //     'Manual data synching',
-  //     // 'Access to Chaindesk API',
-  //     // 'ChatGPT plugin',
-  //   ],
-  //   mostPopular: false,
-  // },
+      // `Data processing limited to ${accountConfig['level_0'].limits
+      //   .maxDataProcessing / 1000000}MB / month`,
+      'Manual data synching',
+      // 'Access to Chaindesk API',
+      // 'ChatGPT plugin',
+    ],
+    mostPopular: false,
+  },
   {
     name: 'Growth',
     id: 'tier-startup',
@@ -127,35 +127,35 @@ const tiers = [
     ],
     mostPopular: false,
   },
-  {
-    name: 'Ultimate',
-    id: 'tier-ultimate',
-    href: `${appUrl}/settings/billing`,
-    price: { monthly: '$999', annually: '$9990' },
-    description:
-      'You’ve got a huge amount of assets but it’s not enough. To the moon.',
-    features: [
-      `${accountConfig['level_4'].limits.maxAgents} agent(s)`,
-      `${accountConfig['level_4'].limits.maxDatastores} datastore(s)`,
-      `${accountConfig['level_4'].limits.maxAgentsQueries} GPT-3.5 or ${
-        accountConfig['level_4'].limits.maxAgentsQueries / 20
-      } GPT-4 agents queries / month`,
-      `${formatter.format(
-        accountConfig['level_4'].limits.maxStoredTokens
-      )} words storage`,
-      `File upload limited to ${
-        accountConfig['level_4'].limits.maxFileSize / 1000000
-      }MB / file`,
-      // `Data processing limited to ${accountConfig['level_4'].limits
-      //   .maxDataProcessing / 1000000}MB / month`,
-      'Access to Chaindesk API',
-      'Auto synch datasources',
-      // 'ChatGPT plugin',
-      `Website loader limited to  ${accountConfig['level_4'].limits.maxWebsiteURL} Pages`,
-      `${accountConfig['level_4'].limits.maxSeats} Team seat(s) included`,
-    ],
-    mostPopular: false,
-  },
+  // {
+  //   name: 'Ultimate',
+  //   id: 'tier-ultimate',
+  //   href: `${appUrl}/settings/billing`,
+  //   price: { monthly: '$999', annually: '$9990' },
+  //   description:
+  //     'You’ve got a huge amount of assets but it’s not enough. To the moon.',
+  //   features: [
+  //     `${accountConfig['level_4'].limits.maxAgents} agent(s)`,
+  //     `${accountConfig['level_4'].limits.maxDatastores} datastore(s)`,
+  //     `${accountConfig['level_4'].limits.maxAgentsQueries} GPT-3.5 or ${
+  //       accountConfig['level_4'].limits.maxAgentsQueries / 20
+  //     } GPT-4 agents queries / month`,
+  //     `${formatter.format(
+  //       accountConfig['level_4'].limits.maxStoredTokens
+  //     )} words storage`,
+  //     `File upload limited to ${
+  //       accountConfig['level_4'].limits.maxFileSize / 1000000
+  //     }MB / file`,
+  //     // `Data processing limited to ${accountConfig['level_4'].limits
+  //     //   .maxDataProcessing / 1000000}MB / month`,
+  //     'Access to Chaindesk API',
+  //     'Auto synch datasources',
+  //     // 'ChatGPT plugin',
+  //     `Website loader limited to  ${accountConfig['level_4'].limits.maxWebsiteURL} Pages`,
+  //     `${accountConfig['level_4'].limits.maxSeats} Team seat(s) included`,
+  //   ],
+  //   mostPopular: false,
+  // },
 ];
 
 function classNames(...classes: any) {
