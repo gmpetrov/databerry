@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.123"></a>
+## 0.1.123 (2023-12-15)
+
+### Fixed
+
+- 🐛 delete agent breach [[8e84d9e](https://github.com/gmpetrov/databerry/commit/8e84d9ef7d7ff5f75941dedc47185e86f24d98d1)]
+
+
 <a name="0.1.122"></a>
 ## 0.1.122 (2023-12-15)
 
