@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.122"></a>
+## 0.1.122 (2023-12-15)
+
+### Fixed
+
+- 🐛 analytics queries [[d14829e](https://github.com/gmpetrov/databerry/commit/d14829e6d728e9f81e5cbbaeafa89ba1a7cbb8de)]
+
+
 <a name="0.1.121"></a>
 ## 0.1.121 (2023-12-14)
 
