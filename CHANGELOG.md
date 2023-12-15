@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.124"></a>
+## 0.1.124 (2023-12-15)
+
+### Miscellaneous
+
+- 🤖 disable free trials [[43cddc5](https://github.com/gmpetrov/databerry/commit/43cddc569d820ded1cd19f49862a41996c3cd3a8)]
+
+
 <a name="0.1.123"></a>
 ## 0.1.123 (2023-12-15)
 
