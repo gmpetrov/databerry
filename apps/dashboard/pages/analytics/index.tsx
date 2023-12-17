@@ -64,6 +64,43 @@ const getMonthName = (num: number) =>
     'December',
   ][num - 1];
 
+function aggregateRepliesByKey(key: string, data: Record<string, any>[]) {
+  const aggregatedData = {} as Record<string, any>;
+
+  for (const item of data) {
+    const keyValue = item[key];
+
+    if (!aggregatedData[keyValue]) {
+      aggregatedData[keyValue] = [];
+    }
+    aggregatedData[keyValue].push({
+      month: item.month,
+      good_count: item.good_count,
+      bad_count: item.bad_count,
+    });
+  }
+
+  return aggregatedData;
+}
+
+function aggregateConversationsByKey(key: string, data: Record<string, any>[]) {
+  const aggregatedData = {} as Record<string, any>;
+
+  for (const item of data) {
+    const keyValue = item[key];
+
+    if (!aggregatedData[keyValue]) {
+      aggregatedData[keyValue] = [];
+    }
+    aggregatedData[keyValue].push({
+      month: item.month,
+      conversation_count: item.conversation_count,
+    });
+  }
+
+  return aggregatedData;
+}
+
 export default function AnalyticsPage() {
   const [state, setState] = useStateReducer({
     conversation_count: 0,
@@ -74,7 +111,7 @@ export default function AnalyticsPage() {
     repliesEvolution: [],
     visitsPerCountry: [],
     conversationEvolution: [],
-    view: 'year',
+    view: 'all_time',
     agentId: '',
     isLoading: false,
   });
@@ -82,12 +119,12 @@ export default function AnalyticsPage() {
     '/api/agents',
     fetcher
   );
-
+  console.log('0000', state.conversationEvolution);
   const fetchAnalytics = useCallback(async () => {
     try {
       setState({ isLoading: true });
       const response = await axios.get(
-        `${ANALYTICS_API_URL}?view=${state.view}&agent_id=${state.agentId}`
+        `${ANALYTICS_API_URL}?view=${state.view}&agentId=${state.agentId}`
       );
       setState(response.data);
     } catch (e) {
@@ -157,7 +194,7 @@ export default function AnalyticsPage() {
         >
           <Typography level="body-xs">Date Range</Typography>
           <Select
-            defaultValue="year"
+            defaultValue="all_time"
             startDecorator={<EventIcon fontSize="lg" />}
             sx={{ width: 155, height: 30 }}
             onChange={(_, value) => {
@@ -166,8 +203,8 @@ export default function AnalyticsPage() {
               }
             }}
           >
-            <Option value="year">All Time</Option>
-            <Option value="month">This Month</Option>
+            <Option value="all_time">All Time</Option>
+            <Option value="monthly">This Month</Option>
           </Select>
         </Box>
         <Box
@@ -262,11 +299,13 @@ export default function AnalyticsPage() {
           />
         </Box>
       </Box>
-      {state.view === 'year' ? (
+      {state.view === 'all_time' ? (
         <>
           <AreaChart<ReplieMetricBase & { month: string }>
             data={state.repliesEvolution}
             xkey="month"
+            viewBy="year"
+            aggregation={aggregateRepliesByKey}
             positive_area_key="good_count"
             negative_area_key="bad_count"
             title="Replies Quality Performance"
@@ -277,6 +316,8 @@ export default function AnalyticsPage() {
           <AreaChart<ConversationMetricBase & { month: string }>
             data={state.conversationEvolution}
             xkey="month"
+            viewBy="year"
+            aggregation={aggregateConversationsByKey}
             area_key="conversation_count"
             title="Conversations Evolution"
             XAxisFormatter={getMonthName}
