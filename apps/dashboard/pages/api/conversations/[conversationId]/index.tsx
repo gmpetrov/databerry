@@ -5,7 +5,6 @@ import z from 'zod';
 import IntegrationsEventDispatcher from '@app/utils/integrations-event-dispatcher';
 
 import { ConversationResolved, HelpRequest, render } from '@chaindesk/emails';
-import getHttpClient from '@chaindesk/integrations/zendesk/lib/get-http-client';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
   createLazyAuthHandler,
@@ -13,10 +12,7 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import mailer from '@chaindesk/lib/mailer';
 import runMiddleware from '@chaindesk/lib/run-middleware';
-import {
-  ConversationStatusSchema,
-  ServiceProviderZendesk,
-} from '@chaindesk/lib/types/dtos';
+import { ConversationUpdateSchema } from '@chaindesk/lib/types/dtos';
 import { AppEventType, AppNextApiRequest } from '@chaindesk/lib/types/index';
 import {
   Agent,
@@ -47,6 +43,8 @@ export const getConversation = async (
     },
     select: {
       status: true,
+      isAiEnabled: true,
+      userId: true,
       agent: true,
       lead: true,
       messages: {
@@ -111,7 +109,7 @@ export const updateConversation = async (
   try {
     const session = req.session;
     const conversationId = req.query.conversationId as string;
-    const data = ConversationStatusSchema.parse(req.body);
+    const updates = ConversationUpdateSchema.parse(req.body);
 
     const conversation = await prisma.conversation.findUnique({
       where: {
@@ -142,7 +140,7 @@ export const updateConversation = async (
         id: conversationId,
       },
       data: {
-        status: data.status,
+        ...updates,
       },
       include: {
         lead: true,
@@ -177,7 +175,7 @@ export const updateConversation = async (
       const leadEmail = updated?.lead?.email!;
       const agent = updated?.agent!;
 
-      if (data.status === ConversationStatus.RESOLVED) {
+      if (updates.status === ConversationStatus.RESOLVED) {
         await mailer.sendMail({
           from: {
             name: 'Chaindesk',
@@ -215,7 +213,7 @@ export const updateConversation = async (
             },
           }
         );
-      } else if (data.status === ConversationStatus.HUMAN_REQUESTED) {
+      } else if (updates.status === ConversationStatus.HUMAN_REQUESTED) {
         await mailer.sendMail({
           from: {
             name: 'Chaindesk',

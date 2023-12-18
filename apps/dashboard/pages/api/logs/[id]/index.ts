@@ -24,6 +24,11 @@ export const getConversation = async (
     include: {
       agent: true,
       lead: true,
+      externalConfig: {
+        include: {
+          serviceProvider: true,
+        },
+      },
       _count: {
         select: {
           messages: {

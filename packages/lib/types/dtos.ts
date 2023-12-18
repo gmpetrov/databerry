@@ -396,8 +396,9 @@ export const CrispUpdateMetadataSchema = CrispSchema.extend({
   aiStatus: z.nativeEnum(AIStatus),
 });
 
-export const ConversationStatusSchema = z.object({
-  status: z.nativeEnum(ConversationStatus),
+export const ConversationUpdateSchema = z.object({
+  status: z.nativeEnum(ConversationStatus).optional(),
+  isAiEnabled: z.boolean().optional(),
 });
 
 export const YoutubeSummarySchema = z.object({

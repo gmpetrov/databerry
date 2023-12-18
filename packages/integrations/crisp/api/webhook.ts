@@ -21,6 +21,7 @@ import validate from '@chaindesk/lib/validate';
 import {
   ConversationChannel,
   MessageFrom,
+  Prisma,
   ServiceProviderType,
   SubscriptionPlan,
 } from '@chaindesk/prisma';
@@ -45,7 +46,8 @@ type HookEventType =
   | 'message:updated'
   | 'message:compose:send'
   | 'message:notify:unread:send'
-  | 'message:acknowledge:delivered';
+  | 'message:acknowledge:delivered'
+  | 'session:set_data';
 
 type HookDataType = 'text';
 
@@ -57,6 +59,18 @@ type HookBodyBase = {
   timestamp: number;
   data: {
     [key: string]: any;
+  };
+};
+
+type HookBodySetData = HookBodyBase & {
+  event: Extract<HookEventType, 'session:set_data'>;
+  data: {
+    session_id: string;
+    website_id: string;
+    data: {
+      aiStatus: string;
+      aiDisabledDate: string;
+    };
   };
 };
 
@@ -186,40 +200,27 @@ const handleQuery = async (
     });
   } catch {
     return;
-    // return await CrispClient.website.sendMessageInConversation(
-    //   websiteId,
-    //   sessionId,
-    //   {
-    //     type: 'text',
-    //     from: 'operator',
-    //     origin: 'chat',
-    //     content: 'Usage limit reached.',
-    //     user: {
-    //       type: 'participant',
-    //       nickname: agent?.name || 'Chaindesk',
-    //       avatar:
-    //         agent.iconUrl ||
-    //         'https://chaindesk.ai/app-rounded-bg-white.png',
-    //     },
-    //   }
-    // );
   }
-
-  const conversation = await prisma.conversation.findFirst({
+  let externalConfig = await prisma.externalConversationConfig.findUnique({
     where: {
-      AND: [{ agentId: agent?.id }, { visitorId: sessionId }],
+      id: sessionId,
     },
-    include: {
-      messages: {
-        take: -24,
-        orderBy: {
-          createdAt: 'asc',
+    select: {
+      id: true,
+      conversation: {
+        include: {
+          messages: {
+            take: -24,
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
         },
       },
     },
   });
 
-  const conversationId = conversation?.id || cuid();
+  const conversationId = externalConfig?.conversation?.id || cuid();
 
   const conversationManager = new ConversationManager({
     organizationId: agent?.organizationId!,
@@ -227,6 +228,15 @@ const handleQuery = async (
     agentId: agent?.id!,
     visitorId: sessionId,
     conversationId,
+    ...(!externalConfig
+      ? {
+          externalConfig: {
+            externalId: websiteId,
+            serviceProviderType: ServiceProviderType.crisp,
+            externalConversationId: sessionId,
+          },
+        }
+      : {}),
   });
 
   conversationManager.push({
@@ -236,7 +246,7 @@ const handleQuery = async (
 
   const { answer, sources } = await new AgentManager({ agent }).query({
     input: query,
-    history: conversation?.messages,
+    history: externalConfig?.conversation?.messages || [],
   });
 
   const finalAnswer = `${answer}\n\n${formatSourcesRawText(
@@ -285,7 +295,6 @@ const handleQuery = async (
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   let body = {} as HookBody;
-
   try {
     res.status(200).send('Handling...');
     // const host = req?.headers?.['host'];
@@ -331,28 +340,42 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
     switch (body.event) {
       case 'message:send':
+        console.log('bodyx', body.data, metadata);
         if (
           body.data.origin === 'chat' &&
           body.data.from === 'user' &&
           body.data.type === 'text'
         ) {
           if (metadata?.aiStatus === AIStatus.disabled) {
-            // const oneHourAgo = new Date().getTime() - 10 * 1000;
+            const externalConfig =
+              await prisma.externalConversationConfig.findUnique({
+                where: {
+                  id: body.data.session_id,
+                },
+                select: {
+                  id: true,
+                  conversation: true,
+                },
+              });
+            const conversation = externalConfig?.conversation;
 
-            // if (new Date(metadata?.aiDisabledDate!).getTime() < oneHourAgo) {
-            //   console.log('CALLLED ----------------', 'ENABLED AI');
-            //   await CrispClient.website.updateConversationMetas(
-            //     body.website_id,
-            //     body.data.session_id,
-            //     {
-            //       data: {
-            //         aiStatus: AIStatus.enabled,
-            //       } as ConversationMetadata,
-            //     }
-            //   );
-            // } else {
-            //   return 'Converstaion disabled dot not proceed';
-            // }
+            // If the operator is intervening, save the message
+            if (!conversation?.isAiEnabled) {
+              const conversationManager = new ConversationManager({
+                organizationId: conversation?.organizationId as string,
+                conversationId: conversation?.id,
+                channel: conversation?.channel as ConversationChannel,
+                userId: conversation?.userId as string,
+              });
+
+              conversationManager.push({
+                from: MessageFrom.human,
+                text: body.data.content,
+              });
+
+              await conversationManager.save();
+              return;
+            }
             return 'Converstaion disabled dot not proceed';
           }
 
