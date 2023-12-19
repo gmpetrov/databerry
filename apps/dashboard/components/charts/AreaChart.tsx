@@ -154,6 +154,7 @@ function AreaChart<T extends Record<string, any>>({
                   type="monotone"
                   dataKey={area_key}
                   fillOpacity={1}
+                  stroke={c2}
                   fill={'url(#c2)'}
                 />
               )}
