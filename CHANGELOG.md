@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.125"></a>
+## 0.1.125 (2023-12-19)
+
+### Fixed
+
+- 🐛 refactor and all time view ([#275](https://github.com/gmpetrov/databerry/issues/275)) [[a0926f2](https://github.com/gmpetrov/databerry/commit/a0926f2b1e61058b2e6049dbba4dff6be06c942d)]
+
+### Miscellaneous
+
+-  Fix/analytics refacto ([#278](https://github.com/gmpetrov/databerry/issues/278)) [[6d59652](https://github.com/gmpetrov/databerry/commit/6d5965209660f457e1e46de1787d52c8ca4a849f)]
+
+
 <a name="0.1.124"></a>
 ## 0.1.124 (2023-12-15)
 
