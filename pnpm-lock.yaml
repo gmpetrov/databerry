@@ -329,6 +329,9 @@ importers:
       typescript:
         specifier: 5.0.2
         version: 5.0.2
+      use-deep-compare-effect:
+        specifier: ^1.8.1
+        version: 1.8.1(react@18.2.0)
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -737,6 +740,9 @@ importers:
       cuid:
         specifier: ^3.0.0
         version: 3.0.0
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       eslint-config-custom:
         specifier: workspace:*
         version: link:../eslint-config-custom
@@ -8794,7 +8800,7 @@ packages:
   /dom-helpers@3.4.0:
     resolution: {integrity: sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==}
     dependencies:
-      '@babel/runtime': 7.23.1
+      '@babel/runtime': 7.23.5
     dev: false
 
   /dom-helpers@5.2.1:
@@ -19973,6 +19979,17 @@ packages:
       '@types/react': 18.0.25
       react: 18.2.0
       tslib: 2.6.2
+    dev: false
+
+  /use-deep-compare-effect@1.8.1(react@18.2.0):
+    resolution: {integrity: sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==}
+    engines: {node: '>=10', npm: '>=6'}
+    peerDependencies:
+      react: '>=16.13'
+    dependencies:
+      '@babel/runtime': 7.23.5
+      dequal: 2.0.3
+      react: 18.2.0
     dev: false
 
   /use-isomorphic-layout-effect@1.1.2(@types/react@18.0.25)(react@18.2.0):

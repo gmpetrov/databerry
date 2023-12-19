@@ -1,5 +1,7 @@
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import { Card, Skeleton, Typography } from '@mui/joy';
+import { Card, Skeleton, Stack, Typography } from '@mui/joy';
+import dayjs from 'dayjs';
+import { memo, useEffect, useMemo, useState } from 'react';
 import {
   Area,
   AreaChart as NativeAreaChart,
@@ -9,11 +11,17 @@ import {
   YAxis,
 } from 'recharts';
 
+import TimeLineNavigation from '../TimelineNavigation';
 type Props<T> =
   | {
       data: T[];
       title: string;
       loading?: boolean;
+      viewBy?: Exclude<keyof T, symbol | number>;
+      aggregation?(
+        key: string,
+        data: Record<string, any>[]
+      ): Record<string, any>;
       xkey: Exclude<keyof T, symbol>;
       area_key: Exclude<keyof T, symbol>;
       positive_area_key?: never;
@@ -24,6 +32,11 @@ type Props<T> =
       data: T[];
       title: string;
       loading?: boolean;
+      viewBy?: Exclude<keyof T, symbol | number>;
+      aggregation?(
+        key: string,
+        data: Record<string, any>[]
+      ): Record<string, any>;
       xkey: Exclude<keyof T, symbol>;
       positive_area_key: Exclude<keyof T, symbol>;
       negative_area_key: Exclude<keyof T, symbol>;
@@ -31,9 +44,11 @@ type Props<T> =
       XAxisFormatter?(value: any, index: number): string;
     };
 
-export default function AreaChart<T>({
+function AreaChart<T extends Record<string, any>>({
   data,
   xkey,
+  viewBy,
+  aggregation,
   positive_area_key,
   negative_area_key,
   area_key,
@@ -44,9 +59,51 @@ export default function AreaChart<T>({
   const c1 = '#ff7675';
   const c2 = '#82ca9d';
 
+  const keys = (
+    area_key ? [area_key] : [positive_area_key, negative_area_key]
+  ) as (keyof T)[];
+
+  const maxYAxisValue = data.reduce((max, item) => {
+    let values = keys.map((key) => item[key]);
+    // Min ticks is 2
+    return Math.max(max, ...values, 2);
+  }, 0);
+
+  const [aggregatedData, views] = useMemo(() => {
+    const aggregated = viewBy ? aggregation!(viewBy, data) : data;
+    const views = Object.keys(aggregated);
+    return [aggregated, views];
+  }, [aggregation, data, viewBy]);
+
+  const [currentView, setCurrentView] = useState<number>(dayjs().year());
+
+  useEffect(() => {
+    /*
+  default the view to the current year, or the most recent one
+  if the current year is not present int the views.
+  */
+    setCurrentView(
+      views.includes(dayjs().year().toString())
+        ? dayjs().year()
+        : Number(views[views.length - 1])
+    );
+  }, [views]);
+
   return (
     <Card variant="outlined" sx={{ px: 5, py: 2, mt: 4 }}>
       <Typography textAlign="center">{title}</Typography>
+
+      {/* show timeline navigator if a viewBy timeline property provided */}
+      {viewBy && (
+        <Stack direction="row-reverse">
+          <TimeLineNavigation
+            currentValue={currentView!}
+            values={views.map((view) => Number(view))}
+            onChange={(v) => setCurrentView(v)}
+          />
+        </Stack>
+      )}
+
       <Skeleton
         loading={loading}
         variant="rectangular"
@@ -68,7 +125,11 @@ export default function AreaChart<T>({
             <NativeAreaChart
               width={730}
               height={250}
-              data={data}
+              data={
+                viewBy
+                  ? (aggregatedData as Record<string, any>)[currentView!]
+                  : data
+              }
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
               <defs>
@@ -82,13 +143,16 @@ export default function AreaChart<T>({
                 </linearGradient>
               </defs>
               <XAxis dataKey={xkey} tickFormatter={XAxisFormatter} />
-              <YAxis />
+              <YAxis
+                ticks={Array.from({ length: maxYAxisValue }).map(
+                  (_, i) => i + 1
+                )}
+              />
               <Tooltip />
               {area_key && (
                 <Area
                   type="monotone"
                   dataKey={area_key}
-                  stroke={'url(#c2)'}
                   fillOpacity={1}
                   fill={'url(#c2)'}
                 />
@@ -118,3 +182,5 @@ export default function AreaChart<T>({
     </Card>
   );
 }
+
+export default memo(AreaChart) as typeof AreaChart;
