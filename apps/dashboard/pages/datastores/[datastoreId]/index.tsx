@@ -70,10 +70,10 @@ export default function DatastorePage() {
   };
 
   React.useEffect(() => {
-    if (typeof window !== 'undefined' && !router.query.tab) {
+    if (router.isReady && typeof window !== 'undefined' && !router.query.tab) {
       handleChangeTab('datasources');
     }
-  }, [router.query.tab]);
+  }, [router.isReady, router.query.tab]);
 
   if (!getDatastoreQuery?.data) {
     return (

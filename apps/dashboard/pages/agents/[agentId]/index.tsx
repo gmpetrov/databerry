@@ -85,10 +85,10 @@ export default function AgentPage() {
   };
 
   React.useEffect(() => {
-    if (typeof window !== 'undefined' && !router.query.tab) {
+    if (router.isReady && typeof window !== 'undefined' && !router.query.tab) {
       handleChangeTab('chat');
     }
-  }, [router.query.tab]);
+  }, [router.isReady, router.query.tab]);
 
   if (!query?.data) {
     return null;
@@ -387,7 +387,11 @@ export default function AgentPage() {
                             }}
                           >
                             <Link
-                              href={`/datastores/${tool?.datastoreId}`}
+                              href={
+                                tool.type === 'datastore'
+                                  ? `/datastores/${tool?.datastoreId}`
+                                  : ''
+                              }
                               className="truncate"
                             >
                               <Typography
@@ -395,7 +399,9 @@ export default function AgentPage() {
                                 className="max-w-full truncate"
                                 level="body-sm"
                               >
-                                {(tool as any)?.datastore?.name}
+                                {(tool as any)?.datastore?.name ||
+                                  (tool as any)?.config?.name ||
+                                  tool?.type}
                               </Typography>
                             </Link>
                           </Stack>

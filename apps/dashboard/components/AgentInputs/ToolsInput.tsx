@@ -178,7 +178,7 @@ function ToolsInput({}: Props) {
         </IconButton>
       </ToolCard>
 
-      {/* <ToolCard
+      <ToolCard
         id="http-tool"
         name={'HTTP Tool'}
         description={'Perform an HTTP request from your Agent'}
@@ -188,49 +188,12 @@ function ToolsInput({}: Props) {
           variant="plain"
           color="success"
           onClick={() => {
-            // newApiToolForm.open();
-
-            setValue(
-              'tools',
-              [
-                ...tools,
-                createTool({
-                  type: ToolType.http,
-                  // datastoreId: datastore.id,
-                  serviceProvider: {
-                    type: 'zendesk',
-                    name: 'georges@chaindesk.ai',
-                    config: {
-                      domain: 'XXX',
-                      email: 'XXX',
-                      apiToken: 'XXX',
-                    },
-                  },
-                  config: {
-                    name: 'function',
-                    description: 'Get order information',
-                    method: 'GET',
-                    url: 'https://dummyjson.com/products/1',
-                    isApprovalRequired: true,
-                    queryParameters: [
-                      {
-                        key: 'orderId',
-                        isUserProvided: true,
-                      },
-                    ],
-                  },
-                }),
-              ],
-              {
-                shouldDirty: true,
-                shouldValidate: true,
-              }
-            );
+            newApiToolForm.open();
           }}
         >
           <AddCircleOutlineRoundedIcon />
         </IconButton>
-      </ToolCard> */}
+      </ToolCard>
 
       <newDatastoreModal.component
         title="Datastore"
@@ -307,12 +270,20 @@ function ToolsInput({}: Props) {
         description="Let your Agent call an HTTP endpoint."
         dialogProps={{
           sx: {
-            maxWidth: 'sm',
+            maxWidth: 'md',
             height: 'auto',
           },
         }}
       >
-        <APIToolForm />
+        <APIToolForm
+          onSubmit={(values) => {
+            setValue('tools', [...tools, createTool(values)], {
+              shouldDirty: true,
+              shouldValidate: true,
+            });
+            newApiToolForm.close();
+          }}
+        />
       </newApiToolForm.component>
 
       <CreateDatastoreModal

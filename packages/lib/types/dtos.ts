@@ -234,6 +234,27 @@ const ToolBaseSchema = z.object({
 //   description: z.string().trim().optional().nullable(),
 //   config: z.object({}).optional(),
 // });
+
+const ToolKeyValueField = z
+  .object({
+    key: z.string().min(1),
+    value: z.string().optional(),
+    isUserProvided: z.boolean().optional(),
+  })
+
+  .refine(
+    (val) => {
+      if (!val.isUserProvided && !val.value) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Value is required',
+      path: ['value'],
+    }
+  );
+
 export const ToolSchema = z.discriminatedUnion('type', [
   ToolBaseSchema.extend({
     type: z.literal(ToolType.datastore),
@@ -244,37 +265,13 @@ export const ToolSchema = z.discriminatedUnion('type', [
     type: z.literal(ToolType.http),
     config: z.object({
       url: z.string().url(),
-      method: z.string(),
-      name: z.string().min(3),
+      name: z.string().optional(),
+      method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).default('GET'),
       description: z.string().min(3),
-      isApprovalRequired: z.boolean().optional(),
-      headers: z
-        .array(
-          z.object({
-            key: z.string().min(1),
-            value: z.string().optional(),
-            isUserProvided: z.boolean().optional(),
-          })
-        )
-        .optional(),
-      body: z
-        .array(
-          z.object({
-            key: z.string().min(1),
-            value: z.string().optional(),
-            isUserProvided: z.boolean().optional(),
-          })
-        )
-        .optional(),
-      queryParameters: z
-        .array(
-          z.object({
-            key: z.string().min(1),
-            value: z.string().optional(),
-            isUserProvided: z.boolean().optional(),
-          })
-        )
-        .optional(),
+      withApproval: z.boolean().optional(),
+      headers: z.array(ToolKeyValueField).optional(),
+      body: z.array(ToolKeyValueField).optional(),
+      queryParameters: z.array(ToolKeyValueField).optional(),
     }),
   }),
   ToolBaseSchema.extend({

@@ -321,55 +321,89 @@ function ChatBox({
                       ></Avatar>
                     )}
 
-                    <Stack>
-                      <ChatMessageCard
-                        className={clsx(
-                          each.from === 'agent'
-                            ? 'message-agent'
-                            : 'message-human'
-                        )}
-                      >
-                        <Markdown>{each.message}</Markdown>
-
-                        {each?.component}
-
-                        <Stack direction="row" justifyContent={'space-between'}>
-                          {((hideInternalSources
-                            ? filterInternalSources(each?.sources!)
-                            : each?.sources
-                          )?.length || 0) > 0 && (
-                            <Box
+                    <Stack gap={1}>
+                      {each?.step?.type === 'tool_call' && (
+                        <Card
+                          size="sm"
+                          variant="plain"
+                          sx={{ p: 0.5, background: 'transparent' }}
+                        >
+                          <Stack direction="row" alignItems={'center'} gap={1}>
+                            <CircularProgress
+                              size="sm"
+                              color="primary"
                               sx={{
-                                mt: 2,
-                                width: '100%',
-                                maxWidth: '100%',
+                                '--_root-size': '9px',
                               }}
-                            >
-                              <details>
-                                <summary className="cursor-pointer">
-                                  Sources
-                                </summary>
-                                <Stack
-                                  direction={'column'}
-                                  gap={1}
-                                  sx={{ pt: 1 }}
-                                >
-                                  {(hideInternalSources
-                                    ? filterInternalSources(each?.sources!)
-                                    : each?.sources
-                                  )?.map((source) => (
-                                    <SourceComponent
-                                      key={source.chunk_id}
-                                      source={source}
-                                      onClick={handleSourceClick}
-                                    />
-                                  ))}
-                                </Stack>
-                              </details>
-                            </Box>
+                            />
+
+                            <Typography level="body-sm">{`${
+                              each?.step?.description
+                                ? each?.step?.description
+                                : 'Thinking'
+                            }`}</Typography>
+                          </Stack>
+                        </Card>
+                      )}
+
+                      {each?.message && (
+                        <ChatMessageCard
+                          className={clsx(
+                            each.from === 'agent'
+                              ? 'message-agent'
+                              : 'message-human'
                           )}
-                        </Stack>
-                      </ChatMessageCard>
+                        >
+                          {/* {each?.step?.type === 'tool_call' && (
+
+                        )} */}
+
+                          <Markdown>{each.message}</Markdown>
+
+                          {each?.component}
+
+                          <Stack
+                            direction="row"
+                            justifyContent={'space-between'}
+                          >
+                            {((hideInternalSources
+                              ? filterInternalSources(each?.sources!)
+                              : each?.sources
+                            )?.length || 0) > 0 && (
+                              <Box
+                                sx={{
+                                  mt: 2,
+                                  width: '100%',
+                                  maxWidth: '100%',
+                                }}
+                              >
+                                <details>
+                                  <summary className="cursor-pointer">
+                                    Sources
+                                  </summary>
+                                  <Stack
+                                    direction={'column'}
+                                    gap={1}
+                                    sx={{ pt: 1 }}
+                                  >
+                                    {(hideInternalSources
+                                      ? filterInternalSources(each?.sources!)
+                                      : each?.sources
+                                    )?.map((source) => (
+                                      <SourceComponent
+                                        key={source.chunk_id}
+                                        source={source}
+                                        onClick={handleSourceClick}
+                                      />
+                                    ))}
+                                  </Stack>
+                                </details>
+                              </Box>
+                            )}
+                          </Stack>
+                        </ChatMessageCard>
+                      )}
+
                       {each.from === 'agent' &&
                         each?.id &&
                         !each?.disableActions && (

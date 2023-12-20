@@ -44,6 +44,10 @@ export type ChatMessage = {
   sources?: Source[];
   component?: JSX.Element;
   disableActions?: boolean;
+  step?: {
+    type: 'tool_call';
+    description?: string;
+  };
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -166,6 +170,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         let buffer = '';
         let bufferStep = '';
         let bufferEndpointResponse = '';
+        let bufferToolCall = '';
         class RetriableError extends Error {}
         class FatalError extends Error {}
 
@@ -292,6 +297,30 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                 h[nextIndex].message = `${bufferStep}`;
               } else {
                 h.push({ from: 'agent', message: bufferStep });
+              }
+
+              setState({
+                history: h as any,
+              });
+            } else if (event.event === SSE_EVENT.tool_call) {
+              bufferToolCall += event.data as string;
+
+              const h = [...history];
+
+              if (h?.[nextIndex]) {
+                (h[nextIndex] as any).step = {
+                  type: 'tool_call',
+                  // description: bufferToolCall,
+                };
+              } else {
+                h.push({
+                  from: 'agent',
+                  message: '',
+                  step: {
+                    type: 'tool_call',
+                    // description: bufferToolCall,
+                  },
+                });
               }
 
               setState({

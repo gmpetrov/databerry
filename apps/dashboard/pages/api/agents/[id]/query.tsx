@@ -201,9 +201,9 @@ export const chatAgentRequest = async (
     text: data.query,
   });
 
-  const handleStream = (data: string) =>
+  const handleStream = (data: string, event: SSE_EVENT) =>
     streamData({
-      event: SSE_EVENT.answer,
+      event: event || SSE_EVENT.answer,
       data,
       res,
     });
