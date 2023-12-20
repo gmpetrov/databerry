@@ -14,6 +14,7 @@ import {
   Select,
   Sheet,
   Stack,
+  Typography,
 } from '@mui/joy';
 import React, { useCallback, useMemo } from 'react';
 import {
@@ -26,6 +27,8 @@ import {
   useFormContext,
 } from 'react-hook-form';
 import z from 'zod';
+
+import useModal from '@app/hooks/useModal';
 
 import {
   CreateAgentSchema,
@@ -132,83 +135,152 @@ export default function HttpToolInput({ name }: Props) {
   const prefix = useMemo(() => {
     return name ? `${name}.` : '';
   }, [name]) as 'tools.0.' | '';
+  const templatesModal = useModal();
 
   return (
-    <Stack gap={2}>
-      <Input
-        control={methods.control}
-        label={'Name'}
-        {...methods.register(`${prefix}config.name`)}
-      />
+    <Stack>
+      <Stack
+        direction="row"
+        sx={{
+          mt: -3,
+          mb: -2,
+        }}
+      >
+        <Button
+          variant="outlined"
+          onClick={templatesModal.open}
+          sx={{ mx: 'auto' }}
+          size="sm"
+        >
+          Start from a template
+        </Button>
+      </Stack>
 
-      <Input
-        control={methods.control}
-        label={'Description'}
-        helperText="The description helps the Agent to determine when to use the tool."
-        {...methods.register(`${prefix}config.description`)}
-        placeholder="e.g: Useful for getting the current weather in a given city."
-      />
+      <Stack gap={2}>
+        <Input
+          control={methods.control}
+          label={'Name'}
+          {...methods.register(`${prefix}config.name`)}
+        />
 
-      <Input
-        control={methods.control}
-        label={'URL to call'}
-        {...methods.register(`${prefix}config.url`)}
-      />
+        <Input
+          control={methods.control}
+          label={'Description'}
+          helperText="The description helps the Agent to determine when to use the tool."
+          {...methods.register(`${prefix}config.description`)}
+          placeholder="e.g: Useful for getting the current weather in a given city."
+        />
 
-      <FormControl>
-        <FormLabel>Request Method</FormLabel>
+        <Input
+          control={methods.control}
+          label={'URL to call'}
+          {...methods.register(`${prefix}config.url`)}
+        />
 
-        <Select
-          defaultValue={'GET'}
-          onChange={(_, value) => {
-            if (value) {
+        <FormControl>
+          <FormLabel>Request Method</FormLabel>
+
+          <Select
+            defaultValue={'GET'}
+            onChange={(_, value) => {
+              if (value) {
+                methods.setValue(
+                  `${prefix}config.method`,
+                  value as HttpToolSchema['config']['method'],
+                  {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  }
+                );
+              }
+            }}
+          >
+            <Option value="GET">GET</Option>
+            <Option value="POST">POST</Option>
+            <Option value="PUT">PUT</Option>
+            <Option value="PATCH">PATCH</Option>
+            <Option value="DELETE">DELETE</Option>
+          </Select>
+        </FormControl>
+
+        <KeyValueFieldArray label="Headers" name={`${prefix}config.headers`} />
+
+        <KeyValueFieldArray
+          label="Query Parameters"
+          name={`${prefix}config.queryParameters`}
+        />
+
+        <KeyValueFieldArray
+          label="Body Parameters"
+          name={`${prefix}config.body`}
+        />
+
+        {/* <Card size="sm" variant="outlined"> */}
+        <FormControl>
+          <Checkbox
+            label="Approval Required"
+            onChange={(e) => {
               methods.setValue(
-                `${prefix}config.method`,
-                value as HttpToolSchema['config']['method'],
+                `${prefix}config.withApproval`,
+                e.target.checked,
                 {
-                  shouldValidate: true,
                   shouldDirty: true,
+                  shouldValidate: true,
                 }
               );
-            }
+            }}
+          />
+          <FormHelperText>
+            {`When enabled, an administrator's approval is required to proceed with the action`}
+          </FormHelperText>
+        </FormControl>
+        {/* </Card> */}
+
+        <templatesModal.component
+          dialogProps={{
+            sx: {
+              maxWidth: 'sm',
+            },
           }}
         >
-          <Option value="GET">GET</Option>
-          <Option value="POST">POST</Option>
-          <Option value="PUT">PUT</Option>
-          <Option value="PATCH">PATCH</Option>
-          <Option value="DELETE">DELETE</Option>
-        </Select>
-      </FormControl>
+          <Card>
+            <Stack gap={2} direction="row">
+              <Stack>
+                <Typography level="body-md">Random Cat Picture</Typography>
+                <Typography level="body-sm">
+                  Ask your agent to fetch a random cat picture from
+                  thecatapi.com
+                </Typography>
+              </Stack>
+              <Button
+                size="sm"
+                sx={{ ml: 'auto', alignSelf: 'center' }}
+                onClick={() => {
+                  methods.setValue(
+                    `${prefix}config`,
+                    {
+                      name: 'Random Cat Image',
+                      description: 'Useful for getting a random cat image',
+                      url: 'https://api.thecatapi.com/v1/images/search',
+                      headers: [],
+                      queryParameters: [],
+                      body: [],
+                    },
+                    {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    }
+                  );
 
-      <KeyValueFieldArray label="Headers" name={`${prefix}config.headers`} />
-
-      <KeyValueFieldArray
-        label="Query Parameters"
-        name={`${prefix}config.queryParameters`}
-      />
-
-      <KeyValueFieldArray
-        label="Body Parameters"
-        name={`${prefix}config.body`}
-      />
-
-      {/* <Card size="sm" variant="outlined"> */}
-      <FormControl>
-        <Checkbox
-          label="Approval Required"
-          onChange={(e) => {
-            methods.setValue(`${prefix}config.withApproval`, e.target.checked, {
-              shouldDirty: true,
-              shouldValidate: true,
-            });
-          }}
-        />
-        <FormHelperText>
-          {`When enabled, an administrator's approval is required to proceed with the action`}
-        </FormHelperText>
-      </FormControl>
-      {/* </Card> */}
+                  templatesModal.close();
+                }}
+              >
+                Select
+              </Button>
+            </Stack>
+          </Card>
+        </templatesModal.component>
+      </Stack>
     </Stack>
   );
 }

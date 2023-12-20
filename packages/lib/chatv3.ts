@@ -169,8 +169,12 @@ const chat = async ({
         presence_penalty: otherProps.presencePenalty,
         max_tokens: otherProps.maxTokens,
         signal: abortController?.signal,
-        tool_choice: 'auto',
         tools: openAiTools,
+        ...(openAiTools?.length > 0
+          ? {
+              tool_choice: 'auto',
+            }
+          : {}),
       },
       null,
       2
@@ -187,8 +191,12 @@ const chat = async ({
     presence_penalty: otherProps.presencePenalty,
     max_tokens: otherProps.maxTokens,
     signal: abortController?.signal,
-    tool_choice: 'auto',
     tools: openAiTools,
+    ...(openAiTools?.length > 0
+      ? {
+          tool_choice: 'auto',
+        }
+      : {}),
   });
 
   const answer = output?.answer;

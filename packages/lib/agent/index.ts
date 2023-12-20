@@ -104,6 +104,7 @@ export default class AgentManager {
       query: props.input,
       tools: this.agent.tools,
       userPrompt,
+      systemPrompt,
     });
     // let answer: string = '';
     // let sources: Source[] = [];

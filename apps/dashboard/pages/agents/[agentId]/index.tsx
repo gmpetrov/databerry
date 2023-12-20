@@ -480,7 +480,7 @@ export default function AgentPage() {
                   }}
                 >
                   {({ mutation }) => (
-                    <Stack>
+                    <Stack gap={2}>
                       <HttpToolInput
                         name={`tools.${state.currentToolIndex}` as `tools.0`}
                       />
