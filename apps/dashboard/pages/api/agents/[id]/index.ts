@@ -116,6 +116,12 @@ export const updateAgent = async (
     )
     .map((each) => ({ id: each.id }));
 
+  const updatedTools = (data?.tools || []).filter(
+    (tool) =>
+      !newTools.find((one) => one.id === tool.id) &&
+      !removedTools.find((one) => one.id === tool.id)
+  );
+
   for (const [index, tool] of newTools.entries()) {
     if (!tool.serviceProviderId && !!tool.serviceProvider) {
       const created = await prisma.serviceProvider.create({
@@ -156,21 +162,21 @@ export const updateAgent = async (
             }) => ({
               ...otherToolProps,
               ...(serviceProviderId ? { serviceProviderId } : {}),
-
-              // type: tool.type,
-              // ...(tool.type === ToolType.datastore
-              //   ? {
-              //       datastoreId: tool.datastoreId,
-              //     }
-              //   : undefined),
-              // ...(tool.type === ToolType.http
-              //   ? {
-              //       ...tool,
-              //     }
-              //   : undefined),
             })
           ),
         },
+        updateMany: updatedTools.map((tool) => ({
+          where: {
+            id: tool.id,
+          },
+          data: {
+            ...(tool?.type === 'http'
+              ? {
+                  config: tool.config,
+                }
+              : {}),
+          },
+        })),
         deleteMany: removedTools,
       },
     },

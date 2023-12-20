@@ -25,6 +25,7 @@ type Props = {
     query: UseAgentQuery;
     mutation: UseAgentMutation;
   }): ReactElement;
+  refreshQueryAfterMutation?: boolean;
 };
 
 function AgentForm(props: Props) {
@@ -60,6 +61,11 @@ function AgentForm(props: Props) {
           error: 'Something went wrong',
         }
       );
+
+      if (props?.refreshQueryAfterMutation) {
+        query.mutate();
+      }
+
       props?.onSubmitSucces?.(agent as Agent);
     } catch (err) {
       console.log('error', err);

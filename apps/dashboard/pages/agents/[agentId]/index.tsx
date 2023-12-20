@@ -25,6 +25,8 @@ import { ReactElement } from 'react';
 import * as React from 'react';
 
 import AgentDeployTab from '@app/components/AgentDeployTab';
+import AgentForm from '@app/components/AgentForm';
+import HttpToolInput from '@app/components/AgentInputs/HttpToolInput';
 import AgentSettingsTab from '@app/components/AgentSettingsTab';
 import ChatBox from '@app/components/ChatBox';
 import ChatSection from '@app/components/ChatSection';
@@ -33,6 +35,7 @@ import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgent from '@app/hooks/useAgent';
 import useChat from '@app/hooks/useChat';
+import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import { RouteNames } from '@chaindesk/lib/types';
@@ -44,6 +47,7 @@ export default function AgentPage() {
   const { data: session, status } = useSession();
   const [state, setState] = useStateReducer({
     isUsageModalOpen: false,
+    currentToolIndex: -1,
   });
 
   const { query } = useAgent({
@@ -70,6 +74,8 @@ export default function AgentPage() {
     router.query.tab = tab;
     router.replace(router);
   };
+
+  const editApiToolForm = useModal();
 
   const handleSelectConversation = (conversationId: string) => {
     setConversationId(conversationId);
@@ -375,7 +381,7 @@ export default function AgentPage() {
                     </IconButton>
                   </Stack>
                   <Stack gap={1}>
-                    {query?.data?.tools?.map((tool) => (
+                    {query?.data?.tools?.map((tool, index) => (
                       <>
                         <Card key={tool.id} variant="outlined" size="sm">
                           <Stack
@@ -387,10 +393,20 @@ export default function AgentPage() {
                             }}
                           >
                             <Link
+                              onClick={
+                                tool.type === 'http'
+                                  ? () => {
+                                      setState({
+                                        currentToolIndex: index,
+                                      });
+                                      editApiToolForm.open();
+                                    }
+                                  : undefined
+                              }
                               href={
                                 tool.type === 'datastore'
                                   ? `/datastores/${tool?.datastoreId}`
-                                  : ''
+                                  : '#'
                               }
                               className="truncate"
                             >
@@ -444,6 +460,38 @@ export default function AgentPage() {
                 </Box>
               )}
             </Stack>
+
+            <editApiToolForm.component
+              title="HTTP Tool"
+              description="Let your Agent call an HTTP endpoint."
+              dialogProps={{
+                sx: {
+                  maxWidth: 'md',
+                  height: 'auto',
+                },
+              }}
+            >
+              {state.currentToolIndex >= 0 && (
+                <AgentForm
+                  agentId={agentId}
+                  refreshQueryAfterMutation
+                  onSubmitSucces={(agent) => {
+                    editApiToolForm.close();
+                  }}
+                >
+                  {({ mutation }) => (
+                    <Stack>
+                      <HttpToolInput
+                        name={`tools.${state.currentToolIndex}` as `tools.0`}
+                      />
+                      <Button type="submit" loading={mutation.isMutating}>
+                        Update
+                      </Button>
+                    </Stack>
+                  )}
+                </AgentForm>
+              )}
+            </editApiToolForm.component>
           </Box>
         )}
 
