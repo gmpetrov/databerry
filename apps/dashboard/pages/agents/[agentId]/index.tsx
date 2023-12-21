@@ -64,6 +64,7 @@ export default function AgentPage() {
     conversationId,
     handleEvalAnswer,
     handleAbort,
+    refreshConversation,
   } = useChat({
     endpoint: router.query?.agentId
       ? `/api/agents/${router.query?.agentId}/query`
@@ -319,6 +320,7 @@ export default function AgentPage() {
             >
               <ChatSection
                 agentId={agentId}
+                organizationId={query?.data?.organizationId}
                 handleSelectConversation={handleSelectConversation}
                 currentConversationId={conversationId}
                 handleCreateNewChat={handleCreateNewChat}
@@ -332,6 +334,7 @@ export default function AgentPage() {
                 handleEvalAnswer={handleEvalAnswer}
                 handleAbort={handleAbort}
                 userImgUrl={session?.user?.image!}
+                refreshConversation={refreshConversation}
               />
 
               {(query?.data?.tools?.length || 0) > 0 && (

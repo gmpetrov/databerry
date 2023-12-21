@@ -20,8 +20,13 @@ export type AgentWithTools = Agent & {
   tools: ToolExtended[];
 };
 
-type MessageExtended = Pick<Message, 'from' | 'text' | 'sources'> & {
-  sources: Source[];
+type MessageExtended = Pick<Message, 'from' | 'text'> & {
+  id?: string;
+  createdAt?: Date;
+  sources?: Source[];
+  usage?: ChatResponse['usage'];
+  approvals?: ChatResponse['approvals'];
+  inputId?: string;
 };
 
 export default class ConversationManager {
@@ -61,14 +66,7 @@ export default class ConversationManager {
     this.organizationId = organizationId;
   }
 
-  push(
-    message: Pick<Message, 'from' | 'text'> & {
-      id?: string;
-      createdAt?: Date;
-      sources?: Source[];
-      usage?: ChatResponse['usage'];
-    }
-  ) {
+  push(message: MessageExtended) {
     this.messages.push({
       createdAt: new Date(),
       ...message,
@@ -80,6 +78,21 @@ export default class ConversationManager {
     if (!this.userId && !this.visitorId) {
       return;
     }
+
+    const msgIds = this.messages.map(() => cuid());
+
+    const messages = this.messages.map((each, index) => {
+      const { approvals, id, ...rest } = each as any;
+
+      if (id) {
+        msgIds[index] = id;
+      }
+
+      return {
+        ...(rest as MessageExtended),
+        id: msgIds[index],
+      };
+    });
 
     const conversation = await prisma.conversation.upsert({
       where: {
@@ -104,7 +117,8 @@ export default class ConversationManager {
           : {}),
         messages: {
           createMany: {
-            data: this.messages,
+            data: messages,
+            skipDuplicates: true,
           },
         },
         ...(this.metadata ? { metadata: this.metadata } : {}),
@@ -126,7 +140,8 @@ export default class ConversationManager {
       update: {
         messages: {
           createMany: {
-            data: this.messages,
+            data: messages,
+            skipDuplicates: true,
           },
         },
         ...(this.metadata ? { metadata: this.metadata } : {}),
@@ -146,6 +161,27 @@ export default class ConversationManager {
           : {}),
       },
     });
+
+    const approvalsToInsert = this.messages
+      .map((each, index) => {
+        const { approvals, ...message } = each as any;
+
+        return (approvals as ChatResponse['approvals'])?.map((approval) => ({
+          messageId: msgIds[index],
+          toolId: approval.tool.id,
+          payload: approval.payload as any,
+          agentId: this.agentId,
+          organizationId: this.organizationId,
+        }));
+      })
+      .filter((each) => !!each)
+      .flat();
+
+    if (approvalsToInsert.length > 0) {
+      await prisma.actionApproval.createMany({
+        data: approvalsToInsert,
+      });
+    }
 
     return conversation;
   }

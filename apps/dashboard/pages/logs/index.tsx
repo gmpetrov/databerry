@@ -704,7 +704,7 @@ export default function LogsPage() {
 
           <Divider orientation="vertical" />
           <Box
-            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 4 }}
+            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 8 }}
           >
             {getConversationQuery.data && (
               <>
@@ -761,6 +761,7 @@ export default function LogsPage() {
                   message: each.text,
                   createdAt: each.createdAt,
                   eval: each.eval,
+                  approvals: each.approvals || [],
                 })) || []
               }
               isLoadingConversation={getConversationQuery?.isLoading}
@@ -776,6 +777,8 @@ export default function LogsPage() {
                 });
               }}
               userImgUrl={session?.user?.image!}
+              organizationId={session?.organization?.id!}
+              refreshConversation={getConversationQuery.mutate}
             />
           </Box>
         </Stack>

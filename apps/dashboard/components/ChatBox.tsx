@@ -30,6 +30,7 @@ import { ChatMessage, MessageEvalUnion } from '@app/hooks/useChat';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import type { Source } from '@chaindesk/lib/types/document';
 
+import ChatMessageApproval from './ChatMessageApproval';
 import CopyButton from './CopyButton';
 import SourceComponent from './Source';
 
@@ -57,6 +58,8 @@ export type ChatBoxProps = {
   emptyComponent?: JSX.Element | null;
   hideInternalSources?: boolean;
   userImgUrl?: string;
+  organizationId?: string | null;
+  refreshConversation?: () => any;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -136,6 +139,8 @@ function ChatBox({
   hideInternalSources,
   renderBottom,
   userImgUrl,
+  organizationId,
+  refreshConversation,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -179,7 +184,7 @@ function ChatBox({
     setTimeout(() => {
       setFirstMsg(
         initialMessage?.trim?.()
-          ? { from: 'agent', message: initialMessage }
+          ? { from: 'agent', message: initialMessage, approvals: [] }
           : undefined
       );
     }, 0);
@@ -346,6 +351,18 @@ function ChatBox({
                         </Card>
                       )}
 
+                      {each?.approvals?.length > 0 && (
+                        <Stack gap={1}>
+                          {each?.approvals?.map((approval) => (
+                            <ChatMessageApproval
+                              key={approval.id}
+                              approval={approval}
+                              showApproveButton={!!organizationId}
+                              onSumitSuccess={refreshConversation}
+                            />
+                          ))}
+                        </Stack>
+                      )}
                       {each?.message && (
                         <ChatMessageCard
                           className={clsx(
@@ -406,7 +423,8 @@ function ChatBox({
 
                       {each.from === 'agent' &&
                         each?.id &&
-                        !each?.disableActions && (
+                        !each?.disableActions &&
+                        !!each?.message && (
                           <Stack
                             direction="row"
                             marginLeft={'auto'}

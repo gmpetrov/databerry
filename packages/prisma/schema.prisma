@@ -18,6 +18,7 @@ model Organization {
   agents           Agent[]
   apiKeys          UserApiKey[]
   sessions         Session[]
+  approvals        ActionApproval[]
   datastores       Datastore[]
   memberships      Membership[]
   conversations    Conversation[]
@@ -246,11 +247,35 @@ model Agent {
   handle  String?  @unique @map("handle")
   domains Domain[]
   leads   Lead[]
+  approvals ActionApproval[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("agents")
+}
+
+model ActionApproval {
+  id String @id @default(cuid())
+
+  payload Json?
+
+  tool   Tool?   @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  toolId String? @map("tool_id")
+
+  message   Message?   @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String? @map("message_id")
+
+  agent   Agent?   @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId String? @map("agent_id")
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("tool_action_approvals")
 }
 
 model Domain {
@@ -302,7 +327,14 @@ model Message {
   sources        Json?
   usage          Json?
 
+  inputId String?       @map("input_id")
+  input   Message? @relation(fields: [inputId], references: [id], name: "input")
+
+  outputs Message[] @relation("input")
+
   eval MessageEval?
+
+  approvals ActionApproval[]
 
   read Boolean? @default(false)
 
@@ -326,6 +358,7 @@ model Tool {
 
   serviceProviderId String?          @map("service_provider_id")
   serviceProvider   ServiceProvider? @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade)
+  approvals ActionApproval[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

@@ -196,10 +196,14 @@ export const chatAgentRequest = async (
       : {}),
   });
 
+  const inputMessageId = cuid();
   conversationManager.push({
+    id: inputMessageId,
     from: MessageFrom.human,
     text: data.query,
   });
+
+  conversationManager.save();
 
   const handleStream = (data: string, event: SSE_EVENT) =>
     streamData({
@@ -233,10 +237,12 @@ export const chatAgentRequest = async (
 
   conversationManager.push({
     id: answerMsgId,
+    inputId: inputMessageId,
     from: MessageFrom.agent,
     text: chatRes.answer,
     sources: chatRes.sources,
-    usage: (chatRes as any).usage,
+    usage: chatRes.usage,
+    approvals: chatRes.approvals,
   });
 
   await conversationManager.save();

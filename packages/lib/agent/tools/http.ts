@@ -45,11 +45,25 @@ export const toJsonSchema = (tool: HttpToolSchema) => {
 };
 
 export const createHandler =
-  (httpTool: HttpToolSchema) => async (payload: HttpToolPayload) => {
+  (
+    httpTool: HttpToolSchema,
+    handleApproval?: (props: {
+      tool: HttpToolSchema;
+      payload: HttpToolPayload;
+    }) => any
+  ) =>
+  async (payload: HttpToolPayload) => {
     console.log('HTTP Tool Config', httpTool?.config);
     console.log('HTTP Tool Payload', payload);
 
     const config = httpTool?.config as HttpToolSchema['config'];
+
+    if (config?.withApproval) {
+      return handleApproval?.({
+        tool: httpTool,
+        payload,
+      });
+    }
 
     const inputUrl = new URL(config.url);
     const inputQUeryParams = new URLSearchParams(inputUrl.search);

@@ -13,6 +13,7 @@ import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
 import type {
+  ActionApproval,
   ConversationChannel,
   ConversationStatus,
   Prisma,
@@ -48,6 +49,7 @@ export type ChatMessage = {
     type: 'tool_call';
     description?: string;
   };
+  approvals: ActionApproval[];
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -269,6 +271,13 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                     conversationId || ''
                   );
                 } catch {}
+
+                // ApprovalRequired case returns an empty message. Refresh ui to display associated approval requests.
+                if (buffer?.trim() === '') {
+                  setTimeout(() => {
+                    getConversationQuery.mutate();
+                  }, 1000);
+                }
               } catch (err) {
                 console.log(err);
               }
@@ -447,6 +456,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             message: message?.text!,
             createdAt: message?.createdAt!,
             sources: message?.sources as Source[],
+            approvals: message?.approvals || [],
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,

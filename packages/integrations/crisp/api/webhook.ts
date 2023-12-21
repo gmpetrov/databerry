@@ -240,7 +240,7 @@ const handleQuery = async (
   });
 
   const finalAnswer = `${answer}\n\n${formatSourcesRawText(
-    filterInternalSources(sources)!
+    filterInternalSources(sources || [])!
   )}`.trim();
 
   CrispClient.website.visitorId;

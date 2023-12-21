@@ -71,6 +71,7 @@ export default function ChatPage() {
     conversationId: currentConversationId,
     conversationStatus,
     handleAbort,
+    refreshConversation,
   } = useChat({
     endpoint: `/api/chains/run`,
     queryBody: {
@@ -356,6 +357,7 @@ export default function ChatPage() {
                 />
               }
               userImgUrl={session?.user?.image!}
+              refreshConversation={refreshConversation}
             />
 
             {datasourceViewId && (

@@ -10,6 +10,7 @@ import {
   createHandler as createHttpToolHandler,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
+import type { Source } from './types/document';
 import {
   ChatModelConfigSchema,
   ChatRequest,
@@ -31,7 +32,7 @@ export type ChatProps = ChatModelConfigSchema & {
   stream?: any;
   modelName?: AgentModelName;
   history?: Message[];
-  abortController?: any;
+  abortController?: AbortController;
   context?: string;
   useXpContext?: boolean;
   tools?: Tool[];
@@ -62,6 +63,16 @@ const chat = async ({
     (each) => each.type === ToolType.http
   ) as HttpToolSchema[];
 
+  const approvals: ChatResponse['approvals'] = [];
+
+  const handleToolWithApproval = async (
+    props: ChatResponse['approvals'][0]
+  ) => {
+    approvals.push(props);
+
+    throw 'ToolApprovalRequired';
+  };
+
   const formatedHttpTools = httpTools.map(
     (each) =>
       ({
@@ -70,7 +81,7 @@ const chat = async ({
         function: {
           ...httpToolToJsonSchema(each),
           parse: JSON.parse,
-          function: createHttpToolHandler(each),
+          function: createHttpToolHandler(each, handleToolWithApproval),
         },
         // } as RunnableToolFunction<HttpToolPayload>)
       } as ChatCompletionTool)
@@ -181,41 +192,55 @@ const chat = async ({
     )
   );
 
-  const output = await model.call({
-    handleStream: stream,
-    model: ModelConfig[modelName]?.name,
-    messages,
-    temperature: temperature || 0,
-    top_p: otherProps.topP,
-    frequency_penalty: otherProps.frequencyPenalty,
-    presence_penalty: otherProps.presencePenalty,
-    max_tokens: otherProps.maxTokens,
-    signal: abortController?.signal,
-    tools: openAiTools,
-    ...(openAiTools?.length > 0
-      ? {
-          tool_choice: 'auto',
-        }
-      : {}),
-  });
+  try {
+    const output = await model.call({
+      handleStream: stream,
+      model: ModelConfig[modelName]?.name,
+      messages,
+      temperature: temperature || 0,
+      top_p: otherProps.topP,
+      frequency_penalty: otherProps.frequencyPenalty,
+      presence_penalty: otherProps.presencePenalty,
+      max_tokens: otherProps.maxTokens,
+      signal: abortController?.signal,
+      tools: openAiTools,
+      ...(openAiTools?.length > 0
+        ? {
+            tool_choice: 'auto',
+          }
+        : {}),
+    });
 
-  const answer = output?.answer;
+    const answer = output?.answer;
 
-  const usage = {
-    completionTokens: output?.usage?.completion_tokens,
-    promptTokens: output?.usage?.prompt_tokens,
-    totalTokens: output?.usage?.total_tokens,
-    cost: getUsageCost({
-      modelName,
-      usage: output?.usage!,
-    }),
-  };
+    const usage = {
+      completionTokens: output?.usage?.completion_tokens,
+      promptTokens: output?.usage?.prompt_tokens,
+      totalTokens: output?.usage?.total_tokens,
+      cost: getUsageCost({
+        modelName,
+        usage: output?.usage!,
+      }),
+    };
 
-  return {
-    answer,
-    usage,
-    sources: retrievalData?.sources || [],
-  } as ChatResponse;
+    return {
+      answer,
+      usage,
+      sources: retrievalData?.sources || [],
+      approvals,
+    } as ChatResponse;
+  } catch (err: any) {
+    if (err?.message?.includes('ToolApprovalRequired')) {
+      return {
+        answer: '',
+        usage: {},
+        approvals,
+        sources: [] as Source[],
+      } as ChatResponse;
+    } else {
+      throw err;
+    }
+  }
 };
 
 export default chat;

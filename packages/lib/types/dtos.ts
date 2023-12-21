@@ -174,24 +174,6 @@ export const RunChainRequest = ChatRequest.extend({
 
 export type RunChainRequest = z.infer<typeof RunChainRequest>;
 
-export const ChatResponse = z.object({
-  answer: z.string(),
-  sources: z.array(Source).optional(),
-  conversationId: z.string().cuid(),
-  visitorId: z.string().optional(),
-  messageId: z.string().cuid(),
-  usage: z
-    .object({
-      completionTokens: z.number(),
-      promptTokens: z.number(),
-      totalTokens: z.number(),
-      cost: z.number(),
-    })
-    .optional(),
-});
-
-export type ChatResponse = z.infer<typeof ChatResponse>;
-
 const ServiceProviderBaseSchema = z.object({
   id: z.string().cuid().optional(),
   name: z.string().optional(),
@@ -255,25 +237,26 @@ const ToolKeyValueField = z
     }
   );
 
+export const HttpToolSchema = ToolBaseSchema.extend({
+  type: z.literal(ToolType.http),
+  config: z.object({
+    url: z.string().url(),
+    name: z.string().optional(),
+    method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).default('GET'),
+    description: z.string().min(3),
+    withApproval: z.boolean().optional(),
+    headers: z.array(ToolKeyValueField).optional(),
+    body: z.array(ToolKeyValueField).optional(),
+    queryParameters: z.array(ToolKeyValueField).optional(),
+  }),
+});
+
 export const ToolSchema = z.discriminatedUnion('type', [
   ToolBaseSchema.extend({
     type: z.literal(ToolType.datastore),
     datastoreId: z.string().cuid().optional(),
   }),
-
-  ToolBaseSchema.extend({
-    type: z.literal(ToolType.http),
-    config: z.object({
-      url: z.string().url(),
-      name: z.string().optional(),
-      method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).default('GET'),
-      description: z.string().min(3),
-      withApproval: z.boolean().optional(),
-      headers: z.array(ToolKeyValueField).optional(),
-      body: z.array(ToolKeyValueField).optional(),
-      queryParameters: z.array(ToolKeyValueField).optional(),
-    }),
-  }),
+  HttpToolSchema,
   ToolBaseSchema.extend({
     type: z.literal(ToolType.connector),
     config: z.any({}),
@@ -421,3 +404,27 @@ export const YoutubeSummarySchema = z.object({
     }
   ),
 });
+
+export const ChatResponse = z.object({
+  answer: z.string(),
+  sources: z.array(Source).optional(),
+  conversationId: z.string().cuid(),
+  visitorId: z.string().optional(),
+  messageId: z.string().cuid(),
+  usage: z
+    .object({
+      completionTokens: z.number(),
+      promptTokens: z.number(),
+      totalTokens: z.number(),
+      cost: z.number(),
+    })
+    .optional(),
+  approvals: z.array(
+    z.object({
+      tool: HttpToolSchema,
+      payload: z.record(z.string(), z.unknown()),
+    })
+  ),
+});
+
+export type ChatResponse = z.infer<typeof ChatResponse>;

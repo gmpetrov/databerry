@@ -96,6 +96,7 @@
     "next-auth": "^4.24.3",
     "nodemailer": "^6.9.1",
     "nprogress": "^0.2.0",
+    "openai": "^4.23.0",
     "p-debounce": "^4.0.0",
     "p-map": "^5.5.0",
     "p-retry": "^5.1.2",

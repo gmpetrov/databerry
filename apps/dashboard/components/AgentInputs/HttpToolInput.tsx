@@ -136,6 +136,7 @@ export default function HttpToolInput({ name }: Props) {
     return name ? `${name}.` : '';
   }, [name]) as 'tools.0.' | '';
   const templatesModal = useModal();
+  const [withApprovalChecked] = methods.watch([`${prefix}config.withApproval`]);
 
   return (
     <Stack>
@@ -219,6 +220,7 @@ export default function HttpToolInput({ name }: Props) {
         <FormControl>
           <Checkbox
             label="Approval Required"
+            checked={!!withApprovalChecked}
             onChange={(e) => {
               methods.setValue(
                 `${prefix}config.withApproval`,
