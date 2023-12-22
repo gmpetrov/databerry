@@ -33,6 +33,7 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
   theme: 'light',
   primaryColor: '#000000',
+  position: 'left',
   // initialMessage: 'Hi, how can I help you?',
   // position: 'right',
   // messageTemplates: ["What's the pricing?"],

@@ -30,6 +30,28 @@ type Props = {
   pageNumber?: number;
 };
 
+function splitToHighlightedText(longText: string, minLength = 20) {
+  const sentenceDelimiter = /[.!?]/;
+  const lineDelimiter = /\n/;
+  const bulletPointDelimiter = /\s*•\s*/;
+
+  let potentialChunks = longText.split(sentenceDelimiter);
+
+  potentialChunks = potentialChunks
+    .filter((chunk) => chunk.trim() !== '')
+    .flatMap((chunk) => chunk.split(lineDelimiter));
+
+  potentialChunks = potentialChunks.flatMap((chunk) =>
+    chunk.split(bulletPointDelimiter)
+  );
+
+  const finalChunks = potentialChunks
+    .filter((chunk) => chunk.trim() !== '' && chunk.trim().length >= minLength)
+    .map((chunk) => chunk.trim());
+
+  return finalChunks;
+}
+
 function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     sidebarTabs: (defaultTabs) => [],
@@ -99,6 +121,11 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
   });
   const [isLoaded, setIsLoaded] = React.useState(false);
 
+  const pageIndex = React.useMemo(
+    () => (pageNumber ? pageNumber - 1 : 0),
+    [pageNumber]
+  );
+
   const getDatasourceQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatasource>
   >(datasourceId ? `/api/datasources/${datasourceId}` : null, fetcher);
@@ -164,33 +191,31 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
     .map((each) => each.trim());
 
   const handleSearch = React.useCallback(
-    (search?: string) => {
+    async (search?: string) => {
       if (search) {
-        console.log('SEARCH', search);
-        const rows = search
-          .split('\n')
-          .map((each) => each.trim())
-          .filter((each) => each !== '');
-        highlight(rows);
+        const contentToHighlight = splitToHighlightedText(search);
+        highlight(contentToHighlight);
       }
     },
     [highlight]
   );
 
-  // useEffect(() => {
-  //   handleSearch(search);
-  // }, [search]);
   // "Given the following extracted parts of a long document and a question,
   // create a final answer in the language the question is asked.
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.
   // Always answer in the same language the question is asked in.\n\n
   // Content: ... Question: What are nodes?\n\n\nHelpful Answer:"
 
+  // In case the search change but not the document (pdf-viewer will not load again)
   useEffect(() => {
-    if (isLoaded && typeof pageNumber !== 'undefined') {
-      jumpToPage(pageNumber);
+    handleSearch(search);
+  }, [search]);
+
+  useEffect(() => {
+    if (isLoaded && pageIndex !== 0) {
+      jumpToPage(pageIndex);
     }
-  }, [pageNumber, isLoaded]);
+  }, [pageIndex, isLoaded]);
 
   if (!fileUrl) {
     return null;
@@ -225,14 +250,15 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
           defaultScale={SpecialZoomLevel.PageWidth}
           fileUrl={fileUrl}
           plugins={[searchPluginInstance, defaultLayoutPluginInstance]}
+          enableSmoothScroll
           onDocumentLoad={(e) => {
             setIsLoaded(true);
-            // if (search) {
-            //   handleSearch(search);
-            // }
+            if (search) {
+              handleSearch(search);
+            }
 
             if (pageNumber) {
-              jumpToPage(pageNumber);
+              jumpToPage(pageIndex);
             }
           }}
         />

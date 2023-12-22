@@ -90,7 +90,6 @@ export default function AgentPage() {
       shallow: true,
     });
   };
-
   React.useEffect(() => {
     if (router.isReady && typeof window !== 'undefined' && !router.query.tab) {
       handleChangeTab('chat');
