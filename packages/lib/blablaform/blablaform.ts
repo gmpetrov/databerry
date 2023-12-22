@@ -9,6 +9,12 @@ import {
   ChatCompletionMessage,
   ChatCompletionMessageParam,
 } from 'openai/resources/chat';
+import {
+  ChatCompletionCreateParamsBase,
+  ChatCompletionTool,
+} from 'openai/resources/chat/completions';
+
+import ChatModel from '../chat-model';
 
 import { BlablaSchema } from './blablaform.types';
 
@@ -55,7 +61,7 @@ async function callFunction(
 export class BlaBlaForm {
   schema: BlablaSchema;
   values: object;
-  modelName: string;
+  modelName: ChatCompletionCreateParamsBase['model'];
   messages: ChatCompletionMessageParam[];
   systemPrompt?: string;
   locale?: string;
@@ -83,8 +89,12 @@ export class BlaBlaForm {
     this.modelName = modelName;
     this.locale = locale;
     this.handleLLMNewToken = handleLLMNewToken;
-    const _systemPrompt = `${systemPrompt}\nUsing the language specified by ${locale}, then please retrieve only the information outlined in ${this.schema.properties}. While optional fields can be omitted by the user, ensure you do not request or accept any information beyond what's defined in the schema. For reference, the current schema is: ${this.schema.properties} `;
+    const _systemPrompt = `
+${systemPrompt}\nUsing the language specified by ${locale}, then please retrieve only the information outlined in ${this.schema.properties}. 
+While optional fields can be omitted by the user, ensure you do not request or accept any information beyond what's defined in the schema.
+For reference, the current schema is: ${this.schema.properties}`;
     this.systemPrompt = _systemPrompt;
+    console.log('this.schema.properties', this.schema.properties);
     this.messages = [
       {
         role: 'system',
@@ -101,7 +111,7 @@ export class BlaBlaForm {
     handleLLMNewToken,
   }: {
     schema: BlablaSchema;
-    modelName: string;
+    modelName: ChatCompletionCreateParamsBase['model'];
     messages: ChatCompletionMessageParam[];
     handleLLMNewToken?: (token: string) => any;
   }) {
@@ -111,18 +121,39 @@ export class BlaBlaForm {
 
     const isStreamEnabled = Boolean(handleLLMNewToken);
 
+    const model = new ChatModel();
+
+    let isValid = false;
+    let values = {};
+
+    console.log('messages', JSON.stringify(messages, null, 2));
+
     if (isStreamEnabled) {
-      const stream = await openai.chat.completions.create({
+      const { answer, completion } = await model.call({
+        handleStream: handleLLMNewToken,
         model: modelName,
         messages,
-        stream: true,
-        functions: [
+        tools: [
           {
-            name: 'isFormValid',
-            description:
-              'Trigger only when all the required field have been answered',
-            parameters: schema,
-          },
+            type: 'function',
+            function: {
+              name: 'isFormValid',
+              description:
+                'Trigger only when all the required field have been answered',
+              parameters: schema,
+              parse: JSON.parse,
+              function: (props: any) => {
+                isValid = true;
+                values = props;
+                // TODO: Save values to the db
+
+                return `Form successfully filled.`;
+              },
+              // function: (args: any) => {
+
+              // }
+            },
+          } as ChatCompletionTool,
           // {
           //   name: 'getFormValues',
           //   description:
@@ -131,8 +162,28 @@ export class BlaBlaForm {
           // },
         ],
       });
+      // const stream = await openai.chat.completions.create({
+      //   model: modelName,
+      //   messages,
+      //   stream: true,
+      //   functions: [
+      //     {
+      //       name: 'isFormValid',
+      //       description:
+      //         'Trigger only when all the required field have been answered',
+      //       parameters: schema,
+      //     },
+      //     // {
+      //     //   name: 'getFormValues',
+      //     //   description:
+      //     //     'Use this function to extract values from the conversation along with the completion',
+      //     //   parameters: schema,
+      //     // },
+      //   ],
+      // });
 
-      let completion = {} as ChatCompletionMessage;
+      // let completion = {} as ChatCompletionMessage;
+      let currentFieldId = '';
       let hasStreamedOnce = false;
       const TOKEN_SEPERATOR = '__BLABLA_FIELD_ID__:';
       const generateOrderedCombinations = (
@@ -144,63 +195,68 @@ export class BlaBlaForm {
           generateOrderedCombinations(str, index + 1)
         );
       };
-      const potentialStarts = generateOrderedCombinations(TOKEN_SEPERATOR);
-      const pattern = /__BLABLA_FIELD_ID__:[a-z][a-zA-Z0-9]{24}/g;
 
-      let currentFieldId = '';
+      // const potentialStarts = generateOrderedCombinations(TOKEN_SEPERATOR);
+      // const pattern = /__BLABLA_FIELD_ID__:[a-z][a-zA-Z0-9]{24}/g;
 
-      let buffer = '';
-      for await (const chunk of stream) {
-        completion = messageReducer(completion, chunk);
+      // let currentFieldId = '';
 
-        if (completion.function_call) {
-          if (!hasStreamedOnce) {
-            hasStreamedOnce = true;
-          }
-        } else {
-          const content = chunk?.choices?.[0]?.delta?.content!;
-          buffer += content;
-          // let shouldStream = true;
+      // let buffer = '';
+      // for await (const chunk of stream) {
+      //   completion = messageReducer(completion, chunk);
 
-          // const match = buffer.match(pattern);
+      //   if (completion.function_call) {
+      //     if (!hasStreamedOnce) {
+      //       hasStreamedOnce = true;
+      //     }
+      //   } else {
+      //     const content = chunk?.choices?.[0]?.delta?.content!;
+      //     buffer += content;
+      //     // let shouldStream = true;
 
-          // if (match) {
-          //   currentFieldId = match[0];
-          //   // remove pattern from the buffer
-          //   buffer = buffer.replace(pattern, '');
-          // } else {
-          //   for (const start of potentialStarts) {
-          //     if (buffer.endsWith(start)) {
-          //       shouldStream = false;
-          //       break;
-          //     }
-          //   }
-          // }
+      //     // const match = buffer.match(pattern);
 
-          // if (shouldStream) {
-          handleLLMNewToken?.(content);
-          buffer = '';
-          // buffer = '';
-          // }
-        }
-      }
+      //     // if (match) {
+      //     //   currentFieldId = match[0];
+      //     //   // remove pattern from the buffer
+      //     //   buffer = buffer.replace(pattern, '');
+      //     // } else {
+      //     //   for (const start of potentialStarts) {
+      //     //     if (buffer.endsWith(start)) {
+      //     //       shouldStream = false;
+      //     //       break;
+      //     //     }
+      //     //   }
+      //     // }
 
-      if (completion?.function_call?.name === 'isFormValid') {
-        const values = JSON.parse(completion?.function_call.arguments!);
-        handleLLMNewToken?.(
-          'You have successfully filled the form. Thank you for your time'
-        );
-        return {
-          answer:
-            'You have successfully filled the form. Thank you for your time',
-          isValid: true,
-          values,
-        };
-      }
+      //     // if (shouldStream) {
+      //     handleLLMNewToken?.(content);
+      //     buffer = '';
+      //     // buffer = '';
+      //     // }
+      //   }
+      // }
+
+      // console.log(JSON.stringify(completion, null, 2));
+      // const fn = completion?.choices?.[0]?.message?.tool_calls?.[0]?.function;
+      // if (fn?.name === 'isFormValid') {
+      //   completion?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
+
+      //   const values = JSON.parse(fn?.arguments);
+      //   handleLLMNewToken?.(
+      //     'You have successfully filled the form. Thank you for your time'
+      //   );
+      //   return {
+      //     answer:
+      //       'You have successfully filled the form. Thank you for your time',
+      //     isValid: true,
+      //     values,
+      //   };
+      // }
 
       console.log('-------------------------', currentFieldId);
       return {
-        answer: completion.content,
+        answer,
         isValid: false,
         values: undefined,
         currentFieldId,

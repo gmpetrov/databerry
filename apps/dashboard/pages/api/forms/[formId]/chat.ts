@@ -58,6 +58,7 @@ const queryForm = async ({
   }
 
   const form = new BlaBlaForm({
+    modelName: 'gpt-4-1106-preview',
     schema: (found?.publishedConfig as any)?.schema as BlablaSchema,
     handleLLMNewToken: stream,
     messages: history?.map((each) => ({

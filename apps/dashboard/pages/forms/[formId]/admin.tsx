@@ -387,7 +387,10 @@ function FormDashboard(props: FormDashboardProps) {
                       {chatData.history.length > 0 &&
                         chatData?.history[chatData.history.length - 1].from ===
                           'agent' && (
-                          <Typography>
+                          <Typography
+                            level="title-lg"
+                            sx={{ maxWidth: '600px' }}
+                          >
                             {
                               chatData?.history[chatData.history.length - 1]
                                 .message
@@ -411,7 +414,7 @@ function FormDashboard(props: FormDashboardProps) {
                         state.isConversationStarted && (
                           <input
                             autoFocus
-                            className="bg-transparent outline-none text-xl"
+                            className="w-full text-3xl text-center bg-transparent outline-none"
                             placeholder="Type your answer "
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
@@ -447,11 +450,7 @@ function FormDashboard(props: FormDashboardProps) {
                               ?.introScreen?.introText
                           }
                         </Typography>
-                        <Button
-                          variant="outlined"
-                          onClick={initiateForm}
-                          sx={{ width: '50%' }}
-                        >
+                        <Button variant="solid" onClick={initiateForm}>
                           {
                             (getFormQuery.data?.publishedConfig as any)
                               ?.introScreen?.ctaText
