@@ -72,6 +72,7 @@ export enum TaskQueue {
 
 export enum SSE_EVENT {
   answer = 'answer',
+  tool_call = 'tool_call',
   endpoint_response = 'endpoint_response',
   step = 'step',
 }

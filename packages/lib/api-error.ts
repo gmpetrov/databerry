@@ -8,6 +8,7 @@ export enum ApiErrorType {
   ALREADY_INVITED = 'ALREADY_INVITED',
   INTEGRATION_CREDENTIALS_INVALID = 'INTEGRATION_CREDENTIALS_INVALID',
   RATE_LIMIT = 'RATE_LIMIT',
+  NOT_IMPLEMENTED = 'NOT_IMPLEMENTED',
 }
 
 export class ApiError extends Error {
@@ -39,6 +40,9 @@ export class ApiError extends Error {
           break;
         case ApiErrorType.RATE_LIMIT:
           this.status = 429;
+          break;
+        case ApiErrorType.NOT_IMPLEMENTED:
+          this.status = 501;
           break;
         default:
           this.status = 500;

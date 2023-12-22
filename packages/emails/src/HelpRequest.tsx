@@ -44,6 +44,7 @@ export const HelpRequest = ({
       usage: {},
       eval: 'good',
       read: false,
+      inputId: null,
     },
     {
       id: '2',
@@ -56,6 +57,7 @@ export const HelpRequest = ({
       usage: {},
       eval: 'good',
       read: false,
+      inputId: null,
     },
   ],
   visitorEmail = 'hello@world.com',

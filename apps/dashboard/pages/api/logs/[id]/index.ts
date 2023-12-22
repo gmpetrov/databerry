@@ -38,6 +38,17 @@ export const getConversation = async (
         orderBy: {
           createdAt: 'asc',
         },
+        include: {
+          approvals: {
+            include: {
+              tool: {
+                select: {
+                  config: true,
+                },
+              },
+            },
+          },
+        },
       },
     },
   });

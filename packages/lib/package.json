@@ -41,7 +41,6 @@
     "nanoid": "^4.0.2",
     "next-connect": "^0.13.0",
     "nodemailer": "^6.9.1",
-    "openai": "^4.20.0",
     "p-map": "^5.5.0",
     "p-retry": "^5.1.2",
     "p-timeout": "^6.1.1",
@@ -69,7 +68,8 @@
     "@types/react": "18.0.29",
     "@types/react-dom": "18.0.11",
     "@types/request-ip": "^0.0.41",
-    "@types/uuid": "^9.0.1"
+    "@types/uuid": "^9.0.1",
+    "openai": "^4.23.0"
   },
   "peerDependencies": {
     "next": "13.5.4",

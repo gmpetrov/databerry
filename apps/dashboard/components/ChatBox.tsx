@@ -30,6 +30,7 @@ import { ChatMessage, MessageEvalUnion } from '@app/hooks/useChat';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import type { Source } from '@chaindesk/lib/types/document';
 
+import ChatMessageApproval from './ChatMessageApproval';
 import CopyButton from './CopyButton';
 import SourceComponent from './Source';
 
@@ -57,6 +58,8 @@ export type ChatBoxProps = {
   emptyComponent?: JSX.Element | null;
   hideInternalSources?: boolean;
   userImgUrl?: string;
+  organizationId?: string | null;
+  refreshConversation?: () => any;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -136,6 +139,8 @@ function ChatBox({
   hideInternalSources,
   renderBottom,
   userImgUrl,
+  organizationId,
+  refreshConversation,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -179,7 +184,7 @@ function ChatBox({
     setTimeout(() => {
       setFirstMsg(
         initialMessage?.trim?.()
-          ? { from: 'agent', message: initialMessage }
+          ? { from: 'agent', message: initialMessage, approvals: [] }
           : undefined
       );
     }, 0);
@@ -309,7 +314,10 @@ function ChatBox({
                       <Avatar
                         size="sm"
                         variant="outlined"
-                        src={agentIconUrl || '/app-rounded-bg-white.png'}
+                        src={
+                          agentIconUrl ||
+                          '/images/chatbubble-default-icon-sm.gif'
+                        }
                       ></Avatar>
                     )}
 
@@ -321,58 +329,105 @@ function ChatBox({
                       ></Avatar>
                     )}
 
-                    <Stack>
-                      <ChatMessageCard
-                        className={clsx(
-                          each.from === 'agent'
-                            ? 'message-agent'
-                            : 'message-human'
-                        )}
-                      >
-                        <Markdown>{each.message}</Markdown>
-
-                        {each?.component}
-
-                        <Stack direction="row" justifyContent={'space-between'}>
-                          {((hideInternalSources
-                            ? filterInternalSources(each?.sources!)
-                            : each?.sources
-                          )?.length || 0) > 0 && (
-                            <Box
+                    <Stack gap={1}>
+                      {each?.step?.type === 'tool_call' && (
+                        <Card
+                          size="sm"
+                          variant="plain"
+                          sx={{ p: 0.5, background: 'transparent' }}
+                        >
+                          <Stack direction="row" alignItems={'center'} gap={1}>
+                            <CircularProgress
+                              size="sm"
+                              color="primary"
                               sx={{
-                                mt: 2,
-                                width: '100%',
-                                maxWidth: '100%',
+                                '--_root-size': '9px',
                               }}
-                            >
-                              <details>
-                                <summary className="cursor-pointer">
-                                  Sources
-                                </summary>
-                                <Stack
-                                  direction={'column'}
-                                  gap={1}
-                                  sx={{ pt: 1 }}
-                                >
-                                  {(hideInternalSources
-                                    ? filterInternalSources(each?.sources!)
-                                    : each?.sources
-                                  )?.map((source) => (
-                                    <SourceComponent
-                                      key={source.chunk_id}
-                                      source={source}
-                                      onClick={handleSourceClick}
-                                    />
-                                  ))}
-                                </Stack>
-                              </details>
-                            </Box>
-                          )}
+                            />
+
+                            <Typography level="body-sm">{`${
+                              each?.step?.description
+                                ? each?.step?.description
+                                : 'Thinking'
+                            }`}</Typography>
+                          </Stack>
+                        </Card>
+                      )}
+
+                      {each?.approvals?.length > 0 && (
+                        <Stack gap={1}>
+                          {each?.approvals?.map((approval) => (
+                            <ChatMessageApproval
+                              key={approval.id}
+                              approval={approval}
+                              showApproveButton={!!organizationId}
+                              onSumitSuccess={refreshConversation}
+                            />
+                          ))}
                         </Stack>
-                      </ChatMessageCard>
+                      )}
+                      {each?.message && (
+                        <ChatMessageCard
+                          className={clsx(
+                            each.from === 'agent'
+                              ? 'message-agent'
+                              : 'message-human'
+                          )}
+                        >
+                          {/* {each?.step?.type === 'tool_call' && (
+
+                        )} */}
+
+                          <Markdown>{each.message}</Markdown>
+
+                          {each?.component}
+
+                          <Stack
+                            direction="row"
+                            justifyContent={'space-between'}
+                          >
+                            {((hideInternalSources
+                              ? filterInternalSources(each?.sources!)
+                              : each?.sources
+                            )?.length || 0) > 0 && (
+                              <Box
+                                sx={{
+                                  mt: 2,
+                                  width: '100%',
+                                  maxWidth: '100%',
+                                }}
+                              >
+                                <details>
+                                  <summary className="cursor-pointer">
+                                    Sources
+                                  </summary>
+                                  <Stack
+                                    direction={'column'}
+                                    gap={1}
+                                    sx={{ pt: 1 }}
+                                  >
+                                    {(hideInternalSources
+                                      ? filterInternalSources(each?.sources!)
+                                      : each?.sources
+                                    )?.map((source) => (
+                                      <SourceComponent
+                                        key={source.chunk_id}
+                                        source={source}
+                                        onClick={handleSourceClick}
+                                      />
+                                    ))}
+                                  </Stack>
+                                </details>
+                              </Box>
+                            )}
+                          </Stack>
+                        </ChatMessageCard>
+                      )}
+
                       {each.from === 'agent' &&
                         each?.id &&
-                        !each?.disableActions && (
+                        !each?.disableActions &&
+                        !!each?.message && (
                           <Stack
                             direction="row"
                             marginLeft={'auto'}

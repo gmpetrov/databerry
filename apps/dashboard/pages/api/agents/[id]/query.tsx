@@ -21,6 +21,7 @@ import mailer from '@chaindesk/lib/mailer';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
+import { CUSTOMER_SUPPORT_BASE } from '@chaindesk/lib/prompt-templates';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
 import { AppNextApiRequest, SSE_EVENT } from '@chaindesk/lib/types';
@@ -30,6 +31,7 @@ import {
   ConversationChannel,
   MembershipRole,
   MessageFrom,
+  PromptType,
   Usage,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -165,6 +167,17 @@ export const chatAgentRequest = async (
     agent.modelName = data.modelName;
   }
 
+  // promptType is now deprecated - patch until supported by the API
+  if (data.promptType === PromptType.raw && data.promptTemplate) {
+    agent.systemPrompt = '';
+    agent.userPrompt = data.promptTemplate;
+  } else if (data.promptType === PromptType.customer_support) {
+    agent.systemPrompt = `${
+      data.promptTemplate || agent.prompt
+    } ${CUSTOMER_SUPPORT_BASE}`;
+    agent.userPrompt = `{query}`;
+  }
+
   const manager = new AgentManager({ agent, topK: 50 });
   const ctrl = new AbortController();
 
@@ -196,14 +209,18 @@ export const chatAgentRequest = async (
       : {}),
   });
 
+  const inputMessageId = cuid();
   conversationManager.push({
+    id: inputMessageId,
     from: MessageFrom.human,
     text: data.query,
   });
 
-  const handleStream = (data: string) =>
+  conversationManager.save();
+
+  const handleStream = (data: string, event: SSE_EVENT) =>
     streamData({
-      event: SSE_EVENT.answer,
+      event: event || SSE_EVENT.answer,
       data,
       res,
     });
@@ -233,10 +250,12 @@ export const chatAgentRequest = async (
 
   conversationManager.push({
     id: answerMsgId,
+    inputId: inputMessageId,
     from: MessageFrom.agent,
     text: chatRes.answer,
     sources: chatRes.sources,
-    usage: (chatRes as any).usage,
+    usage: chatRes.usage,
+    approvals: chatRes.approvals,
   });
 
   await conversationManager.save();

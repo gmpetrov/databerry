@@ -1,7 +1,7 @@
 import { motion, MotionProps } from 'framer-motion';
 import React, { useRef } from 'react';
 
-type Props = Omit<MotionProps, 'children'> & {
+export type Props = Omit<MotionProps, 'children'> & {
   children: ({ ref }: { ref: React.ForwardedRef<any> }) => any;
 };
 

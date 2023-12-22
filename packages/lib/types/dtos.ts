@@ -159,12 +159,16 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional(),
 
-  promptTemplate: z.string().optional(),
-  promptType: z.nativeEnum(PromptType).optional(),
+  systemPrompt: z.string().optional(),
+  userPrompt: z.string().optional(),
 
   modelName: z.nativeEnum(AgentModelName).optional(),
 
   filters: FiltersSchema.optional(),
+
+  //  DEPRECATED
+  promptTemplate: z.string().optional(),
+  promptType: z.nativeEnum(PromptType).optional(),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;
@@ -173,24 +177,6 @@ export const RunChainRequest = ChatRequest.extend({
 });
 
 export type RunChainRequest = z.infer<typeof RunChainRequest>;
-
-export const ChatResponse = z.object({
-  answer: z.string(),
-  sources: z.array(Source).optional(),
-  conversationId: z.string().cuid(),
-  visitorId: z.string().optional(),
-  messageId: z.string().cuid(),
-  usage: z
-    .object({
-      completionTokens: z.number(),
-      promptTokens: z.number(),
-      totalTokens: z.number(),
-      cost: z.number(),
-    })
-    .optional(),
-});
-
-export type ChatResponse = z.infer<typeof ChatResponse>;
 
 const ServiceProviderBaseSchema = z.object({
   id: z.string().cuid().optional(),
@@ -234,49 +220,47 @@ const ToolBaseSchema = z.object({
 //   description: z.string().trim().optional().nullable(),
 //   config: z.object({}).optional(),
 // });
+
+const ToolKeyValueField = z
+  .object({
+    key: z.string().min(1),
+    value: z.string().optional(),
+    isUserProvided: z.boolean().optional(),
+  })
+
+  .refine(
+    (val) => {
+      if (!val.isUserProvided && !val.value) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Value is required',
+      path: ['value'],
+    }
+  );
+
+export const HttpToolSchema = ToolBaseSchema.extend({
+  type: z.literal(ToolType.http),
+  config: z.object({
+    url: z.string().url(),
+    name: z.string().optional(),
+    method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).default('GET'),
+    description: z.string().min(3),
+    withApproval: z.boolean().optional(),
+    headers: z.array(ToolKeyValueField).optional(),
+    body: z.array(ToolKeyValueField).optional(),
+    queryParameters: z.array(ToolKeyValueField).optional(),
+  }),
+});
+
 export const ToolSchema = z.discriminatedUnion('type', [
   ToolBaseSchema.extend({
     type: z.literal(ToolType.datastore),
     datastoreId: z.string().cuid().optional(),
   }),
-
-  ToolBaseSchema.extend({
-    type: z.literal(ToolType.http),
-    config: z.object({
-      url: z.string().url(),
-      method: z.string(),
-      name: z.string().min(3),
-      description: z.string().min(3),
-      isApprovalRequired: z.boolean().optional(),
-      headers: z
-        .array(
-          z.object({
-            key: z.string().min(1),
-            value: z.string().optional(),
-            isUserProvided: z.boolean().optional(),
-          })
-        )
-        .optional(),
-      body: z
-        .array(
-          z.object({
-            key: z.string().min(1),
-            value: z.string().optional(),
-            isUserProvided: z.boolean().optional(),
-          })
-        )
-        .optional(),
-      queryParameters: z
-        .array(
-          z.object({
-            key: z.string().min(1),
-            value: z.string().optional(),
-            isUserProvided: z.boolean().optional(),
-          })
-        )
-        .optional(),
-    }),
-  }),
+  HttpToolSchema,
   ToolBaseSchema.extend({
     type: z.literal(ToolType.connector),
     config: z.any({}),
@@ -296,6 +280,8 @@ export const CreateAgentSchema = z.object({
   name: z.string().trim().optional(),
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
+  systemPrompt: z.string().trim().optional().nullable(),
+  userPrompt: z.string().trim().optional().nullable(),
   modelName: z
     .nativeEnum(AgentModelName)
     .default(AgentModelName.gpt_3_5_turbo)
@@ -424,3 +410,27 @@ export const YoutubeSummarySchema = z.object({
     }
   ),
 });
+
+export const ChatResponse = z.object({
+  answer: z.string(),
+  sources: z.array(Source).optional(),
+  conversationId: z.string().cuid(),
+  visitorId: z.string().optional(),
+  messageId: z.string().cuid(),
+  usage: z
+    .object({
+      completionTokens: z.number(),
+      promptTokens: z.number(),
+      totalTokens: z.number(),
+      cost: z.number(),
+    })
+    .optional(),
+  approvals: z.array(
+    z.object({
+      tool: HttpToolSchema,
+      payload: z.record(z.string(), z.unknown()),
+    })
+  ),
+});
+
+export type ChatResponse = z.infer<typeof ChatResponse>;

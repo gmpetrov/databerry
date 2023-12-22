@@ -41,7 +41,7 @@ export const getConversation = async (
   const conversationId = req.query.conversationId as string;
   const cursor = req.query.cursor as string;
 
-  const conversation = await prisma.conversation.findUnique({
+  let conversation = await prisma.conversation.findUnique({
     where: {
       id: conversationId,
     },
@@ -51,6 +51,20 @@ export const getConversation = async (
       lead: true,
       messages: {
         take: 50,
+        include: {
+          approvals: {
+            include: {
+              tool: {
+                select: {
+                  config: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
         ...(cursor
           ? {
               skip: 1,
@@ -59,12 +73,24 @@ export const getConversation = async (
               },
             }
           : {}),
-        orderBy: {
-          createdAt: 'desc',
-        },
       },
     },
   });
+
+  if (conversation) {
+    conversation.messages = conversation?.messages?.map((each) => ({
+      ...each,
+      approvals: each.approvals?.map((approval) => ({
+        ...approval,
+        tool: {
+          ...approval.tool,
+          config: {
+            name: (approval as any)?.tool?.config?.name || '',
+          },
+        },
+      })),
+    }));
+  }
 
   if (
     conversation?.agent?.visibility === AgentVisibility.private &&

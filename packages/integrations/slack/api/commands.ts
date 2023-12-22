@@ -246,7 +246,7 @@ const handleAsk = async (payload: CommandEvent) => {
   conversationManager.save();
 
   const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
-    filterInternalSources(chatRes?.sources)
+    filterInternalSources(chatRes?.sources || [])
   )}`.trim();
 
   return axios.post(payload.response_url, {

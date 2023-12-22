@@ -19,6 +19,7 @@ const handler = (error: any) => {
   if (
     error.message.startsWith('Cancel') ||
     error.message.startsWith('AbortError') ||
+    error.message.startsWith('ToolApprovalRequired') ||
     error.name === 'AbortError'
   ) {
     throw error;

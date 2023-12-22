@@ -82,10 +82,13 @@ export default class ChainManager {
     history?: Message[] | undefined;
     temperature?: ChatRequest['temperature'];
     filters?: ChatRequest['filters'];
-    promptType?: ChatRequest['promptType'];
-    promptTemplate?: ChatRequest['promptTemplate'];
+    systemPrompt?: ChatRequest['systemPrompt'];
+    userPrompt?: ChatRequest['userPrompt'];
     httpResponse?: any;
     abortController?: any;
+
+    promptType?: ChatRequest['promptType'];
+    promptTemplate?: ChatRequest['promptTemplate'];
   }) {
     if (filters?.datasource_ids?.length || filters?.datastore_ids?.length) {
       return qa({

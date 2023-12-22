@@ -44,7 +44,7 @@ const agentToolFormat = (tool: ToolSchema) => {
   } else if (tool.type === ToolType.http) {
     format = {
       id: tool.id!,
-      name: 'HTTP Tool',
+      name: tool?.config?.name || 'HTTP Tool',
       description: tool?.config?.description,
     };
   }

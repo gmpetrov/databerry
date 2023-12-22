@@ -13,6 +13,7 @@ import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
 import type {
+  ActionApproval,
   ConversationChannel,
   ConversationStatus,
   Prisma,
@@ -44,6 +45,11 @@ export type ChatMessage = {
   sources?: Source[];
   component?: JSX.Element;
   disableActions?: boolean;
+  step?: {
+    type: 'tool_call';
+    description?: string;
+  };
+  approvals: ActionApproval[];
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -166,6 +172,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         let buffer = '';
         let bufferStep = '';
         let bufferEndpointResponse = '';
+        let bufferToolCall = '';
         class RetriableError extends Error {}
         class FatalError extends Error {}
 
@@ -264,6 +271,13 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                     conversationId || ''
                   );
                 } catch {}
+
+                // ApprovalRequired case returns an empty message. Refresh ui to display associated approval requests.
+                if (buffer?.trim() === '') {
+                  setTimeout(() => {
+                    getConversationQuery.mutate();
+                  }, 1000);
+                }
               } catch (err) {
                 console.log(err);
               }
@@ -292,6 +306,30 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                 h[nextIndex].message = `${bufferStep}`;
               } else {
                 h.push({ from: 'agent', message: bufferStep });
+              }
+
+              setState({
+                history: h as any,
+              });
+            } else if (event.event === SSE_EVENT.tool_call) {
+              bufferToolCall += event.data as string;
+
+              const h = [...history];
+
+              if (h?.[nextIndex]) {
+                (h[nextIndex] as any).step = {
+                  type: 'tool_call',
+                  // description: bufferToolCall,
+                };
+              } else {
+                h.push({
+                  from: 'agent',
+                  message: '',
+                  step: {
+                    type: 'tool_call',
+                    // description: bufferToolCall,
+                  },
+                });
               }
 
               setState({
@@ -418,6 +456,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             message: message?.text!,
             createdAt: message?.createdAt!,
             sources: message?.sources as Source[],
+            approvals: message?.approvals || [],
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,

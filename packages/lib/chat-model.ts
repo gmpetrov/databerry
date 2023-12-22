@@ -6,6 +6,7 @@ import pRetry from 'p-retry';
 import { countTokensEstimation } from './count-tokens';
 import failedAttemptHandler from './lc-failed-attempt-hanlder';
 import { promptTokensEstimate } from './tokens-estimate';
+import { SSE_EVENT } from './types';
 
 const list = () => ['mistery'];
 
@@ -46,7 +47,7 @@ export default class ChatModel {
     tools = [],
     ...otherProps
   }: Parameters<typeof this.openai.chat.completions.create>[0] & {
-    handleStream?: (text: string) => any;
+    handleStream?: (text: string, event?: SSE_EVENT) => any;
     signal?: AbortSignal;
   }) {
     return pRetry(
@@ -72,14 +73,19 @@ export default class ChatModel {
               tools: tools as any,
               stream: true,
             })
-            .on('message', (msg) => console.log('msg', msg))
-            .on('functionCall', (functionCall) =>
-              console.log('functionCall', functionCall)
-            )
+            .on('message', (msg) => {
+              console.log('msg', msg);
+            })
+            .on('functionCall', (functionCall) => {
+              console.log('functionCall', functionCall);
+              handleStream?.(functionCall?.name || '', SSE_EVENT.tool_call);
+            })
             .on('functionCallResult', (functionCallResult) =>
               console.log('functionCallResult', functionCallResult)
             )
-            .on('content', (diff) => console.log('content', diff));
+            .on('content', (chunk) => {
+              handleStream?.(chunk);
+            });
 
           const completion = await runner.finalChatCompletion();
 

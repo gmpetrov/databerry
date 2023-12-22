@@ -7,21 +7,36 @@ import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
+import FormHelperText from '@mui/joy/FormHelperText';
 import FormLabel from '@mui/joy/FormLabel';
 import Modal from '@mui/joy/Modal';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import Slider from '@mui/joy/Slider';
 import Stack from '@mui/joy/Stack';
+import Tab, { tabClasses } from '@mui/joy/Tab';
+import TabList from '@mui/joy/TabList';
+import TabPanel from '@mui/joy/TabPanel';
+import Tabs from '@mui/joy/Tabs';
 import Textarea from '@mui/joy/Textarea';
+import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 import Typography from '@mui/joy/Typography';
-import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import useModal from '@app/hooks/useModal';
+
 import { ModelConfig } from '@chaindesk/lib/config';
-import { CUSTOMER_SUPPORT } from '@chaindesk/lib/prompt-templates';
+import {
+  CHURN_PREVENTION,
+  CUSTOMER_SUPPORT,
+  CUSTOMER_SUPPORT_V3,
+  HR_INTERVIEW,
+  SALES_INBOUND,
+  SALES_OUTREACH,
+} from '@chaindesk/lib/prompt-templates';
 import { PromptTypesLabels, RouteNames } from '@chaindesk/lib/types';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import {
@@ -69,18 +84,58 @@ const PROMPT_TEMPLATES_FUN = [
   },
 ];
 
+const promptTemplates = [
+  {
+    label: 'Customer Support',
+    description: '',
+    systemPrompt: CUSTOMER_SUPPORT_V3,
+    userPrompt: `{query}`,
+  },
+  {
+    label: 'HR Interview',
+    description: '',
+    systemPrompt: HR_INTERVIEW,
+    userPrompt: `{query}`,
+  },
+  {
+    label: 'Churn Prevention',
+    description: '',
+    systemPrompt: CHURN_PREVENTION,
+    userPrompt: `{query}`,
+  },
+  {
+    label: 'Inbound B2B SaaS',
+    description: '',
+    systemPrompt: SALES_INBOUND,
+    userPrompt: `{query}`,
+  },
+  {
+    label: 'B2B SaaS Sales Outreach',
+    description: '',
+    systemPrompt: SALES_OUTREACH,
+    userPrompt: `{query}`,
+  },
+];
+
 export default function ModelInput({}: Props) {
   const session = useSession();
-  const { watch, setValue, register, formState } =
+  const { watch, setValue, register, formState, control } =
     useFormContext<CreateAgentSchema>();
+
+  const promptTemplatesModal = useModal();
+  const [currentTemplateIndex, setCurrentTemplateIndex] = useState(0);
 
   const [isPromptTemplatesModalOpen, setIsPromptTemplatesModalOpen] =
     useState(false);
+  const [currentPromptLevel, setCurrentPromptLevel] = useState<
+    'simple' | 'advanced'
+  >('advanced');
 
   const modelName = watch('modelName');
   const temperature = watch('temperature');
-  const prompt = watch('prompt');
-  const promptType = watch('promptType');
+  const systemPrompt = watch('systemPrompt');
+  // const prompt = watch('prompt');
+  // const promptType = watch('promptType');
 
   return (
     <>
@@ -89,7 +144,7 @@ export default function ModelInput({}: Props) {
 
         <Select
           {...register('modelName')}
-          defaultValue={modelName || AgentModelName.gpt_3_5_turbo}
+          defaultValue={modelName || AgentModelName.gpt_4_turbo}
           value={modelName}
           onChange={(_, value) => {
             setValue('modelName', value as AgentModelName, {
@@ -167,7 +222,92 @@ export default function ModelInput({}: Props) {
         />
       </FormControl>
 
+      {/* <Divider /> */}
+
+      <Typography level="title-md">Prompt</Typography>
+
+      <Alert startDecorator={<InfoRoundedIcon />} color="primary">
+        <Link
+          href="https://platform.openai.com/docs/guides/prompt-engineering"
+          target="_blank"
+        >
+          <Typography>
+            Learn about prompt engineering best practices{' '}
+            <Typography color="primary">here</Typography>
+          </Typography>
+        </Link>
+      </Alert>
+
+      {/* <ToggleButtonGroup
+        value={currentPromptLevel}
+        onChange={(_, value) => {
+          if (value) {
+            setCurrentPromptLevel(value as any);
+          }
+        }}
+      >
+        <Button value="simple">Simple</Button>
+        <Button value="advanced">Advanced</Button>
+      </ToggleButtonGroup> */}
+
+      {/* <Tabs aria-label="tabs" defaultValue={1} sx={{ bgcolor: 'transparent' }}>
+        <TabList
+          disableUnderline
+          sx={{
+            p: 0.5,
+            gap: 0.5,
+            borderRadius: 'xl',
+            bgcolor: 'background.level1',
+            [`& .${tabClasses.root}[aria-selected="true"]`]: {
+              boxShadow: 'sm',
+              bgcolor: 'background.surface',
+
+              '::after': {
+                height: 0,
+              },
+            },
+          }}
+        >
+          <Tab>Simple</Tab>
+          <Tab>Advanced</Tab>
+        </TabList>
+        <TabPanel value={0}>Hello</TabPanel>
+        <TabPanel value={1}>World</TabPanel>
+      </Tabs> */}
+
       <FormControl>
+        <Stack direction="row" alignItems={'end'} sx={{ mb: 1 }}>
+          <Typography>System Prompt</Typography>
+
+          <Button
+            // variant="plain"
+            variant="solid"
+            color="neutral"
+            endDecorator={<ArrowForwardRoundedIcon />}
+            sx={{ mt: 1, ml: 'auto' }}
+            onClick={() => {
+              promptTemplatesModal.open();
+              setCurrentTemplateIndex(0);
+            }}
+          >
+            Prompt Templates
+          </Button>
+        </Stack>
+        <Textarea
+          minRows={4}
+          {...register('systemPrompt')}
+          defaultValue={systemPrompt || ''}
+        ></Textarea>
+        <FormHelperText></FormHelperText>
+      </FormControl>
+
+      <FormControl>
+        <FormLabel>User Prompt</FormLabel>
+        <Textarea minRows={2} {...register('userPrompt')}></Textarea>
+        <FormHelperText>{`{query} and {context} variables are respectively replaced by the user query and data retrieved from a datastore at runtime`}</FormHelperText>
+      </FormControl>
+
+      {/* <FormControl>
         <FormLabel>Prompt</FormLabel>
 
         {promptType && (
@@ -215,7 +355,7 @@ export default function ModelInput({}: Props) {
         >
           Choose a Prompt Template
         </Button>
-      </FormControl>
+      </FormControl> */}
 
       <Modal
         open={isPromptTemplatesModalOpen}
@@ -345,6 +485,84 @@ export default function ModelInput({}: Props) {
           </Stack>
         </Card>
       </Modal>
+
+      <promptTemplatesModal.component
+        title="Prompt Templates"
+        description="Tailored to your business needs"
+      >
+        <Stack
+          direction="row"
+          gap={2}
+          sx={{
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <Stack gap={1} sx={{ width: '100%' }}>
+            {promptTemplates.map((each, index) => (
+              <Card
+                key={index}
+                size="sm"
+                onClick={() => setCurrentTemplateIndex(index)}
+                color={index === currentTemplateIndex ? 'primary' : 'neutral'}
+                variant="soft"
+                sx={{
+                  cursor: 'pointer',
+                }}
+              >
+                <Stack gap={2} direction="row">
+                  <Typography>{each.label}</Typography>
+                  <Stack direction="row" sx={{ ml: 'auto' }} gap={1}>
+                    <Button size="sm" color="neutral" variant="outlined">
+                      View
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        setValue('systemPrompt', each.systemPrompt, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setValue('userPrompt', each.userPrompt, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        promptTemplatesModal.close();
+                      }}
+                    >
+                      Select
+                    </Button>
+                  </Stack>
+                </Stack>
+              </Card>
+            ))}
+          </Stack>
+          <Stack
+            sx={(t) => ({
+              [t.breakpoints.down('md')]: {
+                display: 'none',
+              },
+              width: '100%',
+            })}
+            gap={2}
+          >
+            <Stack gap={1}>
+              <Typography>System Prompt</Typography>
+              <Textarea
+                value={promptTemplates?.[currentTemplateIndex].systemPrompt}
+                disabled
+              ></Textarea>
+            </Stack>
+            <Stack gap={1}>
+              <Typography>User Prompt</Typography>
+              <Textarea
+                value={promptTemplates?.[currentTemplateIndex].userPrompt}
+                disabled
+              ></Textarea>
+            </Stack>
+          </Stack>
+        </Stack>
+      </promptTemplatesModal.component>
     </>
   );
 }
