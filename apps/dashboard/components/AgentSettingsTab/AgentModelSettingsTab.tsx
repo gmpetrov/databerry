@@ -1,3 +1,5 @@
+import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import router from 'next/router';
 import React from 'react';
@@ -9,6 +11,9 @@ import SettingCard from '@app/components/ui/SettingCard';
 
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import { Agent, AppDatasource as Datasource } from '@chaindesk/prisma';
+
+import Motion from '../Motion';
+import MotionBottom from '../MotionBottom';
 
 type Props = {
   defaultValues?: CreateAgentSchema;
@@ -27,13 +32,37 @@ export default function AgentToolSettingsTab(props: Props) {
                 <SettingCard
                   title="Language Model"
                   description="Customize the language model your Agent uses."
-                  submitButtonProps={{
-                    loading: mutation.isMutating,
-                    disabled: !formState.isDirty || !formState.isValid,
-                    children: 'Save',
-                  }}
+                  // submitButtonProps={{
+                  //   loading: mutation.isMutating,
+                  //   disabled: !formState.isDirty || !formState.isValid,
+                  //   children: 'Save',
+                  // }}
+                  disableSubmitButton
                 >
                   <ModelInput />
+
+                  {formState.isDirty && formState.isValid && (
+                    <MotionBottom>
+                      {({ ref }: any) => (
+                        <Button
+                          ref={ref as any}
+                          type="submit"
+                          disabled={!formState.isDirty}
+                          loading={mutation.isMutating}
+                          color="success"
+                          sx={{
+                            position: 'fixed',
+                            bottom: 35,
+                            right: 90,
+                            zIndex: 1,
+                          }}
+                          startDecorator={<SaveRoundedIcon />}
+                        >
+                          Save
+                        </Button>
+                      )}
+                    </MotionBottom>
+                  )}
                 </SettingCard>
               );
             }}

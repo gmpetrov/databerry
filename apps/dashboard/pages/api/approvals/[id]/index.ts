@@ -17,6 +17,7 @@ import {
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import pipe from '@chaindesk/lib/middlewares/pipe';
+import promptInject from '@chaindesk/lib/prompt-inject';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 import { HttpToolSchema } from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
@@ -93,11 +94,19 @@ export const approve = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const { answer, usage } = await model.call({
     model: ModelConfig[action.agent.modelName].name,
     messages: [
+      ...(action?.agent?.systemPrompt
+        ? [{ role: 'system', content: action.agent.systemPrompt }]
+        : []),
       ...(action?.message?.input
         ? [
             {
               role: 'user',
-              content: action?.message?.input?.text,
+              content: action?.agent?.userPrompt
+                ? promptInject({
+                    query: action?.message?.input?.text,
+                    template: action?.agent?.userPrompt,
+                  })
+                : action?.message?.input?.text,
             },
           ]
         : []),

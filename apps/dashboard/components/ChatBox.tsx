@@ -314,7 +314,10 @@ function ChatBox({
                       <Avatar
                         size="sm"
                         variant="outlined"
-                        src={agentIconUrl || '/app-rounded-bg-white.png'}
+                        src={
+                          agentIconUrl ||
+                          '/images/chatbubble-default-icon-sm.gif'
+                        }
                       ></Avatar>
                     )}
 

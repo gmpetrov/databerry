@@ -217,6 +217,10 @@ model Agent {
 
   name        String
   description String
+  
+  userPrompt  String? @map("user_prompt")
+  systemPrompt String? @map("system_prompt")
+
   prompt      String?
   promptType  PromptType     @default(customer_support) @map("prompt_type")
   iconUrl     String?        @map("icon_url")

@@ -19,9 +19,8 @@ module.exports = {
       id: process.env.TEST_AGENT_ID || 'cliobpozh0000e9og25x37w42',
       name: 'Test Agent',
       description: 'Test',
-      prompt:
+      systemPrompt:
         "As a customer support agent, please provide a helpful and professional response to the user's question or issue.\nAnswer in 20 words maximum.",
-      promptType: 'customer_support',
       iconUrl: null,
       temperature: 0,
       visibility: 'private',

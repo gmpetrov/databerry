@@ -126,11 +126,15 @@ export const runChainRequest = async (
       stream: data.streaming ? handleStream : undefined,
       history: conversation?.messages,
       temperature: data.temperature,
-      promptTemplate: data.promptTemplate,
-      promptType: data.promptType,
+      systemPrompt: data.systemPrompt,
+      userPrompt: data.userPrompt,
       filters: data.filters,
       httpResponse: res,
       abortController: ctrl,
+
+      // Deprecated
+      promptTemplate: data.promptTemplate,
+      promptType: data.promptType,
     }),
     prisma.usage.update({
       where: {

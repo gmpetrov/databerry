@@ -25,6 +25,7 @@ import useSWR from 'swr';
 
 import AgentForm from '@app/components/AgentForm';
 import GeneralInput from '@app/components/AgentInputs/GeneralInput';
+import ModelInput from '@app/components/AgentInputs/ModelInput';
 import ToolsInput from '@app/components/AgentInputs/ToolsInput';
 import AgentTable from '@app/components/AgentTable';
 import Layout from '@app/components/Layout';
@@ -34,10 +35,11 @@ import { getProductFromHostname } from '@app/hooks/useProduct';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import accountConfig from '@chaindesk/lib/account-config';
+import { CUSTOMER_SUPPORT_V3 } from '@chaindesk/lib/prompt-templates';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
-import { Agent, Prisma } from '@chaindesk/prisma';
+import { Agent, AgentModelName, Prisma } from '@chaindesk/prisma';
 
 import { getAgents } from '../api/agents';
 import { getDatastores } from '../api/datastores';
@@ -192,6 +194,12 @@ export default function AgentsPage() {
             {({ mutation }) => (
               <Stack gap={4}>
                 <GeneralInput />
+
+                <details>
+                  <summary>Model / Prompt Settings</summary>
+                  <ModelInput />
+                </details>
+
                 <SettingCard
                   title="Tools"
                   disableSubmitButton

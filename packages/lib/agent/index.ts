@@ -27,6 +27,7 @@ import failedAttemptHandler from '../lc-failed-attempt-hanlder';
 import promptInject from '../prompt-inject';
 import {
   ANSWER_IN_SAME_LANGUAGE,
+  CUSTOMER_SUPPORT_BASE,
   KNOWLEDGE_RESTRICTION,
   MARKDOWN_FORMAT_ANSWER,
   QA_CONTEXT,
@@ -62,7 +63,13 @@ export type HttpToolPayload = {
 type AgentManagerProps = ChatModelConfigSchema &
   Pick<
     ChatRequest,
-    'modelName' | 'truncateQuery' | 'filters' | 'promptType' | 'promptTemplate'
+    | 'modelName'
+    | 'truncateQuery'
+    | 'filters'
+    | 'promptType'
+    | 'promptTemplate'
+    | 'systemPrompt'
+    | 'userPrompt'
   > & {
     input: string;
     stream?: any;
@@ -81,21 +88,9 @@ export default class AgentManager {
   }
 
   async query(props: AgentManagerProps) {
-    let systemPrompt = '';
-    let userPrompt = '{query}';
-
-    if (this.agent.promptType === PromptType.customer_support) {
-      systemPrompt = `${this.agent.prompt}
-      Answer the query in the same language in which the query is asked.
-      Give answer in the markdown rich format with proper bolds, italics etc as per heirarchy and readability requirements.
-      You will be provided by a context retrieved by the knowledge_base_retrieval function.
-      If the context does not contain the information needed to answer this query then politely say that you don't know without mentioning the existence of a context.
-      Remember do not answer any query that is outside of the provided context nor mention its existence.
-      You are allowed to use the following conversation history to answer the query.
-      `;
-    } else if (this.agent.promptType === PromptType.raw) {
-      userPrompt = this.agent.prompt!;
-    }
+    let systemPrompt = props.systemPrompt || this.agent.systemPrompt || '';
+    let userPrompt =
+      props.userPrompt || this.agent.userPrompt?.trim?.() || '{query}';
 
     return chatv3({
       ...props,

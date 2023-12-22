@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/joy/Box';
-import React, { ComponentProps, ReactElement, useEffect } from 'react';
+import React, { ComponentProps, ReactElement, useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { SWRResponse } from 'swr';
@@ -8,9 +8,12 @@ import { SWRResponse } from 'swr';
 import useAgent, { UseAgentMutation, UseAgentQuery } from '@app/hooks/useAgent';
 import useStateReducer from '@app/hooks/useStateReducer';
 
-import { CUSTOMER_SUPPORT } from '@chaindesk/lib/prompt-templates';
+import {
+  CUSTOMER_SUPPORT,
+  CUSTOMER_SUPPORT_V3,
+} from '@chaindesk/lib/prompt-templates';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
-import { Agent, Prisma, PromptType } from '@chaindesk/prisma';
+import { Agent, AgentModelName, Prisma, PromptType } from '@chaindesk/prisma';
 
 // interface ConnectFormProps<TFieldValues extends FieldValues> {
 //   children(children: UseFormReturn<TFieldValues>): ReactElement;
@@ -40,10 +43,13 @@ function AgentForm(props: Props) {
   const methods = useForm<CreateAgentSchema>({
     resolver: zodResolver(CreateAgentSchema),
     defaultValues: {
-      promptType: PromptType.customer_support,
-      prompt: CUSTOMER_SUPPORT,
+      promptType: PromptType.raw,
+      // prompt: CUSTOMER_SUPPORT,
+      modelName: AgentModelName.gpt_4_turbo,
+      systemPrompt: CUSTOMER_SUPPORT_V3,
+      userPrompt: '{query}',
       includeSources: true,
-      ...props?.defaultValues,
+      ...props.defaultValues,
     },
   });
 

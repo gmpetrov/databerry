@@ -220,6 +220,9 @@ const joyTheme = extendJoyTheme({
         primary: {
           ...purple,
         },
+        neutral: {
+          solidBg: '#000',
+        },
       },
     },
   },

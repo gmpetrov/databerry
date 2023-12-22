@@ -159,12 +159,16 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional(),
 
-  promptTemplate: z.string().optional(),
-  promptType: z.nativeEnum(PromptType).optional(),
+  systemPrompt: z.string().optional(),
+  userPrompt: z.string().optional(),
 
   modelName: z.nativeEnum(AgentModelName).optional(),
 
   filters: FiltersSchema.optional(),
+
+  //  DEPRECATED
+  promptTemplate: z.string().optional(),
+  promptType: z.nativeEnum(PromptType).optional(),
 });
 
 export type ChatRequest = z.infer<typeof ChatRequest>;
@@ -276,6 +280,8 @@ export const CreateAgentSchema = z.object({
   name: z.string().trim().optional(),
   description: z.string().trim().min(1),
   prompt: z.string().trim().optional().nullable(),
+  systemPrompt: z.string().trim().optional().nullable(),
+  userPrompt: z.string().trim().optional().nullable(),
   modelName: z
     .nativeEnum(AgentModelName)
     .default(AgentModelName.gpt_3_5_turbo)
