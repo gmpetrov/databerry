@@ -75,6 +75,7 @@ export enum SSE_EVENT {
   tool_call = 'tool_call',
   endpoint_response = 'endpoint_response',
   step = 'step',
+  metadata = 'metadata',
 }
 
 export enum ChainType {

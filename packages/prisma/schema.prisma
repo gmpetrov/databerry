@@ -325,7 +325,8 @@ model Conversation {
   lead Lead?
  
 
-  formStatus FormStatus @map("form_status") @default(IN_PROGRESS)
+  formSubmission FormSubmission?
+  
   form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String?   @map("form_id")
 
@@ -345,6 +346,8 @@ model Message {
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
   usage          Json?
+  
+  metadata       Json?
 
   inputId String?       @map("input_id")
   input   Message? @relation(fields: [inputId], references: [id], name: "input")
@@ -593,6 +596,7 @@ model Form {
   
   
   conversations Conversation[]
+  submissions  FormSubmission[]
 
   // agent   Agent?  @relation(fields: [agentId], references: [id], onDelete: Cascade)
   // agentId String? @map("agent_id")
@@ -601,6 +605,23 @@ model Form {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("forms")
+}
+
+model FormSubmission {
+  id          String  @id @default(cuid())
+  
+  status FormStatus @default(IN_PROGRESS)
+  
+  data Json?
+
+  form   Form? @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId String?       @map("form_id")
+
+  conversationId String?  @unique @map("conversation_id")
+  conversation Conversation? @relation(fields: [conversationId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  @@map("form_submissions")
 }
 
 // model FormResponse {

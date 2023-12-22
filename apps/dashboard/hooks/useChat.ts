@@ -54,6 +54,7 @@ export type ChatMessage = {
     description?: string;
   };
   approvals: ActionApproval[];
+  metadata?: Record<string, any>;
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -213,6 +214,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         let bufferStep = '';
         let bufferEndpointResponse = '';
         let bufferToolCall = '';
+        let bufferMetadata = '';
         class RetriableError extends Error {}
         class FatalError extends Error {}
         await fetchEventSource(endpoint, {
@@ -291,15 +293,23 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
 
                 const h = [...history];
 
+                let metadata = {};
+
+                try {
+                  metadata = JSON.parse(bufferMetadata || '{}');
+                } catch {}
+
                 if (h?.[nextIndex]) {
                   h[nextIndex].message = `${buffer}`;
                   (h[nextIndex] as any).id = messageId;
+                  (h[nextIndex] as any).metadata = metadata;
                 } else {
                   h.push({
                     id: messageId,
                     from: 'agent',
                     message: buffer,
                     sources,
+                    metadata,
                   });
                 }
 
@@ -358,6 +368,8 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               setState({
                 history: h as any,
               });
+            } else if (event.event === SSE_EVENT.metadata) {
+              bufferMetadata += event.data as string;
             } else if (event.event === SSE_EVENT.tool_call) {
               bufferToolCall += event.data as string;
 
@@ -504,6 +516,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             createdAt: message?.createdAt!,
             sources: message?.sources as Source[],
             approvals: message?.approvals || [],
+            metadata: message?.metadata || ({} as any),
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,

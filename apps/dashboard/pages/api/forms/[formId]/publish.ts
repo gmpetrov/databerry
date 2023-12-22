@@ -13,44 +13,6 @@ import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createApiHandler();
 
-type Field = {
-  id: string;
-  required: boolean;
-  fieldName: string;
-};
-
-type InputObject = {
-  fields: Field[];
-};
-
-type Schema = {
-  type: 'object';
-  required: string[];
-  properties: {
-    [key: string]: {
-      id: string;
-      type: string;
-    };
-  };
-};
-
-function generateSchema(fields: Field[]): Schema {
-  return fields?.reduce(
-    (acc, field) => {
-      acc['properties'][field.fieldName] = {
-        id: field.id,
-        type: 'string',
-      };
-      acc['required'] = [
-        ...acc.required,
-        ...(field.required ? [field.fieldName] : []),
-      ];
-      return acc;
-    },
-    { type: 'object', properties: {}, required: [] } as Schema
-  );
-}
-
 const cors = Cors({
   methods: ['POST', 'HEAD'],
 });
@@ -78,14 +40,14 @@ export const publishForm = async (
   if (!fields) {
     throw new Error('Must register at least one ield');
   }
-  const schema = generateSchema(fields);
+  const schema = formToJsonSchema(fields);
   await prisma.form.update({
     where: {
       id: formId,
     },
     data: {
       publishedConfig: {
-        schema,
+        schema: schema as any,
         introScreen: (found?.draftConfig as any).introScreen,
       },
     },
@@ -104,4 +66,7 @@ export default async function wrapper(
   await runMiddleware(req, res, cors);
 
   return handler(req, res);
+}
+function formToJsonSchema(fields: any) {
+  throw new Error('Function not implemented.');
 }

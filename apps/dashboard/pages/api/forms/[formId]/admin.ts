@@ -5,10 +5,15 @@ import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import { formToJsonSchema } from '@chaindesk/lib/forms';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import roles from '@chaindesk/lib/middlewares/roles';
-import { UpdateAgentSchema, UpdateFormSchema } from '@chaindesk/lib/types/dtos';
+import {
+  FormFieldSchema,
+  UpdateAgentSchema,
+  UpdateFormSchema,
+} from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
 import { MembershipRole } from '@chaindesk/prisma';
@@ -22,12 +27,18 @@ export const updateForm = async (
   const updates = UpdateFormSchema.parse(req.body);
   const id = req.query.formId as string;
 
+  const draftConfig = {
+    ...updates.draftConfig,
+    schema: formToJsonSchema(updates?.draftConfig?.fields as FormFieldSchema[]),
+  };
+
   return prisma.form.update({
     where: {
       id,
     },
     data: {
       ...updates,
+      draftConfig: draftConfig as any,
     },
   });
 };

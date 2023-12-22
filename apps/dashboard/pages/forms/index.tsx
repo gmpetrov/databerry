@@ -50,7 +50,7 @@ export default function FormsPage() {
               {
                 id: cuid(),
                 required: false,
-                fieldName: 'email',
+                name: 'email',
               },
             ],
           },

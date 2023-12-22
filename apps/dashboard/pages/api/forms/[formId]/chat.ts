@@ -34,6 +34,7 @@ const queryForm = async ({
   filters,
   httpResponse,
   abortController,
+  useDraftConfig,
 }: {
   input: string;
   formId: string;
@@ -45,11 +46,13 @@ const queryForm = async ({
   promptTemplate?: ChatRequest['promptTemplate'];
   httpResponse?: any;
   abortController?: any;
+  useDraftConfig?: boolean;
 }) => {
   const found = await prisma.form.findUnique({
     where: { id: formId },
     select: {
       publishedConfig: true,
+      draftConfig: true,
     },
   });
 
@@ -57,9 +60,15 @@ const queryForm = async ({
     throw new ApiError(ApiErrorType.NOT_FOUND);
   }
 
+  const config = useDraftConfig ? found?.draftConfig : found?.publishedConfig;
+
+  if (!config) {
+    throw new ApiError(ApiErrorType.INVALID_REQUEST);
+  }
+
   const form = new BlaBlaForm({
     modelName: 'gpt-4-1106-preview',
-    schema: (found?.publishedConfig as any)?.schema as BlablaSchema,
+    schema: (config as any)?.schema as BlablaSchema,
     handleLLMNewToken: stream,
     messages: history?.map((each) => ({
       content: each.text,
@@ -76,6 +85,7 @@ export const formChat = async (
 ) => {
   const formId = req.query.formId as string;
   const data = req.body as ChatRequest;
+  const useDraftConfig = req.query.draft === 'true';
 
   const conversationId = data.conversationId! || cuid();
 
@@ -119,15 +129,12 @@ export const formChat = async (
     text: data.query,
   });
 
-  const handleStream = (data: string) => {
-    if (data) {
-      streamData({
-        event: SSE_EVENT.answer,
-        data,
-        res,
-      });
-    }
-  };
+  const handleStream = (data: string, event: SSE_EVENT) =>
+    streamData({
+      event: event || SSE_EVENT.answer,
+      data,
+      res,
+    });
 
   const chatRes = await queryForm({
     input: data.query,
@@ -140,22 +147,44 @@ export const formChat = async (
     filters: data.filters,
     httpResponse: res,
     abortController: ctrl,
+    useDraftConfig,
   });
 
   const answerMsgId = cuid();
 
-  conversationManager.formtStatus = chatRes.isValid
-    ? FormStatus.COMPLETED
-    : FormStatus.IN_PROGRESS;
+  // conversationManager.formtStatus = chatRes.isValid
+  //   ? FormStatus.COMPLETED
+  //   : FormStatus.IN_PROGRESS;
 
   conversationManager.push({
     id: answerMsgId,
     from: MessageFrom.agent,
     text: chatRes.answer as string,
+    metadata: chatRes.metadata,
     sources: [],
   });
 
-  await conversationManager.save();
+  const c = await conversationManager.save();
+
+  if (chatRes.isValid && chatRes.values) {
+    const submissionId = c?.formSubmission?.id || cuid();
+
+    await prisma.formSubmission.upsert({
+      where: {
+        id: submissionId,
+      },
+      create: {
+        conversationId: c?.id,
+        formId: formId,
+        data: chatRes.values,
+        status: FormStatus.COMPLETED,
+      },
+      update: {
+        data: chatRes.values,
+        status: FormStatus.COMPLETED,
+      },
+    });
+  }
 
   if (data.streaming) {
     streamData({

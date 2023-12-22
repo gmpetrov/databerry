@@ -4,7 +4,6 @@ import {
   Agent,
   ConversationChannel,
   Datastore,
-  FormStatus,
   Message,
   ServiceProviderType,
   Tool,
@@ -29,6 +28,7 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   usage?: ChatResponse['usage'];
   approvals?: ChatResponse['approvals'];
   inputId?: string;
+  metadata?: Record<string, any>;
 };
 
 type ExternalConfig = {
@@ -50,7 +50,6 @@ export default class ConversationManager {
   channelExternalId?: string;
   channelCredentialsId?: string;
   formId?: string;
-  formtStatus?: FormStatus;
 
   constructor({
     organizationId,
@@ -206,11 +205,9 @@ export default class ConversationManager {
               },
             }
           : {}),
-        ...(this.formtStatus
-          ? {
-              formStatus: this.formtStatus,
-            }
-          : {}),
+      },
+      include: {
+        formSubmission: true,
       },
     });
 

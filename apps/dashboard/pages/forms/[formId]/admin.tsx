@@ -14,7 +14,6 @@ import {
   Checkbox,
   Divider,
   IconButton,
-  Input,
   Option,
   Select,
   Stack,
@@ -30,13 +29,19 @@ import cuid from 'cuid';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  useFieldArray,
+  useForm,
+} from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import z from 'zod';
 
 import AutoSaveForm from '@app/components/AutoSaveForm';
+import Input from '@app/components/Input';
 import Layout from '@app/components/Layout';
 import useChat from '@app/hooks/useChat';
 import { getProductFromHostname } from '@app/hooks/useProduct';
@@ -50,36 +55,16 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
-import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
+import {
+  CreateFormSchema,
+  FormConfigSchema,
+  FormFieldSchema,
+} from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Prisma } from '@chaindesk/prisma';
 
 import { isEmpty } from '..';
 interface FormDashboardProps {}
-
-type Field = {
-  id: string;
-  fieldName: string;
-  required: boolean;
-  choices?: string[];
-};
-
-const DynamicFeildsResolver = z.object({
-  dynamicFields: z.array(
-    z.object({
-      id: z.string(),
-      fieldName: z.string().min(5, 'fieldame must be longer than 5 characters'),
-      required: z.boolean(),
-      choices: z.optional(z.array(z.string())),
-    })
-  ),
-  introScreen: z
-    .object({
-      introText: z.string(),
-      ctaText: z.string(),
-    })
-    .optional(),
-});
 
 function FormDashboard(props: FormDashboardProps) {
   const [state, setState] = useStateReducer({
@@ -105,12 +90,10 @@ function FormDashboard(props: FormDashboardProps) {
     Prisma.PromiseReturnType<typeof publishForm>
   >(`/api/forms/${formId}/publish`, generateActionFetcher(HTTP_METHOD.POST));
 
-  const methods = useForm<{
-    dynamicFields: Field[];
-    introScreen: { introText: string; ctaText: string };
-  }>({
-    resolver: zodResolver(DynamicFeildsResolver),
+  const methods = useForm<FormConfigSchema>({
+    resolver: zodResolver(FormConfigSchema),
     defaultValues: {},
+    mode: 'onChange',
   });
   console.log(
     (getFormQuery.data?.publishedConfig as any)?.introScreen?.ctaText
@@ -126,11 +109,11 @@ function FormDashboard(props: FormDashboardProps) {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'dynamicFields',
+    name: 'fields',
   });
 
   const chatData = useChat({
-    endpoint: `/api/forms/${formId}/chat`,
+    endpoint: `/api/forms/${formId}/chat?draft=true`,
   });
 
   useEffect(() => {
@@ -141,7 +124,8 @@ function FormDashboard(props: FormDashboardProps) {
         (getFormQuery.data?.draftConfig as any)?.introScreen
       );
       append(
-        ((getFormQuery.data?.draftConfig as any)?.fields || []) as Field[]
+        ((getFormQuery.data?.draftConfig as any)?.fields ||
+          []) as FormConfigSchema['fields']
       );
       localStorage.setItem('conversationId', '');
     }
@@ -175,7 +159,7 @@ function FormDashboard(props: FormDashboardProps) {
     console.log('-------------', getValues('introScreen'));
     await updateFormMutation.trigger({
       draftConfig: {
-        fields: getValues('dynamicFields'),
+        fields: getValues('fields'),
         introScreen: getValues('introScreen'),
       },
     } as any);
@@ -188,6 +172,62 @@ function FormDashboard(props: FormDashboardProps) {
       'I am ready, to fill the form. prompt me with informations you need.'
     );
   };
+
+  console.log(
+    'chatData?.history[chatData.history.length - 1]',
+    chatData?.history[chatData.history.length - 1]
+  );
+
+  const fieldsValues = methods.watch('fields');
+
+  const Choices = useMemo(() => {
+    const Component = (props: { name: 'fields.0.choices' }) => {
+      const { fields, append, remove } = useFieldArray({
+        control,
+        name: props.name,
+      });
+
+      useEffect(() => {
+        if (fields.length === 0) {
+          append('');
+        }
+      }, [fields.length]);
+
+      return (
+        <Stack gap={1}>
+          <Stack gap={1}>
+            {fields?.map((field, i) => (
+              <Stack key={`${field.id}`} direction="row" gap={1}>
+                <Input
+                  size="sm"
+                  control={methods.control}
+                  endDecorator={
+                    <IconButton
+                      onClick={() => remove(i)}
+                      disabled={fields.length <= 1}
+                    >
+                      <CloseIcon fontSize="sm" />
+                    </IconButton>
+                  }
+                  {...register(`${props.name}.${i}`)}
+                />
+              </Stack>
+            ))}
+          </Stack>
+
+          <Button
+            size="sm"
+            onClick={() => append('')}
+            variant="plain"
+            sx={{ ml: 'auto' }}
+          >
+            Add Choice
+          </Button>
+        </Stack>
+      );
+    };
+    return Component;
+  }, []);
 
   return (
     <Box
@@ -292,33 +332,72 @@ function FormDashboard(props: FormDashboardProps) {
                       alignItems="center"
                       marginBottom={2}
                     >
-                      <Box sx={{ mx: 1, width: '100%' }}>
-                        <Input
-                          size="sm"
-                          key={field.id}
-                          defaultValue={field.fieldName}
-                          {...register(
-                            `dynamicFields.${index}.fieldName` as const
-                          )}
-                          endDecorator={
-                            <IconButton onClick={() => remove(index)}>
-                              <CloseIcon fontSize="sm" />
-                            </IconButton>
-                          }
-                        />
+                      <Stack
+                        direction={'column'}
+                        gap={1}
+                        sx={{ width: '100%' }}
+                      >
+                        <Stack sx={{ width: '100%' }} direction="row" gap={1}>
+                          <Controller
+                            name={`fields.${index}.type` as const}
+                            render={({
+                              field: { onChange, onBlur, value, name, ref },
+                              fieldState: {
+                                invalid,
+                                isTouched,
+                                isDirty,
+                                error,
+                              },
+                              formState,
+                            }) => (
+                              <Select
+                                value={value}
+                                onChange={(_, value) => {
+                                  onChange(value);
+                                }}
+                                sx={{ minWidth: '80px' }}
+                              >
+                                <Option value="text">text</Option>
+                                <Option value="multiple_choice">
+                                  mutliple choice
+                                </Option>
+                              </Select>
+                            )}
+                          ></Controller>
+                          <Input
+                            control={methods.control}
+                            sx={{ width: '100%' }}
+                            size="sm"
+                            key={field.id}
+                            defaultValue={field.name}
+                            {...register(`fields.${index}.name` as const)}
+                            endDecorator={
+                              <IconButton onClick={() => remove(index)}>
+                                <CloseIcon fontSize="sm" />
+                              </IconButton>
+                            }
+                          />
 
-                        {(
-                          getValues(`dynamicFields.${index}.choices`) || []
-                        ).map((choice, i) => (
-                          <Chip key={i}>{choice}</Chip>
-                        ))}
-                      </Box>
-                      <Checkbox
+                          {/* {(getValues(`fields.${index}.choices`) || []).map(
+                            (choice, i) => (
+                              <Chip key={i}>{choice}</Chip>
+                            )
+                          )} */}
+                        </Stack>
+
+                        {fieldsValues?.[index]?.type === 'multiple_choice' && (
+                          <Stack sx={{ px: 2 }}>
+                            <Choices name={`fields.${index}.choices` as any} />
+                          </Stack>
+                        )}
+                      </Stack>
+                      {/* <Checkbox
+                        defaultChecked={true}
                         size="sm"
                         {...register(
-                          `dynamicFields.${index}.required` as const
+                          `fields.${index}.required` as const
                         )}
-                      />
+                      /> */}
                     </Box>
                   ))}
                   <Typography
@@ -333,9 +412,10 @@ function FormDashboard(props: FormDashboardProps) {
                     startDecorator={<AddIcon fontSize="sm" />}
                     onClick={() => {
                       append({
-                        fieldName: '',
+                        name: '',
                         id: cuid(),
-                        required: false,
+                        required: true,
+                        type: 'text',
                       });
                       trigger();
                     }}
@@ -360,7 +440,10 @@ function FormDashboard(props: FormDashboardProps) {
                   </Box>
                   <Box>
                     <Typography level="body-sm">Call to action</Typography>
-                    <Input {...register('introScreen.ctaText')} />
+                    <Input
+                      control={methods.control}
+                      {...register('introScreen.ctaText')}
+                    />
                   </Box>
                 </Stack>
               </Stack>
@@ -387,15 +470,27 @@ function FormDashboard(props: FormDashboardProps) {
                       {chatData.history.length > 0 &&
                         chatData?.history[chatData.history.length - 1].from ===
                           'agent' && (
-                          <Typography
-                            level="title-lg"
-                            sx={{ maxWidth: '600px' }}
-                          >
-                            {
-                              chatData?.history[chatData.history.length - 1]
-                                .message
-                            }
-                          </Typography>
+                          <Stack>
+                            <Typography
+                              level="title-lg"
+                              sx={{ maxWidth: '600px' }}
+                            >
+                              {
+                                chatData?.history[chatData.history.length - 1]
+                                  .message
+                              }
+                            </Typography>
+
+                            {chatData?.history[chatData.history.length - 1]
+                              .metadata?.currentField && (
+                              <Chip>
+                                {
+                                  chatData?.history[chatData.history.length - 1]
+                                    .metadata?.currentField
+                                }
+                              </Chip>
+                            )}
+                          </Stack>
                         )}
                       {chatData.isStreaming && (
                         <span className="inline-block w-0.5 h-4 bg-current animate-typewriterCursor"></span>

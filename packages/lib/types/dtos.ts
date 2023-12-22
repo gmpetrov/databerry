@@ -450,28 +450,44 @@ export const ConversationMetadataSlack = z.object({
 export type ConversationMetadataSlack = z.infer<
   typeof ConversationMetadataSlack
 >;
+export const FormFieldBaseSchema = z.object({
+  id: z.string(),
+  required: z.boolean().default(true),
+  name: z.string().min(3),
+});
+export const FormFieldSchema = z.discriminatedUnion('type', [
+  FormFieldBaseSchema.extend({
+    type: z.literal('text'),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('multiple_choice'),
+    choices: z.array(z.string()).min(1),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('file'),
+    fileUrl: z.string().optional(),
+  }),
+]);
+export type FormFieldSchema = z.infer<typeof FormFieldSchema>;
+
+export const FormConfigSchema = z.object({
+  fields: z.array(FormFieldSchema),
+  introScreen: z
+    .object({
+      introText: z.string(),
+      ctaText: z.string(),
+    })
+    .optional(),
+  schema: z.any(),
+});
+export type FormConfigSchema = z.infer<typeof FormConfigSchema>;
+
 export const CreateFormSchema = z.object({
   id: z.string().optional(),
   name: z.string(),
   datastoreId: z.string().optional(),
-  draftConfig: z
-    .object({
-      fields: z.array(
-        z.object({
-          id: z.union([z.string(), z.number()]).optional(),
-          fieldName: z.string().min(5),
-          required: z.boolean().optional(),
-        })
-      ),
-      introScreen: z
-        .object({
-          introText: z.string(),
-          ctaText: z.string(),
-        })
-        .optional(),
-    })
-    .optional(),
-  publishedConfig: z.record(z.any()).optional(),
+  draftConfig: FormConfigSchema,
+  publishedConfig: FormConfigSchema.optional(),
 });
 export type CreateFormSchema = z.infer<typeof CreateFormSchema>;
 
