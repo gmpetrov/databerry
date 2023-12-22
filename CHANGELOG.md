@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.126"></a>
+## 0.1.126 (2023-12-22)
+
+### Miscellaneous
+
+-  Feature/http tool ([#282](https://github.com/gmpetrov/databerry/issues/282)) [[2c15076](https://github.com/gmpetrov/databerry/commit/2c15076d3a76a7fd62f2b1abfa8d8fd2c12a9285)]
+
+
 <a name="0.1.125"></a>
 ## 0.1.125 (2023-12-19)
 
