@@ -149,7 +149,7 @@ For reference, the current schema is: ${JSON.stringify(
       // let completion = {} as ChatCompletionMessage;
       let currentField = '';
 
-      const re = /__BLABLA_FIELD_NAME__:?\s?(\w+)/;
+      const re = /__BLABLA_FIELD_NAME__:?\s?(.*)/;
       currentField = answer?.match(re)?.[1]?.trim?.() || '';
       if (!schema?.properties?.[currentField]) {
         console.log('field name not found in schema: ', currentField);
