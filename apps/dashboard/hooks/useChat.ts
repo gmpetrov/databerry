@@ -369,7 +369,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                 history: h as any,
               });
             } else if (event.event === SSE_EVENT.metadata) {
-              bufferMetadata += event.data as string;
+              bufferMetadata += decodeURIComponent(event.data) as string;
             } else if (event.event === SSE_EVENT.tool_call) {
               bufferToolCall += event.data as string;
 

@@ -1,7 +1,9 @@
 import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
+import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import FeedRoundedIcon from '@mui/icons-material/FeedRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -58,7 +60,7 @@ function NavigationLink(props: {
   target?: string;
   active?: boolean;
   icon?: React.ReactNode;
-  label?: string;
+  label?: string | React.ReactElement;
   isExperimental?: boolean;
 }) {
   return (
@@ -219,12 +221,6 @@ export default function Navigation() {
       ...(product === 'chaindesk'
         ? [
             {
-              label: 'Conversational Forms',
-              route: RouteNames.FORMS,
-              icon: <InboxRoundedIcon fontSize="md" />,
-              active: router.route === RouteNames.FORMS,
-            },
-            {
               label: 'Inbox',
               route: RouteNames.LOGS,
               icon: (
@@ -253,6 +249,25 @@ export default function Navigation() {
               route: RouteNames.DATASTORES,
               icon: <StorageRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.DATASTORES),
+            },
+            {
+              label: (
+                <Typography
+                // endDecorator={
+                //   <Chip
+                //     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+                //     size="sm"
+                //   >
+                //     new
+                //   </Chip>
+                // }
+                >
+                  Forms
+                </Typography>
+              ),
+              route: RouteNames.FORMS,
+              icon: <FeedRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.FORMS),
             },
             // {
             //   label: 'Analytics',
@@ -430,17 +445,17 @@ export default function Navigation() {
                         sx={{ width: '100%' }}
                         color="neutral"
                         variant="soft"
-                        endDecorator={
-                          <Chip
-                            className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
-                            size="sm"
-                            sx={{
-                              color: 'white',
-                            }}
-                          >
-                            new
-                          </Chip>
-                        }
+                        // endDecorator={
+                        //   <Chip
+                        //     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+                        //     size="sm"
+                        //     sx={{
+                        //       color: 'white',
+                        //     }}
+                        //   >
+                        //     new
+                        //   </Chip>
+                        // }
                       >
                         Search Assistant
                       </Button>

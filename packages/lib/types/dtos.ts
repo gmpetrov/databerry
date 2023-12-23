@@ -453,7 +453,7 @@ export type ConversationMetadataSlack = z.infer<
 export const FormFieldBaseSchema = z.object({
   id: z.string(),
   required: z.boolean().default(true),
-  name: z.string().min(3),
+  name: z.string().toLowerCase().trim().min(3),
 });
 export const FormFieldSchema = z.discriminatedUnion('type', [
   FormFieldBaseSchema.extend({
@@ -461,7 +461,7 @@ export const FormFieldSchema = z.discriminatedUnion('type', [
   }),
   FormFieldBaseSchema.extend({
     type: z.literal('multiple_choice'),
-    choices: z.array(z.string()).min(1),
+    choices: z.array(z.string().min(1)).min(1),
   }),
   FormFieldBaseSchema.extend({
     type: z.literal('file'),
@@ -471,11 +471,36 @@ export const FormFieldSchema = z.discriminatedUnion('type', [
 export type FormFieldSchema = z.infer<typeof FormFieldSchema>;
 
 export const FormConfigSchema = z.object({
-  fields: z.array(FormFieldSchema),
+  fields: z.array(FormFieldSchema).superRefine(
+    (vals, ctx) => {
+      const unique = new Set();
+      for (const [i, val] of vals.entries()) {
+        if (unique.has(val?.name?.toLowerCase?.())) {
+          ctx.addIssue({
+            code: 'custom',
+            message: 'Field names must be unique',
+            path: [`${i}`, 'name'],
+          });
+        }
+        unique.add(val?.name?.toLowerCase?.());
+      }
+
+      // return unique.size === vals.length;
+    }
+    // {
+    //   message: 'Field names must be unique',
+    //   path: ['0', 'name'],
+    // }
+  ),
   introScreen: z
     .object({
       introText: z.string(),
       ctaText: z.string(),
+    })
+    .optional(),
+  webhook: z
+    .object({
+      url: z.union([z.string().url().nullish(), z.literal('')]),
     })
     .optional(),
   schema: z.any(),

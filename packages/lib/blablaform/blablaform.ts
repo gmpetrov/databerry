@@ -57,7 +57,10 @@ export class BlaBlaForm {
 ${systemPrompt}\n
 Use the language specified by ${locale}. 
 While optional fields can be omitted by the user, ensure you do not request or accept any information beyond what's defined in the schema.
-For each questions, in order to keep track of the current field, finish your sentence with __BLABLA_FIELD_NAME__: field name as defined in the schema.
+For each questions, in order to keep track of the current field, finish your sentence with __BLABLA_FIELD__: field name as defined in the schema.
+
+Example with a field named firstname: What is yout firstname __BLABLA_FIELD__: firstname
+
 For reference, the current schema is: ${JSON.stringify(
       this.schema.properties
     )}`;
@@ -124,19 +127,22 @@ For reference, the current schema is: ${JSON.stringify(
     } as ChatCompletionCreateParamsBase;
 
     if (isStreamEnabled) {
-      const needle = '__BLABLA_FIELD_NAME__';
+      const needle = '__BLABLA_FIELD__';
 
       let buffer = '';
       let stop = false;
       const handleStream = (chunk: string) => {
         buffer += chunk;
-        if (!stop && partiallyIncludes(buffer, needle)) {
-          if (buffer.includes(needle)) {
-            stop = true;
+
+        if (!stop) {
+          if (partiallyIncludes(buffer, needle)) {
+            if (buffer.includes(needle)) {
+              stop = true;
+            }
+          } else {
+            handleLLMNewToken?.(buffer);
+            buffer = '';
           }
-        } else {
-          handleLLMNewToken?.(buffer);
-          buffer = '';
         }
       };
 
@@ -149,7 +155,7 @@ For reference, the current schema is: ${JSON.stringify(
       // let completion = {} as ChatCompletionMessage;
       let currentField = '';
 
-      const re = /__BLABLA_FIELD_NAME__:?\s?(.*)/;
+      const re = /__BLABLA_FIELD__:?\s?(.*)/;
       currentField = answer?.match(re)?.[1]?.trim?.() || '';
       if (!schema?.properties?.[currentField]) {
         console.log('field name not found in schema: ', currentField);
@@ -158,8 +164,11 @@ For reference, the current schema is: ${JSON.stringify(
 
       console.log('currentField', currentField);
 
-      if (currentField) {
-        (handleLLMNewToken as any)?.(currentField, SSE_EVENT.metadata);
+      if (currentField || isValid) {
+        (handleLLMNewToken as any)?.(
+          JSON.stringify({ currentField, isValid }),
+          SSE_EVENT.metadata
+        );
       }
 
       return {

@@ -9,7 +9,7 @@ import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
 import { AppNextApiRequest, SSE_EVENT } from '@chaindesk/lib/types';
-import { ChatRequest } from '@chaindesk/lib/types/dtos';
+import { ChatRequest, FormConfigSchema } from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
 import {
   ConversationChannel,
@@ -94,6 +94,7 @@ export const formChat = async (
       id: conversationId,
     },
     include: {
+      form: true,
       messages: {
         // take: -10,
         orderBy: {
@@ -169,7 +170,7 @@ export const formChat = async (
   if (chatRes.isValid && chatRes.values) {
     const submissionId = c?.formSubmission?.id || cuid();
 
-    await prisma.formSubmission.upsert({
+    const submission = await prisma.formSubmission.upsert({
       where: {
         id: submissionId,
       },
@@ -184,6 +185,22 @@ export const formChat = async (
         status: FormStatus.COMPLETED,
       },
     });
+
+    const webhookUrl = (conversation?.form?.publishedConfig as FormConfigSchema)
+      ?.webhook?.url;
+    if (webhookUrl) {
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(submission),
+        });
+      } catch (e) {
+        console.log('error', e);
+      }
+    }
   }
 
   if (data.streaming) {
