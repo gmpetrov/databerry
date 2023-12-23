@@ -137,6 +137,7 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
       mime_type: z.string(),
       fileSize: z.number().optional(),
       fileUploadPath: z.string().optional(),
+      fileDuration: z.number().optional(),
     }),
   }),
   DatasourceBaseSchema.extend({
@@ -194,6 +195,7 @@ export type DatasourceSchema = z.infer<typeof DatasourceSchema>;
 export type DatasourceNotion = Extract<DatasourceSchema, { type: 'notion' }>;
 export type DatasourceQA = Extract<DatasourceSchema, { type: 'qa' }>;
 export type DatasourceFile = Extract<DatasourceSchema, { type: 'file' }>;
+export type DatasourceAudio = Extract<DatasourceSchema, { type: 'audio' }>;
 export type DatasourceText = Extract<DatasourceSchema, { type: 'text' }>;
 export type DatasourceWebPage = Extract<DatasourceSchema, { type: 'web_page' }>;
 export type DatasourceWebSite = Extract<DatasourceSchema, { type: 'web_site' }>;

@@ -238,6 +238,22 @@ const nextConfig = {
       new CopyWebpackPlugin({
         patterns: [
           {
+            from: path.resolve(__dirname, '../../packages/lib/ffmpeg/index.js'),
+            to: path.resolve(
+              __dirname,
+              '../../packages/lib/node_modules/fluent-ffmpeg'
+            ),
+            toType: 'dir',
+            force: true, // Overwrite the existing index.js
+          },
+        ],
+      })
+    );
+
+    config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
             from: '../../packages/integrations/**/static/**',
             to({ context, absoluteFilename }) {
               // Adds compatibility for windows path
@@ -262,6 +278,15 @@ const nextConfig = {
                 `${context}/public/integrations/${appName[1]}/[name][ext]`
               );
             },
+          },
+          {
+            from: path.resolve(__dirname, '../../packages/lib/ffmpeg/index.js'),
+            to: path.resolve(
+              __dirname,
+              '../../packages/lib/node_modules/fluent-ffmpeg'
+            ),
+            toType: 'dir',
+            force: true, // Overwrite the existing index.js
           },
         ],
       })

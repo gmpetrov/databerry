@@ -31,7 +31,7 @@ const options: DatsourceOption[] = [
     isPremium: true,
   },
   {
-    type: 'google_drive_folder' as any,
+    type: DatasourceType.google_drive_folder,
     label: 'Google Drive™',
     description: 'Talk to your Google Drive files',
     isPremium: true,
@@ -47,7 +47,7 @@ const options: DatsourceOption[] = [
     isPremium: true,
   },
   {
-    type: 'notion' as any,
+    type: DatasourceType.notion,
     label: 'Notion',
     description: 'Connect your Notion workspace',
     icon: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg',
@@ -61,9 +61,10 @@ const options: DatsourceOption[] = [
     icon: undefined,
   },
   {
-    type: 'file' as any,
+    type: DatasourceType.file,
     label: 'File',
-    description: 'It can be: PDF, CSV, JSON, Text, PowerPoint, Word, Excel',
+    description:
+      'It can be: PDF, CSV, JSON, Text, PowerPoint, Word, Excel, Audio',
     disabled: false,
   },
   {

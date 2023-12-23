@@ -17,17 +17,23 @@ type Props = {};
 function DatasourceTagsInput({}: Props) {
   const { control, register } = useFormContext<DatasourceSchema>();
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      name: 'config.tags',
-    }
-  );
+  const { fields, append, prepend, remove } = useFieldArray({
+    name: 'config.tags',
+  });
 
   useEffect(() => {
     if (fields.length === 0) {
       append('');
     }
   }, [fields]);
+
+  const handleClear = (index: number) => {
+    if (Object.keys(fields[index]).length === 1) {
+      return; // empty field.
+    } else {
+      remove(index);
+    }
+  };
 
   return (
     <FormControl>
@@ -48,7 +54,7 @@ function DatasourceTagsInput({}: Props) {
                   variant="plain"
                   color="danger"
                   size="sm"
-                  onClick={() => remove(index)}
+                  onClick={() => handleClear(index)}
                 >
                   <CloseRoundedIcon />
                 </IconButton>

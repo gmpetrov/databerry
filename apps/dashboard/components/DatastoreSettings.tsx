@@ -33,6 +33,7 @@ import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { createDatastore } from '@app/pages/api/datastores';
 import { updateDatastore } from '@app/pages/api/datastores/[id]';
+import uploadToS3Bucket from '@app/utils/aws/upload-to-s3';
 
 import getDatastoreS3Url from '@chaindesk/lib/get-datastore-s3-url';
 import getRootDomain from '@chaindesk/lib/get-root-domain';
@@ -87,19 +88,10 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 
       const fileName = `plugin-icon.${mime.extension(file.type)}`;
 
-      // upload text from file to AWS
-      const uploadLinkRes = await axios.post(
-        `/api/datastores/${datastore?.id}/generate-upload-link`,
-        {
-          fileName,
-          type: file.type,
-        } as GenerateUploadLinkRequest
-      );
-
-      await axios.put(uploadLinkRes.data, file, {
-        headers: {
-          'Content-Type': file.type,
-        },
+      await uploadToS3Bucket({
+        generatorUrl: `/api/datastores/${datastore?.id}/generate-upload-link`,
+        fileName,
+        file,
       });
 
       const pluginIconUrl = `${getDatastoreS3Url(datastore?.id!)}/${fileName}`;
