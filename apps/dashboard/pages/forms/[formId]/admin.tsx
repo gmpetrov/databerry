@@ -9,7 +9,16 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
+import LooksOneRoundedIcon from '@mui/icons-material/LooksOneRounded';
+import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
 import {
+  Accordion,
+  AccordionDetails,
+  accordionDetailsClasses,
+  AccordionGroup,
+  AccordionSummary,
+  accordionSummaryClasses,
   Alert,
   Box,
   Button,
@@ -43,6 +52,7 @@ import {
   FormProvider,
   useFieldArray,
   useForm,
+  useFormContext,
 } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
@@ -86,6 +96,7 @@ function FormDashboard(props: FormDashboardProps) {
     isConversationStarted: false,
     isFormCompleted: false,
     isPublishable: false,
+    currentAccordionIndex: 0 as number | null,
   });
 
   const router = useRouter();
@@ -134,12 +145,6 @@ function FormDashboard(props: FormDashboardProps) {
   });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(LOCAL_STORAGE_CONVERSATION_KEY, '');
-    }
-  }, []);
-
-  useEffect(() => {
     methods.reset({
       ...(getFormQuery.data?.draftConfig as any),
     });
@@ -177,7 +182,7 @@ function FormDashboard(props: FormDashboardProps) {
           error: 'Something went wrong',
         },
         {
-          position: 'bottom-right',
+          position: 'top-center',
         }
       );
     }, 1000),
@@ -185,15 +190,24 @@ function FormDashboard(props: FormDashboardProps) {
   );
 
   const { watch, formState, handleSubmit } = methods;
+  // const fieldArray = watch('fields');
 
-  useEffect(() => {
-    const subscription = watch(() => {
-      if (formState.isDirty) {
-        handleSubmit(onSubmit)();
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [formState.isDirty, handleSubmit, onSubmit]);
+  // console.log(
+  //   'FIELDARRAY',
+  //   fieldArray?.length,
+  //   formState.isDirty,
+  //   formState.isValid
+  // );
+
+  // useEffect(() => {
+  //   const subscription = watch(() => {
+  //     console.log('calllled---------------->');
+  //     if (formState.isDirty) {
+  //       handleSubmit(onSubmit)();
+  //     }
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [formState.isDirty, fieldArray?.length, watch, handleSubmit, onSubmit]);
 
   const values = watch();
   const currentFieldName =
@@ -205,6 +219,7 @@ function FormDashboard(props: FormDashboardProps) {
 
   const Choices = useMemo(() => {
     const Component = (props: { name: 'fields.0.choices' }) => {
+      const { control } = useFormContext();
       const { fields, append, remove } = useFieldArray({
         control,
         name: props.name,
@@ -220,13 +235,16 @@ function FormDashboard(props: FormDashboardProps) {
         <Stack gap={1}>
           <Stack gap={1}>
             {fields?.map((field, i) => (
-              <Stack key={`${field.id}`} direction="row" gap={1}>
+              <Stack key={field.id} direction="row" gap={1}>
                 <Input
                   size="sm"
                   control={methods.control}
                   endDecorator={
                     <IconButton
-                      onClick={() => remove(i)}
+                      onClick={() => {
+                        remove(i);
+                        handleSubmit(onSubmit)(); // TODO find why remove does not trigger form submission (add does)
+                      }}
                       disabled={fields.length <= 1}
                     >
                       <CloseIcon fontSize="sm" />
@@ -276,69 +294,163 @@ function FormDashboard(props: FormDashboardProps) {
         flexDirection: 'column',
         minWidth: 0,
         width: '100%',
+        height: '100%',
         gap: 1,
       })}
     >
-      <Stack direction={'row'} gap={2} alignItems={'center'}>
-        <Tabs
-          aria-label="tabs"
-          // defaultValue={'settings'}
-          value={(router.query.tab as string) || 'settings'}
-          size="md"
+      <Tabs
+        aria-label="tabs"
+        // defaultValue={'settings'}
+        value={(router.query.tab as string) || 'settings'}
+        size="md"
+        sx={{
+          bgcolor: 'transparent',
+          width: '100%',
+          height: '100%',
+        }}
+        onChange={(_, value) => {
+          handleChangeTab(value as string);
+        }}
+      >
+        <TabList
+          size="sm"
+          disableUnderline
+          // sx={{
+          //   [`&& .${tabClasses.root}`]: {
+          //     flex: 'initial',
+          //     bgcolor: 'transparent',
+          //     '&:hover': {
+          //       bgcolor: 'transparent',
+          //     },
+          // [`&.${tabClasses.selected}`]: {
+          //   color: 'primary.plainColor',
+          //   '&::after': {
+          //     height: '3px',
+          //     borderTopLeftRadius: '3px',
+          //     borderTopRightRadius: '3px',
+          //     bgcolor: 'primary.500',
+          //   },
+          // },
+          //   },
+          // }}
+
           sx={{
-            bgcolor: 'transparent',
-            width: '100%',
-          }}
-          onChange={(_, value) => {
-            handleChangeTab(value as string);
+            p: 0.7,
+            gap: 0.5,
+            borderRadius: 'xl',
+            bgcolor: 'background.level1',
+            [`& .${tabClasses.root}[aria-selected="true"]`]: {
+              boxShadow: 'sm',
+              bgcolor: 'background.surface',
+              '&::after': {
+                height: '0px',
+                width: '0px',
+              },
+            },
           }}
         >
-          <TabList
-            size="sm"
-            sx={{
-              [`&& .${tabClasses.root}`]: {
-                flex: 'initial',
-                bgcolor: 'transparent',
-                '&:hover': {
-                  bgcolor: 'transparent',
-                },
-                [`&.${tabClasses.selected}`]: {
-                  color: 'primary.plainColor',
-                  '&::after': {
-                    height: '3px',
-                    borderTopLeftRadius: '3px',
-                    borderTopRightRadius: '3px',
-                    bgcolor: 'primary.500',
-                  },
-                },
-              },
-            }}
-          >
-            <Tab indicatorInset value={'settings'}>
-              Settings
-            </Tab>
-            <Tab indicatorInset value={'submissions'}>
-              Submissions
-            </Tab>
-          </TabList>
+          <Tab indicatorInset value={'settings'}>
+            Settings
+          </Tab>
+          <Tab indicatorInset value={'submissions'}>
+            Submissions
+          </Tab>
+        </TabList>
 
-          <TabPanel value={'preview'}>Preview</TabPanel>
+        <TabPanel value={'preview'}>Preview</TabPanel>
 
-          <TabPanel value={'settings'}>
-            <FormProvider {...methods}>
-              <Card
-                component={'form'}
-                onSubmit={methods.handleSubmit(onSubmit)}
-              >
-                <Stack direction="row" gap={3}>
-                  {/* start */}
-                  <Stack width="35%" gap={4}>
-                    <Stack gap={1}>
-                      <Typography level="title-md">Form Fields</Typography>
-                      <Alert startDecorator={<InfoRoundedIcon />}>
-                        {`Field names have an impact on context understanding for
+        <TabPanel
+          value={'settings'}
+          sx={{
+            height: '100%',
+          }}
+        >
+          <FormProvider {...methods}>
+            <Card
+              component={'form'}
+              sx={{ height: '100%' }}
+              onSubmit={methods.handleSubmit(onSubmit)}
+              onChange={() => {
+                if (formState.isDirty) {
+                  handleSubmit(onSubmit)();
+                }
+              }}
+            >
+              <Stack direction="row" gap={3} sx={{ height: '100%' }}>
+                {/* start */}
+                <AccordionGroup
+                  disableDivider
+                  size="lg"
+                  transition="0.2s ease"
+                  // variant="outlined"
+                  sx={{
+                    width: '35%',
+                    borderRadius: 'lg',
+                    [`& .${accordionSummaryClasses.button}:hover`]: {
+                      bgcolor: 'transparent',
+                    },
+                    [`& .${accordionDetailsClasses.content}`]: {
+                      boxShadow: (theme) =>
+                        `inset 0 1px ${theme.vars.palette.divider}`,
+                      [`&.${accordionDetailsClasses.expanded}`]: {
+                        paddingBlock: '0.75rem',
+                      },
+                    },
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <Accordion
+                    expanded={state.currentAccordionIndex === 0}
+                    onChange={(event, expanded) => {
+                      setState({
+                        currentAccordionIndex: expanded ? 0 : null,
+                      });
+                    }}
+                  >
+                    <AccordionSummary>
+                      <Typography startDecorator={<LooksOneRoundedIcon />}>
+                        Welcome Screen
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Stack gap={2}>
+                        <FormControl>
+                          <FormLabel>Intoduce the form.</FormLabel>
+                          <Textarea
+                            minRows={2}
+                            maxRows={4}
+                            {...register('introScreen.introText')}
+                          />
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel>Call to action</FormLabel>
+                          <Input
+                            control={methods.control}
+                            {...register('introScreen.ctaText')}
+                          />
+                        </FormControl>
+                      </Stack>
+                    </AccordionDetails>
+                  </Accordion>
+
+                  <Accordion
+                    expanded={state.currentAccordionIndex === 1}
+                    onChange={(event, expanded) => {
+                      setState({
+                        currentAccordionIndex: expanded ? 1 : null,
+                      });
+                    }}
+                  >
+                    <AccordionSummary>
+                      <Typography startDecorator={<LooksTwoRoundedIcon />}>
+                        Form Fields
+                      </Typography>
+                    </AccordionSummary>
+                    {/* <Alert startDecorator={<InfoRoundedIcon />}>
+                          {`Field names have an impact on context understanding for
                       the AI`}
-                      </Alert>
+                        </Alert> */}
+                    <AccordionDetails>
                       <Stack gap={2}>
                         {fields?.map((field, index) => (
                           <Box
@@ -399,7 +511,12 @@ function FormDashboard(props: FormDashboardProps) {
                                   placeholder="e.g. email"
                                   {...register(`fields.${index}.name` as const)}
                                   endDecorator={
-                                    <IconButton onClick={() => remove(index)}>
+                                    <IconButton
+                                      onClick={() => {
+                                        remove(index);
+                                        handleSubmit(onSubmit)();
+                                      }}
+                                    >
                                       <CloseIcon fontSize="sm" />
                                     </IconButton>
                                   }
@@ -421,6 +538,7 @@ function FormDashboard(props: FormDashboardProps) {
                                 </Stack>
                               )}
                             </Stack>
+
                             {/* <Checkbox
                         defaultChecked={true}
                         size="sm"
@@ -459,57 +577,52 @@ function FormDashboard(props: FormDashboardProps) {
                           />
                         )} */}
                       </Stack>
-                    </Stack>
+                    </AccordionDetails>
+                  </Accordion>
 
-                    <Divider />
+                  <Accordion
+                    expanded={state.currentAccordionIndex === 2}
+                    onChange={(event, expanded) => {
+                      setState({
+                        currentAccordionIndex: expanded ? 2 : null,
+                      });
+                    }}
+                  >
+                    <AccordionSummary>
+                      <Typography startDecorator={<Looks3RoundedIcon />}>
+                        Webhook
+                      </Typography>
+                    </AccordionSummary>
 
-                    <Stack gap={2}>
-                      <Typography level="title-md">Welcome Screen</Typography>
+                    <AccordionDetails>
                       <FormControl>
-                        <FormLabel>Intoduce the form.</FormLabel>
-                        <Textarea
-                          minRows={2}
-                          maxRows={4}
-                          {...register('introScreen.introText')}
-                        />
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel>Call to action</FormLabel>
+                        <FormLabel>Url</FormLabel>
                         <Input
                           control={methods.control}
-                          {...register('introScreen.ctaText')}
+                          placeholder="https://example.com/api/webhook"
+                          {...register('webhook.url')}
                         />
+                        <FormHelperText>
+                          Send form submission to the provided endpoint with a
+                          HTTP POST request
+                        </FormHelperText>
                       </FormControl>
-                    </Stack>
+                    </AccordionDetails>
+                  </Accordion>
+                </AccordionGroup>
 
-                    <Divider />
-
-                    <FormControl>
-                      <FormLabel>Webhook</FormLabel>
-                      <Input
-                        control={methods.control}
-                        placeholder="https://example.com/api/webhook"
-                        {...register('webhook.url')}
-                      />
-                      <FormHelperText>
-                        Send form submission to the provided endpoint with a
-                        HTTP POST request
-                      </FormHelperText>
-                    </FormControl>
-                  </Stack>
-
-                  <Stack sx={{ width: '100%' }} gap={1}>
-                    <Button
-                      variant="solid"
-                      color="primary"
-                      // disabled={!state.isPublishable}
-                      startDecorator={<RocketLaunch />}
-                      onClick={handlePublish}
-                      sx={{ ml: 'auto' }}
-                    >
-                      Publish Form
-                    </Button>
-                    {/* {
+                <Stack sx={{ width: '100%' }} gap={1}>
+                  <Button
+                    variant="solid"
+                    color="primary"
+                    // disabled={!state.isPublishable}
+                    startDecorator={<RocketLaunch />}
+                    onClick={handlePublish}
+                    sx={{ ml: 'auto' }}
+                  >
+                    Publish Form
+                  </Button>
+                  {/* {
                     (!isEmpty(getFormQuery.data?.publishedConfig) ||
                       !isEmpty(getFormQuery.data?.draftConfig)) && (
                       <Button
@@ -524,37 +637,35 @@ function FormDashboard(props: FormDashboardProps) {
                       </Button>
                     )} */}
 
-                    <Stack
-                      sx={(t) => ({
-                        border: '1px solid',
-                        borderRadius: t.radius.md,
-                        borderColor: t.palette.divider,
-                        width: '100%',
-                        height: '100%',
-                      })}
-                    >
-                      <BlablaFormViewer
-                        formId={formId}
-                        config={{
-                          fields: values?.fields,
-                          introScreen: values?.introScreen,
-                          webhook: values?.webhook,
-                          schema: (getFormQuery.data?.draftConfig as any)
-                            ?.schema,
-                        }}
-                      />
-                    </Stack>
+                  <Stack
+                    sx={(t) => ({
+                      border: '1px solid',
+                      borderRadius: t.radius.md,
+                      borderColor: t.palette.divider,
+                      width: '100%',
+                      height: '100%',
+                    })}
+                  >
+                    <BlablaFormViewer
+                      formId={formId}
+                      config={{
+                        fields: values?.fields,
+                        introScreen: values?.introScreen,
+                        webhook: values?.webhook,
+                        schema: (getFormQuery.data?.draftConfig as any)?.schema,
+                      }}
+                    />
                   </Stack>
                 </Stack>
-              </Card>
-            </FormProvider>
-          </TabPanel>
+              </Stack>
+            </Card>
+          </FormProvider>
+        </TabPanel>
 
-          <TabPanel value="submissions">
-            {formId && <FormSubmissionsTab formId={formId} />}
-          </TabPanel>
-        </Tabs>
-      </Stack>
+        <TabPanel value="submissions">
+          {formId && <FormSubmissionsTab formId={formId} />}
+        </TabPanel>
+      </Tabs>
     </Box>
   );
 }

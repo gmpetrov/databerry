@@ -131,7 +131,7 @@ For reference, the current schema is: ${JSON.stringify(
 
       let buffer = '';
       let stop = false;
-      const handleStream = (chunk: string) => {
+      const handleStream = (chunk: string, event?: any) => {
         buffer += chunk;
 
         if (!stop) {
@@ -140,7 +140,7 @@ For reference, the current schema is: ${JSON.stringify(
               stop = true;
             }
           } else {
-            handleLLMNewToken?.(buffer);
+            (handleLLMNewToken as any)?.(buffer, event);
             buffer = '';
           }
         }

@@ -21,6 +21,7 @@ import {
   FormHelperText,
   FormLabel,
   IconButton,
+  Input,
   Option,
   Select,
   Stack,
@@ -35,6 +36,7 @@ import {
 } from '@mui/joy';
 import Chip from '@mui/joy/Chip';
 import cuid from 'cuid';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import debounce from 'p-debounce';
@@ -52,7 +54,6 @@ import z from 'zod';
 
 import AutoSaveForm from '@app/components/AutoSaveForm';
 import FormSubmissionsTab from '@app/components/FormSubmissionsTab';
-import Input from '@app/components/Input';
 import Layout from '@app/components/Layout';
 import useChat from '@app/hooks/useChat';
 import useConfetti from '@app/hooks/useConfetti';
@@ -88,10 +89,19 @@ type Props = {
 const FormButton = styled(Button)(({ theme }) => ({
   borderRadius: '100px',
   fontSize: '2rem',
-  transition: 'all 0.15s ease-in-out',
+  fontWeight: '400',
+  transition: 'transform 0.15s ease-in-out',
   '&:hover': {
     transform: 'scale(1.05) !important',
   },
+}));
+
+const FormText = styled(Typography)(({ theme }) => ({
+  wordWrap: 'break-word',
+  whiteSpace: 'normal',
+  textAlign: 'left',
+  transition: 'all 1s ease-in-out',
+  fontWeight: '600',
 }));
 
 export const LOCAL_STORAGE_CONVERSATION_KEY = 'formConversationId';
@@ -131,6 +141,12 @@ function BlablaFormViewer({ formId, config }: Props) {
   const lastMessage = chatData?.history[chatData.history.length - 1];
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LOCAL_STORAGE_CONVERSATION_KEY, '');
+    }
+  }, []);
+
+  useEffect(() => {
     if (lastMessage?.metadata?.isValid) {
       triggerConfetti();
     }
@@ -144,7 +160,15 @@ function BlablaFormViewer({ formId, config }: Props) {
       alignItems="center"
       justifyContent="center"
       textAlign={'center'}
-      sx={{ p: 4 }}
+      // component={motion.div}
+
+      sx={{
+        p: 4,
+        '*': {
+          // fontFamily: 'Bricolage Grotesque',
+          fontFamily: 'Lato',
+        },
+      }}
     >
       {!config ? (
         <>
@@ -174,25 +198,50 @@ function BlablaFormViewer({ formId, config }: Props) {
               </span>
             )}
 
-            {chatData.history.length > 0 && lastMessage.from === 'agent' && (
-              <Typography
-                level="h1"
-                // maxWidth="600px"
-                sx={{
-                  wordWrap: 'break-word',
-                  whiteSpace: 'normal',
-                  textAlign: 'left',
-                  opacity: chatData.isStreaming ? 1 : 0.75,
-                  transition: 'opacity 0.3s ease-in-out',
-                }}
-              >
-                {lastMessage.message}
+            <Motion
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+            >
+              {({ ref }) =>
+                chatData.history.length > 0 &&
+                lastMessage.from === 'agent' && (
+                  <span ref={ref}>
+                    <FormText
+                      level="h1"
+                      sx={{
+                        opacity: chatData.isStreaming ? 1 : 0.7,
+                      }}
+                    >
+                      {lastMessage.message}
 
-                {chatData.isStreaming && (
-                  <span className="inline-block ml-1 w-0.5 h-4 bg-current animate-typewriterCursor"></span>
-                )}
-              </Typography>
-            )}
+                      {chatData.isStreaming && (
+                        <span
+                          className="bg-current animate-typewriterCursor"
+                          style={{
+                            //   height: '100%',
+                            width: 3,
+                            display: 'inline-block',
+                            // backgroundColor: style?.color || 'black',
+                            marginLeft: 4,
+                            marginTop: -4,
+                            verticalAlign: 'middle',
+                            // opacity: Number(animatedText.cursorShown),
+                            // ...cursorStyle,
+                          }}
+                        >
+                          {/* trick to fix cursor height */}
+                          <span style={{ visibility: 'hidden' }}>l</span>
+                        </span>
+                      )}
+                    </FormText>
+                  </span>
+                )
+              }
+            </Motion>
           </Stack>
 
           {!chatData.isStreaming &&
@@ -200,9 +249,9 @@ function BlablaFormViewer({ formId, config }: Props) {
             state.isConversationStarted && (
               <Stack sx={{ width: '100%' }}>
                 {currentField?.type !== 'multiple_choice' && (
-                  <input
+                  <Input
                     autoFocus
-                    className="w-full text-3xl text-left text-white bg-transparent outline-none"
+                    className="w-full p-0 text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
                     placeholder="Type your answer "
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
@@ -222,32 +271,39 @@ function BlablaFormViewer({ formId, config }: Props) {
                     gap={2}
                     sx={{ flexWrap: 'wrap', justifyContent: 'flex-start' }}
                     direction="row"
+                    component={motion.div}
+                    variants={{
+                      hidden: { opacity: 0 },
+                      show: {
+                        opacity: 1,
+                        transition: {
+                          staggerChildren: 0.35,
+                        },
+                      },
+                    }}
+                    initial="hidden"
+                    animate="show"
                   >
                     {currentField?.choices?.map((choice, i) => (
                       <Motion
                         key={choice}
-                        custom={i}
                         variants={{
-                          visible: (i) => ({
-                            opacity: 1,
-                            transition: {
-                              delay: i * 0.3,
-                            },
-                          }),
-                          hidden: { opacity: 0 },
+                          hidden: { opacity: 0, y: 20 },
+                          show: { opacity: 1, y: 0 },
                         }}
                       >
                         {({ ref }) => (
-                          <FormButton
-                            ref={ref}
-                            variant="solid"
-                            onClick={() => {
-                              answerQuestion(choice);
-                            }}
-                            size="lg"
-                          >
-                            {choice}
-                          </FormButton>
+                          <span ref={ref}>
+                            <FormButton
+                              variant="solid"
+                              onClick={() => {
+                                answerQuestion(choice);
+                              }}
+                              size="lg"
+                            >
+                              {choice}
+                            </FormButton>
+                          </span>
                         )}
                       </Motion>
                     ))}
@@ -258,38 +314,61 @@ function BlablaFormViewer({ formId, config }: Props) {
 
           {!state.isConversationStarted && (
             <Stack
-              gap={5}
+              gap={3}
               maxWidth="100%"
               sx={{
                 textAlign: 'center',
                 alignItems: 'center',
               }}
             >
-              <MotionBottom
-                transition={{
-                  duration: 0.55,
+              <Motion
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
                 }}
               >
                 {({ ref }) => (
-                  <Typography
-                    ref={ref as any}
-                    level="h1"
-                    // maxWidth="600px"
-                    sx={{
-                      wordWrap: 'break-word',
-                      whiteSpace: 'normal',
-                    }}
-                  >
-                    {config?.introScreen?.introText}
-                  </Typography>
+                  <span ref={ref}>
+                    <FormText // maxWidth="600px"
+                      level="h1"
+                      sx={{
+                        textAlign: 'center',
+                      }}
+                    >
+                      {config?.introScreen?.introText}
+                    </FormText>
+                  </span>
                 )}
-              </MotionBottom>
+              </Motion>
+
+              {/* <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                  },
+                  hidden: {
+                    opacity: 0,
+                    y: 100,
+                  },
+                }}
+              >
+                <FormButton variant="solid" onClick={initiateForm} size="lg">
+                  {config?.introScreen?.ctaText}
+                </FormButton>
+              </motion.div> */}
 
               <Motion
                 initial="hidden"
                 animate="visible"
                 transition={{
-                  delay: 0.5,
+                  delay: 0.2,
                   // type: 'spring',
                   // bounce: 1,
                   // stiffness: 50,
@@ -298,6 +377,7 @@ function BlablaFormViewer({ formId, config }: Props) {
                 variants={{
                   visible: {
                     opacity: 1,
+                    y: 0,
                     // scale: 1,
                     // transition: {
                     //   when: 'beforeChildren',
@@ -306,6 +386,7 @@ function BlablaFormViewer({ formId, config }: Props) {
                   },
                   hidden: {
                     opacity: 0,
+                    y: 20,
                     // scale: 0.5,
                     // transition: {
                     //   when: 'afterChildren',
@@ -314,14 +395,15 @@ function BlablaFormViewer({ formId, config }: Props) {
                 }}
               >
                 {({ ref }) => (
-                  <FormButton
-                    ref={ref}
-                    variant="solid"
-                    onClick={initiateForm}
-                    size="lg"
-                  >
-                    {config?.introScreen?.ctaText}
-                  </FormButton>
+                  <span ref={ref}>
+                    <FormButton
+                      variant="solid"
+                      onClick={initiateForm}
+                      size="lg"
+                    >
+                      {config?.introScreen?.ctaText}
+                    </FormButton>
+                  </span>
                 )}
               </Motion>
             </Stack>
