@@ -9,6 +9,8 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
+import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
 import LooksOneRoundedIcon from '@mui/icons-material/LooksOneRounded';
 import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
@@ -40,8 +42,10 @@ import {
   Tabs,
   Textarea,
   Typography,
+  useColorScheme,
 } from '@mui/joy';
 import Chip from '@mui/joy/Chip';
+import clsx from 'clsx';
 import cuid from 'cuid';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -63,6 +67,7 @@ import AutoSaveForm from '@app/components/AutoSaveForm';
 import BlablaFormViewer, {
   LOCAL_STORAGE_CONVERSATION_KEY,
 } from '@app/components/BlablaFormViewer';
+import CopyButton from '@app/components/CopyButton';
 import FormSubmissionsTab from '@app/components/FormSubmissionsTab';
 import Input from '@app/components/Input';
 import Layout from '@app/components/Layout';
@@ -124,6 +129,7 @@ function FormDashboard(props: FormDashboardProps) {
     defaultValues: {},
     mode: 'onChange',
   });
+  const { mode } = useColorScheme();
 
   const {
     control,
@@ -164,7 +170,7 @@ function FormDashboard(props: FormDashboardProps) {
   const handlePublish = async () => {
     await toast.promise(publishFormMutation.trigger(), {
       loading: 'Publishing...',
-      success: 'Published!',
+      success: 'Published',
       error: 'Something went wrong',
     });
     getFormQuery.mutate();
@@ -199,15 +205,14 @@ function FormDashboard(props: FormDashboardProps) {
   //   formState.isValid
   // );
 
-  // useEffect(() => {
-  //   const subscription = watch(() => {
-  //     console.log('calllled---------------->');
-  //     if (formState.isDirty) {
-  //       handleSubmit(onSubmit)();
-  //     }
-  //   });
-  //   return () => subscription.unsubscribe();
-  // }, [formState.isDirty, fieldArray?.length, watch, handleSubmit, onSubmit]);
+  useEffect(() => {
+    const subscription = watch(() => {
+      if (formState.isDirty) {
+        handleSubmit(onSubmit)();
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [formState.isDirty, watch, handleSubmit, onSubmit]);
 
   const values = watch();
   const currentFieldName =
@@ -239,6 +244,7 @@ function FormDashboard(props: FormDashboardProps) {
                 <Input
                   size="sm"
                   control={methods.control}
+                  variant="soft"
                   endDecorator={
                     <IconButton
                       onClick={() => {
@@ -368,206 +374,293 @@ function FormDashboard(props: FormDashboardProps) {
           <FormProvider {...methods}>
             <Card
               component={'form'}
-              sx={{ height: '100%' }}
+              sx={{ height: '100%', p: 0 }}
               onSubmit={methods.handleSubmit(onSubmit)}
-              onChange={() => {
-                if (formState.isDirty) {
-                  handleSubmit(onSubmit)();
-                }
-              }}
+              // onChange={() => {
+              //   if (formState.isDirty) {
+              //     handleSubmit(onSubmit)();
+              //   }
+              // }}
             >
-              <Stack direction="row" gap={3} sx={{ height: '100%' }}>
+              <Stack
+                direction="row"
+                gap={3}
+                sx={{ height: '100%' }}
+                divider={<Divider orientation="vertical" />}
+              >
                 {/* start */}
-                <AccordionGroup
-                  disableDivider
-                  size="lg"
-                  transition="0.2s ease"
-                  // variant="outlined"
+                <Stack
                   sx={{
                     width: '35%',
-                    borderRadius: 'lg',
-                    [`& .${accordionSummaryClasses.button}:hover`]: {
-                      bgcolor: 'transparent',
-                    },
-                    [`& .${accordionDetailsClasses.content}`]: {
-                      boxShadow: (theme) =>
-                        `inset 0 1px ${theme.vars.palette.divider}`,
-                      [`&.${accordionDetailsClasses.expanded}`]: {
-                        paddingBlock: '0.75rem',
-                      },
-                    },
-                    transition: 'all 0.2s ease',
+                    height: '100%',
+                    p: 2,
+                    pr: 0,
+                    position: 'relative',
                   }}
                 >
-                  <Accordion
-                    expanded={state.currentAccordionIndex === 0}
-                    onChange={(event, expanded) => {
-                      setState({
-                        currentAccordionIndex: expanded ? 0 : null,
-                      });
+                  <AccordionGroup
+                    disableDivider
+                    size="lg"
+                    transition="0.2s ease"
+                    // variant="outlined"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      maxHeight: '100%',
+                      overflowY: 'auto',
+                      borderRadius: 'lg',
+                      [`& .${accordionSummaryClasses.button}:hover`]: {
+                        bgcolor: 'transparent',
+                      },
+                      [`& .${accordionDetailsClasses.content}`]: {
+                        boxShadow: (theme) =>
+                          `inset 0 1px ${theme.vars.palette.divider}`,
+                        [`&.${accordionDetailsClasses.expanded}`]: {
+                          paddingBlock: '0.75rem',
+                        },
+                      },
+                      transition: 'all 0.2s ease',
                     }}
                   >
-                    <AccordionSummary>
-                      <Typography startDecorator={<LooksOneRoundedIcon />}>
-                        Welcome Screen
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Stack gap={2}>
-                        <FormControl>
-                          <FormLabel>Intoduce the form.</FormLabel>
-                          <Textarea
-                            minRows={2}
-                            maxRows={4}
-                            {...register('introScreen.introText')}
-                          />
-                        </FormControl>
-                        <FormControl>
-                          <FormLabel>Call to action</FormLabel>
-                          <Input
-                            control={methods.control}
-                            {...register('introScreen.ctaText')}
-                          />
-                        </FormControl>
-                      </Stack>
-                    </AccordionDetails>
-                  </Accordion>
+                    <Accordion
+                      expanded={state.currentAccordionIndex === 0}
+                      onChange={(event, expanded) => {
+                        setState({
+                          currentAccordionIndex: expanded ? 0 : null,
+                        });
+                      }}
+                    >
+                      <AccordionSummary>
+                        <Typography startDecorator={<LooksOneRoundedIcon />}>
+                          Start/End Screen
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Stack gap={2}>
+                          <Typography level="body-md">Start Screen</Typography>
+                          <FormControl>
+                            <FormLabel>Title</FormLabel>
+                            <Input
+                              control={methods.control}
+                              {...register('startScreen.title')}
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Description</FormLabel>
+                            <Textarea
+                              minRows={2}
+                              maxRows={4}
+                              {...register('startScreen.description')}
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Call to action</FormLabel>
+                            <Input
+                              control={methods.control}
+                              {...register('startScreen.cta.label')}
+                            />
+                          </FormControl>
 
-                  <Accordion
-                    expanded={state.currentAccordionIndex === 1}
-                    onChange={(event, expanded) => {
-                      setState({
-                        currentAccordionIndex: expanded ? 1 : null,
-                      });
-                    }}
-                  >
-                    <AccordionSummary>
-                      <Typography startDecorator={<LooksTwoRoundedIcon />}>
-                        Form Fields
-                      </Typography>
-                    </AccordionSummary>
-                    {/* <Alert startDecorator={<InfoRoundedIcon />}>
+                          <Divider />
+                          <Typography level="body-md">End Screen</Typography>
+                          <FormControl>
+                            <FormLabel>Call to action</FormLabel>
+                            <Input
+                              control={methods.control}
+                              {...register('endScreen.cta.label')}
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Call to action URL</FormLabel>
+                            <Stack
+                              direction="row"
+                              gap={0.5}
+                              sx={(t) => ({
+                                border: '1px solid',
+                                borderColor: t.palette.divider,
+                                borderRadius: t.radius.md,
+                                boxShadow: t.shadow.xs,
+                                p: 0.5,
+                              })}
+                            >
+                              <Input
+                                variant="plain"
+                                sx={{ py: 0 }}
+                                control={methods.control}
+                                // endDecorator={}
+                                {...register('endScreen.cta.url')}
+                              />
+                              <Controller
+                                control={methods.control}
+                                name="endScreen.cta.target"
+                                render={({
+                                  field: { onChange, onBlur, value, name, ref },
+                                  fieldState: {
+                                    invalid,
+                                    isTouched,
+                                    isDirty,
+                                    error,
+                                  },
+                                  formState,
+                                }) => (
+                                  <Select
+                                    value={values?.endScreen?.cta?.target}
+                                    variant="outlined"
+                                    size="sm"
+                                    sx={{ width: '350px' }}
+                                    onChange={(_, v) => {
+                                      onChange(v);
+                                      console.log('CHANED _----------->', v);
+                                    }}
+                                  >
+                                    <Option value="_blank">blank</Option>
+                                    <Option value="_self">self</Option>
+                                  </Select>
+                                )}
+                              />
+                            </Stack>
+                          </FormControl>
+                        </Stack>
+                      </AccordionDetails>
+                    </Accordion>
+
+                    <Accordion
+                      expanded={state.currentAccordionIndex === 1}
+                      onChange={(event, expanded) => {
+                        setState({
+                          currentAccordionIndex: expanded ? 1 : null,
+                        });
+                      }}
+                    >
+                      <AccordionSummary>
+                        <Typography startDecorator={<LooksTwoRoundedIcon />}>
+                          Form Fields
+                        </Typography>
+                      </AccordionSummary>
+                      {/* <Alert startDecorator={<InfoRoundedIcon />}>
                           {`Field names have an impact on context understanding for
                       the AI`}
                         </Alert> */}
-                    <AccordionDetails>
-                      <Stack gap={2}>
-                        {fields?.map((field, index) => (
-                          <Box
-                            key={field.id}
-                            display="flex"
-                            alignItems="center"
-                          >
-                            <Stack
-                              direction={'column'}
-                              gap={1}
-                              sx={{ width: '100%' }}
+                      <AccordionDetails>
+                        <Stack gap={2}>
+                          {fields?.map((field, index) => (
+                            <Box
+                              key={field.id}
+                              display="flex"
+                              alignItems="center"
                             >
                               <Stack
-                                sx={{ width: '100%' }}
-                                direction="row"
+                                direction={'column'}
                                 gap={1}
-                                alignItems={'start'}
+                                sx={{ width: '100%' }}
                               >
-                                <Controller
-                                  name={`fields.${index}.type` as const}
-                                  render={({
-                                    field: {
-                                      onChange,
-                                      onBlur,
-                                      value,
-                                      name,
-                                      ref,
-                                    },
-                                    fieldState: {
-                                      invalid,
-                                      isTouched,
-                                      isDirty,
-                                      error,
-                                    },
-                                    formState,
-                                  }) => (
-                                    <Select
-                                      size="sm"
-                                      value={value}
-                                      onChange={(_, value) => {
-                                        onChange(value);
-                                      }}
-                                      sx={{ minWidth: '80px' }}
-                                    >
-                                      <Option value="text">text</Option>
-                                      <Option value="multiple_choice">
-                                        mutliple choice
-                                      </Option>
-                                    </Select>
-                                  )}
-                                ></Controller>
-                                <Input
-                                  control={methods.control}
+                                <Stack
                                   sx={{ width: '100%' }}
-                                  size="sm"
-                                  key={field.id}
-                                  defaultValue={field.name}
-                                  placeholder="e.g. email"
-                                  {...register(`fields.${index}.name` as const)}
-                                  endDecorator={
-                                    <IconButton
-                                      onClick={() => {
-                                        remove(index);
-                                        handleSubmit(onSubmit)();
-                                      }}
-                                    >
-                                      <CloseIcon fontSize="sm" />
-                                    </IconButton>
-                                  }
-                                />
+                                  direction="row"
+                                  gap={1}
+                                  alignItems={'start'}
+                                >
+                                  <Controller
+                                    name={`fields.${index}.type` as const}
+                                    render={({
+                                      field: {
+                                        onChange,
+                                        onBlur,
+                                        value,
+                                        name,
+                                        ref,
+                                      },
+                                      fieldState: {
+                                        invalid,
+                                        isTouched,
+                                        isDirty,
+                                        error,
+                                      },
+                                      formState,
+                                    }) => (
+                                      <Select
+                                        size="sm"
+                                        value={value}
+                                        onChange={(_, value) => {
+                                          onChange(value);
+                                        }}
+                                        sx={{ minWidth: '80px' }}
+                                      >
+                                        <Option value="text">text</Option>
+                                        <Option value="multiple_choice">
+                                          mutliple choice
+                                        </Option>
+                                      </Select>
+                                    )}
+                                  ></Controller>
+                                  <Input
+                                    control={methods.control}
+                                    sx={{ width: '100%' }}
+                                    size="sm"
+                                    key={field.id}
+                                    defaultValue={field.name}
+                                    placeholder="e.g. email"
+                                    {...register(
+                                      `fields.${index}.name` as const
+                                    )}
+                                    endDecorator={
+                                      <IconButton
+                                        onClick={() => {
+                                          remove(index);
+                                          handleSubmit(onSubmit)();
+                                        }}
+                                      >
+                                        <CloseIcon fontSize="sm" />
+                                      </IconButton>
+                                    }
+                                  />
 
-                                {/* {(getValues(`fields.${index}.choices`) || []).map(
+                                  {/* {(getValues(`fields.${index}.choices`) || []).map(
                             (choice, i) => (
                               <Chip key={i}>{choice}</Chip>
                             )
                           )} */}
+                                </Stack>
+
+                                {values?.fields?.[index]?.type ===
+                                  'multiple_choice' && (
+                                  <Stack sx={{ pl: 2 }}>
+                                    <Choices
+                                      name={`fields.${index}.choices` as any}
+                                    />
+                                  </Stack>
+                                )}
                               </Stack>
 
-                              {values?.fields?.[index]?.type ===
-                                'multiple_choice' && (
-                                <Stack sx={{ px: 2 }}>
-                                  <Choices
-                                    name={`fields.${index}.choices` as any}
-                                  />
-                                </Stack>
-                              )}
-                            </Stack>
-
-                            {/* <Checkbox
+                              {/* <Checkbox
                         defaultChecked={true}
                         size="sm"
                         {...register(
                           `fields.${index}.required` as const
                         )}
                       /> */}
-                          </Box>
-                        ))}
-                        <Button
-                          size="sm"
-                          startDecorator={
-                            <AddCircleRoundedIcon fontSize="sm" />
-                          }
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => {
-                            append({
-                              name: '',
-                              id: cuid(),
-                              required: true,
-                              type: 'text',
-                            });
-                            trigger();
-                          }}
-                        >
-                          Add Field
-                        </Button>
-                        {/* {getFormQuery.data && (
+                            </Box>
+                          ))}
+                          <Button
+                            size="sm"
+                            startDecorator={
+                              <AddCircleRoundedIcon fontSize="sm" />
+                            }
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => {
+                              append({
+                                name: '',
+                                id: cuid(),
+                                required: true,
+                                type: 'text',
+                              });
+                              trigger();
+                            }}
+                          >
+                            Add Field
+                          </Button>
+                          {/* {getFormQuery.data && (
                           <AutoSaveForm
                             onSubmit={saveFields}
                             defaultValues={{}}
@@ -576,43 +669,65 @@ function FormDashboard(props: FormDashboardProps) {
                             }
                           />
                         )} */}
-                      </Stack>
-                    </AccordionDetails>
-                  </Accordion>
+                        </Stack>
+                      </AccordionDetails>
+                    </Accordion>
 
-                  <Accordion
-                    expanded={state.currentAccordionIndex === 2}
-                    onChange={(event, expanded) => {
-                      setState({
-                        currentAccordionIndex: expanded ? 2 : null,
-                      });
-                    }}
+                    <Accordion
+                      expanded={state.currentAccordionIndex === 2}
+                      onChange={(event, expanded) => {
+                        setState({
+                          currentAccordionIndex: expanded ? 2 : null,
+                        });
+                      }}
+                    >
+                      <AccordionSummary>
+                        <Typography startDecorator={<Looks3RoundedIcon />}>
+                          Webhook
+                        </Typography>
+                      </AccordionSummary>
+
+                      <AccordionDetails>
+                        <FormControl>
+                          <FormLabel>Url</FormLabel>
+                          <Input
+                            control={methods.control}
+                            placeholder="https://example.com/api/webhook"
+                            {...register('webhook.url')}
+                          />
+                          <FormHelperText>
+                            Send form submission to the provided endpoint with a
+                            HTTP POST request
+                          </FormHelperText>
+                        </FormControl>
+                      </AccordionDetails>
+                    </Accordion>
+                  </AccordionGroup>
+
+                  <div
+                    className={clsx(
+                      'absolute bottom-0 w-full h-24 pointer-events-none bg-gradient-to-t',
+                      {
+                        'via-white from-white': mode === 'light',
+                        'via-black from-black': mode === 'dark',
+                      }
+                    )}
+                  ></div>
+                  <Button
+                    startDecorator={<RocketLaunch fontSize="sm" />}
+                    onClick={handlePublish}
+                    loading={publishFormMutation.isMutating}
+                    disabled={
+                      updateFormMutation.isMutating ||
+                      !methods.formState.isValid
+                    }
                   >
-                    <AccordionSummary>
-                      <Typography startDecorator={<Looks3RoundedIcon />}>
-                        Webhook
-                      </Typography>
-                    </AccordionSummary>
-
-                    <AccordionDetails>
-                      <FormControl>
-                        <FormLabel>Url</FormLabel>
-                        <Input
-                          control={methods.control}
-                          placeholder="https://example.com/api/webhook"
-                          {...register('webhook.url')}
-                        />
-                        <FormHelperText>
-                          Send form submission to the provided endpoint with a
-                          HTTP POST request
-                        </FormHelperText>
-                      </FormControl>
-                    </AccordionDetails>
-                  </Accordion>
-                </AccordionGroup>
+                    Publish Updates
+                  </Button>
+                </Stack>
 
                 <Stack sx={{ width: '100%' }} gap={1}>
-                  <Button
+                  {/* <Button
                     variant="solid"
                     color="primary"
                     // disabled={!state.isPublishable}
@@ -621,7 +736,7 @@ function FormDashboard(props: FormDashboardProps) {
                     sx={{ ml: 'auto' }}
                   >
                     Publish Form
-                  </Button>
+                  </Button> */}
                   {/* {
                     (!isEmpty(getFormQuery.data?.publishedConfig) ||
                       !isEmpty(getFormQuery.data?.draftConfig)) && (
@@ -639,18 +754,60 @@ function FormDashboard(props: FormDashboardProps) {
 
                   <Stack
                     sx={(t) => ({
-                      border: '1px solid',
+                      // border: '1px solid',
                       borderRadius: t.radius.md,
                       borderColor: t.palette.divider,
                       width: '100%',
                       height: '100%',
+                      position: 'relative',
+                      overflow: 'hidden',
                     })}
                   >
+                    <Stack
+                      sx={{
+                        width: '100%',
+                        position: 'absolute',
+                        top: 2,
+                        left: 2,
+                        pt: 2,
+                        pr: 2,
+                      }}
+                    >
+                      <Alert
+                        variant="outlined"
+                        size="sm"
+                        startDecorator={
+                          <LockRoundedIcon
+                            fontSize="sm"
+                            sx={{ opacity: 0.5 }}
+                          />
+                        }
+                        sx={{ borderRadius: 'lg', width: '100%' }}
+                        className="backdrop-blur-lg"
+                      >
+                        <Typography
+                          level="body-sm"
+                          endDecorator={
+                            <CopyButton text="http://localhost:3000/forms/clqgorhb40000zm0u887y07d9" />
+                          }
+                        >
+                          <a
+                            href={
+                              'http://localhost:3000/forms/clqgorhb40000zm0u887y07d9'
+                            }
+                            className="hover:underline"
+                            target="_blank"
+                          >
+                            http://localhost:3000/forms/clqgorhb40000zm0u887y07d9
+                          </a>
+                        </Typography>
+                      </Alert>
+                    </Stack>
                     <BlablaFormViewer
                       formId={formId}
                       config={{
                         fields: values?.fields,
-                        introScreen: values?.introScreen,
+                        startScreen: values?.startScreen,
                         webhook: values?.webhook,
                         schema: (getFormQuery.data?.draftConfig as any)?.schema,
                       }}

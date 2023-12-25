@@ -471,31 +471,35 @@ export const FormFieldSchema = z.discriminatedUnion('type', [
 export type FormFieldSchema = z.infer<typeof FormFieldSchema>;
 
 export const FormConfigSchema = z.object({
-  fields: z.array(FormFieldSchema).superRefine(
-    (vals, ctx) => {
-      const unique = new Set();
-      for (const [i, val] of vals.entries()) {
-        if (unique.has(val?.name?.toLowerCase?.())) {
-          ctx.addIssue({
-            code: 'custom',
-            message: 'Field names must be unique',
-            path: [`${i}`, 'name'],
-          });
-        }
-        unique.add(val?.name?.toLowerCase?.());
+  fields: z.array(FormFieldSchema).superRefine((vals, ctx) => {
+    const unique = new Set();
+    for (const [i, val] of vals.entries()) {
+      if (unique.has(val?.name?.toLowerCase?.())) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Field names must be unique',
+          path: [`${i}`, 'name'],
+        });
       }
-
-      // return unique.size === vals.length;
+      unique.add(val?.name?.toLowerCase?.());
     }
-    // {
-    //   message: 'Field names must be unique',
-    //   path: ['0', 'name'],
-    // }
-  ),
-  introScreen: z
+  }),
+  startScreen: z
     .object({
-      introText: z.string(),
-      ctaText: z.string(),
+      title: z.string().max(50),
+      description: z.string().max(250),
+      cta: z.object({
+        label: z.string(),
+      }),
+    })
+    .optional(),
+  endScreen: z
+    .object({
+      cta: z.object({
+        label: z.string(),
+        url: z.union([z.string().url().nullish(), z.literal('')]),
+        target: z.string().optional(),
+      }),
     })
     .optional(),
   webhook: z

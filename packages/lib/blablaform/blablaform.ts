@@ -34,7 +34,7 @@ export class BlaBlaForm {
   constructor({
     schema,
     values = {},
-    modelName = 'gpt-3.5-turbo',
+    modelName = 'gpt-3.5-turbo-1106',
     messages = [],
     systemPrompt = defaultSystemPrompt,
     locale = 'en',
@@ -56,14 +56,12 @@ export class BlaBlaForm {
     const _systemPrompt = `
 ${systemPrompt}\n
 Use the language specified by ${locale}. 
-While optional fields can be omitted by the user, ensure you do not request or accept any information beyond what's defined in the schema.
-For each questions, in order to keep track of the current field, finish your sentence with __BLABLA_FIELD__: field name as defined in the schema.
+Never request or accept any information beyond what's defined in the schema.
 
-Example with a field named firstname: What is yout firstname __BLABLA_FIELD__: firstname
+Always end your question with __BLABLA_FIELD__: name of the field your asking for in order to keep track of the current field.
+Example with a field named firstname: What is your first name? __BLABLA_FIELD__: firstname
 
-For reference, the current schema is: ${JSON.stringify(
-      this.schema.properties
-    )}`;
+`;
     this.systemPrompt = _systemPrompt;
     console.log('this.schema.properties', this.schema.properties);
     this.messages = [

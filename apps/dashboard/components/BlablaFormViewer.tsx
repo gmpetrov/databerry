@@ -90,7 +90,7 @@ const FormButton = styled(Button)(({ theme }) => ({
   borderRadius: '100px',
   fontSize: '2rem',
   fontWeight: '400',
-  transition: 'transform 0.15s ease-in-out',
+  transition: 'transform 0.1s ease-in-out',
   '&:hover': {
     transform: 'scale(1.05) !important',
   },
@@ -192,7 +192,7 @@ function BlablaFormViewer({ formId, config }: Props) {
               //   color="neutral"
               //   size="sm"
               // />
-              <span className="relative flex w-8 h-8">
+              <span className="relative flex w-8 h-8 mt-[5px]">
                 <span className="absolute inline-flex w-full h-full bg-gray-400 rounded-full opacity-75 animate-ping"></span>
                 <span className="relative inline-flex w-8 h-8 bg-gray-500 rounded-full"></span>
               </span>
@@ -312,6 +312,36 @@ function BlablaFormViewer({ formId, config }: Props) {
               </Stack>
             )}
 
+          {chatData.isFomValid && config?.endScreen?.cta?.label && (
+            <Motion
+              initial="hidden"
+              animate="visible"
+              variants={{
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                },
+                hidden: {
+                  opacity: 0,
+                  y: 20,
+                },
+              }}
+            >
+              {({ ref }) => (
+                <span ref={ref}>
+                  <a
+                    href={config?.endScreen?.cta?.url || '#'}
+                    target={config?.endScreen?.cta?.target || '_blank'}
+                  >
+                    <FormButton variant="solid" size="lg">
+                      {config?.endScreen?.cta?.label}
+                    </FormButton>
+                  </a>
+                </span>
+              )}
+            </Motion>
+          )}
+
           {!state.isConversationStarted && (
             <Stack
               gap={3}
@@ -321,29 +351,59 @@ function BlablaFormViewer({ formId, config }: Props) {
                 alignItems: 'center',
               }}
             >
-              <Motion
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-              >
-                {({ ref }) => (
-                  <span ref={ref}>
-                    <FormText // maxWidth="600px"
-                      level="h1"
-                      sx={{
-                        textAlign: 'center',
-                      }}
-                    >
-                      {config?.introScreen?.introText}
-                    </FormText>
-                  </span>
-                )}
-              </Motion>
+              {config?.startScreen?.title && (
+                <Motion
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                >
+                  {({ ref }) => (
+                    <span ref={ref}>
+                      <FormText // maxWidth="600px"
+                        level="h1"
+                        sx={{
+                          textAlign: 'center',
+                          fontWeight: 900,
+                          fontSize: '4rem',
+                        }}
+                      >
+                        {config?.startScreen?.title}
+                      </FormText>
+                    </span>
+                  )}
+                </Motion>
+              )}
+              {config?.startScreen?.description && (
+                <Motion
+                  initial={{
+                    opacity: 0,
+                    y: 20,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                >
+                  {({ ref }) => (
+                    <span ref={ref}>
+                      <FormText // maxWidth="600px"
+                        level="h1"
+                        sx={{
+                          textAlign: 'center',
+                          fontWeight: 400,
+                        }}
+                      >
+                        {config?.startScreen?.description}
+                      </FormText>
+                    </span>
+                  )}
+                </Motion>
+              )}
 
               {/* <motion.div
                 initial="hidden"
@@ -360,7 +420,7 @@ function BlablaFormViewer({ formId, config }: Props) {
                 }}
               >
                 <FormButton variant="solid" onClick={initiateForm} size="lg">
-                  {config?.introScreen?.ctaText}
+                  {config?.startScreen?.cta?.label}
                 </FormButton>
               </motion.div> */}
 
@@ -401,7 +461,7 @@ function BlablaFormViewer({ formId, config }: Props) {
                       onClick={initiateForm}
                       size="lg"
                     >
-                      {config?.introScreen?.ctaText}
+                      {config?.startScreen?.cta?.label}
                     </FormButton>
                   </span>
                 )}
