@@ -174,7 +174,7 @@ export default function ModelInput({}: Props) {
           </Option>
           <Option
             value={AgentModelName.gpt_4_turbo}
-            disabled={!session?.data?.organization?.isPremium}
+            // disabled={!session?.data?.organization?.isPremium}
           >
             gpt-4-turbo - 128k - {ModelConfig[AgentModelName.gpt_4_turbo].cost}{' '}
             credits/query (premium)
