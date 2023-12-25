@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.128"></a>
+## 0.1.128 (2023-12-25)
+
+### Fixed
+
+- 🐛 enable gpt-4 turbo for non premium users [[51eee1e](https://github.com/gmpetrov/databerry/commit/51eee1e93c09c515c64590bd2560f9c06c2e5561)]
+
+
 <a name="0.1.127"></a>
 ## 0.1.127 (2023-12-25)
 
