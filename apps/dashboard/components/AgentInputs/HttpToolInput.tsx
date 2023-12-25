@@ -137,6 +137,7 @@ export default function HttpToolInput({ name }: Props) {
   }, [name]) as 'tools.0.' | '';
   const templatesModal = useModal();
   const [withApprovalChecked] = methods.watch([`${prefix}config.withApproval`]);
+  const [methodValue] = methods.watch([`${prefix}config.method`]);
 
   return (
     <Stack>
@@ -183,6 +184,7 @@ export default function HttpToolInput({ name }: Props) {
 
           <Select
             defaultValue={'GET'}
+            value={methodValue}
             onChange={(_, value) => {
               if (value) {
                 methods.setValue(
