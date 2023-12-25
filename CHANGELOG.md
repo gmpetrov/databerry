@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.127"></a>
+## 0.1.127 (2023-12-25)
+
+### Fixed
+
+- 🐛 http tool form method value deafult value [[248bdd4](https://github.com/gmpetrov/databerry/commit/248bdd49f2682ca0cbeb6cc8fa16ee893807730b)]
+
+### Miscellaneous
+
+- 🤖 bump chat-bubble version [[50fbb66](https://github.com/gmpetrov/databerry/commit/50fbb669b1d928309e5a49ad6ccf6729afc36b3b)]
+
+
 <a name="0.1.126"></a>
 ## 0.1.126 (2023-12-22)
 
