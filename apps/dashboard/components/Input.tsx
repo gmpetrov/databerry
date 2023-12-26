@@ -24,7 +24,7 @@ const Input = forwardRef((props: Props, ref) => {
   const helper = errorMsg ? errorMsg : helperText;
 
   return (
-    <FormControl error={!!errorMsg} sx={{ width: '100%' }}>
+    <FormControl error={!!errorMsg}>
       {!props.hidden && label && (
         <FormLabel
           sx={{

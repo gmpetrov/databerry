@@ -29,7 +29,12 @@ export const getForms = async (
       organizationId: session?.organization?.id,
     },
     include: {
-      conversations: true,
+      _count: {
+        select: {
+          submissions: true,
+          conversations: true,
+        },
+      },
     },
     orderBy: {
       updatedAt: 'desc',

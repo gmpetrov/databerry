@@ -50,31 +50,4 @@ handler.patch(
   })
 );
 
-export const deleteForm = async (
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) => {
-  const id = req.query.formId as string;
-
-  const existingForm = await prisma.form.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  if (!existingForm) {
-    throw new ApiError(ApiErrorType.NOT_FOUND);
-  }
-
-  return prisma.form.delete({
-    where: {
-      id,
-    },
-  });
-};
-
-handler.delete(
-  pipe(roles([MembershipRole.ADMIN, MembershipRole.OWNER]), respond(deleteForm))
-);
-
 export default pipe(cors({ methods: ['DELETE', 'PATCH', 'HEAD'] }), handler);

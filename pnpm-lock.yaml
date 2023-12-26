@@ -87,8 +87,8 @@ importers:
         specifier: ^2.0.16
         version: 2.0.16(react@18.2.0)
       '@hookform/resolvers':
-        specifier: ^3.0.0
-        version: 3.0.0(react-hook-form@7.45.4)
+        specifier: ^3.3.2
+        version: 3.3.2(react-hook-form@7.49.2)
       '@microsoft/fetch-event-source':
         specifier: ^2.0.1
         version: 2.0.1
@@ -288,8 +288,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1(react-dom@18.2.0)(react@18.2.0)
       react-hook-form:
-        specifier: ^7.45.4
-        version: 7.45.4(react@18.2.0)
+        specifier: ^7.49.2
+        version: 7.49.2(react@18.2.0)
       react-hot-toast:
         specifier: ^2.4.1
         version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
@@ -342,8 +342,8 @@ importers:
         specifier: ^2.2.1
         version: 2.3.1
       zod:
-        specifier: 3.21.4
-        version: 3.21.4
+        specifier: 3.22.4
+        version: 3.22.4
     devDependencies:
       '@chaindesk/tsconfig':
         specifier: workspace:*
@@ -635,8 +635,8 @@ importers:
         specifier: ^11.10.6
         version: 11.11.0(@emotion/react@11.11.1)(@types/react@18.0.29)(react@18.2.0)
       '@hookform/resolvers':
-        specifier: ^3.0.0
-        version: 3.0.0(react-hook-form@7.45.4)
+        specifier: ^3.3.2
+        version: 3.3.2(react-hook-form@7.49.2)
       '@mui/icons-material':
         specifier: ^5.14.19
         version: 5.14.19(@mui/material@5.14.20)(@types/react@18.0.29)(react@18.2.0)
@@ -674,11 +674,11 @@ importers:
         specifier: 13.5.4
         version: 13.5.4(@babel/core@7.22.9)(react-dom@18.2.0)(react@18.2.0)
       react-hook-form:
-        specifier: ^7.45.4
-        version: 7.45.4(react@18.2.0)
+        specifier: ^7.49.2
+        version: 7.49.2(react@18.2.0)
       zod:
-        specifier: 3.21.4
-        version: 3.21.4
+        specifier: 3.22.4
+        version: 3.22.4
     devDependencies:
       '@chaindesk/tsconfig':
         specifier: workspace:*
@@ -967,11 +967,14 @@ importers:
         specifier: ^10.7.1
         version: 10.7.1
       react-hook-form:
-        specifier: ^7.45.4
-        version: 7.45.4(react@18.2.0)
+        specifier: ^7.49.2
+        version: 7.49.2(react@18.2.0)
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.2.0)(react@18.2.0)
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@chaindesk/tsconfig':
         specifier: workspace:*
@@ -2229,12 +2232,12 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@hookform/resolvers@3.0.0(react-hook-form@7.45.4):
-    resolution: {integrity: sha512-SQPefakODpyq25b/phHXDKCdRrEfPcCXV7B4nAa139wE1DxufYbbNAjeo0T04ZXBokRxZ+wD8iA1kkVMa3QwjQ==}
+  /@hookform/resolvers@3.3.2(react-hook-form@7.49.2):
+    resolution: {integrity: sha512-Tw+GGPnBp+5DOsSg4ek3LCPgkBOuOgS5DsDV7qsWNH9LZc433kgsWICjlsh2J9p04H2K66hsXPPb9qn9ILdUtA==}
     peerDependencies:
       react-hook-form: ^7.0.0
     dependencies:
-      react-hook-form: 7.45.4(react@18.2.0)
+      react-hook-form: 7.49.2(react@18.2.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.8:
@@ -17256,9 +17259,9 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /react-hook-form@7.45.4(react@18.2.0):
-    resolution: {integrity: sha512-HGDV1JOOBPZj10LB3+OZgfDBTn+IeEsNOKiq/cxbQAIbKaiJUe/KV8DBUzsx0Gx/7IG/orWqRRm736JwOfUSWQ==}
-    engines: {node: '>=12.22.0'}
+  /react-hook-form@7.49.2(react@18.2.0):
+    resolution: {integrity: sha512-TZcnSc17+LPPVpMRIDNVITY6w20deMdNi6iehTFLV1x8SqThXGwu93HjlUVU09pzFgZH7qZOvLMM7UYf2ShAHA==}
+    engines: {node: '>=18', pnpm: '8'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18
     dependencies:
