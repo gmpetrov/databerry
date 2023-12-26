@@ -175,7 +175,7 @@ export default function FormsPage() {
         <Link href={RouteNames.HOME}>
           <HomeRoundedIcon />
         </Link>
-        <Typography fontSize="inherit" color="neutral">
+        <Typography fontSize="inherit" color="primary">
           Forms
         </Typography>
       </Breadcrumbs>

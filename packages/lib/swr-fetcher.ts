@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 export enum HTTP_METHOD {
   POST = 'POST',
   PATCH = 'PATCH',
+  DELETE = 'DELETE',
 }
 
 export const generateActionFetcher =

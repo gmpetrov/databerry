@@ -16,41 +16,46 @@ export const getSubmissions = async (
 ) => {
   const session = req.session;
   const formId = req.query.formId as string;
-  const cursor = req.query.cursor as string;
+  // const cursor = req.query.cursor as string;
+  const offset = parseInt((req.query.offset as string) || '0');
+  const limit = parseInt((req.query.limit as string) || '100');
 
-  const submissions = await prisma.formSubmission.findMany({
+  const form = await prisma.form.findUnique({
     where: {
-      formId,
-      form: {
-        organizationId: session?.organization?.id,
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
+      id: formId,
     },
     include: {
-      form: true,
+      _count: {
+        select: {
+          submissions: true,
+        },
+      },
+      submissions: {
+        skip: offset * limit,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        // ...(cursor
+        //   ? {
+        //       skip: 1,
+        //       cursor: {
+        //         id: cursor,
+        //       },
+        //     }
+        //   : {}),
+      },
     },
-    take: 100,
-
-    ...(cursor
-      ? {
-          skip: 1,
-          cursor: {
-            id: cursor,
-          },
-        }
-      : {}),
   });
 
-  if (
-    submissions?.length > 0 &&
-    submissions?.[0]?.form?.organizationId !== session?.organization?.id
-  ) {
+  if (form?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  return submissions;
+  return {
+    submissions: form?.submissions || [],
+    total: form?._count?.submissions,
+  };
 };
 
 handler.get(respond(getSubmissions));
