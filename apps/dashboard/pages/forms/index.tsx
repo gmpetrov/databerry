@@ -33,13 +33,11 @@ import ModelInput from '@app/components/AgentInputs/ModelInput';
 import ToolsInput from '@app/components/AgentInputs/ToolsInput';
 import FormsTable from '@app/components/FormsTable';
 import Layout from '@app/components/Layout';
+import Loader from '@app/components/Loader';
 import SettingCard from '@app/components/ui/SettingCard';
 import UsageLimitModal from '@app/components/UsageLimitModal';
-import { getProductFromHostname } from '@app/hooks/useProduct';
 import useStateReducer from '@app/hooks/useStateReducer';
 
-import accountConfig from '@chaindesk/lib/account-config';
-import { CUSTOMER_SUPPORT_V3 } from '@chaindesk/lib/prompt-templates';
 import {
   fetcher,
   generateActionFetcher,
@@ -51,7 +49,6 @@ import { withAuth } from '@chaindesk/lib/withAuth';
 import { Agent, AgentModelName, Form, Prisma } from '@chaindesk/prisma';
 
 import { getAgents } from '../api/agents';
-import { getDatastores } from '../api/datastores';
 import { createForm, getForms } from '../api/forms';
 
 export default function FormsPage() {
@@ -65,11 +62,6 @@ export default function FormsPage() {
     isAgentModalOpen: false,
     isUsageLimitModalOpen: false,
   });
-
-  const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
-    '/api/agents',
-    fetcher
-  );
 
   const getFormsQuery = useSWR<Prisma.PromiseReturnType<typeof getForms>>(
     '/api/forms',
@@ -120,18 +112,11 @@ export default function FormsPage() {
       console.log('error', err);
     }
   };
-  const handleDeleteForm = async (formId: string) => {
-    try {
-      await toast.promise(axios.delete(`api/forms/${formId}/admin`), {
-        loading: 'Processing',
-        success: 'Deleted!',
-        error: 'Something went wrong',
-      });
-      getFormsQuery.mutate();
-    } catch (err) {
-      console.log('error', err);
-    }
-  };
+
+  if (!getFormsQuery.data && getFormsQuery.isLoading) {
+    return <Loader />;
+  }
+
   return (
     <Box
       component="main"
@@ -211,13 +196,14 @@ export default function FormsPage() {
             color="primary"
             startDecorator={<AddIcon />}
             onClick={onSubmit}
+            loading={formMutation.isMutating}
           >
             New Form
           </Button>
         </Box>
       </Box>
 
-      {getAgentsQuery.data && (
+      {getFormsQuery.data && (
         <FormsTable items={getFormsQuery.data as Form[]} />
       )}
 

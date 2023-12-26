@@ -121,32 +121,36 @@ function FormSubmissionsTab({ formId }: Props) {
       sx={{ maxHeight: '100%', width: '100%' }}
     >
       <Stack sx={{ height: '100%' }} gap={1}>
-        <Card size="sm">
-          <Stack
-            direction="row"
-            sx={{ justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <Typography>
-              Total: <strong>{total}</strong>
-            </Typography>
+        {total > 0 && (
+          <Card size="sm">
+            <Stack
+              direction="row"
+              sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <Typography>
+                Total: <strong>{total}</strong>
+              </Typography>
 
-            <Button disabled size="sm">
-              Export
-            </Button>
-          </Stack>
-        </Card>
+              <Button disabled size="sm">
+                Export
+              </Button>
+            </Stack>
+          </Card>
+        )}
 
         {submissions?.length <= 0 && (
-          <Stack
-            sx={{ width: '100%', height: '100%', py: 12 }}
-            alignItems="center"
-            justifyContent="center"
-            gap={2}
-          >
-            <InboxRoundedIcon fontSize={'xl3'} />
+          <Card>
+            <Stack
+              sx={{ width: '100%', height: '100%', py: 12 }}
+              alignItems="center"
+              justifyContent="center"
+              gap={2}
+            >
+              <InboxRoundedIcon fontSize={'xl3'} />
 
-            <Typography level="h3">No submissions</Typography>
-          </Stack>
+              <Typography level="h3">No submissions</Typography>
+            </Stack>
+          </Card>
         )}
         {(submissions?.length || 0) > 0 && (
           <Card size="sm">
@@ -181,96 +185,100 @@ function FormSubmissionsTab({ formId }: Props) {
           </Card>
         )}
 
-        <Box
-          className="Pagination-mobile"
-          sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}
-        >
-          <IconButton
-            aria-label="previous page"
-            variant="outlined"
-            color="neutral"
-            size="sm"
-          >
-            <i data-feather="arrow-left" />
-          </IconButton>
-          <Typography level="body-sm" mx="auto">
-            Page 1 of 10
-          </Typography>
-          <IconButton
-            aria-label="next page"
-            variant="outlined"
-            color="neutral"
-            size="sm"
-          >
-            <i data-feather="arrow-right" />
-          </IconButton>
-        </Box>
-        <Box
-          className="Pagination-laptopUp"
-          sx={{
-            pt: 4,
-            gap: 1,
-            [`& .${iconButtonClasses.root}`]: { borderRadius: '50%' },
-            display: {
-              xs: 'none',
-              md: 'flex',
-            },
-          }}
-        >
-          <Button
-            size="sm"
-            variant="plain"
-            color="neutral"
-            startDecorator={<ArrowBackRoundedIcon />}
-            onClick={() => {
-              if (offset - 1 >= 0) {
-                router.query.offset = `${offset - 1}`;
-                router.replace(router, undefined, { shallow: true });
-              }
-            }}
-          >
-            Previous
-          </Button>
-
-          <Box sx={{ flex: 1 }} />
-          {offsetIndexes.map((page) => (
-            <IconButton
-              key={page}
-              size="sm"
-              variant={Number(page) ? 'outlined' : 'plain'}
-              color={
-                Number(page) && Number(page) - 1 === offset
-                  ? 'primary'
-                  : 'neutral'
-              }
-              onClick={() => {
-                const nb = Number(page);
-                if (nb) {
-                  router.query.offset = `${nb - 1}`;
-                  router.replace(router, undefined, { shallow: true });
-                }
+        {total > 0 && (
+          <>
+            <Box
+              className="Pagination-mobile"
+              sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}
+            >
+              <IconButton
+                aria-label="previous page"
+                variant="outlined"
+                color="neutral"
+                size="sm"
+              >
+                <i data-feather="arrow-left" />
+              </IconButton>
+              <Typography level="body-sm" mx="auto">
+                Page 1 of 10
+              </Typography>
+              <IconButton
+                aria-label="next page"
+                variant="outlined"
+                color="neutral"
+                size="sm"
+              >
+                <i data-feather="arrow-right" />
+              </IconButton>
+            </Box>
+            <Box
+              className="Pagination-laptopUp"
+              sx={{
+                pt: 4,
+                gap: 1,
+                [`& .${iconButtonClasses.root}`]: { borderRadius: '50%' },
+                display: {
+                  xs: 'none',
+                  md: 'flex',
+                },
               }}
             >
-              {page}
-            </IconButton>
-          ))}
-          <Box sx={{ flex: 1 }} />
+              <Button
+                size="sm"
+                variant="plain"
+                color="neutral"
+                startDecorator={<ArrowBackRoundedIcon />}
+                onClick={() => {
+                  if (offset - 1 >= 0) {
+                    router.query.offset = `${offset - 1}`;
+                    router.replace(router, undefined, { shallow: true });
+                  }
+                }}
+              >
+                Previous
+              </Button>
 
-          <Button
-            size="sm"
-            variant="plain"
-            color="neutral"
-            endDecorator={<ArrowForwardRoundedIcon />}
-            onClick={() => {
-              if (offset + 1 < nbPages) {
-                router.query.offset = `${offset + 1}`;
-                router.replace(router, undefined, { shallow: true });
-              }
-            }}
-          >
-            Next
-          </Button>
-        </Box>
+              <Box sx={{ flex: 1 }} />
+              {offsetIndexes.map((page) => (
+                <IconButton
+                  key={page}
+                  size="sm"
+                  variant={Number(page) ? 'outlined' : 'plain'}
+                  color={
+                    Number(page) && Number(page) - 1 === offset
+                      ? 'primary'
+                      : 'neutral'
+                  }
+                  onClick={() => {
+                    const nb = Number(page);
+                    if (nb) {
+                      router.query.offset = `${nb - 1}`;
+                      router.replace(router, undefined, { shallow: true });
+                    }
+                  }}
+                >
+                  {page}
+                </IconButton>
+              ))}
+              <Box sx={{ flex: 1 }} />
+
+              <Button
+                size="sm"
+                variant="plain"
+                color="neutral"
+                endDecorator={<ArrowForwardRoundedIcon />}
+                onClick={() => {
+                  if (offset + 1 < nbPages) {
+                    router.query.offset = `${offset + 1}`;
+                    router.replace(router, undefined, { shallow: true });
+                  }
+                }}
+              >
+                Next
+              </Button>
+            </Box>
+          </>
+        )}
       </Stack>
     </Skeleton>
   );

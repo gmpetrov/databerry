@@ -516,7 +516,7 @@ export const CreateFormSchema = z.object({
   name: z.string(),
   datastoreId: z.string().optional().nullable(),
   draftConfig: FormConfigSchema,
-  publishedConfig: FormConfigSchema.optional(),
+  publishedConfig: FormConfigSchema.optional().nullable(),
 });
 export type CreateFormSchema = z.infer<typeof CreateFormSchema>;
 

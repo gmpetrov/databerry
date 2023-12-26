@@ -12,6 +12,7 @@ import { RouteNames } from '@chaindesk/lib/types';
 
 import SettingCard from './ui/SettingCard';
 import BlablaFormProvider from './BlablaFormProvider';
+import Loader from './Loader';
 
 type Props = {
   formId: string;
@@ -19,9 +20,14 @@ type Props = {
 
 function FormSettingsTab({ formId }: Props) {
   const router = useRouter();
+
   return (
     <BlablaFormProvider formId={formId}>
       {({ query, mutation, deleteMutation, methods }) => {
+        if (!query.data && query.isLoading) {
+          return <Loader />;
+        }
+
         return (
           <Stack sx={{ width: '100%', maxWidth: 'md', mx: 'auto', gap: 2 }}>
             <SettingCard

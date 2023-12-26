@@ -44,11 +44,13 @@ export default function FormsTable({ items = [] }: { items: Form[] }) {
         >
           <thead>
             <tr>
-              <th style={{ width: 120, padding: 12 }}>Name</th>
-              <th style={{ width: 120, padding: 12 }}>Description</th>
-              <th style={{ width: 120, padding: 12 }}>Model</th>
-              <th style={{ width: 220, padding: 12 }}>Visibility</th>
-              <th style={{ width: 160, padding: 12 }}> </th>
+              <th style={{ width: '80%' }} rowSpan={5}>
+                Name
+              </th>
+              {/* <th style={{ width: 120,  }}>Description</th>
+              <th style={{ width: 120,  }}>Model</th> */}
+              <th style={{}}>Submissions</th>
+              {/* <th style={{ width: 160,  }}> </th> */}
             </tr>
           </thead>
           <tbody>
@@ -73,7 +75,7 @@ export default function FormsTable({ items = [] }: { items: Form[] }) {
                     </Link>
                   </div>
                 </td>
-                <td>
+                {/* <td>
                   <Typography
                     sx={{
                       overflow: 'hidden',
@@ -83,19 +85,19 @@ export default function FormsTable({ items = [] }: { items: Form[] }) {
                   >
                     {form.name}
                   </Typography>
-                </td>
+                </td> */}
 
-                <td>
+                {/* <td>
                   <Chip variant="soft" size="sm" color={'neutral'}>
                     {form.name}
                   </Chip>
-                </td>
+                </td> */}
                 <td>
                   <Chip variant="soft" size="sm">
-                    {form.name}
+                    {(form as any)?._count?.submissions || 0}
                   </Chip>
                 </td>
-                <td>
+                {/* <td>
                   <Stack direction="row" spacing={1}>
                     <Link href={`${RouteNames.AGENTS}/${form.id}/?tab=chat`}>
                       <Tooltip title="Chat with Agent">
@@ -115,7 +117,7 @@ export default function FormsTable({ items = [] }: { items: Form[] }) {
                       </Tooltip>
                     </Link>
                   </Stack>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>

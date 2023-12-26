@@ -126,7 +126,7 @@ function BlablaFormForm(props: Props) {
 
   // Weired bug, without this, the form is valid after a second update
   // console.log('isValid', methods.formState.isValid);
-  // console.log('errors', methods.formState.errors);
+  console.log('errors', methods.formState.errors);
   // console.log('dirtyFields', methods.formState.dirtyFields);
 
   return (

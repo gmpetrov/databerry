@@ -42,6 +42,8 @@ import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import { Prisma } from '@chaindesk/prisma';
 
+import Loader from '../Loader';
+
 import FieldsInput from './FieldsInput';
 import { forceSubmit } from './utils';
 
@@ -80,6 +82,10 @@ function Form({ formId }: Props) {
     );
     query.mutate();
   };
+
+  if (!query.data && query.isLoading) {
+    return <Loader />;
+  }
 
   return (
     <Card sx={{ height: '100%', p: 0 }}>
@@ -305,48 +311,50 @@ function Form({ formId }: Props) {
               overflow: 'hidden',
             })}
           >
-            <Stack
-              sx={{
-                width: '100%',
-                position: 'absolute',
-                top: 2,
-                left: 2,
-                pt: 2,
-                pr: 2,
-              }}
-            >
-              <Alert
-                variant="outlined"
-                size="sm"
-                startDecorator={
-                  <LockRoundedIcon fontSize="sm" sx={{ opacity: 0.5 }} />
-                }
+            {!!query?.data?.publishedConfig && (
+              <Stack
                 sx={{
-                  borderRadius: 'lg',
                   width: '100%',
-                  py: 0.5,
-                  px: 1,
+                  position: 'absolute',
+                  top: 2,
+                  left: 2,
+                  pt: 2,
+                  pr: 2,
                 }}
-                className="backdrop-blur-lg"
               >
-                <Typography
-                  level="body-sm"
-                  endDecorator={
-                    <CopyButton text="http://localhost:3000/forms/clqgorhb40000zm0u887y07d9" />
+                <Alert
+                  variant="outlined"
+                  size="sm"
+                  startDecorator={
+                    <LockRoundedIcon fontSize="sm" sx={{ opacity: 0.5 }} />
                   }
+                  sx={{
+                    borderRadius: 'lg',
+                    width: '100%',
+                    py: 0.5,
+                    px: 1,
+                  }}
+                  className="backdrop-blur-lg"
                 >
-                  <a
-                    href={
-                      'http://localhost:3000/forms/clqgorhb40000zm0u887y07d9'
+                  <Typography
+                    level="body-sm"
+                    endDecorator={
+                      <CopyButton text="http://localhost:3000/forms/clqgorhb40000zm0u887y07d9" />
                     }
-                    className="hover:underline"
-                    target="_blank"
                   >
-                    http://localhost:3000/forms/clqgorhb40000zm0u887y07d9
-                  </a>
-                </Typography>
-              </Alert>
-            </Stack>
+                    <a
+                      href={
+                        'http://localhost:3000/forms/clqgorhb40000zm0u887y07d9'
+                      }
+                      className="hover:underline"
+                      target="_blank"
+                    >
+                      http://localhost:3000/forms/clqgorhb40000zm0u887y07d9
+                    </a>
+                  </Typography>
+                </Alert>
+              </Stack>
+            )}
             <BlablaFormViewer
               formId={formId}
               config={{
