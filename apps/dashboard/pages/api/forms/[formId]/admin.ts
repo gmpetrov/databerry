@@ -37,7 +37,7 @@ export const updateForm = async (
       id,
     },
     data: {
-      ...updates,
+      ...(updates as any),
       draftConfig: draftConfig as any,
     },
   });

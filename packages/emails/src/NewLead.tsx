@@ -45,6 +45,7 @@ export const NewLead = ({
       eval: 'good',
       read: false,
       inputId: null,
+      metadata: {},
     },
     {
       id: '2',
@@ -58,6 +59,7 @@ export const NewLead = ({
       eval: 'good',
       read: false,
       inputId: null,
+      metadata: {},
     },
   ],
   visitorEmail = 'hello@world.com',

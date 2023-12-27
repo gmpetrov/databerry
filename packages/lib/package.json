@@ -58,7 +58,7 @@
     "uuid": "^9.0.0",
     "xlsx": "^0.18.5",
     "youtube-transcript": "^1.0.6",
-    "zod": "3.21.4",
+    "zod": "3.22.4",
     "zod-to-json-schema": "^3.22.1"
   },
   "devDependencies": {

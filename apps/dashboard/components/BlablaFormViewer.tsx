@@ -52,7 +52,6 @@ import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import z from 'zod';
 
-import AutoSaveForm from '@app/components/AutoSaveForm';
 import FormSubmissionsTab from '@app/components/FormSubmissionsTab';
 import Layout from '@app/components/Layout';
 import useChat from '@app/hooks/useChat';
