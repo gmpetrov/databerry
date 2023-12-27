@@ -18,6 +18,7 @@ import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
 import {
+  ActionApproval,
   type ConversationChannel,
   type ConversationStatus,
   MessageFrom,
