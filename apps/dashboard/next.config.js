@@ -239,6 +239,9 @@ const nextConfig = {
         patterns: [
           {
             from: '../../packages/integrations/**/static/**',
+            globOptions: {
+              ignore: ['**/integrations/node_modules'],
+            },
             to({ context, absoluteFilename }) {
               // Adds compatibility for windows path
               if (os.platform() === 'win32') {
