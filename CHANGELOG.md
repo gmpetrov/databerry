@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.129"></a>
+## 0.1.129 (2023-12-27)
+
+### Fixed
+
+- 🐛 bugs chatbubble and datasource viewer ([#281](https://github.com/gmpetrov/databerry/issues/281)) [[3721527](https://github.com/gmpetrov/databerry/commit/3721527b08a56d9b2c26df846246e9520893ff55)]
+
+### Miscellaneous
+
+- 🤖 bump chat bubble version [[55f2b96](https://github.com/gmpetrov/databerry/commit/55f2b9665b4ba20618f16d290672616d0c07054d)]
+
+
 <a name="0.1.128"></a>
 ## 0.1.128 (2023-12-25)
 
