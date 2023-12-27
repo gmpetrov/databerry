@@ -55,7 +55,7 @@
     "ts-node": "^10.9.1",
     "tsc-files": "^1.1.4",
     "tsx": "^3.13.0",
-    "turbo": "^1.10.14"
+    "turbo": "^1.11.2"
   },
   "packageManager": "pnpm@8.7.5"
 }
