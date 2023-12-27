@@ -15,7 +15,11 @@
     },
     "dev": {
       "dotEnv": [".env.local"],
-      "dependsOn": ["^dev", "@chaindesk/prisma#prisma:generate"],
+      "dependsOn": [
+        "^dev",
+        "@chaindesk/prisma#prisma:generate",
+        "@chaindesk/prisma#prisma:push"
+      ],
       "cache": false
     },
     "lint": {},
