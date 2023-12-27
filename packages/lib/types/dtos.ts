@@ -435,3 +435,18 @@ export const ChatResponse = z.object({
 });
 
 export type ChatResponse = z.infer<typeof ChatResponse>;
+
+export const ConversationMetadataCrisp = z.object({
+  sessionId: z.string(),
+});
+
+export type ConversationMetadataCrisp = z.infer<
+  typeof ConversationMetadataCrisp
+>;
+export const ConversationMetadataSlack = z.object({
+  user_id: z.string(),
+});
+
+export type ConversationMetadataSlack = z.infer<
+  typeof ConversationMetadataSlack
+>;

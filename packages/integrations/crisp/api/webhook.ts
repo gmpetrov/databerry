@@ -17,11 +17,9 @@ import {
   ConversationMetadata,
 } from '@chaindesk/lib/types/crisp';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
-import validate from '@chaindesk/lib/validate';
 import {
   ConversationChannel,
   MessageFrom,
-  Prisma,
   ServiceProviderType,
   SubscriptionPlan,
 } from '@chaindesk/prisma';
@@ -115,7 +113,7 @@ type HookBodyMessageUpdated = HookBodyBase & {
 
 type HookBody = HookBodyBase | HookBodyMessageSent | HookBodyMessageUpdated;
 
-const getAgent = async (websiteId: string) => {
+const getIntegration = async (websiteId: string) => {
   const integration = await prisma.serviceProvider.findUnique({
     where: {
       unique_external_id: {
@@ -148,7 +146,7 @@ const getAgent = async (websiteId: string) => {
     throw new Error('Agent not found');
   }
 
-  return agent;
+  return integration;
 };
 
 // const handleSendInput = async ({
@@ -187,7 +185,8 @@ const handleQuery = async (
   query: string,
   t: TFunction<'translation', undefined>
 ) => {
-  const agent = await getAgent(websiteId);
+  const integration = await getIntegration(websiteId);
+  const agent = integration?.agents?.[0];
 
   const usage = agent?.organization?.usage!;
   const plan =
@@ -201,26 +200,21 @@ const handleQuery = async (
   } catch {
     return;
   }
-  let externalConfig = await prisma.externalConversationConfig.findUnique({
+  let conversation = await prisma.conversation.findUnique({
     where: {
-      id: sessionId,
+      channelExternalId: sessionId,
     },
-    select: {
-      id: true,
-      conversation: {
-        include: {
-          messages: {
-            take: -24,
-            orderBy: {
-              createdAt: 'asc',
-            },
-          },
+    include: {
+      messages: {
+        take: -24,
+        orderBy: {
+          createdAt: 'asc',
         },
       },
     },
   });
 
-  const conversationId = externalConfig?.conversation?.id || cuid();
+  const conversationId = conversation?.id || cuid();
 
   const conversationManager = new ConversationManager({
     organizationId: agent?.organizationId!,
@@ -228,15 +222,8 @@ const handleQuery = async (
     agentId: agent?.id!,
     visitorId: sessionId,
     conversationId,
-    ...(!externalConfig
-      ? {
-          externalConfig: {
-            externalId: websiteId,
-            serviceProviderType: ServiceProviderType.crisp,
-            externalConversationId: sessionId,
-          },
-        }
-      : {}),
+    channelExternalId: sessionId,
+    channelCredentialsId: integration?.id,
   });
 
   conversationManager.push({
@@ -246,7 +233,7 @@ const handleQuery = async (
 
   const { answer, sources } = await new AgentManager({ agent }).query({
     input: query,
-    history: externalConfig?.conversation?.messages || [],
+    history: conversation?.messages || [],
   });
 
   const finalAnswer = `${answer}\n\n${formatSourcesRawText(
@@ -347,36 +334,26 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           body.data.type === 'text'
         ) {
           if (metadata?.aiStatus === AIStatus.disabled) {
-            const externalConfig =
-              await prisma.externalConversationConfig.findUnique({
-                where: {
-                  id: body.data.session_id,
-                },
-                select: {
-                  id: true,
-                  conversation: true,
-                },
-              });
-            const conversation = externalConfig?.conversation;
+            const conversation = await prisma.conversation.findUnique({
+              where: {
+                channelExternalId: body.data.session_id,
+              },
+            });
 
-            // If the operator is intervening, save the message
-            if (!conversation?.isAiEnabled) {
-              const conversationManager = new ConversationManager({
-                organizationId: conversation?.organizationId as string,
-                conversationId: conversation?.id,
-                channel: conversation?.channel as ConversationChannel,
-                userId: conversation?.userId as string,
-              });
+            const conversationManager = new ConversationManager({
+              organizationId: conversation?.organizationId as string,
+              conversationId: conversation?.id,
+              channel: conversation?.channel as ConversationChannel,
+              userId: conversation?.userId as string,
+            });
 
-              conversationManager.push({
-                from: MessageFrom.human,
-                text: body.data.content,
-              });
+            conversationManager.push({
+              from: MessageFrom.human,
+              text: body.data.content,
+            });
 
-              await conversationManager.save();
-              return;
-            }
-            return 'Converstaion disabled dot not proceed';
+            await conversationManager.save();
+            return 'Message saved';
           }
 
           CrispClient.website.composeMessageInConversation(

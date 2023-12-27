@@ -214,16 +214,13 @@ const handleAsk = async (payload: CommandEvent) => {
   const integration = await getIntegrationByTeamId(payload.team_id);
   const agent = integration?.agents?.[0]!;
 
-  const externalConfig = await prisma.externalConversationConfig.findUnique({
+  const conversation = await prisma.conversation.findUnique({
     where: {
-      id: payload.trigger_id,
-    },
-    include: {
-      conversation: true,
+      channelExternalId: payload.trigger_id,
     },
   });
 
-  const conversationId = externalConfig?.conversation?.id || cuid();
+  const conversationId = conversation?.id || cuid();
 
   const conversationManager = new ConversationManager({
     organizationId: agent?.organizationId!,
@@ -231,20 +228,8 @@ const handleAsk = async (payload: CommandEvent) => {
     agentId: agent?.id!,
     visitorId: payload.user_id,
     channel: ConversationChannel.slack,
-    ...(!externalConfig
-      ? {
-          externalConfig: {
-            externalId: payload.team_id,
-            serviceProviderType: ServiceProviderType.slack,
-            externalConversationId: payload.trigger_id,
-            metadata: {
-              question: payload.text,
-              channel_id: payload.channel_id,
-              user_id: payload.user_id,
-            },
-          },
-        }
-      : {}),
+    channelExternalId: payload.trigger_id,
+    channelCredentialsId: integration?.id,
   });
 
   conversationManager.push({
@@ -252,7 +237,7 @@ const handleAsk = async (payload: CommandEvent) => {
     text: payload.text,
   });
 
-  if (externalConfig?.conversation?.isAiEnabled) {
+  if (conversation?.isAiEnabled) {
     const chatRes = await new AgentManager({ agent }).query({
       input: payload.text,
     });

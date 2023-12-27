@@ -298,6 +298,28 @@ export default function LogsPage() {
     ];
   }, [getConversationsQuery?.data, getSingleConversationQuery?.data]);
 
+  const isHumanHandoffButtonHidden = useMemo(() => {
+    let hide = false;
+    const externalChannelId = getConversationQuery?.data?.channelExternalId;
+
+    switch (getConversationQuery?.data?.channel) {
+      case ConversationChannel.crisp:
+      case ConversationChannel.slack:
+        if (!externalChannelId) {
+          hide = true;
+        }
+        break;
+      case ConversationChannel.dashboard:
+        hide = true;
+      default:
+        break;
+    }
+    return hide;
+  }, [
+    getConversationQuery?.data?.channel,
+    getConversationQuery?.data?.channelExternalId,
+  ]);
+
   const toggleAi = async () => {
     try {
       switch (getConversationQuery.data?.channel) {
@@ -819,22 +841,24 @@ export default function LogsPage() {
                         email={getConversationQuery?.data?.lead?.email!}
                         currentConversationId={state.currentConversationId!}
                       />
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        size="md"
-                        loading={conversationUpdater.isMutating}
-                        endDecorator={
-                          state.isAiEnabled ? (
-                            <QuickreplyIcon fontSize="md" />
-                          ) : (
-                            <SmartToyIcon />
-                          )
-                        }
-                        onClick={toggleAi}
-                      >
-                        {state.isAiEnabled ? 'Intervene' : 'Re-Enable AI'}
-                      </Button>
+                      {!isHumanHandoffButtonHidden && (
+                        <Button
+                          variant="solid"
+                          color="neutral"
+                          size="md"
+                          loading={conversationUpdater.isMutating}
+                          endDecorator={
+                            state.isAiEnabled ? (
+                              <QuickreplyIcon fontSize="md" />
+                            ) : (
+                              <SmartToyIcon />
+                            )
+                          }
+                          onClick={toggleAi}
+                        >
+                          {state.isAiEnabled ? 'Reply' : 'Re-Enable AI'}
+                        </Button>
+                      )}
                     </Stack>
                   }
                 >

@@ -46,7 +46,8 @@ export default class ConversationManager {
   messages: MessageExtended[] = [];
   agentId?: string;
   metadata?: Record<PropertyKey, any> = {};
-  externalConfig?: ExternalConfig;
+  channelExternalId?: string;
+  channelCredentialsId?: string;
 
   constructor({
     organizationId,
@@ -56,7 +57,8 @@ export default class ConversationManager {
     channel,
     conversationId,
     metadata,
-    externalConfig,
+    channelExternalId,
+    channelCredentialsId,
   }: {
     organizationId: string;
     agentId?: string;
@@ -65,7 +67,8 @@ export default class ConversationManager {
     userId?: string;
     visitorId?: string;
     metadata?: Record<PropertyKey, any>;
-    externalConfig?: ExternalConfig;
+    channelExternalId?: string;
+    channelCredentialsId?: string;
   }) {
     this.messages = [];
     this.userId = userId;
@@ -75,7 +78,8 @@ export default class ConversationManager {
     this.agentId = agentId;
     this.metadata = metadata;
     this.organizationId = organizationId;
-    this.externalConfig = externalConfig;
+    this.channelExternalId = channelExternalId;
+    this.channelCredentialsId = channelCredentialsId;
   }
 
   push(message: MessageExtended) {
@@ -113,29 +117,21 @@ export default class ConversationManager {
       create: {
         id: this.conversationId,
         channel: this.channel,
+        channelExternalId: this.channelExternalId,
+        ...(this.channelCredentialsId
+          ? {
+              channelCredentials: {
+                connect: {
+                  id: this.channelCredentialsId,
+                },
+              },
+            }
+          : {}),
         organization: {
           connect: {
             id: this.organizationId,
           },
         },
-        ...(this.externalConfig
-          ? {
-              externalConfig: {
-                create: {
-                  id: this.externalConfig.externalConversationId,
-                  config: this.externalConfig.metadata || {},
-                  serviceProvider: {
-                    connect: {
-                      unique_external_id: {
-                        type: this.externalConfig.serviceProviderType,
-                        externalId: this.externalConfig.externalId,
-                      },
-                    },
-                  },
-                },
-              },
-            }
-          : {}),
         ...(this.agentId
           ? {
               agent: {
@@ -168,6 +164,16 @@ export default class ConversationManager {
           : {}),
       },
       update: {
+        channelExternalId: this.channelExternalId,
+        ...(this.channelCredentialsId
+          ? {
+              channelCredentials: {
+                connect: {
+                  id: this.channelCredentialsId,
+                },
+              },
+            }
+          : {}),
         messages: {
           createMany: {
             data: messages,

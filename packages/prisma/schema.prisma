@@ -312,10 +312,13 @@ model Conversation {
 
   metadata Json?
 
+  channelExternalId String? @unique @map("channel_external_id")
+  channelCredentialsId String? @map("channel_credentials_id")
+  channelCredentials ServiceProvider? @relation(fields:[channelCredentialsId],references:[id])
+
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  externalConfig     ExternalConversationConfig?  
 
   lead Lead?
  
@@ -326,21 +329,6 @@ model Conversation {
   @@map("conversations")
 }
 
-// specify how to map  between the internal/external aspect of the conversation.
-model ExternalConversationConfig {
-  id       String @id @default(cuid())
-
-  conversationId   String @unique
-  conversation  Conversation @relation(fields: [conversationId], references: [id],onDelete:Cascade)
-
-  
-  serviceProviderId String
-  serviceProvider ServiceProvider @relation(fields:[serviceProviderId],references:[id],onDelete:Cascade)
-
-  config Json
-
-  @@map("external_conversation_configs")
-}
 
 model Message {
   id             String        @id @default(cuid())
@@ -530,10 +518,11 @@ model ServiceProvider {
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  conversationConfigs  ExternalConversationConfig[]
   appDatasources AppDatasource[]
   agents Agent[]
   tools Tool[]
+
+  conversations Conversation[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
