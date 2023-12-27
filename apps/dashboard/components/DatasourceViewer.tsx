@@ -13,6 +13,12 @@ import {
   ToolbarProps,
   ToolbarSlot,
 } from '@react-pdf-viewer/default-layout';
+import {
+  HighlightArea,
+  highlightPlugin,
+  RenderHighlightsProps,
+  Trigger,
+} from '@react-pdf-viewer/highlight';
 import { searchPlugin } from '@react-pdf-viewer/search';
 import mime from 'mime-types';
 import React, { ReactElement, useEffect } from 'react';
@@ -137,6 +143,53 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
 
   const searchPluginInstance = searchPlugin();
 
+  // const areas: HighlightArea[] = [
+  //   {
+  //     pageIndex: 7,
+  //     height: 10.1,
+  //     width: 396.0412000000003,
+  //     left: 0,
+  //     top: 10.1,
+  //   },
+  // ];
+
+  //    str: 'the usual framework of coins made from digital signatures, which provides strong control of',
+  //    dir: 'ltr',
+  //    width: 396.0412000000003,
+  //    height: 10.1,
+  //    transform: [ 10.1, 0, 0, 10.1, 108.1, 285.6 ],
+  //    fontName: 'g_d0_f2',
+  //    hasEOL: false
+
+  // const renderHighlights = (props: RenderHighlightsProps) => (
+  //   <div>
+  //     {areas
+  //       .filter((area) => area.pageIndex === props.pageIndex)
+  //       .map((area, idx) => (
+  //         <div
+  //           key={idx}
+  //           className="highlight-area"
+  //           style={Object.assign(
+  //             {},
+  //             {
+  //               background: 'yellow',
+  //               opacity: 0.4,
+  //             },
+  //             // Calculate the position
+  //             // to make the highlight area displayed at the desired position
+  //             // when users zoom or rotate the document
+  //             props.getCssProperties(area, props.rotation)
+  //           )}
+  //         />
+  //       ))}
+  //   </div>
+  // );
+
+  // const highlightPluginInstance = highlightPlugin({
+  //   renderHighlights,
+  //   trigger: Trigger.None,
+  // });
+
   const { highlight } = searchPluginInstance;
   const {
     toolbarPluginInstance: {
@@ -208,8 +261,10 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
 
   // In case the search change but not the document (pdf-viewer will not load again)
   useEffect(() => {
-    handleSearch(search);
-  }, [search]);
+    if (isLoaded && search) {
+      handleSearch(search);
+    }
+  }, [search, isLoaded]);
 
   useEffect(() => {
     if (isLoaded && pageIndex !== 0) {
@@ -249,7 +304,11 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
         <Viewer
           defaultScale={SpecialZoomLevel.PageWidth}
           fileUrl={fileUrl}
-          plugins={[searchPluginInstance, defaultLayoutPluginInstance]}
+          plugins={[
+            searchPluginInstance,
+            defaultLayoutPluginInstance,
+            // highlightPluginInstance,
+          ]}
           enableSmoothScroll
           onDocumentLoad={(e) => {
             setIsLoaded(true);
