@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.130"></a>
+## 0.1.130 (2023-12-27)
+
+### Fixed
+
+- 🐛 integrations/node_modules should not be copied [[ceaa2f6](https://github.com/gmpetrov/databerry/commit/ceaa2f607563dac02b8f02776a0f3e089f158e4d)]
+
+### Miscellaneous
+
+-  chore: next14 + turbo@latest + node v18.19.0 [[dca9fc3](https://github.com/gmpetrov/databerry/commit/dca9fc3c590fd118c78aabde8873ba1dc177d4a9)]
+
+
 <a name="0.1.129"></a>
 ## 0.1.129 (2023-12-27)
 
