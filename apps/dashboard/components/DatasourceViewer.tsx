@@ -13,6 +13,12 @@ import {
   ToolbarProps,
   ToolbarSlot,
 } from '@react-pdf-viewer/default-layout';
+import {
+  HighlightArea,
+  highlightPlugin,
+  RenderHighlightsProps,
+  Trigger,
+} from '@react-pdf-viewer/highlight';
 import { searchPlugin } from '@react-pdf-viewer/search';
 import mime from 'mime-types';
 import React, { ReactElement, useEffect } from 'react';
@@ -29,6 +35,28 @@ type Props = {
   search?: string;
   pageNumber?: number;
 };
+
+function splitToHighlightedText(longText: string, minLength = 20) {
+  const sentenceDelimiter = /[.!?]/;
+  const lineDelimiter = /\n/;
+  const bulletPointDelimiter = /\s*•\s*/;
+
+  let potentialChunks = longText.split(sentenceDelimiter);
+
+  potentialChunks = potentialChunks
+    .filter((chunk) => chunk.trim() !== '')
+    .flatMap((chunk) => chunk.split(lineDelimiter));
+
+  potentialChunks = potentialChunks.flatMap((chunk) =>
+    chunk.split(bulletPointDelimiter)
+  );
+
+  const finalChunks = potentialChunks
+    .filter((chunk) => chunk.trim() !== '' && chunk.trim().length >= minLength)
+    .map((chunk) => chunk.trim());
+
+  return finalChunks;
+}
 
 function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
@@ -99,6 +127,11 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
   });
   const [isLoaded, setIsLoaded] = React.useState(false);
 
+  const pageIndex = React.useMemo(
+    () => (pageNumber ? pageNumber - 1 : 0),
+    [pageNumber]
+  );
+
   const getDatasourceQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatasource>
   >(datasourceId ? `/api/datasources/${datasourceId}` : null, fetcher);
@@ -109,6 +142,53 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
   const datasourceType = getDatasourceQuery?.data?.type;
 
   const searchPluginInstance = searchPlugin();
+
+  // const areas: HighlightArea[] = [
+  //   {
+  //     pageIndex: 7,
+  //     height: 10.1,
+  //     width: 396.0412000000003,
+  //     left: 0,
+  //     top: 10.1,
+  //   },
+  // ];
+
+  //    str: 'the usual framework of coins made from digital signatures, which provides strong control of',
+  //    dir: 'ltr',
+  //    width: 396.0412000000003,
+  //    height: 10.1,
+  //    transform: [ 10.1, 0, 0, 10.1, 108.1, 285.6 ],
+  //    fontName: 'g_d0_f2',
+  //    hasEOL: false
+
+  // const renderHighlights = (props: RenderHighlightsProps) => (
+  //   <div>
+  //     {areas
+  //       .filter((area) => area.pageIndex === props.pageIndex)
+  //       .map((area, idx) => (
+  //         <div
+  //           key={idx}
+  //           className="highlight-area"
+  //           style={Object.assign(
+  //             {},
+  //             {
+  //               background: 'yellow',
+  //               opacity: 0.4,
+  //             },
+  //             // Calculate the position
+  //             // to make the highlight area displayed at the desired position
+  //             // when users zoom or rotate the document
+  //             props.getCssProperties(area, props.rotation)
+  //           )}
+  //         />
+  //       ))}
+  //   </div>
+  // );
+
+  // const highlightPluginInstance = highlightPlugin({
+  //   renderHighlights,
+  //   trigger: Trigger.None,
+  // });
 
   const { highlight } = searchPluginInstance;
   const {
@@ -164,33 +244,33 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
     .map((each) => each.trim());
 
   const handleSearch = React.useCallback(
-    (search?: string) => {
+    async (search?: string) => {
       if (search) {
-        console.log('SEARCH', search);
-        const rows = search
-          .split('\n')
-          .map((each) => each.trim())
-          .filter((each) => each !== '');
-        highlight(rows);
+        const contentToHighlight = splitToHighlightedText(search);
+        highlight(contentToHighlight);
       }
     },
     [highlight]
   );
 
-  // useEffect(() => {
-  //   handleSearch(search);
-  // }, [search]);
   // "Given the following extracted parts of a long document and a question,
   // create a final answer in the language the question is asked.
   // If you don't know the answer, just say that you don't know. Don't try to make up an answer.
   // Always answer in the same language the question is asked in.\n\n
   // Content: ... Question: What are nodes?\n\n\nHelpful Answer:"
 
+  // In case the search change but not the document (pdf-viewer will not load again)
   useEffect(() => {
-    if (isLoaded && typeof pageNumber !== 'undefined') {
-      jumpToPage(pageNumber);
+    if (isLoaded && search) {
+      handleSearch(search);
     }
-  }, [pageNumber, isLoaded]);
+  }, [search, isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded && pageIndex !== 0) {
+      jumpToPage(pageIndex);
+    }
+  }, [pageIndex, isLoaded]);
 
   if (!fileUrl) {
     return null;
@@ -224,15 +304,20 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
         <Viewer
           defaultScale={SpecialZoomLevel.PageWidth}
           fileUrl={fileUrl}
-          plugins={[searchPluginInstance, defaultLayoutPluginInstance]}
+          plugins={[
+            searchPluginInstance,
+            defaultLayoutPluginInstance,
+            // highlightPluginInstance,
+          ]}
+          enableSmoothScroll
           onDocumentLoad={(e) => {
             setIsLoaded(true);
-            // if (search) {
-            //   handleSearch(search);
-            // }
+            if (search) {
+              handleSearch(search);
+            }
 
             if (pageNumber) {
-              jumpToPage(pageNumber);
+              jumpToPage(pageIndex);
             }
           }}
         />
