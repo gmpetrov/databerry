@@ -99,7 +99,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     mounted: false,
     handleAbort: undefined as any,
     isStreaming: false,
-    AiEnabled: true,
+    isAiEnabled: true,
   });
 
   // TODO: Remove when rate limit implemented from backend
@@ -142,7 +142,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     },
     fetcher,
     {
-      ...(state.AiEnabled
+      ...(state.isAiEnabled
         ? {
             // check if AI is disabled every 30 seconds
             refreshInterval: 30000,
@@ -171,7 +171,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
 
       if (
         getConversationQuery?.data &&
-        !getConversationQuery?.data?.[0]?.isAiEnabled
+        !getConversationQuery?.data?.[0]?.isisAiEnabled
       ) {
         await conversationChatMutation.trigger({
           message,
@@ -501,7 +501,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,
-        AiEnabled: getConversationQuery?.data?.[0]?.isAiEnabled,
+        isAiEnabled: getConversationQuery?.data?.[0]?.isisAiEnabled,
       });
     }
   }, [getConversationQuery.data]);
