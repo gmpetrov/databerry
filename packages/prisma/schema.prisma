@@ -256,6 +256,8 @@ model Agent {
   externalIntegration ExternalIntegration[]
   serviceProviders    ServiceProvider[]
 
+  workflow Workflow[]
+
   nbQueries Int? @default(0) @map("nb_queries")
 
   interfaceConfig Json? @map("interface_config")
@@ -343,6 +345,7 @@ model Conversation {
 
 
   lead Lead?
+  job Job?
  
 
   formSubmissions FormSubmission[]
@@ -710,6 +713,61 @@ model LLMTaskOutput {
   @@map("llm_task_outputs")
 }
 
+model Workflow { 
+  id String @id @default(cuid())
+
+  name String
+
+  description String?
+
+  query String
+
+  agent   Agent   @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId String @map("agent_id")
+
+  recurrenceConfig Json?
+  recurrence  WorkflowRecurrence?
+
+  jobs Job[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  @@map("workflows")
+}
+
+model Job { 
+  id String @id @default(cuid())
+
+  workflow   Workflow?   @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowId String? @map("workflow_id")
+
+
+  conversation  Conversation?   @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String? @unique @map("conversation_id")
+
+ 
+  status JobStatus @default(QUEUED)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  @@map("job")
+}
+
+enum WorkflowRecurrence {
+  NO_REPEAT
+  HOURLY
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  DONE
+  ERROR
+}
+
 model MailInbox {
 
   id String  @id @default(cuid())
@@ -896,6 +954,7 @@ enum ConversationChannel {
   crisp
   zapier
   api
+  automation
   form
   mail
 }

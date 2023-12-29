@@ -29,8 +29,9 @@ import pDebounce from 'p-debounce';
 import * as React from 'react';
 import useSWR from 'swr';
 
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
+import usePaginatedQuery from '@app/hooks/usePaginatedQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { getDatastore } from '@app/pages/api/datastores/[id]';
 
 import pagination from '@chaindesk/lib/pagination';
 import relativeDate from '@chaindesk/lib/relative-date';
@@ -148,12 +149,22 @@ export default function DatasourceTable({
 }) {
   const router = useRouter();
 
-  const { getDatastoreQuery, offset, limit, search, status, type, groupId } =
-    useGetDatastoreQuery({
-      swrConfig: {
-        refreshInterval: 5000,
-      },
-    });
+  const {
+    getPagniatedQuery: getDatastoreQuery,
+    offset,
+    limit,
+    filterValues,
+  } = usePaginatedQuery<typeof getDatastore>({
+    swrConfig: {
+      refreshInterval: 5000,
+    },
+    baseEndpoint: '/api/datastores',
+    path: ['datastoreId'],
+    filters: ['type', 'status', 'groupId', 'search'],
+    tableType: 'datasourceTable',
+  });
+
+  const { search, groupId, type, status } = filterValues;
 
   const [selected, setSelected] = React.useState<string[]>([]);
   const [state, setState] = useStateReducer({

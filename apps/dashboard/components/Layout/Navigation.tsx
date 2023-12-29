@@ -1,6 +1,7 @@
 import AllInboxRoundedIcon from '@mui/icons-material/AllInboxRounded';
 import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -273,6 +274,7 @@ export default function Navigation() {
               active: router.route.startsWith(RouteNames.DATASTORES),
               isNew: false,
             },
+
             {
               label: 'Forms',
               route: RouteNames.FORMS,
@@ -287,6 +289,14 @@ export default function Navigation() {
               icon: <ShowChartIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.ANALYTICS),
               isNew: true,
+            },
+            {
+              label: 'Workflows',
+              route: RouteNames.WORKFLOWS,
+              icon: <AutoAwesomeIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.WORKFLOWS),
+              isNew: false,
+              isExperimental: true,
             },
             {
               label: 'Email Inboxes',

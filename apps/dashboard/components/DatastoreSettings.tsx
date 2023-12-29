@@ -29,10 +29,10 @@ import { z } from 'zod';
 
 import { DatastoreFormsMap } from '@app/components/DatastoreForms';
 import Input from '@app/components/Input';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
+import usePaginatedQuery from '@app/hooks/usePaginatedQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { createDatastore } from '@app/pages/api/datastores';
-import { updateDatastore } from '@app/pages/api/datastores/[id]';
+import { getDatastore, updateDatastore } from '@app/pages/api/datastores/[id]';
 
 import getDatastoreS3Url from '@chaindesk/lib/get-datastore-s3-url';
 import getRootDomain from '@chaindesk/lib/get-root-domain';
@@ -59,7 +59,15 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
     isUpdatingPlugin: false,
   });
 
-  const { getDatastoreQuery } = useGetDatastoreQuery({});
+  const { getPagniatedQuery: getDatastoreQuery } = usePaginatedQuery({
+    swrConfig: {
+      refreshInterval: 5000,
+    },
+    baseEndpoint: '/api/datastores',
+    path: ['datastoreId'],
+    filters: ['type', 'status', 'groupId', 'search'],
+    tableType: 'datasourceTable',
+  });
 
   const createDatastoreMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof createDatastore>
@@ -341,7 +349,14 @@ function DatastoreSettings() {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = React.useState(false);
 
-  const { getDatastoreQuery } = useGetDatastoreQuery({});
+  const { getPagniatedQuery: getDatastoreQuery } = usePaginatedQuery<
+    typeof getDatastore
+  >({
+    baseEndpoint: '/api/datastores',
+    path: ['datastoreId'],
+    filters: ['type', 'status', 'groupId', 'search'],
+    tableType: 'datasourceTable',
+  });
 
   const handleDeleteDatastore = async () => {
     if (

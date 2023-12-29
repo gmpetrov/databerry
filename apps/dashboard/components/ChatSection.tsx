@@ -1,14 +1,23 @@
 import { Box } from '@mui/joy';
 
-import ChatBox, { ChatBoxProps } from './ChatBox';
+import ChatBox, { ChatBoxBaseProps } from './ChatBox';
 import ConversationList from './ConversationList';
 
-interface Props extends ChatBoxProps {
+interface baseProps extends ChatBoxBaseProps {
   agentId?: string;
   currentConversationId: string;
   handleSelectConversation(conversationId: string): void;
   handleCreateNewChat(): void;
 }
+
+type Props = baseProps &
+  (
+    | {
+        readOnly?: false | boolean;
+        onSubmit: (message: string, attachments?: File[]) => Promise<any>;
+      }
+    | { readOnly: true; onSubmit?: never }
+  );
 
 function ChatSection({
   agentId,

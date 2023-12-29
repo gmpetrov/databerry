@@ -12,6 +12,7 @@ import {
   PromptType,
   ServiceProviderType,
   ToolType,
+  WorkflowRecurrence,
 } from '@chaindesk/prisma';
 
 import {
@@ -219,7 +220,6 @@ export const ServiceProviderZendeskSchema = ServiceProviderBaseSchema.extend({
 export const ServiceProviderSchema = z.discriminatedUnion('type', [
   ServiceProviderZendeskSchema,
 ]);
-
 export type ServiceProviderSchema = z.infer<typeof ServiceProviderSchema>;
 export type ServiceProviderZendesk = Extract<
   ServiceProviderSchema,
@@ -350,6 +350,61 @@ export type CreateAgentSchema = z.infer<typeof CreateAgentSchema>;
 
 export const UpdateAgentSchema = CreateAgentSchema.partial();
 export type UpdateAgentSchema = z.infer<typeof UpdateAgentSchema>;
+
+export const recurrenceConfigSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal(WorkflowRecurrence.HOURLY),
+    config: z.object({}).optional(),
+  }),
+  z.object({
+    type: z.literal(WorkflowRecurrence.DAILY),
+    config: z.object({
+      hour: z.number(),
+    }),
+  }),
+  z.object({
+    type: z.literal(WorkflowRecurrence.WEEKLY),
+    config: z.object({
+      hour: z.number(),
+      dayOfWeek: z.string(),
+    }),
+  }),
+  z.object({
+    type: z.literal(WorkflowRecurrence.MONTHLY),
+    config: z.object({
+      hour: z.number(),
+      dayOfMonth: z.union([z.string(), z.number()]),
+    }),
+  }),
+  z.object({
+    type: z.literal(WorkflowRecurrence.NO_REPEAT),
+    config: z.object({
+      date: z.string().refine(
+        (value) => {
+          const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
+          return dateRegex.test(value);
+        },
+        {
+          message: 'Date must be in the format YYYY/MM/DD',
+        }
+      ),
+      hour: z.number(),
+    }),
+  }),
+]);
+
+export const createWorkflowSchema = z.object({
+  name: z.string().min(4),
+  description: z.string().min(9).optional(),
+  agentId: z.string().min(8),
+  query: z.string().min(15),
+  recurrence: recurrenceConfigSchema,
+});
+
+export type createWorkflowSchema = z.infer<typeof createWorkflowSchema>;
+
+export const updateWorkflowSchema = createWorkflowSchema.partial();
+export type updateWorkflowSchema = z.infer<typeof updateWorkflowSchema>;
 
 export const AcceptedDatasourceMimeTypes = [
   'text/csv',
