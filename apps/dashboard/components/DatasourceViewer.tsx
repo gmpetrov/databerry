@@ -1,27 +1,14 @@
-import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
-import {
-  Position,
-  PrimaryButton,
-  SpecialZoomLevel,
-  Tooltip,
-  Viewer,
-  Worker,
-} from '@react-pdf-viewer/core';
+import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core';
 import {
   defaultLayoutPlugin,
   ToolbarProps,
   ToolbarSlot,
 } from '@react-pdf-viewer/default-layout';
-import {
-  HighlightArea,
-  highlightPlugin,
-  RenderHighlightsProps,
-  Trigger,
-} from '@react-pdf-viewer/highlight';
 import { searchPlugin } from '@react-pdf-viewer/search';
 import mime from 'mime-types';
-import React, { ReactElement, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import useSWR from 'swr';
 
 import { getDatasource } from '@app/pages/api/datasources/[id]';
@@ -36,26 +23,52 @@ type Props = {
   pageNumber?: number;
 };
 
-function splitToHighlightedText(longText: string, minLength = 20) {
-  const sentenceDelimiter = /[.!?]/;
-  const lineDelimiter = /\n/;
-  const bulletPointDelimiter = /\s*•\s*/;
+/*
+  ☢️ important: once the pdf  is fully rendered the plugin onTextLayerRender callback wont be called
+  this behaviour imply that a selection of a different answer with the same datasource (and different chunkId) will not  trigger a new highiligh
+  the highlight function can be used to highlight in combination with a useEffect to highlight new  lines if needed
+ */
 
-  let potentialChunks = longText.split(sentenceDelimiter);
+type HighlightFn = ReturnType<typeof searchPlugin>['highlight'];
 
-  potentialChunks = potentialChunks
-    .filter((chunk) => chunk.trim() !== '')
-    .flatMap((chunk) => chunk.split(lineDelimiter));
+class CustomHighlightPlugin {
+  cb: HighlightFn;
+  searchRef: React.MutableRefObject<string | undefined>;
 
-  potentialChunks = potentialChunks.flatMap((chunk) =>
-    chunk.split(bulletPointDelimiter)
-  );
+  constructor(
+    cb: HighlightFn,
+    searchRef: React.MutableRefObject<string | undefined>
+  ) {
+    this.cb = cb;
+    this.searchRef = searchRef;
+  }
 
-  const finalChunks = potentialChunks
-    .filter((chunk) => chunk.trim() !== '' && chunk.trim().length >= minLength)
-    .map((chunk) => chunk.trim());
+  onTextLayerRender({ ele }: { ele: HTMLElement }) {
+    this.highlight(ele);
+  }
 
-  return finalChunks;
+  highlight(ele?: HTMLElement) {
+    if (this.searchRef.current !== undefined) {
+      const lineCollection = (ele || document).querySelectorAll(
+        '.rpv-core__text-layer-text'
+      );
+      const lines = Array.from(lineCollection || []);
+
+      const linesToHighlight = lines.reduce((result, child) => {
+        const childText: string = (child as any)?.innerText.trim();
+        if (
+          this.searchRef.current?.includes(childText) &&
+          childText !== '' &&
+          childText.length > 20
+        ) {
+          result.push(childText);
+        }
+        return result;
+      }, [] as string[]);
+
+      this.cb(linesToHighlight);
+    }
+  }
 }
 
 function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
@@ -125,8 +138,6 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
       </Toolbar>
     ),
   });
-  const [isLoaded, setIsLoaded] = React.useState(false);
-
   const pageIndex = React.useMemo(
     () => (pageNumber ? pageNumber - 1 : 0),
     [pageNumber]
@@ -142,54 +153,6 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
   const datasourceType = getDatasourceQuery?.data?.type;
 
   const searchPluginInstance = searchPlugin();
-
-  // const areas: HighlightArea[] = [
-  //   {
-  //     pageIndex: 7,
-  //     height: 10.1,
-  //     width: 396.0412000000003,
-  //     left: 0,
-  //     top: 10.1,
-  //   },
-  // ];
-
-  //    str: 'the usual framework of coins made from digital signatures, which provides strong control of',
-  //    dir: 'ltr',
-  //    width: 396.0412000000003,
-  //    height: 10.1,
-  //    transform: [ 10.1, 0, 0, 10.1, 108.1, 285.6 ],
-  //    fontName: 'g_d0_f2',
-  //    hasEOL: false
-
-  // const renderHighlights = (props: RenderHighlightsProps) => (
-  //   <div>
-  //     {areas
-  //       .filter((area) => area.pageIndex === props.pageIndex)
-  //       .map((area, idx) => (
-  //         <div
-  //           key={idx}
-  //           className="highlight-area"
-  //           style={Object.assign(
-  //             {},
-  //             {
-  //               background: 'yellow',
-  //               opacity: 0.4,
-  //             },
-  //             // Calculate the position
-  //             // to make the highlight area displayed at the desired position
-  //             // when users zoom or rotate the document
-  //             props.getCssProperties(area, props.rotation)
-  //           )}
-  //         />
-  //       ))}
-  //   </div>
-  // );
-
-  // const highlightPluginInstance = highlightPlugin({
-  //   renderHighlights,
-  //   trigger: Trigger.None,
-  // });
-
   const { highlight } = searchPluginInstance;
   const {
     toolbarPluginInstance: {
@@ -211,66 +174,16 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
     return null;
   }, [datasourceId, datastoreId, datasourceType, mimeType]);
 
-  //   console.log('fileURL', datasourceId, datastoreId, datasourceType, mimeType);
+  const searchRef = useRef(search);
 
-  const _search = `4. Proof-of-Work
-    To implement a distributed timestamp server on a peer-to-peer basis, we will need to use a proof-
-    of-work system similar to Adam Back's Hashcash [6], rather than newspaper or Usenet posts.
-    The proof-of-work involves scanning for a value that when hashed, such as with SHA-256, the
-    hash begins with a number of zero bits. The average work required is exponential in the number
-    of zero bits required and can be verified by executing a single hash.
-    For our timestamp network, we implement the proof-of-work by incrementing a nonce in the
-    block until a value is found that gives the block's hash the required zero bits. Once the CPU
-    effort has been expended to make it satisfy the proof-of-work, the block cannot be changed
-    without redoing the work. As later blocks are chained after it, the work to change the block
-    would include redoing all the blocks after it.
-    The proof-of-work also solves the problem of determining representation in majority decision
-    making. If the majority were based on one-IP-address-one-vote, it could be subverted by anyone
-    able to allocate many IPs. Proof-of-work is essentially one-CPU-one-vote. The majority
-    decision is represented by the longest chain, which has the greatest proof-of-work effort invested
-    in it. If a majority of CPU power is controlled by honest nodes, the honest chain will grow the
-    fastest and outpace any competing chains. To modify a past block, an attacker would have to
-    redo the proof-of-work of the block and all blocks after it and then catch up with and surpass the
-    work of the honest nodes. We will show later that the probability of a slower attacker catching up
-    diminishes exponentially as subsequent blocks are added.
-    To compensate for increasing hardware speed and varying interest in running nodes over time,
-    the proof-of-work difficulty is determined by a moving average targeting an average number of
-    blocks per hour. If they're generated too fast, the difficulty increases.
-    5. Network
-    The steps to run the network are as follows:
-    1) New transactions are broadcast to all nodes.
-    2) Each node collects new transactions into a block.`
-    .split('\n')
-    .map((each) => each.trim());
-
-  const handleSearch = React.useCallback(
-    async (search?: string) => {
-      if (search) {
-        const contentToHighlight = splitToHighlightedText(search);
-        highlight(contentToHighlight);
-      }
-    },
-    [highlight]
-  );
-
-  // "Given the following extracted parts of a long document and a question,
-  // create a final answer in the language the question is asked.
-  // If you don't know the answer, just say that you don't know. Don't try to make up an answer.
-  // Always answer in the same language the question is asked in.\n\n
-  // Content: ... Question: What are nodes?\n\n\nHelpful Answer:"
-
-  // In case the search change but not the document (pdf-viewer will not load again)
-  useEffect(() => {
-    if (isLoaded && search) {
-      handleSearch(search);
-    }
-  }, [search, isLoaded]);
+  const customHighlightPlugin = new CustomHighlightPlugin(highlight, searchRef);
 
   useEffect(() => {
-    if (isLoaded && pageIndex !== 0) {
-      jumpToPage(pageIndex);
+    if (search) {
+      searchRef.current = search;
+      customHighlightPlugin.highlight();
     }
-  }, [pageIndex, isLoaded]);
+  }, [search]);
 
   if (!fileUrl) {
     return null;
@@ -289,33 +202,16 @@ function DatasourceViewer({ datasourceId, search, pageNumber }: Props) {
       })}
     >
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.js">
-        {/* <Button
-          onClick={() => {
-            highlight(_search);
-            // highlight({
-            // keyword: search,
-
-            // matchCase: false,
-            // });
-          }}
-        >
-          test
-        </Button> */}
         <Viewer
           defaultScale={SpecialZoomLevel.PageWidth}
           fileUrl={fileUrl}
           plugins={[
             searchPluginInstance,
             defaultLayoutPluginInstance,
-            // highlightPluginInstance,
+            customHighlightPlugin,
           ]}
           enableSmoothScroll
           onDocumentLoad={(e) => {
-            setIsLoaded(true);
-            if (search) {
-              handleSearch(search);
-            }
-
             if (pageNumber) {
               jumpToPage(pageIndex);
             }
