@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.131"></a>
+## 0.1.131 (2023-12-31)
+
+### Fixed
+
+- 🐛 highlight lines issue [[37d3b43](https://github.com/gmpetrov/databerry/commit/37d3b43c53cf9533b118ed9731da62ac603c995e)]
+
+
 <a name="0.1.130"></a>
 ## 0.1.130 (2023-12-27)
 
