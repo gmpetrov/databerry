@@ -73,7 +73,7 @@ import {
   FormFieldSchema,
 } from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
-import { Prisma } from '@chaindesk/prisma';
+import { ConversationChannel, Prisma } from '@chaindesk/prisma';
 
 import Motion from './Motion';
 import MotionBottom from './MotionBottom';
@@ -116,6 +116,7 @@ function BlablaFormViewer({ formId, config }: Props) {
   const chatData = useChat({
     endpoint: `/api/forms/${formId}/chat?draft=true`,
     localStorageConversationIdKey: LOCAL_STORAGE_CONVERSATION_KEY,
+    channel: ConversationChannel.form,
   });
 
   const answerQuestion = async (answer: string) => {
@@ -251,17 +252,20 @@ function BlablaFormViewer({ formId, config }: Props) {
                   <Input
                     autoFocus
                     className="w-full p-0 text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
-                    placeholder="Type your answer "
+                    placeholder="Type your answer"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         answerQuestion(state.currentAnswer);
                       }
                     }}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+
                       setState({
                         currentAnswer: e.target.value,
-                      })
-                    }
+                      });
+                    }}
                   />
                 )}
 

@@ -6,6 +6,7 @@ import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import generateFunId from '@chaindesk/lib/generate-fun-id';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
@@ -56,14 +57,13 @@ export const createForm = async (
   return prisma.form.create({
     data: {
       id: cuid(),
-      name: data.name,
+      name: data.name || generateFunId(),
       organization: {
         connect: {
           id: organizationId,
         },
       },
       draftConfig: data.draftConfig,
-      publishedConfig: {},
     },
   });
 };

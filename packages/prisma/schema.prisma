@@ -786,6 +786,7 @@ enum ConversationChannel {
   crisp
   zapier
   api
+  form
 }
 
 enum AgentModelName {

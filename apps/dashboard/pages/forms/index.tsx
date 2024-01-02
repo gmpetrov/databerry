@@ -76,7 +76,6 @@ export default function FormsPage() {
     try {
       const res = await toast.promise(
         formMutation.trigger({
-          name: 'untitled',
           draftConfig: {
             fields: [
               {

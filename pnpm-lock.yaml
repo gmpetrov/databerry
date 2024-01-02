@@ -131,6 +131,9 @@ importers:
       '@sentry/nextjs':
         specifier: ^7.66.0
         version: 7.66.0(next@14.0.4)(react@18.2.0)(webpack@5.89.0)
+      '@slack/web-api':
+        specifier: ^6.8.1
+        version: 6.8.1
       '@sparticuz/chromium':
         specifier: ^117.0.0
         version: 117.0.0
