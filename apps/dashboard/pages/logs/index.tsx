@@ -2,6 +2,7 @@ import { CloseRounded } from '@mui/icons-material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import Notifications from '@mui/icons-material/Notifications';
 import QuickreplyIcon from '@mui/icons-material/Quickreply';
@@ -16,6 +17,7 @@ import {
   SelectProps,
   TabList,
   Tabs,
+  Tooltip,
 } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
@@ -228,7 +230,7 @@ export default function LogsPage() {
 
   const conversationChatMutation = useSWRMutation(
     state.currentConversationId
-      ? `/api/conversations/${state.currentConversationId}/chat`
+      ? `/api/conversations/${state.currentConversationId}/message`
       : null,
     generateActionFetcher(HTTP_METHOD.POST)
   );
@@ -809,7 +811,7 @@ export default function LogsPage() {
 
           <Divider orientation="vertical" />
           <Box
-            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 5 }}
+            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 9 }}
           >
             {getConversationQuery.data && (
               <>
@@ -836,22 +838,17 @@ export default function LogsPage() {
                   startDecorator={<Notifications />}
                   endDecorator={
                     <Stack direction="row" spacing={1}>
-                      <BannerActions
-                        status={getConversationQuery?.data?.status}
-                        email={getConversationQuery?.data?.lead?.email!}
-                        currentConversationId={state.currentConversationId!}
-                      />
                       {!isHumanHandoffButtonHidden && (
                         <Button
                           variant="solid"
-                          color="neutral"
+                          color={state.isAiEnabled ? 'primary' : 'warning'}
                           size="md"
                           loading={conversationUpdater.isMutating}
                           endDecorator={
                             state.isAiEnabled ? (
-                              <QuickreplyIcon fontSize="md" />
+                              <CommentRoundedIcon fontSize="sm" />
                             ) : (
-                              <SmartToyIcon />
+                              <SmartToyIcon fontSize="sm" />
                             )
                           }
                           onClick={toggleAi}
@@ -859,6 +856,12 @@ export default function LogsPage() {
                           {state.isAiEnabled ? 'Reply' : 'Re-Enable AI'}
                         </Button>
                       )}
+
+                      <BannerActions
+                        status={getConversationQuery?.data?.status}
+                        email={getConversationQuery?.data?.lead?.email!}
+                        currentConversationId={state.currentConversationId!}
+                      />
                     </Stack>
                   }
                 >
@@ -893,7 +896,7 @@ export default function LogsPage() {
               onSubmit={(message) => {
                 return handleOperatorChat(message);
               }}
-              readOnly={state.isAiEnabled || state.isAiEnabled === undefined}
+              readOnly={!!state.isAiEnabled}
               handleEvalAnswer={handleEvalAnswer}
               handleImprove={(message, index) => {
                 const prev = getConversationQuery?.data?.messages?.[index - 1];
@@ -906,6 +909,7 @@ export default function LogsPage() {
               userImgUrl={session?.user?.image!}
               organizationId={session?.organization?.id!}
               refreshConversation={getConversationQuery.mutate}
+              disableWatermark
             />
           </Box>
         </Stack>

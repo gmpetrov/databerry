@@ -36,7 +36,6 @@ type Props = {
   queryBody?: any;
   datasourceId?: string;
   localStorageConversationIdKey?: string;
-  conversationId?: string;
   agentId?: string;
 };
 
@@ -110,7 +109,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
 
   const conversationChatMutation = useSWRMutation(
     state.conversationId
-      ? `/api/conversations/${state.conversationId}/chat`
+      ? `/api/conversations/${state.conversationId}/message`
       : null,
     generateActionFetcher(HTTP_METHOD.POST)
   );
@@ -535,14 +534,13 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       // Init from localStorage onmount (for chatbubble widget)
       try {
         const visitorId = localStorage.getItem('visitorId') as string;
-        const localStoageConversationId = localStorage.getItem(
+        const conversationId = localStorage.getItem(
           localStorageConversationIdKey
-        );
+        ) as string;
 
         setState({
           visitorId,
-          conversationId:
-            localStoageConversationId || otherProps.conversationId,
+          conversationId,
         });
       } catch {}
     }
