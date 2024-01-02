@@ -7,6 +7,10 @@ import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
 
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
+  createHandler as createFormToolHandler,
+  toJsonSchema as formToolToJsonSchema,
+} from './agent/tools/form';
+import {
   createHandler as createHttpToolHandler,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
@@ -15,6 +19,7 @@ import {
   ChatModelConfigSchema,
   ChatRequest,
   ChatResponse,
+  FormToolSchema,
   HttpToolSchema,
   ToolSchema,
 } from './types/dtos';
@@ -63,6 +68,10 @@ const chat = async ({
     (each) => each.type === ToolType.http
   ) as HttpToolSchema[];
 
+  const formTools = (tools as ToolSchema[]).filter(
+    (each) => each.type === ToolType.form
+  ) as FormToolSchema[];
+
   const approvals: ChatResponse['approvals'] = [];
 
   const handleToolWithApproval = async (
@@ -84,6 +93,19 @@ const chat = async ({
           function: createHttpToolHandler(each, handleToolWithApproval),
         },
         // } as RunnableToolFunction<HttpToolPayload>)
+      } as ChatCompletionTool)
+  );
+
+  const formatedFormTools = formTools.map(
+    (each) =>
+      ({
+        type: 'function',
+
+        function: {
+          ...formToolToJsonSchema(each),
+          parse: JSON.parse,
+          function: createFormToolHandler(each, {}),
+        },
       } as ChatCompletionTool)
   );
 
@@ -134,6 +156,7 @@ const chat = async ({
 
   const openAiTools = [
     ...formatedHttpTools,
+    ...formatedFormTools,
     ...(nbDatastoreTools > 0
       ? [
           {

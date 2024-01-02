@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import Cors from 'cors';
 import cuid from 'cuid';
 import { NextApiResponse } from 'next';
@@ -24,10 +25,18 @@ export const getForms = async (
   res: NextApiResponse
 ) => {
   const session = req.session;
+  const published = req.query.published === 'true';
 
   const forms = await prisma.form.findMany({
     where: {
       organizationId: session?.organization?.id,
+      ...(published
+        ? {
+            publishedConfig: {
+              not: Prisma.AnyNull,
+            },
+          }
+        : {}),
     },
     include: {
       _count: {

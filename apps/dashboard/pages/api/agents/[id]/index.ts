@@ -40,6 +40,7 @@ export const agentInclude: Prisma.AgentInclude = {
           },
         },
       },
+      form: true,
     },
   },
 };
@@ -158,6 +159,7 @@ export const updateAgent = async (
               serviceProviderId,
               serviceProvider,
               datastore, // ⚠️ do not remove datastore from spreading as passing the object to createMany will throw an error
+              form, // Same
               ...otherToolProps
             }) => ({
               ...otherToolProps,

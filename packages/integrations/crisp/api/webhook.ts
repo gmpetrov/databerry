@@ -133,6 +133,7 @@ const getIntegration = async (websiteId: string) => {
           tools: {
             include: {
               datastore: true,
+              form: true,
             },
           },
         },

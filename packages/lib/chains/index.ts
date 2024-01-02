@@ -19,6 +19,7 @@ import { ChatRequest } from '@chaindesk/lib/types/dtos';
 import {
   Agent,
   Datastore,
+  Form,
   Message,
   MessageFrom,
   Tool,
@@ -35,6 +36,7 @@ import qa from './qa';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
+  form: Form | null;
 };
 
 export type AgentWithTools = Agent & {

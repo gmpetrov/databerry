@@ -1,4 +1,8 @@
+import cuid from 'cuid';
 import { JSONSchema7 } from 'json-schema';
+
+import { FormStatus } from '@chaindesk/prisma';
+import prisma from '@chaindesk/prisma/client';
 
 import { FormFieldSchema } from './types/dtos';
 
@@ -38,3 +42,47 @@ export function formToJsonSchema(fields: FormFieldSchema[]): JSONSchema7 {
     { type: 'object', properties: {}, required: [] } as JSONSchema7
   );
 }
+
+export const handleFormValid = async ({
+  conversationId,
+  formId,
+  values,
+  webhookUrl,
+  submissionId = cuid(),
+}: {
+  formId: string;
+  conversationId?: string;
+  submissionId?: string;
+  webhookUrl?: string;
+  values: any;
+}) => {
+  const submission = await prisma.formSubmission.upsert({
+    where: {
+      id: submissionId,
+    },
+    create: {
+      conversationId: conversationId,
+      formId: formId,
+      data: values,
+      status: FormStatus.COMPLETED,
+    },
+    update: {
+      data: values,
+      status: FormStatus.COMPLETED,
+    },
+  });
+
+  if (webhookUrl) {
+    try {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submission),
+      });
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
+};

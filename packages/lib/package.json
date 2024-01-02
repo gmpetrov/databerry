@@ -13,6 +13,7 @@
     "@chaindesk/prisma": "workspace:*",
     "@chaindesk/tsconfig": "workspace:*",
     "@notionhq/client": "^2.2.13",
+    "@sindresorhus/slugify": "^2.2.1",
     "@slack/web-api": "^6.8.1",
     "@xmldom/xmldom": "^0.8.7",
     "aws-sdk": "^2.1343.0",

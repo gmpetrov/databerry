@@ -16,7 +16,7 @@ import clsx from 'clsx';
 import cuid from 'cuid';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
 
@@ -32,12 +32,15 @@ import { RouteNames } from '@chaindesk/lib/types';
 import { CreateAgentSchema, ToolSchema } from '@chaindesk/lib/types/dtos';
 import {
   AppDatasource as Datasource,
+  Form,
   Prisma,
+  Tool,
   ToolType,
 } from '@chaindesk/prisma';
 
 import HttpToolForm from '../HttpToolForm';
 
+import FormToolInput from './FormToolInput';
 import HttpToolInput from './HttpToolInput';
 type Props = {
   onHttpToolClick?: (index: number) => any;
@@ -119,6 +122,7 @@ function ToolsInput({}: Props) {
 
   const newDatastoreModal = useModal();
   const newApiToolForm = useModal();
+  const newFormToolModal = useModal();
   const editApiToolForm = useModal();
 
   const getDatastoresQuery = useSWR<
@@ -128,6 +132,17 @@ function ToolsInput({}: Props) {
   const tools = watch('tools') || [];
 
   const formattedTools = tools.map(agentToolFormat);
+
+  const getToolLink = (tool: Tool) => {
+    switch (tool.type) {
+      case ToolType.datastore:
+        return `${RouteNames.DATASTORES}/${tool.datastoreId}`;
+      case ToolType.form:
+        return `${RouteNames.FORMS}/${tool.formId}/admin`;
+      default:
+        return undefined;
+    }
+  };
 
   return (
     <Stack gap={1}>
@@ -158,11 +173,7 @@ function ToolsInput({}: Props) {
                   }
                 : undefined
             }
-            link={
-              tool.type === 'datastore'
-                ? `${RouteNames.DATASTORES}/${tool.datastoreId}`
-                : undefined
-            }
+            link={getToolLink(tool)}
           >
             <IconButton
               variant="plain"
@@ -217,6 +228,23 @@ function ToolsInput({}: Props) {
           color="success"
           onClick={() => {
             newApiToolForm.open();
+          }}
+        >
+          <AddCircleOutlineRoundedIcon />
+        </IconButton>
+      </ToolCard>
+
+      <ToolCard
+        id="form-tool"
+        name={'Form'}
+        description={'Connect a form to your Agent'}
+      >
+        <IconButton
+          size="sm"
+          variant="plain"
+          color="success"
+          onClick={() => {
+            newFormToolModal.open();
           }}
         >
           <AddCircleOutlineRoundedIcon />
@@ -313,6 +341,39 @@ function ToolsInput({}: Props) {
           }}
         />
       </newApiToolForm.component>
+
+      <newFormToolModal.component
+        title="Form Tool"
+        description="Connect a Form to your Agent"
+        dialogProps={{
+          sx: {
+            maxWidth: 'sm',
+            height: 'auto',
+          },
+        }}
+      >
+        <FormToolInput
+          onChange={(form: Form) => {
+            setValue(
+              'tools',
+              [
+                ...tools,
+                createTool({
+                  type: ToolType.form,
+                  formId: form.id,
+                  form: form,
+                }),
+              ],
+              {
+                shouldDirty: true,
+                shouldValidate: true,
+              }
+            );
+
+            newFormToolModal.close();
+          }}
+        />
+      </newFormToolModal.component>
 
       <CreateDatastoreModal
         isOpen={isCreateDatastoreModalOpen}

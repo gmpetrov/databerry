@@ -405,11 +405,16 @@ export default function AgentPage() {
                                     }
                                   : undefined
                               }
-                              href={
-                                tool.type === 'datastore'
-                                  ? `/datastores/${tool?.datastoreId}`
-                                  : '#'
-                              }
+                              href={(() => {
+                                switch (tool.type) {
+                                  case 'datastore':
+                                    return `/datastores/${tool?.datastoreId}`;
+                                  case 'form':
+                                    return `/forms/${tool?.formId}/admin`;
+                                  default:
+                                    return '#';
+                                }
+                              })()}
                               className="truncate"
                             >
                               <Typography
@@ -418,6 +423,7 @@ export default function AgentPage() {
                                 level="body-sm"
                               >
                                 {(tool as any)?.datastore?.name ||
+                                  (tool as any)?.form?.name ||
                                   (tool as any)?.config?.name ||
                                   tool?.type}
                               </Typography>

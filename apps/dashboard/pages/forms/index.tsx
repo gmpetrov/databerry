@@ -46,7 +46,7 @@ import {
 import { RouteNames } from '@chaindesk/lib/types';
 import { CreateFormSchema, FormConfigSchema } from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
-import { Agent, AgentModelName, Form, Prisma } from '@chaindesk/prisma';
+import { Form, Prisma } from '@chaindesk/prisma';
 
 import { getAgents } from '../api/agents';
 import { createForm, getForms } from '../api/forms';
@@ -206,70 +206,6 @@ export default function FormsPage() {
         <FormsTable items={getFormsQuery.data as Form[]} />
       )}
 
-      <Modal
-        onClose={() => setState({ isAgentModalOpen: false })}
-        open={state.isAgentModalOpen}
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Sheet
-          variant="outlined"
-          sx={{
-            width: 600,
-            maxWidth: '100%',
-            borderRadius: 'md',
-            p: 3,
-            boxShadow: 'lg',
-            overflowY: 'auto',
-            maxHeight: '95vh',
-          }}
-        >
-          <Typography level="h3">Agent</Typography>
-          <Divider sx={{ my: 4 }} />
-          <AgentForm
-            onSubmitSucces={(agent: Agent) => {
-              setState({ isAgentModalOpen: false });
-              if (agent?.id) {
-                router.push(`${RouteNames.AGENTS}/${agent.id}`);
-              }
-            }}
-          >
-            {({ mutation }) => (
-              <Stack gap={4}>
-                <GeneralInput />
-
-                <details>
-                  <summary>Model / Prompt Settings</summary>
-                  <ModelInput />
-                </details>
-
-                <SettingCard
-                  title="Tools"
-                  disableSubmitButton
-                  description="Give tools to your Agent to make it smarter"
-                >
-                  <ToolsInput />
-                </SettingCard>
-
-                <Button
-                  type="submit"
-                  variant="solid"
-                  color="primary"
-                  loading={mutation.isMutating}
-                  sx={{ ml: 'auto', mt: 2 }}
-                  // disabled={!methods.formState.isValid}
-                  // startDecorator={<SaveRoundedIcon />}
-                >
-                  {'Create'}
-                </Button>
-              </Stack>
-            )}
-          </AgentForm>
-        </Sheet>
-      </Modal>
       <UsageLimitModal
         isOpen={state.isUsageLimitModalOpen}
         handleClose={() =>

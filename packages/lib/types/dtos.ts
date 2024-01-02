@@ -210,6 +210,7 @@ const ToolBaseSchema = z.object({
   serviceProviderId: z.string().cuid().optional().nullable(),
   serviceProvider: z.any().optional(),
   datastore: z.any().optional(),
+  form: z.any().optional(),
 });
 
 // export const ToolSchema = z.object({
@@ -269,11 +270,16 @@ export const ToolSchema = z.discriminatedUnion('type', [
     type: z.literal(ToolType.agent),
     config: z.any({}),
   }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.form),
+    formId: z.string().cuid(),
+  }),
 ]);
 
 export type ToolSchema = z.infer<typeof ToolSchema>;
 
 export type HttpToolSchema = Extract<ToolSchema, { type: 'http' }>;
+export type FormToolSchema = Extract<ToolSchema, { type: 'form' }>;
 
 export const CreateAgentSchema = z.object({
   id: z.string().trim().cuid().optional(),

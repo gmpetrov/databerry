@@ -115,6 +115,7 @@ const getIntegrationByTeamId = async (teamId: string) => {
           tools: {
             include: {
               datastore: true,
+              form: true,
             },
           },
         },

@@ -93,6 +93,7 @@ export const chatAgentRequest = async (
       tools: {
         include: {
           datastore: true,
+          form: true,
         },
       },
     },

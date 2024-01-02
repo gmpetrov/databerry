@@ -6,6 +6,7 @@ import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { BlaBlaForm, BlablaSchema } from '@chaindesk/lib/blablaform';
 import ConversationManager from '@chaindesk/lib/conversation';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
+import { handleFormValid } from '@chaindesk/lib/forms';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
 import { AppNextApiRequest, SSE_EVENT } from '@chaindesk/lib/types';
@@ -96,7 +97,7 @@ export const formChat = async (
     include: {
       form: true,
       messages: {
-        // take: -10,
+        take: -100,
         orderBy: {
           createdAt: 'asc',
         },
@@ -117,6 +118,12 @@ export const formChat = async (
       ctrl.abort();
     });
   }
+
+  const config = (
+    useDraftConfig
+      ? conversation?.form?.draftConfig
+      : conversation?.form?.publishedConfig
+  ) as FormConfigSchema;
 
   const conversationManager = new ConversationManager({
     formId,
@@ -170,37 +177,13 @@ export const formChat = async (
   if (chatRes.isValid && chatRes.values) {
     const submissionId = c?.formSubmission?.id || cuid();
 
-    const submission = await prisma.formSubmission.upsert({
-      where: {
-        id: submissionId,
-      },
-      create: {
-        conversationId: c?.id,
-        formId: formId,
-        data: chatRes.values,
-        status: FormStatus.COMPLETED,
-      },
-      update: {
-        data: chatRes.values,
-        status: FormStatus.COMPLETED,
-      },
+    await handleFormValid({
+      conversationId: c?.id!,
+      formId: formId,
+      values: chatRes.values,
+      webhookUrl: config?.webhook?.url!,
+      submissionId,
     });
-
-    const webhookUrl = (conversation?.form?.publishedConfig as FormConfigSchema)
-      ?.webhook?.url;
-    if (webhookUrl) {
-      try {
-        await fetch(webhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(submission),
-        });
-      } catch (e) {
-        console.log('error', e);
-      }
-    }
   }
 
   if (data.streaming) {
