@@ -44,6 +44,7 @@ export type ChatProps = ChatModelConfigSchema & {
   tools?: Tool[];
   filters?: ChatRequest['filters'];
   topK?: number;
+  toolsConfig?: ChatRequest['toolsConfig'];
 };
 
 const chat = async ({
@@ -59,6 +60,7 @@ const chat = async ({
   tools = [],
   filters,
   topK,
+  toolsConfig,
   ...otherProps
 }: ChatProps) => {
   // Tools
@@ -85,9 +87,9 @@ const chat = async ({
 
   const createHandler =
     (handler: CreateToolHandler) =>
-    (tool: ToolSchema) =>
+    (tool: ToolSchema, config?: ChatRequest['toolsConfig']) =>
     async (args: unknown) => {
-      const res = await handler(tool)(args);
+      const res = await handler(tool, config)(args);
 
       if (res.approvalRequired) {
         return handleToolWithApproval({
@@ -99,32 +101,32 @@ const chat = async ({
       return res.data;
     };
 
-  const formatedHttpTools = httpTools.map(
-    (each) =>
-      ({
-        type: 'function',
+  const formatedHttpTools = httpTools.map((each) => {
+    const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
 
-        function: {
-          ...httpToolToJsonSchema(each),
-          parse: JSON.parse,
-          function: createHandler(createHttpToolHandler)(each),
-        },
-        // } as RunnableToolFunction<HttpToolPayload>)
-      } as ChatCompletionTool)
-  );
+    return {
+      type: 'function',
 
-  const formatedFormTools = formTools.map(
-    (each) =>
-      ({
-        type: 'function',
+      function: {
+        ...httpToolToJsonSchema(each, toolConfig),
+        parse: JSON.parse,
+        function: createHandler(createHttpToolHandler)(each, toolConfig),
+      },
+      // } as RunnableToolFunction<HttpToolPayload>)
+    } as ChatCompletionTool;
+  });
 
-        function: {
-          ...formToolToJsonSchema(each),
-          parse: JSON.parse,
-          function: createHandler(createFormToolHandler)(each),
-        },
-      } as ChatCompletionTool)
-  );
+  const formatedFormTools = formTools.map((each) => {
+    const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
+    return {
+      type: 'function',
+      function: {
+        ...formToolToJsonSchema(each, toolConfig),
+        parse: JSON.parse,
+        function: createHandler(createFormToolHandler)(each, toolConfig),
+      },
+    } as ChatCompletionTool;
+  });
 
   let retrievalData:
     | Awaited<ReturnType<typeof datastoreToolHandler>>

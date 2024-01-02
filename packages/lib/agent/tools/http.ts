@@ -8,7 +8,10 @@ export type HttpToolPayload = {
   [key: string]: unknown;
 };
 
-export const toJsonSchema = (tool: HttpToolSchema) => {
+export const toJsonSchema = (
+  tool: HttpToolSchema,
+  toolConfig?: Record<string, unknown>
+) => {
   return {
     name: `${tool.id}`,
     description: tool?.config?.description,

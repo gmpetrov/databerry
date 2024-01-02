@@ -32,6 +32,7 @@ export const getAgents = async (
   const agents = await prisma.agent.findMany({
     where: {
       organizationId: session?.organization?.id,
+      hidden: false,
     },
     include: {
       organization: {

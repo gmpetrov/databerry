@@ -234,6 +234,7 @@ export const chatAgentRequest = async (
       history: agent?.organization?.conversations?.[0]?.messages,
       abortController: ctrl,
       filters: data.filters,
+      toolsConfig: data.toolsConfig,
     }),
     prisma.usage.update({
       where: {

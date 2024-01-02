@@ -61,6 +61,7 @@ type AgentManagerProps = ChatModelConfigSchema &
     | 'promptTemplate'
     | 'systemPrompt'
     | 'userPrompt'
+    | 'toolsConfig'
   > & {
     input: string;
     stream?: any;

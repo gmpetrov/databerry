@@ -166,6 +166,8 @@ export const ChatRequest = ChatModelConfigSchema.extend({
 
   filters: FiltersSchema.optional(),
 
+  toolsConfig: z.record(z.string().cuid(), z.any()).optional(),
+
   //  DEPRECATED
   promptTemplate: z.string().optional(),
   promptType: z.nativeEnum(PromptType).optional(),

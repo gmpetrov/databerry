@@ -106,7 +106,11 @@ export const formChat = async (
     select: {
       publishedConfig: true,
       draftConfig: true,
-      agent: true,
+      agent: {
+        include: {
+          tools: true,
+        },
+      },
       organization: {
         include: {
           apiKeys: true,
@@ -198,6 +202,11 @@ export const formChat = async (
         systemPrompt: prompt,
         modelName: AgentModelName.gpt_4_turbo,
         streaming: true,
+        toolsConfig: {
+          [form!.agent!.tools[0].id]: {
+            useDraftConfig,
+          },
+        },
       } as ChatRequest),
       onmessage: (event) => {
         if (event.data === '[DONE]') {
@@ -285,101 +294,101 @@ export const formChat = async (
 
   return response;
 
-  const conversation = await prisma.conversation.findUnique({
-    where: {
-      id: conversationId,
-    },
-    include: {
-      form: true,
-      messages: {
-        take: -100,
-        orderBy: {
-          createdAt: 'asc',
-        },
-      },
-    },
-  });
+  // const conversation = await prisma.conversation.findUnique({
+  //   where: {
+  //     id: conversationId,
+  //   },
+  //   include: {
+  //     form: true,
+  //     messages: {
+  //       take: -100,
+  //       orderBy: {
+  //         createdAt: 'asc',
+  //       },
+  //     },
+  //   },
+  // });
 
-  const conversationManager = new ConversationManager({
-    formId,
-    channel: ConversationChannel.dashboard,
-    visitorId: data.visitorId!,
-    conversationId,
-  });
+  // const conversationManager = new ConversationManager({
+  //   formId,
+  //   channel: ConversationChannel.dashboard,
+  //   visitorId: data.visitorId!,
+  //   conversationId,
+  // });
 
-  conversationManager.push({
-    from: MessageFrom.human,
-    text: data.query,
-  });
+  // conversationManager.push({
+  //   from: MessageFrom.human,
+  //   text: data.query,
+  // });
 
-  const chatRes = await queryForm({
-    input: data.query,
-    formId,
-    stream: data.streaming ? handleStream : undefined,
-    history: conversation?.messages,
-    temperature: data.temperature,
-    promptTemplate: data.promptTemplate,
-    promptType: data.promptType,
-    filters: data.filters,
-    httpResponse: res,
-    abortController: ctrl,
-    useDraftConfig,
-  });
+  // const chatRes = await queryForm({
+  //   input: data.query,
+  //   formId,
+  //   stream: data.streaming ? handleStream : undefined,
+  //   history: conversation?.messages,
+  //   temperature: data.temperature,
+  //   promptTemplate: data.promptTemplate,
+  //   promptType: data.promptType,
+  //   filters: data.filters,
+  //   httpResponse: res,
+  //   abortController: ctrl,
+  //   useDraftConfig,
+  // });
 
-  const answerMsgId = cuid();
+  // const answerMsgId = cuid();
 
-  // conversationManager.formtStatus = chatRes.isValid
-  //   ? FormStatus.COMPLETED
-  //   : FormStatus.IN_PROGRESS;
+  // // conversationManager.formtStatus = chatRes.isValid
+  // //   ? FormStatus.COMPLETED
+  // //   : FormStatus.IN_PROGRESS;
 
-  conversationManager.push({
-    id: answerMsgId,
-    from: MessageFrom.agent,
-    text: chatRes.answer as string,
-    metadata: chatRes.metadata,
-    sources: [],
-  });
+  // conversationManager.push({
+  //   id: answerMsgId,
+  //   from: MessageFrom.agent,
+  //   text: chatRes.answer as string,
+  //   metadata: chatRes.metadata,
+  //   sources: [],
+  // });
 
-  const c = await conversationManager.save();
+  // const c = await conversationManager.save();
 
-  if (chatRes.isValid && chatRes.values) {
-    const submissionId = c?.formSubmission?.id || cuid();
+  // if (chatRes.isValid && chatRes.values) {
+  //   const submissionId = c?.formSubmission?.id || cuid();
 
-    await handleFormValid({
-      conversationId: c?.id!,
-      formId: formId,
-      values: chatRes.values,
-      webhookUrl: config?.webhook?.url!,
-      submissionId,
-    });
-  }
+  //   await handleFormValid({
+  //     conversationId: c?.id!,
+  //     formId: formId,
+  //     values: chatRes.values,
+  //     webhookUrl: config?.webhook?.url!,
+  //     submissionId,
+  //   });
+  // }
 
-  if (data.streaming) {
-    streamData({
-      event: SSE_EVENT.endpoint_response,
-      data: JSON.stringify({
-        messageId: answerMsgId,
-        answer: chatRes.answer,
-        isValid: chatRes.isValid,
-        sources: [],
-        conversationId: conversationManager.conversationId,
-        visitorId: conversationManager.visitorId,
-      }),
-      res,
-    });
+  // if (data.streaming) {
+  //   streamData({
+  //     event: SSE_EVENT.endpoint_response,
+  //     data: JSON.stringify({
+  //       messageId: answerMsgId,
+  //       answer: chatRes.answer,
+  //       isValid: chatRes.isValid,
+  //       sources: [],
+  //       conversationId: conversationManager.conversationId,
+  //       visitorId: conversationManager.visitorId,
+  //     }),
+  //     res,
+  //   });
 
-    streamData({
-      data: '[DONE]',
-      res,
-    });
-  } else {
-    return {
-      ...chatRes,
-      messageId: answerMsgId,
-      conversationId: conversationManager.conversationId,
-      visitorId: conversationManager.visitorId,
-    };
-  }
+  //   streamData({
+  //     data: '[DONE]',
+  //     res,
+  //   });
+  // } else {
+  //   return {
+  //     ...chatRes,
+  //     messageId: answerMsgId,
+  //     conversationId: conversationManager.conversationId,
+  //     visitorId: conversationManager.visitorId,
+  //   };
+  // }
 };
 
 handler.post(
