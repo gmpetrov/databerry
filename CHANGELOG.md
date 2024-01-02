@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.132"></a>
+## 0.1.132 (2024-01-02)
+
+### Miscellaneous
+
+- 🎸 human handoff v1 ([#277](https://github.com/gmpetrov/databerry/issues/277)) [[b0366a6](https://github.com/gmpetrov/databerry/commit/b0366a69bba326eabd1899184c95232252612e68)]
+
+
 <a name="0.1.131"></a>
 ## 0.1.131 (2023-12-31)
 
