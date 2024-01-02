@@ -169,7 +169,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
 
       if (
         getConversationQuery?.data &&
-        !getConversationQuery?.data?.[0]?.isisAiEnabled
+        !getConversationQuery?.data?.[0]?.isAiEnabled
       ) {
         await conversationChatMutation.trigger({
           message,
@@ -499,7 +499,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,
-        isAiEnabled: getConversationQuery?.data?.[0]?.isisAiEnabled,
+        isAiEnabled: getConversationQuery?.data?.[0]?.isAiEnabled,
       });
     }
   }, [getConversationQuery.data]);
