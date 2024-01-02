@@ -7,10 +7,11 @@ import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import { formToJsonSchema } from '@chaindesk/lib/forms';
 import generateFunId from '@chaindesk/lib/generate-fun-id';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
-import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
+import { CreateFormSchema, FormFieldSchema } from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
 import { prisma } from '@chaindesk/prisma/client';
 
@@ -62,17 +63,37 @@ export const createForm = async (
 ) => {
   const data = CreateFormSchema.parse(req.body);
   const organizationId = req.session.organization.id as string;
+  const formId = cuid();
 
   return prisma.form.create({
     data: {
-      id: cuid(),
+      id: formId,
       name: data.name || generateFunId(),
       organization: {
         connect: {
           id: organizationId,
         },
       },
-      draftConfig: data.draftConfig,
+      draftConfig: {
+        ...data.draftConfig,
+        schema: formToJsonSchema(
+          data?.draftConfig?.fields as FormFieldSchema[]
+        ),
+      } as any,
+      agent: {
+        create: {
+          hidden: true,
+          name: 'Hidden Agent',
+          description: "Form's hidden agent",
+          organizationId: organizationId,
+          tools: {
+            create: {
+              type: 'form',
+              formId: formId,
+            },
+          },
+        },
+      },
     },
   });
 };

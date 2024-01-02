@@ -62,6 +62,7 @@ import { getForm } from '@app/pages/api/forms/[formId]';
 import { updateForm } from '@app/pages/api/forms/[formId]/admin';
 import { publishForm } from '@app/pages/api/forms/[formId]/publish';
 
+import slugify from '@chaindesk/lib/slugify';
 import {
   fetcher,
   generateActionFetcher,
@@ -127,7 +128,9 @@ function BlablaFormViewer({ formId, config }: Props) {
     chatData?.history?.[chatData.history.length - 1]?.metadata?.currentField;
 
   const currentField = useMemo(() => {
-    return config?.fields?.find((field) => field.name === currentFieldName);
+    return config?.fields?.find(
+      (field) => slugify(field.name) === currentFieldName
+    );
   }, [currentFieldName, config?.fields]);
 
   const initiateForm = () => {
@@ -139,6 +142,7 @@ function BlablaFormViewer({ formId, config }: Props) {
   };
 
   const lastMessage = chatData?.history[chatData.history.length - 1];
+  const isFormValid = lastMessage?.metadata?.isValid;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -147,10 +151,10 @@ function BlablaFormViewer({ formId, config }: Props) {
   }, []);
 
   useEffect(() => {
-    if (lastMessage?.metadata?.isValid) {
+    if (isFormValid) {
       triggerConfetti();
     }
-  }, [lastMessage?.metadata?.isValid]);
+  }, [isFormValid]);
 
   return (
     <Stack
@@ -245,7 +249,7 @@ function BlablaFormViewer({ formId, config }: Props) {
           </Stack>
 
           {!chatData.isStreaming &&
-            !chatData.isFomValid &&
+            !isFormValid &&
             state.isConversationStarted && (
               <Stack sx={{ width: '100%' }}>
                 {currentField?.type !== 'multiple_choice' && (
@@ -315,7 +319,7 @@ function BlablaFormViewer({ formId, config }: Props) {
               </Stack>
             )}
 
-          {chatData.isFomValid && config?.endScreen?.cta?.label && (
+          {isFormValid && config?.endScreen?.cta?.label && (
             <Motion
               initial="hidden"
               animate="visible"

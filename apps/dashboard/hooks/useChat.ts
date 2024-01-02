@@ -1,14 +1,12 @@
-import {
-  EventStreamContentType,
-  fetchEventSource,
-} from '@microsoft/fetch-event-source';
 import { createContext, useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
-import { getConversation } from '@app/pages/api/conversations/[conversationId]';
-
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
+import {
+  EventStreamContentType,
+  fetchEventSource,
+} from '@chaindesk/lib/fetch-event-source';
 import {
   fetcher,
   generateActionFetcher,

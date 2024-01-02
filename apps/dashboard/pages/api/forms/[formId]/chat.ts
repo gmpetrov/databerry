@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Cors from 'cors';
 import cuid from 'cuid';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -6,13 +7,20 @@ import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { BlaBlaForm, BlablaSchema } from '@chaindesk/lib/blablaform';
 import ConversationManager from '@chaindesk/lib/conversation';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
+import { fetchEventSource } from '@chaindesk/lib/fetch-event-source';
 import { handleFormValid } from '@chaindesk/lib/forms';
+import partiallyIncludes from '@chaindesk/lib/partially-includes';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
 import { AppNextApiRequest, SSE_EVENT } from '@chaindesk/lib/types';
-import { ChatRequest, FormConfigSchema } from '@chaindesk/lib/types/dtos';
+import {
+  ChatRequest,
+  ChatResponse,
+  FormConfigSchema,
+} from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
 import {
+  AgentModelName,
   ConversationChannel,
   FormStatus,
   Message,
@@ -90,6 +98,193 @@ export const formChat = async (
 
   const conversationId = data.conversationId! || cuid();
 
+  const ctrl = new AbortController();
+
+  const form = await prisma.form.findUnique({
+    where: { id: formId },
+
+    select: {
+      publishedConfig: true,
+      draftConfig: true,
+      agent: true,
+      organization: {
+        include: {
+          apiKeys: true,
+        },
+      },
+    },
+  });
+
+  if (!form) {
+    throw new ApiError(ApiErrorType.NOT_FOUND);
+  }
+
+  const config = (
+    useDraftConfig ? form?.draftConfig : form?.publishedConfig
+  ) as FormConfigSchema;
+
+  const locale = 'en';
+
+  const prompt = `You role is to help fill a form that follows a JSON Schema that will be given to you, you should only ask about the field specified in the properties of the schema. You will ask questions in natural language, one at a time, to the user and fill the form. Use a friendly and energetic tone. You are able to go back to previous questions if asked.
+  Use the language specified by locale = ${locale}. 
+  Never request or accept any information beyond what's defined in the schema.
+  
+  Always end your question with __BLABLA_FIELD__: name of the field your asking for in order to keep track of the current field, spelled like in the json schema.
+  Example with a field named firstname: What is your first name? __BLABLA_FIELD__: firstname
+  
+  `;
+
+  if (data.streaming) {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      Connection: 'keep-alive',
+    });
+
+    req.socket.on('close', function () {
+      ctrl.abort();
+    });
+  }
+
+  const needle = '__BLABLA_FIELD__';
+
+  let buffer = '';
+  let stop = false;
+
+  const _handleStream = (data: string, event: SSE_EVENT) =>
+    streamData({
+      event: event || SSE_EVENT.answer,
+      data,
+      res,
+    });
+
+  const handleStream = (chunk: string, event?: SSE_EVENT) => {
+    buffer += chunk;
+
+    if (!stop) {
+      if (partiallyIncludes(buffer, needle)) {
+        if (buffer.includes(needle)) {
+          stop = true;
+        }
+      } else {
+        (_handleStream as any)?.(buffer, event);
+        buffer = '';
+      }
+    }
+  };
+
+  let responseBuffer = '';
+  let toolBuffer = '';
+  let currentField = '';
+
+  let response: ChatResponse | undefined = undefined;
+  let tool: any = undefined;
+
+  await fetchEventSource(
+    `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/agents/${form?.agent?.id}/query`,
+    {
+      method: 'POST',
+      openWhenHidden: true,
+      signal: ctrl.signal,
+      headers: {
+        'Content-Type': 'application/json',
+
+        Authorization: `Bearer ${form?.organization?.apiKeys[0]?.key}`,
+      },
+      body: JSON.stringify({
+        channel: 'form',
+        conversationId,
+        query: data.query,
+        systemPrompt: prompt,
+        modelName: AgentModelName.gpt_4_turbo,
+        streaming: true,
+      } as ChatRequest),
+      onmessage: (event) => {
+        if (event.data === '[DONE]') {
+          try {
+            ctrl.abort();
+            response = JSON.parse(responseBuffer) as ChatResponse;
+          } catch (err) {
+            console.log('responseBuffer ---------->', err, responseBuffer);
+          }
+        } else {
+          if (event.event === SSE_EVENT.answer) {
+            handleStream(decodeURIComponent(event.data), event.event as any);
+          } else if (event.event === SSE_EVENT.endpoint_response) {
+            responseBuffer += decodeURIComponent(event.data);
+          } else if (event.event === SSE_EVENT.tool_call) {
+            _handleStream(decodeURIComponent(event.data), event.event as any);
+            toolBuffer += decodeURIComponent(event.data);
+          }
+        }
+      },
+    }
+  );
+
+  const re = /__BLABLA_FIELD__:?\s?(.*)/;
+  currentField = (response as any)?.answer?.match(re)?.[1]?.trim?.() || '';
+  if (!config?.schema?.properties?.[currentField]) {
+    console.log(
+      'field name not found in schema:',
+      currentField,
+      Object.keys((config?.schema as any)?.properties),
+      config?.schema?.properties
+    );
+    currentField = '';
+  }
+
+  try {
+    if (toolBuffer) {
+      tool = JSON.parse(toolBuffer);
+    }
+  } catch (err) {
+    console.log('toolBuffer ---------->', err, toolBuffer);
+  }
+
+  if ((response as any)?.answer) {
+    (response as any).answer = (response as any)?.answer?.replace(re, '');
+  }
+
+  const isValid = !!(tool?.name as string)?.startsWith('isFormValid');
+
+  if (currentField || isValid) {
+    _handleStream(
+      JSON.stringify({ currentField, isValid }),
+      SSE_EVENT.metadata
+    );
+  }
+
+  console.log('currentField', currentField);
+  console.log('RESPONSE', response);
+
+  const messageId = (response as any)?.messageId as string;
+
+  if (messageId && currentField) {
+    await prisma.message.update({
+      where: {
+        id: messageId,
+      },
+      data: {
+        text: (response as any)?.answer,
+        metadata: {
+          ...(response as any)?.metadata,
+          currentField,
+        },
+      },
+    });
+  }
+
+  if (response) {
+    _handleStream(JSON.stringify(response), SSE_EVENT.endpoint_response);
+  }
+
+  streamData({
+    data: '[DONE]',
+    res,
+  });
+
+  return response;
+
   const conversation = await prisma.conversation.findUnique({
     where: {
       id: conversationId,
@@ -105,26 +300,6 @@ export const formChat = async (
     },
   });
 
-  const ctrl = new AbortController();
-
-  if (data.streaming) {
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-    });
-
-    req.socket.on('close', function () {
-      ctrl.abort();
-    });
-  }
-
-  const config = (
-    useDraftConfig
-      ? conversation?.form?.draftConfig
-      : conversation?.form?.publishedConfig
-  ) as FormConfigSchema;
-
   const conversationManager = new ConversationManager({
     formId,
     channel: ConversationChannel.dashboard,
@@ -136,13 +311,6 @@ export const formChat = async (
     from: MessageFrom.human,
     text: data.query,
   });
-
-  const handleStream = (data: string, event: SSE_EVENT) =>
-    streamData({
-      event: event || SSE_EVENT.answer,
-      data,
-      res,
-    });
 
   const chatRes = await queryForm({
     input: data.query,

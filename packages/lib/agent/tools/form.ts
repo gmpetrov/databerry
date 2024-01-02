@@ -3,6 +3,8 @@ import slugify from '@chaindesk/lib/slugify';
 import { FormConfigSchema, FormToolSchema } from '@chaindesk/lib/types/dtos';
 import { Form } from '@chaindesk/prisma';
 
+import { CreateToolHandler } from './type';
+
 export type FormToolPayload = Record<string, unknown>;
 
 export const toJsonSchema = (tool: FormToolSchema) => {
@@ -15,8 +17,8 @@ export const toJsonSchema = (tool: FormToolSchema) => {
   };
 };
 
-export const createHandler =
-  (tool: FormToolSchema, props: any) => async (payload: FormToolPayload) => {
+export const createHandler = ((tool: FormToolSchema) =>
+  async (payload: FormToolPayload) => {
     const form = tool.form as Form;
     const config = form?.publishedConfig as FormConfigSchema;
 
@@ -27,5 +29,7 @@ export const createHandler =
       webhookUrl: config?.webhook?.url!,
     });
 
-    return 'Form submitted successfully';
-  };
+    return {
+      data: 'Form submitted successfully',
+    };
+  }) as CreateToolHandler;

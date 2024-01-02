@@ -14,6 +14,7 @@ import {
   createHandler as createHttpToolHandler,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
+import { CreateToolHandler } from './agent/tools/type';
 import type { Source } from './types/document';
 import {
   ChatModelConfigSchema,
@@ -82,6 +83,22 @@ const chat = async ({
     throw 'ToolApprovalRequired';
   };
 
+  const createHandler =
+    (handler: CreateToolHandler) =>
+    (tool: ToolSchema) =>
+    async (args: unknown) => {
+      const res = await handler(tool)(args);
+
+      if (res.approvalRequired) {
+        return handleToolWithApproval({
+          tool,
+          payload: args,
+        });
+      }
+
+      return res.data;
+    };
+
   const formatedHttpTools = httpTools.map(
     (each) =>
       ({
@@ -90,7 +107,7 @@ const chat = async ({
         function: {
           ...httpToolToJsonSchema(each),
           parse: JSON.parse,
-          function: createHttpToolHandler(each, handleToolWithApproval),
+          function: createHandler(createHttpToolHandler)(each),
         },
         // } as RunnableToolFunction<HttpToolPayload>)
       } as ChatCompletionTool)
@@ -104,7 +121,7 @@ const chat = async ({
         function: {
           ...formToolToJsonSchema(each),
           parse: JSON.parse,
-          function: createFormToolHandler(each, {}),
+          function: createHandler(createFormToolHandler)(each),
         },
       } as ChatCompletionTool)
   );

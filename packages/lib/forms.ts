@@ -1,6 +1,7 @@
 import cuid from 'cuid';
 import { JSONSchema7 } from 'json-schema';
 
+import slugify from '@chaindesk/lib/slugify';
 import { FormStatus } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
@@ -19,7 +20,9 @@ export function formToJsonSchema(fields: FormFieldSchema[]): JSONSchema7 {
 
   return fields.reduce(
     (acc, field) => {
-      acc['properties']![field.name] = {
+      const fieldName = slugify(field.name);
+
+      acc['properties']![fieldName] = {
         // id: field.id,
         ...(field.type === 'text'
           ? {
@@ -35,7 +38,7 @@ export function formToJsonSchema(fields: FormFieldSchema[]): JSONSchema7 {
       };
       acc['required'] = [
         ...acc.required!,
-        ...(field.required ? [field.name] : []),
+        ...(field.required ? [fieldName] : []),
       ];
       return acc;
     },

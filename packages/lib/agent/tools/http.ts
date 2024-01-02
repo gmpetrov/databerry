@@ -2,6 +2,8 @@ import axios, { Axios, AxiosRequestConfig } from 'axios';
 
 import { HttpToolSchema } from '@chaindesk/lib/types/dtos';
 
+import { CreateToolHandler } from './type';
+
 export type HttpToolPayload = {
   [key: string]: unknown;
 };
@@ -44,14 +46,7 @@ export const toJsonSchema = (tool: HttpToolSchema) => {
   };
 };
 
-export const createHandler =
-  (
-    httpTool: HttpToolSchema,
-    handleApproval?: (props: {
-      tool: HttpToolSchema;
-      payload: HttpToolPayload;
-    }) => any
-  ) =>
+export const createHandler = ((httpTool: HttpToolSchema) =>
   async (payload: HttpToolPayload) => {
     console.log('HTTP Tool Config', httpTool?.config);
     console.log('HTTP Tool Payload', payload);
@@ -59,10 +54,9 @@ export const createHandler =
     const config = httpTool?.config as HttpToolSchema['config'];
 
     if (config?.withApproval) {
-      return handleApproval?.({
-        tool: httpTool,
-        payload,
-      });
+      return {
+        approvalRequired: true,
+      };
     }
 
     const inputUrl = new URL(config.url);
@@ -115,8 +109,8 @@ export const createHandler =
     try {
       const { data } = await axios(url, reqConfig);
 
-      return data;
+      return { data };
     } catch (err) {
       console.log('HTTP Tool Error', err);
     }
-  };
+  }) as CreateToolHandler;

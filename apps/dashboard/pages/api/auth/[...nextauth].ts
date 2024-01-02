@@ -9,7 +9,8 @@ export default function Auth(
   ...args: any
 ) {
   const protocol =
-    req.headers['x-forwarded-proto'] || (req?.connection as any)?.encrypted
+    !req.headers.host?.includes('localhost') &&
+    (req.headers['x-forwarded-proto'] || (req?.connection as any)?.encrypted)
       ? 'https'
       : 'http';
 

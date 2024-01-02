@@ -78,7 +78,14 @@ export default class ChatModel {
             })
             .on('functionCall', (functionCall) => {
               console.log('functionCall', functionCall);
-              handleStream?.(functionCall?.name || '', SSE_EVENT.tool_call);
+              handleStream?.(
+                JSON.stringify({
+                  type: 'function',
+                  name: functionCall?.name,
+                  arguments: functionCall?.arguments,
+                }),
+                SSE_EVENT.tool_call
+              );
             })
             .on('functionCallResult', (functionCallResult) =>
               console.log('functionCallResult', functionCallResult)

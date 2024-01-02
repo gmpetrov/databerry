@@ -217,6 +217,7 @@ model DatastoreApiKey {
 model Agent {
   id String @id @default(cuid())
 
+  hidden      Boolean @default(false)
   name        String
   description String
   
@@ -255,6 +256,9 @@ model Agent {
   leads   Lead[]
   
   approvals ActionApproval[]
+
+  form   Form?  @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId String? @unique @map("form_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -602,8 +606,7 @@ model Form {
   submissions  FormSubmission[]
   tool        Tool[]
 
-  // agent   Agent?  @relation(fields: [agentId], references: [id], onDelete: Cascade)
-  // agentId String? @map("agent_id")
+  agent Agent?
   
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

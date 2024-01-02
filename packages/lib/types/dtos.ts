@@ -424,6 +424,7 @@ export const ChatResponse = z.object({
   conversationId: z.string().cuid(),
   visitorId: z.string().optional(),
   messageId: z.string().cuid(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   usage: z
     .object({
       completionTokens: z.number(),
@@ -434,8 +435,8 @@ export const ChatResponse = z.object({
     .optional(),
   approvals: z.array(
     z.object({
-      tool: HttpToolSchema,
-      payload: z.record(z.string(), z.unknown()),
+      tool: ToolSchema,
+      payload: z.unknown(),
     })
   ),
 });
@@ -528,3 +529,12 @@ export type CreateFormSchema = z.infer<typeof CreateFormSchema>;
 
 export const UpdateFormSchema = CreateFormSchema.partial();
 export type UpdateFormSchema = z.infer<typeof UpdateFormSchema>;
+
+export const ToolResponseSchema = z.object({
+  data: z.any(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+  approvalRequired: z.boolean().optional(),
+  error: z.string().optional(),
+});
+
+export type ToolResponseSchema = z.infer<typeof ToolResponseSchema>;
