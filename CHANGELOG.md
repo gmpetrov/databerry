@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.133"></a>
+## 0.1.133 (2024-01-02)
+
+### Fixed
+
+- 🐛 lead form not showing [[a5bf2d3](https://github.com/gmpetrov/databerry/commit/a5bf2d305a712c3d754b4b6eaa79841974feb1dd)]
+
+
 <a name="0.1.132"></a>
 ## 0.1.132 (2024-01-02)
 
