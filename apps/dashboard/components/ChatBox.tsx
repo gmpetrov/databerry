@@ -366,7 +366,7 @@ function ChatBox({
                           ))}
                         </Stack>
                       )}
-                      {each?.message && (
+                      {(each?.message || each?.component) && (
                         <ChatMessageCard
                           className={clsx(
                             each.from === 'agent'
