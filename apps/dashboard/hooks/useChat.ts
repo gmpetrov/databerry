@@ -17,12 +17,11 @@ import {
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
-import {
+import type {
   ActionApproval,
-  type ConversationChannel,
-  type ConversationStatus,
-  MessageFrom,
-  type Prisma,
+  ConversationChannel,
+  ConversationStatus,
+  Prisma,
 } from '@chaindesk/prisma';
 
 import useRateLimit from './useRateLimit';
@@ -175,7 +174,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         await conversationChatMutation.trigger({
           message,
           channel,
-          from: MessageFrom.human,
+          from: 'human',
           organizationId:
             getConversationQuery?.data?.[0]?.agent?.organizationId,
         });
