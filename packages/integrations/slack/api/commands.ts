@@ -26,6 +26,7 @@ import {
   SubscriptionPlan,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
+import cuid from 'cuid';
 
 const handler = createApiHandler();
 
@@ -213,13 +214,13 @@ const handleAsk = async (payload: CommandEvent) => {
   const integration = await getIntegrationByTeamId(payload.team_id);
   const agent = integration?.agents?.[0]!;
 
-  const conversation = await prisma.conversation.findFirst({
+  const conversation = await prisma.conversation.findUnique({
     where: {
-      AND: [{ agentId: agent?.id }, { visitorId: payload.user_id }],
+      channelExternalId: payload.trigger_id,
     },
   });
 
-  const conversationId = conversation?.id;
+  const conversationId = conversation?.id || cuid();
 
   const conversationManager = new ConversationManager({
     organizationId: agent?.organizationId!,
@@ -227,6 +228,8 @@ const handleAsk = async (payload: CommandEvent) => {
     agentId: agent?.id!,
     visitorId: payload.user_id,
     channel: ConversationChannel.slack,
+    channelExternalId: payload.trigger_id,
+    channelCredentialsId: integration?.id,
   });
 
   conversationManager.push({
@@ -234,26 +237,29 @@ const handleAsk = async (payload: CommandEvent) => {
     text: payload.text,
   });
 
-  const chatRes = await new AgentManager({ agent }).query({
-    input: payload.text,
-  });
+  if (conversation?.isAiEnabled) {
+    const chatRes = await new AgentManager({ agent }).query({
+      input: payload.text,
+    });
 
-  conversationManager.push({
-    from: MessageFrom.agent,
-    text: chatRes?.answer,
-  });
+    conversationManager.push({
+      from: MessageFrom.agent,
+      text: chatRes?.answer,
+    });
 
+    conversationManager.save();
+
+    const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
+      filterInternalSources(chatRes?.sources || [])
+    )}`.trim();
+
+    return axios.post(payload.response_url, {
+      text: `${payload.text}\n\n${finalAnser}`,
+      // response_type: 'in_channel',
+      response_type: 'ephemeral',
+    });
+  }
   conversationManager.save();
-
-  const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
-    filterInternalSources(chatRes?.sources || [])
-  )}`.trim();
-
-  return axios.post(payload.response_url, {
-    text: `${payload.text}\n\n${finalAnser}`,
-    // response_type: 'in_channel',
-    response_type: 'ephemeral',
-  });
 };
 
 export const slack = async (req: AppNextApiRequest, res: NextApiResponse) => {

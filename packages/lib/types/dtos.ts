@@ -396,8 +396,9 @@ export const CrispUpdateMetadataSchema = CrispSchema.extend({
   aiStatus: z.nativeEnum(AIStatus),
 });
 
-export const ConversationStatusSchema = z.object({
-  status: z.nativeEnum(ConversationStatus),
+export const ConversationUpdateSchema = z.object({
+  status: z.nativeEnum(ConversationStatus).optional(),
+  isAiEnabled: z.boolean().optional(),
 });
 
 export const YoutubeSummarySchema = z.object({
@@ -434,3 +435,18 @@ export const ChatResponse = z.object({
 });
 
 export type ChatResponse = z.infer<typeof ChatResponse>;
+
+export const ConversationMetadataCrisp = z.object({
+  sessionId: z.string(),
+});
+
+export type ConversationMetadataCrisp = z.infer<
+  typeof ConversationMetadataCrisp
+>;
+export const ConversationMetadataSlack = z.object({
+  user_id: z.string(),
+});
+
+export type ConversationMetadataSlack = z.infer<
+  typeof ConversationMetadataSlack
+>;

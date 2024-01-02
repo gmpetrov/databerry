@@ -5,6 +5,7 @@ import {
   ConversationChannel,
   Datastore,
   Message,
+  ServiceProviderType,
   Tool,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
@@ -29,6 +30,13 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   inputId?: string;
 };
 
+type ExternalConfig = {
+  externalId: string;
+  serviceProviderType: ServiceProviderType;
+  externalConversationId: string;
+  metadata?: Record<PropertyKey, any>;
+};
+
 export default class ConversationManager {
   organizationId: string;
   userId?: string;
@@ -37,7 +45,9 @@ export default class ConversationManager {
   channel: ConversationChannel;
   messages: MessageExtended[] = [];
   agentId?: string;
-  metadata?: Record<string, any> = {};
+  metadata?: Record<PropertyKey, any> = {};
+  channelExternalId?: string;
+  channelCredentialsId?: string;
 
   constructor({
     organizationId,
@@ -47,6 +57,8 @@ export default class ConversationManager {
     channel,
     conversationId,
     metadata,
+    channelExternalId,
+    channelCredentialsId,
   }: {
     organizationId: string;
     agentId?: string;
@@ -54,7 +66,9 @@ export default class ConversationManager {
     conversationId?: string;
     userId?: string;
     visitorId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<PropertyKey, any>;
+    channelExternalId?: string;
+    channelCredentialsId?: string;
   }) {
     this.messages = [];
     this.userId = userId;
@@ -64,6 +78,8 @@ export default class ConversationManager {
     this.agentId = agentId;
     this.metadata = metadata;
     this.organizationId = organizationId;
+    this.channelExternalId = channelExternalId;
+    this.channelCredentialsId = channelCredentialsId;
   }
 
   push(message: MessageExtended) {
@@ -101,6 +117,16 @@ export default class ConversationManager {
       create: {
         id: this.conversationId,
         channel: this.channel,
+        channelExternalId: this.channelExternalId,
+        ...(this.channelCredentialsId
+          ? {
+              channelCredentials: {
+                connect: {
+                  id: this.channelCredentialsId,
+                },
+              },
+            }
+          : {}),
         organization: {
           connect: {
             id: this.organizationId,
@@ -138,6 +164,16 @@ export default class ConversationManager {
           : {}),
       },
       update: {
+        channelExternalId: this.channelExternalId,
+        ...(this.channelCredentialsId
+          ? {
+              channelCredentials: {
+                connect: {
+                  id: this.channelCredentialsId,
+                },
+              },
+            }
+          : {}),
         messages: {
           createMany: {
             data: messages,

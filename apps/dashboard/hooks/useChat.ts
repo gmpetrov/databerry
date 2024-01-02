@@ -4,11 +4,16 @@ import {
 } from '@microsoft/fetch-event-source';
 import { createContext, useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
+import useSWRMutation from 'swr/mutation';
 
 import { getConversation } from '@app/pages/api/conversations/[conversationId]';
 
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
-import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import {
+  fetcher,
+  generateActionFetcher,
+  HTTP_METHOD,
+} from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
@@ -30,7 +35,6 @@ type Props = {
   queryBody?: any;
   datasourceId?: string;
   localStorageConversationIdKey?: string;
-  // TODO: Remove when rate limit implemented from backend
   agentId?: string;
 };
 
@@ -93,6 +97,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     mounted: false,
     handleAbort: undefined as any,
     isStreaming: false,
+    isAiEnabled: true,
   });
 
   // TODO: Remove when rate limit implemented from backend
@@ -101,32 +106,51 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       agentId: otherProps.agentId,
     });
 
-  const getConversationQuery = useSWRInfinite<
-    Prisma.PromiseReturnType<typeof getConversation>
-  >((pageIndex, previousPageData) => {
-    if (!state.conversationId) {
-      if (state.hasMoreMessages) {
-        setState({ hasMoreMessages: false });
+  const conversationChatMutation = useSWRMutation(
+    state.conversationId
+      ? `/api/conversations/${state.conversationId}/message`
+      : null,
+    generateActionFetcher(HTTP_METHOD.POST)
+  );
+
+  const getConversationQuery = useSWRInfinite(
+    (pageIndex, previousPageData) => {
+      if (!state.conversationId) {
+        if (state.hasMoreMessages) {
+          setState({ hasMoreMessages: false });
+        }
+
+        return null;
       }
 
-      return null;
+      if (previousPageData && previousPageData?.messages?.length === 0) {
+        setState({
+          hasMoreMessages: false,
+        });
+        return null;
+      }
+
+      const cursor = previousPageData?.messages?.[
+        previousPageData?.messages?.length - 1
+      ]?.id as string;
+
+      return `${API_URL}/api/conversations/${state.conversationId}?cursor=${
+        cursor || ''
+      }`;
+    },
+    fetcher,
+    {
+      ...(state.isAiEnabled
+        ? {
+            // check if AI is disabled every 30 seconds
+            refreshInterval: 30000,
+          }
+        : {
+            //  If AI is disabled check for new messages every 5 seconds
+            refreshInterval: 5000,
+          }),
     }
-
-    if (previousPageData && previousPageData?.messages?.length === 0) {
-      setState({
-        hasMoreMessages: false,
-      });
-      return null;
-    }
-
-    const cursor = previousPageData?.messages?.[
-      previousPageData?.messages?.length - 1
-    ]?.id as string;
-
-    return `${API_URL}/api/conversations/${state.conversationId}?cursor=${
-      cursor || ''
-    }`;
-  }, fetcher);
+  );
 
   const handleLoadMoreMessages = useCallback(() => {
     if (getConversationQuery.isLoading || getConversationQuery.isValidating)
@@ -140,6 +164,21 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       const message = _message?.trim?.();
 
       if (!message || !endpoint) {
+        return;
+      }
+
+      if (
+        getConversationQuery?.data &&
+        !getConversationQuery?.data?.[0]?.isisAiEnabled
+      ) {
+        await conversationChatMutation.trigger({
+          message,
+          channel,
+          from: 'human',
+          organizationId:
+            getConversationQuery?.data?.[0]?.agent?.organizationId,
+        });
+        await getConversationQuery.mutate();
         return;
       }
 
@@ -460,6 +499,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,
+        isAiEnabled: getConversationQuery?.data?.[0]?.isisAiEnabled,
       });
     }
   }, [getConversationQuery.data]);

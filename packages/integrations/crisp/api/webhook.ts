@@ -17,7 +17,6 @@ import {
   ConversationMetadata,
 } from '@chaindesk/lib/types/crisp';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
-import validate from '@chaindesk/lib/validate';
 import {
   ConversationChannel,
   MessageFrom,
@@ -45,7 +44,8 @@ type HookEventType =
   | 'message:updated'
   | 'message:compose:send'
   | 'message:notify:unread:send'
-  | 'message:acknowledge:delivered';
+  | 'message:acknowledge:delivered'
+  | 'session:set_data';
 
 type HookDataType = 'text';
 
@@ -57,6 +57,18 @@ type HookBodyBase = {
   timestamp: number;
   data: {
     [key: string]: any;
+  };
+};
+
+type HookBodySetData = HookBodyBase & {
+  event: Extract<HookEventType, 'session:set_data'>;
+  data: {
+    session_id: string;
+    website_id: string;
+    data: {
+      aiStatus: string;
+      aiDisabledDate: string;
+    };
   };
 };
 
@@ -101,7 +113,7 @@ type HookBodyMessageUpdated = HookBodyBase & {
 
 type HookBody = HookBodyBase | HookBodyMessageSent | HookBodyMessageUpdated;
 
-const getAgent = async (websiteId: string) => {
+const getIntegration = async (websiteId: string) => {
   const integration = await prisma.serviceProvider.findUnique({
     where: {
       unique_external_id: {
@@ -134,7 +146,7 @@ const getAgent = async (websiteId: string) => {
     throw new Error('Agent not found');
   }
 
-  return agent;
+  return integration;
 };
 
 // const handleSendInput = async ({
@@ -173,7 +185,8 @@ const handleQuery = async (
   query: string,
   t: TFunction<'translation', undefined>
 ) => {
-  const agent = await getAgent(websiteId);
+  const integration = await getIntegration(websiteId);
+  const agent = integration?.agents?.[0];
 
   const usage = agent?.organization?.usage!;
   const plan =
@@ -186,28 +199,10 @@ const handleQuery = async (
     });
   } catch {
     return;
-    // return await CrispClient.website.sendMessageInConversation(
-    //   websiteId,
-    //   sessionId,
-    //   {
-    //     type: 'text',
-    //     from: 'operator',
-    //     origin: 'chat',
-    //     content: 'Usage limit reached.',
-    //     user: {
-    //       type: 'participant',
-    //       nickname: agent?.name || 'Chaindesk',
-    //       avatar:
-    //         agent.iconUrl ||
-    //         'https://chaindesk.ai/app-rounded-bg-white.png',
-    //     },
-    //   }
-    // );
   }
-
-  const conversation = await prisma.conversation.findFirst({
+  let conversation = await prisma.conversation.findUnique({
     where: {
-      AND: [{ agentId: agent?.id }, { visitorId: sessionId }],
+      channelExternalId: sessionId,
     },
     include: {
       messages: {
@@ -227,6 +222,8 @@ const handleQuery = async (
     agentId: agent?.id!,
     visitorId: sessionId,
     conversationId,
+    channelExternalId: sessionId,
+    channelCredentialsId: integration?.id,
   });
 
   conversationManager.push({
@@ -236,7 +233,7 @@ const handleQuery = async (
 
   const { answer, sources } = await new AgentManager({ agent }).query({
     input: query,
-    history: conversation?.messages,
+    history: conversation?.messages || [],
   });
 
   const finalAnswer = `${answer}\n\n${formatSourcesRawText(
@@ -285,7 +282,6 @@ const handleQuery = async (
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   let body = {} as HookBody;
-
   try {
     res.status(200).send('Handling...');
     // const host = req?.headers?.['host'];
@@ -331,29 +327,33 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
     switch (body.event) {
       case 'message:send':
+        console.log('bodyx', body.data, metadata);
         if (
           body.data.origin === 'chat' &&
           body.data.from === 'user' &&
           body.data.type === 'text'
         ) {
           if (metadata?.aiStatus === AIStatus.disabled) {
-            // const oneHourAgo = new Date().getTime() - 10 * 1000;
+            const conversation = await prisma.conversation.findUnique({
+              where: {
+                channelExternalId: body.data.session_id,
+              },
+            });
 
-            // if (new Date(metadata?.aiDisabledDate!).getTime() < oneHourAgo) {
-            //   console.log('CALLLED ----------------', 'ENABLED AI');
-            //   await CrispClient.website.updateConversationMetas(
-            //     body.website_id,
-            //     body.data.session_id,
-            //     {
-            //       data: {
-            //         aiStatus: AIStatus.enabled,
-            //       } as ConversationMetadata,
-            //     }
-            //   );
-            // } else {
-            //   return 'Converstaion disabled dot not proceed';
-            // }
-            return 'Converstaion disabled dot not proceed';
+            const conversationManager = new ConversationManager({
+              organizationId: conversation?.organizationId as string,
+              conversationId: conversation?.id,
+              channel: conversation?.channel as ConversationChannel,
+              userId: conversation?.userId as string,
+            });
+
+            conversationManager.push({
+              from: MessageFrom.human,
+              text: body.data.content,
+            });
+
+            await conversationManager.save();
+            return 'Message saved';
           }
 
           CrispClient.website.composeMessageInConversation(

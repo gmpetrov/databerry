@@ -304,24 +304,31 @@ model Conversation {
   agent    Agent?    @relation(fields: [agentId], references: [id], onDelete: Cascade)
   agentId  String?   @map("agent_id")
   messages Message[]
-
+  isAiEnabled Boolean? @default(true)  @map("is_ai_enabled")
+  
   channel ConversationChannel @default(dashboard)
 
   status ConversationStatus @default(UNRESOLVED)
 
   metadata Json?
 
+  channelExternalId String? @unique @map("channel_external_id")
+  channelCredentialsId String? @map("channel_credentials_id")
+  channelCredentials ServiceProvider? @relation(fields:[channelCredentialsId],references:[id])
+
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  lead Lead?
 
+  lead Lead?
+ 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([visitorId], type: Hash)
   @@map("conversations")
 }
+
 
 model Message {
   id             String        @id @default(cuid())
@@ -514,6 +521,8 @@ model ServiceProvider {
   appDatasources AppDatasource[]
   agents Agent[]
   tools Tool[]
+
+  conversations Conversation[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

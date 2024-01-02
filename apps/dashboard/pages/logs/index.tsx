@@ -2,8 +2,11 @@ import { CloseRounded } from '@mui/icons-material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import Notifications from '@mui/icons-material/Notifications';
+import QuickreplyIcon from '@mui/icons-material/Quickreply';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import {
   Button,
   ColorPaletteProp,
@@ -14,6 +17,7 @@ import {
   SelectProps,
   TabList,
   Tabs,
+  Tooltip,
 } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
@@ -29,15 +33,14 @@ import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Tab, { tabClasses } from '@mui/joy/Tab';
 import Typography from '@mui/joy/Typography';
-import { SxProps } from '@mui/material';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
 import { ReactElement, useEffect, useMemo } from 'react';
 import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
+import useSWRMutation from 'swr/mutation';
 
 import ChatBox from '@app/components/ChatBox';
 import { ConversationExport } from '@app/components/ConversationExport';
@@ -48,11 +51,22 @@ import { updateConversationStatus } from '@app/components/ResolveButton';
 import { handleEvalAnswer } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
+// import { client as crispClient } from '@chaindesk/lib/crisp';
 import relativeDate from '@chaindesk/lib/relative-date';
-import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import {
+  fetcher,
+  generateActionFetcher,
+  HTTP_METHOD,
+} from '@chaindesk/lib/swr-fetcher';
+import { AIStatus } from '@chaindesk/lib/types/crisp';
 import { EvalSchema } from '@chaindesk/lib/types/dtos';
-import { withAuth } from '@chaindesk/lib/withAuth';
-import { ConversationStatus, MessageEval, Prisma } from '@chaindesk/prisma';
+import {
+  ConversationChannel,
+  ConversationStatus,
+  MessageEval,
+  MessageFrom,
+  Prisma,
+} from '@chaindesk/prisma';
 
 import { getAgents } from '../api/agents';
 import { getLogs } from '../api/logs';
@@ -69,7 +83,7 @@ function SelectQueryParamFilter<T extends {}>({
   ...otherProps
 }: SelectQueryParamFilterProps<T> & SelectProps<T, false>) {
   const router = useRouter();
-  const currentValue = router.query[filterName] as T;
+  const currentValue = router.query[filterName] as unknown as T;
 
   return (
     <Select
@@ -157,6 +171,7 @@ const tabToParams = (tab: string): Record<string, unknown> => {
 export default function LogsPage() {
   const { data: session } = useSession();
   const router = useRouter();
+
   const conversationId = router.query.conversationId as string;
 
   const hasFilterApplied =
@@ -171,7 +186,9 @@ export default function LogsPage() {
     currentImproveAnswerID: undefined as string | undefined,
     improveAnswerDefaultValue: '' as string | undefined,
     currentConversationIndex: 0,
+    isAiEnabled: true,
   });
+
   const getConversationsQuery = useSWRInfinite<
     Prisma.PromiseReturnType<typeof getLogs>
   >((pageIndex, previousPageData) => {
@@ -202,7 +219,34 @@ export default function LogsPage() {
     state.currentConversationId
       ? `/api/logs/${state.currentConversationId}`
       : null,
-    fetcher
+    fetcher,
+    {
+      // TODO: remove when we have websockets.
+      ...(state.isAiEnabled
+        ? { refreshInterval: 30000 }
+        : { refreshInterval: 5000 }),
+    }
+  );
+
+  const conversationChatMutation = useSWRMutation(
+    state.currentConversationId
+      ? `/api/conversations/${state.currentConversationId}/message`
+      : null,
+    generateActionFetcher(HTTP_METHOD.POST)
+  );
+
+  const conversationUpdater = useSWRMutation(
+    state.currentConversationId
+      ? `/api/conversations/${state.currentConversationId}`
+      : null,
+    generateActionFetcher(HTTP_METHOD.PATCH)
+  );
+
+  const syncAiMutation = useSWRMutation(
+    state.currentConversationId
+      ? `/api/conversations/${state.currentConversationId}/integration/sync-ai-status`
+      : null,
+    generateActionFetcher(HTTP_METHOD.POST)
   );
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
@@ -210,6 +254,14 @@ export default function LogsPage() {
     fetcher
   );
 
+  const handleOperatorChat = async (message: string) => {
+    await conversationChatMutation.trigger({
+      message,
+      channel: getConversationQuery?.data?.channel as string,
+    });
+
+    await getConversationQuery.mutate();
+  };
   const handleChangeTab = (tab: TabEnum) => {
     router.query.tab = tab;
     router.replace(router);
@@ -248,6 +300,56 @@ export default function LogsPage() {
     ];
   }, [getConversationsQuery?.data, getSingleConversationQuery?.data]);
 
+  const isHumanHandoffButtonHidden = useMemo(() => {
+    let hide = false;
+    const externalChannelId = getConversationQuery?.data?.channelExternalId;
+
+    switch (getConversationQuery?.data?.channel) {
+      case ConversationChannel.crisp:
+      case ConversationChannel.slack:
+        if (!externalChannelId) {
+          hide = true;
+        }
+        break;
+      case ConversationChannel.dashboard:
+        hide = true;
+      default:
+        break;
+    }
+    return hide;
+  }, [
+    getConversationQuery?.data?.channel,
+    getConversationQuery?.data?.channelExternalId,
+  ]);
+
+  const toggleAi = async () => {
+    try {
+      switch (getConversationQuery.data?.channel) {
+        case 'crisp':
+          await syncAiMutation.trigger({
+            isAiEnabled: !state.isAiEnabled,
+            channel: 'crisp',
+          });
+          break;
+        default:
+          break;
+      }
+
+      await conversationUpdater.trigger({
+        isAiEnabled: !state.isAiEnabled,
+      });
+
+      await getConversationQuery.mutate();
+
+      // synchronize
+      setState({
+        isAiEnabled: !state.isAiEnabled,
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     setState({
       currentConversationId:
@@ -266,16 +368,21 @@ export default function LogsPage() {
     }
   }, [getSingleConversationQuery?.data?.id]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined' && !router.query.tab) {
       handleChangeTab(TabEnum.unresolved);
     }
     setState({ currentConversationIndex: 0 });
   }, [router.query.tab]);
 
-  // useEffect(() => {
-
-  // }, [state.currentConversationId]);
+  useEffect(() => {
+    if (getConversationQuery.isLoading || getConversationQuery.isValidating) {
+      return;
+    }
+    setState({
+      isAiEnabled: getConversationQuery?.data?.isAiEnabled ?? undefined,
+    });
+  }, [getConversationQuery?.data?.isAiEnabled]);
 
   if (!session?.organization) return null;
 
@@ -504,7 +611,7 @@ export default function LogsPage() {
             ))}
           </SelectQueryParamFilter>
         </Stack>
-        <Stack>
+        <Stack direction="row" spacing={2}>
           <ConversationExport />
         </Stack>
       </Stack>
@@ -704,7 +811,7 @@ export default function LogsPage() {
 
           <Divider orientation="vertical" />
           <Box
-            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 8 }}
+            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 9 }}
           >
             {getConversationQuery.data && (
               <>
@@ -730,11 +837,32 @@ export default function LogsPage() {
                   }}
                   startDecorator={<Notifications />}
                   endDecorator={
-                    <BannerActions
-                      status={getConversationQuery?.data?.status}
-                      email={getConversationQuery?.data?.lead?.email!}
-                      currentConversationId={state.currentConversationId!}
-                    />
+                    <Stack direction="row" spacing={1}>
+                      {!isHumanHandoffButtonHidden && (
+                        <Button
+                          variant="solid"
+                          color={state.isAiEnabled ? 'primary' : 'warning'}
+                          size="md"
+                          loading={conversationUpdater.isMutating}
+                          endDecorator={
+                            state.isAiEnabled ? (
+                              <CommentRoundedIcon fontSize="sm" />
+                            ) : (
+                              <SmartToyIcon fontSize="sm" />
+                            )
+                          }
+                          onClick={toggleAi}
+                        >
+                          {state.isAiEnabled ? 'Reply' : 'Re-Enable AI'}
+                        </Button>
+                      )}
+
+                      <BannerActions
+                        status={getConversationQuery?.data?.status}
+                        email={getConversationQuery?.data?.lead?.email!}
+                        currentConversationId={state.currentConversationId!}
+                      />
+                    </Stack>
                   }
                 >
                   <p>
@@ -765,8 +893,10 @@ export default function LogsPage() {
                 })) || []
               }
               isLoadingConversation={getConversationQuery?.isLoading}
-              onSubmit={async () => {}}
-              readOnly={true}
+              onSubmit={(message) => {
+                return handleOperatorChat(message);
+              }}
+              readOnly={!!state.isAiEnabled}
               handleEvalAnswer={handleEvalAnswer}
               handleImprove={(message, index) => {
                 const prev = getConversationQuery?.data?.messages?.[index - 1];
@@ -779,6 +909,7 @@ export default function LogsPage() {
               userImgUrl={session?.user?.image!}
               organizationId={session?.organization?.id!}
               refreshConversation={getConversationQuery.mutate}
+              disableWatermark
             />
           </Box>
         </Stack>
