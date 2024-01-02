@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.134"></a>
+## 0.1.134 (2024-01-02)
+
+### Fixed
+
+- 🐛 variable name typo [[e82de8f](https://github.com/gmpetrov/databerry/commit/e82de8fc41751e84699933abd702226801e32680)]
+
+
 <a name="0.1.133"></a>
 ## 0.1.133 (2024-01-02)
 
