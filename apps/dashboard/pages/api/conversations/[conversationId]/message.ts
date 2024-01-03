@@ -55,8 +55,8 @@ export const sendMessage = async (
           },
         });
         await CrispClient.website.sendMessageInConversation(
-          channelExternalId,
-          channelCredentials?.id,
+          channelCredentials?.externalId, // websiteId
+          channelExternalId, // sessionId
           {
             type: 'text',
             from: 'operator',
@@ -74,8 +74,8 @@ export const sendMessage = async (
 
         // disable AI
         await CrispClient.website.updateConversationMetas(
-          channelExternalId,
-          channelCredentials?.id,
+          channelCredentials?.externalId, // websiteId
+          channelExternalId, // sessionId
           {
             data: {
               aiStatus: AIStatus.disabled,
