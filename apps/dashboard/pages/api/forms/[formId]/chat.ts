@@ -265,7 +265,7 @@ export const formChat = async (
 
   const messageId = (response as any)?.messageId as string;
 
-  if (messageId && currentField) {
+  if ((messageId && currentField) || isValid) {
     await prisma.message.update({
       where: {
         id: messageId,
@@ -275,6 +275,7 @@ export const formChat = async (
         metadata: {
           ...(response as any)?.metadata,
           currentField,
+          isValid,
         },
       },
     });

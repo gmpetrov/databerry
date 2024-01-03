@@ -1,5 +1,7 @@
 import axios, { Axios, AxiosRequestConfig } from 'axios';
 
+// import { jsonSchemaToZod } from 'json-schema-to-zod';
+// import z from 'zod';
 import createToolParser from '@chaindesk/lib/create-tool-parser';
 import { HttpToolSchema } from '@chaindesk/lib/types/dtos';
 
@@ -118,5 +120,16 @@ export const createHandler = ((httpTool: HttpToolSchema) =>
 
 export const createParser =
   (tool: HttpToolSchema, config: any) => (payload: string) => {
-    return createToolParser(toJsonSchema(tool)?.parameters)(payload);
+    try {
+      // const schema = eval(
+      //   jsonSchemaToZod(toJsonSchema(tool)?.parameters, { module: 'cjs' })
+      // ) as z.ZodSchema;
+
+      // const values = schema.parse(JSON.parse(payload));
+
+      return createToolParser(toJsonSchema(tool)?.parameters)(payload);
+    } catch (err) {
+      console.log('Parser Error', err);
+      throw err;
+    }
   };

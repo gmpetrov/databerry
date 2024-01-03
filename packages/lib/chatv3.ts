@@ -8,11 +8,11 @@ import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
   createHandler as createFormToolHandler,
-  createHandlerTest as createFormToolHandlerTest,
+  // createHandlerTest as createFormToolHandlerTest,
   createParser as createParserFormTool,
-  createParserTest as createParserFormToolTest,
+  // createParserTest as createParserFormToolTest,
   toJsonSchema as formToolToJsonSchema,
-  toJsonSchemaTest as formToolToJsonSchemaTest,
+  // toJsonSchemaTest as formToolToJsonSchemaTest,
 } from './agent/tools/form';
 import {
   createHandler as createHttpToolHandler,
@@ -134,31 +134,19 @@ const chat = async ({
     } as ChatCompletionTool;
   });
 
-  const formatedFormTools = formTools
-    .map((each) => {
-      const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-      const config = { toolConfig, conversationId };
+  const formatedFormTools = formTools.map((each) => {
+    const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
+    const config = { toolConfig, conversationId };
 
-      return [
-        {
-          type: 'function',
-          function: {
-            ...formToolToJsonSchema(each, config),
-            parse: createParserFormTool(each, config),
-            function: createHandler(createFormToolHandler)(each, config),
-          },
-        } as ChatCompletionTool,
-        // {
-        //   type: 'function',
-        //   function: {
-        //     ...formToolToJsonSchemaTest(each, toolConfig),
-        //     parse: createParserFormToolTest(each, config),
-        //     function: createHandler(createFormToolHandlerTest)(each, config),
-        //   },
-        // } as ChatCompletionTool,
-      ];
-    })
-    .flat();
+    return {
+      type: 'function',
+      function: {
+        ...formToolToJsonSchema(each, config),
+        parse: createParserFormTool(each, config),
+        function: createHandler(createFormToolHandler)(each, config),
+      },
+    } as ChatCompletionTool;
+  });
 
   let retrievalData:
     | Awaited<ReturnType<typeof datastoreToolHandler>>
