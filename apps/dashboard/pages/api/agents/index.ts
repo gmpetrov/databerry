@@ -81,9 +81,20 @@ export const createAgent = async (
         createMany: {
           data: (data.tools || []).map((tool) => ({
             type: tool.type,
+            config: (tool as any).config,
             ...(tool.type === ToolType.datastore
               ? {
                   datastoreId: tool.datastoreId,
+                }
+              : {}),
+            ...(tool.type === ToolType.form
+              ? {
+                  formId: tool.formId,
+                }
+              : {}),
+            ...(tool.serviceProviderId
+              ? {
+                  serviceProviderId: tool.serviceProviderId,
                 }
               : {}),
           })),
