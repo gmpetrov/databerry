@@ -11,33 +11,34 @@ import { CreateToolHandler, ToolToJsonSchema } from './type';
 
 export type FormToolPayload = Record<string, unknown>;
 
-export const toJsonSchema = ((tool: FormToolSchema, toolConfig) => {
+export const toJsonSchema = ((tool: FormToolSchema, config) => {
   const form = tool.form as Form;
-  const useDraftConfig = !!toolConfig?.useDraftConfig;
-  const config = (
+  const useDraftConfig = !!config?.toolConfig?.useDraftConfig;
+  const formConfig = (
     useDraftConfig ? form?.draftConfig : form?.publishedConfig
   ) as FormConfigSchema;
 
   return {
     name: `isFormValid_${slugify(form.name)}`,
     description: 'Trigger only when all the required field have been answered',
-    parameters: (config as any)?.schema,
+    parameters: (formConfig as any)?.schema,
   };
 }) as ToolToJsonSchema;
 
-export const createHandler = ((tool: FormToolSchema, toolConfig) =>
+export const createHandler = ((tool: FormToolSchema, config) =>
   async (payload: FormToolPayload) => {
     const form = tool.form as Form;
-    const useDraftConfig = !!toolConfig?.useDraftConfig;
-    const config = (
+    const useDraftConfig = !!config?.toolConfig?.useDraftConfig;
+    const conversationId = config?.conversationId as string;
+    const formConfig = (
       useDraftConfig ? form?.draftConfig : form?.publishedConfig
     ) as FormConfigSchema;
 
     await handleFormValid({
-      // conversationId: c?.id!,
+      conversationId,
       formId: tool.formId,
       values: payload,
-      webhookUrl: config?.webhook?.url!,
+      webhookUrl: formConfig?.webhook?.url!,
     });
 
     return {

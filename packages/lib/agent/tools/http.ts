@@ -2,16 +2,13 @@ import axios, { Axios, AxiosRequestConfig } from 'axios';
 
 import { HttpToolSchema } from '@chaindesk/lib/types/dtos';
 
-import { CreateToolHandler } from './type';
+import { CreateToolHandler, ToolToJsonSchema } from './type';
 
 export type HttpToolPayload = {
   [key: string]: unknown;
 };
 
-export const toJsonSchema = (
-  tool: HttpToolSchema,
-  toolConfig?: Record<string, unknown>
-) => {
+export const toJsonSchema = ((tool: HttpToolSchema) => {
   return {
     name: `${tool.id}`,
     description: tool?.config?.description,
@@ -47,7 +44,7 @@ export const toJsonSchema = (
       required: [],
     },
   };
-};
+}) as ToolToJsonSchema;
 
 export const createHandler = ((httpTool: HttpToolSchema) =>
   async (payload: HttpToolPayload) => {

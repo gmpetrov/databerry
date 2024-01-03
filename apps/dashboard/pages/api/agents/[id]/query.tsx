@@ -48,7 +48,10 @@ export const chatAgentRequest = async (
 
   const conversationId = data.conversationId || cuid();
   const isNewConversation = !data.conversationId;
-  if (session?.authType == 'apiKey') {
+  if (
+    session?.authType == 'apiKey' &&
+    data.channel !== ConversationChannel.form
+  ) {
     data.channel = ConversationChannel.api;
   }
 
@@ -229,6 +232,7 @@ export const chatAgentRequest = async (
   const [chatRes] = await Promise.all([
     manager.query({
       ...data,
+      conversationId,
       input: data.query,
       stream: data.streaming ? handleStream : undefined,
       history: agent?.organization?.conversations?.[0]?.messages,

@@ -329,7 +329,7 @@ model Conversation {
   lead Lead?
  
 
-  formSubmission FormSubmission?
+  formSubmissions FormSubmission[]
   
   form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String?   @map("form_id")

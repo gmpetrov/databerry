@@ -62,6 +62,7 @@ type AgentManagerProps = ChatModelConfigSchema &
     | 'systemPrompt'
     | 'userPrompt'
     | 'toolsConfig'
+    | 'conversationId'
   > & {
     input: string;
     stream?: any;

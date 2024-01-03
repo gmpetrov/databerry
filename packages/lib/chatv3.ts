@@ -14,7 +14,7 @@ import {
   createHandler as createHttpToolHandler,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
-import { CreateToolHandler } from './agent/tools/type';
+import { CreateToolHandler, CreateToolHandlerConfig } from './agent/tools/type';
 import type { Source } from './types/document';
 import {
   ChatModelConfigSchema,
@@ -45,6 +45,7 @@ export type ChatProps = ChatModelConfigSchema & {
   filters?: ChatRequest['filters'];
   topK?: number;
   toolsConfig?: ChatRequest['toolsConfig'];
+  conversationId?: ChatRequest['conversationId'];
 };
 
 const chat = async ({
@@ -61,6 +62,7 @@ const chat = async ({
   filters,
   topK,
   toolsConfig,
+  conversationId,
   ...otherProps
 }: ChatProps) => {
   // Tools
@@ -87,7 +89,7 @@ const chat = async ({
 
   const createHandler =
     (handler: CreateToolHandler) =>
-    (tool: ToolSchema, config?: ChatRequest['toolsConfig']) =>
+    (tool: ToolSchema, config: CreateToolHandlerConfig) =>
     async (args: unknown) => {
       const res = await handler(tool, config)(args);
 
@@ -103,6 +105,7 @@ const chat = async ({
 
   const formatedHttpTools = httpTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
+    const config = { toolConfig, conversationId };
 
     return {
       type: 'function',
@@ -110,7 +113,7 @@ const chat = async ({
       function: {
         ...httpToolToJsonSchema(each, toolConfig),
         parse: JSON.parse,
-        function: createHandler(createHttpToolHandler)(each, toolConfig),
+        function: createHandler(createHttpToolHandler)(each, config),
       },
       // } as RunnableToolFunction<HttpToolPayload>)
     } as ChatCompletionTool;
@@ -118,12 +121,14 @@ const chat = async ({
 
   const formatedFormTools = formTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
+    const config = { toolConfig, conversationId };
+
     return {
       type: 'function',
       function: {
         ...formToolToJsonSchema(each, toolConfig),
         parse: JSON.parse,
-        function: createHandler(createFormToolHandler)(each, toolConfig),
+        function: createHandler(createFormToolHandler)(each, config),
       },
     } as ChatCompletionTool;
   });

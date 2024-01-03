@@ -206,9 +206,6 @@ export default class ConversationManager {
             }
           : {}),
       },
-      include: {
-        formSubmission: true,
-      },
     });
 
     const approvalsToInsert = this.messages

@@ -1,4 +1,8 @@
-import { ConversationStatus, Prisma } from '@prisma/client';
+import {
+  ConversationChannel,
+  ConversationStatus,
+  Prisma,
+} from '@prisma/client';
 import { NextApiResponse } from 'next';
 
 import { MessageEvalUnion } from '@app/hooks/useChat';
@@ -25,6 +29,11 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const conversations = await prisma.conversation.findMany({
     where: {
       AND: [
+        {
+          channel: {
+            notIn: [ConversationChannel.form],
+          },
+        },
         {
           agent: {
             organizationId: session.organization?.id,
