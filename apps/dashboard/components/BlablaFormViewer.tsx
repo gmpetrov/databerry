@@ -136,9 +136,7 @@ function BlablaFormViewer({ formId, config }: Props) {
   const initiateForm = () => {
     localStorage.setItem('conversationId', '');
     setState({ isConversationStarted: true });
-    answerQuestion(
-      'I am ready, to fill the form. prompt me with informations you need.'
-    );
+    answerQuestion('👋');
   };
 
   const lastMessage = chatData?.history[chatData.history.length - 1];
@@ -196,7 +194,7 @@ function BlablaFormViewer({ formId, config }: Props) {
               //   color="neutral"
               //   size="sm"
               // />
-              <span className="relative flex w-8 h-8 mt-[5px]">
+              <span className="relative flex w-8 h-8 mt-[0px]">
                 <span className="absolute inline-flex w-full h-full bg-gray-400 rounded-full opacity-75 animate-ping"></span>
                 <span className="relative inline-flex w-8 h-8 bg-gray-500 rounded-full"></span>
               </span>
@@ -217,6 +215,7 @@ function BlablaFormViewer({ formId, config }: Props) {
                     <FormText
                       level="h1"
                       sx={{
+                        fontSize: '1.8rem',
                         opacity: chatData.isStreaming ? 1 : 0.7,
                       }}
                     >

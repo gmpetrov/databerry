@@ -1,6 +1,7 @@
 import { RocketLaunch } from '@mui/icons-material';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
+import Looks4RoundedIcon from '@mui/icons-material/Looks4Rounded';
 import LooksOneRoundedIcon from '@mui/icons-material/LooksOneRounded';
 import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
 import {
@@ -83,6 +84,11 @@ function Form({ formId }: Props) {
     query.mutate();
   };
 
+  const formPublicUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL?.replace(
+    'app.',
+    ''
+  )}/forms/${query?.data?.id}`;
+
   if (!query.data && query.isLoading) {
     return <Loader />;
   }
@@ -139,6 +145,31 @@ function Form({ formId }: Props) {
             >
               <AccordionSummary>
                 <Typography startDecorator={<LooksOneRoundedIcon />}>
+                  Overview
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <FormControl>
+                  <FormLabel>Overview</FormLabel>
+                  <Textarea
+                    minRows={4}
+                    // maxRows={4}
+                    {...methods.register('draftConfig.overview')}
+                  />
+                </FormControl>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion
+              expanded={state.currentAccordionIndex === 1}
+              onChange={(event, expanded) => {
+                setState({
+                  currentAccordionIndex: expanded ? 1 : null,
+                });
+              }}
+            >
+              <AccordionSummary>
+                <Typography startDecorator={<LooksTwoRoundedIcon />}>
                   Start/End Screen
                 </Typography>
               </AccordionSummary>
@@ -183,7 +214,7 @@ function Form({ formId }: Props) {
                     <FormLabel>Call to action URL</FormLabel>
                     <Stack
                       direction="row"
-                      gap={0.5}
+                      gap={1.5}
                       sx={(t) => ({
                         border: '1px solid',
                         borderColor: t.palette.divider,
@@ -228,15 +259,15 @@ function Form({ formId }: Props) {
             </Accordion>
 
             <Accordion
-              expanded={state.currentAccordionIndex === 1}
+              expanded={state.currentAccordionIndex === 2}
               onChange={(event, expanded) => {
                 setState({
-                  currentAccordionIndex: expanded ? 1 : null,
+                  currentAccordionIndex: expanded ? 2 : null,
                 });
               }}
             >
               <AccordionSummary>
-                <Typography startDecorator={<LooksTwoRoundedIcon />}>
+                <Typography startDecorator={<Looks3RoundedIcon />}>
                   Form Fields
                 </Typography>
               </AccordionSummary>
@@ -250,15 +281,15 @@ function Form({ formId }: Props) {
             </Accordion>
 
             <Accordion
-              expanded={state.currentAccordionIndex === 2}
+              expanded={state.currentAccordionIndex === 3}
               onChange={(event, expanded) => {
                 setState({
-                  currentAccordionIndex: expanded ? 2 : null,
+                  currentAccordionIndex: expanded ? 3 : null,
                 });
               }}
             >
               <AccordionSummary>
-                <Typography startDecorator={<Looks3RoundedIcon />}>
+                <Typography startDecorator={<Looks4RoundedIcon />}>
                   Webhook
                 </Typography>
               </AccordionSummary>
@@ -338,18 +369,14 @@ function Form({ formId }: Props) {
                 >
                   <Typography
                     level="body-sm"
-                    endDecorator={
-                      <CopyButton text="http://localhost:3000/forms/clqgorhb40000zm0u887y07d9" />
-                    }
+                    endDecorator={<CopyButton text={formPublicUrl} />}
                   >
                     <a
-                      href={
-                        'http://localhost:3000/forms/clqgorhb40000zm0u887y07d9'
-                      }
+                      href={formPublicUrl}
                       className="hover:underline"
                       target="_blank"
                     >
-                      http://localhost:3000/forms/clqgorhb40000zm0u887y07d9
+                      {formPublicUrl}
                     </a>
                   </Typography>
                 </Alert>

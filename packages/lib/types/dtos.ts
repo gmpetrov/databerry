@@ -480,6 +480,7 @@ export const FormFieldSchema = z.discriminatedUnion('type', [
 export type FormFieldSchema = z.infer<typeof FormFieldSchema>;
 
 export const FormConfigSchema = z.object({
+  overview: z.string().max(750).optional().nullable(),
   fields: z.array(FormFieldSchema).superRefine((vals, ctx) => {
     const unique = new Set();
     for (const [i, val] of vals.entries()) {
@@ -505,7 +506,7 @@ export const FormConfigSchema = z.object({
   endScreen: z
     .object({
       cta: z.object({
-        label: z.string(),
+        label: z.string().max(50),
         url: z.union([z.string().url().nullish(), z.literal('')]),
         target: z.string().optional(),
       }),

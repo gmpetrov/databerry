@@ -129,14 +129,18 @@ export const formChat = async (
 
   const locale = 'en';
 
-  const prompt = `You role is to help fill a form that follows a JSON Schema that will be given to you, you should only ask about the field specified in the properties of the schema. You will ask questions in natural language, one at a time, to the user and fill the form. Use a friendly and energetic tone. You are able to go back to previous questions if asked.
+  const prompt = `You role is to help fill a form that follows a JSON Schema that will be given to you, you should only ask about the field specified in the properties of the schema.
+  You will ask questions in natural language, one at a time, to the user and fill the form. Use a friendly and energetic tone. 
+  You are able to go back to previous questions if asked.
+  Stay consice, avoid long sentences.
+  
   Use the language specified by locale = ${locale}. 
   Never request or accept any information beyond what's defined in the schema.
+
+  ${config?.overview || ''}
   
   Always end your question with __BLABLA_FIELD__: name of the field your asking for in order to keep track of the current field, spelled like in the json schema.
-  Example with a field named firstname: What is your first name? __BLABLA_FIELD__: firstname
-  
-  `;
+  Example with a field named firstname: What is your first name? __BLABLA_FIELD__: firstname`;
 
   if (data.streaming) {
     res.writeHead(200, {
@@ -232,6 +236,8 @@ export const formChat = async (
 
   const re = /__BLABLA_FIELD__:?\s?(.*)/;
   currentField = (response as any)?.answer?.match(re)?.[1]?.trim?.() || '';
+  console.log('currentFieldp-------------->', currentField);
+
   if (!config?.schema?.properties?.[currentField]) {
     currentField = '';
   }

@@ -5,7 +5,7 @@ import slugify from '@chaindesk/lib/slugify';
 import { FormStatus } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
-import { FormFieldSchema } from './types/dtos';
+import { FormFieldSchema } from '../types/dtos';
 
 export function formToJsonSchema(fields: FormFieldSchema[]): JSONSchema {
   const defaultValue = {

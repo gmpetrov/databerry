@@ -36,8 +36,14 @@ import Layout from '@app/components/Layout';
 import Loader from '@app/components/Loader';
 import SettingCard from '@app/components/ui/SettingCard';
 import UsageLimitModal from '@app/components/UsageLimitModal';
+import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
+import {
+  CONTACT_SALES,
+  FROM_SCRATCH,
+  INBOUND_LEAD,
+} from '@chaindesk/lib/forms/templates';
 import {
   fetcher,
   generateActionFetcher,
@@ -54,6 +60,7 @@ import { createForm, getForms } from '../api/forms';
 export default function FormsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const createFormModal = useModal();
 
   const [state, setState] = useStateReducer({
     isCreateDatastoreModalOpen: false,
@@ -72,28 +79,11 @@ export default function FormsPage() {
     Prisma.PromiseReturnType<typeof createForm>
   >('api/forms/', generateActionFetcher(HTTP_METHOD.POST)<CreateFormSchema>);
 
-  const onSubmit = async () => {
+  const onSubmit = async (schema: FormConfigSchema) => {
     try {
       const res = await toast.promise(
         formMutation.trigger({
-          draftConfig: {
-            fields: [
-              {
-                id: cuid(),
-                type: 'text',
-                name: 'email',
-                required: true,
-              },
-            ] as any,
-            startScreen: {
-              title: 'Welcome to our support!',
-              description: 'Please fill out the form below',
-              cta: {
-                label: 'Start',
-              },
-            },
-            // endScreen: {},
-          },
+          draftConfig: schema,
         } as any),
         {
           loading: 'Creating empty form...',
@@ -194,7 +184,9 @@ export default function FormsPage() {
             variant="solid"
             color="primary"
             startDecorator={<AddIcon />}
-            onClick={onSubmit}
+            onClick={() => {
+              createFormModal.open();
+            }}
             loading={formMutation.isMutating}
           >
             New Form
@@ -214,6 +206,41 @@ export default function FormsPage() {
           })
         }
       />
+
+      <createFormModal.component
+        title="Create Form"
+        dialogProps={{
+          sx: {
+            maxWidth: 'sm',
+            height: 'auto',
+          },
+        }}
+      >
+        <Stack gap={2}>
+          {[FROM_SCRATCH, INBOUND_LEAD, CONTACT_SALES].map((each) => (
+            <Card
+              size="sm"
+              key={each.name}
+              onClick={() => onSubmit(each.schema)}
+              variant="outlined"
+              sx={(t) => ({
+                transition: 'all 0.1s ease-in-out',
+                '&:hover': {
+                  backgroundColor: t.palette.background.popup,
+                  cursor: 'pointer',
+                  transform: 'scale(1.005)',
+                  '& > p:first-child': {
+                    color: t.palette.primary.main,
+                  },
+                },
+              })}
+            >
+              <Typography level="title-lg">{each.name}</Typography>
+              <Typography level="body-md">{each.description}</Typography>
+            </Card>
+          ))}
+        </Stack>
+      </createFormModal.component>
     </Box>
   );
 }
