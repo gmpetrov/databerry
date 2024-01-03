@@ -8,10 +8,15 @@ import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
   createHandler as createFormToolHandler,
+  createHandlerTest as createFormToolHandlerTest,
+  createParser as createParserFormTool,
+  createParserTest as createParserFormToolTest,
   toJsonSchema as formToolToJsonSchema,
+  toJsonSchemaTest as formToolToJsonSchemaTest,
 } from './agent/tools/form';
 import {
   createHandler as createHttpToolHandler,
+  createParser as createParserHttpTool,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
 import { CreateToolHandler, CreateToolHandlerConfig } from './agent/tools/type';
@@ -26,6 +31,7 @@ import {
 } from './types/dtos';
 import ChatModel from './chat-model';
 import { ModelConfig } from './config';
+import createToolParser from './create-tool-parser';
 import formatMessagesOpenAI from './format-messages-openai';
 import getUsageCost from './get-usage-cost';
 import promptInject from './prompt-inject';
@@ -87,6 +93,8 @@ const chat = async ({
     throw 'ToolApprovalRequired';
   };
 
+  let metadata: object | undefined = undefined;
+
   const createHandler =
     (handler: CreateToolHandler) =>
     (tool: ToolSchema, config: CreateToolHandlerConfig) =>
@@ -98,6 +106,13 @@ const chat = async ({
           tool,
           payload: args,
         });
+      }
+
+      if (res.metadata) {
+        metadata = {
+          ...metadata,
+          ...res.metadata,
+        };
       }
 
       return res.data;
@@ -112,26 +127,38 @@ const chat = async ({
 
       function: {
         ...httpToolToJsonSchema(each, toolConfig),
-        parse: JSON.parse,
+        parse: createParserHttpTool(each, config),
         function: createHandler(createHttpToolHandler)(each, config),
       },
       // } as RunnableToolFunction<HttpToolPayload>)
     } as ChatCompletionTool;
   });
 
-  const formatedFormTools = formTools.map((each) => {
-    const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId };
+  const formatedFormTools = formTools
+    .map((each) => {
+      const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
+      const config = { toolConfig, conversationId };
 
-    return {
-      type: 'function',
-      function: {
-        ...formToolToJsonSchema(each, toolConfig),
-        parse: JSON.parse,
-        function: createHandler(createFormToolHandler)(each, config),
-      },
-    } as ChatCompletionTool;
-  });
+      return [
+        {
+          type: 'function',
+          function: {
+            ...formToolToJsonSchema(each, toolConfig),
+            parse: createParserFormTool(each, config),
+            function: createHandler(createFormToolHandler)(each, config),
+          },
+        } as ChatCompletionTool,
+        // {
+        //   type: 'function',
+        //   function: {
+        //     ...formToolToJsonSchemaTest(each, toolConfig),
+        //     parse: createParserFormToolTest(each, config),
+        //     function: createHandler(createFormToolHandlerTest)(each, config),
+        //   },
+        // } as ChatCompletionTool,
+      ];
+    })
+    .flat();
 
   let retrievalData:
     | Awaited<ReturnType<typeof datastoreToolHandler>>
@@ -275,6 +302,7 @@ const chat = async ({
       usage,
       sources: retrievalData?.sources || [],
       approvals,
+      metadata,
     } as ChatResponse;
   } catch (err: any) {
     if (err?.message?.includes('ToolApprovalRequired')) {
@@ -283,6 +311,7 @@ const chat = async ({
         usage: {},
         approvals,
         sources: [] as Source[],
+        metadata,
       } as ChatResponse;
     } else {
       throw err;

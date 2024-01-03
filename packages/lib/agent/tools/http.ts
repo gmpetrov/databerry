@@ -1,5 +1,6 @@
 import axios, { Axios, AxiosRequestConfig } from 'axios';
 
+import createToolParser from '@chaindesk/lib/create-tool-parser';
 import { HttpToolSchema } from '@chaindesk/lib/types/dtos';
 
 import { CreateToolHandler, ToolToJsonSchema } from './type';
@@ -114,3 +115,8 @@ export const createHandler = ((httpTool: HttpToolSchema) =>
       console.log('HTTP Tool Error', err);
     }
   }) as CreateToolHandler;
+
+export const createParser =
+  (tool: HttpToolSchema, config: any) => (payload: string) => {
+    return createToolParser(toJsonSchema(tool)?.parameters)(payload);
+  };

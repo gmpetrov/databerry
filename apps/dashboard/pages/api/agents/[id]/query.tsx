@@ -262,6 +262,7 @@ export const chatAgentRequest = async (
     sources: chatRes.sources,
     usage: chatRes.usage,
     approvals: chatRes.approvals,
+    metadata: chatRes.metadata,
   });
 
   await conversationManager.save();

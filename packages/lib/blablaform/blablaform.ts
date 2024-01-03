@@ -2,7 +2,7 @@
     package that allows to create conversational forms with Generative AI
     input json schema -> AI ask questions until form is valid -> output json
 */
-import { JSONSchema7 } from 'json-schema';
+
 import OpenAI from 'openai';
 import {
   ChatCompletionChunk,

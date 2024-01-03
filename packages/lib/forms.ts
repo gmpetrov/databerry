@@ -1,5 +1,5 @@
 import cuid from 'cuid';
-import { JSONSchema7 } from 'json-schema';
+import type { Schema as JSONSchema } from 'jsonschema';
 
 import slugify from '@chaindesk/lib/slugify';
 import { FormStatus } from '@chaindesk/prisma';
@@ -7,12 +7,12 @@ import prisma from '@chaindesk/prisma/client';
 
 import { FormFieldSchema } from './types/dtos';
 
-export function formToJsonSchema(fields: FormFieldSchema[]): JSONSchema7 {
+export function formToJsonSchema(fields: FormFieldSchema[]): JSONSchema {
   const defaultValue = {
     type: 'object',
     properties: {},
     required: [],
-  } as JSONSchema7;
+  } as JSONSchema;
 
   if ((fields || [])?.length <= 0) {
     return defaultValue;
@@ -37,12 +37,12 @@ export function formToJsonSchema(fields: FormFieldSchema[]): JSONSchema7 {
           : {}),
       };
       acc['required'] = [
-        ...acc.required!,
+        ...(acc.required! as string[]),
         ...(field.required ? [fieldName] : []),
       ];
       return acc;
     },
-    { type: 'object', properties: {}, required: [] } as JSONSchema7
+    { type: 'object', properties: {}, required: [] } as JSONSchema
   );
 }
 
