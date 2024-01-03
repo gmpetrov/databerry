@@ -624,7 +624,7 @@ model FormSubmission {
   form   Form? @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId String?       @map("form_id")
 
-  conversationId String?  @unique @map("conversation_id")
+  conversationId String?  @map("conversation_id")
   conversation Conversation? @relation(fields: [conversationId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")

@@ -59,9 +59,18 @@ function FormSettingsTab({ formId }: Props) {
                 color: 'danger',
               }}
               submitButtonProps={{
-                onClick: async () => {
-                  await deleteMutation.trigger();
-                  router.replace(RouteNames.FORMS);
+                onClick: async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  const confirmed = await window.confirm(
+                    'All submissions will be deleted. Are you sure?'
+                  );
+
+                  if (confirmed) {
+                    await deleteMutation.trigger();
+                    router.replace(RouteNames.FORMS);
+                  }
                 },
                 color: 'danger',
                 children: 'Delete',
