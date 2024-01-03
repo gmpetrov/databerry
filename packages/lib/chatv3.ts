@@ -126,7 +126,7 @@ const chat = async ({
       type: 'function',
 
       function: {
-        ...httpToolToJsonSchema(each, toolConfig),
+        ...httpToolToJsonSchema(each, config),
         parse: createParserHttpTool(each, config),
         function: createHandler(createHttpToolHandler)(each, config),
       },
@@ -143,7 +143,7 @@ const chat = async ({
         {
           type: 'function',
           function: {
-            ...formToolToJsonSchema(each, toolConfig),
+            ...formToolToJsonSchema(each, config),
             parse: createParserFormTool(each, config),
             function: createHandler(createFormToolHandler)(each, config),
           },

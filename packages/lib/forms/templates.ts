@@ -131,3 +131,49 @@ export const CONTACT_SALES: FormTemplate = {
     },
   },
 };
+
+export const FEEDBACK: FormTemplate = {
+  name: 'Product Feedback',
+  description:
+    'Obtain opinions on a product through an engaging dialogue-based approach.',
+  // category: 'marketing',
+  schema: {
+    overview: `Gather feedback from new customer of one of our model of sneaker
+    Acme Clothes is a distinguished fashion brand renowned for its high-quality, stylish apparel. 
+    Offering a wide range of clothing options for men, women, and kids, Acme Clothes combines comfort with contemporary trends to create unique and versatile pieces suitable for every occasion.
+    `,
+    fields: [
+      {
+        id: cuid(),
+        type: 'text',
+        name: 'model purchased',
+        required: true,
+      },
+      {
+        id: cuid(),
+        type: 'text',
+        name: 'Size fitting',
+        required: true,
+      },
+      {
+        id: cuid(),
+        type: 'text',
+        name: 'Price value assessment ',
+        required: true,
+      },
+      {
+        id: cuid(),
+        type: 'text',
+        name: 'Overall satisfaction (1-5)',
+        required: true,
+      },
+    ],
+    startScreen: {
+      title: 'Sneaker.com',
+      description: 'Let us know how we can improve our product',
+      cta: {
+        label: '💬 Share Feedback',
+      },
+    },
+  },
+};

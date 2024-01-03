@@ -41,6 +41,7 @@ import useStateReducer from '@app/hooks/useStateReducer';
 
 import {
   CONTACT_SALES,
+  FEEDBACK,
   FROM_SCRATCH,
   INBOUND_LEAD,
 } from '@chaindesk/lib/forms/templates';
@@ -86,8 +87,8 @@ export default function FormsPage() {
           draftConfig: schema,
         } as any),
         {
-          loading: 'Creating empty form...',
-          success: 'Created!',
+          loading: 'Creating Form...',
+          success: 'Created',
           error: 'Something went wrong',
         }
       );
@@ -217,7 +218,7 @@ export default function FormsPage() {
         }}
       >
         <Stack gap={2}>
-          {[FROM_SCRATCH, INBOUND_LEAD, CONTACT_SALES].map((each) => (
+          {[FROM_SCRATCH, INBOUND_LEAD, CONTACT_SALES, FEEDBACK].map((each) => (
             <Card
               size="sm"
               key={each.name}
