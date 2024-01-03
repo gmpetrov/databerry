@@ -63,7 +63,6 @@ Example with a field named firstname: What is your first name? __BLABLA_FIELD__:
 
 `;
     this.systemPrompt = _systemPrompt;
-    console.log('this.schema.properties', this.schema.properties);
     this.messages = [
       {
         role: 'system',

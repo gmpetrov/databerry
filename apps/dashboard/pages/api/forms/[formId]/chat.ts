@@ -214,7 +214,7 @@ export const formChat = async (
             ctrl.abort();
             response = JSON.parse(responseBuffer) as ChatResponse;
           } catch (err) {
-            console.log('responseBuffer ---------->', err, responseBuffer);
+            console.log(responseBuffer);
           }
         } else {
           if (event.event === SSE_EVENT.answer) {
@@ -233,12 +233,6 @@ export const formChat = async (
   const re = /__BLABLA_FIELD__:?\s?(.*)/;
   currentField = (response as any)?.answer?.match(re)?.[1]?.trim?.() || '';
   if (!config?.schema?.properties?.[currentField]) {
-    console.log(
-      'field name not found in schema:',
-      currentField,
-      Object.keys((config?.schema as any)?.properties),
-      config?.schema?.properties
-    );
     currentField = '';
   }
 
@@ -247,7 +241,7 @@ export const formChat = async (
       tool = JSON.parse(toolBuffer);
     }
   } catch (err) {
-    console.log('toolBuffer ---------->', err, toolBuffer);
+    console.log(toolBuffer);
   }
 
   if ((response as any)?.answer) {
@@ -262,9 +256,6 @@ export const formChat = async (
       SSE_EVENT.metadata
     );
   }
-
-  console.log('currentField', currentField);
-  console.log('RESPONSE', response);
 
   const messageId = (response as any)?.messageId as string;
 
