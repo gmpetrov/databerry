@@ -301,6 +301,16 @@ export default function AnalyticsPage() {
       </Box>
       {state.view === 'all_time' ? (
         <>
+          <AreaChart<ConversationMetricBase & { month: string }>
+            data={state.conversationEvolution}
+            xkey="month"
+            viewBy="year"
+            aggregation={aggregateConversationsByKey}
+            area_key="conversation_count"
+            title="Number of Conversations Over Time"
+            XAxisFormatter={getMonthName}
+            loading={state.isLoading}
+          />
           <AreaChart<ReplieMetricBase & { month: string }>
             data={state.repliesEvolution}
             xkey="month"
@@ -312,20 +322,16 @@ export default function AnalyticsPage() {
             XAxisFormatter={getMonthName}
             loading={state.isLoading}
           />
-
-          <AreaChart<ConversationMetricBase & { month: string }>
-            data={state.conversationEvolution}
-            xkey="month"
-            viewBy="year"
-            aggregation={aggregateConversationsByKey}
-            area_key="conversation_count"
-            title="Conversations Evolution"
-            XAxisFormatter={getMonthName}
-            loading={state.isLoading}
-          />
         </>
       ) : (
         <>
+          <AreaChart<ConversationMetricBase & { day: string }>
+            data={state.conversationEvolution}
+            xkey="day"
+            area_key="conversation_count"
+            title="Conversations Evolution"
+            loading={state.isLoading}
+          />
           <AreaChart<ReplieMetricBase & { day: string }>
             data={state.repliesEvolution}
             xkey="day"
@@ -334,18 +340,10 @@ export default function AnalyticsPage() {
             title="Replies Quality Performance"
             loading={state.isLoading}
           />
-
-          <AreaChart<ConversationMetricBase & { day: string }>
-            data={state.conversationEvolution}
-            xkey="day"
-            area_key="conversation_count"
-            title="Conversations Evolution"
-            loading={state.isLoading}
-          />
         </>
       )}
       <Card variant="outlined" sx={{ px: 5, py: 2, mt: 4 }}>
-        <Typography textAlign="center">Conversations Per Country</Typography>
+        <Typography textAlign="center">Conversations By Country</Typography>
         <GeoChart
           label="visits"
           data={state.visitsPerCountry}

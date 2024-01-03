@@ -252,29 +252,36 @@ export default function Navigation() {
             },
             {
               label: (
-                <Typography
-                // endDecorator={
-                //   <Chip
-                //     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
-                //     size="sm"
-                //   >
-                //     new
-                //   </Chip>
-                // }
-                >
-                  Forms
-                </Typography>
+                <Stack direction="row" gap={1} alignItems={'center'}>
+                  <Typography>Forms</Typography>
+                  <Chip
+                    className="text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+                    size="sm"
+                  >
+                    beta
+                  </Chip>
+                </Stack>
               ),
               route: RouteNames.FORMS,
               icon: <FeedRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.FORMS),
             },
-            // {
-            //   label: 'Analytics',
-            //   route: RouteNames.ANALYTICS,
-            //   icon: <ShowChartIcon fontSize="md" />,
-            //   active: router.route.startsWith(RouteNames.ANALYTICS),
-            // },
+            {
+              label: (
+                <Stack direction="row" gap={1} alignItems={'center'}>
+                  <Typography>Analytics</Typography>
+                  <Chip
+                    className="text-white bg-gradient-to-r from-orange-500 via-red-500 to-red-500"
+                    size="sm"
+                  >
+                    new
+                  </Chip>
+                </Stack>
+              ),
+              route: RouteNames.ANALYTICS,
+              icon: <ShowChartIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.ANALYTICS),
+            },
           ]
         : []),
       ...(product === 'cs'
