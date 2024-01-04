@@ -12,6 +12,7 @@ import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, ConversationChannel } from '@chaindesk/prisma';
 
 import CustomerSupportActions from './CustomerSupportActions';
+import NewChatButton from './NewChatButton';
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
@@ -152,6 +153,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           },
         })}
       >
+        <NewChatButton sx={{ position: 'absolute', right: 15, top: 15 }} />
         <ChatBox
           messages={history}
           onSubmit={handleChatSubmit}

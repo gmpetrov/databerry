@@ -28,6 +28,7 @@ import ChatMessageCard from './ChatMessageCard';
 import CustomerSupportActions from './CustomerSupportActions';
 import Markdown from './Markdown';
 import Motion from './Motion';
+import NewChatButton from './NewChatButton';
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
@@ -399,14 +400,20 @@ function App(props: {
                     <Typography>{state.config?.displayName}</Typography>
                   )}
 
-                  <IconButton
-                    variant="plain"
-                    sx={{ ml: 'auto' }}
-                    size="sm"
-                    onClick={() => setState({ isOpen: false })}
+                  <Stack
+                    direction="row"
+                    sx={{ ml: 'auto', alignItems: 'center' }}
                   >
-                    <CloseRoundedIcon />
-                  </IconButton>
+                    <NewChatButton variant="plain" />
+
+                    <IconButton
+                      variant="plain"
+                      size="sm"
+                      onClick={() => setState({ isOpen: false })}
+                    >
+                      <CloseRoundedIcon />
+                    </IconButton>
+                  </Stack>
                 </Stack>
                 <Stack
                   sx={(theme) => ({
