@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.136"></a>
+## 0.1.136 (2024-01-04)
+
+### Fixed
+
+- 🐛 missing api url [[7dcaa3f](https://github.com/gmpetrov/databerry/commit/7dcaa3f5fe2e8b828fd99c50db717876fb9126c6)]
+
+
 <a name="0.1.135"></a>
 ## 0.1.135 (2024-01-04)
 
