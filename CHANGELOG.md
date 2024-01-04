@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.137"></a>
+## 0.1.137 (2024-01-04)
+
+### Fixed
+
+- 🐛 form locale [[c17f361](https://github.com/gmpetrov/databerry/commit/c17f3618c43abf381a8664f5bfbcda7bf0d473f5)]
+
+### Miscellaneous
+
+- 🤖 add feedback modal [[7e44c77](https://github.com/gmpetrov/databerry/commit/7e44c77b30040ed2debd74a50a2e128d04184e0d)]
+
+
 <a name="0.1.136"></a>
 ## 0.1.136 (2024-01-04)
 
