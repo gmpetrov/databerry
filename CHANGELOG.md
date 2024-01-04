@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.138"></a>
+## 0.1.138 (2024-01-04)
+
+### Miscellaneous
+
+- 🎸 new chat button [[18a5cbb](https://github.com/gmpetrov/databerry/commit/18a5cbbdc29cecb0b08f0513fda22b0286165ad2)]
+
+
 <a name="0.1.137"></a>
 ## 0.1.137 (2024-01-04)
 
