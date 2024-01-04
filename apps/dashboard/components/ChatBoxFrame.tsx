@@ -153,7 +153,9 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           },
         })}
       >
-        <NewChatButton sx={{ position: 'absolute', right: 15, top: 15 }} />
+        <NewChatButton
+          sx={{ position: 'absolute', right: 15, top: 15, background: 'white' }}
+        />
         <ChatBox
           messages={history}
           onSubmit={handleChatSubmit}
