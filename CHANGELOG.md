@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.141"></a>
+## 0.1.141 (2024-01-04)
+
+### Fixed
+
+- 🐛 og image [[d2bc16b](https://github.com/gmpetrov/databerry/commit/d2bc16b6f4892977c7a85f3e2907c2ba7f07ea5f)]
+
+### Miscellaneous
+
+- 🎸 socal media promotion [[3374b5a](https://github.com/gmpetrov/databerry/commit/3374b5a38a448b4c4c68247acfd4bc9f16178eba)]
+
+
 <a name="0.1.140"></a>
 ## 0.1.140 (2024-01-04)
 
