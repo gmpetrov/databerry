@@ -1,14 +1,12 @@
-import {
-  EventStreamContentType,
-  fetchEventSource,
-} from '@microsoft/fetch-event-source';
 import { createContext, useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
-import { getConversation } from '@app/pages/api/conversations/[conversationId]';
-
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
+import {
+  EventStreamContentType,
+  fetchEventSource,
+} from '@chaindesk/lib/fetch-event-source';
 import {
   fetcher,
   generateActionFetcher,
@@ -54,6 +52,7 @@ export type ChatMessage = {
     description?: string;
   };
   approvals: ActionApproval[];
+  metadata?: Record<string, any>;
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -98,6 +97,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     handleAbort: undefined as any,
     isStreaming: false,
     isAiEnabled: true,
+    isFormValid: false,
   });
 
   // TODO: Remove when rate limit implemented from backend
@@ -212,9 +212,9 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         let bufferStep = '';
         let bufferEndpointResponse = '';
         let bufferToolCall = '';
+        let bufferMetadata = '';
         class RetriableError extends Error {}
         class FatalError extends Error {}
-
         await fetchEventSource(endpoint, {
           method: 'POST',
           headers: {
@@ -279,20 +279,35 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               console.log('[response]', bufferEndpointResponse);
 
               try {
-                const { sources, conversationId, visitorId, messageId } =
-                  JSON.parse(bufferEndpointResponse) as ChatResponse;
+                const {
+                  sources,
+                  conversationId,
+                  visitorId,
+                  messageId,
+                  isValid,
+                } = JSON.parse(bufferEndpointResponse) as ChatResponse & {
+                  isValid: boolean;
+                };
 
                 const h = [...history];
+
+                let metadata = {};
+
+                try {
+                  metadata = JSON.parse(bufferMetadata || '{}');
+                } catch {}
 
                 if (h?.[nextIndex]) {
                   h[nextIndex].message = `${buffer}`;
                   (h[nextIndex] as any).id = messageId;
+                  (h[nextIndex] as any).metadata = metadata;
                 } else {
                   h.push({
                     id: messageId,
                     from: 'agent',
                     message: buffer,
                     sources,
+                    metadata,
                   });
                 }
 
@@ -301,6 +316,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                   conversationId,
                   prevConversationId: state.conversationId,
                   visitorId,
+                  isFormValid: isValid,
                 });
 
                 try {
@@ -350,6 +366,8 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               setState({
                 history: h as any,
               });
+            } else if (event.event === SSE_EVENT.metadata) {
+              bufferMetadata += decodeURIComponent(event.data) as string;
             } else if (event.event === SSE_EVENT.tool_call) {
               bufferToolCall += event.data as string;
 
@@ -496,6 +514,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             createdAt: message?.createdAt!,
             sources: message?.sources as Source[],
             approvals: message?.approvals || [],
+            metadata: message?.metadata || ({} as any),
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,
@@ -554,6 +573,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     history: state.history,
     isLoadingConversation: getConversationQuery.isLoading,
     isValidatingConversation: getConversationQuery.isValidating,
+    isFomValid: state.isFormValid,
     hasMoreMessages: state.hasMoreMessages,
     visitorId: state.visitorId,
     conversationId: state.conversationId,

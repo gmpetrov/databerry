@@ -166,6 +166,8 @@ export const ChatRequest = ChatModelConfigSchema.extend({
 
   filters: FiltersSchema.optional(),
 
+  toolsConfig: z.record(z.string().cuid(), z.any()).optional(),
+
   //  DEPRECATED
   promptTemplate: z.string().optional(),
   promptType: z.nativeEnum(PromptType).optional(),
@@ -210,6 +212,7 @@ const ToolBaseSchema = z.object({
   serviceProviderId: z.string().cuid().optional().nullable(),
   serviceProvider: z.any().optional(),
   datastore: z.any().optional(),
+  form: z.any().optional(),
 });
 
 // export const ToolSchema = z.object({
@@ -269,11 +272,16 @@ export const ToolSchema = z.discriminatedUnion('type', [
     type: z.literal(ToolType.agent),
     config: z.any({}),
   }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.form),
+    formId: z.string().cuid(),
+  }),
 ]);
 
 export type ToolSchema = z.infer<typeof ToolSchema>;
 
 export type HttpToolSchema = Extract<ToolSchema, { type: 'http' }>;
+export type FormToolSchema = Extract<ToolSchema, { type: 'form' }>;
 
 export const CreateAgentSchema = z.object({
   id: z.string().trim().cuid().optional(),
@@ -418,6 +426,7 @@ export const ChatResponse = z.object({
   conversationId: z.string().cuid(),
   visitorId: z.string().optional(),
   messageId: z.string().cuid(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
   usage: z
     .object({
       completionTokens: z.number(),
@@ -428,8 +437,8 @@ export const ChatResponse = z.object({
     .optional(),
   approvals: z.array(
     z.object({
-      tool: HttpToolSchema,
-      payload: z.record(z.string(), z.unknown()),
+      tool: ToolSchema,
+      payload: z.unknown(),
     })
   ),
 });
@@ -450,3 +459,85 @@ export const ConversationMetadataSlack = z.object({
 export type ConversationMetadataSlack = z.infer<
   typeof ConversationMetadataSlack
 >;
+export const FormFieldBaseSchema = z.object({
+  id: z.string(),
+  required: z.boolean().default(true),
+  name: z.string().toLowerCase().trim().min(3),
+});
+export const FormFieldSchema = z.discriminatedUnion('type', [
+  FormFieldBaseSchema.extend({
+    type: z.literal('text'),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('multiple_choice'),
+    choices: z.array(z.string().min(1)).min(1),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('file'),
+    fileUrl: z.string().optional(),
+  }),
+]);
+export type FormFieldSchema = z.infer<typeof FormFieldSchema>;
+
+export const FormConfigSchema = z.object({
+  overview: z.string().max(750).optional().nullable(),
+  fields: z.array(FormFieldSchema).superRefine((vals, ctx) => {
+    const unique = new Set();
+    for (const [i, val] of vals.entries()) {
+      if (unique.has(val?.name?.toLowerCase?.())) {
+        ctx.addIssue({
+          code: 'custom',
+          message: 'Field names must be unique',
+          path: [`${i}`, 'name'],
+        });
+      }
+      unique.add(val?.name?.toLowerCase?.());
+    }
+  }),
+  startScreen: z
+    .object({
+      title: z.string().max(50),
+      description: z.string().max(250),
+      cta: z.object({
+        label: z.string(),
+      }),
+    })
+    .optional(),
+  endScreen: z
+    .object({
+      cta: z.object({
+        label: z.string().max(50),
+        url: z.union([z.string().url().nullish(), z.literal('')]),
+        target: z.string().optional(),
+      }),
+    })
+    .optional(),
+  webhook: z
+    .object({
+      url: z.union([z.string().url().nullish(), z.literal('')]),
+    })
+    .optional(),
+  schema: z.any(),
+});
+export type FormConfigSchema = z.infer<typeof FormConfigSchema>;
+
+export const CreateFormSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  datastoreId: z.string().optional().nullable(),
+  draftConfig: FormConfigSchema,
+  publishedConfig: FormConfigSchema.optional().nullable(),
+});
+export type CreateFormSchema = z.infer<typeof CreateFormSchema>;
+
+export const UpdateFormSchema = CreateFormSchema.partial();
+export type UpdateFormSchema = z.infer<typeof UpdateFormSchema>;
+
+export const ToolResponseSchema = z.object({
+  data: z.any(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+  approvalRequired: z.boolean().optional(),
+  error: z.string().optional(),
+});
+
+export type ToolResponseSchema = z.infer<typeof ToolResponseSchema>;

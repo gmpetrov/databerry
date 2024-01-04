@@ -25,6 +25,7 @@ model Organization {
   subscriptions    Subscription[]
   appDatasources   AppDatasource[]
   serviceProviders ServiceProvider[]
+  forms            Form[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -122,6 +123,7 @@ model Datastore {
   visibility  DatastoreVisibility @default(private)
   apiKeys     DatastoreApiKey[]
   tool        Tool[]
+  forms       Form[]
 
   pluginIconUrl              String? @map("plugin_icon_url")
   pluginName                 String? @map("plugin_name")
@@ -215,6 +217,7 @@ model DatastoreApiKey {
 model Agent {
   id String @id @default(cuid())
 
+  hidden      Boolean @default(false)
   name        String
   description String
   
@@ -253,6 +256,9 @@ model Agent {
   leads   Lead[]
   
   approvals ActionApproval[]
+
+  form   Form?  @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId String? @unique @map("form_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -322,6 +328,12 @@ model Conversation {
 
   lead Lead?
  
+
+  formSubmissions FormSubmission[]
+  
+  form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId  String?   @map("form_id")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -338,6 +350,8 @@ model Message {
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
   usage          Json?
+  
+  metadata       Json?
 
   inputId String?       @map("input_id")
   input   Message? @relation(fields: [inputId], references: [id], name: "input")
@@ -365,6 +379,9 @@ model Tool {
 
   datastoreId String?    @map("datastore_id")
   datastore   Datastore? @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+
+  formId String?    @map("form_id")
+  form   Form? @relation(fields: [formId], references: [id], onDelete: Cascade)
 
   config Json?
 
@@ -568,6 +585,64 @@ model Lead {
 
   @@map("leads")
 }
+model Form {
+  id          String  @id @default(cuid())
+
+  name        String
+
+  draftConfig Json?
+  publishedConfig Json?
+  
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // responses FormResponse[]
+ 
+  datastore            Datastore?            @relation(fields: [datastoreId], references: [id], onDelete: Cascade)
+  datastoreId          String?               @map("datastore_id")
+  
+  
+  conversations Conversation[]
+  submissions  FormSubmission[]
+  tool        Tool[]
+
+  agent Agent?
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("forms")
+}
+
+model FormSubmission {
+  id          String  @id @default(cuid())
+  
+  status FormStatus @default(IN_PROGRESS)
+  
+  data Json?
+
+  form   Form? @relation(fields: [formId], references: [id], onDelete: Cascade)
+  formId String?       @map("form_id")
+
+  conversationId String?  @map("conversation_id")
+  conversation Conversation? @relation(fields: [conversationId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  @@map("form_submissions")
+}
+
+// model FormResponse {
+//   id          String  @id @default(cuid())
+
+//   data Json?
+
+//   formId String?       @map("form_id")
+//   form   Form? @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+//   createdAt DateTime @default(now()) @map("created_at")
+//   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+//   @@map("form_responses")
+// }
 
 model XPBNPEval {
   id             String  @id @default(cuid())
@@ -661,6 +736,7 @@ enum DatastoreType {
 
 enum ToolType {
   datastore
+  form
   connector
   agent
   http
@@ -718,6 +794,7 @@ enum ConversationChannel {
   crisp
   zapier
   api
+  form
 }
 
 enum AgentModelName {
@@ -749,4 +826,9 @@ enum ConversationStatus {
      RESOLVED
      UNRESOLVED
      HUMAN_REQUESTED
+}
+enum FormStatus {
+  COMPLETED
+  IN_PROGRESS
+  ABANDONED
 }

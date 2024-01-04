@@ -47,6 +47,13 @@ const agentToolFormat = (tool: ToolSchema) => {
       name: tool?.config?.name || 'HTTP Tool',
       description: tool?.config?.description,
     };
+  } else if (tool.type === ToolType.form) {
+    format = {
+      id: tool.id!,
+      formId: tool?.formId,
+      name: tool?.form?.name || 'Form Tool',
+      description: tool?.form?.description,
+    };
   }
 
   return {

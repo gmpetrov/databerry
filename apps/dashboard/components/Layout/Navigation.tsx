@@ -1,7 +1,9 @@
 import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
+import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import FeedRoundedIcon from '@mui/icons-material/FeedRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -58,7 +60,7 @@ function NavigationLink(props: {
   target?: string;
   active?: boolean;
   icon?: React.ReactNode;
-  label?: string;
+  label?: string | React.ReactElement;
   isExperimental?: boolean;
 }) {
   return (
@@ -248,12 +250,38 @@ export default function Navigation() {
               icon: <StorageRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.DATASTORES),
             },
-            // {
-            //   label: 'Analytics',
-            //   route: RouteNames.ANALYTICS,
-            //   icon: <ShowChartIcon fontSize="md" />,
-            //   active: router.route.startsWith(RouteNames.ANALYTICS),
-            // },
+            {
+              label: (
+                <Stack direction="row" gap={1} alignItems={'center'}>
+                  <Typography>Forms</Typography>
+                  <Chip
+                    className="text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+                    size="sm"
+                  >
+                    beta
+                  </Chip>
+                </Stack>
+              ),
+              route: RouteNames.FORMS,
+              icon: <FeedRoundedIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.FORMS),
+            },
+            {
+              label: (
+                <Stack direction="row" gap={1} alignItems={'center'}>
+                  <Typography>Analytics</Typography>
+                  <Chip
+                    className="text-white bg-gradient-to-r from-orange-500 via-red-500 to-red-500"
+                    size="sm"
+                  >
+                    new
+                  </Chip>
+                </Stack>
+              ),
+              route: RouteNames.ANALYTICS,
+              icon: <ShowChartIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.ANALYTICS),
+            },
           ]
         : []),
       ...(product === 'cs'
@@ -424,17 +452,17 @@ export default function Navigation() {
                         sx={{ width: '100%' }}
                         color="neutral"
                         variant="soft"
-                        endDecorator={
-                          <Chip
-                            className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
-                            size="sm"
-                            sx={{
-                              color: 'white',
-                            }}
-                          >
-                            new
-                          </Chip>
-                        }
+                        // endDecorator={
+                        //   <Chip
+                        //     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+                        //     size="sm"
+                        //     sx={{
+                        //       color: 'white',
+                        //     }}
+                        //   >
+                        //     new
+                        //   </Chip>
+                        // }
                       >
                         Search Assistant
                       </Button>

@@ -24,8 +24,9 @@
     "@mui/material": "^5.14.20",
     "@mui/utils": "5.14.20",
     "radash": "^10.7.1",
-    "react-hook-form": "^7.45.4",
-    "react-transition-group": "^4.4.5"
+    "react-hook-form": "^7.49.2",
+    "react-transition-group": "^4.4.5",
+    "zod": "3.22.4"
   },
   "devDependencies": {
     "@chaindesk/tsconfig": "workspace:*",

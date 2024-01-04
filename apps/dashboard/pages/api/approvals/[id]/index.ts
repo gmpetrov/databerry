@@ -39,6 +39,7 @@ export const approve = async (req: AppNextApiRequest, res: NextApiResponse) => {
           tools: {
             include: {
               datastore: true,
+              form: true,
             },
           },
         },

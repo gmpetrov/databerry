@@ -32,6 +32,7 @@ export const getAgents = async (
   const agents = await prisma.agent.findMany({
     where: {
       organizationId: session?.organization?.id,
+      hidden: false,
     },
     include: {
       organization: {
@@ -80,9 +81,20 @@ export const createAgent = async (
         createMany: {
           data: (data.tools || []).map((tool) => ({
             type: tool.type,
+            config: (tool as any).config,
             ...(tool.type === ToolType.datastore
               ? {
                   datastoreId: tool.datastoreId,
+                }
+              : {}),
+            ...(tool.type === ToolType.form
+              ? {
+                  formId: tool.formId,
+                }
+              : {}),
+            ...(tool.serviceProviderId
+              ? {
+                  serviceProviderId: tool.serviceProviderId,
                 }
               : {}),
           })),

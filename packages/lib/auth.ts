@@ -284,7 +284,11 @@ export const sessionUserInclude: Prisma.UserInclude = {
   },
   _count: {
     select: {
-      agents: true,
+      agents: {
+        where: {
+          hidden: false,
+        },
+      },
       datastores: true,
     },
   },
@@ -301,7 +305,11 @@ export const sessionOrganizationInclude: Prisma.OrganizationInclude = {
   },
   _count: {
     select: {
-      agents: true,
+      agents: {
+        where: {
+          hidden: false,
+        },
+      },
       datastores: true,
     },
   },

@@ -29,6 +29,7 @@ export enum RouteNames {
   APPS = '/apps',
   CHAT_SITE = '/products/crisp-plugin',
   SLACK_BOT = '/products/slack-bot',
+  FORMS = '/forms',
   ANALYTICS = '/analytics',
 }
 
@@ -75,6 +76,7 @@ export enum SSE_EVENT {
   tool_call = 'tool_call',
   endpoint_response = 'endpoint_response',
   step = 'step',
+  metadata = 'metadata',
 }
 
 export enum ChainType {

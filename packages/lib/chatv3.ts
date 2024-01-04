@@ -7,19 +7,31 @@ import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
 
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
+  createHandler as createFormToolHandler,
+  // createHandlerTest as createFormToolHandlerTest,
+  createParser as createParserFormTool,
+  // createParserTest as createParserFormToolTest,
+  toJsonSchema as formToolToJsonSchema,
+  // toJsonSchemaTest as formToolToJsonSchemaTest,
+} from './agent/tools/form';
+import {
   createHandler as createHttpToolHandler,
+  createParser as createParserHttpTool,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
+import { CreateToolHandler, CreateToolHandlerConfig } from './agent/tools/type';
 import type { Source } from './types/document';
 import {
   ChatModelConfigSchema,
   ChatRequest,
   ChatResponse,
+  FormToolSchema,
   HttpToolSchema,
   ToolSchema,
 } from './types/dtos';
 import ChatModel from './chat-model';
 import { ModelConfig } from './config';
+import createToolParser from './create-tool-parser';
 import formatMessagesOpenAI from './format-messages-openai';
 import getUsageCost from './get-usage-cost';
 import promptInject from './prompt-inject';
@@ -38,6 +50,8 @@ export type ChatProps = ChatModelConfigSchema & {
   tools?: Tool[];
   filters?: ChatRequest['filters'];
   topK?: number;
+  toolsConfig?: ChatRequest['toolsConfig'];
+  conversationId?: ChatRequest['conversationId'];
 };
 
 const chat = async ({
@@ -53,6 +67,8 @@ const chat = async ({
   tools = [],
   filters,
   topK,
+  toolsConfig,
+  conversationId,
   ...otherProps
 }: ChatProps) => {
   // Tools
@@ -62,6 +78,10 @@ const chat = async ({
   const httpTools = (tools as ToolSchema[]).filter(
     (each) => each.type === ToolType.http
   ) as HttpToolSchema[];
+
+  const formTools = (tools as ToolSchema[]).filter(
+    (each) => each.type === ToolType.form
+  ) as FormToolSchema[];
 
   const approvals: ChatResponse['approvals'] = [];
 
@@ -73,19 +93,60 @@ const chat = async ({
     throw 'ToolApprovalRequired';
   };
 
-  const formatedHttpTools = httpTools.map(
-    (each) =>
-      ({
-        type: 'function',
+  let metadata: object | undefined = undefined;
 
-        function: {
-          ...httpToolToJsonSchema(each),
-          parse: JSON.parse,
-          function: createHttpToolHandler(each, handleToolWithApproval),
-        },
-        // } as RunnableToolFunction<HttpToolPayload>)
-      } as ChatCompletionTool)
-  );
+  const createHandler =
+    (handler: CreateToolHandler) =>
+    (tool: ToolSchema, config: CreateToolHandlerConfig) =>
+    async (args: unknown) => {
+      const res = await handler(tool, config)(args);
+
+      if (res.approvalRequired) {
+        return handleToolWithApproval({
+          tool,
+          payload: args,
+        });
+      }
+
+      if (res.metadata) {
+        metadata = {
+          ...metadata,
+          ...res.metadata,
+        };
+      }
+
+      return res.data;
+    };
+
+  const formatedHttpTools = httpTools.map((each) => {
+    const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
+    const config = { toolConfig, conversationId };
+
+    return {
+      type: 'function',
+
+      function: {
+        ...httpToolToJsonSchema(each, config),
+        parse: createParserHttpTool(each, config),
+        function: createHandler(createHttpToolHandler)(each, config),
+      },
+      // } as RunnableToolFunction<HttpToolPayload>)
+    } as ChatCompletionTool;
+  });
+
+  const formatedFormTools = formTools.map((each) => {
+    const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
+    const config = { toolConfig, conversationId };
+
+    return {
+      type: 'function',
+      function: {
+        ...formToolToJsonSchema(each, config),
+        parse: createParserFormTool(each, config),
+        function: createHandler(createFormToolHandler)(each, config),
+      },
+    } as ChatCompletionTool;
+  });
 
   let retrievalData:
     | Awaited<ReturnType<typeof datastoreToolHandler>>
@@ -134,6 +195,7 @@ const chat = async ({
 
   const openAiTools = [
     ...formatedHttpTools,
+    ...formatedFormTools,
     ...(nbDatastoreTools > 0
       ? [
           {
@@ -228,6 +290,7 @@ const chat = async ({
       usage,
       sources: retrievalData?.sources || [],
       approvals,
+      metadata,
     } as ChatResponse;
   } catch (err: any) {
     if (err?.message?.includes('ToolApprovalRequired')) {
@@ -236,6 +299,7 @@ const chat = async ({
         usage: {},
         approvals,
         sources: [] as Source[],
+        metadata,
       } as ChatResponse;
     } else {
       throw err;

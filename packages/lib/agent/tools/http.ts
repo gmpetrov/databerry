@@ -1,12 +1,17 @@
 import axios, { Axios, AxiosRequestConfig } from 'axios';
 
+// import { jsonSchemaToZod } from 'json-schema-to-zod';
+// import z from 'zod';
+import createToolParser from '@chaindesk/lib/create-tool-parser';
 import { HttpToolSchema } from '@chaindesk/lib/types/dtos';
+
+import { CreateToolHandler, ToolToJsonSchema } from './type';
 
 export type HttpToolPayload = {
   [key: string]: unknown;
 };
 
-export const toJsonSchema = (tool: HttpToolSchema) => {
+export const toJsonSchema = ((tool: HttpToolSchema) => {
   return {
     name: `${tool.id}`,
     description: tool?.config?.description,
@@ -42,16 +47,9 @@ export const toJsonSchema = (tool: HttpToolSchema) => {
       required: [],
     },
   };
-};
+}) as ToolToJsonSchema;
 
-export const createHandler =
-  (
-    httpTool: HttpToolSchema,
-    handleApproval?: (props: {
-      tool: HttpToolSchema;
-      payload: HttpToolPayload;
-    }) => any
-  ) =>
+export const createHandler = ((httpTool: HttpToolSchema) =>
   async (payload: HttpToolPayload) => {
     console.log('HTTP Tool Config', httpTool?.config);
     console.log('HTTP Tool Payload', payload);
@@ -59,10 +57,9 @@ export const createHandler =
     const config = httpTool?.config as HttpToolSchema['config'];
 
     if (config?.withApproval) {
-      return handleApproval?.({
-        tool: httpTool,
-        payload,
-      });
+      return {
+        approvalRequired: true,
+      };
     }
 
     const inputUrl = new URL(config.url);
@@ -115,8 +112,24 @@ export const createHandler =
     try {
       const { data } = await axios(url, reqConfig);
 
-      return data;
+      return { data };
     } catch (err) {
       console.log('HTTP Tool Error', err);
+    }
+  }) as CreateToolHandler;
+
+export const createParser =
+  (tool: HttpToolSchema, config: any) => (payload: string) => {
+    try {
+      // const schema = eval(
+      //   jsonSchemaToZod(toJsonSchema(tool)?.parameters, { module: 'cjs' })
+      // ) as z.ZodSchema;
+
+      // const values = schema.parse(JSON.parse(payload));
+
+      return createToolParser(toJsonSchema(tool)?.parameters)(payload);
+    } catch (err) {
+      console.log('Parser Error', err);
+      throw err;
     }
   };

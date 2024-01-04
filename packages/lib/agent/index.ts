@@ -11,6 +11,7 @@ import {
 import {
   Agent,
   Datastore,
+  Form,
   Message,
   PromptType,
   Tool,
@@ -20,10 +21,7 @@ import {
 import chatRetrieval from '../chains/chat-retrieval';
 import ChatModel from '../chat-model';
 import chatv3 from '../chatv3';
-import { ModelConfig } from '../config';
 import createPromptContext from '../create-prompt-context';
-import formatMessagesOpenAI from '../format-messages-openai';
-import failedAttemptHandler from '../lc-failed-attempt-hanlder';
 import promptInject from '../prompt-inject';
 import {
   ANSWER_IN_SAME_LANGUAGE,
@@ -37,19 +35,12 @@ import truncateByModel from '../truncate-by-model';
 import truncateArray from '../truncateArray';
 import truncateChatMessages from '../truncateChatMessages';
 import { AppDocument, ChunkMetadataRetrieved, Source } from '../types/document';
-import {
-  ChatRequest,
-  ChatResponse,
-  HttpToolSchema,
-  ToolSchema,
-} from '../types/dtos';
+import { ChatRequest } from '../types/dtos';
 import { ChatModelConfigSchema } from '../types/dtos';
-
-import { handler as datastoreToolHandler } from './tools/datastore';
-import { createHandler as createHttpToolHandler } from './tools/http';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
+  form: Form | null;
 };
 
 export type AgentWithTools = Agent & {
@@ -70,6 +61,8 @@ type AgentManagerProps = ChatModelConfigSchema &
     | 'promptTemplate'
     | 'systemPrompt'
     | 'userPrompt'
+    | 'toolsConfig'
+    | 'conversationId'
   > & {
     input: string;
     stream?: any;
