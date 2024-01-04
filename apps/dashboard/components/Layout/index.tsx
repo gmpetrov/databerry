@@ -1,12 +1,14 @@
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import MenuIcon from '@mui/icons-material/Menu';
-import { IconButton, Theme, useColorScheme } from '@mui/joy';
+import { Button, IconButton, Stack, Theme, useColorScheme } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import { SxProps } from '@mui/joy/styles/types';
 import Typography from '@mui/joy/Typography';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React from 'react';
+
+import useModal from '@app/hooks/useModal';
 
 import { appUrl } from '@chaindesk/lib/config';
 
@@ -33,6 +35,8 @@ export default function Layout(props: Props) {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [userMenuElement, setUserMenuElement] =
     React.useState<null | HTMLElement>(null);
+
+  const shareFeedbackModal = useModal();
 
   const [mounted, setMounted] = React.useState(false);
 
@@ -214,6 +218,11 @@ export default function Layout(props: Props) {
               <Divider />
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu> */}
+
+            <Button variant="plain" onClick={shareFeedbackModal.open}>
+              👋 Share feedback
+            </Button>
+
             <ColorSchemeToggle />
           </Box>
         </Header>
@@ -232,6 +241,28 @@ export default function Layout(props: Props) {
         >
           {props.children}
         </Main>
+
+        <shareFeedbackModal.component
+          dialogProps={{
+            sx: {
+              height: '100%',
+              flex: 1,
+            },
+          }}
+        >
+          <Box
+            component={'iframe'}
+            src={'https://www.chaindesk.ai/forms/clqz46y9u003e8ipv0lvfcnsg'}
+            frameBorder="0"
+            sx={{
+              width: '100%',
+              maxWidth: '100%',
+              height: '100%',
+              borderRadius: 'xl',
+              overflow: 'hidden',
+            }}
+          ></Box>
+        </shareFeedbackModal.component>
       </Root>
     </>
   );

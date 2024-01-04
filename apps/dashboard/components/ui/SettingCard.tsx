@@ -9,6 +9,7 @@ type Props = {
   disableSubmitButton?: boolean;
 
   cardProps?: ComponentProps<typeof Card>;
+  stackProps?: ComponentProps<typeof Stack>;
   submitButtonProps?: ComponentProps<typeof Button>;
 };
 
@@ -29,7 +30,11 @@ export default forwardRef(function SettingCard(props: Props, ref) {
           </Box>
         </CardOverflow>
       )}
-      <Stack spacing={2} sx={{ my: 1 }}>
+      <Stack
+        spacing={2}
+        {...props.stackProps}
+        sx={{ my: 1, height: '100%', width: '100%', ...props?.stackProps?.sx }}
+      >
         {props.children}
       </Stack>
       {!props.disableSubmitButton && (
