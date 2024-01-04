@@ -2,7 +2,9 @@ import ArrowCircleUpRoundedIcon from '@mui/icons-material/ArrowCircleUpRounded';
 import CorporateFareRoundedIcon from '@mui/icons-material/CorporateFareRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import { Alert, CircularProgress } from '@mui/joy';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import { Alert, Badge, CircularProgress } from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
@@ -222,6 +224,56 @@ function AccountCard({}: Props) {
           Upgrade Plan
         </Button>
       </Link>
+
+      <Card size="sm">
+        <Stack gap={1}>
+          <Alert
+            size="sm"
+            color="danger"
+            variant="soft"
+            startDecorator={<ErrorRoundedIcon fontSize="sm" />}
+          >
+            Ending soon!
+          </Alert>
+          <Alert color="success" variant="solid">
+            Share on social and get 30% off on your subscription!
+          </Alert>
+          <Stack direction="row" gap={1} sx={{ width: '100%' }}>
+            <a
+              target="_blank"
+              className="w-full"
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`This is a game changer! 
+
+Chaindesk has transformed the way we handle customer queries with its next-gen AI native solution. Definitely a game-changer!
+
+Find out more: https://www.chaindesk.ai`)}`}
+            >
+              <Button
+                color="neutral"
+                variant="outlined"
+                sx={{ width: '100%' }}
+                startDecorator={<TwitterIcon />}
+              >
+                Share
+              </Button>
+            </a>
+            <a
+              target="_blank"
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=https://www.chaindesk.ai`}
+              className="w-full"
+            >
+              <Button
+                color="neutral"
+                variant="outlined"
+                sx={{ width: '100%' }}
+                startDecorator={<LinkedInIcon />}
+              >
+                Share
+              </Button>
+            </a>
+          </Stack>
+        </Stack>
+      </Card>
     </Stack>
   );
 }

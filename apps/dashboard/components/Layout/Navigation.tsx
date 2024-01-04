@@ -585,6 +585,8 @@ export default function Navigation() {
       </ListItem> */}
       </List>
 
+      <Divider sx={{ my: 2 }}></Divider>
+
       <AccountCard />
 
       <Divider sx={{ my: 2 }}></Divider>
