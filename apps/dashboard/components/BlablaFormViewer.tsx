@@ -115,7 +115,7 @@ function BlablaFormViewer({ formId, config }: Props) {
   });
 
   const chatData = useChat({
-    endpoint: `/api/forms/${formId}/chat?draft=true`,
+    endpoint: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${formId}/chat?draft=true`,
     localStorageConversationIdKey: LOCAL_STORAGE_CONVERSATION_KEY,
     channel: ConversationChannel.form,
   });
