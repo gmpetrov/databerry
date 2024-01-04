@@ -21,6 +21,8 @@ function SEO(props: Props) {
       `${baseUrl}${props?.uri?.startsWith('/') ? '' : '/'}${props.uri}`) ||
     undefined;
 
+  const defaultOgImage = `${baseUrl}/og-image.png`;
+
   return (
     <Head>
       <meta charSet="utf-8" />
@@ -57,22 +59,22 @@ function SEO(props: Props) {
         key="og:image"
         property="og:image"
         itemProp="image"
-        content={props.ogImage ? props.ogImage : '/og-image.png'}
+        content={props.ogImage ? props.ogImage : defaultOgImage}
       />
       <meta
         key="og:image:url"
         property="og:image:url"
-        content={props.ogImage ? props.ogImage : '/og-image.png'}
+        content={props.ogImage ? props.ogImage : defaultOgImage}
       />
       <meta
         key="og:image:secure_url"
         property="og:image:secure_url"
-        content={props.ogImage ? props.ogImage : '/og-image.png'}
+        content={props.ogImage ? props.ogImage : defaultOgImage}
       />
       <meta
         key="twitter:image"
         property="twitter:image"
-        content={props.ogImage ? props.ogImage : '/og-image.png'}
+        content={props.ogImage ? props.ogImage : defaultOgImage}
       />
 
       <meta
