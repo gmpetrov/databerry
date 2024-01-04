@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.139"></a>
+## 0.1.139 (2024-01-04)
+
+### Fixed
+
+- 🐛 button background [[f056969](https://github.com/gmpetrov/databerry/commit/f05696913ede27dc65c38296e63e38d6b76bb38a)]
+
+
 <a name="0.1.138"></a>
 ## 0.1.138 (2024-01-04)
 

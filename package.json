@@ -1,6 +1,6 @@
 {
   "name": "chaindesk",
-  "version": "0.1.138",
+  "version": "0.1.139",
   "private": true,
   "scripts": {
     "prepare": "husky install",
