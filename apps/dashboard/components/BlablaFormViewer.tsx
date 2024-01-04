@@ -142,6 +142,10 @@ function BlablaFormViewer({ formId, config }: Props) {
   const lastMessage = chatData?.history[chatData.history.length - 1];
   const isFormValid = lastMessage?.metadata?.isValid;
 
+  const lastMessageText = useMemo(() => {
+    return lastMessage?.message?.replace?.(/__BLABLA.*/, '') || '';
+  }, [lastMessage?.message]);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem(LOCAL_STORAGE_CONVERSATION_KEY, '');
@@ -219,7 +223,7 @@ function BlablaFormViewer({ formId, config }: Props) {
                         opacity: chatData.isStreaming ? 1 : 0.7,
                       }}
                     >
-                      {lastMessage.message}
+                      {lastMessageText}
 
                       {chatData.isStreaming && (
                         <span
