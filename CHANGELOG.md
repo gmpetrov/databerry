@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.140"></a>
+## 0.1.140 (2024-01-04)
+
+### Fixed
+
+- 🐛 button zindex [[84965cf](https://github.com/gmpetrov/databerry/commit/84965cf04713a9317a886ede2d139459005fc649)]
+
+
 <a name="0.1.139"></a>
 ## 0.1.139 (2024-01-04)
 
