@@ -203,6 +203,7 @@ export const chatAgentRequest = async (
     agentId: agent?.id,
     userId: session?.user?.id,
     visitorId: data.visitorId!,
+    formId: data.formId!,
     conversationId,
     ...(!session?.user && !!isNewConversation
       ? {

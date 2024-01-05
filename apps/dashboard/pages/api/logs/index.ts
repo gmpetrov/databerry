@@ -35,10 +35,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
             ? { channel: channelFilter }
             : {
                 channel: {
-                  notIn: [
-                    ConversationChannel.form,
-                    ConversationChannel.dashboard,
-                  ],
+                  notIn: [ConversationChannel.dashboard],
                 },
               }),
         },
@@ -106,6 +103,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
         }
       : {}),
     include: {
+      form: true,
       agent: true,
       lead: true,
       _count: {

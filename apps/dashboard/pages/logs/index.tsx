@@ -270,14 +270,19 @@ export default function LogsPage() {
     any,
     any,
     UpdateStatusAllConversationsSchema
-  >(
-    `/api/conversations/update-status`,
-    generateActionFetcher(HTTP_METHOD.POST)
-  );
+  >(() => {
+    return `/api/conversations/update-status${
+      typeof window !== undefined ? window.location.search : ''
+    }`;
+  }, generateActionFetcher(HTTP_METHOD.POST));
 
   const markAllReadMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof markAllRead>
-  >(`/api/messages/mark-all-read`, generateActionFetcher(HTTP_METHOD.POST));
+  >(() => {
+    return `/api/messages/mark-all-read${
+      typeof window !== undefined ? window.location.search : ''
+    }`;
+  }, generateActionFetcher(HTTP_METHOD.POST));
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
     '/api/agents',
@@ -645,7 +650,7 @@ export default function LogsPage() {
                 disabled={markAllReadMutation.isMutating}
                 onClick={async () => {
                   const confirmed = window.confirm(
-                    'All messages will be marked as read. Are you sure?'
+                    'All messages that match the filters will be marked as read. Are you sure?'
                   );
 
                   if (!confirmed) return;
@@ -669,7 +674,7 @@ export default function LogsPage() {
                 disabled={updateStatusAllMutation.isMutating}
                 onClick={async () => {
                   const confirmed = window.confirm(
-                    'All conversation will be marked as resolved. Are you sure?'
+                    'All conversations that match the filters will be marked as resolved. Are you sure?'
                   );
 
                   if (!confirmed) return;
@@ -717,11 +722,11 @@ export default function LogsPage() {
               {ConversationChannel.api}
             </Option>
             <Option
-              key={ConversationChannel.dashboard}
-              value={ConversationChannel.dashboard}
+              key={ConversationChannel.form}
+              value={ConversationChannel.form}
               sx={{ fontSize: 14 }}
             >
-              {ConversationChannel.dashboard}
+              {ConversationChannel.form}
             </Option>
 
             <Option
@@ -915,7 +920,15 @@ export default function LogsPage() {
                             direction="row"
                             justifyContent={'space-between'}
                           >
-                            <Typography>{each?.agent?.name}</Typography>
+                            <Typography>
+                              {(() => {
+                                if (!!each?.agent?.hidden) {
+                                  return (each as any)?.form?.name || 'Form';
+                                }
+
+                                return each?.agent?.name;
+                              })()}
+                            </Typography>
 
                             <Typography level="body-xs">
                               {relativeDate(each?.updatedAt)}
@@ -939,13 +952,30 @@ export default function LogsPage() {
                             gap={1}
                           >
                             <Chip size="sm" color="neutral" variant="outlined">
-                              {'🤖 '}
-                              {each?.agent?.name}
-                            </Chip>
-                            <Chip size="sm" color="neutral" variant="outlined">
                               {'🚀 '}
                               {each?.channel}
                             </Chip>
+                            {!each?.agent?.hidden && (
+                              <Chip
+                                size="sm"
+                                color="neutral"
+                                variant="outlined"
+                              >
+                                {'🤖 '}
+                                {each?.agent?.name}
+                              </Chip>
+                            )}
+
+                            {!!(each as any)?.form?.name && (
+                              <Chip
+                                size="sm"
+                                color="neutral"
+                                variant="outlined"
+                              >
+                                {'📄 '}
+                                {(each as any)?.form?.name}
+                              </Chip>
+                            )}
                           </Stack>
                         </Stack>
                       </ListItemContent>

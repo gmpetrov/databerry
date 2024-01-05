@@ -201,6 +201,7 @@ export const formChat = async (
         Authorization: `Bearer ${form?.organization?.apiKeys[0]?.key}`,
       },
       body: JSON.stringify({
+        formId,
         channel: ConversationChannel.form,
         conversationId,
         query: data.query,
