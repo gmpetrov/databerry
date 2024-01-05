@@ -191,7 +191,8 @@ export default function LogsPage() {
   const hasFilterApplied =
     router.query.eval ||
     router.query.agentId ||
-    router.query.tab !== TabEnum.all;
+    router.query.tab !== TabEnum.all ||
+    router.query.channel;
 
   const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
@@ -1055,7 +1056,7 @@ export default function LogsPage() {
               onSubmit={(message) => {
                 return handleOperatorChat(message);
               }}
-              readOnly={!!state.isAiEnabled}
+              readOnly={!!state.isAiEnabled || !state.currentConversationId}
               handleEvalAnswer={handleEvalAnswer}
               handleImprove={(message, index) => {
                 const prev = getConversationQuery?.data?.messages?.[index - 1];
