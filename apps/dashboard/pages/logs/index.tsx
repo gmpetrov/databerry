@@ -221,6 +221,7 @@ export default function LogsPage() {
       conversationId: conversationId || '',
       eval: (router.query.eval as string) || '',
       agentId: (router.query.agentId as string) || '',
+      channel: (router.query.channel as string) || '',
       ...tabToParams(router.query.tab as string),
     });
 
@@ -695,6 +696,60 @@ export default function LogsPage() {
             </Menu>
           </Dropdown>
 
+          <SelectQueryParamFilter<ConversationChannel>
+            filterName="channel"
+            placeholder="Filter by Channel"
+          >
+            <Option
+              key={ConversationChannel.website}
+              value={ConversationChannel.website}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.website}
+            </Option>
+
+            <Option
+              key={ConversationChannel.api}
+              value={ConversationChannel.api}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.api}
+            </Option>
+            <Option
+              key={ConversationChannel.dashboard}
+              value={ConversationChannel.dashboard}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.dashboard}
+            </Option>
+
+            <Option
+              key={ConversationChannel.crisp}
+              value={ConversationChannel.crisp}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.crisp}
+            </Option>
+            <Option
+              key={ConversationChannel.slack}
+              value={ConversationChannel.slack}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.slack}
+            </Option>
+          </SelectQueryParamFilter>
+
+          <SelectQueryParamFilter<string>
+            filterName="agentId"
+            placeholder="Filter by Agent"
+          >
+            {getAgentsQuery.data?.map((each) => (
+              <Option key={each.id} value={each.id}>
+                {`🤖 ${each.name}`}
+              </Option>
+            ))}
+          </SelectQueryParamFilter>
+
           <SelectQueryParamFilter<EvalSchema>
             filterName="eval"
             placeholder="Filter by Evaluation"
@@ -713,17 +768,6 @@ export default function LogsPage() {
             >
               🔴 Bad
             </Option>
-          </SelectQueryParamFilter>
-
-          <SelectQueryParamFilter<string>
-            filterName="agentId"
-            placeholder="Filter by Agent"
-          >
-            {getAgentsQuery.data?.map((each) => (
-              <Option key={each.id} value={each.id}>
-                {`🤖 ${each.name}`}
-              </Option>
-            ))}
           </SelectQueryParamFilter>
         </Stack>
         <Stack direction="row" spacing={2}>

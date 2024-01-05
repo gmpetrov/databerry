@@ -20,6 +20,7 @@ const handler = createAuthApiHandler();
 export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const session = req.session;
   const evalFilter = req.query.eval as MessageEvalUnion;
+  const channelFilter = req.query.channel as ConversationChannel;
   const agentId = req.query.agentId as string;
   const conversationStatus = req.query.status as ConversationStatus | undefined;
   const unread = req.query.unread;
@@ -30,9 +31,13 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
     where: {
       AND: [
         {
-          channel: {
-            notIn: [ConversationChannel.form],
-          },
+          ...(channelFilter
+            ? { channel: channelFilter }
+            : {
+                channel: {
+                  notIn: [ConversationChannel.form],
+                },
+              }),
         },
         {
           agent: {
