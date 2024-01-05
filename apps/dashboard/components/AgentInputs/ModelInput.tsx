@@ -4,6 +4,7 @@ import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
+import Checkbox from '@mui/joy/Checkbox';
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
@@ -134,6 +135,9 @@ export default function ModelInput({}: Props) {
   const modelName = watch('modelName');
   const temperature = watch('temperature');
   const systemPrompt = watch('systemPrompt');
+  const restrictKnowledge = watch('restrictKnowledge');
+  const useMarkdown = watch('useMarkdown');
+  const useLanguageDetection = watch('useLanguageDetection');
   // const prompt = watch('prompt');
   // const promptType = watch('promptType');
 
@@ -223,6 +227,52 @@ export default function ModelInput({}: Props) {
       </FormControl>
 
       {/* <Divider /> */}
+
+      <Stack sx={{ py: 2 }} gap={1}>
+        <Typography level="title-md">Behavior</Typography>
+
+        <FormControl>
+          <FormLabel>Knowledge Restriction</FormLabel>
+
+          <Checkbox
+            label="Limit your Agent knowledge to informations contains in the prompt or a Datastore"
+            checked={!!restrictKnowledge}
+            {...register('restrictKnowledge')}
+          />
+          <FormHelperText>
+            When activated extra instructions are added to the system prompt
+          </FormHelperText>
+        </FormControl>
+        <FormControl>
+          <FormLabel>
+            Output in markdown format{' '}
+            <Chip color="primary" sx={{ ml: 1 }} size="sm">
+              recommended
+            </Chip>
+          </FormLabel>
+
+          <Checkbox
+            label="Force the Agent to format answers in markdown format for better readability (bold, italic, links, etc...)"
+            checked={!!useMarkdown}
+            {...register('useMarkdown')}
+          />
+          <FormHelperText>
+            When activated extra instructions are added to the system prompt
+          </FormHelperText>
+        </FormControl>
+        <FormControl>
+          <FormLabel>Automatic Language Detection</FormLabel>
+
+          <Checkbox
+            label="Reply to the user in the same language as the query"
+            checked={!!useLanguageDetection}
+            {...register('useLanguageDetection')}
+          />
+          <FormHelperText>
+            When activated extra instructions are added to the system prompt
+          </FormHelperText>
+        </FormControl>
+      </Stack>
 
       <Typography level="title-md">Prompt</Typography>
 

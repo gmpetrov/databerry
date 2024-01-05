@@ -75,6 +75,10 @@ const chat = async ({
   const nbDatastoreTools =
     tools?.filter((each) => each.type === 'datastore')?.length || 0;
 
+  const datastoreTools = (tools as ToolSchema[]).filter(
+    (each) => each.type === ToolType.datastore
+  ) as ToolSchema[];
+
   const httpTools = (tools as ToolSchema[]).filter(
     (each) => each.type === ToolType.http
   ) as HttpToolSchema[];
@@ -202,7 +206,9 @@ const chat = async ({
             type: 'function',
             function: {
               name: 'queryKnowledgeBase',
-              description: 'Use it for any other query',
+              description: `Useful to fetch informations from the knowledge base (${datastoreTools
+                .map((each) => each?.datastore?.name)
+                .join(', ')})`,
               parameters: {
                 type: 'object',
                 properties: {},

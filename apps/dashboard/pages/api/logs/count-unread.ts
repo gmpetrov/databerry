@@ -23,7 +23,7 @@ export const countUnread = async (
           organizationId: session?.organization?.id,
         },
         channel: {
-          notIn: [ConversationChannel.form],
+          notIn: [ConversationChannel.form, ConversationChannel.dashboard],
         },
       },
       read: false,

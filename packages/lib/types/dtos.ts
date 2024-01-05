@@ -301,6 +301,8 @@ export const CreateAgentSchema = z.object({
   interfaceConfig: AgentInterfaceConfig.optional().nullable(),
   includeSources: z.boolean().optional().nullable(),
   restrictKnowledge: z.boolean().optional().nullable(),
+  useMarkdown: z.boolean().optional().nullable(),
+  useLanguageDetection: z.boolean().optional().nullable(),
   tools: z.array(ToolSchema).optional(),
   // .max(1),
   handle: z

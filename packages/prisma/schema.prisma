@@ -232,6 +232,8 @@ model Agent {
 
   includeSources    Boolean? @default(true) @map("include_sources")
   restrictKnowledge Boolean? @default(true) @map("restrict_knowledge")
+  useMarkdown Boolean? @default(true) @map("use_markdown")
+  useLanguageDetection Boolean? @default(true) @map("use_language_detection")
 
   visibility    AgentVisibility @default(private)
   conversations Conversation[]
