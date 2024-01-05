@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.145"></a>
+## 0.1.145 (2024-01-05)
+
+### Miscellaneous
+
+- 🎸 mark all conversations as read / resolved [[8d7b618](https://github.com/gmpetrov/databerry/commit/8d7b618dcab75f2cd750ecc3e842b8691765c7c3)]
+
+
 <a name="0.1.144"></a>
 ## 0.1.144 (2024-01-05)
 
