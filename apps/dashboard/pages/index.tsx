@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { useEffect, useState } from 'react';
 
+import Body from '@app/components/cs-landing-page/Body';
 import ChatBotBenefits from '@app/components/landing-page/ChatBotBenefits';
 import CompanyLogos from '@app/components/landing-page/CompanyLogos';
 import FAQ from '@app/components/landing-page/FAQ';
@@ -90,34 +91,17 @@ export default function Home() {
       </Script> */}
 
       <main className={clsx('bg-black min-heigh-full', mounted ? mode : '')}>
-        {/* <Hero /> */}
-        <HeroChatGPTPlugin />
+        {/* <HeroChatGPTPlugin />
         <PartnerLogos />
-        {/* <CompanyLogos /> */}
-        {/* <Image
-          src="/features.png"
-          alt="features"
-          width="800"
-          height="200"
-          className="mx-auto"
-        /> */}
-        {/* <PrimaryFeatures /> */}
-        {/* 
-        <SecondaryFeatures />
-        <CallToAction />
-        <Testimonials />
-        <Pricing />
-      <Faqs /> */}
+        
         <FeaturesForChatWithData />
         <FeaturesForCustomerSupport />
         <FeaturesForDevs />
         <Languages />
-        {/* <FeaturesForChatGPTPlugin /> */}
-        {/* <FeaturesForSlack /> */}
-        {/* <FeaturesForInfluencers /> */}
-        {/* <ChatBotBenefits /> */}
         <FAQ />
-        <Cta />
+        <Cta /> */}
+
+        <Body />
       </main>
       <Footer />
     </>
