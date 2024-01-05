@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.146"></a>
+## 0.1.146 (2024-01-05)
+
+### Miscellaneous
+
+- 🎸 inbox channel filter [[1998596](https://github.com/gmpetrov/databerry/commit/199859608c914ddb296088f115e68df83fc31a65)]
+
+
 <a name="0.1.145"></a>
 ## 0.1.145 (2024-01-05)
 
