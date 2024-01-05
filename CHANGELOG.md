@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.142"></a>
+## 0.1.142 (2024-01-05)
+
+### Fixed
+
+- 🐛 inbox counter issue [[3581384](https://github.com/gmpetrov/databerry/commit/3581384947373a08dbeefec7dd59f82c9f09c941)]
+
+
 <a name="0.1.141"></a>
 ## 0.1.141 (2024-01-04)
 
