@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.148"></a>
+## 0.1.148 (2024-01-05)
+
+### Miscellaneous
+
+- 🎸 behaviors [[0fc4cea](https://github.com/gmpetrov/databerry/commit/0fc4ceaf91a8c6e964ed3cc94abb73771b3f8936)]
+
+
 <a name="0.1.147"></a>
 ## 0.1.147 (2024-01-05)
 
