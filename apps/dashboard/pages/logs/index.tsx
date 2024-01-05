@@ -351,14 +351,20 @@ export default function LogsPage() {
   };
 
   useEffect(() => {
-    setState({
-      currentConversationId:
-        conversations.length >= 0 &&
-        state.currentConversationIndex >= conversations.length
-          ? conversations?.[conversations?.length - 1]?.id
-          : conversations?.[state.currentConversationIndex]?.id,
-    });
-  }, [conversations]);
+    const found = conversations.find(
+      (one) => one.id === state.currentConversationId
+    );
+
+    if (!state.currentConversationId || !found) {
+      setState({
+        currentConversationId:
+          conversations.length >= 0 &&
+          state.currentConversationIndex >= conversations.length
+            ? conversations?.[conversations?.length - 1]?.id
+            : conversations?.[state.currentConversationIndex]?.id,
+      });
+    }
+  }, [conversations, state.currentConversationId]);
 
   useEffect(() => {
     if (getSingleConversationQuery?.data?.id) {
@@ -459,6 +465,19 @@ export default function LogsPage() {
           onClick={async () => {
             try {
               setIsLoading(true);
+              const nextConversationIndex =
+                state.currentConversationIndex === conversations?.length - 1
+                  ? Math.max(0, state.currentConversationIndex - 1)
+                  : state.currentConversationIndex + 1;
+              const nextConversationId =
+                conversations?.[nextConversationIndex]?.id;
+
+              if (nextConversationId) {
+                setState({
+                  currentConversationId: nextConversationId,
+                  currentConversationIndex: nextConversationIndex,
+                });
+              }
 
               await handleBannerAction({
                 conversationId: props.currentConversationId!,
