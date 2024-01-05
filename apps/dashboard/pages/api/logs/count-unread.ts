@@ -5,6 +5,7 @@ import {
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
+import { ConversationChannel } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createAuthApiHandler();
@@ -20,6 +21,9 @@ export const countUnread = async (
       conversation: {
         agent: {
           organizationId: session?.organization?.id,
+        },
+        channel: {
+          notIn: [ConversationChannel.form],
         },
       },
       read: false,

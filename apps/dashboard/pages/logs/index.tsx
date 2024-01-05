@@ -459,6 +459,20 @@ export default function LogsPage() {
           onClick={async () => {
             try {
               setIsLoading(true);
+              const nextConversationIndex =
+                state.currentConversationIndex === conversations?.length - 1
+                  ? Math.max(0, state.currentConversationIndex - 1)
+                  : state.currentConversationIndex + 1;
+              const nextConversationId =
+                conversations?.[nextConversationIndex]?.id;
+
+              if (nextConversationId) {
+                setState({
+                  currentConversationId: nextConversationId,
+                  currentConversationIndex: nextConversationIndex,
+                });
+              }
+
               await handleBannerAction({
                 conversationId: props.currentConversationId!,
                 conversationStatus: {
