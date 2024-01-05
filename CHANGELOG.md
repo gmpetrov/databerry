@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.149"></a>
+## 0.1.149 (2024-01-05)
+
+### Miscellaneous
+
+- 🤖 clean templates [[8726162](https://github.com/gmpetrov/databerry/commit/8726162bf6931222280d28facd775e3d370128dd)]
+-  migration files [[aed1d2a](https://github.com/gmpetrov/databerry/commit/aed1d2af6980a0b130746127a931e7d665087fbf)]
+
+
 <a name="0.1.148"></a>
 ## 0.1.148 (2024-01-05)
 
