@@ -21,7 +21,7 @@ function SEO(props: Props) {
       `${baseUrl}${props?.uri?.startsWith('/') ? '' : '/'}${props.uri}`) ||
     undefined;
 
-  const defaultOgImage = `${baseUrl}/og-image.jpg`;
+  const defaultOgImage = `${baseUrl}/og-cs.jpg`;
 
   return (
     <Head>
