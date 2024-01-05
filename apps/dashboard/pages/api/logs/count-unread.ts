@@ -16,17 +16,19 @@ export const countUnread = async (
 ) => {
   const session = req.session;
 
-  const count = await prisma.message.count({
+  const count = await prisma.conversation.count({
     where: {
-      conversation: {
-        agent: {
-          organizationId: session?.organization?.id,
-        },
-        channel: {
-          notIn: [ConversationChannel.dashboard],
+      agent: {
+        organizationId: session?.organization?.id,
+      },
+      channel: {
+        notIn: [ConversationChannel.dashboard],
+      },
+      messages: {
+        some: {
+          read: false,
         },
       },
-      read: false,
     },
   });
 
