@@ -12,7 +12,7 @@
 <!-- <h4 align="center">The no-code platform for semantic search and retrieval of personal or organizational documents.</h4> -->
 
 <h2 align="center">
-<img src="apps/dashboard/public/og-image.png" alt="Chaindesk" width="1000" style="max-width: 100%;">
+<img src="apps/dashboard/public/og-image.jpg" alt="Chaindesk" width="1000" style="max-width: 100%;">
 </h2>
 
 **[Chaindesk](https://chaindesk.ai)** provides a user-friendly solution to quickly setup a semantic search system over your personal data without any technical knowledge.

@@ -9,12 +9,12 @@ function DefaultSEOTags({}: Props) {
       <meta
         key="og:image"
         property="og:image"
-        content="https://www.chaindesk.ai/og-image.png"
+        content="https://www.chaindesk.ai/og-image.jpg"
       />
       <meta
         key="twitter:image"
         property="twitter:image"
-        content="https://www.chaindesk.ai/og-image.png"
+        content="https://www.chaindesk.ai/og-image.jpg"
       />
       <meta
         key="twitter:card"

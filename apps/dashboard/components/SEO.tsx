@@ -21,7 +21,7 @@ function SEO(props: Props) {
       `${baseUrl}${props?.uri?.startsWith('/') ? '' : '/'}${props.uri}`) ||
     undefined;
 
-  const defaultOgImage = `${baseUrl}/og-image.png`;
+  const defaultOgImage = `${baseUrl}/og-image.jpg`;
 
   return (
     <Head>
@@ -34,6 +34,8 @@ function SEO(props: Props) {
       <title>{props.title}</title>
       <meta key="title" name="title" content={props.title} />
       <meta key="og:title" property="og:title" content={props.title} />
+      <meta key="og:type" property="og:type" content="website" />
+      <meta property="og:image:type" content="image/jpeg" />
 
       <meta key="description" name="description" content={props.description} />
       <meta
@@ -82,7 +84,8 @@ function SEO(props: Props) {
         property="twitter:card"
         content="summary_large_image"
       />
-      <meta key="og:type" property="og:type" content="website" />
+
+      <meta name="twitter:site" content="@chaindesk_ai" />
 
       {url && (
         <>
