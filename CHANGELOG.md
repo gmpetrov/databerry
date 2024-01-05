@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.147"></a>
+## 0.1.147 (2024-01-05)
+
+### Fixed
+
+- 🐛 filter bug [[2fa19d1](https://github.com/gmpetrov/databerry/commit/2fa19d1323050720f15db861dcb7663f1cb1b854)]
+
+
 <a name="0.1.146"></a>
 ## 0.1.146 (2024-01-05)
 
