@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.151"></a>
+## 0.1.151 (2024-01-05)
+
+### Fixed
+
+- 🐛 inbox counter based on nb conversations with unreed msgs [[4deee65](https://github.com/gmpetrov/databerry/commit/4deee654bc2e92effbe37ce376e9609099abc216)]
+
+
 <a name="0.1.150"></a>
 ## 0.1.150 (2024-01-05)
 
