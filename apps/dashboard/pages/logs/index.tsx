@@ -347,6 +347,7 @@ export default function LogsPage() {
         }
         break;
       case ConversationChannel.dashboard:
+      case ConversationChannel.form:
         hide = true;
       default:
         break;
