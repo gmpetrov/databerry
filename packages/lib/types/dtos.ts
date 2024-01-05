@@ -541,3 +541,10 @@ export const ToolResponseSchema = z.object({
 });
 
 export type ToolResponseSchema = z.infer<typeof ToolResponseSchema>;
+
+export const UpdateStatusAllConversationsSchema = z.object({
+  status: z.nativeEnum(ConversationStatus),
+});
+export type UpdateStatusAllConversationsSchema = z.infer<
+  typeof UpdateStatusAllConversationsSchema
+>;

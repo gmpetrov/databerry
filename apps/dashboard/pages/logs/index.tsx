@@ -2,16 +2,24 @@ import { CloseRounded } from '@mui/icons-material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Notifications from '@mui/icons-material/Notifications';
 import QuickreplyIcon from '@mui/icons-material/Quickreply';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
 import {
   Button,
   ColorPaletteProp,
+  Dropdown,
   IconButton,
   Input,
+  ListItemDecorator,
+  Menu,
+  MenuButton,
+  MenuItem,
   Option,
   Select,
   SelectProps,
@@ -37,6 +45,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { ReactElement, useEffect, useMemo } from 'react';
 import React from 'react';
+import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroller';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
@@ -59,7 +68,10 @@ import {
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
-import { EvalSchema } from '@chaindesk/lib/types/dtos';
+import {
+  EvalSchema,
+  UpdateStatusAllConversationsSchema,
+} from '@chaindesk/lib/types/dtos';
 import {
   ConversationChannel,
   ConversationStatus,
@@ -69,8 +81,10 @@ import {
 } from '@chaindesk/prisma';
 
 import { getAgents } from '../api/agents';
+import { updateStatus } from '../api/conversations/update-status';
 import { getLogs } from '../api/logs';
 import { getConversation } from '../api/logs/[id]';
+import { markAllRead } from '../api/messages/mark-all-read';
 
 const LIMIT = 20;
 
@@ -248,6 +262,20 @@ export default function LogsPage() {
       : null,
     generateActionFetcher(HTTP_METHOD.POST)
   );
+
+  const updateStatusAllMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof updateStatus>,
+    any,
+    any,
+    UpdateStatusAllConversationsSchema
+  >(
+    `/api/conversations/update-status`,
+    generateActionFetcher(HTTP_METHOD.POST)
+  );
+
+  const markAllReadMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof markAllRead>
+  >(`/api/messages/mark-all-read`, generateActionFetcher(HTTP_METHOD.POST));
 
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
     '/api/agents',
@@ -529,6 +557,7 @@ export default function LogsPage() {
         View all Agents conversations across all channels. Evaluate and improve
         answers.
       </Alert> */}
+
       <Tabs
         aria-label="tabs"
         value={(router.query.tab as string) || TabEnum.all}
@@ -600,6 +629,72 @@ export default function LogsPage() {
             },
           }}
         >
+          <Dropdown>
+            <MenuButton
+              slots={{ root: IconButton }}
+              slotProps={{
+                root: { variant: 'outlined', color: 'neutral', size: 'sm' },
+              }}
+            >
+              <MoreVertIcon />
+            </MenuButton>
+            <Menu placement="bottom-start" size="sm">
+              <MenuItem
+                disabled={markAllReadMutation.isMutating}
+                onClick={async () => {
+                  const confirmed = window.confirm(
+                    'All messages will be marked as read. Are you sure?'
+                  );
+
+                  if (!confirmed) return;
+
+                  await toast.promise(markAllReadMutation.trigger(), {
+                    loading: 'Updating...',
+                    success: 'Updated',
+                    error: 'Something went wrong',
+                  });
+
+                  getConversationsQuery.mutate();
+                  getConversationQuery.mutate();
+                }}
+              >
+                <ListItemDecorator>
+                  <TaskAltRoundedIcon />
+                </ListItemDecorator>{' '}
+                Mark all messages as read
+              </MenuItem>
+              <MenuItem
+                disabled={updateStatusAllMutation.isMutating}
+                onClick={async () => {
+                  const confirmed = window.confirm(
+                    'All conversation will be marked as resolved. Are you sure?'
+                  );
+
+                  if (!confirmed) return;
+
+                  await toast.promise(
+                    updateStatusAllMutation.trigger({
+                      status: ConversationStatus.RESOLVED,
+                    }),
+                    {
+                      loading: 'Updating...',
+                      success: 'Updated',
+                      error: 'Something went wrong',
+                    }
+                  );
+
+                  getConversationsQuery.mutate();
+                  getConversationQuery.mutate();
+                }}
+              >
+                <ListItemDecorator>
+                  <TaskAltRoundedIcon />
+                </ListItemDecorator>
+                Resolve all conversations
+              </MenuItem>
+            </Menu>
+          </Dropdown>
+
           <SelectQueryParamFilter<EvalSchema>
             filterName="eval"
             placeholder="Filter by Evaluation"
