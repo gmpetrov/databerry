@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.150"></a>
+## 0.1.150 (2024-01-05)
+
+### Miscellaneous
+
+- 🎸 display form conversations in inbox [[cedf389](https://github.com/gmpetrov/databerry/commit/cedf3897d543f3511a72a5543875692cbd294488)]
+
+
 <a name="0.1.149"></a>
 ## 0.1.149 (2024-01-05)
 
