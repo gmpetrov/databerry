@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.143"></a>
+## 0.1.143 (2024-01-05)
+
+### Fixed
+
+- 🐛 next conversation [[74dafd2](https://github.com/gmpetrov/databerry/commit/74dafd2bb0c0393132f4fc4faec29b1b4751a0bb)]
+
+
 <a name="0.1.142"></a>
 ## 0.1.142 (2024-01-05)
 
