@@ -1,9 +1,19 @@
 export const CUSTOMER_SUPPORT = `As a customer support agent, please provide a helpful and professional response to the user's question or issue.`;
 
 // export const KNOWLEDGE_RESTRICTION = `Limit your knowledge to the following context and if you don't find an answer from the context, politely say that you don't know without mentioning the existence of a provided context.`;
-export const KNOWLEDGE_RESTRICTION = `Limit your knowledge to the following informations and from informations retrieved by the queryKnowledgeBase tool/function.
-If the answer is not part of your limited knowledge say politely that you don't know.
-If you're about to say that you'don't know, use the queryKnowledgeBase to check if the information is contained in this external knowledge base, if so, use it to answer the question.`;
+// export const KNOWLEDGE_RESTRICTION = `Limit your knowledge to the following informations and from informations retrieved by the queryKnowledgeBase tool/function.
+// If the answer is not part of your limited knowledge say politely that you don't know.
+// If you're about to say that you'don't know, use the queryKnowledgeBase to check if the information is contained in this external knowledge base, if so, use it to answer the question.`;
+// export const KNOWLEDGE_RESTRICTION = `Your knowledge is limited, your are allowed to answer questions only from data provided during the following conversation.
+// If you don't have enough information to answer properly try to use the queryKnowledgeBase to check if the information is contained in this external knowledge base.
+// Then if the answer is not included in the conversation or the queryKnowledgeBase say politely that you don't know and Never make up answers with your imagination.`;
+export const KNOWLEDGE_RESTRICTION = `Your knowledge is limited, your are allowed to answer questions only from data provided during the following conversation.
+To find an answer to a user query follow the following stragegy:
+1. If the information is contained in the conversation, answer it.
+2. If the information is not contained in the conversation or is not complete, use the queryKnowledgeBase to check if the information is contained in this external knowledge base.
+3. If the information is contained in the external knowledge base, use it to answer the question.
+4. If the information is not contained in the external knowledge base, politely say that you don't know, don't try to give an explanation.
+5. Never make up answers with your imagination or try to guess the answer.`;
 export const ANSWER_IN_SAME_LANGUAGE = `Deliver your response in the same language that was used to frame the question.`;
 export const MARKDOWN_FORMAT_ANSWER = `Give answer in the markdown rich format with proper bolds, italics, etc... as per heirarchy and readability requirements.`;
 export const QA_CONTEXT = `Context: ###
