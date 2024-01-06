@@ -84,6 +84,8 @@ model User {
   role GlobalRole @default(CUSTOMER)
 
   viaProduct String? @default("chaindesk") @map("via_product")
+  
+  assignedConversations Conversation[] @relation("assignees")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -327,11 +329,17 @@ model Conversation {
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
+  mailInbox   MailInbox? @relation(fields: [mailInboxId], references: [id])
+  mailInboxId String?          @map("mail_inbox_id")
+
 
   lead Lead?
  
 
   formSubmissions FormSubmission[]
+
+  // actionLogs ActionLog[]
+  assignees  User[] @relation("assignees")
   
   form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String?   @map("form_id")
@@ -343,6 +351,18 @@ model Conversation {
   @@map("conversations")
 }
 
+// model ActionLog {
+//   id      String @id @default(cuid())
+
+//   text String
+
+//   conversationId String?       @map("conversation_id")
+//   conversation   Conversation? @relation(fields: [conversationId], references: [id])
+
+//   createdAt DateTime @default(now()) @map("created_at")
+//   @@map("action_logs")
+// }
+
 
 model Message {
   id             String        @id @default(cuid())
@@ -352,6 +372,7 @@ model Message {
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
   usage          Json?
+  
   
   metadata       Json?
 
@@ -365,6 +386,9 @@ model Message {
   approvals ActionApproval[]
 
   read Boolean? @default(false)
+
+  // mail MailMessage?
+  attachments Attachment[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -542,6 +566,7 @@ model ServiceProvider {
   tools Tool[]
 
   conversations Conversation[]
+  mailInboxes            MailInbox[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -685,6 +710,59 @@ model LLMTaskOutput {
   @@map("llm_task_outputs")
 }
 
+model MailInbox {
+
+  id String  @id @default(cuid())
+
+  alias String @unique
+  fromName String? @map("from_name")
+  signature String? @map("signature")
+
+  customEmail String? @map("custom_email")
+
+  smtpCredentials   ServiceProvider? @relation(fields: [smtpCredentialsId], references: [id])
+  smtpCredentialsId String?          @map("smtp_credentials_id")
+
+  conversations    Conversation[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("mail_inboxes")
+}
+
+// model MailMessage {
+
+//   id String  @id @default(cuid())
+//   from String[]
+//   to String[]
+//   cc String[]
+//   bcc String[]
+//   subject String?
+
+//   text String?
+//   html String?
+
+//   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+//   messageId String @unique          @map("message_id")
+
+//   attachments String[]
+
+//   @@map("mail_messages")
+// }
+
+model Attachment {
+  id String  @id @default(cuid())
+  name String
+  url String
+  size Int
+  mimeType String @map("mime_type")
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String @unique          @map("message_id")
+
+  @@map("attachments")
+
+}
+
 enum LLMTaskOutputType {
   youtube_summary
 }
@@ -729,6 +807,7 @@ enum ServiceProviderType {
   crisp
   slack
   zendesk
+  smtp
 }
 
 enum DatastoreType {
@@ -797,6 +876,7 @@ enum ConversationChannel {
   zapier
   api
   form
+  mail
 }
 
 enum AgentModelName {
@@ -833,4 +913,10 @@ enum FormStatus {
   COMPLETED
   IN_PROGRESS
   ABANDONED
+}
+
+enum ConversationPriority {
+  LOW
+  MEDIUM
+  HIGH
 }

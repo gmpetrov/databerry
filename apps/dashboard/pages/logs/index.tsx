@@ -1072,36 +1072,56 @@ export default function LogsPage() {
               </>
             )}
 
-            <ChatBox
-              messages={
-                getConversationQuery?.data?.messages?.map((each) => ({
-                  id: each.id,
-                  from: each.from,
-                  message: each.text,
-                  createdAt: each.createdAt,
-                  eval: each.eval,
-                  approvals: each.approvals || [],
-                })) || []
-              }
-              isLoadingConversation={getConversationQuery?.isLoading}
-              onSubmit={(message) => {
-                return handleOperatorChat(message);
-              }}
-              readOnly={!!state.isAiEnabled || !state.currentConversationId}
-              handleEvalAnswer={handleEvalAnswer}
-              handleImprove={(message, index) => {
-                const prev = getConversationQuery?.data?.messages?.[index - 1];
+            <Stack direction="row" sx={{ height: '100%', width: '100%' }}>
+              <ChatBox
+                messages={
+                  getConversationQuery?.data?.messages?.map((each) => ({
+                    id: each.id,
+                    from: each.from,
+                    message: each.text,
+                    createdAt: each.createdAt,
+                    eval: each.eval,
+                    approvals: each.approvals || [],
+                  })) || []
+                }
+                isLoadingConversation={getConversationQuery?.isLoading}
+                onSubmit={(message) => {
+                  return handleOperatorChat(message);
+                }}
+                readOnly={!!state.isAiEnabled || !state.currentConversationId}
+                handleEvalAnswer={handleEvalAnswer}
+                handleImprove={(message, index) => {
+                  const prev =
+                    getConversationQuery?.data?.messages?.[index - 1];
 
-                setState({
-                  currentImproveAnswerID: message?.id,
-                  improveAnswerDefaultValue: prev?.text,
-                });
-              }}
-              userImgUrl={session?.user?.image!}
-              organizationId={session?.organization?.id!}
-              refreshConversation={getConversationQuery.mutate}
-              disableWatermark
-            />
+                  setState({
+                    currentImproveAnswerID: message?.id,
+                    improveAnswerDefaultValue: prev?.text,
+                  });
+                }}
+                userImgUrl={session?.user?.image!}
+                organizationId={session?.organization?.id!}
+                refreshConversation={getConversationQuery.mutate}
+                disableWatermark
+              />
+
+              {/* <Divider orientation="vertical" />
+
+              <Stack
+                sx={(t) => ({
+                  maxWidth: '300px',
+                  width: '100%',
+                  height: '100%',
+                  // bgcolor: t.palette.background.paper,
+                  p: 2,
+                })}
+                gap={1}
+              >
+                <Button>Intervene</Button>
+                <Input placeholder="hello" />
+                <Input placeholder="hello" />
+              </Stack> */}
+            </Stack>
           </Box>
         </Stack>
 
