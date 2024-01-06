@@ -3,13 +3,22 @@ import axios from 'axios';
 // Function to fetch the sitemap URL from the robots.txt file
 async function getSitemapFromRobotsTxt(websiteUrl: string) {
   try {
+    const rooUrl = new URL(websiteUrl);
     const response = await axios.get(`${websiteUrl}/robots.txt`);
     const robotsTxt = response.data;
     const sitemapLine = robotsTxt
       .split('\n')
       .find((line: string) => line.startsWith('Sitemap:'));
     if (sitemapLine) {
-      return sitemapLine.split(' ')[1] as string;
+      let url = sitemapLine.split(' ')[1] as string;
+      if (url.startsWith('/')) {
+        // relative path
+        url = `${websiteUrl?.replace(/\/$/, '')}${url}`;
+      } else if (!url.startsWith('http')) {
+        // missing protocol
+        url = `${rooUrl.protocol}//${url}`;
+      }
+      return url;
     }
   } catch (error: any) {
     console.error('Error fetching robots.txt:', error?.message);
@@ -46,6 +55,7 @@ async function findSitemap(websiteUrl: string) {
 
   // If not found in robots.txt, try to fetch the sitemap.xml file directly from the website root
   sitemapUrl = await getSitemapFromRoot(origin);
+
   if (sitemapUrl) {
     console.log('Sitemap XML found at website root:', sitemapUrl);
     return sitemapUrl;
