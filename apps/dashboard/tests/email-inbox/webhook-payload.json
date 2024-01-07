@@ -6,14 +6,14 @@
       "ses": {
         "mail": {
           "timestamp": "2024-01-06T01:51:31.092Z",
-          "source": "test@chaindesk.ai",
+          "source": "customer@email.com",
           "messageId": "s6q2haqhraouel4k8rlrmfpro4g91grivc3pbao1",
           "destination": ["test@on.chaindesk.ai"],
           "headersTruncated": false,
           "headers": [
             {
               "name": "Return-Path",
-              "value": "<test@chaindesk.ai>"
+              "value": "<customer@email.com>"
             },
             {
               "name": "Received",
@@ -29,11 +29,11 @@
             },
             {
               "name": "Received-SPF",
-              "value": "pass (spfCheck: domain of _spf.google.com designates 209.85.208.49 as permitted sender) client-ip=209.85.208.49; envelope-from=test@chaindesk.ai; helo=mail-ed1-f49.google.com;"
+              "value": "pass (spfCheck: domain of _spf.google.com designates 209.85.208.49 as permitted sender) client-ip=209.85.208.49; envelope-from=customer@email.com; helo=mail-ed1-f49.google.com;"
             },
             {
               "name": "Authentication-Results",
-              "value": "amazonses.com; spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.49 as permitted sender) client-ip=209.85.208.49; envelope-from=test@chaindesk.ai; helo=mail-ed1-f49.google.com; dkim=pass header.i=@gmail.com; dmarc=pass header.from=gmail.com;"
+              "value": "amazonses.com; spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.49 as permitted sender) client-ip=209.85.208.49; envelope-from=customer@email.com; helo=mail-ed1-f49.google.com; dkim=pass header.i=@gmail.com; dmarc=pass header.from=gmail.com;"
             },
             {
               "name": "X-SES-RECEIPT",
@@ -73,7 +73,7 @@
             },
             {
               "name": "From",
-              "value": "gmp gmp <test@chaindesk.ai>"
+              "value": "gmp gmp <customer@email.com>"
             },
             {
               "name": "Date",
@@ -97,8 +97,8 @@
             }
           ],
           "commonHeaders": {
-            "returnPath": "test@chaindesk.ai",
-            "from": ["gmp gmp <test@chaindesk.ai>"],
+            "returnPath": "customer@email.com",
+            "from": ["gmp gmp <customer@email.com>"],
             "date": "Sat, 6 Jan 2024 02:51:18 +0100",
             "to": ["test@on.chaindesk.ai"],
             "messageId": "<CAL=0_XEFQciVdS-L8Vpy2r-YDYBGjoXGDbeYux8BHmQEEvPz-w@mail.gmail.com>",

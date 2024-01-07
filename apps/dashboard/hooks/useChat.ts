@@ -17,6 +17,7 @@ import { Source } from '@chaindesk/lib/types/document';
 import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
 import type {
   ActionApproval,
+  Attachment,
   ConversationChannel,
   ConversationStatus,
   Prisma,
@@ -53,6 +54,7 @@ export type ChatMessage = {
   };
   approvals: ActionApproval[];
   metadata?: Record<string, any>;
+  attachments?: Attachment[];
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -515,6 +517,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             sources: message?.sources as Source[],
             approvals: message?.approvals || [],
             metadata: message?.metadata || ({} as any),
+            attachments: message?.attachments || ([] as Attachment[]),
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,

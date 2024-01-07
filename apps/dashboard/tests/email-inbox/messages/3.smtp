@@ -1,19 +1,19 @@
-Return-Path: <test@chaindesk.ai>
+Return-Path: <customer@email.com>
 Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
  by inbound-smtp.us-east-1.amazonaws.com with SMTP id qj34en225nfhdp0rqfktf1mtqsr8dlc6si110bg1
- for test2@on.chaindesk.ai;
+ for dev@on.chaindesk.ai;
  Sat, 06 Jan 2024 02:27:07 +0000 (UTC)
 X-SES-Spam-Verdict: PASS
 X-SES-Virus-Verdict: PASS
-Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.208.43 as permitted sender) client-ip=209.85.208.43; envelope-from=test@chaindesk.ai; helo=mail-ed1-f43.google.com;
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.208.43 as permitted sender) client-ip=209.85.208.43; envelope-from=customer@email.com; helo=mail-ed1-f43.google.com;
 Authentication-Results: amazonses.com;
- spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.43 as permitted sender) client-ip=209.85.208.43; envelope-from=test@chaindesk.ai; helo=mail-ed1-f43.google.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.43 as permitted sender) client-ip=209.85.208.43; envelope-from=customer@email.com; helo=mail-ed1-f43.google.com;
  dkim=pass header.i=@gmail.com;
  dmarc=pass header.from=gmail.com;
 X-SES-RECEIPT: AEFBQUFBQUFBQUFGSWwybldkVkxaSmZNb0JvemdUcUFoY2x5RGEvVHdQdHdiSGhKZ21ka3JSUUV0N0RUUkZKS2g3dEV1NDltQm8zN0s1NkdPdGljUXJlYU00STQ5TDZVNHRyZ1ZQUHdCNnZhRDl4WDhVczlhc0Y5TWg5STVMS1hqUWlVZnBVajdHNHdXT0pxTW5TSHMveHpLUkY3eDBtc0pXdW4xcnhEMTZaN1lRRDNzSmtvNGdDRlNhR1VPbkZCNEI2WEVlbldZcDNGRU9hUnVRN3ZBTjVhZ3h0UHpiTCtrMWhkclhnWTRUQ0hBQjdJc3h0OG1mZ0toR2wxSUh1RmFabDRLS0ZTZHh4TWdOZDhJNjhEZGVmZ2J6NEFVT3Y3ZVVYcnE3TWFGNDVYQ255REVPZ092eXc9PQ==
 X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=cU68loPc9Z05SfDDkRqZ2xqu54X158aBNVcnNemBjNbHNs9wwTbUWyFIb/gR8UAIgb7nwYIFgdl4U+Mbw7tAhDdtZ6nV9AGVFlWZ4a7sc9iVteILEUxQu+huEGtEUk92+5f/vnz4UIUjaw0iO+pOOQEYajyylZTPhR7Eq5tLA8g=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1704508028; v=1; bh=Jh2HlceFCDzYNW4+zRncdWCcKAF2g9B4H561jH7grnE=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
 Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-555bd21f9fdso161929a12.0
-        for <test2@on.chaindesk.ai>; Fri, 05 Jan 2024 18:27:07 -0800 (PST)
+        for <dev@on.chaindesk.ai>; Fri, 05 Jan 2024 18:27:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1704508026; x=1705112826; darn=on.chaindesk.ai;
         h=to:subject:message-id:date:from:in-reply-to:references:mime-version
@@ -46,11 +46,11 @@ MIME-Version: 1.0
 References: <CAL=0_XGSQo6oXn5UuP+iAXbDXT_0AYTaB2pwip9gdgjqPDAgMg@mail.gmail.com>
  <CAL=0_XFYb2uuo3yTkpA1Z0MhaOjo2rrN0eOdHAmpTsAn_vrUPA@mail.gmail.com>
 In-Reply-To: <CAL=0_XFYb2uuo3yTkpA1Z0MhaOjo2rrN0eOdHAmpTsAn_vrUPA@mail.gmail.com>
-From: gmp gmp <test@chaindesk.ai>
+From: gmp gmp <customer@email.com>
 Date: Sat, 6 Jan 2024 03:26:54 +0100
 Message-ID: <CAL=0_XGvxqFXkcZn7brRYznnq=NZSE1hEYvpoQCdnJ5Cokp7gQ@mail.gmail.com>
 Subject: Re: test
-To: test2@on.chaindesk.ai, Georges Petrov <georgesm.petrov@gmail.com>
+To: dev@on.chaindesk.ai, Georges Petrov <georgesm.petrov@gmail.com>
 Content-Type: multipart/alternative; boundary="0000000000006413ec060e3db30b"
 
 --0000000000006413ec060e3db30b
@@ -59,12 +59,12 @@ Content-Transfer-Encoding: quoted-printable
 
 Agaiin 1234
 
-Le sam. 6 janv. 2024 =C3=A0 02:59, gmp gmp <test@chaindesk.ai> a =C3=A9c=
+Le sam. 6 janv. 2024 =C3=A0 02:59, gmp gmp <customer@email.com> a =C3=A9c=
 rit :
 
 > YOO
 >
-> Le sam. 6 janv. 2024 =C3=A0 02:54, gmp gmp <test@chaindesk.ai> a =C3=
+> Le sam. 6 janv. 2024 =C3=A0 02:54, gmp gmp <customer@email.com> a =C3=
 =A9crit :
 >
 >> hello world
@@ -77,12 +77,12 @@ Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr">Agaiin=C2=A01234</div><br><div class=3D"gmail_quote"><div =
 dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0sam. 6 janv. 2024 =C3=A0=C2=A002:5=
-9, gmp gmp &lt;<a href=3D"mailto:test@chaindesk.ai">test@chaindesk.ai=
+9, gmp gmp &lt;<a href=3D"mailto:customer@email.com">customer@email.com=
 </a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" sty=
 le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
 ng-left:1ex"><div dir=3D"ltr">YOO</div><br><div class=3D"gmail_quote"><div =
 dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0sam. 6 janv. 2024 =C3=A0=C2=A002:5=
-4, gmp gmp &lt;<a href=3D"mailto:test@chaindesk.ai" target=3D"_blank">0b=
+4, gmp gmp &lt;<a href=3D"mailto:customer@email.com" target=3D"_blank">0b=
 10101042@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=
 =3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
 b(204,204,204);padding-left:1ex"><div dir=3D"ltr">hello world</div>

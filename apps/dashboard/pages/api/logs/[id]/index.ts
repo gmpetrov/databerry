@@ -39,6 +39,7 @@ export const getConversation = async (
           createdAt: 'asc',
         },
         include: {
+          attachments: true,
           approvals: {
             include: {
               tool: {
@@ -53,7 +54,7 @@ export const getConversation = async (
     },
   });
 
-  if (conversation?.agent?.organizationId !== session?.organization?.id) {
+  if (conversation?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 

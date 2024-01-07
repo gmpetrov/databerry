@@ -1,19 +1,19 @@
-Return-Path: <test@chaindesk.ai>
+Return-Path: <customer@email.com>
 Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
  by inbound-smtp.us-east-1.amazonaws.com with SMTP id s6q2haqhraouel4k8rlrmfpro4g91grivc3pbao1
- for test2@on.chaindesk.ai;
+ for dev@on.chaindesk.ai;
  Sat, 06 Jan 2024 01:54:31 +0000 (UTC)
 X-SES-Spam-Verdict: PASS
 X-SES-Virus-Verdict: PASS
-Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.208.175 as permitted sender) client-ip=209.85.208.175; envelope-from=test@chaindesk.ai; helo=mail-lj1-f175.google.com;
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.208.175 as permitted sender) client-ip=209.85.208.175; envelope-from=customer@email.com; helo=mail-lj1-f175.google.com;
 Authentication-Results: amazonses.com;
- spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.175 as permitted sender) client-ip=209.85.208.175; envelope-from=test@chaindesk.ai; helo=mail-lj1-f175.google.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.175 as permitted sender) client-ip=209.85.208.175; envelope-from=customer@email.com; helo=mail-lj1-f175.google.com;
  dkim=pass header.i=@gmail.com;
  dmarc=pass header.from=gmail.com;
 X-SES-RECEIPT: AEFBQUFBQUFBQUFFc0lHMDBmK2pBOFlOTFNzTEdRWm9CZG02cE90Y0ZiZGViMkFlWlM0UDViY045akxlKzNKMC80SHhyRG0xbnllbmNtUklLNkt6MEUvNkJmMllhMkRWNi9yL1E1bE9Hd1lnUzgrUXlIYmZMZmJ3T2d5ZFpDVFA0OTJKWTNoU3QwWHpRb2plRUJaNWdQeEYyRTRBd05YSUxJeGRSeGJJWlpLN1A4SlVtLzRIdEFYVm1ka1ZSSE51NXIrSmhHVGlYa21pQ3RydXBHbkhUcVdiR1V6QlVtZ001VGZSNFNPZnRwMzFTdHplZ090Q1JmRkx4dGJnN1JocWt4dk4yNlduZ0ptUXczMERtY3ZXU3V0WjM5SzdBZ1I1L3pWNlVZWFpxbUloSkp2ZUJ0WVNPcVE9PQ==
 X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=jMgyEqc7Oz/2zlsjBihwxqKH8zXw7ruRkepqxjjqYNZSfFc9xJO6SKmAqi0UUzKIhjz0wOEO+FEDptpGnuKFgVi6CeGbOCcllqtM2dva/FLZmVGODBytwlBbu4Ut9gQuPJcwpNniKNPy/zUZC6WB5a8/N5uZ2AuPygjDnExgnts=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1704506072; v=1; bh=lApi8WgwOCUfs3QE0Tf1R6uu9BTbdER/qQkdBACmvrw=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
 Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd0c17e42bso1328471fa.0
-        for <test2@on.chaindesk.ai>; Fri, 05 Jan 2024 17:54:31 -0800 (PST)
+        for <dev@on.chaindesk.ai>; Fri, 05 Jan 2024 17:54:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1704506069; x=1705110869; darn=on.chaindesk.ai;
         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
@@ -43,11 +43,11 @@ X-Received: by 2002:a2e:9b52:0:b0:2cc:cbc3:9def with SMTP id
  o18-20020a2e9b52000000b002cccbc39defmr95609ljj.95.1704506069136; Fri, 05 Jan
  2024 17:54:29 -0800 (PST)
 MIME-Version: 1.0
-From: gmp gmp <test@chaindesk.ai>
+From: gmp gmp <customer@email.com>
 Date: Sat, 6 Jan 2024 02:54:18 +0100
 Message-ID: <CAL=0_XGSQo6oXn5UuP+iAXbDXT_0AYTaB2pwip9gdgjqPDAgMg@mail.gmail.com>
 Subject: test
-To: test2@on.chaindesk.ai
+To: dev@on.chaindesk.ai
 Content-Type: multipart/mixed; boundary="000000000000c5b643060e3d3e38"
 
 --000000000000c5b643060e3d3e38

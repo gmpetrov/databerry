@@ -150,6 +150,9 @@ export const updateConversation = async (
           orderBy: {
             createdAt: 'asc',
           },
+          include: {
+            attachments: true,
+          },
         },
         organization: {
           include: {

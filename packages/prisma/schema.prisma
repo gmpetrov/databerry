@@ -26,6 +26,8 @@ model Organization {
   appDatasources   AppDatasource[]
   serviceProviders ServiceProvider[]
   forms            Form[]
+  mailInboxes         MailInbox[]
+  contacts            Contact[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -86,6 +88,8 @@ model User {
   viaProduct String? @default("chaindesk") @map("via_product")
   
   assignedConversations Conversation[] @relation("assignees")
+
+  joinedConversations Conversation[] @relation("participants") 
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -307,6 +311,7 @@ model Domain {
 
 model Conversation {
   id        String  @id @default(cuid())
+  title     String?
   visitorId String? @map("visitor_id")
   userId    String? @map("user_id")
   user      User?   @relation(fields: [userId], references: [id])
@@ -344,6 +349,9 @@ model Conversation {
   form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String?   @map("form_id")
 
+  participants User[] @relation("participants")
+  contacts Contact[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -353,6 +361,8 @@ model Conversation {
 
 // model ActionLog {
 //   id      String @id @default(cuid())
+
+// conversations Conversation[]
 
 //   text String
 
@@ -367,11 +377,13 @@ model Conversation {
 model Message {
   id             String        @id @default(cuid())
   text           String
+  html           String?
   from           MessageFrom
   conversationId String?       @map("conversation_id")
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
   usage          Json?
+  externalId     String?       @unique @map("external_id")
   
   
   metadata       Json?
@@ -725,6 +737,9 @@ model MailInbox {
 
   conversations    Conversation[]
 
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   @@map("mail_inboxes")
@@ -733,11 +748,11 @@ model MailInbox {
 // model MailMessage {
 
 //   id String  @id @default(cuid())
-//   from String[]
-//   to String[]
-//   cc String[]
-//   bcc String[]
-//   subject String?
+  // from String[]
+  // to String[]
+  // cc String[]
+  // bcc String[]
+  // subject String?
 
 //   text String?
 //   html String?
@@ -760,7 +775,27 @@ model Attachment {
   messageId String @unique          @map("message_id")
 
   @@map("attachments")
+}
 
+model Contact {
+  id String  @id @default(cuid())
+
+  email String?
+
+  firstName String? @map("first_name")
+  lastName String? @map("last_name")
+
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  conversations Conversation[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([email, organizationId], name: "unique_email_for_org")
+  @@map("contacts") 
 }
 
 enum LLMTaskOutputType {

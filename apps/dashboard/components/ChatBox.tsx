@@ -31,6 +31,7 @@ import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import type { Source } from '@chaindesk/lib/types/document';
 
 import ChatMessageApproval from './ChatMessageApproval';
+import ChatMessageAttachment from './ChatMessageAttachment';
 import CopyButton from './CopyButton';
 import SourceComponent from './Source';
 
@@ -60,6 +61,7 @@ export type ChatBoxProps = {
   userImgUrl?: string;
   organizationId?: string | null;
   refreshConversation?: () => any;
+  metadata?: Record<string, unknown>;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -141,6 +143,7 @@ function ChatBox({
   userImgUrl,
   organizationId,
   refreshConversation,
+  metadata,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -424,6 +427,16 @@ function ChatBox({
                         </ChatMessageCard>
                       )}
 
+                      {(each?.attachments?.length || 0) > 0 && (
+                        <Stack gap={1}>
+                          {each?.attachments?.map((each) => (
+                            <ChatMessageAttachment
+                              key={each.id}
+                              attachment={each}
+                            />
+                          ))}
+                        </Stack>
+                      )}
                       {each.from === 'agent' &&
                         each?.id &&
                         !each?.disableActions &&

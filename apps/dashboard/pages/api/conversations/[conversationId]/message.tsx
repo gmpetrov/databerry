@@ -4,12 +4,15 @@ import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
+import { GenericTemplate, render } from '@chaindesk/emails';
+import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import ConversationManager from '@chaindesk/lib/conversation';
 import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import { client as CrispClient } from '@chaindesk/lib/crisp';
+import mailer from '@chaindesk/lib/mailer';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
 import { ConversationMetadataSlack } from '@chaindesk/lib/types/dtos';
@@ -112,6 +115,68 @@ export const sendMessage = async (
           `could not send message through slack api ${(e as any)?.message}`
         );
       }
+      break;
+    case 'mail':
+      // fetch all participants except the current user
+      const conversation = await prisma.conversation.findUnique({
+        where: {
+          id: conversationId,
+        },
+        include: {
+          mailInbox: true,
+          participants: {
+            where: {
+              id: {
+                not: session.user?.id,
+              },
+            },
+          },
+          contacts: true,
+        },
+      });
+
+      if (!conversation?.mailInbox) {
+        throw new ApiError(ApiErrorType.NOT_FOUND);
+      }
+
+      const emails: string[] = [
+        ...(conversation?.participants
+          ?.map((each) => each?.email as string)
+          .filter((each) => !!each) || []),
+        ...(conversation?.contacts
+          ?.map((c) => c?.email as string)
+          .filter((each) => !!each) || []),
+      ];
+
+      if (emails.length <= 0) {
+        throw new ApiError(ApiErrorType.INVALID_REQUEST);
+      }
+
+      const subject =
+        conversation?.title || session?.organization?.name || '💌 Request';
+      await mailer.sendMail({
+        inReplyTo: conversation?.channelExternalId!,
+        from: {
+          name: conversation?.mailInbox?.fromName!,
+          address: conversation?.mailInbox?.customEmail
+            ? conversation?.mailInbox?.customEmail
+            : `${conversation?.mailInbox?.alias}@${process.env.INBOUND_EMAIL_DOMAIN}`,
+        },
+        // to: emails,
+        to: ['georgesm.petrov@gmail.com'],
+        subject,
+        html: render(
+          <GenericTemplate
+            title={subject}
+            description={payload.message}
+            // cta={{
+            //   label: 'Upgrade Account',
+            //   href: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/settings/billing`,
+            // }}
+          />
+        ),
+      });
+
       break;
     case 'website':
       // no special treatement for website channel.

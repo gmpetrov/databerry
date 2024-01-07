@@ -1079,9 +1079,11 @@ export default function LogsPage() {
                     id: each.id,
                     from: each.from,
                     message: each.text,
+                    metadata: each.metadata as any,
                     createdAt: each.createdAt,
                     eval: each.eval,
                     approvals: each.approvals || [],
+                    attachments: each.attachments || [],
                   })) || []
                 }
                 isLoadingConversation={getConversationQuery?.isLoading}
