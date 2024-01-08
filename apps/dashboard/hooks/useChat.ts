@@ -14,14 +14,20 @@ import {
 } from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
-import type { ChatResponse, EvalAnswer } from '@chaindesk/lib/types/dtos';
+import type {
+  ChatResponse,
+  CreateAttachmentSchema,
+  EvalAnswer,
+} from '@chaindesk/lib/types/dtos';
 import type {
   ActionApproval,
+  Attachment,
   ConversationChannel,
   ConversationStatus,
   Prisma,
 } from '@chaindesk/prisma';
 
+import useFileUpload from './useFileUpload';
 import useRateLimit from './useRateLimit';
 import useStateReducer from './useStateReducer';
 
@@ -53,6 +59,7 @@ export type ChatMessage = {
   };
   approvals: ActionApproval[];
   metadata?: Record<string, any>;
+  attachments?: Attachment[];
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -99,6 +106,8 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
     isAiEnabled: true,
     isFormValid: false,
   });
+
+  const { upload } = useFileUpload();
 
   // TODO: Remove when rate limit implemented from backend
   const { isRateExceeded, rateExceededMessage, handleIncrementRateLimitCount } =
@@ -160,11 +169,30 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
   }, [getConversationQuery]);
 
   const handleChatSubmit = useCallback(
-    async (_message: string) => {
+    async (_message: string, files: File[] = []) => {
       const message = _message?.trim?.();
 
       if (!message || !endpoint) {
         return;
+      }
+
+      let attachments: CreateAttachmentSchema[] = [];
+
+      if (files?.length > 0) {
+        const filesUrls = await upload(
+          files.map((each) => ({
+            case: 'chatUpload',
+            fileName: each.name,
+            mimeType: each.type,
+            file: each,
+          }))
+        );
+        attachments = files.map((each, index) => ({
+          name: each.name,
+          url: filesUrls[index],
+          size: each.size,
+          mimeType: each.type,
+        }));
       }
 
       if (
@@ -193,7 +221,17 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       }
 
       const ctrl = new AbortController();
-      const history = [...state.history, { from: 'human', message }];
+      const history = [
+        ...state.history,
+        {
+          from: 'human',
+          message,
+          attachments: attachments.map((each, index) => ({
+            id: index,
+            ...each,
+          })),
+        },
+      ];
       const nextIndex = history.length;
 
       setState({
@@ -229,6 +267,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             visitorId: state.visitorId,
             conversationId: state.conversationId,
             channel,
+            attachments,
           }),
           signal: ctrl.signal,
 
@@ -308,6 +347,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                     message: buffer,
                     sources,
                     metadata,
+                    attachments: [],
                   });
                 }
 
@@ -360,7 +400,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               if (h?.[nextIndex]) {
                 h[nextIndex].message = `${bufferStep}`;
               } else {
-                h.push({ from: 'agent', message: bufferStep });
+                h.push({ from: 'agent', message: bufferStep, attachments: [] });
               }
 
               setState({
@@ -386,6 +426,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
                     type: 'tool_call',
                     // description: bufferToolCall,
                   },
+                  attachments: [],
                 });
               }
 
@@ -402,7 +443,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
               if (h?.[nextIndex]) {
                 h[nextIndex].message = `${buffer}`;
               } else {
-                h.push({ from: 'agent', message: buffer });
+                h.push({ from: 'agent', message: buffer, attachments: [] });
               }
 
               setState({
@@ -515,6 +556,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             sources: message?.sources as Source[],
             approvals: message?.approvals || [],
             metadata: message?.metadata || ({} as any),
+            attachments: message?.attachments || ([] as Attachment[]),
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,

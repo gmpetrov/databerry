@@ -1,0 +1,136 @@
+{
+  "Records": [
+    {
+      "eventSource": "aws:ses",
+      "eventVersion": "1.0",
+      "ses": {
+        "mail": {
+          "timestamp": "2024-01-06T01:51:31.092Z",
+          "source": "customer@email.com",
+          "messageId": "s6q2haqhraouel4k8rlrmfpro4g91grivc3pbao1",
+          "destination": ["test@on.chaindesk.ai"],
+          "headersTruncated": false,
+          "headers": [
+            {
+              "name": "Return-Path",
+              "value": "<customer@email.com>"
+            },
+            {
+              "name": "Received",
+              "value": "from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49]) by inbound-smtp.us-east-1.amazonaws.com with SMTP id s6q2haqhraouel4k8rlrmfpro4g91grivc3pbao1 for test@on.chaindesk.ai; Sat, 06 Jan 2024 01:51:31 +0000 (UTC)"
+            },
+            {
+              "name": "X-SES-Spam-Verdict",
+              "value": "PASS"
+            },
+            {
+              "name": "X-SES-Virus-Verdict",
+              "value": "PASS"
+            },
+            {
+              "name": "Received-SPF",
+              "value": "pass (spfCheck: domain of _spf.google.com designates 209.85.208.49 as permitted sender) client-ip=209.85.208.49; envelope-from=customer@email.com; helo=mail-ed1-f49.google.com;"
+            },
+            {
+              "name": "Authentication-Results",
+              "value": "amazonses.com; spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.49 as permitted sender) client-ip=209.85.208.49; envelope-from=customer@email.com; helo=mail-ed1-f49.google.com; dkim=pass header.i=@gmail.com; dmarc=pass header.from=gmail.com;"
+            },
+            {
+              "name": "X-SES-RECEIPT",
+              "value": "AEFBQUFBQUFBQUFHSUZFYStDWHlTV2d0RC9wS1Z4aGpPSnRSazE2K2MwVHluZE5PcVlhRHBVSlVjVGFUUk51YmFBcjZ4WHB3ZFVmMk55QXR2elRpbzJtUXVRWWhlSEVCY2FqOUtyVjBmbkR5RjNyV201SkxiVTdMM0FGVytnblpFNG1ObHFYU2d5b1lxMXNzYWpVeE9JcHZadjQ3ZjhkNXFHZHJmQlhvcm5hRTQxM1dBS0ozd2FHalRpVEVrZmFJdERZTXdKWnI1ZmRoem80WDlCaVgrcDdBV0ZpUFdBaUN1QnN0ZllOS2g4QXNpbnFnQ0srRTdpYjRmanhOM0g4Y3JWOFB2Y2h1azVqM1N4SUN6UnZnbnZkbWp3cHJZRUFNNWtoVkxkVnZtVUQ0RWRvVHVvVDArZmc9PQ=="
+            },
+            {
+              "name": "X-SES-DKIM-SIGNATURE",
+              "value": "a=rsa-sha256; q=dns/txt; b=LdmMtJeQR1+4s27sV1Kj14BM6957dd/7mpC24ARwqI5uax4g+GB5Hg+cHRbkkoWeajuoOm6Q313NPVSnVLtpIP/0fDWPOyZkHYARnA8XAL8QVpGQcshgxi2wlbskBhNcBnTScrqc015X8ljpdenWecObaQkYsM89oK+HNp/9DaU=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1704505891; v=1; bh=oCnTuz3JGb3atmveAHQE+T75S5zp6LLdzKzSUOIG1mg=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;"
+            },
+            {
+              "name": "Received",
+              "value": "by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-556eadd5904so127077a12.2 for <test@on.chaindesk.ai>; Fri, 05 Jan 2024 17:51:30 -0800 (PST)"
+            },
+            {
+              "name": "DKIM-Signature",
+              "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20230601; t=1704505889; x=1705110689; darn=on.chaindesk.ai; h=to:subject:message-id:date:from:mime-version:from:to:cc:subject:date:message-id:reply-to; bh=oCnTuz3JGb3atmveAHQE+T75S5zp6LLdzKzSUOIG1mg=; b=lsjFAH2HZMFA5chJpByoTEmV0F5LwenNHLULEntS07y4d5NlbwASotiuVkLiVu5scdFlShkCnKrHyVUitL7rW+FlOQcCIqc/SyukpdwfCTZG4jO6kCWUM4871efP8Q0J0TlBanM5NTbVYiSEOE7HDD+5W/XTTKcr9mKYyi4v6SpW84CvVComBtXhY/d2gySIKWCcQlJPKmw5Mq3hJNV7JHKTwTJ5wNNPVS01PFhFTJnZVY8NDzH6OJxh2UwJYTgJW2W9Y+sEODM6oVO4w/IrqWKVE7af9znnbhoJsrwNddEgC9URuhV8Eul35/PtIepGUTFCkjRCScraqmttIO2Z/Q=="
+            },
+            {
+              "name": "X-Google-DKIM-Signature",
+              "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20230601; t=1704505889; x=1705110689; h=to:subject:message-id:date:from:mime-version:x-gm-message-state :from:to:cc:subject:date:message-id:reply-to; bh=oCnTuz3JGb3atmveAHQE+T75S5zp6LLdzKzSUOIG1mg=; b=AiEFCUN4m0R5es5cD+G4n8CQhqLdy1y9BcgNviWeJACWI0c1HkECoySLBMwKWxK+Q+ meh2zJ9zH3qH7kryhpAy9pXvZNWp8FtiQ63l6UmZgPhfE2Xqo+PRTqbSGqRg3atdz9dg 5+AFS64zZw2+zZTrQ84DDxJaOhP1pmSoPtf3Wondp3WljsYDh+I3S1my1j1vXSp7uCjv xknNEi6SqCnrCa+/3B+sURc6mWGhTACq6dA5T7m3u8TsnCVEe+IwU/PVl/MDxsiG1lEn exjGVRb8mlzNEVu4gq9b9hyIuhs9FzpnRxKF6XoACCGaCmbYB8qQfosINN3lE5nbzaSj CQxQ=="
+            },
+            {
+              "name": "X-Gm-Message-State",
+              "value": "AOJu0YwaJjfrLfAvy+kao/KSEdDjO+4F3Hd+nCw8o8NtiLybZoBZK9SN YSahnyHhyqLgirpAPP3/vI1vxYqVo5EuziNIqgVQ0sRA"
+            },
+            {
+              "name": "X-Google-Smtp-Source",
+              "value": "AGHT+IFkEvyMYzKF/sLpShg5ob+bRJDLFtnnmgsoNmFjf5ld5y2jSElNZVxzKny/FS203AJ3skGqIEynrpsCLK2rpf8="
+            },
+            {
+              "name": "X-Received",
+              "value": "by 2002:a05:6402:2210:b0:557:4301:f325 with SMTP id cq16-20020a056402221000b005574301f325mr75922edb.35.1704505889238; Fri, 05 Jan 2024 17:51:29 -0800 (PST)"
+            },
+            {
+              "name": "MIME-Version",
+              "value": "1.0"
+            },
+            {
+              "name": "From",
+              "value": "gmp gmp <customer@email.com>"
+            },
+            {
+              "name": "Date",
+              "value": "Sat, 6 Jan 2024 02:51:18 +0100"
+            },
+            {
+              "name": "Message-ID",
+              "value": "<CAL=0_XEFQciVdS-L8Vpy2r-YDYBGjoXGDbeYux8BHmQEEvPz-w@mail.gmail.com>"
+            },
+            {
+              "name": "Subject",
+              "value": "hello world"
+            },
+            {
+              "name": "To",
+              "value": "test@on.chaindesk.ai"
+            },
+            {
+              "name": "Content-Type",
+              "value": "multipart/mixed; boundary=\"0000000000000bc821060e3d34a2\""
+            }
+          ],
+          "commonHeaders": {
+            "returnPath": "customer@email.com",
+            "from": ["gmp gmp <customer@email.com>"],
+            "date": "Sat, 6 Jan 2024 02:51:18 +0100",
+            "to": ["test@on.chaindesk.ai"],
+            "messageId": "<CAL=0_XEFQciVdS-L8Vpy2r-YDYBGjoXGDbeYux8BHmQEEvPz-w@mail.gmail.com>",
+            "subject": "hello world"
+          }
+        },
+        "receipt": {
+          "timestamp": "2024-01-06T01:51:31.092Z",
+          "processingTimeMillis": 1069,
+          "recipients": ["test@on.chaindesk.ai"],
+          "spamVerdict": {
+            "status": "PASS"
+          },
+          "virusVerdict": {
+            "status": "PASS"
+          },
+          "spfVerdict": {
+            "status": "PASS"
+          },
+          "dkimVerdict": {
+            "status": "PASS"
+          },
+          "dmarcVerdict": {
+            "status": "PASS"
+          },
+          "action": {
+            "type": "Lambda",
+            "functionArn": "arn:aws:lambda:us-east-1:286335099094:function:test-email-receiver",
+            "invocationType": "Event"
+          }
+        }
+      }
+    }
+  ]
+}

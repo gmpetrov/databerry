@@ -13,6 +13,12 @@ import {
   ToolType,
 } from '@chaindesk/prisma';
 
+import {
+  AcceptedAudioMimeTypes,
+  AcceptedDocumentMimeTypes,
+  AcceptedImageMimeTypes,
+  AcceptedVideoMimeTypes,
+} from '../accepted-mime-types';
 import { YOUTUBE_VIDEO_URL_RE } from '../youtube-api/lib';
 
 import { AIStatus } from './crisp';
@@ -151,6 +157,14 @@ export const ChatModelConfigSchema = z.object({
 
 export type ChatModelConfigSchema = z.infer<typeof ChatModelConfigSchema>;
 
+export const CreateAttachmentSchema = z.object({
+  name: z.string(),
+  url: z.string().url(),
+  size: z.number(),
+  mimeType: z.string(),
+});
+export type CreateAttachmentSchema = z.infer<typeof CreateAttachmentSchema>;
+
 export const ChatRequest = ChatModelConfigSchema.extend({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
@@ -169,6 +183,8 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   toolsConfig: z.record(z.string().cuid(), z.any()).optional(),
 
   formId: z.union([z.string().cuid().nullish(), z.literal('')]),
+
+  attachments: z.array(CreateAttachmentSchema).optional(),
 
   //  DEPRECATED
   promptTemplate: z.string().optional(),
@@ -551,4 +567,103 @@ export const UpdateStatusAllConversationsSchema = z.object({
 });
 export type UpdateStatusAllConversationsSchema = z.infer<
   typeof UpdateStatusAllConversationsSchema
+>;
+
+export const AcceptedImageMimeTypesSchema = z.enum(AcceptedImageMimeTypes);
+export type AcceptedImageMimeTypesSchema = z.infer<
+  typeof AcceptedImageMimeTypesSchema
+>;
+
+export const AcceptedVideoMimeTypesSchema = z.enum(AcceptedVideoMimeTypes);
+
+export const AcceptedAudioMimeTypesSchema = z.enum(AcceptedAudioMimeTypes);
+
+export const AcceptedDocumentMimeTypesSchema = z.enum(
+  AcceptedDocumentMimeTypes
+);
+
+export const GenerateUploadLinkRequestSchema = z.discriminatedUnion('case', [
+  z.object({
+    case: z.literal('agentIcon'),
+    fileName: z.string(),
+    mimeType: AcceptedImageMimeTypesSchema,
+    agentId: z.string().cuid(),
+  }),
+  z.object({
+    case: z.literal('organizationIcon'),
+    fileName: z.string(),
+    mimeType: AcceptedImageMimeTypesSchema,
+  }),
+  z.object({
+    case: z.literal('userIcon'),
+    fileName: z.string(),
+    mimeType: AcceptedImageMimeTypesSchema,
+  }),
+  z.object({
+    case: z.literal('chatUpload'),
+    fileName: z.string(),
+    mimeType: AcceptedDocumentMimeTypesSchema.or(AcceptedAudioMimeTypesSchema)
+      .or(AcceptedVideoMimeTypesSchema)
+      .or(AcceptedImageMimeTypesSchema),
+  }),
+]);
+
+export type GenerateUploadLinkRequestSchema = z.infer<
+  typeof GenerateUploadLinkRequestSchema
+>;
+
+export const GenerateManyUploadLinksSchema = z
+  .array(GenerateUploadLinkRequestSchema)
+  .min(1)
+  .max(10);
+
+export type GenerateManyUploadLinksSchema = z.infer<
+  typeof GenerateManyUploadLinksSchema
+>;
+
+export const GenerateManyUploadLinksResponseSchema = z.array(
+  z.object({
+    signedUrl: z.string().url(),
+    fileUrl: z.string().url(),
+  })
+);
+export type GenerateManyUploadLinksResponseSchema = z.infer<
+  typeof GenerateManyUploadLinksResponseSchema
+>;
+
+export const CreateMailInboxSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  alias: z.string().optional(),
+});
+export type CreateMailInboxSchema = z.infer<typeof CreateMailInboxSchema>;
+
+export const EmailAliasSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(50)
+  .transform((val) => val.toLocaleLowerCase())
+  .refine(
+    (val) => /^[a-z0-9]+(?:[-_.][a-z0-9]+)*$/.test(val),
+    'Invalid email alias'
+  );
+
+export const UpdateMailInboxSchema = z.object({
+  alias: EmailAliasSchema,
+  customEmail: z.string().email().optional().nullable(),
+  name: z.string().min(1).max(50).optional(),
+  fromName: z.string().max(50).optional().nullable(),
+  signature: z.string().optional().nullable(),
+  hideBranding: z.boolean().optional().nullable(),
+});
+
+export type UpdateMailInboxSchema = z.infer<typeof UpdateMailInboxSchema>;
+
+export const CheckAliasAvailabilitySchema = z.object({
+  alias: EmailAliasSchema,
+});
+
+export type CheckAliasAvailabilitySchema = z.infer<
+  typeof CheckAliasAvailabilitySchema
 >;

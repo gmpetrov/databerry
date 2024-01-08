@@ -1,3 +1,4 @@
+import AllInboxRoundedIcon from '@mui/icons-material/AllInboxRounded';
 import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
@@ -62,6 +63,7 @@ function NavigationLink(props: {
   icon?: React.ReactNode;
   label?: string | React.ReactElement;
   isExperimental?: boolean;
+  isNew?: boolean;
 }) {
   return (
     <Link key={props.href} href={props.href} target={props?.target}>
@@ -77,16 +79,33 @@ function NavigationLink(props: {
           </ListItemDecorator>
           <ListItemContent>{props.label}</ListItemContent>
 
-          {props.isExperimental && (
-            <Chip
-              startDecorator={<NewReleasesRoundedIcon />}
-              size="sm"
-              variant="soft"
-              color="warning"
-            >
-              Beta
-            </Chip>
-          )}
+          <Stack direction="row" alignItems={'center'} sx={{ ml: 'auto' }}>
+            {props.isNew && (
+              <Chip
+                className="text-white bg-gradient-to-r from-orange-500 via-red-500 to-red-500"
+                size="sm"
+              >
+                new
+              </Chip>
+            )}
+
+            {props.isExperimental && (
+              <Chip
+                className="text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+                size="sm"
+              >
+                beta
+              </Chip>
+              // <Chip
+              //   startDecorator={<NewReleasesRoundedIcon />}
+              //   size="sm"
+              //   variant="soft"
+              //   color="warning"
+              // >
+              //   Beta
+              // </Chip>
+            )}
+          </Stack>
         </ListItemButton>
       </ListItem>
     </Link>
@@ -236,6 +255,7 @@ export default function Navigation() {
                 </Badge>
               ),
               active: router.route === RouteNames.LOGS,
+              isNew: false,
             },
             {
               label: 'Agents',
@@ -243,44 +263,29 @@ export default function Navigation() {
               icon: <SmartToyRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.AGENTS),
               isExperimental: false,
+              isNew: false,
             },
             {
               label: 'Datastores',
               route: RouteNames.DATASTORES,
               icon: <StorageRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.DATASTORES),
+              isNew: false,
             },
             {
-              label: (
-                <Stack direction="row" gap={1} alignItems={'center'}>
-                  <Typography>Forms</Typography>
-                  <Chip
-                    className="text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-                    size="sm"
-                  >
-                    beta
-                  </Chip>
-                </Stack>
-              ),
+              label: 'Forms',
               route: RouteNames.FORMS,
               icon: <FeedRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.FORMS),
+              isNew: false,
+              isExperimental: true,
             },
             {
-              label: (
-                <Stack direction="row" gap={1} alignItems={'center'}>
-                  <Typography>Analytics</Typography>
-                  <Chip
-                    className="text-white bg-gradient-to-r from-orange-500 via-red-500 to-red-500"
-                    size="sm"
-                  >
-                    new
-                  </Chip>
-                </Stack>
-              ),
+              label: 'Analytics',
               route: RouteNames.ANALYTICS,
               icon: <ShowChartIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.ANALYTICS),
+              isNew: true,
             },
           ]
         : []),
@@ -302,6 +307,7 @@ export default function Navigation() {
                 </Badge>
               ),
               active: router.route === RouteNames.LOGS,
+              isNew: false,
             },
             {
               label: 'Agents',
@@ -309,6 +315,7 @@ export default function Navigation() {
               icon: <SmartToyRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.AGENTS),
               isExperimental: false,
+              isNew: false,
             },
           ]
         : []),
@@ -320,12 +327,14 @@ export default function Navigation() {
               icon: <ChatRoundedIcon fontSize="md" />,
               active: router.route === RouteNames.CHAT,
               isExperimental: true,
+              isNew: false,
             },
             {
               label: 'Datastores',
               route: RouteNames.DATASTORES,
               icon: <StorageRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.DATASTORES),
+              isNew: false,
             },
           ]
         : []),
@@ -347,6 +356,14 @@ export default function Navigation() {
         active: router.route.startsWith(RouteNames.SETTINGS),
         isExperimental: false,
       },
+      {
+        label: 'Email Inboxes',
+        route: RouteNames.EMAIL_INBOXES,
+        icon: <AllInboxRoundedIcon fontSize="small" />,
+        active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
+        // isExperimental: true,
+        isNew: true,
+      },
     ];
   }, [router.route]);
 
@@ -358,6 +375,7 @@ export default function Navigation() {
         icon: <HelpRoundedIcon fontSize="small" />,
         target: 'blank',
         isExperimental: false,
+        isNew: false,
       },
       {
         label: 'API Documentation',
@@ -365,6 +383,7 @@ export default function Navigation() {
         icon: <ApiRoundedIcon fontSize="small" />,
         target: 'blank',
         isExperimental: false,
+        isNew: false,
       },
     ];
   }, [router.route]);
@@ -398,6 +417,7 @@ export default function Navigation() {
                 icon={each.icon}
                 label={each.label}
                 isExperimental={each.isExperimental}
+                isNew={each.isNew}
                 target={(each as any).target}
               />
             ))}
@@ -412,6 +432,7 @@ export default function Navigation() {
                 icon={each.icon}
                 label={each.label}
                 isExperimental={each.isExperimental}
+                isNew={each.isNew}
                 target={(each as any).target}
               />
             ))}
@@ -424,6 +445,7 @@ export default function Navigation() {
                 icon={each.icon}
                 label={each.label}
                 isExperimental={each.isExperimental}
+                isNew={each.isNew}
                 target={(each as any).target}
               />
             ))}

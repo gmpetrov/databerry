@@ -1,0 +1,92 @@
+Return-Path: <customer@email.com>
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+ by inbound-smtp.us-east-1.amazonaws.com with SMTP id qj34en225nfhdp0rqfktf1mtqsr8dlc6si110bg1
+ for dev@on.chaindesk.ai;
+ Sat, 06 Jan 2024 02:27:07 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.208.43 as permitted sender) client-ip=209.85.208.43; envelope-from=customer@email.com; helo=mail-ed1-f43.google.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.208.43 as permitted sender) client-ip=209.85.208.43; envelope-from=customer@email.com; helo=mail-ed1-f43.google.com;
+ dkim=pass header.i=@gmail.com;
+ dmarc=pass header.from=gmail.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFGSWwybldkVkxaSmZNb0JvemdUcUFoY2x5RGEvVHdQdHdiSGhKZ21ka3JSUUV0N0RUUkZKS2g3dEV1NDltQm8zN0s1NkdPdGljUXJlYU00STQ5TDZVNHRyZ1ZQUHdCNnZhRDl4WDhVczlhc0Y5TWg5STVMS1hqUWlVZnBVajdHNHdXT0pxTW5TSHMveHpLUkY3eDBtc0pXdW4xcnhEMTZaN1lRRDNzSmtvNGdDRlNhR1VPbkZCNEI2WEVlbldZcDNGRU9hUnVRN3ZBTjVhZ3h0UHpiTCtrMWhkclhnWTRUQ0hBQjdJc3h0OG1mZ0toR2wxSUh1RmFabDRLS0ZTZHh4TWdOZDhJNjhEZGVmZ2J6NEFVT3Y3ZVVYcnE3TWFGNDVYQ255REVPZ092eXc9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=cU68loPc9Z05SfDDkRqZ2xqu54X158aBNVcnNemBjNbHNs9wwTbUWyFIb/gR8UAIgb7nwYIFgdl4U+Mbw7tAhDdtZ6nV9AGVFlWZ4a7sc9iVteILEUxQu+huEGtEUk92+5f/vnz4UIUjaw0iO+pOOQEYajyylZTPhR7Eq5tLA8g=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1704508028; v=1; bh=Jh2HlceFCDzYNW4+zRncdWCcKAF2g9B4H561jH7grnE=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-555bd21f9fdso161929a12.0
+        for <dev@on.chaindesk.ai>; Fri, 05 Jan 2024 18:27:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704508026; x=1705112826; darn=on.chaindesk.ai;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jh2HlceFCDzYNW4+zRncdWCcKAF2g9B4H561jH7grnE=;
+        b=NIkL1y0SoON0b/lh4VNGEtRPJBHcxlQxQz/BHC5EC4/uinCbxrZS34rO1K+GeBwLvW
+         +AJT2Asgjrud1SmEVE0roGjZtt1k0GlmNrMY/+L3mIeRTBgQgrRhW8TDlSxWZJ25Tflo
+         emVNHDuYh0SMq1BnVghK1MLqDDWALEJ5xhe94y1Y/kIu4GY3yfAbLn9J+vNlyClGQnsi
+         jTOBfD/+NbwvmLVMwx88meYF/jcyarwamuvmq8P+exwEnjSB5opdti/p6qCLEaFO+bgm
+         iI+t24JLbBrSL3786SCZt5fTxU/c7FNh+Zx/XnAtvR1r2TqJPIAkdeaDosjttsluabkg
+         x3nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704508026; x=1705112826;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jh2HlceFCDzYNW4+zRncdWCcKAF2g9B4H561jH7grnE=;
+        b=oW+xNWANTcO672VqOU1SBIf8vVs8xhgyRMBmJGRSAxYsXKpyU7gX2m/YUb/JJhCqXd
+         51r7o837m0XTXclawHt/gu4MRC8YWPWUkvRYzc8eIpLQc0Q2jIVZRs0i+nlcwhGSn+NU
+         D2+qOeZzEw+Pfvo7yU+NXVclQ8swN/3cRDqIqeE3K8zClU3Jb+hFj6hzHeTczd+2aNxC
+         q+sMb0pIGjzKFFUYFPugfpaE3Stdry0NC9Dh9fUM5XMy0y+Zva2NDspGboJLgBiJboH1
+         hD6+dLElLdpE6erR1EzdYXimyeeumpOCv+qAXFJSB62odOmR3+OEtNYuyTLQj6C+8C8a
+         XH8A==
+X-Gm-Message-State: AOJu0Yxi16UVbD373E6xpHyb6ZRRXAkqsUzz+02GYaOLK7x/c66eNWkk
+	E6yPcsPjbUp0hKNSyh6N2fexGWiAbiwrcRVy6mEBgWArHbk=
+X-Google-Smtp-Source: AGHT+IGhPXztj8p6Fimfgc3AfuWlALuEL+rDt55JEMPBQF+2txYOlW6Y0KlscddkNgt58BK1lYaYcX62QlP0DW/NGeY=
+X-Received: by 2002:aa7:d6c9:0:b0:557:a9c:b08f with SMTP id
+ x9-20020aa7d6c9000000b005570a9cb08fmr158877edr.19.1704508025736; Fri, 05 Jan
+ 2024 18:27:05 -0800 (PST)
+MIME-Version: 1.0
+References: <CAL=0_XGSQo6oXn5UuP+iAXbDXT_0AYTaB2pwip9gdgjqPDAgMg@mail.gmail.com>
+ <CAL=0_XFYb2uuo3yTkpA1Z0MhaOjo2rrN0eOdHAmpTsAn_vrUPA@mail.gmail.com>
+In-Reply-To: <CAL=0_XFYb2uuo3yTkpA1Z0MhaOjo2rrN0eOdHAmpTsAn_vrUPA@mail.gmail.com>
+From: gmp gmp <customer@email.com>
+Date: Sat, 6 Jan 2024 03:26:54 +0100
+Message-ID: <CAL=0_XGvxqFXkcZn7brRYznnq=NZSE1hEYvpoQCdnJ5Cokp7gQ@mail.gmail.com>
+Subject: Re: test
+To: dev@on.chaindesk.ai, Georges Petrov <georgesm.petrov@gmail.com>
+Content-Type: multipart/alternative; boundary="0000000000006413ec060e3db30b"
+
+--0000000000006413ec060e3db30b
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Agaiin 1234
+
+Le sam. 6 janv. 2024 =C3=A0 02:59, gmp gmp <customer@email.com> a =C3=A9c=
+rit :
+
+> YOO
+>
+> Le sam. 6 janv. 2024 =C3=A0 02:54, gmp gmp <customer@email.com> a =C3=
+=A9crit :
+>
+>> hello world
+>>
+>
+
+--0000000000006413ec060e3db30b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Agaiin=C2=A01234</div><br><div class=3D"gmail_quote"><div =
+dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0sam. 6 janv. 2024 =C3=A0=C2=A002:5=
+9, gmp gmp &lt;<a href=3D"mailto:customer@email.com">customer@email.com=
+</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
+ng-left:1ex"><div dir=3D"ltr">YOO</div><br><div class=3D"gmail_quote"><div =
+dir=3D"ltr" class=3D"gmail_attr">Le=C2=A0sam. 6 janv. 2024 =C3=A0=C2=A002:5=
+4, gmp gmp &lt;<a href=3D"mailto:customer@email.com" target=3D"_blank">0b=
+10101042@gmail.com</a>&gt; a =C3=A9crit=C2=A0:<br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex"><div dir=3D"ltr">hello world</div>
+</blockquote></div>
+</blockquote></div>
+
+--0000000000006413ec060e3db30b--

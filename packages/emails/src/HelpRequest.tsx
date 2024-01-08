@@ -22,7 +22,7 @@ import { Message } from '@chaindesk/prisma';
 
 interface VercelInviteUserEmailProps {
   agentName?: string;
-  messages?: Message[];
+  messages?: Partial<Message>[];
   ctaLink?: string;
   visitorEmail?: string;
 }

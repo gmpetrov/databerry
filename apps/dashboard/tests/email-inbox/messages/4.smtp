@@ -1,0 +1,63 @@
+Return-Path: <customer@email.com>
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+ by inbound-smtp.us-east-1.amazonaws.com with SMTP id ioe4fgdp8uhlutkansdildd27fd6keb85b1l2ro1
+ for dev@on.chaindesk.ai;
+ Sat, 06 Jan 2024 02:29:10 +0000 (UTC)
+X-SES-Spam-Verdict: PASS
+X-SES-Virus-Verdict: PASS
+Received-SPF: pass (spfCheck: domain of _spf.google.com designates 209.85.167.46 as permitted sender) client-ip=209.85.167.46; envelope-from=customer@email.com; helo=mail-lf1-f46.google.com;
+Authentication-Results: amazonses.com;
+ spf=pass (spfCheck: domain of _spf.google.com designates 209.85.167.46 as permitted sender) client-ip=209.85.167.46; envelope-from=customer@email.com; helo=mail-lf1-f46.google.com;
+ dkim=pass header.i=@gmail.com;
+ dmarc=pass header.from=gmail.com;
+X-SES-RECEIPT: AEFBQUFBQUFBQUFIbHcyaUo1RUlOWGR2UC9DbEdkQTJJNDczSVdHcHlmVkxHRWxQcXJJOUNhUWcydnplVERaVlErOUJqc051ZWRtZk5OUU5xRXNURmdCVGtneUdETldqZC9kUEg3QW1sRCtCNUEzQS9ra0xlTThUS0NiWHRTU0M0VU5WK0t6cFdRM0JjNVFsTlZLYVhFTkFYdU9tSGgxSFVLeFlNRTdnY3pJdFBwa3R1Y3VidDJSVXRMYnpXa0x4QlpOelFpS2txaXkvVkpWT1ZyeTQwVkxOSDJ2NUVYQXcwU2NHaGNCN3N2ajlLQU1pWURXa0lwN1czbDFsM2ZKTm1EY01MbEZmb05HeU5HY0EvajBOYkprSEV4THBqQkRsTnhBZzNmdzF1L2I3Ym5JRldYTlN2TUE9PQ==
+X-SES-DKIM-SIGNATURE: a=rsa-sha256; q=dns/txt; b=G5pFK6QFFGoRpTLZvAxCJlWjIrQyxT55DGW4ldGYdvlgfgeP2EcU7tLneKwzT+s9c1Y3F9bzhknuzCCj3mPd/UEkRUJS0qjZZJwc9lxSAQDPLiLiXppIFaCrzIJ0NSu+9PVsBQkPjJTiqJCHoFTjj5h8mblz1WuKKRV4bukoVKQ=; c=relaxed/simple; s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1704508151; v=1; bh=LGKyB+NNpYBXGwl5nFdmzJz9C/T6ct456aZfCUDiTPM=; h=From:To:Cc:Bcc:Subject:Date:Message-ID:MIME-Version:Content-Type:X-SES-RECEIPT;
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50e7c6f0487so143502e87.3
+        for <dev@on.chaindesk.ai>; Fri, 05 Jan 2024 18:29:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704508148; x=1705112948; darn=on.chaindesk.ai;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LGKyB+NNpYBXGwl5nFdmzJz9C/T6ct456aZfCUDiTPM=;
+        b=cBTyDlIrz84fePAa0MkY8kDiU3vceGXw61C+/vtavnespj/toPuIYsAQu1P8oghzz0
+         rdk1SPx2z3wXB6zM6bTU4qVSFJCqAjqupufe0As87zZBXRga4hmdjKxkhmlu+tPoxBX4
+         mtXw4kLK1SBebiVODWSiidJHxBUCLXizRzXk9dFyHQ8Flrs3tilMBTi+4m4AC0sqBWbJ
+         +1+VSjoLyeGStLN4KkxfUjEnDYvOrO/sMm2ULPmvYtly+NWxMpcawwrP5cicYFU1vb0K
+         J+9rjxXUD0etYIIhINnEoC5hti+lMpgynS4M2WHoEP2RHdY/j2Q6jzikOT5S3Jl0r9Dv
+         6U4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704508148; x=1705112948;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LGKyB+NNpYBXGwl5nFdmzJz9C/T6ct456aZfCUDiTPM=;
+        b=JutzQEHdDXt7oZC8enphlJ56YP3zfTDef8+5FWQZrL66cAJxNa2LzQKcbl6xHobon5
+         Xvt8FUeZYWg5eAqv6YyoyL4KdRHSpBQAwD3cWFPcsKXzWyDwItNIW5Sfd/EF/hc51QkV
+         MIVfUno0tqgv5VqAVT7jsM+qdCJltHW5O78LoNrw3t9nMMgviqQy52vXDFs2SxCvqGcg
+         xGvG2Z5uCgaqcmq0NUTprwQ+c1Xz1cQdY0qUgn6wqcONEito5wGcrwwWHIY8IlZjckRq
+         Xb0GEJJRG/30qiy53Z1XYzJaKjx7XkDZGBbdPMeqc4ZfZhFSpv32ixeNwtVpmdd5Kxhp
+         6Gjw==
+X-Gm-Message-State: AOJu0YwjY6xBxSIUfECj8fdEM1d262sGDo3dvh6RlwkBiWrjcuh64zj/
+	fXtFp4QSG36aCyReOpWYapsUf/IK2HL2DBrUxAZ2ADP6Wew=
+X-Google-Smtp-Source: AGHT+IGmB6zMrHzHM/08dQkgvH0G4IP5qHpViayi3TffyayQ70k6lUEUEjr4aTme15HDz5vHBxpCETl+Xxb/M0TPCwc=
+X-Received: by 2002:a05:6512:b1d:b0:50e:b2f9:23e7 with SMTP id
+ w29-20020a0565120b1d00b0050eb2f923e7mr85216lfu.28.1704508148458; Fri, 05 Jan
+ 2024 18:29:08 -0800 (PST)
+MIME-Version: 1.0
+From: gmp gmp <customer@email.com>
+Date: Sat, 6 Jan 2024 03:28:57 +0100
+Message-ID: <CAL=0_XE8PCa=1O_gQnTjq+3zDKLpk8tsYRCdmryBZqxoV7OcEg@mail.gmail.com>
+Subject: tet
+To: dev@on.chaindesk.ai
+Content-Type: multipart/alternative; boundary="000000000000b4a87a060e3dba0f"
+
+--000000000000b4a87a060e3dba0f
+Content-Type: text/plain; charset="UTF-8"
+
+hello nouveau thread
+
+--000000000000b4a87a060e3dba0f
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">hello nouveau thread</div>
+
+--000000000000b4a87a060e3dba0f--

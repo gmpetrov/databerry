@@ -36,6 +36,7 @@
     "jsonschema": "^1.4.1",
     "jszip": "^3.10.1",
     "langchain": "0.0.196",
+    "mailparser": "^3.6.6",
     "mammoth": "^1.5.1",
     "mime-types": "^2.1.35",
     "mixpanel": "^0.18.0",
@@ -65,6 +66,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@types/json-schema": "^7.0.14",
+    "@types/mailparser": "^3.4.4",
     "@types/mime-types": "^2.1.1",
     "@types/node": "18.15.10",
     "@types/nodemailer": "^6.4.7",

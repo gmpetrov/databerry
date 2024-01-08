@@ -1,23 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
+import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
+import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
+import ChipDelete from '@mui/joy/ChipDelete';
 import CircularProgress from '@mui/joy/CircularProgress';
-import Divider from '@mui/joy/Divider';
 import IconButton from '@mui/joy/IconButton';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -27,16 +29,31 @@ import ChatMessageCard from '@app/components/ChatMessageCard';
 import Markdown from '@app/components/Markdown';
 import { ChatMessage, MessageEvalUnion } from '@app/hooks/useChat';
 
+import {
+  AcceptedAudioMimeTypes,
+  AcceptedDocumentMimeTypes,
+  AcceptedImageMimeTypes,
+  AcceptedVideoMimeTypes,
+} from '@chaindesk/lib/accepted-mime-types';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import type { Source } from '@chaindesk/lib/types/document';
 
 import ChatMessageApproval from './ChatMessageApproval';
+import ChatMessageAttachment from './ChatMessageAttachment';
 import CopyButton from './CopyButton';
 import SourceComponent from './Source';
+import VisuallyHiddenInput from './VisuallyHiddenInput';
+
+const acceptedMimeTypesStr = [
+  ...AcceptedImageMimeTypes,
+  ...AcceptedVideoMimeTypes,
+  ...AcceptedAudioMimeTypes,
+  ...AcceptedDocumentMimeTypes,
+].join(',');
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
-  onSubmit: (message: string) => Promise<any>;
+  onSubmit: (message: string, attachments?: File[]) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
   readOnly?: boolean;
@@ -60,6 +77,8 @@ export type ChatBoxProps = {
   userImgUrl?: string;
   organizationId?: string | null;
   refreshConversation?: () => any;
+  metadata?: Record<string, unknown>;
+  withFileUpload?: boolean;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -141,14 +160,19 @@ function ChatBox({
   userImgUrl,
   organizationId,
   refreshConversation,
+  metadata,
+  withFileUpload,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<ChatMessage>();
+  const [files, setFiles] = useState<File[]>([] as File[]);
+
   const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
   const lastMessageLength =
     messages?.length > 0
-      ? messages?.[messages?.length - 1]?.message?.length
+      ? messages?.[messages?.length - 1]?.message?.length +
+        (messages?.[messages?.length - 1]?.attachments || [])?.length
       : 0;
 
   const methods = useForm<z.infer<typeof Schema>>({
@@ -165,7 +189,8 @@ function ChatBox({
       setIsLoading(true);
       setHideTemplateMessages(true);
       methods.reset();
-      await onSubmit(query);
+      await onSubmit(query, files);
+      setFiles([]);
     } catch (err) {
     } finally {
       setIsLoading(false);
@@ -424,6 +449,16 @@ function ChatBox({
                         </ChatMessageCard>
                       )}
 
+                      {(each?.attachments?.length || 0) > 0 && (
+                        <Stack gap={1}>
+                          {each?.attachments?.map((each) => (
+                            <ChatMessageAttachment
+                              key={each.id}
+                              attachment={each}
+                            />
+                          ))}
+                        </Stack>
+                      )}
                       {each.from === 'agent' &&
                         each?.id &&
                         !each?.disableActions &&
@@ -540,13 +575,46 @@ function ChatBox({
           <Stack width="100%" gap={0.5}>
             {topSettings}
 
+            {files?.length > 0 && (
+              <Stack gap={1} sx={{ mb: 1 }}>
+                <Stack direction="row" sx={{ flexWrap: 'wrap' }} gap={1}>
+                  {files.map((each, index) => (
+                    <Chip
+                      size="lg"
+                      key={each.name}
+                      variant="soft"
+                      color="primary"
+                      endDecorator={
+                        <ChipDelete
+                          disabled={isLoading}
+                          onDelete={() =>
+                            setFiles(files.filter((_, i) => i !== index))
+                          }
+                        />
+                      }
+                    >
+                      {each.name}
+                    </Chip>
+                  ))}
+                </Stack>
+                <Alert
+                  color="warning"
+                  size="sm"
+                  startDecorator={<ErrorRoundedIcon />}
+                >
+                  Currently, uploaded files are intended for human use and will
+                  not be processed by the AI Agent
+                </Alert>
+              </Stack>
+            )}
+
             <Textarea
               slotProps={{
                 textarea: {
                   id: 'chatbox-input',
                 },
               }}
-              maxRows={4}
+              maxRows={8}
               minRows={1}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -559,40 +627,79 @@ function ChatBox({
                 flexDirection: 'row',
                 alignItems: 'center',
                 '.MuiTextarea-endDecorator': {
-                  marginBlockStart: 'auto',
+                  // marginBlockStart: 'auto',
+                  marginBlockStart: 0,
+                  marginTop: 'auto',
+                },
+                '.MuiTextarea-startDecorator': {
+                  // marginBlockStart: 'auto',
+                  // marginBlockStart: 0,
+                  // marginTop: 'auto',
+                  // width: '100%',
+                  marginBlockStart: 0,
+                  marginTop: 'auto',
                 },
               }}
-              // disabled={!state.currentDatastoreId || state.loading}
+              disabled={isLoading}
               variant="outlined"
               endDecorator={
-                <Stack direction="row">
-                  {!isLoading && (
+                <Stack
+                  direction={'row'}
+                  justifyContent={'space-between'}
+                  sx={{ width: '100%' }}
+                >
+                  {withFileUpload && (
                     <IconButton
-                      size="sm"
-                      type="submit"
-                      disabled={isLoading}
+                      variant="plain"
                       sx={{ maxHeight: '100%' }}
+                      size="sm"
+                      component="label"
+                      disabled={isLoading}
                     >
-                      <SendRoundedIcon />
+                      <AttachFileRoundedIcon />
+                      <VisuallyHiddenInput
+                        accept={acceptedMimeTypesStr}
+                        type="file"
+                        multiple
+                        onChange={async (e) => {
+                          setFiles(Array.from(e.target?.files!));
+                        }}
+                      />
                     </IconButton>
                   )}
 
-                  {isLoading && handleAbort && (
-                    <IconButton
-                      size="sm"
-                      color="danger"
-                      sx={{ maxHeight: '100%' }}
-                      variant={'soft'}
-                      onClick={() => {
-                        handleAbort?.();
-                      }}
-                    >
-                      <StopRoundedIcon />
-                    </IconButton>
-                  )}
+                  <Stack direction="row" sx={{ ml: 'auto' }}>
+                    {!isLoading && (
+                      <IconButton
+                        size="sm"
+                        type="submit"
+                        disabled={isLoading}
+                        sx={{ maxHeight: '100%' }}
+                        color="primary"
+                        variant="soft"
+                      >
+                        <SendRoundedIcon />
+                      </IconButton>
+                    )}
+
+                    {isLoading && handleAbort && (
+                      <IconButton
+                        size="sm"
+                        color="danger"
+                        sx={{ maxHeight: '100%' }}
+                        variant={'soft'}
+                        onClick={() => {
+                          handleAbort?.();
+                        }}
+                      >
+                        <StopRoundedIcon />
+                      </IconButton>
+                    )}
+                  </Stack>
                 </Stack>
               }
               {...methods.register('query')}
+              onBlur={(e) => {}} // // Otherwise got error when submiting with return key 🤷
             />
 
             <Stack>

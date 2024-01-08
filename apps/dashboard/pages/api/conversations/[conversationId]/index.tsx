@@ -50,6 +50,7 @@ export const getConversation = async (
       messages: {
         take: 50,
         include: {
+          attachments: true,
           approvals: {
             include: {
               tool: {
@@ -149,6 +150,9 @@ export const updateConversation = async (
           take: -20,
           orderBy: {
             createdAt: 'asc',
+          },
+          include: {
+            attachments: true,
           },
         },
         organization: {

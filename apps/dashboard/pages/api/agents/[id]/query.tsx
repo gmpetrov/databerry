@@ -215,13 +215,13 @@ export const chatAgentRequest = async (
   });
 
   const inputMessageId = cuid();
-  conversationManager.push({
+
+  await conversationManager.createMessage({
     id: inputMessageId,
     from: MessageFrom.human,
     text: data.query,
+    attachments: data.attachments,
   });
-
-  conversationManager.save();
 
   const handleStream = (data: string, event: SSE_EVENT) =>
     streamData({
@@ -255,7 +255,7 @@ export const chatAgentRequest = async (
 
   const answerMsgId = cuid();
 
-  conversationManager.push({
+  await conversationManager.createMessage({
     id: answerMsgId,
     inputId: inputMessageId,
     from: MessageFrom.agent,
@@ -265,8 +265,6 @@ export const chatAgentRequest = async (
     approvals: chatRes.approvals,
     metadata: chatRes.metadata,
   });
-
-  await conversationManager.save();
 
   // Send new conversation notfication from website visitor
   const ownerEmail = agent?.organization?.memberships?.[0]?.user?.email;

@@ -26,6 +26,8 @@ model Organization {
   appDatasources   AppDatasource[]
   serviceProviders ServiceProvider[]
   forms            Form[]
+  mailInboxes         MailInbox[]
+  contacts            Contact[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -84,6 +86,10 @@ model User {
   role GlobalRole @default(CUSTOMER)
 
   viaProduct String? @default("chaindesk") @map("via_product")
+  
+  assignedConversations Conversation[] @relation("assignees")
+
+  joinedConversations Conversation[] @relation("participants") 
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -305,6 +311,7 @@ model Domain {
 
 model Conversation {
   id        String  @id @default(cuid())
+  title     String?
   visitorId String? @map("visitor_id")
   userId    String? @map("user_id")
   user      User?   @relation(fields: [userId], references: [id])
@@ -327,14 +334,22 @@ model Conversation {
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
+  mailInbox   MailInbox? @relation(fields: [mailInboxId], references: [id])
+  mailInboxId String?          @map("mail_inbox_id")
+
 
   lead Lead?
  
 
   formSubmissions FormSubmission[]
+
+  assignees  User[] @relation("assignees")
   
   form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String?   @map("form_id")
+
+  participants User[] @relation("participants")
+  contacts Contact[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -342,16 +357,17 @@ model Conversation {
   @@index([visitorId], type: Hash)
   @@map("conversations")
 }
-
-
 model Message {
   id             String        @id @default(cuid())
   text           String
+  html           String?
   from           MessageFrom
   conversationId String?       @map("conversation_id")
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sources        Json?
   usage          Json?
+  externalId     String?       @unique @map("external_id")
+  
   
   metadata       Json?
 
@@ -365,6 +381,8 @@ model Message {
   approvals ActionApproval[]
 
   read Boolean? @default(false)
+
+  attachments Attachment[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -542,6 +560,7 @@ model ServiceProvider {
   tools Tool[]
 
   conversations Conversation[]
+  // mailInboxes            MailInbox[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -685,6 +704,67 @@ model LLMTaskOutput {
   @@map("llm_task_outputs")
 }
 
+model MailInbox {
+
+  id String  @id @default(cuid())
+
+  name String
+  description String?
+
+  alias String @unique
+  fromName String? @map("from_name")
+  signature String? @map("signature")
+
+  hideBranding Boolean? @default(true) @map("hide_branding")
+
+  customEmail String? @map("custom_email")
+
+  // smtpCredentials   ServiceProvider? @relation(fields: [smtpCredentialsId], references: [id])
+  // smtpCredentialsId String?          @map("smtp_credentials_id")
+
+  conversations    Conversation[]
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("mail_inboxes")
+}
+
+model Attachment {
+  id String  @id @default(cuid())
+  name String
+  url String
+  size Int
+  mimeType String @map("mime_type")
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String  @map("message_id")
+
+  @@map("attachments")
+}
+
+model Contact {
+  id String  @id @default(cuid())
+
+  email String?
+
+  firstName String? @map("first_name")
+  lastName String? @map("last_name")
+
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  conversations Conversation[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([email, organizationId], name: "unique_email_for_org")
+  @@map("contacts") 
+}
+
 enum LLMTaskOutputType {
   youtube_summary
 }
@@ -729,6 +809,7 @@ enum ServiceProviderType {
   crisp
   slack
   zendesk
+  // smtp
 }
 
 enum DatastoreType {
@@ -797,6 +878,7 @@ enum ConversationChannel {
   zapier
   api
   form
+  mail
 }
 
 enum AgentModelName {
@@ -833,4 +915,10 @@ enum FormStatus {
   COMPLETED
   IN_PROGRESS
   ABANDONED
+}
+
+enum ConversationPriority {
+  LOW
+  MEDIUM
+  HIGH
 }

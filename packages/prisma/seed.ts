@@ -77,6 +77,20 @@ async function main() {
     const premiumOrgId = 'clnol6ij8000308jl1cky5hsy';
     const subscriptionId = 'clnolau4y000408jl08aqektv';
 
+    // await prisma.organization.update({
+    //   where: {
+    //     id: premiumOrgId,
+    //   },
+    //   data: {
+    //     mailInboxes: {
+    //       create: {
+    //         alias: 'dev',
+    //         fromName: 'Georges',
+    //       },
+    //     },
+    //   },
+    // });
+
     await prisma.user.upsert({
       where: {
         id: userId,
@@ -125,6 +139,13 @@ async function main() {
                       plan: 'level_3',
                       customerId: '42',
                       priceId: prices?.[0]?.id,
+                    },
+                  },
+                  mailInboxes: {
+                    create: {
+                      name: 'Dev',
+                      alias: 'dev',
+                      fromName: 'Georges',
                     },
                   },
                 },

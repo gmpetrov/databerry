@@ -31,6 +31,9 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
     where: {
       AND: [
         {
+          organizationId: session.organization?.id,
+        },
+        {
           ...(channelFilter
             ? { channel: channelFilter }
             : {
@@ -39,11 +42,11 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
                 },
               }),
         },
-        {
-          agent: {
-            organizationId: session.organization?.id,
-          },
-        },
+        // {
+        //   agent: {
+        //     organizationId: session.organization?.id,
+        //   },
+        // },
         ...(agentId
           ? [
               {

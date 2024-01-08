@@ -31,6 +31,7 @@ export enum RouteNames {
   SLACK_BOT = '/products/slack-bot',
   FORMS = '/forms',
   ANALYTICS = '/analytics',
+  EMAIL_INBOXES = '/mail-inboxes',
 }
 
 export enum PromptTypesLabels {

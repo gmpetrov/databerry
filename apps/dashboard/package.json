@@ -25,7 +25,8 @@
     "sendDailyLeads": "npm run dotenv -- tsx cron/daily-leads.tsx",
     "sendWeeklyAdminStats": "npm run dotenv -- tsx cron/admin-weekly-report.tsx",
     "sendAccountCleaningWarning": "npm run dotenv -- tsx cron/account-cleaning-warning.tsx",
-    "syncDatasources": "npm run dotenv -- tsx cron/sync-datasources.tsx"
+    "syncDatasources": "npm run dotenv -- tsx cron/sync-datasources.tsx",
+    "test:emails:trigger:receive": "npm run dotenv -- tsx tests/email-inbox/receive-email.ts"
   },
   "alias": {
     "@app/components": "./components",
@@ -160,6 +161,7 @@
     "eslint-config-custom": "workspace:*",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
+    "medium-zoom": "^1.1.0",
     "parcel": "^2.9.3",
     "postcss": "^8.4.21",
     "release-it": "^16.1.5",
