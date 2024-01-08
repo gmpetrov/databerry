@@ -5,12 +5,9 @@ import useSWRMutation from 'swr/mutation';
 
 import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
 import {
+  GenerateManyUploadLinksResponseSchema,
   GenerateManyUploadLinksSchema,
-  GenerateUploadLinkRequestSchema,
 } from '@chaindesk/lib/types/dtos';
-import { Prisma } from '@chaindesk/prisma';
-
-import type { generateUploadLinks } from './../pages/api/generate-upload-links';
 
 type FileToUpload = {
   case: 'agentIcon' | 'organizationIcon' | 'userIcon' | 'chatUpload';
@@ -20,7 +17,7 @@ type FileToUpload = {
 function useFileUpload() {
   const [isUploading, setIsUploading] = React.useState(false);
   const generateLinkMutation = useSWRMutation<
-    Prisma.PromiseReturnType<typeof generateUploadLinks>,
+    GenerateManyUploadLinksResponseSchema,
     any,
     any,
     GenerateManyUploadLinksSchema

@@ -5,7 +5,7 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import React from 'react';
 
-import { Attachment } from '@chaindesk/prisma';
+import type { Attachment } from '@chaindesk/prisma';
 
 import { ImageZoom } from './ImageZoom';
 

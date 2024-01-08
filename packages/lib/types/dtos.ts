@@ -675,3 +675,13 @@ export const GenerateManyUploadLinksSchema = z
 export type GenerateManyUploadLinksSchema = z.infer<
   typeof GenerateManyUploadLinksSchema
 >;
+
+export const GenerateManyUploadLinksResponseSchema = z.array(
+  z.object({
+    signedUrl: z.string().url(),
+    fileUrl: z.string().url(),
+  })
+);
+export type GenerateManyUploadLinksResponseSchema = z.infer<
+  typeof GenerateManyUploadLinksResponseSchema
+>;
