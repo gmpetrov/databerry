@@ -16,13 +16,15 @@ type FileToUpload = {
 
 function useFileUpload() {
   const [isUploading, setIsUploading] = React.useState(false);
+  const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
+
   const generateLinkMutation = useSWRMutation<
     GenerateManyUploadLinksResponseSchema,
     any,
     any,
     GenerateManyUploadLinksSchema
   >(() => {
-    return `/api/generate-upload-links`;
+    return `${API_URL}/api/generate-upload-links`;
   }, generateActionFetcher(HTTP_METHOD.POST));
 
   const upload = useCallback(
