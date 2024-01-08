@@ -4,7 +4,7 @@ import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
-import { GenericTemplate, render } from '@chaindesk/emails';
+import { InboxTemplate, render } from '@chaindesk/emails';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import ConversationManager from '@chaindesk/lib/conversation';
 import {
@@ -174,13 +174,11 @@ export const sendMessage = async (
           path: each.url!,
         })),
         html: render(
-          <GenericTemplate
+          <InboxTemplate
             title={subject}
-            description={payload.message}
-            // cta={{
-            //   label: 'Upgrade Account',
-            //   href: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/settings/billing`,
-            // }}
+            message={payload.message}
+            signature={conversation?.mailInbox?.signature!}
+            hideBranding={!!conversation?.mailInbox?.hideBranding}
           />
         ),
       });

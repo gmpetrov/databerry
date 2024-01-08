@@ -1,5 +1,6 @@
 import { S3 } from 'aws-sdk';
 import cuid from 'cuid';
+import EmailReplyParser from 'email-reply-parser';
 import mime from 'mime-types';
 import { NextApiResponse } from 'next';
 import pMap from 'p-map';
@@ -185,10 +186,20 @@ export async function inboundWebhook(
         )
       : [];
 
+  let lastMessage = '';
+  try {
+    lastMessage = new EmailReplyParser().read(mail.text!).getVisibleText();
+  } catch (err) {
+    console.log(err, err);
+  }
+
+  console.log('current message', mail.text);
+  console.log('parsed message', lastMessage);
+
   const msg = {
     externalId: notificationId,
     from: MessageFrom.human,
-    text: mail.text,
+    text: lastMessage || mail.text,
     html: mail.html,
     attachments: {
       createMany: {
