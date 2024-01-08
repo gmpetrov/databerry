@@ -175,6 +175,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           handleAbort={handleAbort}
           hideInternalSources
           renderBottom={<CustomerSupportActions config={config} />}
+          withFileUpload
         />
       </Box>
     </ChatContext.Provider>

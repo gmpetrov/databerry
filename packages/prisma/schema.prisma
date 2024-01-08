@@ -772,7 +772,7 @@ model Attachment {
   size Int
   mimeType String @map("mime_type")
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
-  messageId String @unique          @map("message_id")
+  messageId String  @map("message_id")
 
   @@map("attachments")
 }

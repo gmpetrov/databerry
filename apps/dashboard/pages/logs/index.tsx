@@ -58,6 +58,7 @@ import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import Layout from '@app/components/Layout';
 import { updateConversationStatus } from '@app/components/ResolveButton';
 import { handleEvalAnswer } from '@app/hooks/useChat';
+import useFileUpload from '@app/hooks/useFileUpload';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 // import { client as crispClient } from '@chaindesk/lib/crisp';
@@ -73,6 +74,7 @@ import {
   UpdateStatusAllConversationsSchema,
 } from '@chaindesk/lib/types/dtos';
 import {
+  Attachment,
   ConversationChannel,
   ConversationStatus,
   MessageEval,
@@ -265,6 +267,8 @@ export default function LogsPage() {
     generateActionFetcher(HTTP_METHOD.POST)
   );
 
+  const { upload } = useFileUpload();
+
   const updateStatusAllMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof updateStatus>,
     any,
@@ -289,10 +293,30 @@ export default function LogsPage() {
     fetcher
   );
 
-  const handleOperatorChat = async (message: string) => {
+  const handleOperatorChat = async (message: string, files?: File[]) => {
+    let attachments: Partial<Attachment>[] = [];
+
+    if (files && files?.length > 0) {
+      const filesUrls = await upload(
+        files.map((each) => ({
+          case: 'chatUpload',
+          fileName: each.name,
+          mimeType: each.type,
+          file: each,
+        }))
+      );
+      attachments = files.map((each, index) => ({
+        name: each.name,
+        url: filesUrls[index],
+        size: each.size,
+        mimeType: each.type,
+      }));
+    }
+
     await conversationChatMutation.trigger({
       message,
       channel: getConversationQuery?.data?.channel as string,
+      attachments,
     });
 
     await getConversationQuery.mutate();
@@ -956,7 +980,7 @@ export default function LogsPage() {
                               {'🚀 '}
                               {each?.channel}
                             </Chip>
-                            {!each?.agent?.hidden && (
+                            {!each?.agent?.hidden && !!each?.agent?.name && (
                               <Chip
                                 size="sm"
                                 color="neutral"
@@ -1087,8 +1111,8 @@ export default function LogsPage() {
                   })) || []
                 }
                 isLoadingConversation={getConversationQuery?.isLoading}
-                onSubmit={(message) => {
-                  return handleOperatorChat(message);
+                onSubmit={(message, attachments) => {
+                  return handleOperatorChat(message, attachments);
                 }}
                 readOnly={!!state.isAiEnabled || !state.currentConversationId}
                 handleEvalAnswer={handleEvalAnswer}
@@ -1105,6 +1129,7 @@ export default function LogsPage() {
                 organizationId={session?.organization?.id!}
                 refreshConversation={getConversationQuery.mutate}
                 disableWatermark
+                withFileUpload
               />
 
               {/* <Divider orientation="vertical" />

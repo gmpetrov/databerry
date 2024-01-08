@@ -15,7 +15,10 @@ import { client as CrispClient } from '@chaindesk/lib/crisp';
 import mailer from '@chaindesk/lib/mailer';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
-import { ConversationMetadataSlack } from '@chaindesk/lib/types/dtos';
+import {
+  ConversationMetadataSlack,
+  CreateAttachmentSchema,
+} from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
 import { ConversationChannel, MessageFrom } from '@chaindesk/prisma';
@@ -25,6 +28,7 @@ const handler = createAuthApiHandler();
 const chatBodySchema = z.object({
   message: z.string(),
   channel: z.nativeEnum(ConversationChannel),
+  attachments: z.array(CreateAttachmentSchema).optional(),
 });
 
 export const sendMessage = async (
@@ -165,6 +169,11 @@ export const sendMessage = async (
         // to: emails,
         to: ['georgesm.petrov@gmail.com'],
         subject,
+        attachments: payload.attachments?.map((each) => ({
+          filename: each.name!,
+          contentType: each.mimeType!,
+          path: each.url!,
+        })),
         html: render(
           <GenericTemplate
             title={subject}
@@ -198,6 +207,7 @@ export const sendMessage = async (
     id: answerMsgId,
     from: MessageFrom.human,
     text: payload.message,
+    attachments: payload.attachments,
   });
 
   await conversationManager.save();

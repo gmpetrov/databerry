@@ -151,6 +151,14 @@ export const ChatModelConfigSchema = z.object({
 
 export type ChatModelConfigSchema = z.infer<typeof ChatModelConfigSchema>;
 
+export const CreateAttachmentSchema = z.object({
+  name: z.string(),
+  url: z.string().url(),
+  size: z.number(),
+  mimeType: z.string(),
+});
+export type CreateAttachmentSchema = z.infer<typeof CreateAttachmentSchema>;
+
 export const ChatRequest = ChatModelConfigSchema.extend({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
@@ -169,6 +177,8 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   toolsConfig: z.record(z.string().cuid(), z.any()).optional(),
 
   formId: z.union([z.string().cuid().nullish(), z.literal('')]),
+
+  attachments: z.array(CreateAttachmentSchema).optional(),
 
   //  DEPRECATED
   promptTemplate: z.string().optional(),
@@ -551,4 +561,117 @@ export const UpdateStatusAllConversationsSchema = z.object({
 });
 export type UpdateStatusAllConversationsSchema = z.infer<
   typeof UpdateStatusAllConversationsSchema
+>;
+
+export const AcceptedImageMimeTypes = [
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/avif',
+  'image/apng',
+  'image/svg+xml',
+  'image/webp',
+] as const;
+
+export const AcceptedImageMimeTypesSchema = z.enum(AcceptedImageMimeTypes);
+export type AcceptedImageMimeTypesSchema = z.infer<
+  typeof AcceptedImageMimeTypesSchema
+>;
+
+export const AcceptedVideoMimeTypes = [
+  'video/mp4',
+  'video/mpeg',
+  'video/webm',
+  'video/x-msvideo',
+  'video/ogg',
+] as const;
+export const AcceptedVideoMimeTypesSchema = z.enum(AcceptedVideoMimeTypes);
+
+export const AcceptedAudioMimeTypes = [
+  'audio/mp3',
+  'audio/mpeg',
+  'audio/ogg',
+  'audio/wav',
+  'audio/webm',
+  'audio/aac',
+] as const;
+
+export const AcceptedAudioMimeTypesSchema = z.enum(AcceptedAudioMimeTypes);
+
+export const AcceptedDocumentMimeTypes = [
+  'text/css',
+  'text/csv',
+  'text/javascript',
+  'text/plain',
+  'text/calendar',
+  'application/x-abiword',
+  'application/x-freearc',
+  'application/vnd.amazon.ebook',
+  'application/x-bzip2',
+  'application/x-cdf',
+  'application/x-csh',
+
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-fontobject',
+  'application/epub+zip',
+  'application/epub+zip',
+  'application/vnd.oasis.opendocument.presentation',
+  'application/vnd.oasis.opendocument.spreadsheet',
+  'application/vnd.oasis.opendocument.text',
+  'application/ogg',
+  'application/pdf',
+  'application/vnd.ms-powerpoint',
+
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.rar',
+  'application/rtf',
+  'application/xhtml+xml',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/gzip',
+  'application/zip',
+] as const;
+
+export const AcceptedDocumentMimeTypesSchema = z.enum(
+  AcceptedDocumentMimeTypes
+);
+
+export const GenerateUploadLinkRequestSchema = z.discriminatedUnion('case', [
+  z.object({
+    case: z.literal('agentIcon'),
+    fileName: z.string(),
+    mimeType: AcceptedImageMimeTypesSchema,
+    agentId: z.string().cuid(),
+  }),
+  z.object({
+    case: z.literal('organizationIcon'),
+    fileName: z.string(),
+    mimeType: AcceptedImageMimeTypesSchema,
+  }),
+  z.object({
+    case: z.literal('userIcon'),
+    fileName: z.string(),
+    mimeType: AcceptedImageMimeTypesSchema,
+  }),
+  z.object({
+    case: z.literal('chatUpload'),
+    fileName: z.string(),
+    mimeType: AcceptedDocumentMimeTypesSchema.or(AcceptedAudioMimeTypesSchema)
+      .or(AcceptedVideoMimeTypesSchema)
+      .or(AcceptedImageMimeTypesSchema),
+  }),
+]);
+
+export type GenerateUploadLinkRequestSchema = z.infer<
+  typeof GenerateUploadLinkRequestSchema
+>;
+
+export const GenerateManyUploadLinksSchema = z
+  .array(GenerateUploadLinkRequestSchema)
+  .min(1)
+  .max(10);
+
+export type GenerateManyUploadLinksSchema = z.infer<
+  typeof GenerateManyUploadLinksSchema
 >;

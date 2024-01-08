@@ -50,6 +50,7 @@ export const getConversation = async (
       messages: {
         take: 50,
         include: {
+          attachments: true,
           approvals: {
             include: {
               tool: {

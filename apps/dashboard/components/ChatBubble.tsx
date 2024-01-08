@@ -472,6 +472,7 @@ function App(props: {
                     renderBottom={
                       <CustomerSupportActions config={state.config} />
                     }
+                    withFileUpload
                   />
                 </Stack>
               </Card>

@@ -2,9 +2,11 @@ import cuid from 'cuid';
 
 import {
   Agent,
+  Attachment,
   ConversationChannel,
   Datastore,
   Message,
+  Prisma,
   ServiceProviderType,
   Tool,
 } from '@chaindesk/prisma';
@@ -29,6 +31,7 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   approvals?: ChatResponse['approvals'];
   inputId?: string;
   metadata?: Record<string, any>;
+  attachments?: Pick<Attachment, 'mimeType' | 'name' | 'size' | 'url'>[];
 };
 
 type ExternalConfig = {
@@ -92,6 +95,7 @@ export default class ConversationManager {
       createdAt: new Date(),
       ...message,
       sources: message.sources || [],
+      attachments: message.attachments,
     });
   }
 
@@ -103,7 +107,7 @@ export default class ConversationManager {
     const msgIds = this.messages.map(() => cuid());
 
     const messages = this.messages.map((each, index) => {
-      const { approvals, id, ...rest } = each as any;
+      const { approvals, attachments, id, ...rest } = each as any;
 
       if (id) {
         msgIds[index] = id;
@@ -229,6 +233,31 @@ export default class ConversationManager {
       });
     }
 
+    const attachementsToInsert = this.messages
+      .map((each, index) => {
+        const { attachments } = each;
+
+        return (attachments || [])?.map((attachment) => ({
+          ...attachment,
+          messageId: msgIds[index],
+        }));
+      })
+      .filter((each) => !!each)
+      .flat();
+
+    if (attachementsToInsert.length > 0) {
+      await prisma.attachment.createMany({
+        data: attachementsToInsert,
+      });
+    }
+
     return conversation;
+  }
+
+  async createMessage(message: MessageExtended) {
+    this.push(message);
+    const updated = await this.save();
+    this.messages = [];
+    return updated;
   }
 }
