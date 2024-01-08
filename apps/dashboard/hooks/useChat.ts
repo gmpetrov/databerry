@@ -181,6 +181,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       if (files?.length > 0) {
         const filesUrls = await upload(
           files.map((each) => ({
+            agentId: otherProps.agentId!,
             case: 'chatUpload',
             fileName: each.name,
             mimeType: each.type,

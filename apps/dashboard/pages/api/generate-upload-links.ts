@@ -4,7 +4,7 @@ import pMap from 'p-map';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { s3 } from '@chaindesk/lib/aws';
 import {
-  createAuthApiHandler,
+  createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
@@ -15,7 +15,7 @@ import { GenerateManyUploadLinksSchema } from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
 import { prisma } from '@chaindesk/prisma/client';
 
-const handler = createAuthApiHandler();
+const handler = createLazyAuthHandler();
 
 export const generateUploadLinks = async (
   req: AppNextApiRequest,
@@ -28,9 +28,14 @@ export const generateUploadLinks = async (
   return pMap(data, async (item) => {
     let prefix = ``;
     const useCase = item.case;
+    let organizationId = session?.organization?.id;
+    const isAuthenticated = !!organizationId;
 
     switch (useCase) {
       case 'agentIcon':
+        if (!isAuthenticated) {
+          throw new ApiError(ApiErrorType.UNAUTHORIZED);
+        }
         const agent = await prisma.agent.findUnique({
           where: {
             id,
@@ -44,13 +49,40 @@ export const generateUploadLinks = async (
         prefix = `agents/${item.agentId}`;
         break;
       case 'organizationIcon':
+        if (!isAuthenticated) {
+          throw new ApiError(ApiErrorType.UNAUTHORIZED);
+        }
         prefix = `organizations/${session?.organization?.id}`;
         break;
       case 'userIcon':
+        if (!isAuthenticated) {
+          throw new ApiError(ApiErrorType.UNAUTHORIZED);
+        }
         prefix = `users/${session?.user?.id}`;
         break;
       case 'chatUpload':
-        prefix = `organizations/${session?.organization?.id}/uploads`;
+        // Allow unauthenticated users to upload to chat if agentId is provided and agent is public
+
+        if (!organizationId) {
+          if (!item.agentId) {
+            throw new ApiError(ApiErrorType.UNAUTHORIZED);
+          }
+
+          const agent = await prisma.agent.findUnique({
+            where: {
+              id: item.agentId,
+              visibility: 'public',
+            },
+          });
+
+          if (!agent) {
+            throw new ApiError(ApiErrorType.UNAUTHORIZED);
+          }
+
+          organizationId = agent.organizationId as string;
+        }
+
+        prefix = `organizations/${organizationId}/uploads`;
         break;
       default:
         throw new ApiError(ApiErrorType.INVALID_REQUEST);

@@ -68,7 +68,7 @@ function App(props: {
     channel: 'website',
     // channel: ConversationChannel.website // not working with bundler parcel,
     agentId: props?.agentId,
-    localStorageConversationIdKey: 'chatBubbleConversationId',
+    localStorageConversationIdKey: `chatBubbleConversationId-${props.agentId}`,
   });
 
   const {

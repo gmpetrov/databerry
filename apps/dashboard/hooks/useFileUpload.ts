@@ -10,8 +10,9 @@ import {
 } from '@chaindesk/lib/types/dtos';
 
 type FileToUpload = {
-  case: 'agentIcon' | 'organizationIcon' | 'userIcon' | 'chatUpload';
+  case: 'chatUpload' | 'agentIcon' | 'organizationIcon' | 'userIcon';
   file: File;
+  agentId?: string;
 };
 
 function useFileUpload() {
@@ -39,6 +40,7 @@ function useFileUpload() {
               case: each.case as any,
               fileName: each.file.name,
               mimeType: each.file.type as any,
+              agentId: each.agentId as any,
             }))
           )) || [];
 

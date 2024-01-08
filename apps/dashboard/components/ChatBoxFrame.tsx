@@ -41,7 +41,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
 
     channel: ConversationChannel.website,
     agentId,
-    localStorageConversationIdKey: 'iFrameConversationId',
+    localStorageConversationIdKey: `iFrameConversationId-${router.query?.agentId}`,
   });
 
   const {

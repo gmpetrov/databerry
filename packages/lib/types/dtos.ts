@@ -601,6 +601,7 @@ export const GenerateUploadLinkRequestSchema = z.discriminatedUnion('case', [
   }),
   z.object({
     case: z.literal('chatUpload'),
+    agentId: z.string().cuid().optional(),
     fileName: z.string(),
     mimeType: AcceptedDocumentMimeTypesSchema.or(AcceptedAudioMimeTypesSchema)
       .or(AcceptedVideoMimeTypesSchema)
