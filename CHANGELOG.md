@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.159"></a>
+## 0.1.159 (2024-01-08)
+
+### Fixed
+
+- 🐛 file upload chatbubble [[72cf3e5](https://github.com/gmpetrov/databerry/commit/72cf3e542ef9d3b70375d59651b4a81f9600e452)]
+
+
 <a name="0.1.158"></a>
 ## 0.1.158 (2024-01-08)
 
