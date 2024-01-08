@@ -1,10 +1,10 @@
+import { S3 } from 'aws-sdk';
 import cuid from 'cuid';
 import mime from 'mime-types';
 import { NextApiResponse } from 'next';
 import pMap from 'p-map';
 
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
-import { s3 } from '@chaindesk/lib/aws';
 import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
 import mailparser from '@chaindesk/lib/mail-parser';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
@@ -17,12 +17,26 @@ import {
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
+export const s3 = new S3({
+  signatureVersion: 'v4',
+  accessKeyId: process.env.INBOUND_EMAIL_AWS_ACCESS_KEY,
+  secretAccessKey: process.env.INBOUND_EMAIL_AWS_SECRET_KEY,
+  region: process.env.INBOUND_EMAIL_AWS_REGION,
+  ...(process.env.INBOUND_EMAIL_AWS_S3_ENDPOINT
+    ? {
+        endpoint: process.env.INBOUND_EMAIL_AWS_S3_ENDPOINT,
+        s3ForcePathStyle:
+          process.env.INBOUND_EMAIL_APP_AWS_S3_FORCE_PATH_STYLE === 'true',
+      }
+    : {}),
+});
+
 const handler = createApiHandler();
 
 const clean = async ({ notificationId }: { notificationId: string }) => {
   return s3
     .deleteObject({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
+      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
       Key: `emails/${notificationId}`,
     })
     .promise();
@@ -32,7 +46,10 @@ export async function inboundWebhook(
   req: AppNextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('REQ.BODY =--================>', req.body);
+  console.log(
+    'REQ.BODY =--================>',
+    JSON.stringify(req.body, null, 2)
+  );
 
   const notification = req.body?.Records?.[0]?.ses;
   const notificationId = notification?.mail?.messageId as string;
@@ -43,7 +60,7 @@ export async function inboundWebhook(
 
   const obj = await s3
     .getObject({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
+      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
       Key: `emails/${notificationId}`,
     })
     .promise();
@@ -134,7 +151,7 @@ export async function inboundWebhook(
     fileName?: string
   ) => {
     const params = {
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
+      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
       Key: `uploads/${fileName || attachment.filename}`,
       Body: attachment.content,
     };

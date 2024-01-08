@@ -70,6 +70,7 @@
     "@types/react-dom": "18.0.11",
     "@vercel/og": "^0.5.11",
     "axios": "^1.3.4",
+    "aws-sdk": "^2.1343.0",
     "bullmq": "^3.13.3",
     "canvas-confetti": "^1.7.0",
     "clsx": "^1.2.1",
