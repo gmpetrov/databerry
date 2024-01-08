@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.154"></a>
+## 0.1.154 (2024-01-08)
+
+### Fixed
+
+- 🐛 missing s3 config for inbound emails [[d3e9a3e](https://github.com/gmpetrov/databerry/commit/d3e9a3e98feb00a51ce9aef919c2134d1442c88a)]
+
+
 <a name="0.1.153"></a>
 ## 0.1.153 (2024-01-08)
 
