@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.153"></a>
+## 0.1.153 (2024-01-08)
+
+### Fixed
+
+- 🐛 wrong emails [[5816913](https://github.com/gmpetrov/databerry/commit/5816913056c1fe34293eedd3d862536f8221116b)]
+
+
 <a name="0.1.152"></a>
 ## 0.1.152 (2024-01-08)
 
