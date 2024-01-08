@@ -50,9 +50,9 @@ function ChatMessageAttachment({ attachment }: Props) {
       )}
       {isVideo && (
         <Box
+          controls
           component="video"
           src={attachment.url}
-          controls
           sx={{
             borderRadius: 'xl',
             maxWidth: '100%',
@@ -61,9 +61,9 @@ function ChatMessageAttachment({ attachment }: Props) {
       )}
       {isAudio && (
         <Box
+          controls
           component="audio"
           src={attachment.url}
-          controls
           sx={{
             maxWidth: '100%',
           }}
@@ -76,9 +76,7 @@ function ChatMessageAttachment({ attachment }: Props) {
           onClick={() => download(attachment.url, attachment.name)}
           size="lg"
           startDecorator={<AttachFileRoundedIcon />}
-          sx={{
-            maxWidth: '100%',
-          }}
+          sx={{}}
         >
           <Stack gap={1} direction="row" sx={{ alignItems: 'end' }}>
             <Typography>{attachment.name}</Typography>

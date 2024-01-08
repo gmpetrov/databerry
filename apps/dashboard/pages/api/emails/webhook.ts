@@ -19,6 +19,15 @@ import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createApiHandler();
 
+const clean = async ({ notificationId }: { notificationId: string }) => {
+  return s3
+    .deleteObject({
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
+      Key: `emails/${notificationId}`,
+    })
+    .promise();
+};
+
 export async function inboundWebhook(
   req: AppNextApiRequest,
   res: NextApiResponse
@@ -232,12 +241,9 @@ export async function inboundWebhook(
   });
 
   // Remove smpt message from s3
-  await s3
-    .deleteObject({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
-      Key: `emails/${notificationId}`,
-    })
-    .promise();
+  await clean({
+    notificationId,
+  });
 
   console.log('mail', mail);
 

@@ -80,6 +80,34 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
   }
 
   await Promise.all([
+    prisma.contact.upsert({
+      where: {
+        unique_email_for_org: {
+          email: data.visitorEmail,
+          organizationId: agent?.organizationId!,
+        },
+      },
+      create: {
+        email: data.visitorEmail,
+        organization: {
+          connect: {
+            id: agent?.organizationId!,
+          },
+        },
+        conversations: {
+          connect: {
+            id: data.conversationId,
+          },
+        },
+      },
+      update: {
+        conversations: {
+          connect: {
+            id: data.conversationId,
+          },
+        },
+      },
+    }),
     prisma.lead.create({
       data: {
         email: data.visitorEmail,

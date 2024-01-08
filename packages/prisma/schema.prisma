@@ -726,9 +726,14 @@ model MailInbox {
 
   id String  @id @default(cuid())
 
+  name String
+  description String?
+
   alias String @unique
   fromName String? @map("from_name")
   signature String? @map("signature")
+
+  hideBranding Boolean? @default(true) @map("hide_branding")
 
   customEmail String? @map("custom_email")
 

@@ -48,7 +48,7 @@ export const generateUploadLinks = async (
         prefix = `users/${session?.user?.id}`;
         break;
       case 'chatUpload':
-        prefix = `organizations/${session?.organization?.id}`;
+        prefix = `organizations/${session?.organization?.id}/uploads`;
         break;
       default:
         throw new ApiError(ApiErrorType.INVALID_REQUEST);

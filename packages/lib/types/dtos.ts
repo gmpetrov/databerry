@@ -630,3 +630,40 @@ export const GenerateManyUploadLinksResponseSchema = z.array(
 export type GenerateManyUploadLinksResponseSchema = z.infer<
   typeof GenerateManyUploadLinksResponseSchema
 >;
+
+export const CreateMailInboxSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  alias: z.string().optional(),
+});
+export type CreateMailInboxSchema = z.infer<typeof CreateMailInboxSchema>;
+
+export const EmailAliasSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(50)
+  .transform((val) => val.toLocaleLowerCase())
+  .refine(
+    (val) => /^[a-z0-9]+(?:[-_.][a-z0-9]+)*$/.test(val),
+    'Invalid email alias'
+  );
+
+export const UpdateMailInboxSchema = z.object({
+  alias: EmailAliasSchema,
+  customEmail: z.string().email().optional().nullable(),
+  name: z.string().min(1).max(50).optional(),
+  fromName: z.string().max(50).optional().nullable(),
+  signature: z.string().optional().nullable(),
+  hideBranding: z.boolean().optional().nullable(),
+});
+
+export type UpdateMailInboxSchema = z.infer<typeof UpdateMailInboxSchema>;
+
+export const CheckAliasAvailabilitySchema = z.object({
+  alias: EmailAliasSchema,
+});
+
+export type CheckAliasAvailabilitySchema = z.infer<
+  typeof CheckAliasAvailabilitySchema
+>;

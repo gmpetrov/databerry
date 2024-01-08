@@ -143,6 +143,7 @@ async function main() {
                   },
                   mailInboxes: {
                     create: {
+                      name: 'Dev',
                       alias: 'dev',
                       fromName: 'Georges',
                     },
