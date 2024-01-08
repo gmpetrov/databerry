@@ -29,14 +29,14 @@ import ChatMessageCard from '@app/components/ChatMessageCard';
 import Markdown from '@app/components/Markdown';
 import { ChatMessage, MessageEvalUnion } from '@app/hooks/useChat';
 
-import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
-import type { Source } from '@chaindesk/lib/types/document';
 import {
   AcceptedAudioMimeTypes,
   AcceptedDocumentMimeTypes,
   AcceptedImageMimeTypes,
   AcceptedVideoMimeTypes,
-} from '@chaindesk/lib/types/dtos';
+} from '@chaindesk/lib/accepted-mime-types';
+import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
+import type { Source } from '@chaindesk/lib/types/document';
 
 import ChatMessageApproval from './ChatMessageApproval';
 import ChatMessageAttachment from './ChatMessageAttachment';
