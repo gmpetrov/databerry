@@ -92,7 +92,7 @@ export async function inboundWebhook(
   }
 
   console.log('attachements', mail.attachments);
-  console.log('replyto', mail.inReplyTo);
+  console.log('replyto ----------->', mail.inReplyTo);
 
   // const conversation = await prisma.conversation.findUnique({
   //   where: {
@@ -197,7 +197,7 @@ export async function inboundWebhook(
   console.log('parsed message', lastMessage);
 
   const msg = {
-    externalId: notificationId,
+    externalId: messageId,
     from: MessageFrom.human,
     text: lastMessage || mail.text,
     html: mail.html,
@@ -230,13 +230,24 @@ export async function inboundWebhook(
     },
   })) as Prisma.ContactCreateOrConnectWithoutConversationsInput[];
 
+  let prevMessage = undefined;
+  if (mail.inReplyTo) {
+    prevMessage = await prisma.message.findUnique({
+      where: {
+        externalId: mail.inReplyTo,
+      },
+    });
+  }
+
+  const conversationId = prevMessage?.conversationId || cuid();
+
   await prisma.conversation.upsert({
     where: {
-      channelExternalId: messageId,
+      id: conversationId,
     },
     create: {
+      id: conversationId,
       title: mail.subject,
-      channelExternalId: messageId,
       channel: ConversationChannel.mail,
       mailInboxId: inboxes[0].id,
       organizationId: inboxes[0].organizationId,
@@ -247,7 +258,7 @@ export async function inboundWebhook(
         connectOrCreate: [
           {
             where: {
-              externalId: notificationId,
+              externalId: messageId,
             },
             create: msg,
           },
@@ -262,7 +273,7 @@ export async function inboundWebhook(
         connectOrCreate: [
           {
             where: {
-              externalId: notificationId,
+              externalId: messageId,
             },
             create: msg,
           },
