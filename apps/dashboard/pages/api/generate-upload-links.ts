@@ -8,6 +8,8 @@ import {
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
+import cors from '@chaindesk/lib/middlewares/cors';
+import pipe from '@chaindesk/lib/middlewares/pipe';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 import { GenerateManyUploadLinksSchema } from '@chaindesk/lib/types/dtos';
 import validate from '@chaindesk/lib/validate';
@@ -77,4 +79,4 @@ handler.post(
   })
 );
 
-export default handler;
+export default pipe(cors({ methods: ['POST', 'HEAD'] }), handler);
