@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.160"></a>
+## 0.1.160 (2024-01-08)
+
+### Fixed
+
+- 🐛 inboud mail msg mapping [[cd72826](https://github.com/gmpetrov/databerry/commit/cd728268ca7a8f39c7081329ee5b799db922099d)]
+
+
 <a name="0.1.159"></a>
 ## 0.1.159 (2024-01-08)
 
