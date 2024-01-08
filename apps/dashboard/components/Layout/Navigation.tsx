@@ -356,14 +356,14 @@ export default function Navigation() {
         active: router.route.startsWith(RouteNames.SETTINGS),
         isExperimental: false,
       },
-      {
-        label: 'Email Inboxes',
-        route: RouteNames.EMAIL_INBOXES,
-        icon: <AllInboxRoundedIcon fontSize="small" />,
-        active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
-        // isExperimental: true,
-        isNew: true,
-      },
+      // {
+      //   label: 'Email Inboxes',
+      //   route: RouteNames.EMAIL_INBOXES,
+      //   icon: <AllInboxRoundedIcon fontSize="small" />,
+      //   active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
+      //   // isExperimental: true,
+      //   isNew: true,
+      // },
     ];
   }, [router.route]);
 
