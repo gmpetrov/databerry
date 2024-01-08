@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.155"></a>
+## 0.1.155 (2024-01-08)
+
+### Fixed
+
+- 🐛 concurrency value [[5f55d70](https://github.com/gmpetrov/databerry/commit/5f55d7094fced1892fa5e85114117b85ddee9fca)]
+
+
 <a name="0.1.154"></a>
 ## 0.1.154 (2024-01-08)
 
