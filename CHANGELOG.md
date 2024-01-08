@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.156"></a>
+## 0.1.156 (2024-01-08)
+
+### Fixed
+
+- 🐛 mail reply parsing [[af58533](https://github.com/gmpetrov/databerry/commit/af585337c2dd0094ee6179fefeb349c2f981a8e8)]
+
+### Miscellaneous
+
+- 🤖 bump version chatbubble [[db4951c](https://github.com/gmpetrov/databerry/commit/db4951c86ea30fa21db8407891ab7594484f219d)]
+
+
 <a name="0.1.155"></a>
 ## 0.1.155 (2024-01-08)
 
