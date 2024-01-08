@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.158"></a>
+## 0.1.158 (2024-01-08)
+
+### Fixed
+
+- 🐛 cors issue on upload endpoint [[b0836b5](https://github.com/gmpetrov/databerry/commit/b0836b5704c14a55016459abd15a7e4c3152b3f0)]
+
+
 <a name="0.1.157"></a>
 ## 0.1.157 (2024-01-08)
 
