@@ -40,19 +40,21 @@ function useFileUpload() {
             }))
           )) || [];
 
-        await pMap(
-          links,
-          async ({ signedUrl }, index) => {
-            return axios.put(signedUrl, items[index].file, {
-              headers: {
-                'Content-Type': items[index]?.file?.type,
+        links.length > 0
+          ? await pMap(
+              links,
+              async ({ signedUrl }, index) => {
+                return axios.put(signedUrl, items[index].file, {
+                  headers: {
+                    'Content-Type': items[index]?.file?.type,
+                  },
+                });
               },
-            });
-          },
-          {
-            concurrency: links.length,
-          }
-        );
+              {
+                concurrency: links.length,
+              }
+            )
+          : [];
 
         setIsUploading(false);
 

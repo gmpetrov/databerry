@@ -161,26 +161,29 @@ export async function inboundWebhook(
     return upload.Location;
   };
 
-  const attachments = await pMap(
-    mail.attachments,
-    async (attachment) => {
-      const id = cuid();
+  const attachments =
+    mail.attachments.length > 0
+      ? await pMap(
+          mail.attachments,
+          async (attachment) => {
+            const id = cuid();
 
-      const uploadUrl = await handleUpload(
-        attachment,
-        `${id}.${mime.extension(attachment.contentType)}`
-      );
+            const uploadUrl = await handleUpload(
+              attachment,
+              `${id}.${mime.extension(attachment.contentType)}`
+            );
 
-      return {
-        id,
-        url: uploadUrl,
-        size: attachment.size,
-        name: attachment.filename,
-        mimeType: attachment.contentType,
-      } as Partial<Attachment>;
-    },
-    { concurrency: mail.attachments.length }
-  );
+            return {
+              id,
+              url: uploadUrl,
+              size: attachment.size,
+              name: attachment.filename,
+              mimeType: attachment.contentType,
+            } as Partial<Attachment>;
+          },
+          { concurrency: mail.attachments.length }
+        )
+      : [];
 
   const msg = {
     externalId: notificationId,
