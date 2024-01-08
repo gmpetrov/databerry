@@ -1,5 +1,23 @@
 # Changelog
 
+<a name="0.1.152"></a>
+## 0.1.152 (2024-01-08)
+
+### Fixed
+
+- 🐛 web-site loader sitemap url without protocol failing [[a582b73](https://github.com/gmpetrov/databerry/commit/a582b73963a8db34cee70aa31ba6cf05a2ab899a)]
+- 🐛 hide reply button for form channel [[d102e32](https://github.com/gmpetrov/databerry/commit/d102e32c8f529d8ff09200f0e6d237e115c223a4)]
+- 🐛 og image [[a1b3f74](https://github.com/gmpetrov/databerry/commit/a1b3f74cb0aedb3359ff666f01aeb9176e995311)]
+
+### Miscellaneous
+
+- 🤖 hide feature [[ae89684](https://github.com/gmpetrov/databerry/commit/ae89684602439c2029f9f92c5db99f3766fb7741)]
+-  Feature/email inbox ([#294](https://github.com/gmpetrov/databerry/issues/294)) [[31569f6](https://github.com/gmpetrov/databerry/commit/31569f674e9f8bf9c35d2e0246690f9978ea8d9f)]
+-  Update prompt-templates.ts [[44c91f1](https://github.com/gmpetrov/databerry/commit/44c91f18d63f44a00186a5fb9e62eb5793703bdf)]
+- 🤖 cs og image [[05ebb17](https://github.com/gmpetrov/databerry/commit/05ebb17a4bf000616b67e7ce890fb98fc17ad8ef)]
+- 🤖 use resolvai lp as main landing page [[a6200ad](https://github.com/gmpetrov/databerry/commit/a6200ade7d5192d9891dfdbdf18d124220fd5537)]
+
+
 <a name="0.1.151"></a>
 ## 0.1.151 (2024-01-05)
 
