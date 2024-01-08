@@ -166,8 +166,7 @@ export const sendMessage = async (
             ? conversation?.mailInbox?.customEmail
             : `${conversation?.mailInbox?.alias}@${process.env.INBOUND_EMAIL_DOMAIN}`,
         },
-        // to: emails,
-        to: ['georgesm.petrov@gmail.com'],
+        to: emails,
         subject,
         attachments: payload.attachments?.map((each) => ({
           filename: each.name!,

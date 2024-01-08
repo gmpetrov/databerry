@@ -355,6 +355,7 @@ export default function Navigation() {
         icon: <ManageAccountsRoundedIcon fontSize="small" />,
         active: router.route.startsWith(RouteNames.SETTINGS),
         isExperimental: false,
+        isNew: false,
       },
       // {
       //   label: 'Email Inboxes',
