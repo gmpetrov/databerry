@@ -247,6 +247,7 @@ export async function inboundWebhook(
     },
     create: {
       id: conversationId,
+      channelExternalId: messageId,
       title: mail.subject,
       channel: ConversationChannel.mail,
       mailInboxId: inboxes[0].id,
