@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.167"></a>
+## 0.1.167 (2024-01-09)
+
+### Miscellaneous
+
+- 🎸 add back dashboard filter [[e31e4df](https://github.com/gmpetrov/databerry/commit/e31e4df76f74e656c4ec334f71d673a3eff9528b)]
+
+
 <a name="0.1.166"></a>
 ## 0.1.166 (2024-01-09)
 
