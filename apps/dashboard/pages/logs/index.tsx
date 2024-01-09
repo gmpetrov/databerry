@@ -754,6 +754,13 @@ export default function LogsPage() {
             >
               {ConversationChannel.form}
             </Option>
+            <Option
+              key={ConversationChannel.dashboard}
+              value={ConversationChannel.dashboard}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.dashboard}
+            </Option>
 
             <Option
               key={ConversationChannel.crisp}

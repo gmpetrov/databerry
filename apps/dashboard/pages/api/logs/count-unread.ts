@@ -21,9 +21,9 @@ export const countUnread = async (
       agent: {
         organizationId: session?.organization?.id,
       },
-      channel: {
-        notIn: [ConversationChannel.dashboard],
-      },
+      // channel: {
+      //   notIn: [ConversationChannel.dashboard],
+      // },
       messages: {
         some: {
           read: false,

@@ -37,9 +37,9 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
           ...(channelFilter
             ? { channel: channelFilter }
             : {
-                channel: {
-                  notIn: [ConversationChannel.dashboard],
-                },
+                // channel: {
+                //   notIn: [ConversationChannel.dashboard],
+                // },
               }),
         },
         // {
