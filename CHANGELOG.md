@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.162"></a>
+## 0.1.162 (2024-01-09)
+
+### Fixed
+
+- 🐛 mail conversation threading [[b4c2c99](https://github.com/gmpetrov/databerry/commit/b4c2c99c542521082dc9ed8c1a3ec6683248ad0d)]
+
+
 <a name="0.1.161"></a>
 ## 0.1.161 (2024-01-09)
 
