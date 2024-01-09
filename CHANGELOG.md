@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.163"></a>
+## 0.1.163 (2024-01-09)
+
+### Fixed
+
+- 🐛 find unique based on references [[ee7267e](https://github.com/gmpetrov/databerry/commit/ee7267e1575fe693431a95e351a8e55d8026992c)]
+
+
 <a name="0.1.162"></a>
 ## 0.1.162 (2024-01-09)
 
