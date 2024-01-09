@@ -1,6 +1,6 @@
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { ColorPaletteProp } from '@mui/joy';
+import { ColorPaletteProp, FormControl, FormLabel } from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -31,9 +31,10 @@ import Input from '../Input';
 
 type Props = {
   conversationId: string;
+  onStatusChange?: (status: ConversationStatus) => any;
 };
 
-function InboxConversationSettings({ conversationId }: Props) {
+function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
   const getMembershipsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getMemberships>
   >(`/api/memberships`, fetcher);
@@ -109,118 +110,169 @@ function InboxConversationSettings({ conversationId }: Props) {
                 </>
               )}
             ></Controller>
-            {/* <Input placeholder="hello" /> */}
-            {/* <Input placeholder="hello" /> */}
 
-            <Controller
-              control={methods.control}
-              name="assignees.0"
-              render={({ field }) => (
-                <Select
-                  {...(field as any)}
-                  value={field.value}
-                  placeholder="Assignee"
-                  startDecorator={
-                    <Avatar
-                      src={
-                        getMembershipsQuery?.data?.find(
-                          (one) => one?.id === field.value
-                        )?.user?.picture || ''
-                      }
-                      size="sm"
-                    />
-                  }
-                  onChange={(_, val) => {
-                    field.onChange(val);
-                  }}
-                >
-                  {getMembershipsQuery?.data?.map((each) => (
-                    <Option key={each.id} value={each.id}>
-                      {each?.user?.name || each?.user?.email}
-                    </Option>
-                  ))}
-                </Select>
-              )}
-            ></Controller>
-            <Controller
-              control={methods.control}
-              name="priority"
-              render={({ field }) => (
-                // <Select
-                //   {...(field as any)}
-                //   value={field.value}
-                //   placeholder="Assignee"
-                //   startDecorator={
-                //     <Avatar
-                //       src={
-                //         getMembershipsQuery?.data?.find(
-                //           (one) => one?.id === field.value
-                //         )?.user?.picture || ''
-                //       }
-                //       size="sm"
-                //     />
-                //   }
-                // onChange={(_, val) => {
-                //   field.onChange(val);
-                // }}
-                // >
-                //   {getMembershipsQuery?.data?.map((each) => (
-                //     <Option key={each.id} value={each.id}>
-                //       {each?.user?.name || each?.user?.email}
-                //     </Option>
-                //   ))}
-                // </Select>
+            <FormControl>
+              <FormLabel>Status</FormLabel>
 
-                <Select
-                  {...(field as any)}
-                  placeholder="Prority"
-                  onChange={(_, val) => {
-                    field.onChange(val);
-                  }}
-                  renderValue={(selected) => (
-                    <Box
-                      sx={{ display: 'flex', gap: '0.25rem', width: '100%' }}
-                    >
-                      <Chip
-                        sx={{ width: '100%' }}
-                        variant="soft"
-                        // color="primary"
-                        size="lg"
-                        startDecorator={
-                          <Box
-                            sx={(t) => ({
-                              width: t.spacing(1.3),
-                              height: t.spacing(1.3),
-                              borderRadius: '100%',
-                              background: {
-                                LOW: t.palette.primary[400],
-                                MEDIUM: t.palette.warning[400],
-                                HIGH: t.palette.danger[400],
-                              }[selected?.value as string],
-                            })}
-                          />
-                        }
-                        color={
-                          (
-                            {
-                              LOW: 'primary',
-                              MEDIUM: 'warning',
-                              HIGH: 'danger',
-                            } as Record<any, ColorPaletteProp>
-                          )[selected?.value as string]
-                        }
+              <Controller
+                control={methods.control}
+                name="status"
+                render={({ field }) => (
+                  <Select
+                    {...(field as any)}
+                    placeholder="Prority"
+                    onChange={(_, val) => {
+                      field.onChange(val);
+                      onStatusChange?.(val as ConversationStatus);
+                    }}
+                    renderValue={(selected) => (
+                      <Box
+                        sx={{ display: 'flex', gap: '0.25rem', width: '100%' }}
                       >
-                        {selected?.label}
-                      </Chip>
-                    </Box>
-                  )}
-                >
-                  <Option value={'LOW'}>Low</Option>
-                  <Option value={'MEDIUM'}>Medium</Option>
-                  <Option value={'HIGH'}>High</Option>
-                </Select>
-              )}
-            ></Controller>
+                        <Chip
+                          sx={{ width: '100%' }}
+                          variant="soft"
+                          // color="primary"
+                          size="lg"
+                          startDecorator={
+                            <Box
+                              sx={(t) => ({
+                                width: t.spacing(1.3),
+                                height: t.spacing(1.3),
+                                borderRadius: '100%',
+                                background: {
+                                  [ConversationStatus.UNRESOLVED]:
+                                    t.palette.danger[400],
+                                  [ConversationStatus.HUMAN_REQUESTED]:
+                                    t.palette.warning[400],
+                                  [ConversationStatus.RESOLVED]:
+                                    t.palette.success[400],
+                                }[selected?.value as string],
+                              })}
+                            />
+                          }
+                          color={
+                            (
+                              {
+                                [ConversationStatus.UNRESOLVED]: 'danger',
+                                [ConversationStatus.HUMAN_REQUESTED]: 'warning',
+                                [ConversationStatus.RESOLVED]: 'success',
+                              } as Record<any, ColorPaletteProp>
+                            )[selected?.value as string]
+                          }
+                        >
+                          {selected?.label}
+                        </Chip>
+                      </Box>
+                    )}
+                  >
+                    <Option value={ConversationStatus.UNRESOLVED}>
+                      Unresolved
+                    </Option>
+                    <Option value={ConversationStatus.HUMAN_REQUESTED}>
+                      Human Requested
+                    </Option>
+                    <Option value={ConversationStatus.RESOLVED}>
+                      Resolved
+                    </Option>
+                  </Select>
+                )}
+              ></Controller>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Priority</FormLabel>
+
+              <Controller
+                control={methods.control}
+                name="priority"
+                render={({ field }) => (
+                  <Select
+                    {...(field as any)}
+                    placeholder="Prority"
+                    onChange={(_, val) => {
+                      field.onChange(val);
+                    }}
+                    renderValue={(selected) => (
+                      <Box
+                        sx={{ display: 'flex', gap: '0.25rem', width: '100%' }}
+                      >
+                        <Chip
+                          sx={{ width: '100%' }}
+                          variant="soft"
+                          // color="primary"
+                          size="lg"
+                          startDecorator={
+                            <Box
+                              sx={(t) => ({
+                                width: t.spacing(1.3),
+                                height: t.spacing(1.3),
+                                borderRadius: '100%',
+                                background: {
+                                  LOW: t.palette.primary[400],
+                                  MEDIUM: t.palette.warning[400],
+                                  HIGH: t.palette.danger[400],
+                                }[selected?.value as string],
+                              })}
+                            />
+                          }
+                          color={
+                            (
+                              {
+                                LOW: 'primary',
+                                MEDIUM: 'warning',
+                                HIGH: 'danger',
+                              } as Record<any, ColorPaletteProp>
+                            )[selected?.value as string]
+                          }
+                        >
+                          {selected?.label}
+                        </Chip>
+                      </Box>
+                    )}
+                  >
+                    <Option value={'LOW'}>Low</Option>
+                    <Option value={'MEDIUM'}>Medium</Option>
+                    <Option value={'HIGH'}>High</Option>
+                  </Select>
+                )}
+              ></Controller>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Assignee</FormLabel>
+
+              <Controller
+                control={methods.control}
+                name="assignees.0"
+                render={({ field }) => (
+                  <Select
+                    {...(field as any)}
+                    value={field.value}
+                    placeholder="Assignee"
+                    startDecorator={
+                      <Avatar
+                        src={
+                          getMembershipsQuery?.data?.find(
+                            (one) => one?.id === field.value
+                          )?.user?.picture || ''
+                        }
+                        size="sm"
+                      />
+                    }
+                    onChange={(_, val) => {
+                      field.onChange(val);
+                    }}
+                  >
+                    {getMembershipsQuery?.data?.map((each) => (
+                      <Option key={each.id} value={each.id}>
+                        {each?.user?.name || each?.user?.email}
+                      </Option>
+                    ))}
+                  </Select>
+                )}
+              ></Controller>
+            </FormControl>
           </Stack>
         );
       }}

@@ -242,7 +242,7 @@ export default function LogsPage() {
     fetcher,
     {
       // TODO: remove when we have websockets.
-      refreshInterval: state.refreshInterval,
+      // refreshInterval: state.refreshInterval,
     }
   );
 
@@ -338,7 +338,7 @@ export default function LogsPage() {
     conversationId: string;
     conversationStatus: ConversationStatus;
   }) => {
-    await updateConversationStatus(conversationId, conversationStatus);
+    // await updateConversationStatus(conversationId, conversationStatus);
 
     // sync data
     await Promise.all([
@@ -366,34 +366,6 @@ export default function LogsPage() {
       });
     }
   }, [getConversationQuery?.data?.isAiEnabled]);
-
-  const toggleAi = async () => {
-    try {
-      switch (getConversationQuery.data?.channel) {
-        case 'crisp':
-          await syncAiMutation.trigger({
-            isAiEnabled: !state.isAiEnabled,
-            channel: 'crisp',
-          });
-          break;
-        default:
-          break;
-      }
-
-      await conversationUpdater.trigger({
-        isAiEnabled: !state.isAiEnabled,
-      });
-
-      await getConversationQuery.mutate();
-
-      // synchronize
-      setState({
-        isAiEnabled: !state.isAiEnabled,
-      });
-    } catch (e) {
-      console.error(e);
-    }
-  };
 
   useEffect(() => {
     const found = conversations.find(
@@ -435,6 +407,44 @@ export default function LogsPage() {
     });
   }, [getConversationQuery?.data?.isAiEnabled]);
 
+  const handleStatusChange = React.useCallback(
+    async (status: ConversationStatus) => {
+      try {
+        // const nextConversationIndex =
+        //   state.currentConversationIndex === conversations?.length - 1
+        //     ? Math.max(0, state.currentConversationIndex - 1)
+        //     : state.currentConversationIndex + 1;
+        // const nextConversationId = conversations?.[nextConversationIndex]?.id;
+
+        // if (nextConversationId) {
+        //   setState({
+        //     currentConversationId: nextConversationId,
+        //     currentConversationIndex: nextConversationIndex,
+        //   });
+        // }
+
+        await Promise.all([
+          // getConversationQuery.mutate(),
+          getConversationsQuery.mutate(),
+        ]);
+
+        // await handleBannerAction({
+        //   conversationId: props.currentConversationId!,
+        //   conversationStatus: {
+        //     [ConversationStatus.RESOLVED]: ConversationStatus.UNRESOLVED,
+        //     [ConversationStatus.UNRESOLVED]: ConversationStatus.RESOLVED,
+        //     [ConversationStatus.HUMAN_REQUESTED]:
+        //       ConversationStatus.RESOLVED,
+        //   }[props.status],
+        // });
+      } catch {
+      } finally {
+        // setIsLoading(false);
+      }
+    },
+    [handleBannerAction, getConversationsQuery.mutate]
+  );
+
   if (!session?.organization) return null;
 
   if (
@@ -444,7 +454,7 @@ export default function LogsPage() {
   ) {
     return (
       <Alert
-        variant="outlined"
+        // variant="outlined"
         sx={{
           textAlign: 'center',
           justifyContent: 'center',
@@ -497,7 +507,7 @@ export default function LogsPage() {
           </Button>
         )} */}
 
-        <Button
+        {/* <Button
           size="sm"
           loading={isLoading}
           color={
@@ -507,37 +517,7 @@ export default function LogsPage() {
               [ConversationStatus.HUMAN_REQUESTED]: 'success',
             }[props.status] as ColorPaletteProp
           }
-          onClick={async () => {
-            try {
-              setIsLoading(true);
-              const nextConversationIndex =
-                state.currentConversationIndex === conversations?.length - 1
-                  ? Math.max(0, state.currentConversationIndex - 1)
-                  : state.currentConversationIndex + 1;
-              const nextConversationId =
-                conversations?.[nextConversationIndex]?.id;
-
-              if (nextConversationId) {
-                setState({
-                  currentConversationId: nextConversationId,
-                  currentConversationIndex: nextConversationIndex,
-                });
-              }
-
-              await handleBannerAction({
-                conversationId: props.currentConversationId!,
-                conversationStatus: {
-                  [ConversationStatus.RESOLVED]: ConversationStatus.UNRESOLVED,
-                  [ConversationStatus.UNRESOLVED]: ConversationStatus.RESOLVED,
-                  [ConversationStatus.HUMAN_REQUESTED]:
-                    ConversationStatus.RESOLVED,
-                }[props.status],
-              });
-            } catch {
-            } finally {
-              setIsLoading(false);
-            }
-          }}
+          onClick={handleStatusChange}
           endDecorator={
             {
               [ConversationStatus.RESOLVED]: (
@@ -559,7 +539,7 @@ export default function LogsPage() {
               [ConversationStatus.HUMAN_REQUESTED]: 'Resolve',
             }[props.status]
           }
-        </Button>
+        </Button> */}
       </Stack>
     );
   }
@@ -1138,6 +1118,7 @@ export default function LogsPage() {
                 {state.currentConversationId && (
                   <InboxConversationSettings
                     conversationId={state.currentConversationId}
+                    onStatusChange={handleStatusChange}
                   />
                 )}
               </Stack>
