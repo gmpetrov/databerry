@@ -29,6 +29,7 @@ model Organization {
   mailInboxes         MailInbox[]
   contacts            Contact[]
 
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -44,6 +45,9 @@ model Membership {
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
+
+  assignedConversations Conversation[] @relation("assignees")
+
 
   // When the user joins, we will clear out the name and email and set the user.
   invitedName  String? @map("invited_name")
@@ -87,7 +91,6 @@ model User {
 
   viaProduct String? @default("chaindesk") @map("via_product")
   
-  assignedConversations Conversation[] @relation("assignees")
 
   joinedConversations Conversation[] @relation("participants") 
 
@@ -343,7 +346,9 @@ model Conversation {
 
   formSubmissions FormSubmission[]
 
-  assignees  User[] @relation("assignees")
+  assignees  Membership[] @relation("assignees")
+
+  priority ConversationPriority @default(MEDIUM)
   
   form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String?   @map("form_id")

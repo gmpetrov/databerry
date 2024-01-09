@@ -609,6 +609,7 @@ function ChatBox({
             )}
 
             <Textarea
+              autoFocus
               slotProps={{
                 textarea: {
                   id: 'chatbox-input',

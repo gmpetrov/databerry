@@ -1,0 +1,231 @@
+import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { ColorPaletteProp } from '@mui/joy';
+import Avatar from '@mui/joy/Avatar';
+import Box from '@mui/joy/Box';
+import Button from '@mui/joy/Button';
+import Chip from '@mui/joy/Chip';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
+import Stack from '@mui/joy/Stack';
+import React, { useMemo } from 'react';
+import { Controller } from 'react-hook-form';
+import useSWR from 'swr';
+
+import useInboxConversation from '@app/hooks/useInboxConversation';
+import { getConversation } from '@app/pages/api/logs/[id]';
+import { getMemberships } from '@app/pages/api/memberships';
+
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import {
+  Attachment,
+  ConversationChannel,
+  ConversationStatus,
+  MessageEval,
+  MessageFrom,
+  Prisma,
+} from '@chaindesk/prisma';
+
+import InboxConversationFormProvider from '../InboxConversationFormProvider';
+import Input from '../Input';
+
+type Props = {
+  conversationId: string;
+};
+
+function InboxConversationSettings({ conversationId }: Props) {
+  const getMembershipsQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getMemberships>
+  >(`/api/memberships`, fetcher);
+
+  const { query } = useInboxConversation({ id: conversationId });
+
+  const isHumanHandoffButtonHidden = useMemo(() => {
+    let hide = false;
+    const externalChannelId = query?.data?.channelExternalId;
+
+    switch (query?.data?.channel) {
+      case ConversationChannel.crisp:
+      case ConversationChannel.slack:
+        if (!externalChannelId) {
+          hide = true;
+        }
+        break;
+      case ConversationChannel.dashboard:
+      case ConversationChannel.form:
+        hide = true;
+      default:
+        break;
+    }
+    return hide;
+  }, [query?.data?.channel, query?.data?.channelExternalId]);
+
+  return (
+    <InboxConversationFormProvider id={conversationId}>
+      {({ methods }) => {
+        return (
+          <Stack
+            sx={(t) => ({
+              width: '100%',
+              height: '100%',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              overflowY: 'auto',
+              p: 2,
+            })}
+            gap={1}
+          >
+            <Controller
+              control={methods.control}
+              name="isAiEnabled"
+              render={({ field }) => (
+                <>
+                  {!isHumanHandoffButtonHidden && (
+                    <Button
+                      startDecorator={
+                        field.value ? (
+                          <MessageRoundedIcon fontSize="md" />
+                        ) : (
+                          <SmartToyIcon fontSize="md" />
+                        )
+                      }
+                      size="md"
+                      loading={methods.formState.dirtyFields.isAiEnabled}
+                      onClick={() => {
+                        field.onChange(!query.data?.isAiEnabled);
+                      }}
+                      color={
+                        (
+                          {
+                            true: 'danger',
+                            false: 'neutral',
+                          } as any
+                        )[field.value as any]
+                      }
+                    >
+                      {!!field.value ? 'Intervene' : 'Enable AI'}
+                    </Button>
+                  )}
+                </>
+              )}
+            ></Controller>
+            {/* <Input placeholder="hello" /> */}
+            {/* <Input placeholder="hello" /> */}
+
+            <Controller
+              control={methods.control}
+              name="assignees.0"
+              render={({ field }) => (
+                <Select
+                  {...(field as any)}
+                  value={field.value}
+                  placeholder="Assignee"
+                  startDecorator={
+                    <Avatar
+                      src={
+                        getMembershipsQuery?.data?.find(
+                          (one) => one?.id === field.value
+                        )?.user?.picture || ''
+                      }
+                      size="sm"
+                    />
+                  }
+                  onChange={(_, val) => {
+                    field.onChange(val);
+                  }}
+                >
+                  {getMembershipsQuery?.data?.map((each) => (
+                    <Option key={each.id} value={each.id}>
+                      {each?.user?.name || each?.user?.email}
+                    </Option>
+                  ))}
+                </Select>
+              )}
+            ></Controller>
+            <Controller
+              control={methods.control}
+              name="priority"
+              render={({ field }) => (
+                // <Select
+                //   {...(field as any)}
+                //   value={field.value}
+                //   placeholder="Assignee"
+                //   startDecorator={
+                //     <Avatar
+                //       src={
+                //         getMembershipsQuery?.data?.find(
+                //           (one) => one?.id === field.value
+                //         )?.user?.picture || ''
+                //       }
+                //       size="sm"
+                //     />
+                //   }
+                // onChange={(_, val) => {
+                //   field.onChange(val);
+                // }}
+                // >
+                //   {getMembershipsQuery?.data?.map((each) => (
+                //     <Option key={each.id} value={each.id}>
+                //       {each?.user?.name || each?.user?.email}
+                //     </Option>
+                //   ))}
+                // </Select>
+
+                <Select
+                  {...(field as any)}
+                  placeholder="Prority"
+                  onChange={(_, val) => {
+                    field.onChange(val);
+                  }}
+                  renderValue={(selected) => (
+                    <Box
+                      sx={{ display: 'flex', gap: '0.25rem', width: '100%' }}
+                    >
+                      <Chip
+                        sx={{ width: '100%' }}
+                        variant="soft"
+                        // color="primary"
+                        size="lg"
+                        startDecorator={
+                          <Box
+                            sx={(t) => ({
+                              width: t.spacing(1.3),
+                              height: t.spacing(1.3),
+                              borderRadius: '100%',
+                              background: {
+                                LOW: t.palette.primary[400],
+                                MEDIUM: t.palette.warning[400],
+                                HIGH: t.palette.danger[400],
+                              }[selected?.value as string],
+                            })}
+                          />
+                        }
+                        color={
+                          (
+                            {
+                              LOW: 'primary',
+                              MEDIUM: 'warning',
+                              HIGH: 'danger',
+                            } as Record<any, ColorPaletteProp>
+                          )[selected?.value as string]
+                        }
+                      >
+                        {selected?.label}
+                      </Chip>
+                    </Box>
+                  )}
+                >
+                  <Option value={'LOW'}>Low</Option>
+                  <Option value={'MEDIUM'}>Medium</Option>
+                  <Option value={'HIGH'}>High</Option>
+                </Select>
+              )}
+            ></Controller>
+          </Stack>
+        );
+      }}
+    </InboxConversationFormProvider>
+  );
+}
+
+export default InboxConversationSettings;

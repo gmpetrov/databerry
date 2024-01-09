@@ -55,7 +55,7 @@ import ChatBox from '@app/components/ChatBox';
 import { ConversationExport } from '@app/components/ConversationExport';
 import CopyButton from '@app/components/CopyButton';
 import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
-// import InboxConversationSettings from '@app/components/InboxConversationSettings';
+import InboxConversationSettings from '@app/components/InboxConversationSettings';
 import Layout from '@app/components/Layout';
 import { updateConversationStatus } from '@app/components/ResolveButton';
 import { handleEvalAnswer } from '@app/hooks/useChat';
@@ -205,6 +205,7 @@ export default function LogsPage() {
     improveAnswerDefaultValue: '' as string | undefined,
     currentConversationIndex: 0,
     isAiEnabled: true,
+    refreshInterval: 5000,
   });
 
   const getConversationsQuery = useSWRInfinite<
@@ -241,9 +242,7 @@ export default function LogsPage() {
     fetcher,
     {
       // TODO: remove when we have websockets.
-      ...(state.isAiEnabled
-        ? { refreshInterval: 30000 }
-        : { refreshInterval: 5000 }),
+      refreshInterval: state.refreshInterval,
     }
   );
 
@@ -360,28 +359,13 @@ export default function LogsPage() {
     ];
   }, [getConversationsQuery?.data, getSingleConversationQuery?.data]);
 
-  const isHumanHandoffButtonHidden = useMemo(() => {
-    let hide = false;
-    const externalChannelId = getConversationQuery?.data?.channelExternalId;
-
-    switch (getConversationQuery?.data?.channel) {
-      case ConversationChannel.crisp:
-      case ConversationChannel.slack:
-        if (!externalChannelId) {
-          hide = true;
-        }
-        break;
-      case ConversationChannel.dashboard:
-      case ConversationChannel.form:
-        hide = true;
-      default:
-        break;
+  useEffect(() => {
+    if (getConversationQuery?.data) {
+      setState({
+        isAiEnabled: !!getConversationQuery?.data?.isAiEnabled,
+      });
     }
-    return hide;
-  }, [
-    getConversationQuery?.data?.channel,
-    getConversationQuery?.data?.channelExternalId,
-  ]);
+  }, [getConversationQuery?.data?.isAiEnabled]);
 
   const toggleAi = async () => {
     try {
@@ -500,7 +484,7 @@ export default function LogsPage() {
           ></Input>
         )}
 
-        {props.email && props.status === ConversationStatus.HUMAN_REQUESTED && (
+        {/* {props.email && props.status === ConversationStatus.HUMAN_REQUESTED && (
           <Button
             size="sm"
             color="neutral"
@@ -511,7 +495,7 @@ export default function LogsPage() {
           >
             Reply
           </Button>
-        )}
+        )} */}
 
         <Button
           size="sm"
@@ -1061,7 +1045,7 @@ export default function LogsPage() {
                   startDecorator={<Notifications />}
                   endDecorator={
                     <Stack direction="row" spacing={1}>
-                      {!isHumanHandoffButtonHidden && (
+                      {/* {!isHumanHandoffButtonHidden && (
                         <Button
                           variant="solid"
                           color={state.isAiEnabled ? 'primary' : 'warning'}
@@ -1078,7 +1062,7 @@ export default function LogsPage() {
                         >
                           {state.isAiEnabled ? 'Reply' : 'Re-Enable AI'}
                         </Button>
-                      )}
+                      )} */}
 
                       <BannerActions
                         status={getConversationQuery?.data?.status}
@@ -1140,7 +1124,7 @@ export default function LogsPage() {
                 withFileUpload
               />
 
-              {/* <Divider orientation="vertical" />
+              <Divider orientation="vertical" />
 
               <Stack
                 sx={(t) => ({
@@ -1148,7 +1132,7 @@ export default function LogsPage() {
                   width: '100%',
                   height: '100%',
                   // bgcolor: t.palette.background.paper,
-                  p: 2,
+                  // p: 2,
                 })}
               >
                 {state.currentConversationId && (
@@ -1156,7 +1140,7 @@ export default function LogsPage() {
                     conversationId={state.currentConversationId}
                   />
                 )}
-              </Stack> */}
+              </Stack>
             </Stack>
           </Box>
         </Stack>
