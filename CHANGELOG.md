@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.164"></a>
+## 0.1.164 (2024-01-09)
+
+### Fixed
+
+- 🐛 style email template [[dce0bb5](https://github.com/gmpetrov/databerry/commit/dce0bb55a1eaa598aa40a3e014e923e2ed201ad7)]
+
+
 <a name="0.1.163"></a>
 ## 0.1.163 (2024-01-09)
 
