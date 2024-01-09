@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.165"></a>
+## 0.1.165 (2024-01-09)
+
+### Fixed
+
+- 🐛 fucking alias field [[97fba25](https://github.com/gmpetrov/databerry/commit/97fba253c03dbd1497ad85cdfefaa2944a28d001)]
+
+
 <a name="0.1.164"></a>
 ## 0.1.164 (2024-01-09)
 
