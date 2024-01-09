@@ -8,7 +8,6 @@ import {
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import roles from '@chaindesk/lib/middlewares/roles';
-import sleep from '@chaindesk/lib/sleep';
 import { CheckAliasAvailabilitySchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';

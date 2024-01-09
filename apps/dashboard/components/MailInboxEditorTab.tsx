@@ -38,16 +38,17 @@ function MailInboxEditorTab({ inboxId }: Props) {
                 helperText={`Emails will be sent from: ${inboxEmail}`}
                 endDecorator={
                   !!methods.formState.dirtyFields?.alias &&
-                  methods.formState.isValidating ? (
+                  (methods.formState.isValidating ||
+                    methods.formState.isSubmitting) ? (
                     <CircularProgress size="sm" />
                   ) : undefined
                 }
                 // onInput={e => e.currentTarget.value = e.target.value.toLowerCase()}
                 {...methods.register('alias', {
-                  onChange: (e) => {
-                    e.target.value = e.target.value.toLowerCase();
-                    return refinement?.invalidate();
-                  },
+                  // onChange: (e) => {
+                  //   e.target.value = e.target.value.toLowerCase();
+                  //   return refinement?.invalidate();
+                  // },
                 })}
                 onBlur={(e) => {}}
               />

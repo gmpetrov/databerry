@@ -55,6 +55,7 @@ import ChatBox from '@app/components/ChatBox';
 import { ConversationExport } from '@app/components/ConversationExport';
 import CopyButton from '@app/components/CopyButton';
 import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
+import InboxConversationSettings from '@app/components/InboxConversationSettings';
 import Layout from '@app/components/Layout';
 import { updateConversationStatus } from '@app/components/ResolveButton';
 import { handleEvalAnswer } from '@app/hooks/useChat';
@@ -1132,7 +1133,7 @@ export default function LogsPage() {
                 withFileUpload
               />
 
-              {/* <Divider orientation="vertical" />
+              <Divider orientation="vertical" />
 
               <Stack
                 sx={(t) => ({
@@ -1142,12 +1143,13 @@ export default function LogsPage() {
                   // bgcolor: t.palette.background.paper,
                   p: 2,
                 })}
-                gap={1}
               >
-                <Button>Intervene</Button>
-                <Input placeholder="hello" />
-                <Input placeholder="hello" />
-              </Stack> */}
+                {state.currentConversationId && (
+                  <InboxConversationSettings
+                    conversationId={state.currentConversationId}
+                  />
+                )}
+              </Stack>
             </Stack>
           </Box>
         </Stack>

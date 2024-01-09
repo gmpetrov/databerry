@@ -45,7 +45,7 @@ function useMailInbox({ id }: Props) {
     generateActionFetcher(HTTP_METHOD.PATCH),
     {
       onSuccess(data, key, config) {
-        query.mutate();
+        // query.mutate();
       },
     }
   );

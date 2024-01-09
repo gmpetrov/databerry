@@ -7,6 +7,8 @@ import React, {
   ReactElement,
   useCallback,
   useEffect,
+  useMemo,
+  useRef,
 } from 'react';
 import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -62,38 +64,41 @@ const checkAliasUnique = async (values: UpdateMailInboxSchema) => {
 };
 
 function MailInboxFormProvider(props: Props) {
-  const [state, setState] = useStateReducer({
-    isLoading: false,
-  });
-
-  const refinement = useRefinement(checkAliasUnique, {
-    debounce: 1000,
-  });
+  // const refinement = useRefinement(checkAliasUnique, {
+  //   debounce: 1000,
+  // });
 
   const inboxId = props?.inboxId;
 
   const { query, mutation, deleteMutation } = useMailInbox({ id: inboxId });
 
   const methods = useForm<UpdateMailInboxSchema>({
-    mode: 'all',
-    resolver: zodResolver(
-      UpdateMailInboxSchema.refine(refinement, {
-        message: 'Alias is not available',
-        path: ['alias'],
-      })
-    ),
+    // mode: 'all',
+    resolver: zodResolver(UpdateMailInboxSchema),
     defaultValues: {
       ...props.defaultValues,
     },
   });
 
   const onSubmit = useCallback(
-    debounce(async (values: UpdateMailInboxSchema) => {
+    async (values: UpdateMailInboxSchema) => {
       if (methods.formState.isValidating || !methods.formState.isDirty) {
         return;
       }
       try {
-        setState({ isLoading: true });
+        if (!!methods.formState.dirtyFields.alias) {
+          const { data } = await axios.post(
+            `/api/mail-inboxes/check-alias-availability`,
+            {
+              alias: values.alias,
+            }
+          );
+
+          if (!data.available) {
+            return toast.error('Alias is already taken');
+          }
+        }
+
         const form = await toast.promise(
           mutation.trigger({
             ...values,
@@ -117,17 +122,20 @@ function MailInboxFormProvider(props: Props) {
       } catch (err) {
         console.log('error', err);
       } finally {
-        setState({ isLoading: false });
       }
-    }, 1000),
+    },
     [
-      setState,
       mutation.trigger,
       query.mutate,
       props?.onSubmitSucces,
       methods.formState.isValidating,
       methods.formState.isDirty,
     ]
+  );
+
+  const debounced = useCallback(
+    debounce(methods.handleSubmit(onSubmit), 1500),
+    []
   );
 
   useEffect(() => {
@@ -137,8 +145,10 @@ function MailInboxFormProvider(props: Props) {
           ...(query.data as any),
         },
         {
-          keepDirtyValues: true,
-          keepDefaultValues: true,
+          keepDirty: false,
+          // keepDirtyValues: false,
+          // keepValues: true,
+          // keepDefaultValues: true,
         }
       );
     }
@@ -146,29 +156,35 @@ function MailInboxFormProvider(props: Props) {
 
   console.log('errors', methods.formState.errors);
 
+  useEffect(() => {
+    if (
+      methods.formState.isDirty &&
+      methods.formState.isValid &&
+      !methods.formState.isValidating
+    ) {
+      debounced();
+    }
+  }, [
+    methods.formState.isDirty,
+    methods.formState.isValid,
+    methods.formState.isValidating,
+    debounced,
+  ]);
+
   return (
     <FormProvider {...methods}>
       <Box
         className="flex flex-col w-full h-full"
         {...props.formProps}
         component="form"
-        onSubmit={methods.handleSubmit(onSubmit)}
-        onChange={methods.handleSubmit(onSubmit)}
       >
         {props.children({
           query,
           mutation,
           methods,
           deleteMutation,
-          refinement,
+          // refinement,
         })}
-
-        <button
-          id="blablaform-form-submit"
-          type="submit"
-          hidden
-          style={{ width: 0, height: 0 }}
-        />
       </Box>
     </FormProvider>
   );
