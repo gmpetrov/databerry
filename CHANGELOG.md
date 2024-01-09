@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.161"></a>
+## 0.1.161 (2024-01-09)
+
+### Fixed
+
+- 🐛 missing externalId for sent messages [[08bcc46](https://github.com/gmpetrov/databerry/commit/08bcc469d8c756edd2f96da951fd3348063d86da)]
+
+
 <a name="0.1.160"></a>
 ## 0.1.160 (2024-01-08)
 
