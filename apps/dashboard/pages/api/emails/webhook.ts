@@ -230,16 +230,32 @@ export async function inboundWebhook(
     },
   })) as Prisma.ContactCreateOrConnectWithoutConversationsInput[];
 
-  let prevMessage = undefined;
+  let references: string[] = [messageId];
+
+  if (mail.references) {
+    references = [
+      ...references,
+      ...(Array.isArray(mail.references) ? mail.references : [mail.references]),
+    ];
+  }
+
   if (mail.inReplyTo) {
-    prevMessage = await prisma.message.findUnique({
+    references = [...references, mail.inReplyTo];
+  }
+
+  let prevConversation = null;
+
+  if (references.length > 0) {
+    prevConversation = await prisma.conversation.findFirst({
       where: {
-        externalId: mail.inReplyTo,
+        channelExternalId: {
+          in: references,
+        },
       },
     });
   }
 
-  const conversationId = prevMessage?.conversationId || cuid();
+  const conversationId = prevConversation?.id || cuid();
 
   await prisma.conversation.upsert({
     where: {
