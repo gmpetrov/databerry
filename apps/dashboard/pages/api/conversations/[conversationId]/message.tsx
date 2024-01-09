@@ -38,6 +38,7 @@ export const sendMessage = async (
   const conversationId = req.query.conversationId as string;
   const payload = chatBodySchema.parse(req.body);
   const session = req.session;
+  let externalMessageId: string | undefined;
 
   const { channelCredentials, channelExternalId, metadata } =
     await prisma.conversation.findUniqueOrThrow({
@@ -136,6 +137,12 @@ export const sendMessage = async (
             },
           },
           contacts: true,
+          messages: {
+            take: 1,
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
         },
       });
 
@@ -158,8 +165,8 @@ export const sendMessage = async (
 
       const subject =
         conversation?.title || session?.organization?.name || '💌 Request';
-      await mailer.sendMail({
-        inReplyTo: conversation?.channelExternalId!,
+      const sent = await mailer.sendMail({
+        inReplyTo: conversation?.messages?.[0]?.externalId!,
         from: {
           name: conversation?.mailInbox?.fromName!,
           address: conversation?.mailInbox?.customEmail
@@ -183,6 +190,8 @@ export const sendMessage = async (
         ),
       });
 
+      externalMessageId = sent.messageId;
+
       break;
     case 'website':
       // no special treatement for website channel.
@@ -205,6 +214,7 @@ export const sendMessage = async (
     from: MessageFrom.human,
     text: payload.message,
     attachments: payload.attachments,
+    externalId: externalMessageId,
   });
 
   await conversationManager.save();

@@ -32,6 +32,7 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   inputId?: string;
   metadata?: Record<string, any>;
   attachments?: Pick<Attachment, 'mimeType' | 'name' | 'size' | 'url'>[];
+  externalId?: string;
 };
 
 type ExternalConfig = {
