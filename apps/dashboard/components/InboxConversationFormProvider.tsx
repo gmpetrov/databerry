@@ -85,8 +85,9 @@ function InboxConversationProvider(props: Props) {
     ]
   );
 
-  const debounced = useCallback(
-    debounce(methods.handleSubmit(onSubmit), 1500),
+  const submit = useCallback(
+    methods.handleSubmit(onSubmit),
+    // debounce(methods.handleSubmit(onSubmit), 1500),
     []
   );
 
@@ -112,13 +113,13 @@ function InboxConversationProvider(props: Props) {
       methods.formState.isValid &&
       !methods.formState.isValidating
     ) {
-      debounced();
+      submit();
     }
   }, [
     methods.formState.isDirty,
     methods.formState.isValid,
     methods.formState.isValidating,
-    debounced,
+    submit,
   ]);
 
   return (
