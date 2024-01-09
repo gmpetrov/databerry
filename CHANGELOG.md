@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.166"></a>
+## 0.1.166 (2024-01-09)
+
+### Miscellaneous
+
+-  fix [[1d47900](https://github.com/gmpetrov/databerry/commit/1d479007f48f8a310e983df9c52ec8b7842102da)]
+
+
 <a name="0.1.165"></a>
 ## 0.1.165 (2024-01-09)
 
