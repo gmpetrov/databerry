@@ -179,20 +179,23 @@ export async function inboundWebhook(
     attachment: mailparser.Attachment,
     fileName?: string
   ) => {
+    const key = creatChatUploadKey({
+      conversationId,
+      organizationId: inboxes[0].organizationId!,
+      fileName: (fileName || attachment.filename)!,
+    });
+
     const params = {
       Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
-      Key: creatChatUploadKey({
-        conversationId,
-        organizationId: inboxes[0].organizationId!,
-        fileName: (fileName || attachment.filename)!,
-      }),
+      ContentType: attachment.contentType,
+      Key: key,
       Body: attachment.content,
-      ACL: 'public-read',
     } as S3.Types.PutObjectRequest;
 
     const upload = await s3.upload(params).promise();
 
-    return upload.Location;
+    // return upload.Location;
+    return `${getS3RootDomain()}/${key}`;
   };
 
   const attachments =
