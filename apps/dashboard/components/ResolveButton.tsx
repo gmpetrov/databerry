@@ -36,12 +36,14 @@ const ResolveButton = ({
   conversationStatus,
   createNewConversation,
   refreshConversation,
+  onMarkedAsResolved,
   sx,
 }: {
   conversationId: string;
   conversationStatus: ConversationStatus;
   createNewConversation(): void;
   refreshConversation(): void;
+  onMarkedAsResolved?(): any;
   sx?: SxProps;
 }) => {
   const [pending, setPending] = useState(false);
@@ -84,7 +86,10 @@ const ResolveButton = ({
       sx={{ whiteSpace: 'nowrap', ...sx }}
       onClick={
         conversationStatus !== 'RESOLVED'
-          ? () => handleUpdateStatus('RESOLVED')
+          ? () => {
+              handleUpdateStatus('RESOLVED');
+              onMarkedAsResolved?.();
+            }
           : () => handleUpdateStatus('UNRESOLVED')
       }
     >

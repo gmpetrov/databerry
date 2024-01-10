@@ -46,6 +46,7 @@ function App(props: {
   agentId: string;
   initConfig?: AgentInterfaceConfig;
   onAgentLoaded?: (agent: Agent) => any;
+  onMarkedAsResolved?(): any;
 }) {
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
@@ -470,7 +471,10 @@ function App(props: {
                     handleAbort={handleAbort}
                     hideInternalSources
                     renderBottom={
-                      <CustomerSupportActions config={state.config} />
+                      <CustomerSupportActions
+                        onMarkedAsResolved={props.onMarkedAsResolved}
+                        config={state.config}
+                      />
                     }
                     withFileUpload
                   />

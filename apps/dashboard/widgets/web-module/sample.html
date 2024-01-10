@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample HTML with Script</title>
+  </head>
+
+  <script type="module">
+    import 'http://localhost:3000/api/agents/html/module';
+
+    window.ChaindeskFactory.initChatBubble({
+      agentId: 'clraz1aif0002kvhuhg2lwjto', // use a valid agent id.
+      onMarkedAsResolved: () => {
+        console.log('conversation was resolved');
+      },
+    });
+  </script>
+  <body>
+    <!-- <web-chat-bubble
+      agent-id="clraz1aif0002kvhuhg2lwjto"
+      on-marked-as-resolved="onMarkedAsResolved"
+    ></web-chat-bubble> -->
+    <h1>Hello, World!</h1>
+  </body>
+</html>

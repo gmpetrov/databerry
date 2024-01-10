@@ -15,9 +15,9 @@ import type { ConversationStatus } from '@chaindesk/prisma';
 import { InjectLeadForm, LEAD_FORM_ID } from './LeadForm';
 import ResolveButton, { updateConversationStatus } from './ResolveButton';
 
-type Props = { config: AgentInterfaceConfig };
+type Props = { config: AgentInterfaceConfig; onMarkedAsResolved?(): any };
 
-function CustomerSupportActions({ config }: Props) {
+function CustomerSupportActions({ config, onMarkedAsResolved }: Props) {
   const {
     conversationId,
     conversationStatus,
@@ -63,6 +63,7 @@ function CustomerSupportActions({ config }: Props) {
             createNewConversation={() => {
               createNewConversation?.();
             }}
+            onMarkedAsResolved={onMarkedAsResolved}
           />
         )}
 
