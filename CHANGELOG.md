@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.170"></a>
+## 0.1.170 (2024-01-10)
+
+### Fixed
+
+- 🐛 missing migration file [[cbba4c0](https://github.com/gmpetrov/databerry/commit/cbba4c0f4b8257935b11dac0730c68986b5c7d9d)]
+
+### Miscellaneous
+
+-  bump version chatbubble [[64fb86c](https://github.com/gmpetrov/databerry/commit/64fb86c67d85dcba2caffaf38aaf7fb7559f5a7c)]
+- 🎸 Custom Email Address [[561d9ef](https://github.com/gmpetrov/databerry/commit/561d9ef0f4bde3458a78e22968ba3ab9236ed0d0)]
+
+
 <a name="0.1.169"></a>
 ## 0.1.169 (2024-01-10)
 
