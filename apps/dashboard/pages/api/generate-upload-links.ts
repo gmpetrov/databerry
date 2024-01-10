@@ -7,6 +7,7 @@ import {
   createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import { creatChatUploadKey } from '@chaindesk/lib/file-upload';
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
@@ -81,7 +82,10 @@ export const generateUploadLinks = async (
           organizationId = agent.organizationId as string;
         }
 
-        prefix = `organizations/${organizationId}/conversations/${item.conversationId}/uploads`;
+        prefix = creatChatUploadKey({
+          organizationId,
+          conversationId: item.conversationId,
+        });
         break;
       default:
         throw new ApiError(ApiErrorType.INVALID_REQUEST);

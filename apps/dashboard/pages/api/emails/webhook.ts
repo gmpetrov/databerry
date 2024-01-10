@@ -6,7 +6,9 @@ import { NextApiResponse } from 'next';
 import pMap from 'p-map';
 
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
+import { s3 } from '@chaindesk/lib/aws';
 import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
+import { creatChatUploadKey } from '@chaindesk/lib/file-upload';
 import mailparser from '@chaindesk/lib/mail-parser';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
@@ -18,7 +20,7 @@ import {
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
-export const s3 = new S3({
+export const mailS3 = new S3({
   signatureVersion: 'v4',
   accessKeyId: process.env.INBOUND_EMAIL_AWS_ACCESS_KEY,
   secretAccessKey: process.env.INBOUND_EMAIL_AWS_SECRET_KEY,
@@ -35,7 +37,7 @@ export const s3 = new S3({
 const handler = createApiHandler();
 
 const clean = async ({ notificationId }: { notificationId: string }) => {
-  return s3
+  return mailS3
     .deleteObject({
       Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
       Key: `emails/${notificationId}`,
@@ -59,7 +61,7 @@ export async function inboundWebhook(
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  const obj = await s3
+  const obj = await mailS3
     .getObject({
       Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
       Key: `emails/${notificationId}`,
@@ -147,13 +149,43 @@ export async function inboundWebhook(
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
+  let references: string[] = [messageId];
+
+  if (mail.references) {
+    references = [
+      ...references,
+      ...(Array.isArray(mail.references) ? mail.references : [mail.references]),
+    ];
+  }
+
+  if (mail.inReplyTo) {
+    references = [...references, mail.inReplyTo];
+  }
+
+  let prevConversation = null;
+
+  if (references.length > 0) {
+    prevConversation = await prisma.conversation.findFirst({
+      where: {
+        channelExternalId: {
+          in: references,
+        },
+      },
+    });
+  }
+  const conversationId = prevConversation?.id || cuid();
+
   const handleUpload = async (
     attachment: mailparser.Attachment,
     fileName?: string
   ) => {
     const params = {
       Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
-      Key: `uploads/${fileName || attachment.filename}`,
+      Key: creatChatUploadKey({
+        conversationId,
+        organizationId: inboxes[0].organizationId!,
+        fileName: (fileName || attachment.filename)!,
+      }),
       Body: attachment.content,
     };
 
@@ -230,33 +262,6 @@ export async function inboundWebhook(
     },
   })) as Prisma.ContactCreateOrConnectWithoutConversationsInput[];
 
-  let references: string[] = [messageId];
-
-  if (mail.references) {
-    references = [
-      ...references,
-      ...(Array.isArray(mail.references) ? mail.references : [mail.references]),
-    ];
-  }
-
-  if (mail.inReplyTo) {
-    references = [...references, mail.inReplyTo];
-  }
-
-  let prevConversation = null;
-
-  if (references.length > 0) {
-    prevConversation = await prisma.conversation.findFirst({
-      where: {
-        channelExternalId: {
-          in: references,
-        },
-      },
-    });
-  }
-
-  const conversationId = prevConversation?.id || cuid();
-
   await prisma.conversation.upsert({
     where: {
       id: conversationId,
@@ -299,7 +304,7 @@ export async function inboundWebhook(
     },
   });
 
-  // Remove smpt message from s3
+  // Remove smpt message from mailS3
   await clean({
     notificationId,
   });
