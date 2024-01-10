@@ -180,7 +180,7 @@ export async function inboundWebhook(
     fileName?: string
   ) => {
     const params = {
-      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
       Key: creatChatUploadKey({
         conversationId,
         organizationId: inboxes[0].organizationId!,
