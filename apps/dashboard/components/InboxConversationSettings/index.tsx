@@ -1,6 +1,7 @@
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { ColorPaletteProp, FormControl, FormLabel } from '@mui/joy';
+import { ColorPaletteProp, Divider, FormControl, FormLabel } from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -41,7 +42,9 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
     Prisma.PromiseReturnType<typeof getMemberships>
   >(`/api/memberships`, fetcher);
 
-  const { query } = useInboxConversation({ id: conversationId });
+  const { query, deleteMutation } = useInboxConversation({
+    id: conversationId,
+  });
 
   const isHumanHandoffButtonHidden = useMemo(() => {
     let hide = false;
@@ -112,6 +115,8 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
                 </>
               )}
             ></Controller>
+
+            {!isHumanHandoffButtonHidden && <Divider />}
 
             <FormControl>
               <FormLabel>Status</FormLabel>
@@ -291,6 +296,27 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
                 </Stack>
               ))}
             </FormControl>
+
+            <Divider />
+
+            <Button
+              color="danger"
+              variant="plain"
+              startDecorator={<DeleteRoundedIcon />}
+              loading={deleteMutation.isMutating}
+              onClick={async () => {
+                const confirmed = confirm(
+                  'All messages from this conversation will be deleted. Are you sure?'
+                );
+
+                if (confirmed) {
+                  await deleteMutation.trigger();
+                  window.location.href = window.location.href;
+                }
+              }}
+            >
+              Delete Conversation
+            </Button>
           </Stack>
         );
       }}

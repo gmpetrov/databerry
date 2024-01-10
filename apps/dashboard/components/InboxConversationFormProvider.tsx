@@ -11,6 +11,7 @@ import { FormProvider, useForm, UseFormReturn } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import useInboxConversation, {
+  UseInboxConversationDeleteMutation,
   UseInboxConversationMutation,
   UseInboxConversationQuery,
 } from '@app/hooks/useInboxConversation';
@@ -26,7 +27,7 @@ type Props = {
   children(children: {
     query: UseInboxConversationQuery;
     mutation: UseInboxConversationMutation;
-    // deleteMutation: UseInboxConversationDeleteMutation;
+    deleteMutation: UseInboxConversationDeleteMutation;
     methods: UseFormReturn<UpdateInboxConversationSchema>;
   }): ReactElement;
   refreshQueryAfterMutation?: boolean;
@@ -35,7 +36,9 @@ type Props = {
 function InboxConversationProvider(props: Props) {
   const inboxId = props?.id;
 
-  const { query, mutation } = useInboxConversation({ id: inboxId });
+  const { query, mutation, deleteMutation } = useInboxConversation({
+    id: inboxId,
+  });
 
   const methods = useForm<UpdateInboxConversationSchema>({
     // mode: 'all',
@@ -135,6 +138,7 @@ function InboxConversationProvider(props: Props) {
           query,
           mutation,
           methods,
+          deleteMutation,
           // refinement,
         })}
       </Box>

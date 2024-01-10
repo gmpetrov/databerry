@@ -1,6 +1,7 @@
 import useSWR, { SWRResponse } from 'swr';
 import useSWRMutation, { SWRMutationResponse } from 'swr/mutation';
 
+import { deleteConversation } from '@app/pages/api/conversations/[conversationId]';
 import {
   getConversation,
   updateInboxConversation,
@@ -26,9 +27,9 @@ export type UseInboxConversationQuery =
 export type UseInboxConversationMutation = SWRMutationResponse<
   Prisma.PromiseReturnType<typeof updateInboxConversation>
 >;
-// export type UseInboxConversationDeleteMutation = SWRMutationResponse<
-//   Prisma.PromiseReturnType<typeof deleteInboxConversation>
-// >;
+export type UseInboxConversationDeleteMutation = SWRMutationResponse<
+  Prisma.PromiseReturnType<typeof deleteConversation>
+>;
 
 function useInboxConversation({ id }: Props) {
   const query = useSWR<Prisma.PromiseReturnType<typeof getConversation>>(
@@ -43,10 +44,18 @@ function useInboxConversation({ id }: Props) {
     // UpdatateInbo
   >(id ? `/api/logs/${id}` : null, generateActionFetcher(HTTP_METHOD.PATCH));
 
+  const deleteMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof deleteConversation>
+  >(
+    id ? `/api/conversations/${id}` : null,
+    generateActionFetcher(HTTP_METHOD.DELETE),
+    {}
+  );
+
   return {
     query,
     mutation,
-    // deleteMutation,
+    deleteMutation,
   };
 }
 

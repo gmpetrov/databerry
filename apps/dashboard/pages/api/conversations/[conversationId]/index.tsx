@@ -6,11 +6,14 @@ import IntegrationsEventDispatcher from '@app/utils/integrations-event-dispatche
 
 import { ConversationResolved, HelpRequest, render } from '@chaindesk/emails';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
+import { deleteFolderFromS3Bucket } from '@chaindesk/lib/aws';
 import {
   createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import mailer from '@chaindesk/lib/mailer';
+import cors from '@chaindesk/lib/middlewares/cors';
+import pipe from '@chaindesk/lib/middlewares/pipe';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import { ConversationUpdateSchema } from '@chaindesk/lib/types/dtos';
 import { AppEventType, AppNextApiRequest } from '@chaindesk/lib/types/index';
@@ -24,10 +27,6 @@ import {
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 const handler = createLazyAuthHandler();
-
-const cors = Cors({
-  methods: ['GET', 'PATCH', 'DELETE', 'HEAD'],
-});
 
 export const getConversation = async (
   req: AppNextApiRequest,
@@ -309,20 +308,28 @@ export const deleteConversation = async (
     },
   });
 
-  if (conversation?.agent?.organizationId !== session?.organization?.id) {
+  if (conversation?.organizationId !== session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
+
+  await prisma.conversation.delete({
+    where: {
+      id: conversationId,
+    },
+  });
+
+  // Delete uploaded files
+  await deleteFolderFromS3Bucket(
+    process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+    `organizations/${session?.organization?.id}/conversations/${conversation.id}`
+  );
 
   return conversation;
 };
 
 handler.delete(respond(deleteConversation));
 
-export default async function wrapper(
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) {
-  await runMiddleware(req, res, cors);
-
-  return handler(req, res);
-}
+export default pipe(
+  cors({ methods: ['GET', 'PATCH', 'DELETE', 'HEAD'] }),
+  handler
+);
