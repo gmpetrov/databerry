@@ -685,3 +685,16 @@ export const UpdateInboxConversationSchema = z.object({
 export type UpdateInboxConversationSchema = z.infer<
   typeof UpdateInboxConversationSchema
 >;
+
+export const CreateContactSchema = z.object({
+  email: z.string().email().optional(),
+  firtName: z.string().optional(),
+  lastName: z.string().optional(),
+  conversationId: z.string().cuid().optional(),
+});
+
+export type CreateContactSchema = z.infer<typeof CreateContactSchema>;
+
+export const UpdateContactSchema = CreateContactSchema;
+
+export type UpdateContactSchema = z.infer<typeof UpdateContactSchema>;

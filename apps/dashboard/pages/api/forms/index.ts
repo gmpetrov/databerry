@@ -9,6 +9,8 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import { formToJsonSchema } from '@chaindesk/lib/forms';
 import generateFunId from '@chaindesk/lib/generate-fun-id';
+import cors from '@chaindesk/lib/middlewares/cors';
+import pipe from '@chaindesk/lib/middlewares/pipe';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
 import { CreateFormSchema, FormFieldSchema } from '@chaindesk/lib/types/dtos';
@@ -16,10 +18,6 @@ import validate from '@chaindesk/lib/validate';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createAuthApiHandler();
-
-const cors = Cors({
-  methods: ['POST', 'HEAD'],
-});
 
 export const getForms = async (
   req: AppNextApiRequest,
@@ -106,11 +104,4 @@ handler.post(
   })
 );
 
-export default async function wrapper(
-  req: AppNextApiRequest,
-  res: NextApiResponse
-) {
-  await runMiddleware(req, res, cors);
-
-  return handler(req, res);
-}
+export default pipe(cors({ methods: ['GET', 'POST', 'HEAD'] }), handler);

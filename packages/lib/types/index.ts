@@ -32,6 +32,7 @@ export enum RouteNames {
   FORMS = '/forms',
   ANALYTICS = '/analytics',
   EMAIL_INBOXES = '/mail-inboxes',
+  CONTACTS = '/contacts',
 }
 
 export enum PromptTypesLabels {

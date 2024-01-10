@@ -59,6 +59,7 @@ Best regards,`}
 
           {values.signature && (
             <div
+              className="text-black whitespace-pre-line"
               dangerouslySetInnerHTML={{
                 __html: values.signature || '',
               }}
