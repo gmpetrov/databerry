@@ -44,11 +44,14 @@ function MailInboxInstallTab({ inboxId }: Props) {
                       </Typography>
                     </Alert>
                   </Stack>
-                  {/* <FormHelperText>
-                    <Link href="#" target="_blank">
+                  <FormHelperText>
+                    <Link
+                      href="https://www.chaindesk.ai/help/email-inbox"
+                      target="_blank"
+                    >
                       Full Documentation
                     </Link>
-                  </FormHelperText> */}
+                  </FormHelperText>
                 </FormControl>
               </Stack>
             </SettingCard>

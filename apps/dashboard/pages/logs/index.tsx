@@ -964,6 +964,15 @@ export default function LogsPage() {
                           >
                             <Typography>
                               {(() => {
+                                if (
+                                  each?.channel === ConversationChannel.mail &&
+                                  each?.title
+                                ) {
+                                  return (
+                                    each?.title || each?.messages?.[0]?.text
+                                  );
+                                }
+
                                 if (!!each?.agent?.hidden) {
                                   return (each as any)?.form?.name || 'Form';
                                 }
