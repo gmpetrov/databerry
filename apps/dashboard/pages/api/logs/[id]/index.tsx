@@ -35,6 +35,12 @@ export const getConversation = async (
           id: true,
         },
       },
+      mailInbox: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
       _count: {
         select: {
           messages: {

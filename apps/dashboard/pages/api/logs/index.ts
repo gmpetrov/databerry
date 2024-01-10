@@ -130,6 +130,12 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
       form: true,
       agent: true,
       lead: true,
+      mailInbox: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
       _count: {
         select: {
           messages: {

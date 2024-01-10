@@ -997,6 +997,16 @@ export default function LogsPage() {
                               {'🚀 '}
                               {each?.channel}
                             </Chip>
+
+                            {each?.channel === ConversationChannel.mail && (
+                              <Chip
+                                size="sm"
+                                color="neutral"
+                                variant="outlined"
+                              >
+                                {`📨 ${each?.mailInbox?.name}`}
+                              </Chip>
+                            )}
                             {!each?.agent?.hidden && !!each?.agent?.name && (
                               <Chip
                                 size="sm"
