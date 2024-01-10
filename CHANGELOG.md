@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.172"></a>
+## 0.1.172 (2024-01-10)
+
+### Miscellaneous
+
+- 🤖 hide feature [[f646642](https://github.com/gmpetrov/databerry/commit/f646642246d07079ee595f07d4fcb43375d23e68)]
+
+
 <a name="0.1.171"></a>
 ## 0.1.171 (2024-01-10)
 
