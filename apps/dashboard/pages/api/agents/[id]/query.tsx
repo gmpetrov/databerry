@@ -46,8 +46,8 @@ export const chatAgentRequest = async (
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
 
-  const conversationId = data.conversationId || cuid();
   const isNewConversation = !data.conversationId;
+  const conversationId = data.conversationId || cuid();
   if (
     session?.authType == 'apiKey' &&
     data.channel !== ConversationChannel.form

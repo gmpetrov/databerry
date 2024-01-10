@@ -77,6 +77,7 @@ import {
 import {
   Attachment,
   ConversationChannel,
+  ConversationPriority,
   ConversationStatus,
   MessageEval,
   MessageFrom,
@@ -87,6 +88,7 @@ import { getAgents } from '../api/agents';
 import { updateStatus } from '../api/conversations/update-status';
 import { getLogs } from '../api/logs';
 import { getConversation } from '../api/logs/[id]';
+import { getMemberships } from '../api/memberships';
 import { markAllRead } from '../api/messages/mark-all-read';
 
 const LIMIT = 20;
@@ -195,7 +197,9 @@ export default function LogsPage() {
     router.query.eval ||
     router.query.agentId ||
     router.query.tab !== TabEnum.all ||
-    router.query.channel;
+    router.query.channel ||
+    router.query.priority ||
+    router.query.assigneeId;
 
   const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
@@ -227,6 +231,8 @@ export default function LogsPage() {
       eval: (router.query.eval as string) || '',
       agentId: (router.query.agentId as string) || '',
       channel: (router.query.channel as string) || '',
+      priority: (router.query.priority as string) || '',
+      assigneeId: (router.query.assigneeId as string) || '',
       ...tabToParams(router.query.tab as string),
     });
 
@@ -246,23 +252,17 @@ export default function LogsPage() {
     }
   );
 
+  const getMembershipsQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getMemberships>
+  >(`/api/memberships`, fetcher);
+
+  const currentMembership = getMembershipsQuery?.data?.find(
+    (one) => one.userId === session?.user?.id
+  );
+
   const conversationChatMutation = useSWRMutation(
     state.currentConversationId
       ? `/api/conversations/${state.currentConversationId}/message`
-      : null,
-    generateActionFetcher(HTTP_METHOD.POST)
-  );
-
-  const conversationUpdater = useSWRMutation(
-    state.currentConversationId
-      ? `/api/conversations/${state.currentConversationId}`
-      : null,
-    generateActionFetcher(HTTP_METHOD.PATCH)
-  );
-
-  const syncAiMutation = useSWRMutation(
-    state.currentConversationId
-      ? `/api/conversations/${state.currentConversationId}/integration/sync-ai-status`
       : null,
     generateActionFetcher(HTTP_METHOD.POST)
   );
@@ -299,6 +299,7 @@ export default function LogsPage() {
     if (files && files?.length > 0) {
       const filesUrls = await upload(
         files.map((each) => ({
+          conversationId: state.currentConversationId,
           case: 'chatUpload',
           fileName: each.name,
           mimeType: each.type,
@@ -692,6 +693,24 @@ export default function LogsPage() {
             </Menu>
           </Dropdown>
 
+          <SelectQueryParamFilter<EvalSchema>
+            filterName="assigneeId"
+            placeholder="Filter by Assignee"
+          >
+            {currentMembership && (
+              <Option value={currentMembership.id} sx={{ fontSize: 14 }}>
+                Me
+              </Option>
+            )}
+            {getMembershipsQuery?.data
+              ?.filter((each) => each.userId !== session?.user?.id)
+              ?.map((each) => (
+                <Option key={each.id} value={each.id} sx={{ fontSize: 14 }}>
+                  {each?.user?.email || each?.user?.name}
+                </Option>
+              ))}
+          </SelectQueryParamFilter>
+
           <SelectQueryParamFilter<ConversationChannel>
             filterName="channel"
             placeholder="Filter by Channel"
@@ -770,6 +789,32 @@ export default function LogsPage() {
               sx={{ fontSize: 14 }}
             >
               🔴 Bad
+            </Option>
+          </SelectQueryParamFilter>
+          <SelectQueryParamFilter<EvalSchema>
+            filterName="priority"
+            placeholder="Filter by Priority"
+          >
+            <Option
+              key={ConversationPriority.LOW}
+              value={ConversationPriority.LOW}
+              sx={{ fontSize: 14 }}
+            >
+              Low
+            </Option>
+            <Option
+              key={ConversationPriority.MEDIUM}
+              value={ConversationPriority.MEDIUM}
+              sx={{ fontSize: 14 }}
+            >
+              Medium
+            </Option>
+            <Option
+              key={ConversationPriority.HIGH}
+              value={ConversationPriority.HIGH}
+              sx={{ fontSize: 14 }}
+            >
+              High
             </Option>
           </SelectQueryParamFilter>
         </Stack>

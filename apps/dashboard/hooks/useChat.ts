@@ -1,3 +1,4 @@
+import cuid from 'cuid';
 import { createContext, useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
@@ -176,11 +177,14 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         return;
       }
 
+      const conversationId = state.conversationId || cuid();
+
       let attachments: CreateAttachmentSchema[] = [];
 
       if (files?.length > 0) {
         const filesUrls = await upload(
           files.map((each) => ({
+            conversationId,
             agentId: otherProps.agentId!,
             case: 'chatUpload',
             fileName: each.name,
@@ -266,7 +270,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             streaming: true,
             query: message,
             visitorId: state.visitorId,
-            conversationId: state.conversationId,
+            conversationId: conversationId,
             channel,
             attachments,
           }),

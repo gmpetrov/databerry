@@ -757,7 +757,6 @@ model Contact {
   firstName String? @map("first_name")
   lastName String? @map("last_name")
 
-
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 

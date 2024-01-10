@@ -5,6 +5,7 @@ import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
+import JoyInput from '@mui/joy/Input';
 import Option from '@mui/joy/Option';
 import Select from '@mui/joy/Select';
 import Stack from '@mui/joy/Stack';
@@ -26,6 +27,7 @@ import {
   Prisma,
 } from '@chaindesk/prisma';
 
+import CopyButton from '../CopyButton';
 import InboxConversationFormProvider from '../InboxConversationFormProvider';
 import Input from '../Input';
 
@@ -74,7 +76,7 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
               overflowY: 'auto',
               p: 2,
             })}
-            gap={1}
+            gap={2}
           >
             <Controller
               control={methods.control}
@@ -261,7 +263,9 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
                       />
                     }
                     onChange={(_, val) => {
-                      field.onChange(val);
+                      if (val) {
+                        field.onChange(val);
+                      }
                     }}
                   >
                     {getMembershipsQuery?.data?.map((each) => (
@@ -272,6 +276,20 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
                   </Select>
                 )}
               ></Controller>
+            </FormControl>
+            <FormControl>
+              <FormLabel>Contact</FormLabel>
+
+              {query?.data?.contacts?.map((each) => (
+                <Stack key={each.id}>
+                  <JoyInput
+                    key={each.id}
+                    endDecorator={<CopyButton text={each.email!} />}
+                    variant="outlined"
+                    value={each.email!}
+                  ></JoyInput>
+                </Stack>
+              ))}
             </FormControl>
           </Stack>
         );
