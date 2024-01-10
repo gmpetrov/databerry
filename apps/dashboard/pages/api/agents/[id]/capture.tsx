@@ -89,6 +89,11 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
       },
       create: {
         email: data.visitorEmail,
+        agent: {
+          connect: {
+            id: agentId,
+          },
+        },
         organization: {
           connect: {
             id: agent?.organizationId!,

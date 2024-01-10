@@ -265,6 +265,7 @@ model Agent {
   handle  String?  @unique @map("handle")
   domains Domain[]
   leads   Lead[]
+  contacts   Contact[]
   
   approvals ActionApproval[]
 
@@ -759,6 +760,9 @@ model Contact {
 
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  agent   Agent?  @relation(fields: [agentId], references: [id])
+  agentId String? @map("agent_id")
 
   conversations Conversation[]
 
