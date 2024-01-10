@@ -663,7 +663,18 @@ function ChatBox({
                         type="file"
                         multiple
                         onChange={async (e) => {
-                          setFiles(Array.from(e.target?.files!));
+                          const f = Array.from(e.target.files!);
+
+                          const maxFileSize = 5000000; // 5MB
+
+                          const found = f.find((one) => one.size > maxFileSize);
+
+                          if (found) {
+                            e.target.value = '';
+                            return alert('File size is limited to 5MB');
+                          }
+
+                          setFiles(f);
                         }}
                       />
                     </IconButton>
