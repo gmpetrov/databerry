@@ -48,7 +48,7 @@ Best regards,`,
           {signature && (
             <>
               <Text
-                className="text-black"
+                className="text-black whitespace-pre-line"
                 dangerouslySetInnerHTML={{
                   __html: signature,
                 }}

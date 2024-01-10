@@ -11,6 +11,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
 import NewReleasesRoundedIcon from '@mui/icons-material/NewReleasesRounded';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
@@ -287,6 +288,13 @@ export default function Navigation() {
               active: router.route.startsWith(RouteNames.ANALYTICS),
               isNew: true,
             },
+            // {
+            //   label: 'Contacts',
+            //   route: RouteNames.CONTACTS,
+            //   icon: <RecentActorsIcon fontSize="md" />,
+            //   active: router.route.startsWith(RouteNames.CONTACTS),
+            //   isNew: true,
+            // },
             // {
             //   label: 'Email Inboxes',
             //   route: RouteNames.EMAIL_INBOXES,
