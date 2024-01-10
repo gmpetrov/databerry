@@ -55,7 +55,7 @@ export const GenericTemplate = (props: Props) => {
 
             <Section className="w-full">
               {props.description && (
-                <Text className="text-black text-[16px] leading-[24px]">
+                <Text className="text-black text-[16px] leading-[24px] text-center">
                   {props.description}
                 </Text>
               )}
