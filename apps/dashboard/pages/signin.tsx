@@ -95,7 +95,7 @@ export default function SignInPage() {
       <Box
         className="min-h-screen w-screen max-w-[100%] flex"
         sx={(theme) => ({
-          background: theme.palette.background.surface,
+          // background: theme.palette.background.surface,
         })}
       >
         <>
