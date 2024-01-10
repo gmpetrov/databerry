@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.175"></a>
+## 0.1.175 (2024-01-10)
+
+### Miscellaneous
+
+-  bump [[fa576ea](https://github.com/gmpetrov/databerry/commit/fa576eabc9269aedf921926b480bcc89a91a1843)]
+- 🤖 enable contacts + email inboxes [[6480eef](https://github.com/gmpetrov/databerry/commit/6480eef7c019b4c0aeabe236d887b065f7a2c11e)]
+- 🎸 Contacts [[c7ed224](https://github.com/gmpetrov/databerry/commit/c7ed2249ac6516e15b0c46db21ffac61b3f0aa49)]
+-  Update webhook.ts [[3f5893e](https://github.com/gmpetrov/databerry/commit/3f5893eb1112d0cf55e7135c714d9b32ae664ae4)]
+-  fix file upload from inbound email [[2e7efc4](https://github.com/gmpetrov/databerry/commit/2e7efc4a9157de2da40270c6e827c4f3f3426889)]
+-  fix acl [[a2f856c](https://github.com/gmpetrov/databerry/commit/a2f856cc6ddb6d497317559a0d487adfee1f0204)]
+-  fix: add file upload limit [[5cf3393](https://github.com/gmpetrov/databerry/commit/5cf33936d42922b5e5e7bb878c169aad2c00feb9)]
+-  fix: wrong bucket name [[c8edb68](https://github.com/gmpetrov/databerry/commit/c8edb6815de4c5a86bd81487d133b577805fe62c)]
+
+
 <a name="0.1.173"></a>
 ## 0.1.173 (2024-01-10)
 
