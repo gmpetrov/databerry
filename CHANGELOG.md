@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.173"></a>
+## 0.1.173 (2024-01-10)
+
+### Fixed
+
+- 🐛 fix file uploads from email [[f103efd](https://github.com/gmpetrov/databerry/commit/f103efd5fbfd9d3241a9ddc6186e4b537720fd18)]
+
+
 <a name="0.1.172"></a>
 ## 0.1.172 (2024-01-10)
 
