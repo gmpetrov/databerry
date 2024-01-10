@@ -1162,6 +1162,7 @@ export default function LogsPage() {
               >
                 {state.currentConversationId && (
                   <InboxConversationSettings
+                    key={state.currentConversationId}
                     conversationId={state.currentConversationId}
                     onStatusChange={handleStatusChange}
                   />

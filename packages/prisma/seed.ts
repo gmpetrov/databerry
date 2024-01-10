@@ -73,6 +73,7 @@ async function main() {
     );
 
     const userId = 'clnol0gtc000208jlgp3p83av';
+    const user2Id = 'clr5mfzec000108l5dwvv3ffb';
     const freeOrgId = 'clnokxi0p000008jlaxe24av9';
     const premiumOrgId = 'clnol6ij8000308jl1cky5hsy';
     const subscriptionId = 'clnolau4y000408jl08aqektv';
@@ -99,6 +100,7 @@ async function main() {
         id: userId,
         emailVerified: new Date(),
         email: 'dev@chaindesk.ai',
+        name: 'Georges',
         memberships: {
           create: [
             {
@@ -154,7 +156,32 @@ async function main() {
           ],
         },
       },
-      update: {},
+      update: {
+        name: 'Georges',
+      },
+    });
+
+    await prisma.user.upsert({
+      where: {
+        id: user2Id,
+      },
+      create: {
+        id: user2Id,
+        emailVerified: new Date(),
+        email: 'dev2@chaindesk.ai',
+        name: 'Adam',
+        memberships: {
+          create: [
+            {
+              role: 'USER',
+              organizationId: premiumOrgId,
+            },
+          ],
+        },
+      },
+      update: {
+        name: 'Adam',
+      },
     });
   } catch (err) {
     console.log('prisma seed err', err);

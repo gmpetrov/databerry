@@ -1,10 +1,12 @@
 import { NextApiResponse } from 'next';
 
+import { GenericTemplate, NewConversation, render } from '@chaindesk/emails';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import mailer from '@chaindesk/lib/mailer';
 import syncAiStatus from '@chaindesk/lib/sync-ai-status';
 import { UpdateInboxConversationSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
@@ -106,7 +108,8 @@ export const updateInboxConversation = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  const { assignees, id: _id, ...otherProps } = data;
+  const { assignees: _assignees, id: _id, ...otherProps } = data;
+  const assignees = _assignees?.filter((each) => !!each) as string[];
 
   const assigneesToRemove = prev?.assignees?.filter(
     (each) => !assignees?.some((p) => p === each.id)
@@ -132,6 +135,19 @@ export const updateInboxConversation = async (
         })),
       },
     },
+    include: {
+      assignees: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              id: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   if (updated.isAiEnabled !== prev?.isAiEnabled) {
@@ -139,6 +155,38 @@ export const updateInboxConversation = async (
       channel: updated.channel,
       conversationId: updated.id,
       isAiEnabled: !!updated.isAiEnabled,
+    });
+  }
+
+  if (
+    updated?.assignees?.[0]?.id &&
+    updated?.assignees?.[0]?.id !== prev?.assignees?.[0]?.id &&
+    updated?.assignees?.[0]?.user?.id !== session?.user?.id
+  ) {
+    // SEND Email
+    await mailer.sendMail({
+      from: {
+        name: 'Chaindesk',
+        address: process.env.EMAIL_FROM!,
+      },
+      to: updated?.assignees?.[0]?.user?.email!,
+      subject: `You've been assigned a conversation`,
+      html: render(
+        <GenericTemplate
+          title={'Conversation Assigned'}
+          description={`${
+            session?.user?.name || session?.user?.email
+          } has assigned you a conversation`}
+          cta={{
+            label: 'View Conversation',
+            href: `${
+              process.env.NEXT_PUBLIC_DASHBOARD_URL
+            }/logs?tab=all&conversationId=${encodeURIComponent(
+              id
+            )}&targetOrgId=${encodeURIComponent(session?.organization.id!)}`,
+          }}
+        />
+      ),
     });
   }
 

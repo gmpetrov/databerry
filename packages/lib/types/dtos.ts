@@ -675,7 +675,10 @@ export const UpdateInboxConversationSchema = z.object({
   id: z.string().cuid().optional(),
   status: z.nativeEnum(ConversationStatus),
   priority: z.nativeEnum(ConversationPriority),
-  assignees: z.array(z.string().cuid()).optional(),
+  assignees: z
+    .array(z.string().cuid().optional().nullable())
+    .transform((val) => val.filter((each) => !!each))
+    .optional(),
   isAiEnabled: z.boolean().optional(),
 });
 
