@@ -180,14 +180,15 @@ export async function inboundWebhook(
     fileName?: string
   ) => {
     const params = {
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME as string,
+      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
       Key: creatChatUploadKey({
         conversationId,
         organizationId: inboxes[0].organizationId!,
         fileName: (fileName || attachment.filename)!,
       }),
       Body: attachment.content,
-    };
+      ACL: 'public-read',
+    } as S3.Types.PutObjectRequest;
 
     const upload = await s3.upload(params).promise();
 
