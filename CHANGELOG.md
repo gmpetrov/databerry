@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.171"></a>
+## 0.1.171 (2024-01-10)
+
+### Miscellaneous
+
+- 🤖 documentation link [[e97c2f9](https://github.com/gmpetrov/databerry/commit/e97c2f9409878b6086beb99855d315a534085041)]
+
+
 <a name="0.1.170"></a>
 ## 0.1.170 (2024-01-10)
 
