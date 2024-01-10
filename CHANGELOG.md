@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.176"></a>
+## 0.1.176 (2024-01-10)
+
+### Fixed
+
+- 🐛 migrate leads to contacts [[b19606d](https://github.com/gmpetrov/databerry/commit/b19606d6c1e5438fa3ca7cd9a26f70f2f151e22c)]
+
+
 <a name="0.1.175"></a>
 ## 0.1.175 (2024-01-10)
 
