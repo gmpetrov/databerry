@@ -287,6 +287,14 @@ export default function Navigation() {
               active: router.route.startsWith(RouteNames.ANALYTICS),
               isNew: true,
             },
+            // {
+            //   label: 'Email Inboxes',
+            //   route: RouteNames.EMAIL_INBOXES,
+            //   icon: <AllInboxRoundedIcon fontSize="small" />,
+            //   active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
+            //   // isExperimental: true,
+            //   isNew: true,
+            // },
           ]
         : []),
       ...(product === 'cs'
@@ -356,14 +364,6 @@ export default function Navigation() {
         active: router.route.startsWith(RouteNames.SETTINGS),
         isExperimental: false,
         isNew: false,
-      },
-      {
-        label: 'Email Inboxes',
-        route: RouteNames.EMAIL_INBOXES,
-        icon: <AllInboxRoundedIcon fontSize="small" />,
-        active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
-        // isExperimental: true,
-        isNew: true,
       },
     ];
   }, [router.route]);
