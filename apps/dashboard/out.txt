@@ -1,0 +1,680 @@
+
+> dashboard@0.1.21 dotenv /Users/gpetrov/workspace/databerry/apps/dashboard
+> dotenv -e ../../.env.local "--" "tsx" "scripts/customer-analysis.ts"
+
+found 102
+[
+  {
+    "email": "pete.cheyne@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 119,
+    "nbMessages": 11
+  },
+  {
+    "email": "luminovajm@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 1091,
+    "nbMessages": 828
+  },
+  {
+    "email": "jameswestern95@googlemail.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 5,
+    "nbMessages": 9
+  },
+  {
+    "email": "contact@circular.xyz",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 168,
+    "nbMessages": 4050
+  },
+  {
+    "email": "antoine@everbiz.com.tw",
+    "nbAgents": 33,
+    "nbDatastores": 33,
+    "nbDatasources": 13198,
+    "nbMessages": 376
+  },
+  {
+    "email": "thibault@awen.ai",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 285,
+    "nbMessages": 689
+  },
+  {
+    "email": "alisher852@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 66,
+    "nbMessages": 57
+  },
+  {
+    "email": "todd@spontent.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 52,
+    "nbMessages": 6
+  },
+  {
+    "email": "gustavo.salami@kuble.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 56,
+    "nbMessages": 13
+  },
+  {
+    "email": "gareth@metareal.io",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 130,
+    "nbMessages": 380
+  },
+  {
+    "email": "edouard.roussez@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 121,
+    "nbMessages": 33
+  },
+  {
+    "email": "lawyer@sprintlaw.com.au",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 2,
+    "nbMessages": 3
+  },
+  {
+    "email": "steve@vedafarms.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 65,
+    "nbMessages": 51
+  },
+  {
+    "email": "c.interno@ebc.edu.mx",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 1142,
+    "nbMessages": 908
+  },
+  {
+    "email": "place5ceo@gmail.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 334,
+    "nbMessages": 6
+  },
+  {
+    "email": "csaunders@gordonelectric.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 29,
+    "nbMessages": 0
+  },
+  {
+    "email": "tiaan@altify.app",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 202,
+    "nbMessages": 254
+  },
+  {
+    "email": "n.galy@tbs-education.fr",
+    "nbAgents": 0,
+    "nbDatastores": 0,
+    "nbDatasources": 0,
+    "nbMessages": 0
+  },
+  {
+    "email": "contact@babysleepbot.ai",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 9,
+    "nbMessages": 81
+  },
+  {
+    "email": "trace.joseph.johnson@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 548,
+    "nbMessages": 21
+  },
+  {
+    "email": "info@innovativegroup.eu",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 143,
+    "nbMessages": 1396
+  },
+  {
+    "email": "chris.heymann@mossimmobilien.de",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 1028,
+    "nbMessages": 14
+  },
+  {
+    "email": "pierre@chaindesk.ai",
+    "nbAgents": 7,
+    "nbDatastores": 7,
+    "nbDatasources": 251,
+    "nbMessages": 72
+  },
+  {
+    "email": "ali135bkr@gmail.com",
+    "nbAgents": 10,
+    "nbDatastores": 10,
+    "nbDatasources": 35,
+    "nbMessages": 42
+  },
+  {
+    "email": "xqueau@gmail.com",
+    "nbAgents": 8,
+    "nbDatastores": 8,
+    "nbDatasources": 101,
+    "nbMessages": 32
+  },
+  {
+    "email": "hello@oddit.co",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 56,
+    "nbMessages": 6
+  },
+  {
+    "email": "andrew.peter.zak@gmail.com",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 31,
+    "nbMessages": 38
+  },
+  {
+    "email": "nmuckian@rubyworks.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 0,
+    "nbMessages": 0
+  },
+  {
+    "email": "plus@painless.health",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 50,
+    "nbMessages": 136
+  },
+  {
+    "email": "daniel@oktagon.se",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 250,
+    "nbMessages": 192
+  },
+  {
+    "email": "evgeny.masibut@eldapro.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 1,
+    "nbMessages": 5
+  },
+  {
+    "email": "ceo@fastlabtech.com",
+    "nbAgents": 8,
+    "nbDatastores": 8,
+    "nbDatasources": 412,
+    "nbMessages": 12508
+  },
+  {
+    "email": "support@brandsgateway.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 22,
+    "nbMessages": 4325
+  },
+  {
+    "email": "muenchinger@lv-soft.de",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 789,
+    "nbMessages": 123
+  },
+  {
+    "email": "emmanueleffeteureka+chaindesk@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 5,
+    "nbMessages": 194
+  },
+  {
+    "email": "ali@dualchas.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 261,
+    "nbMessages": 189
+  },
+  {
+    "email": "integrations@teachbase.ru",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 22,
+    "nbMessages": 196
+  },
+  {
+    "email": "miguel.pinas@companio.email",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 1484,
+    "nbMessages": 2415
+  },
+  {
+    "email": "tdale@aperianglobal.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 102,
+    "nbMessages": 264
+  },
+  {
+    "email": "g@2.works",
+    "nbAgents": 10,
+    "nbDatastores": 10,
+    "nbDatasources": 231,
+    "nbMessages": 57
+  },
+  {
+    "email": "info@linkgua-ediciones.com",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 688,
+    "nbMessages": 705
+  },
+  {
+    "email": "enovinskiy@gmail.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 1,
+    "nbMessages": 3
+  },
+  {
+    "email": "alex@ottooptics.io",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 42,
+    "nbMessages": 210
+  },
+  {
+    "email": "nicolas.bloyet@eventmaker.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 577,
+    "nbMessages": 361
+  },
+  {
+    "email": "ravi.gupta@vertalo.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 67,
+    "nbMessages": 66
+  },
+  {
+    "email": "sprost@motechhq.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 23,
+    "nbMessages": 15
+  },
+  {
+    "email": "support.dm@eatos.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 258,
+    "nbMessages": 61
+  },
+  {
+    "email": "lv@lvit.de",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 2069,
+    "nbMessages": 38
+  },
+  {
+    "email": "atom@kremlin.guru",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 2,
+    "nbMessages": 18
+  },
+  {
+    "email": "dimaraskopov@gmail.com",
+    "nbAgents": 5,
+    "nbDatastores": 5,
+    "nbDatasources": 81,
+    "nbMessages": 1859
+  },
+  {
+    "email": "said.m@komlink.co",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 27,
+    "nbMessages": 0
+  },
+  {
+    "email": "selim@tavux.fr",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 359,
+    "nbMessages": 83
+  },
+  {
+    "email": "chendi@email.jijyun.cn",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 40449,
+    "nbMessages": 7
+  },
+  {
+    "email": "yael.eureka@gmail.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 1,
+    "nbMessages": 8
+  },
+  {
+    "email": "adelsikora@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 1090,
+    "nbMessages": 8
+  },
+  {
+    "email": "reinaldo.picone@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 151,
+    "nbMessages": 190
+  },
+  {
+    "email": "jeff@marketmuse.com",
+    "nbAgents": 9,
+    "nbDatastores": 9,
+    "nbDatasources": 2495,
+    "nbMessages": 227
+  },
+  {
+    "email": "jean@prepaya.fr",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 13,
+    "nbMessages": 0
+  },
+  {
+    "email": "inna.kimshishkina@toyota-fs.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 1,
+    "nbMessages": 305
+  },
+  {
+    "email": "adriano.meirinho@celcoin.com.br",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 26,
+    "nbMessages": 14
+  },
+  {
+    "email": "chalela@hey.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 19,
+    "nbMessages": 2
+  },
+  {
+    "email": "niklas@fully.vc",
+    "nbAgents": 3,
+    "nbDatastores": 3,
+    "nbDatasources": 264,
+    "nbMessages": 53
+  },
+  {
+    "email": "eric@locoventures.co",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 192,
+    "nbMessages": 23
+  },
+  {
+    "email": "nextcompta@gmail.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 2,
+    "nbMessages": 72
+  },
+  {
+    "email": "github@octolus.net",
+    "nbAgents": 5,
+    "nbDatastores": 5,
+    "nbDatasources": 229,
+    "nbMessages": 5629
+  },
+
+  {
+    "email": "copyleftcultivars@gmail.com",
+    "nbAgents": 4,
+    "nbDatastores": 4,
+    "nbDatasources": 1011,
+    "nbMessages": 169
+  },
+  {
+    "email": "info@degreegrading.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 58,
+    "nbMessages": 1299
+  },
+  {
+    "email": "theo.leblanc2@gmail.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 44,
+    "nbMessages": 0
+  },
+  {
+    "email": "mulhem@grambell.com",
+    "nbAgents": 4,
+    "nbDatastores": 4,
+    "nbDatasources": 446,
+    "nbMessages": 22
+  },
+  {
+    "email": "mail@benjshap.com",
+    "nbAgents": 5,
+    "nbDatastores": 5,
+    "nbDatasources": 3898,
+    "nbMessages": 4232
+  },
+  {
+    "email": "correoparaopen01@gmail.com",
+    "nbAgents": 0,
+    "nbDatastores": 0,
+    "nbDatasources": 0,
+    "nbMessages": 0
+  },
+  {
+    "email": "stefan.headwai@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 15,
+    "nbMessages": 401
+  },
+  {
+    "email": "admin@everbreed.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 275,
+    "nbMessages": 487
+  },
+  {
+    "email": "michiel@tmi.one",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 17,
+    "nbMessages": 9
+  },
+  {
+    "email": "chat@adcci.gov.ae",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 139,
+    "nbMessages": 2319
+  },
+  {
+    "email": "mhochleutner@koellisch.de",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 33,
+    "nbMessages": 323
+  },
+  {
+    "email": "sachee@coreplan.io",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 132,
+    "nbMessages": 8
+  },
+  {
+    "email": "dustin@trufflesec.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 71,
+    "nbMessages": 41
+  },
+  {
+    "email": "dev@eesee.io",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 16,
+    "nbMessages": 699
+  },
+  {
+    "email": "sam@vegancreativecompass.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 4418,
+    "nbMessages": 2
+  },
+  {
+    "email": "info@vcloud.ai",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 195,
+    "nbMessages": 326
+  },
+  {
+    "email": "annie@anyonething.org",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 3,
+    "nbMessages": 0
+  },
+  {
+    "email": "philipe.saraiva.cruz@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 94,
+    "nbMessages": 380
+  },
+  {
+    "email": "danielvidal43@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 13,
+    "nbMessages": 652
+  },
+  {
+    "email": "aetchegoyen@waitry.net",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 238,
+    "nbMessages": 1243
+  },
+  {
+    "email": "cohere.us@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 1,
+    "nbMessages": 6
+  },
+  {
+    "email": "tom.johnson1367@gmail.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 5,
+    "nbMessages": 0
+  },
+  {
+    "email": "philipp.black@hotmail.de",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 2,
+    "nbMessages": 38
+  },
+  {
+    "email": "barclayl@gmail.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 1,
+    "nbMessages": 10
+  },
+  {
+    "email": "dev@3s-solar.swiss",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 160,
+    "nbMessages": 2
+  },
+  {
+    "email": "jacob@bsscommerce.com",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 44,
+    "nbMessages": 710
+  },
+  {
+    "email": "mhansell@gmail.com",
+    "nbAgents": 0,
+    "nbDatastores": 0,
+    "nbDatasources": 0,
+    "nbMessages": 0
+  },
+  {
+    "email": "sam@vegcatalyst.com",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 452,
+    "nbMessages": 17
+  },
+  {
+    "email": "sebastien@zonesdegenie.fr",
+    "nbAgents": 2,
+    "nbDatastores": 2,
+    "nbDatasources": 255,
+    "nbMessages": 31
+  },
+  {
+    "email": "tim@dermatologytech.org",
+    "nbAgents": 4,
+    "nbDatastores": 4,
+    "nbDatasources": 790,
+    "nbMessages": 42
+  },
+  {
+    "email": "juan.cortes@phidias.com.co",
+    "nbAgents": 1,
+    "nbDatastores": 1,
+    "nbDatasources": 114,
+    "nbMessages": 86
+  }
+]

@@ -288,21 +288,21 @@ export default function Navigation() {
               active: router.route.startsWith(RouteNames.ANALYTICS),
               isNew: true,
             },
-            // {
-            //   label: 'Contacts',
-            //   route: RouteNames.CONTACTS,
-            //   icon: <RecentActorsIcon fontSize="md" />,
-            //   active: router.route.startsWith(RouteNames.CONTACTS),
-            //   isNew: true,
-            // },
-            // {
-            //   label: 'Email Inboxes',
-            //   route: RouteNames.EMAIL_INBOXES,
-            //   icon: <AllInboxRoundedIcon fontSize="small" />,
-            //   active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
-            //   // isExperimental: true,
-            //   isNew: true,
-            // },
+            {
+              label: 'Email Inboxes',
+              route: RouteNames.EMAIL_INBOXES,
+              icon: <AllInboxRoundedIcon fontSize="small" />,
+              active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
+              // isExperimental: true,
+              isNew: true,
+            },
+            {
+              label: 'Contacts',
+              route: RouteNames.CONTACTS,
+              icon: <RecentActorsIcon fontSize="md" />,
+              active: router.route.startsWith(RouteNames.CONTACTS),
+              isNew: true,
+            },
           ]
         : []),
       ...(product === 'cs'
