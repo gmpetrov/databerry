@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.168"></a>
+## 0.1.168 (2024-01-10)
+
+### Miscellaneous
+
+- 🤖 bump version [[ad3b1f7](https://github.com/gmpetrov/databerry/commit/ad3b1f72b02882a9e3d1d14f52cfbf311631d8cf)]
+-  Feature/inbox conversation settings ([#296](https://github.com/gmpetrov/databerry/issues/296)) [[3809b6e](https://github.com/gmpetrov/databerry/commit/3809b6ed729faf7dc23357f08efc810b9e565128)]
+
+
 <a name="0.1.167"></a>
 ## 0.1.167 (2024-01-09)
 
