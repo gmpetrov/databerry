@@ -63,25 +63,22 @@ export const generateUploadLinks = async (
       case 'chatUpload':
         // Allow unauthenticated users to upload to chat if agentId is provided and agent is public
         if (!organizationId) {
-          if (!item.conversationId) {
+          if (!item.conversationId || !item.agentId) {
             throw new ApiError(ApiErrorType.UNAUTHORIZED);
           }
 
-          const conversation = await prisma.conversation.findUnique({
+          const agent = await prisma.agent.findUnique({
             where: {
-              id: item.conversationId,
-              agent: {
-                visibility: 'public',
-              },
-            },
-            include: {
-              agent: true,
+              id: item.agentId,
+              visibility: 'public',
             },
           });
 
-          if (!conversation) {
+          if (!agent) {
             throw new ApiError(ApiErrorType.UNAUTHORIZED);
           }
+
+          organizationId = agent.organizationId as string;
         }
 
         prefix = `organizations/${organizationId}/conversations/${item.conversationId}/uploads`;
