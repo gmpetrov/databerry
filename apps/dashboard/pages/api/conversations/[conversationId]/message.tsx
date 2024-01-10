@@ -169,9 +169,11 @@ export const sendMessage = async (
         inReplyTo: conversation?.channelExternalId!,
         from: {
           name: conversation?.mailInbox?.fromName!,
-          address: conversation?.mailInbox?.customEmail
-            ? conversation?.mailInbox?.customEmail
-            : `${conversation?.mailInbox?.alias}@${process.env.INBOUND_EMAIL_DOMAIN}`,
+          address:
+            conversation?.mailInbox?.customEmail &&
+            conversation?.mailInbox?.isCustomEmailVerified
+              ? conversation?.mailInbox?.customEmail
+              : `${conversation?.mailInbox?.alias}@${process.env.INBOUND_EMAIL_DOMAIN}`,
         },
         to: emails,
         subject,

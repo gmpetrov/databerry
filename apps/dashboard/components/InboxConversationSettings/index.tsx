@@ -60,11 +60,19 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
       case ConversationChannel.dashboard:
       case ConversationChannel.form:
         hide = true;
+      case ConversationChannel.mail:
+        if (!query?.data?.mailInboxId) {
+          hide = true;
+        }
       default:
         break;
     }
     return hide;
-  }, [query?.data?.channel, query?.data?.channelExternalId]);
+  }, [
+    query?.data?.channel,
+    query?.data?.channelExternalId,
+    query?.data?.mailInboxId,
+  ]);
 
   return (
     <InboxConversationFormProvider id={conversationId}>

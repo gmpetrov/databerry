@@ -5,13 +5,14 @@ import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import mailer from '@chaindesk/lib/mailer';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import roles from '@chaindesk/lib/middlewares/roles';
 import { UpdateMailInboxSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import { MembershipRole } from '@chaindesk/prisma';
+import { MailInbox, MembershipRole } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createAuthApiHandler();
@@ -30,6 +31,7 @@ export const getMailInbox = async (
   if (!item) {
     throw new ApiError(ApiErrorType.NOT_FOUND);
   }
+
   return item;
 };
 
@@ -41,6 +43,7 @@ export const updateMailInbox = async (
 ) => {
   const id = req.query.id as string;
   const data = UpdateMailInboxSchema.parse(req.body);
+  let extraUpdates = {} as Partial<MailInbox>;
 
   const old = await prisma.mailInbox.findUnique({
     where: {
@@ -61,17 +64,26 @@ export const updateMailInbox = async (
     }
   }
 
+  if (data.customEmail && old?.customEmail !== data.customEmail) {
+    extraUpdates = {
+      ...extraUpdates,
+      isCustomEmailVerified: false,
+    };
+  }
+
   const item = await prisma.mailInbox.update({
     where: {
       id,
     },
     data: {
       ...data,
+      ...extraUpdates,
     },
   });
   if (!item) {
     throw new ApiError(ApiErrorType.NOT_FOUND);
   }
+
   return item;
 };
 

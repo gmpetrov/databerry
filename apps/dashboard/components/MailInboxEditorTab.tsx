@@ -1,6 +1,8 @@
 import {
   Alert,
+  Button,
   Checkbox,
+  Chip,
   CircularProgress,
   FormControl,
   FormHelperText,
@@ -10,10 +12,17 @@ import {
 } from '@mui/joy';
 import { useSession } from 'next-auth/react';
 import React, { useRef } from 'react';
+import useSWRMutation from 'swr/mutation';
 
+import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
+
+import AlertPremiumFeature from './AlertPremiumFeature';
 import Input from './Input';
 import MailInboxFormProvider from './MailInboxFormProvider';
 import MailInboxMessagePreview from './MailInboxMessagePreview';
+import UsageLimitCard from './UsageLimitCard';
+import UserFree from './UserFree';
+import UserPremium from './UserPremium';
 
 type Props = {
   inboxId: string;
@@ -21,9 +30,15 @@ type Props = {
 
 function MailInboxEditorTab({ inboxId }: Props) {
   const { data: session } = useSession();
+
+  const startVerifyEmailMutation = useSWRMutation(
+    `/api/mail-inboxes/${inboxId}/start-verify-email`,
+    generateActionFetcher(HTTP_METHOD.POST)
+  );
+
   return (
     <MailInboxFormProvider inboxId={inboxId}>
-      {({ methods, refinement }) => {
+      {({ methods, query, refinement }) => {
         const values = methods.watch();
         const inboxEmail = `${values.alias}@on.chaindesk.ai`;
 
@@ -54,8 +69,51 @@ function MailInboxEditorTab({ inboxId }: Props) {
               />
 
               <FormControl>
-                <FormLabel>Custom email</FormLabel>
-                <Alert color="warning">Coming Soon 🤗</Alert>
+                <UserPremium>
+                  <Input
+                    control={methods.control}
+                    label="Custom email"
+                    endDecorator={
+                      query.data?.customEmail &&
+                      query.data?.isCustomEmailVerified ? (
+                        <Chip color="success">verified</Chip>
+                      ) : (
+                        query?.data?.customEmail && (
+                          <Button
+                            loading={startVerifyEmailMutation.isMutating}
+                            size="sm"
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+
+                              await startVerifyEmailMutation.trigger({});
+
+                              await query.mutate();
+                            }}
+                          >
+                            verify
+                          </Button>
+                        )
+                      )
+                    }
+                    {...methods.register('customEmail')}
+                  />
+                </UserPremium>
+
+                <UserFree>
+                  <FormControl>
+                    <FormLabel>Custom Email</FormLabel>
+                    <AlertPremiumFeature title="Custom email is a premium feature" />
+                  </FormControl>
+                </UserFree>
+
+                {query?.data?.customEmail &&
+                  query?.data?.customEmailVerificationTokenId && (
+                    <Alert sx={{ mt: 1 }} color="primary">
+                      A verification email has been sent to
+                      <strong>{`${query?.data?.customEmail}`}</strong>
+                    </Alert>
+                  )}
               </FormControl>
 
               <Input

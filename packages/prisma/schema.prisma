@@ -723,14 +723,14 @@ model MailInbox {
   hideBranding Boolean? @default(false) @map("hide_branding")
 
   customEmail String? @map("custom_email")
-
-  // smtpCredentials   ServiceProvider? @relation(fields: [smtpCredentialsId], references: [id])
-  // smtpCredentialsId String?          @map("smtp_credentials_id")
-
+  isCustomEmailVerified Boolean? @default(false) @map("is_custom_email_verified")
   conversations    Conversation[]
 
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  customEmailVerificationToken   VerificationCode?  @relation(fields: [customEmailVerificationTokenId], references: [code])
+  customEmailVerificationTokenId String? @unique @map("custom_email_verification_token_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -768,6 +768,17 @@ model Contact {
   @@unique([email, organizationId], name: "unique_email_for_org")
   @@map("contacts") 
 }
+
+model VerificationCode {
+  code   String              @id @default(cuid())
+
+  mailInbox   MailInbox? 
+  mailInboxId String?        @map("maiL_inbox_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  @@map("verification_codes")
+}
+
 
 enum LLMTaskOutputType {
   youtube_summary
