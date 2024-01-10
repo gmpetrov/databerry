@@ -55,7 +55,7 @@ import ChatBox from '@app/components/ChatBox';
 import { ConversationExport } from '@app/components/ConversationExport';
 import CopyButton from '@app/components/CopyButton';
 import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
-// import InboxConversationSettings from '@app/components/InboxConversationSettings';
+import InboxConversationSettings from '@app/components/InboxConversationSettings';
 import Layout from '@app/components/Layout';
 import { updateConversationStatus } from '@app/components/ResolveButton';
 import { handleEvalAnswer } from '@app/hooks/useChat';
@@ -77,6 +77,7 @@ import {
 import {
   Attachment,
   ConversationChannel,
+  ConversationPriority,
   ConversationStatus,
   MessageEval,
   MessageFrom,
@@ -87,6 +88,7 @@ import { getAgents } from '../api/agents';
 import { updateStatus } from '../api/conversations/update-status';
 import { getLogs } from '../api/logs';
 import { getConversation } from '../api/logs/[id]';
+import { getMemberships } from '../api/memberships';
 import { markAllRead } from '../api/messages/mark-all-read';
 
 const LIMIT = 20;
@@ -195,7 +197,9 @@ export default function LogsPage() {
     router.query.eval ||
     router.query.agentId ||
     router.query.tab !== TabEnum.all ||
-    router.query.channel;
+    router.query.channel ||
+    router.query.priority ||
+    router.query.assigneeId;
 
   const parentRef = React.useRef();
   const [state, setState] = useStateReducer({
@@ -205,6 +209,7 @@ export default function LogsPage() {
     improveAnswerDefaultValue: '' as string | undefined,
     currentConversationIndex: 0,
     isAiEnabled: true,
+    refreshInterval: 5000,
   });
 
   const getConversationsQuery = useSWRInfinite<
@@ -226,6 +231,8 @@ export default function LogsPage() {
       eval: (router.query.eval as string) || '',
       agentId: (router.query.agentId as string) || '',
       channel: (router.query.channel as string) || '',
+      priority: (router.query.priority as string) || '',
+      assigneeId: (router.query.assigneeId as string) || '',
       ...tabToParams(router.query.tab as string),
     });
 
@@ -241,29 +248,21 @@ export default function LogsPage() {
     fetcher,
     {
       // TODO: remove when we have websockets.
-      ...(state.isAiEnabled
-        ? { refreshInterval: 30000 }
-        : { refreshInterval: 5000 }),
+      // refreshInterval: state.refreshInterval,
     }
+  );
+
+  const getMembershipsQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getMemberships>
+  >(`/api/memberships`, fetcher);
+
+  const currentMembership = getMembershipsQuery?.data?.find(
+    (one) => one.userId === session?.user?.id
   );
 
   const conversationChatMutation = useSWRMutation(
     state.currentConversationId
       ? `/api/conversations/${state.currentConversationId}/message`
-      : null,
-    generateActionFetcher(HTTP_METHOD.POST)
-  );
-
-  const conversationUpdater = useSWRMutation(
-    state.currentConversationId
-      ? `/api/conversations/${state.currentConversationId}`
-      : null,
-    generateActionFetcher(HTTP_METHOD.PATCH)
-  );
-
-  const syncAiMutation = useSWRMutation(
-    state.currentConversationId
-      ? `/api/conversations/${state.currentConversationId}/integration/sync-ai-status`
       : null,
     generateActionFetcher(HTTP_METHOD.POST)
   );
@@ -300,6 +299,7 @@ export default function LogsPage() {
     if (files && files?.length > 0) {
       const filesUrls = await upload(
         files.map((each) => ({
+          conversationId: state.currentConversationId,
           case: 'chatUpload',
           fileName: each.name,
           mimeType: each.type,
@@ -339,7 +339,7 @@ export default function LogsPage() {
     conversationId: string;
     conversationStatus: ConversationStatus;
   }) => {
-    await updateConversationStatus(conversationId, conversationStatus);
+    // await updateConversationStatus(conversationId, conversationStatus);
 
     // sync data
     await Promise.all([
@@ -360,56 +360,13 @@ export default function LogsPage() {
     ];
   }, [getConversationsQuery?.data, getSingleConversationQuery?.data]);
 
-  const isHumanHandoffButtonHidden = useMemo(() => {
-    let hide = false;
-    const externalChannelId = getConversationQuery?.data?.channelExternalId;
-
-    switch (getConversationQuery?.data?.channel) {
-      case ConversationChannel.crisp:
-      case ConversationChannel.slack:
-        if (!externalChannelId) {
-          hide = true;
-        }
-        break;
-      case ConversationChannel.dashboard:
-      case ConversationChannel.form:
-        hide = true;
-      default:
-        break;
-    }
-    return hide;
-  }, [
-    getConversationQuery?.data?.channel,
-    getConversationQuery?.data?.channelExternalId,
-  ]);
-
-  const toggleAi = async () => {
-    try {
-      switch (getConversationQuery.data?.channel) {
-        case 'crisp':
-          await syncAiMutation.trigger({
-            isAiEnabled: !state.isAiEnabled,
-            channel: 'crisp',
-          });
-          break;
-        default:
-          break;
-      }
-
-      await conversationUpdater.trigger({
-        isAiEnabled: !state.isAiEnabled,
-      });
-
-      await getConversationQuery.mutate();
-
-      // synchronize
+  useEffect(() => {
+    if (getConversationQuery?.data) {
       setState({
-        isAiEnabled: !state.isAiEnabled,
+        isAiEnabled: !!getConversationQuery?.data?.isAiEnabled,
       });
-    } catch (e) {
-      console.error(e);
     }
-  };
+  }, [getConversationQuery?.data?.isAiEnabled]);
 
   useEffect(() => {
     const found = conversations.find(
@@ -451,6 +408,44 @@ export default function LogsPage() {
     });
   }, [getConversationQuery?.data?.isAiEnabled]);
 
+  const handleStatusChange = React.useCallback(
+    async (status: ConversationStatus) => {
+      try {
+        // const nextConversationIndex =
+        //   state.currentConversationIndex === conversations?.length - 1
+        //     ? Math.max(0, state.currentConversationIndex - 1)
+        //     : state.currentConversationIndex + 1;
+        // const nextConversationId = conversations?.[nextConversationIndex]?.id;
+
+        // if (nextConversationId) {
+        //   setState({
+        //     currentConversationId: nextConversationId,
+        //     currentConversationIndex: nextConversationIndex,
+        //   });
+        // }
+
+        await Promise.all([
+          // getConversationQuery.mutate(),
+          getConversationsQuery.mutate(),
+        ]);
+
+        // await handleBannerAction({
+        //   conversationId: props.currentConversationId!,
+        //   conversationStatus: {
+        //     [ConversationStatus.RESOLVED]: ConversationStatus.UNRESOLVED,
+        //     [ConversationStatus.UNRESOLVED]: ConversationStatus.RESOLVED,
+        //     [ConversationStatus.HUMAN_REQUESTED]:
+        //       ConversationStatus.RESOLVED,
+        //   }[props.status],
+        // });
+      } catch {
+      } finally {
+        // setIsLoading(false);
+      }
+    },
+    [handleBannerAction, getConversationsQuery.mutate]
+  );
+
   if (!session?.organization) return null;
 
   if (
@@ -460,7 +455,7 @@ export default function LogsPage() {
   ) {
     return (
       <Alert
-        variant="outlined"
+        // variant="outlined"
         sx={{
           textAlign: 'center',
           justifyContent: 'center',
@@ -500,7 +495,7 @@ export default function LogsPage() {
           ></Input>
         )}
 
-        {props.email && props.status === ConversationStatus.HUMAN_REQUESTED && (
+        {/* {props.email && props.status === ConversationStatus.HUMAN_REQUESTED && (
           <Button
             size="sm"
             color="neutral"
@@ -511,9 +506,9 @@ export default function LogsPage() {
           >
             Reply
           </Button>
-        )}
+        )} */}
 
-        <Button
+        {/* <Button
           size="sm"
           loading={isLoading}
           color={
@@ -523,37 +518,7 @@ export default function LogsPage() {
               [ConversationStatus.HUMAN_REQUESTED]: 'success',
             }[props.status] as ColorPaletteProp
           }
-          onClick={async () => {
-            try {
-              setIsLoading(true);
-              const nextConversationIndex =
-                state.currentConversationIndex === conversations?.length - 1
-                  ? Math.max(0, state.currentConversationIndex - 1)
-                  : state.currentConversationIndex + 1;
-              const nextConversationId =
-                conversations?.[nextConversationIndex]?.id;
-
-              if (nextConversationId) {
-                setState({
-                  currentConversationId: nextConversationId,
-                  currentConversationIndex: nextConversationIndex,
-                });
-              }
-
-              await handleBannerAction({
-                conversationId: props.currentConversationId!,
-                conversationStatus: {
-                  [ConversationStatus.RESOLVED]: ConversationStatus.UNRESOLVED,
-                  [ConversationStatus.UNRESOLVED]: ConversationStatus.RESOLVED,
-                  [ConversationStatus.HUMAN_REQUESTED]:
-                    ConversationStatus.RESOLVED,
-                }[props.status],
-              });
-            } catch {
-            } finally {
-              setIsLoading(false);
-            }
-          }}
+          onClick={handleStatusChange}
           endDecorator={
             {
               [ConversationStatus.RESOLVED]: (
@@ -575,7 +540,7 @@ export default function LogsPage() {
               [ConversationStatus.HUMAN_REQUESTED]: 'Resolve',
             }[props.status]
           }
-        </Button>
+        </Button> */}
       </Stack>
     );
   }
@@ -728,6 +693,24 @@ export default function LogsPage() {
             </Menu>
           </Dropdown>
 
+          <SelectQueryParamFilter<EvalSchema>
+            filterName="assigneeId"
+            placeholder="Filter by Assignee"
+          >
+            {currentMembership && (
+              <Option value={currentMembership.id} sx={{ fontSize: 14 }}>
+                Me
+              </Option>
+            )}
+            {getMembershipsQuery?.data
+              ?.filter((each) => each.userId !== session?.user?.id)
+              ?.map((each) => (
+                <Option key={each.id} value={each.id} sx={{ fontSize: 14 }}>
+                  {each?.user?.email || each?.user?.name}
+                </Option>
+              ))}
+          </SelectQueryParamFilter>
+
           <SelectQueryParamFilter<ConversationChannel>
             filterName="channel"
             placeholder="Filter by Channel"
@@ -806,6 +789,32 @@ export default function LogsPage() {
               sx={{ fontSize: 14 }}
             >
               🔴 Bad
+            </Option>
+          </SelectQueryParamFilter>
+          <SelectQueryParamFilter<EvalSchema>
+            filterName="priority"
+            placeholder="Filter by Priority"
+          >
+            <Option
+              key={ConversationPriority.LOW}
+              value={ConversationPriority.LOW}
+              sx={{ fontSize: 14 }}
+            >
+              Low
+            </Option>
+            <Option
+              key={ConversationPriority.MEDIUM}
+              value={ConversationPriority.MEDIUM}
+              sx={{ fontSize: 14 }}
+            >
+              Medium
+            </Option>
+            <Option
+              key={ConversationPriority.HIGH}
+              value={ConversationPriority.HIGH}
+              sx={{ fontSize: 14 }}
+            >
+              High
             </Option>
           </SelectQueryParamFilter>
         </Stack>
@@ -1061,7 +1070,7 @@ export default function LogsPage() {
                   startDecorator={<Notifications />}
                   endDecorator={
                     <Stack direction="row" spacing={1}>
-                      {!isHumanHandoffButtonHidden && (
+                      {/* {!isHumanHandoffButtonHidden && (
                         <Button
                           variant="solid"
                           color={state.isAiEnabled ? 'primary' : 'warning'}
@@ -1078,7 +1087,7 @@ export default function LogsPage() {
                         >
                           {state.isAiEnabled ? 'Reply' : 'Re-Enable AI'}
                         </Button>
-                      )}
+                      )} */}
 
                       <BannerActions
                         status={getConversationQuery?.data?.status}
@@ -1140,7 +1149,7 @@ export default function LogsPage() {
                 withFileUpload
               />
 
-              {/* <Divider orientation="vertical" />
+              <Divider orientation="vertical" />
 
               <Stack
                 sx={(t) => ({
@@ -1148,15 +1157,16 @@ export default function LogsPage() {
                   width: '100%',
                   height: '100%',
                   // bgcolor: t.palette.background.paper,
-                  p: 2,
+                  // p: 2,
                 })}
               >
                 {state.currentConversationId && (
                   <InboxConversationSettings
                     conversationId={state.currentConversationId}
+                    onStatusChange={handleStatusChange}
                   />
                 )}
-              </Stack> */}
+              </Stack>
             </Stack>
           </Box>
         </Stack>

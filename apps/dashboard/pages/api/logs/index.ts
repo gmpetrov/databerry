@@ -1,5 +1,6 @@
 import {
   ConversationChannel,
+  ConversationPriority,
   ConversationStatus,
   Prisma,
 } from '@prisma/client';
@@ -23,6 +24,8 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const channelFilter = req.query.channel as ConversationChannel;
   const agentId = req.query.agentId as string;
   const conversationStatus = req.query.status as ConversationStatus | undefined;
+  const priority = req.query.priority as ConversationPriority | undefined;
+  const assigneeId = req.query.assigneeId as string | undefined;
   const unread = req.query.unread;
 
   const cursor = req.query.cursor as string;
@@ -79,6 +82,24 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
                     status: conversationStatus,
                   },
                 ],
+              },
+            ]
+          : []),
+        ...(priority
+          ? [
+              {
+                priority,
+              },
+            ]
+          : []),
+        ...(assigneeId
+          ? [
+              {
+                assignees: {
+                  every: {
+                    id: assigneeId,
+                  },
+                },
               },
             ]
           : []),

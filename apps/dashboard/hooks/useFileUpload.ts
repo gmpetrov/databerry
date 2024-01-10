@@ -13,6 +13,7 @@ type FileToUpload = {
   case: 'chatUpload' | 'agentIcon' | 'organizationIcon' | 'userIcon';
   file: File;
   agentId?: string;
+  conversationId?: string;
 };
 
 function useFileUpload() {
@@ -41,6 +42,7 @@ function useFileUpload() {
               fileName: each.file.name,
               mimeType: each.file.type as any,
               agentId: each.agentId as any,
+              conversationId: each.conversationId as any,
             }))
           )) || [];
 

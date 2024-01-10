@@ -5,6 +5,7 @@ import {
   AgentVisibility,
   Conversation,
   ConversationChannel,
+  ConversationPriority,
   ConversationStatus,
   Message,
   MessageEval,
@@ -601,6 +602,7 @@ export const GenerateUploadLinkRequestSchema = z.discriminatedUnion('case', [
   }),
   z.object({
     case: z.literal('chatUpload'),
+    conversationId: z.string().cuid(),
     agentId: z.string().cuid().optional(),
     fileName: z.string(),
     mimeType: AcceptedDocumentMimeTypesSchema.or(AcceptedAudioMimeTypesSchema)
@@ -667,4 +669,16 @@ export const CheckAliasAvailabilitySchema = z.object({
 
 export type CheckAliasAvailabilitySchema = z.infer<
   typeof CheckAliasAvailabilitySchema
+>;
+
+export const UpdateInboxConversationSchema = z.object({
+  id: z.string().cuid().optional(),
+  status: z.nativeEnum(ConversationStatus),
+  priority: z.nativeEnum(ConversationPriority),
+  assignees: z.array(z.string().cuid()).optional(),
+  isAiEnabled: z.boolean().optional(),
+});
+
+export type UpdateInboxConversationSchema = z.infer<
+  typeof UpdateInboxConversationSchema
 >;

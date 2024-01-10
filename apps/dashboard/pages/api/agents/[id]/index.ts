@@ -1,6 +1,8 @@
 import { NextApiResponse } from 'next';
+import pMap from 'p-map';
 
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
+import { deleteFolderFromS3Bucket } from '@chaindesk/lib/aws';
 import {
   createLazyAuthHandler,
   respond,
@@ -12,12 +14,7 @@ import roles from '@chaindesk/lib/middlewares/roles';
 import { UpdateAgentSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import {
-  AgentVisibility,
-  MembershipRole,
-  Prisma,
-  ToolType,
-} from '@chaindesk/prisma';
+import { AgentVisibility, MembershipRole, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createLazyAuthHandler();
@@ -200,6 +197,7 @@ export const deleteAgent = async (
   res: NextApiResponse
 ) => {
   const id = req.query.id as string;
+  const orgId = req.session?.organization?.id;
 
   const agent = await prisma.agent.findUnique({
     where: {
@@ -210,15 +208,57 @@ export const deleteAgent = async (
     },
   });
 
-  if (agent?.organizationId !== req.session?.organization?.id) {
+  if (agent?.organizationId !== orgId) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  await prisma.agent.delete({
+  const deleted = await prisma.agent.delete({
     where: {
       id,
     },
+    select: {
+      conversations: {
+        select: {
+          id: true,
+        },
+        where: {
+          messages: {
+            some: {
+              attachments: {
+                some: {
+                  url: {
+                    startsWith: 'http',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
+
+  // ATM conversation are deleted on cascade. Delete all conversations upload folders
+  const keys = deleted.conversations.map(
+    (conversation) => `organizations/${orgId}/conversations/${conversation.id}`
+  );
+
+  if (keys.length) {
+    await pMap(
+      keys,
+      async (key) => {
+        await deleteFolderFromS3Bucket(
+          process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+          key
+        );
+      },
+      {
+        concurrency: 10,
+      }
+    );
+
+    console.log(`${keys.length} deleted conversations upload folders`);
+  }
 
   return agent;
 };
