@@ -9,6 +9,7 @@ import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { s3 } from '@chaindesk/lib/aws';
 import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
 import { creatChatUploadKey } from '@chaindesk/lib/file-upload';
+import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import mailparser from '@chaindesk/lib/mail-parser';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
