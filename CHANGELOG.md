@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.169"></a>
+## 0.1.169 (2024-01-10)
+
+### Fixed
+
+- 🐛 file upload from chatbubble [[ced6bde](https://github.com/gmpetrov/databerry/commit/ced6bde13d6242483402595d590f2b87f88bf5dd)]
+- 🐛 assignee type error [[3773e83](https://github.com/gmpetrov/databerry/commit/3773e83623c178cc2602a855913e012c0eb62eff)]
+
+### Miscellaneous
+
+- 🎸 delete inbox conversation [[2ba5c14](https://github.com/gmpetrov/databerry/commit/2ba5c14664d1fd3094785221e45d61d54eaddc76)]
+- 🎸 display inbox name [[8ae9a84](https://github.com/gmpetrov/databerry/commit/8ae9a84b2ac66e2be743c3b2a0171d2d43b36347)]
+- 🤖 center text [[8e74d01](https://github.com/gmpetrov/databerry/commit/8e74d0103247b7890f57acc6475461e12a9a4fe5)]
+
+
 <a name="0.1.168"></a>
 ## 0.1.168 (2024-01-10)
 
