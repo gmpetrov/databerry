@@ -44,6 +44,10 @@ worker = "node --max-old-space-size=1536 apps/dashboard/.next/server/datasource-
   processes = ["worker"]
   auto_stop_machines = true
   auto_start_machines = true
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+    # force_https = true  # optional
 
 # [[services]]
 #   # processes = ["app"]
