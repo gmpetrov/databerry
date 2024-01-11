@@ -41,6 +41,7 @@ type Props = {
   datasourceId?: string;
   localStorageConversationIdKey?: string;
   agentId?: string;
+  disableFetchHistory?: boolean;
 };
 
 export type MessageEvalUnion = 'good' | 'bad';
@@ -89,7 +90,13 @@ export const handleEvalAnswer = async (props: {
 
 const LOCAL_STORAGE_CONVERSATION_ID_KEY = 'conversationId';
 
-const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
+const useChat = ({
+  endpoint,
+  channel,
+  queryBody,
+  disableFetchHistory,
+  ...otherProps
+}: Props) => {
   const localStorageConversationIdKey =
     otherProps.localStorageConversationIdKey ||
     LOCAL_STORAGE_CONVERSATION_ID_KEY;
@@ -144,9 +151,11 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
         previousPageData?.messages?.length - 1
       ]?.id as string;
 
-      return `${API_URL}/api/conversations/${state.conversationId}?cursor=${
-        cursor || ''
-      }`;
+      return !disableFetchHistory
+        ? `${API_URL}/api/conversations/${state.conversationId}?cursor=${
+            cursor || ''
+          }`
+        : null;
     },
     fetcher,
     {
@@ -170,7 +179,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
   }, [getConversationQuery]);
 
   const handleChatSubmit = useCallback(
-    async (_message: string, files: File[] = []) => {
+    async (_message: string, files: File[] = [], isDraft?: Boolean) => {
       const message = _message?.trim?.();
 
       if (!message || !endpoint) {
@@ -201,6 +210,8 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
       }
 
       if (
+        channel &&
+        channel !== 'dashboard' &&
         getConversationQuery?.data &&
         !getConversationQuery?.data?.[0]?.isAiEnabled
       ) {
@@ -273,6 +284,7 @@ const useChat = ({ endpoint, channel, queryBody, ...otherProps }: Props) => {
             conversationId: conversationId,
             channel,
             attachments,
+            isDraft,
           }),
           signal: ctrl.signal,
 

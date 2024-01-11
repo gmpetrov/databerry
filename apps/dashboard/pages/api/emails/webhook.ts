@@ -273,6 +273,7 @@ export async function inboundWebhook(
     },
     create: {
       id: conversationId,
+      isAiEnabled: false,
       channelExternalId: messageId,
       title: mail.subject,
       channel: ConversationChannel.mail,
@@ -293,6 +294,7 @@ export async function inboundWebhook(
       },
     },
     update: {
+      isAiEnabled: false,
       contacts: {
         connectOrCreate: contacts,
       },

@@ -46,6 +46,10 @@ export const chatAgentRequest = async (
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
 
+  if (data.isDraft && !session?.organization?.id) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+
   const isNewConversation = !data.conversationId;
   const conversationId = data.conversationId || cuid();
   if (
@@ -77,10 +81,17 @@ export const chatAgentRequest = async (
           },
           conversations: {
             where: {
-              AND: {
-                id: conversationId,
-                agentId: id,
-              },
+              ...(data.isDraft
+                ? {
+                    id: conversationId,
+                    organizationId: session?.organization?.id,
+                  }
+                : {
+                    AND: {
+                      id: conversationId,
+                      agentId: id,
+                    },
+                  }),
             },
             include: {
               messages: {
@@ -166,6 +177,18 @@ export const chatAgentRequest = async (
     throw err;
   }
 
+  let retrievalQuery = '';
+  if (data.isDraft) {
+    // Only use datastore when drafting a reply
+    agent.tools = agent.tools?.filter((each) => each?.type === 'datastore');
+    agent.modelName = 'gpt_3_5_turbo_16k';
+    const lastIndex =
+      (agent?.organization?.conversations?.[0]?.messages?.length || 0) - 1;
+    retrievalQuery =
+      agent?.organization?.conversations?.[0]?.messages?.[lastIndex]?.text ||
+      '';
+  }
+
   if (data.modelName) {
     // override modelName
     agent.modelName = data.modelName;
@@ -216,12 +239,14 @@ export const chatAgentRequest = async (
 
   const inputMessageId = cuid();
 
-  await conversationManager.createMessage({
-    id: inputMessageId,
-    from: MessageFrom.human,
-    text: data.query,
-    attachments: data.attachments,
-  });
+  if (!data.isDraft) {
+    await conversationManager.createMessage({
+      id: inputMessageId,
+      from: MessageFrom.human,
+      text: data.query,
+      attachments: data.attachments,
+    });
+  }
 
   const handleStream = (data: string, event: SSE_EVENT) =>
     streamData({
@@ -240,6 +265,7 @@ export const chatAgentRequest = async (
       abortController: ctrl,
       filters: data.filters,
       toolsConfig: data.toolsConfig,
+      retrievalQuery,
     }),
     prisma.usage.update({
       where: {
@@ -255,20 +281,23 @@ export const chatAgentRequest = async (
 
   const answerMsgId = cuid();
 
-  await conversationManager.createMessage({
-    id: answerMsgId,
-    inputId: inputMessageId,
-    from: MessageFrom.agent,
-    text: chatRes.answer,
-    sources: chatRes.sources,
-    usage: chatRes.usage,
-    approvals: chatRes.approvals,
-    metadata: chatRes.metadata,
-  });
+  if (!data.isDraft) {
+    await conversationManager.createMessage({
+      id: answerMsgId,
+      inputId: inputMessageId,
+      from: MessageFrom.agent,
+      text: chatRes.answer,
+      sources: chatRes.sources,
+      usage: chatRes.usage,
+      approvals: chatRes.approvals,
+      metadata: chatRes.metadata,
+    });
+  }
 
   // Send new conversation notfication from website visitor
   const ownerEmail = agent?.organization?.memberships?.[0]?.user?.email;
   if (
+    !data.isDraft &&
     ownerEmail &&
     isNewConversation &&
     data.channel === ConversationChannel.website &&
@@ -315,6 +344,7 @@ export const chatAgentRequest = async (
       ? AnalyticsEvents.INTERNAL_AGENT_QUERY
       : AnalyticsEvents.EXTERNAL_AGENT_QUERY,
     payload: {
+      isDraft: data.isDraft,
       userId: session?.user?.id,
       agentId: agent?.id,
       organizationId: session?.organization?.id,

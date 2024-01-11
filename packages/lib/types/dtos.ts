@@ -167,6 +167,7 @@ export const CreateAttachmentSchema = z.object({
 export type CreateAttachmentSchema = z.infer<typeof CreateAttachmentSchema>;
 
 export const ChatRequest = ChatModelConfigSchema.extend({
+  isDraft: z.boolean().optional().default(false),
   query: z.string(),
   streaming: z.boolean().optional().default(false),
   visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),

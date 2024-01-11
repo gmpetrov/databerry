@@ -41,6 +41,7 @@ export type ChatProps = ChatModelConfigSchema & {
   systemPrompt?: string;
   userPrompt?: string;
   query: string;
+  retrievalQuery?: string;
   stream?: any;
   modelName?: AgentModelName;
   history?: Message[];
@@ -69,8 +70,10 @@ const chat = async ({
   topK,
   toolsConfig,
   conversationId,
+  retrievalQuery,
   ...otherProps
 }: ChatProps) => {
+  console.log('retrievalQuery------------------------->', retrievalQuery);
   // Tools
   const nbDatastoreTools =
     tools?.filter((each) => each.type === 'datastore')?.length || 0;
@@ -159,7 +162,7 @@ const chat = async ({
   if (userPrompt?.includes('{context}')) {
     retrievalData = await datastoreToolHandler({
       maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
-      query: query,
+      query: retrievalQuery || query,
       tools: tools,
       filters: filters,
       topK: topK,
@@ -221,7 +224,7 @@ const chat = async ({
 
                 retrievalData = await datastoreToolHandler({
                   maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
-                  query: query,
+                  query: retrievalQuery || query,
                   tools: tools,
                   filters: filters,
                   topK: topK,

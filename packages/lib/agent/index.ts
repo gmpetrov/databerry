@@ -68,6 +68,7 @@ type AgentManagerProps = ChatModelConfigSchema &
     stream?: any;
     history?: Message[] | undefined;
     abortController?: any;
+    retrievalQuery?: string;
   };
 
 const SIMILARITY_THRESHOLD = 0.7;

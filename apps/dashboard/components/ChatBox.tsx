@@ -82,6 +82,7 @@ export type ChatBoxProps = {
   refreshConversation?: () => any;
   metadata?: Record<string, unknown>;
   withFileUpload?: boolean;
+  draftReplyInput?: JSX.Element | null;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -165,6 +166,7 @@ function ChatBox({
   refreshConversation,
   metadata,
   withFileUpload,
+  draftReplyInput,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -219,6 +221,18 @@ function ChatBox({
       );
     }, 0);
   }, [initialMessage]);
+
+  const handleOnDraftReply = useCallback(
+    (query: string) => {
+      methods.setValue('query', query, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    },
+    [methods.setValue]
+  );
+
+  const query = methods.watch('query');
 
   return (
     <Stack
@@ -682,6 +696,14 @@ function ChatBox({
                   justifyContent={'space-between'}
                   sx={{ width: '100%' }}
                 >
+                  {/* <Button>hello</Button> */}
+
+                  {draftReplyInput &&
+                    React.cloneElement(draftReplyInput, {
+                      query,
+                      onReply: handleOnDraftReply,
+                    })}
+
                   {withFileUpload && (
                     <IconButton
                       variant="plain"

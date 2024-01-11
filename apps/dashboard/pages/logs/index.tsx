@@ -54,6 +54,7 @@ import useSWRMutation from 'swr/mutation';
 import ChatBox from '@app/components/ChatBox';
 import { ConversationExport } from '@app/components/ConversationExport';
 import CopyButton from '@app/components/CopyButton';
+import DraftReplyInput from '@app/components/DarftReplyInput';
 import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import InboxConversationSettings from '@app/components/InboxConversationSettings';
 import Layout from '@app/components/Layout';
@@ -487,13 +488,13 @@ export default function LogsPage() {
 
     return (
       <Stack direction="row" spacing={1}>
-        {props.email && (
+        {/* {props.email && (
           <Input
             endDecorator={<CopyButton text={props.email} />}
             variant="outlined"
             value={props.email}
           ></Input>
-        )}
+        )} */}
 
         {/* {props.email && props.status === ConversationStatus.HUMAN_REQUESTED && (
           <Button
@@ -1174,6 +1175,17 @@ export default function LogsPage() {
                 refreshConversation={getConversationQuery.mutate}
                 disableWatermark
                 withFileUpload
+                draftReplyInput={
+                  <DraftReplyInput
+                    key={state.currentConversationId}
+                    conversationId={state.currentConversationId}
+                    defaultAgentId={getConversationQuery?.data?.agentId!}
+                    onSubmit={({ query, agentId }) => {
+                      console.log({ query, agentId });
+                      // return handleOperatorChat(query || ' ', [], agentId);
+                    }}
+                  />
+                }
               />
 
               <Divider orientation="vertical" />
