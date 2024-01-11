@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.186"></a>
+## 0.1.186 (2024-01-11)
+
+### Fixed
+
+- 🐛 knowledge restriction improvements [[e007f46](https://github.com/gmpetrov/databerry/commit/e007f4626ac2404213ccfcd43f51d526bc082372)]
+
+
 <a name="0.1.185"></a>
 ## 0.1.185 (2024-01-11)
 
