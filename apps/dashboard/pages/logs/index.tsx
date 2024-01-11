@@ -1177,7 +1177,7 @@ export default function LogsPage() {
                 disableWatermark
                 withFileUpload
                 withSources
-                isAiEnabled={!!getConversationQuery?.data?.isAiEnabled}
+                isAiEnabled={getConversationQuery?.data?.isAiEnabled!}
                 draftReplyInput={
                   <DraftReplyInput
                     key={state.currentConversationId}
