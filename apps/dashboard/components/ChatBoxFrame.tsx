@@ -177,6 +177,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           renderBottom={<CustomerSupportActions config={config} />}
           withFileUpload
           withSources={!!agent?.includeSources}
+          isAiEnabled={methods.isAiEnabled}
         />
       </Box>
     </ChatContext.Provider>

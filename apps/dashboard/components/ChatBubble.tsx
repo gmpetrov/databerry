@@ -474,6 +474,7 @@ function App(props: {
                     }
                     withFileUpload
                     withSources={!!state?.agent?.includeSources}
+                    isAiEnabled={methods.isAiEnabled}
                   />
                 </Stack>
               </Card>

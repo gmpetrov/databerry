@@ -4,6 +4,7 @@ import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
@@ -84,6 +85,7 @@ export type ChatBoxProps = {
   withFileUpload?: boolean;
   draftReplyInput?: JSX.Element | null;
   withSources?: boolean;
+  isAiEnabled?: boolean;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -169,6 +171,7 @@ function ChatBox({
   withFileUpload,
   draftReplyInput,
   withSources,
+  isAiEnabled,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -252,8 +255,27 @@ function ChatBox({
         minHeight: '100%',
         mx: 'auto',
         gap: 0,
+        position: 'relative',
       }}
     >
+      {typeof isAiEnabled === 'boolean' && !isAiEnabled && (
+        <Chip
+          color="danger"
+          sx={{
+            left: '50%',
+            transform: 'translateX(-50%)',
+            top: 10,
+            position: 'absolute',
+            zIndex: 1,
+          }}
+          variant="soft"
+          size="sm"
+          startDecorator={<SmartToyRoundedIcon />}
+        >
+          off
+        </Chip>
+      )}
+
       <Stack
         ref={scrollableRef}
         direction={'column'}

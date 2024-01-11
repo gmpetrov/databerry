@@ -640,6 +640,7 @@ const useChat = ({
     conversationStatus: state.conversationStatus as ConversationStatus,
     visitorEmail: getConversationQuery?.data?.[0]?.lead?.email || '',
     isStreaming: state.isStreaming,
+    isAiEnabled: state.isAiEnabled,
     createNewConversation,
     handleChatSubmit,
     handleLoadMoreMessages: handleLoadMoreMessages,

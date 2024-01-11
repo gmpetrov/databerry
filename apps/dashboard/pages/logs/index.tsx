@@ -1152,6 +1152,7 @@ export default function LogsPage() {
                     createdAt: each.createdAt,
                     eval: each.eval,
                     approvals: each.approvals || [],
+                    sources: (each.sources as any) || [],
                     attachments: each.attachments || [],
                   })) || []
                 }
@@ -1175,6 +1176,8 @@ export default function LogsPage() {
                 refreshConversation={getConversationQuery.mutate}
                 disableWatermark
                 withFileUpload
+                withSources
+                isAiEnabled={!!getConversationQuery?.data?.isAiEnabled}
                 draftReplyInput={
                   <DraftReplyInput
                     key={state.currentConversationId}
@@ -1186,7 +1189,6 @@ export default function LogsPage() {
                     }}
                   />
                 }
-                withSources
               />
 
               <Divider orientation="vertical" />
