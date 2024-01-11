@@ -716,6 +716,13 @@ export default function LogsPage() {
             placeholder="Filter by Channel"
           >
             <Option
+              key={ConversationChannel.mail}
+              value={ConversationChannel.mail}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.mail}
+            </Option>
+            <Option
               key={ConversationChannel.website}
               value={ConversationChannel.website}
               sx={{ fontSize: 14 }}
