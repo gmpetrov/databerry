@@ -4,6 +4,7 @@ import {
   Agent,
   Attachment,
   ConversationChannel,
+  ConversationStatus,
   Datastore,
   Message,
   Prisma,
@@ -54,6 +55,7 @@ export default class ConversationManager {
   channelExternalId?: string;
   channelCredentialsId?: string;
   formId?: string;
+  status?: ConversationStatus;
 
   constructor({
     organizationId,
@@ -77,6 +79,7 @@ export default class ConversationManager {
     channelExternalId?: string;
     channelCredentialsId?: string;
     formId?: string;
+    status?: ConversationStatus;
   }) {
     this.messages = [];
     this.userId = userId;
@@ -178,6 +181,11 @@ export default class ConversationManager {
           : {}),
       },
       update: {
+        ...(this.status
+          ? {
+              status: this.status,
+            }
+          : {}),
         channelExternalId: this.channelExternalId,
         ...(this.channelCredentialsId
           ? {

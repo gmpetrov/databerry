@@ -21,7 +21,11 @@ import {
 } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import { ConversationChannel, MessageFrom } from '@chaindesk/prisma';
+import {
+  ConversationChannel,
+  ConversationStatus,
+  MessageFrom,
+} from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 const handler = createLazyAuthHandler();
 
@@ -206,6 +210,9 @@ export const sendMessage = async (
     conversationId: conversationId,
     channel: payload.channel as ConversationChannel,
     userId: session?.user?.id,
+    // if the user is not logged in, then the conversation is in the human requested state
+    // This way we not miss messages sent on resovled conversations
+    status: !session?.user?.id ? ConversationStatus.HUMAN_REQUESTED : undefined,
   });
 
   const answerMsgId = cuid();
@@ -215,7 +222,6 @@ export const sendMessage = async (
     from: MessageFrom.human,
     text: payload.message,
     attachments: payload.attachments,
-    // externalId: externalMessageId,
   });
 
   await conversationManager.save();

@@ -295,6 +295,7 @@ export async function inboundWebhook(
     },
     update: {
       isAiEnabled: false,
+      status: 'UNRESOLVED',
       contacts: {
         connectOrCreate: contacts,
       },
