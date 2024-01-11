@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.187"></a>
+## 0.1.187 (2024-01-11)
+
+### Fixed
+
+- 🐛 markdown heading size [[1eb5ac5](https://github.com/gmpetrov/databerry/commit/1eb5ac5ae9d577ed6181aa9a6b2ccd6024a6e44b)]
+
+
 <a name="0.1.186"></a>
 ## 0.1.186 (2024-01-11)
 
