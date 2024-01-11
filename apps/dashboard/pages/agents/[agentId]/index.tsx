@@ -32,6 +32,7 @@ import ChatBox from '@app/components/ChatBox';
 import ChatSection from '@app/components/ChatSection';
 import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
+import Loader from '@app/components/Loader';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgent from '@app/hooks/useAgent';
 import useChat from '@app/hooks/useChat';
@@ -97,7 +98,7 @@ export default function AgentPage() {
   }, [router.isReady, router.query.tab]);
 
   if (!query?.data) {
-    return null;
+    return <Loader />;
   }
 
   return (
