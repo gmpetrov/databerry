@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.181"></a>
+## 0.1.181 (2024-01-11)
+
+### Fixed
+
+- 🐛 reply with ai disabled [[295300d](https://github.com/gmpetrov/databerry/commit/295300d4ab129444371fe64a8ea5ebb62ac58cfe)]
+
+
 <a name="0.1.180"></a>
 ## 0.1.180 (2024-01-11)
 
