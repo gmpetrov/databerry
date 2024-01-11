@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.182"></a>
+## 0.1.182 (2024-01-11)
+
+### Fixed
+
+- 🐛 include sources showing when disabled [[4cc6537](https://github.com/gmpetrov/databerry/commit/4cc65374b1bddcbeb77bed2627f644ea1cc2c8ac)]
+- 🐛 iframe copy clipboard [[f01a503](https://github.com/gmpetrov/databerry/commit/f01a50356e548ed852f865c3a3e200cecb4b8c9a)]
+
+### Miscellaneous
+
+- 🎸 add label to show agent off [[e1967ea](https://github.com/gmpetrov/databerry/commit/e1967ea037e26509bc359b201e2be8970e9a6fac)]
+
+
 <a name="0.1.181"></a>
 ## 0.1.181 (2024-01-11)
 
