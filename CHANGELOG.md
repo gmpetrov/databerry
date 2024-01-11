@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.184"></a>
+## 0.1.184 (2024-01-11)
+
+### Fixed
+
+- 🐛 mailbox showBranding [[d44d306](https://github.com/gmpetrov/databerry/commit/d44d306cfc9f431ee55b210fbd1e3b8f2410e7fa)]
+
+
 <a name="0.1.183"></a>
 ## 0.1.183 (2024-01-11)
 
