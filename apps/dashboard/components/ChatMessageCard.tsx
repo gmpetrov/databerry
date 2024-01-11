@@ -16,6 +16,10 @@ function ChatMessage({ sx, children, className, ...otherProps }: Props) {
         marginRight: 'auto',
         gap: 0,
         maxWidth: '100%',
+        whiteSpace: 'pre-line',
+        ['ol, ul']: {
+          whiteSpace: 'normal',
+        },
         // '.prose > *:first-child': {
         //   pt: 1,
         //   mt: 0,
@@ -28,10 +32,9 @@ function ChatMessage({ sx, children, className, ...otherProps }: Props) {
         px: 2,
         [' p ']: {
           m: 0,
-          // p: 0,
           maxWidth: '100%',
-          // wordBreak: 'break-word',
         },
+
         [' img ']: {
           width: '100%',
           maxWidth: '300px',
