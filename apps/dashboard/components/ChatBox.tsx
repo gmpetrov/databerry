@@ -668,7 +668,6 @@ function ChatBox({
                   // margin: 0,
                 },
               }}
-              disabled={isLoading}
               variant="outlined"
               startDecorator={
                 <Stack
@@ -690,6 +689,8 @@ function ChatBox({
                   </IconButton>
                 </Stack>
               }
+              // disabled={isLoading} // Disabled otherwise stop button is not clickable
+
               endDecorator={
                 <Stack
                   direction={'row'}

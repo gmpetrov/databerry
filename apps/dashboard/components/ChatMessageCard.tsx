@@ -16,7 +16,6 @@ function ChatMessage({ sx, children, className, ...otherProps }: Props) {
         marginRight: 'auto',
         gap: 0,
         maxWidth: '100%',
-        whiteSpace: 'pre-line',
         // '.prose > *:first-child': {
         //   pt: 1,
         //   mt: 0,
