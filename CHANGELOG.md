@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.177"></a>
+## 0.1.177 (2024-01-11)
+
+### Miscellaneous
+
+- 🎸 Draft Reply [[e8bff74](https://github.com/gmpetrov/databerry/commit/e8bff744d50adb801eb94f1fd0938d494fc8a583)]
+- 🎸 button to expand size text area [[70b660b](https://github.com/gmpetrov/databerry/commit/70b660bfc98b1f4d5146d01cca322e850307c6f5)]
+- 🎸 filter by channel mail [[576eb96](https://github.com/gmpetrov/databerry/commit/576eb96915a898760f13c3228eb0c9effdf583b8)]
+
+
 <a name="0.1.176"></a>
 ## 0.1.176 (2024-01-10)
 
