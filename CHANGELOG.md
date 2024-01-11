@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.180"></a>
+## 0.1.180 (2024-01-11)
+
+### Fixed
+
+- 🐛 chat message format [[86bea24](https://github.com/gmpetrov/databerry/commit/86bea2458579122baa786353248a1add37ad0f4b)]
+
+
 <a name="0.1.179"></a>
 ## 0.1.179 (2024-01-11)
 
