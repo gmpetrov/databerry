@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.179"></a>
+## 0.1.179 (2024-01-11)
+
+### Fixed
+
+- 🐛 stop button not clickable [[526f65e](https://github.com/gmpetrov/databerry/commit/526f65e7714e1232febf30780cdd21f82b3e2411)]
+- 🐛 fly config [[41c5458](https://github.com/gmpetrov/databerry/commit/41c54580af4213130c3dfaae6083d1c5f1b4e00d)]
+
+
 <a name="0.1.178"></a>
 ## 0.1.178 (2024-01-11)
 
