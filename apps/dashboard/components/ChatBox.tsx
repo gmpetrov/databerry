@@ -1,11 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
+import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
 import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
 import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
+import UnfoldLessOutlinedIcon from '@mui/icons-material/UnfoldLessOutlined';
+import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined';
 import Alert from '@mui/joy/Alert';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -167,6 +170,7 @@ function ChatBox({
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsg, setFirstMsg] = useState<ChatMessage>();
   const [files, setFiles] = useState<File[]>([] as File[]);
+  const [isTextAreaExpanded, setIsTextAreaExpended] = useState(false);
 
   const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
   const lastMessageLength =
@@ -188,6 +192,7 @@ function ChatBox({
     try {
       setIsLoading(true);
       setHideTemplateMessages(true);
+      setIsTextAreaExpended(false);
       methods.reset();
       await onSubmit(query, files);
       setFiles([]);
@@ -615,8 +620,8 @@ function ChatBox({
                   id: 'chatbox-input',
                 },
               }}
-              maxRows={8}
-              minRows={1}
+              maxRows={24}
+              minRows={isTextAreaExpanded ? 18 : 1}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -624,12 +629,19 @@ function ChatBox({
                 }
               }}
               sx={{
+                ...(isTextAreaExpanded
+                  ? {
+                      position: 'absolute',
+                      bottom: 0,
+                      zIndex: 1,
+                    }
+                  : {}),
                 width: '100%',
                 flexDirection: 'row',
                 alignItems: 'center',
                 '.MuiTextarea-endDecorator': {
                   // marginBlockStart: 'auto',
-                  marginBlockStart: 0,
+                  marginBlock: 0,
                   marginTop: 'auto',
                 },
                 '.MuiTextarea-startDecorator': {
@@ -637,12 +649,33 @@ function ChatBox({
                   // marginBlockStart: 0,
                   // marginTop: 'auto',
                   // width: '100%',
-                  marginBlockStart: 0,
+                  marginBlockEnd: 0,
                   marginTop: 'auto',
+                  // margin: 0,
                 },
               }}
               disabled={isLoading}
               variant="outlined"
+              startDecorator={
+                <Stack
+                  direction={'row'}
+                  justifyContent={'space-between'}
+                  sx={{ width: '100%' }}
+                >
+                  <IconButton
+                    variant="plain"
+                    sx={{ maxHeight: '100%' }}
+                    size="sm"
+                    onClick={() => setIsTextAreaExpended(!isTextAreaExpanded)}
+                  >
+                    {isTextAreaExpanded ? (
+                      <UnfoldLessOutlinedIcon />
+                    ) : (
+                      <UnfoldMoreOutlinedIcon />
+                    )}
+                  </IconButton>
+                </Stack>
+              }
               endDecorator={
                 <Stack
                   direction={'row'}
@@ -685,7 +718,7 @@ function ChatBox({
                       <IconButton
                         size="sm"
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoading || !methods.formState.isValid}
                         sx={{ maxHeight: '100%' }}
                         color="primary"
                         variant="soft"
