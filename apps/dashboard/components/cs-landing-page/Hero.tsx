@@ -197,6 +197,7 @@ export default function Hero() {
                 width="100%"
                 height="100%"
                 frameBorder="0"
+                allow="clipboard-write"
               ></iframe>
             </div>
           </div>

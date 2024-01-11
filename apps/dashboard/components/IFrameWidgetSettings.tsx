@@ -43,6 +43,7 @@ export default function BubbleWidgetSettings(props: Props) {
   width="100%"
   height="100%"
   frameborder="0"
+  allow="clipboard-write"
 ></iframe>
 
 `;
