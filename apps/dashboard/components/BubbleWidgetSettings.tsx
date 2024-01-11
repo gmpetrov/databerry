@@ -30,6 +30,7 @@ import CustomCSSInput from './AgentInputs/CustomCSSInput';
 import AgentForm from './AgentForm';
 import ChatBubble from './ChatBubble';
 import ConnectForm from './ConnectForm';
+import ReactFrameStyleFix from './ReactFrameStyleFix';
 
 if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
@@ -153,6 +154,9 @@ export default function BubbleWidgetSettings(props: Props) {
                                         {...themeKeys}
                                       >
                                         <CssBaseline />
+
+                                        <ReactFrameStyleFix />
+
                                         <Box
                                           sx={{
                                             width: '100vw',

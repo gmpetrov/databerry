@@ -28,7 +28,13 @@ function Markdown({ children, className, ...otherProps }: Props) {
     //   {/* ![image](https://i.giphy.com/media/d8L0LCmpEG1aTILGVL/giphy.gif) */}
     // </ReactMarkdown>
 
-    <div className={clsx('prose-sm prose dark:prose-invert', className)}>
+    <div
+      className={clsx(
+        'prose-sm prose dark:prose-invert',
+        'prose-p:leading-relaxed prose-pre:p-0 break-words text-sm',
+        className
+      )}
+    >
       {reactContent}
     </div>
   );
