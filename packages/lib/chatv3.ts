@@ -73,7 +73,6 @@ const chat = async ({
   retrievalQuery,
   ...otherProps
 }: ChatProps) => {
-  console.log('retrievalQuery------------------------->', retrievalQuery);
   // Tools
   const nbDatastoreTools =
     tools?.filter((each) => each.type === 'datastore')?.length || 0;

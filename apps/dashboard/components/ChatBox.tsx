@@ -83,6 +83,7 @@ export type ChatBoxProps = {
   metadata?: Record<string, unknown>;
   withFileUpload?: boolean;
   draftReplyInput?: JSX.Element | null;
+  withSources?: boolean;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -167,6 +168,7 @@ function ChatBox({
   metadata,
   withFileUpload,
   draftReplyInput,
+  withSources,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -426,45 +428,47 @@ function ChatBox({
 
                           {each?.component}
 
-                          <Stack
-                            direction="row"
-                            justifyContent={'space-between'}
-                          >
-                            {((hideInternalSources
-                              ? filterInternalSources(each?.sources!)
-                              : each?.sources
-                            )?.length || 0) > 0 && (
-                              <Box
-                                sx={{
-                                  mt: 2,
-                                  width: '100%',
-                                  maxWidth: '100%',
-                                }}
-                              >
-                                <details>
-                                  <summary className="cursor-pointer">
-                                    Sources
-                                  </summary>
-                                  <Stack
-                                    direction={'column'}
-                                    gap={1}
-                                    sx={{ pt: 1 }}
-                                  >
-                                    {(hideInternalSources
-                                      ? filterInternalSources(each?.sources!)
-                                      : each?.sources
-                                    )?.map((source) => (
-                                      <SourceComponent
-                                        key={source.chunk_id}
-                                        source={source}
-                                        onClick={handleSourceClick}
-                                      />
-                                    ))}
-                                  </Stack>
-                                </details>
-                              </Box>
-                            )}
-                          </Stack>
+                          {withSources && (
+                            <Stack
+                              direction="row"
+                              justifyContent={'space-between'}
+                            >
+                              {((hideInternalSources
+                                ? filterInternalSources(each?.sources!)
+                                : each?.sources
+                              )?.length || 0) > 0 && (
+                                <Box
+                                  sx={{
+                                    mt: 2,
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                  }}
+                                >
+                                  <details>
+                                    <summary className="cursor-pointer">
+                                      Sources
+                                    </summary>
+                                    <Stack
+                                      direction={'column'}
+                                      gap={1}
+                                      sx={{ pt: 1 }}
+                                    >
+                                      {(hideInternalSources
+                                        ? filterInternalSources(each?.sources!)
+                                        : each?.sources
+                                      )?.map((source) => (
+                                        <SourceComponent
+                                          key={source.chunk_id}
+                                          source={source}
+                                          onClick={handleSourceClick}
+                                        />
+                                      ))}
+                                    </Stack>
+                                  </details>
+                                </Box>
+                              )}
+                            </Stack>
+                          )}
                         </ChatMessageCard>
                       )}
 

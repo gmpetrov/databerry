@@ -54,8 +54,6 @@ const chat = async ({
     { role: 'user', content: prompt },
   ];
 
-  // console.log('messages ===--------c_>', messages);
-
   const model = new ChatModel({});
 
   const output = await model.call({

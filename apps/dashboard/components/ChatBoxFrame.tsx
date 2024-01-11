@@ -176,6 +176,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           hideInternalSources
           renderBottom={<CustomerSupportActions config={config} />}
           withFileUpload
+          withSources={!!agent?.includeSources}
         />
       </Box>
     </ChatContext.Provider>

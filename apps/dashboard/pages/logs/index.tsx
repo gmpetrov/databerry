@@ -1186,6 +1186,7 @@ export default function LogsPage() {
                     }}
                   />
                 }
+                withSources
               />
 
               <Divider orientation="vertical" />

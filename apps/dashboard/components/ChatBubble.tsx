@@ -473,6 +473,7 @@ function App(props: {
                       <CustomerSupportActions config={state.config} />
                     }
                     withFileUpload
+                    withSources={!!state?.agent?.includeSources}
                   />
                 </Stack>
               </Card>

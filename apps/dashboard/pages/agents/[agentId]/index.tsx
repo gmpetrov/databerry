@@ -335,6 +335,7 @@ export default function AgentPage() {
                 handleAbort={handleAbort}
                 userImgUrl={session?.user?.image!}
                 refreshConversation={refreshConversation}
+                withSources={!!query?.data?.includeSources}
               />
 
               {(query?.data?.tools?.length || 0) > 0 && (
