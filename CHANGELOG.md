@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.178"></a>
+## 0.1.178 (2024-01-11)
+
+### Fixed
+
+- 🐛 fly toml configuration [[7acdaf8](https://github.com/gmpetrov/databerry/commit/7acdaf85c75907a3ef5ead83aacfbf752124eda6)]
+
+
 <a name="0.1.177"></a>
 ## 0.1.177 (2024-01-11)
 
