@@ -35,9 +35,9 @@ function ChatMessage({ sx, children, className, ...otherProps }: Props) {
         //   maxWidth: '100%',
         // },
 
-        // 'h1,h2,h3,h4,h5': {
-        //   fontSize: theme.fontSize.sm,
-        // },
+        'h1,h2,h3,h4,h5': {
+          fontSize: theme.fontSize.sm,
+        },
         [' img ']: {
           width: '100%',
           maxWidth: '300px',
