@@ -659,7 +659,7 @@ export const UpdateMailInboxSchema = z.object({
   name: z.string().min(1).max(50).optional(),
   fromName: z.string().max(50).optional().nullable(),
   signature: z.string().optional().nullable(),
-  hideBranding: z.boolean().optional().nullable(),
+  showBranding: z.boolean().optional().nullable(),
 });
 
 export type UpdateMailInboxSchema = z.infer<typeof UpdateMailInboxSchema>;

@@ -66,7 +66,7 @@ Best regards,`}
             />
           )}
 
-          {values.hideBranding && (
+          {values.showBranding && (
             <Typography level="body-sm">
               Sent from{' '}
               <a

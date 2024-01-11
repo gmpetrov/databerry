@@ -188,7 +188,7 @@ export const sendMessage = async (
             title={subject}
             message={payload.message}
             signature={mailInbox?.signature!}
-            hideBranding={!!mailInbox?.hideBranding}
+            showBranding={!!mailInbox?.showBranding}
           />
         ),
       });

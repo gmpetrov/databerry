@@ -721,7 +721,7 @@ model MailInbox {
   fromName String? @map("from_name")
   signature String? @map("signature")
 
-  hideBranding Boolean? @default(false) @map("hide_branding")
+  showBranding Boolean? @default(true) @map("show_branding")
 
   customEmail String? @map("custom_email")
   isCustomEmailVerified Boolean? @default(false) @map("is_custom_email_verified")

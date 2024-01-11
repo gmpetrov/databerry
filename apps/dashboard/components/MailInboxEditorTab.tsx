@@ -136,9 +136,9 @@ function MailInboxEditorTab({ inboxId }: Props) {
                 <FormLabel>Branding</FormLabel>
 
                 <Checkbox
-                  checked={!!values.hideBranding}
+                  checked={Boolean(values.showBranding)}
                   label="Show Chaindesk Branding"
-                  {...methods.register('hideBranding')}
+                  {...methods.register('showBranding')}
                   disabled={!session?.organization?.isPremium}
                 />
                 <FormHelperText>

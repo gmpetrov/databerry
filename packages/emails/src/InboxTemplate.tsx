@@ -21,7 +21,7 @@ type Props = {
   description?: string;
   message: string;
   signature?: string;
-  hideBranding?: boolean;
+  showBranding?: boolean;
 };
 
 export const GenericTemplate = ({
@@ -34,7 +34,7 @@ If the problem persists, please reply to this email with a description of the is
     
 Best regards,`,
   signature = '<strong>Georges Petrov</strong> - CEO',
-  hideBranding = false,
+  showBranding = true,
 }: Props) => {
   return (
     <Html>
@@ -55,7 +55,7 @@ Best regards,`,
               />
             </>
           )}
-          {!hideBranding && (
+          {showBranding && (
             <>
               <Text className="text-gray-500">
                 Sent from{' '}
