@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.185"></a>
+## 0.1.185 (2024-01-11)
+
+### Fixed
+
+- 🐛 markdown style [[31696b9](https://github.com/gmpetrov/databerry/commit/31696b98c880a904f66874cbbfb29a49f98942c0)]
+- 🐛 set conversation back to unresolved when incoming msg [[bb71733](https://github.com/gmpetrov/databerry/commit/bb717336b0212de4e61a18211c10f22c126013c7)]
+
+
 <a name="0.1.184"></a>
 ## 0.1.184 (2024-01-11)
 
