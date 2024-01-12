@@ -11,3 +11,5 @@ export { default as AdminStats } from './AdminStats';
 export { default as AccountCleaningWarning } from './AccountCleaningWarning';
 export { default as GenericTemplate } from './GenericTemplate';
 export { default as InboxTemplate } from './InboxTemplate';
+export { default as ActionApprovalTemplate } from './ActionApproval';
+export { default as FormSubmission } from './FormSubmission';
