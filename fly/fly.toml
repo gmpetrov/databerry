@@ -5,6 +5,7 @@ kill_signal = "SIGINT"
 kill_timeout = 5
 primary_region = "fra"
 
+
 [processes]
 web = "node apps/dashboard/server.js"
 # https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
@@ -35,6 +36,7 @@ worker = "node --max-old-space-size=1536 apps/dashboard/.next/server/datasource-
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
+  min_machines_running=2
   [http_service.concurrency]
     type = "connections"
     hard_limit = 550
@@ -45,6 +47,7 @@ worker = "node --max-old-space-size=1536 apps/dashboard/.next/server/datasource-
   processes = ["worker"]
   auto_stop_machines = true
   auto_start_machines = true
+  min_machines_running=6
   [[services.ports]]
     handlers = ["http"]
     port = 80

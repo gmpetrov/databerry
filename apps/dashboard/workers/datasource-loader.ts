@@ -41,6 +41,7 @@ const datasourceLoadQueue = new WorkerPro(
     concurrency: 5,
     removeOnComplete: { count: 1000 },
     removeOnFail: { count: 5000 },
+    lockDuration: 60000 * 3, // 3 mins https://github.com/taskforcesh/bullmq/issues/489#issuecomment-835747320,
   }
 );
 
