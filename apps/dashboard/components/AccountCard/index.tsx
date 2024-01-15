@@ -225,55 +225,57 @@ function AccountCard({}: Props) {
         </Button>
       </Link>
 
-      <Card size="sm">
-        <Stack gap={1}>
-          <Alert
-            size="sm"
-            color="danger"
-            variant="soft"
-            startDecorator={<ErrorRoundedIcon fontSize="sm" />}
-          >
-            Ending soon!
-          </Alert>
-          <Alert color="success" variant="solid">
-            Share on social and get 30% off on your subscription!
-          </Alert>
-          <Stack direction="row" gap={1} sx={{ width: '100%' }}>
-            <a
-              target="_blank"
-              className="w-full"
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`This is a game changer! 
-
-Chaindesk has transformed the way we handle customer queries with its next-gen AI native solution. Definitely a game-changer!
-
-Find out more: https://www.chaindesk.ai`)}`}
+      {!session?.data?.organization?.isPremium && (
+        <Card size="sm">
+          <Stack gap={1}>
+            <Alert
+              size="sm"
+              color="danger"
+              variant="soft"
+              startDecorator={<ErrorRoundedIcon fontSize="sm" />}
             >
-              <Button
-                color="neutral"
-                variant="outlined"
-                sx={{ width: '100%' }}
-                startDecorator={<TwitterIcon />}
+              Ending soon!
+            </Alert>
+            <Alert color="success" variant="solid">
+              Share on social and get 30% off on your subscription!
+            </Alert>
+            <Stack direction="row" gap={1} sx={{ width: '100%' }}>
+              <a
+                target="_blank"
+                className="w-full"
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`This is a game changer! 
+      
+      Chaindesk has transformed the way we handle customer queries with its next-gen AI native solution. Definitely a game-changer!
+      
+      Find out more: https://www.chaindesk.ai`)}`}
               >
-                Share
-              </Button>
-            </a>
-            <a
-              target="_blank"
-              href={`https://www.linkedin.com/sharing/share-offsite/?url=https://www.chaindesk.ai`}
-              className="w-full"
-            >
-              <Button
-                color="neutral"
-                variant="outlined"
-                sx={{ width: '100%' }}
-                startDecorator={<LinkedInIcon />}
+                <Button
+                  color="neutral"
+                  variant="outlined"
+                  sx={{ width: '100%' }}
+                  startDecorator={<TwitterIcon />}
+                >
+                  Share
+                </Button>
+              </a>
+              <a
+                target="_blank"
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=https://www.chaindesk.ai`}
+                className="w-full"
               >
-                Share
-              </Button>
-            </a>
+                <Button
+                  color="neutral"
+                  variant="outlined"
+                  sx={{ width: '100%' }}
+                  startDecorator={<LinkedInIcon />}
+                >
+                  Share
+                </Button>
+              </a>
+            </Stack>
           </Stack>
-        </Stack>
-      </Card>
+        </Card>
+      )}
     </Stack>
   );
 }

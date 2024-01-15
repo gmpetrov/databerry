@@ -99,15 +99,13 @@ export const runChainRequest = async (
   const conversationManager = new ConversationManager({
     organizationId: session?.organization?.id,
     channel: ConversationChannel.dashboard,
-    // agentId: agent?.id,
-    userId: session?.user?.id,
-    visitorId: data.visitorId!,
     conversationId,
   });
 
-  conversationManager.push({
+  const conv = await conversationManager.createMessage({
     from: MessageFrom.human,
     text: data.query,
+    userId: session?.user?.id,
   });
 
   const handleStream = (data: string) => {
@@ -149,15 +147,14 @@ export const runChainRequest = async (
 
   const answerMsgId = cuid();
 
-  conversationManager.push({
+  await conversationManager.createMessage({
     id: answerMsgId,
     from: MessageFrom.agent,
     text: chatRes.answer,
     sources: chatRes.sources,
     usage: (chatRes as any).usage,
+    inputId: conv?.messages?.[0].id,
   });
-
-  await conversationManager.save();
 
   if (data.streaming) {
     streamData({
@@ -167,7 +164,6 @@ export const runChainRequest = async (
         answer: chatRes.answer,
         sources: chatRes.sources,
         conversationId: conversationManager.conversationId,
-        visitorId: conversationManager.visitorId,
       }),
       res,
     });
@@ -181,7 +177,7 @@ export const runChainRequest = async (
       ...chatRes,
       messageId: answerMsgId,
       conversationId: conversationManager.conversationId,
-      visitorId: conversationManager.visitorId,
+      // visitorId: conversationManager.visitorId,
     };
   }
 };

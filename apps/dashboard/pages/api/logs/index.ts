@@ -96,7 +96,7 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
           ? [
               {
                 assignees: {
-                  every: {
+                  some: {
                     id: assigneeId,
                   },
                 },

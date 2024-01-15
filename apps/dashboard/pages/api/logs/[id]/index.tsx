@@ -29,7 +29,7 @@ export const getConversation = async (
     include: {
       agent: true,
       lead: true,
-      contacts: true,
+      participantsContacts: true,
       assignees: {
         select: {
           id: true,

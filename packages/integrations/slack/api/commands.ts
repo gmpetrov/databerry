@@ -226,16 +226,15 @@ const handleAsk = async (payload: CommandEvent) => {
   const conversationManager = new ConversationManager({
     organizationId: agent?.organizationId!,
     conversationId,
-    agentId: agent?.id!,
-    visitorId: payload.user_id,
     channel: ConversationChannel.slack,
     channelExternalId: payload.trigger_id,
     channelCredentialsId: integration?.id,
   });
 
-  conversationManager.push({
+  const conv = await conversationManager.createMessage({
     from: MessageFrom.human,
     text: payload.text,
+    externalId: payload.user_id,
   });
 
   if (conversation?.isAiEnabled) {
@@ -243,12 +242,12 @@ const handleAsk = async (payload: CommandEvent) => {
       input: payload.text,
     });
 
-    conversationManager.push({
+    await conversationManager.createMessage({
+      inputId: conv?.messages?.[0].id,
       from: MessageFrom.agent,
       text: chatRes?.answer,
+      agentId: agent?.id!,
     });
-
-    conversationManager.save();
 
     const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
       filterInternalSources(chatRes?.sources || [])
@@ -260,7 +259,6 @@ const handleAsk = async (payload: CommandEvent) => {
       response_type: 'ephemeral',
     });
   }
-  conversationManager.save();
 };
 
 export const slack = async (req: AppNextApiRequest, res: NextApiResponse) => {

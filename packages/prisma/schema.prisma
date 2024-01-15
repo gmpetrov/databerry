@@ -28,6 +28,7 @@ model Organization {
   forms            Form[]
   mailInboxes         MailInbox[]
   contacts            Contact[]
+  visitors            Visitor[]
 
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -82,6 +83,7 @@ model User {
   apiKeys       UserApiKey[]
   usage         Usage?
   conversations Conversation[]
+  messages      Message[]
 
   serviceProviders ServiceProvider[]
 
@@ -92,6 +94,9 @@ model User {
   viaProduct String? @default("chaindesk") @map("via_product")
   
 
+  joinedConversationsV2 Conversation[] @relation("participants_users") 
+
+  // TODO: delete after migration and rename joinedConversationsV2 to joinedConversations
   joinedConversations Conversation[] @relation("participants") 
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -245,6 +250,9 @@ model Agent {
   useLanguageDetection Boolean? @default(true) @map("use_language_detection")
 
   visibility    AgentVisibility @default(private)
+  messages Message[]
+  joinedConversations Conversation[] @relation("participants_agents")
+  // TODO Deprcate and rename joinedConversations to conversations
   conversations Conversation[]
 
   ownerId String? @map("owner_id")
@@ -316,13 +324,9 @@ model Domain {
 model Conversation {
   id        String  @id @default(cuid())
   title     String?
-  visitorId String? @map("visitor_id")
-  userId    String? @map("user_id")
-  user      User?   @relation(fields: [userId], references: [id])
 
-  agent    Agent?    @relation(fields: [agentId], references: [id], onDelete: Cascade)
-  agentId  String?   @map("agent_id")
   messages Message[]
+
   isAiEnabled Boolean? @default(true)  @map("is_ai_enabled")
   
   channel ConversationChannel @default(dashboard)
@@ -354,8 +358,26 @@ model Conversation {
   form    Form?    @relation(fields: [formId], references: [id], onDelete: Cascade)
   formId  String?   @map("form_id")
 
+  // DEPRECATED: REMOVE AFTER MIGRATion
   participants User[] @relation("participants")
   contacts Contact[]
+
+  // Participants
+  participantsUsers User[] @relation("participants_users")
+  participantsAgents Agent[] @relation("participants_agents")
+  participantsContacts Contact[] @relation("participants_contacts")
+  participantsVisitors Visitor[] @relation("participants_visitors")
+
+  // Still need this one as multiple use cases are based on single agent/conversation this e.g. /agents/:id/query
+  agent    Agent?    @relation(fields: [agentId], references: [id])
+  agentId  String?   @map("agent_id")
+
+  // Todo: deprecate in favor of participants
+  userId    String? @map("user_id")
+  user      User?   @relation(fields: [userId], references: [id])
+
+  // Todo: deprecate in favor of visitorID relation
+  visitorId String? @map("visitor_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -368,13 +390,30 @@ model Message {
   text           String
   html           String?
   from           MessageFrom
+
   conversationId String?       @map("conversation_id")
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
   sources        Json?
+
   usage          Json?
+
   externalId     String?       @unique @map("external_id")
-  
-  
+
+  // Sender is one of visitor, contact, user, agent
+  userId String?       @map("user_id")
+  user   User? @relation(fields: [userId], references: [id])
+
+  contactId String?       @map("contact_id")
+  contact   Contact? @relation(fields: [contactId], references: [id])
+
+  visitorId      String?       @map("visitor_id")
+  visitor        Visitor? @relation(fields: [visitorId], references: [id])
+
+  agentId String?       @map("agent_id")
+  agent   Agent? @relation(fields: [agentId], references: [id])
+  // 
+
   metadata       Json?
 
   inputId String?       @map("input_id")
@@ -765,12 +804,38 @@ model Contact {
   agentId String? @map("agent_id")
 
   conversations Conversation[]
+  conversationsV2 Conversation[] @relation("participants_contacts")
+  messages Message[]
+
+  visitors Visitor[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([email, organizationId], name: "unique_email_for_org")
   @@map("contacts") 
+}
+
+model Visitor {
+  id String  @id @default(cuid())
+
+  contact   Contact?  @relation(fields: [contactId], references: [id])
+  contactId String? @map("contact_id")
+
+  organizationId String?       @map("organization_id")
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  externalId String? @map("external_id")
+
+  conversations Conversation[] @relation("participants_visitors")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+ @@unique([externalId, organizationId], name: "unique_external_id_for_org")
+ @@map("visitors")  
 }
 
 model VerificationCode {

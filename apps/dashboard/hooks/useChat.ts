@@ -125,7 +125,7 @@ const useChat = ({
 
   const conversationChatMutation = useSWRMutation(
     state.conversationId
-      ? `/api/conversations/${state.conversationId}/message`
+      ? `${API_URL}/api/conversations/${state.conversationId}/message`
       : null,
     generateActionFetcher(HTTP_METHOD.POST)
   );
@@ -216,11 +216,10 @@ const useChat = ({
         !getConversationQuery?.data?.[0]?.isAiEnabled
       ) {
         await conversationChatMutation.trigger({
+          from: 'human',
           message,
           channel,
-          from: 'human',
-          organizationId:
-            getConversationQuery?.data?.[0]?.agent?.organizationId,
+          visitorId: state.visitorId,
         });
         await getConversationQuery.mutate();
         return;

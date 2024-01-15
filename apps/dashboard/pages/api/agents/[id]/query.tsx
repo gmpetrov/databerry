@@ -46,6 +46,11 @@ export const chatAgentRequest = async (
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
 
+  const channel = data.channel || ConversationChannel.dashboard;
+  const isDashboardMessage =
+    channel === ConversationChannel.dashboard && !!session?.user?.id;
+  const visitorId = data.visitorId || cuid();
+
   if (data.isDraft && !session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
@@ -80,6 +85,7 @@ export const chatAgentRequest = async (
             },
           },
           conversations: {
+            take: 1,
             where: {
               ...(data.isDraft
                 ? {
@@ -89,7 +95,11 @@ export const chatAgentRequest = async (
                 : {
                     AND: {
                       id: conversationId,
-                      agentId: id,
+                      participantsAgents: {
+                        some: {
+                          id,
+                        },
+                      },
                     },
                   }),
             },
@@ -182,11 +192,14 @@ export const chatAgentRequest = async (
     // Only use datastore when drafting a reply
     agent.tools = agent.tools?.filter((each) => each?.type === 'datastore');
     agent.modelName = 'gpt_3_5_turbo_16k';
-    const lastIndex =
-      (agent?.organization?.conversations?.[0]?.messages?.length || 0) - 1;
+    const lastFromHumanIndex = (
+      agent?.organization?.conversations?.[0]?.messages || []
+    )
+      .reverse()
+      .findIndex((one) => one.from === MessageFrom.human);
     retrievalQuery =
-      agent?.organization?.conversations?.[0]?.messages?.[lastIndex]?.text ||
-      '';
+      agent?.organization?.conversations?.[0]?.messages?.[lastFromHumanIndex]
+        ?.text || '';
   }
 
   if (data.modelName) {
@@ -221,11 +234,8 @@ export const chatAgentRequest = async (
   }
 
   const conversationManager = new ConversationManager({
+    channel,
     organizationId: agent?.organizationId!,
-    channel: data.channel,
-    agentId: agent?.id,
-    userId: session?.user?.id,
-    visitorId: data.visitorId!,
     formId: data.formId!,
     conversationId,
     ...(!session?.user && !!isNewConversation
@@ -245,6 +255,10 @@ export const chatAgentRequest = async (
       from: MessageFrom.human,
       text: data.query,
       attachments: data.attachments,
+
+      visitorId: isDashboardMessage ? undefined : data.visitorId!,
+      contactId: isDashboardMessage ? undefined : data.contactId!,
+      userId: isDashboardMessage ? session?.user?.id : undefined,
     });
   }
 
@@ -291,6 +305,7 @@ export const chatAgentRequest = async (
       usage: chatRes.usage,
       approvals: chatRes.approvals,
       metadata: chatRes.metadata,
+      agentId: agent?.id,
     });
   }
 
@@ -359,7 +374,7 @@ export const chatAgentRequest = async (
         answer: chatRes.answer,
         sources: chatRes.sources,
         conversationId: conversationManager.conversationId,
-        visitorId: conversationManager.visitorId,
+        visitorId: visitorId,
       }),
       res,
     });
@@ -373,7 +388,7 @@ export const chatAgentRequest = async (
       ...chatRes,
       messageId: answerMsgId,
       conversationId: conversationManager.conversationId,
-      visitorId: conversationManager.visitorId,
+      visitorId: visitorId,
     };
   }
 };

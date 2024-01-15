@@ -19,7 +19,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getConversations } from '@app/pages/api/agents/[id]/c';
+import { getConversations } from '@app/pages/api/conversations';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { Prisma } from '@chaindesk/prisma';

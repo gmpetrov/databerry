@@ -34,9 +34,8 @@ worker = "node --max-old-space-size=1536 apps/dashboard/.next/server/datasource-
   processes = ["web"]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = true
+  auto_stop_machines = false
   auto_start_machines = true
-  min_machines_running=2
   [http_service.concurrency]
     type = "connections"
     hard_limit = 550
