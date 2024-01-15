@@ -149,7 +149,6 @@ export default class ConversationManager {
                   },
                 },
                 create: {
-                  id: cuid(),
                   organizationId: this.organizationId!,
                   externalId: externalVisitorId!,
                 },
@@ -172,7 +171,6 @@ export default class ConversationManager {
               createMany: {
                 data: (approvals as ChatResponse['approvals'])?.map(
                   (approval) => ({
-                    messageId,
                     toolId: approval.tool.id,
                     payload: approval.payload as any,
                     agentId: agentId,
@@ -189,7 +187,6 @@ export default class ConversationManager {
               createMany: {
                 data: (attachments || [])?.map((attachment) => ({
                   ...attachment,
-                  messageId,
                 })),
               },
             },
