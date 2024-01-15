@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.188"></a>
+## 0.1.188 (2024-01-15)
+
+### Fixed
+
+- 🐛 change lock duration [[cbaed7d](https://github.com/gmpetrov/databerry/commit/cbaed7d53c387de2cfeea4163c553c451ad8e37d)]
+- 🐛 fly config [[c8034da](https://github.com/gmpetrov/databerry/commit/c8034da99810db0e4621ae2cdc80414bd7638df1)]
+
+### Miscellaneous
+
+- 🎸 refacto participants ([#306](https://github.com/gmpetrov/databerry/issues/306)) [[4674828](https://github.com/gmpetrov/databerry/commit/467482820ba479028f45cf6aafca7aee6f51d91b)]
+
+
 <a name="0.1.187"></a>
 ## 0.1.187 (2024-01-11)
 
