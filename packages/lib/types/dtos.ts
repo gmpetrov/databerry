@@ -171,6 +171,7 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   query: z.string(),
   streaming: z.boolean().optional().default(false),
   visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),
+  contactId: z.union([z.string().cuid().nullish(), z.literal('')]),
   conversationId: z.union([z.string().cuid().nullish(), z.literal('')]),
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional(),

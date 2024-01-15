@@ -183,6 +183,7 @@ const getIntegration = async (websiteId: string) => {
 const handleQuery = async (
   websiteId: string,
   sessionId: string,
+  visitorId: string,
   query: string,
   t: TFunction<'translation', undefined>
 ) => {
@@ -220,16 +221,17 @@ const handleQuery = async (
   const conversationManager = new ConversationManager({
     organizationId: agent?.organizationId!,
     channel: ConversationChannel.crisp,
-    agentId: agent?.id!,
-    visitorId: sessionId,
+
     conversationId,
     channelExternalId: sessionId,
     channelCredentialsId: integration?.id,
   });
 
-  conversationManager.push({
+  const conv = await conversationManager.createMessage({
     from: MessageFrom.human,
     text: query,
+
+    externalVisitorId: visitorId,
   });
 
   const { answer, sources } = await new AgentManager({ agent }).query({
@@ -240,8 +242,6 @@ const handleQuery = async (
   const finalAnswer = `${answer}\n\n${formatSourcesRawText(
     filterInternalSources(sources || [])!
   )}`.trim();
-
-  CrispClient.website.visitorId;
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
     type: 'picker',
@@ -273,12 +273,12 @@ const handleQuery = async (
     },
   });
 
-  conversationManager.push({
+  await conversationManager.createMessage({
+    inputId: conv?.messages?.[0].id,
     from: MessageFrom.agent,
     text: answer,
+    agentId: agent?.id,
   });
-
-  conversationManager.save();
 };
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
@@ -345,15 +345,14 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               organizationId: conversation?.organizationId as string,
               conversationId: conversation?.id,
               channel: conversation?.channel as ConversationChannel,
-              userId: conversation?.userId as string,
             });
 
-            conversationManager.push({
+            await conversationManager.createMessage({
               from: MessageFrom.human,
               text: body.data.content,
+              externalVisitorId: body.data.visitorId,
             });
 
-            await conversationManager.save();
             return 'Message saved';
           }
 
@@ -370,6 +369,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             await handleQuery(
               body.website_id,
               body.data.session_id,
+              body.data.visitorId,
               body.data.content,
               t
             );

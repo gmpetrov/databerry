@@ -290,7 +290,7 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
             <FormControl>
               <FormLabel>Contact</FormLabel>
 
-              {query?.data?.contacts?.map((each) => (
+              {query?.data?.participantsContacts?.map((each) => (
                 <Stack key={each.id}>
                   <JoyInput
                     key={each.id}

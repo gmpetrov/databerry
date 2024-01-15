@@ -26,6 +26,10 @@ export type AgentWithTools = Agent & {
 
 type MessageExtended = Pick<Message, 'from' | 'text'> & {
   id?: string;
+  visitorId?: string;
+  userId?: string;
+  agentId?: string;
+  contactId?: string;
   createdAt?: Date;
   sources?: Source[];
   usage?: ChatResponse['usage'];
@@ -34,34 +38,20 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   metadata?: Record<string, any>;
   attachments?: Pick<Attachment, 'mimeType' | 'name' | 'size' | 'url'>[];
   externalId?: string;
-};
-
-type ExternalConfig = {
-  externalId: string;
-  serviceProviderType: ServiceProviderType;
-  externalConversationId: string;
-  metadata?: Record<PropertyKey, any>;
+  externalVisitorId?: string;
 };
 
 export default class ConversationManager {
   organizationId?: string;
-  userId?: string;
-  visitorId?: string;
   conversationId?: string;
   channel: ConversationChannel;
-  messages: MessageExtended[] = [];
-  agentId?: string;
   metadata?: Record<PropertyKey, any> = {};
   channelExternalId?: string;
   channelCredentialsId?: string;
   formId?: string;
-  status?: ConversationStatus;
 
   constructor({
     organizationId,
-    agentId,
-    userId,
-    visitorId,
     channel,
     conversationId,
     metadata,
@@ -70,23 +60,15 @@ export default class ConversationManager {
     formId,
   }: {
     organizationId?: string;
-    agentId?: string;
+    formId?: string;
     channel: ConversationChannel;
     conversationId?: string;
-    userId?: string;
-    visitorId?: string;
     metadata?: Record<PropertyKey, any>;
     channelExternalId?: string;
     channelCredentialsId?: string;
-    formId?: string;
-    status?: ConversationStatus;
   }) {
-    this.messages = [];
-    this.userId = userId;
-    this.visitorId = visitorId || cuid();
     this.conversationId = conversationId || cuid();
     this.channel = channel;
-    this.agentId = agentId;
     this.metadata = metadata;
     this.organizationId = organizationId;
     this.channelExternalId = channelExternalId;
@@ -94,179 +76,220 @@ export default class ConversationManager {
     this.formId = formId;
   }
 
-  push(message: MessageExtended) {
-    this.messages.push({
-      createdAt: new Date(),
-      ...message,
-      sources: message.sources || [],
-      attachments: message.attachments,
-    });
-  }
+  async createMessage(message: MessageExtended) {
+    const {
+      id,
+      approvals = [],
+      attachments = [],
+      inputId,
+      userId,
+      contactId,
+      agentId,
+      visitorId,
+      externalVisitorId,
+      ...rest
+    } = message;
 
-  async save() {
-    if (!this.userId && !this.visitorId) {
-      return;
-    }
+    const messageId = id || cuid();
 
-    const msgIds = this.messages.map(() => cuid());
+    const CreateMessagePayload = {
+      ...rest,
+      id: messageId,
 
-    const messages = this.messages.map((each, index) => {
-      const { approvals, attachments, id, ...rest } = each as any;
+      ...(inputId
+        ? {
+            input: {
+              connect: {
+                id: inputId,
+              },
+            },
+          }
+        : {}),
+      ...(userId
+        ? {
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
+          }
+        : {}),
+      ...(agentId
+        ? {
+            agent: {
+              connect: {
+                id: agentId,
+              },
+            },
+          }
+        : {}),
+      ...(visitorId
+        ? {
+            visitor: {
+              connectOrCreate: {
+                where: {
+                  id: visitorId,
+                },
+                create: {
+                  id: visitorId || cuid(),
+                  organizationId: this.organizationId!,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(externalVisitorId && !visitorId
+        ? {
+            visitor: {
+              connectOrCreate: {
+                where: {
+                  unique_external_id_for_org: {
+                    organizationId: this.organizationId!,
+                    externalId: externalVisitorId!,
+                  },
+                },
+                create: {
+                  id: cuid(),
+                  organizationId: this.organizationId!,
+                  externalId: externalVisitorId!,
+                },
+              },
+            },
+          }
+        : {}),
+      ...(contactId
+        ? {
+            contact: {
+              connect: {
+                id: contactId,
+              },
+            },
+          }
+        : {}),
+      ...(approvals.length > 0
+        ? {
+            approvals: {
+              createMany: {
+                data: (approvals as ChatResponse['approvals'])?.map(
+                  (approval) => ({
+                    messageId,
+                    toolId: approval.tool.id,
+                    payload: approval.payload as any,
+                    agentId: agentId,
+                    organizationId: this.organizationId,
+                  })
+                ),
+              },
+            },
+          }
+        : {}),
+      ...(attachments.length > 0
+        ? {
+            attachments: {
+              createMany: {
+                data: (attachments || [])?.map((attachment) => ({
+                  ...attachment,
+                  messageId,
+                })),
+              },
+            },
+          }
+        : {}),
+    } as Prisma.MessageCreateInput;
 
-      if (id) {
-        msgIds[index] = id;
-      }
+    const ConversationPayload = {
+      messages: {
+        create: {
+          ...CreateMessagePayload,
+        },
+      },
 
-      return {
-        ...(rest as MessageExtended),
-        id: msgIds[index],
-      };
-    });
+      ...(this.metadata ? { metadata: this.metadata } : {}),
 
-    const conversation = await prisma.conversation.upsert({
+      ...(this.formId
+        ? {
+            form: {
+              connect: {
+                id: this.formId,
+              },
+            },
+          }
+        : {}),
+
+      ...(this.channelCredentialsId
+        ? {
+            channelCredentials: {
+              connect: {
+                id: this.channelCredentialsId,
+              },
+            },
+          }
+        : {}),
+
+      //  Conversation Participants
+      ...(contactId
+        ? {
+            participantsContacts: {
+              connect: {
+                id: contactId,
+              },
+            },
+          }
+        : {}),
+      ...(visitorId
+        ? {
+            participantsVisitors: {
+              connect: {
+                id: visitorId,
+              },
+            },
+          }
+        : {}),
+      ...(agentId
+        ? {
+            participantsAgents: {
+              connect: {
+                id: agentId,
+              },
+            },
+          }
+        : {}),
+      ...(userId
+        ? {
+            participantsUsers: {
+              connect: {
+                id: userId,
+              },
+            },
+          }
+        : {}),
+    } as Prisma.ConversationUpdateInput;
+
+    return prisma.conversation.upsert({
       where: {
         id: this.conversationId,
       },
       create: {
+        ...(ConversationPayload as Prisma.ConversationCreateInput),
         id: this.conversationId,
         channel: this.channel,
-
-        ...(this.organizationId
-          ? {
-              organization: {
-                connect: {
-                  id: this.organizationId,
-                },
-              },
-            }
-          : {}),
-        ...(this.agentId
-          ? {
-              agent: {
-                connect: {
-                  id: this.agentId,
-                },
-              },
-            }
-          : {}),
-        ...(this.formId
-          ? {
-              form: {
-                connect: {
-                  id: this.formId,
-                },
-              },
-            }
-          : {}),
-        messages: {
-          createMany: {
-            data: messages,
-            skipDuplicates: true,
+        channelExternalId: this.channelExternalId,
+        organization: {
+          connect: {
+            id: this.organizationId!,
           },
         },
-        ...(this.metadata ? { metadata: this.metadata } : {}),
-        ...(this.visitorId
-          ? {
-              visitorId: this.visitorId,
-            }
-          : {}),
-        ...(this.userId
-          ? {
-              user: {
-                connect: {
-                  id: this.userId,
-                },
-              },
-            }
-          : {}),
       },
       update: {
-        ...(this.status
-          ? {
-              status: this.status,
-            }
-          : {}),
-        channelExternalId: this.channelExternalId,
-        ...(this.channelCredentialsId
-          ? {
-              channelCredentials: {
-                connect: {
-                  id: this.channelCredentialsId,
-                },
-              },
-            }
-          : {}),
+        ...ConversationPayload,
+      },
+      include: {
         messages: {
-          createMany: {
-            data: messages,
-            skipDuplicates: true,
+          where: {
+            id: messageId,
           },
         },
-        ...(this.metadata ? { metadata: this.metadata } : {}),
-        ...(this.visitorId
-          ? {
-              visitorId: this.visitorId,
-            }
-          : {}),
-
-        ...(this.userId
-          ? {
-              user: {
-                connect: {
-                  id: this.userId,
-                },
-              },
-            }
-          : {}),
       },
     });
-
-    const approvalsToInsert = this.messages
-      .map((each, index) => {
-        const { approvals, ...message } = each as any;
-
-        return (approvals as ChatResponse['approvals'])?.map((approval) => ({
-          messageId: msgIds[index],
-          toolId: approval.tool.id,
-          payload: approval.payload as any,
-          agentId: this.agentId,
-          organizationId: this.organizationId,
-        }));
-      })
-      .filter((each) => !!each)
-      .flat();
-
-    if (approvalsToInsert.length > 0) {
-      await prisma.actionApproval.createMany({
-        data: approvalsToInsert,
-      });
-    }
-
-    const attachementsToInsert = this.messages
-      .map((each, index) => {
-        const { attachments } = each;
-
-        return (attachments || [])?.map((attachment) => ({
-          ...attachment,
-          messageId: msgIds[index],
-        }));
-      })
-      .filter((each) => !!each)
-      .flat();
-
-    if (attachementsToInsert.length > 0) {
-      await prisma.attachment.createMany({
-        data: attachementsToInsert,
-      });
-    }
-
-    return conversation;
-  }
-
-  async createMessage(message: MessageExtended) {
-    this.push(message);
-    const updated = await this.save();
-    this.messages = [];
-    return updated;
   }
 }

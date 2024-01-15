@@ -33,6 +33,7 @@ const chatBodySchema = z.object({
   message: z.string(),
   channel: z.nativeEnum(ConversationChannel),
   attachments: z.array(CreateAttachmentSchema).optional(),
+  visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),
 });
 
 export const sendMessage = async (
@@ -52,8 +53,8 @@ export const sendMessage = async (
     organizationId,
     organization,
     mailInbox,
-    participants,
-    contacts,
+    participantsUsers,
+    participantsContacts,
   } = await prisma.conversation.findUniqueOrThrow({
     where: {
       id: conversationId,
@@ -63,7 +64,7 @@ export const sendMessage = async (
       organization: true,
 
       mailInbox: true,
-      participants: session?.user?.id
+      participantsUsers: session?.user?.id
         ? {
             where: {
               id: {
@@ -72,7 +73,7 @@ export const sendMessage = async (
             },
           }
         : true,
-      contacts: true,
+      participantsContacts: true,
       messages: {
         take: 1,
         orderBy: {
@@ -159,11 +160,12 @@ export const sendMessage = async (
       }
 
       const emails: string[] = [
-        ...(participants
+        ...(participantsUsers
           ?.map((each) => each?.email as string)
           .filter((each) => !!each) || []),
-        ...(contacts?.map((c) => c?.email as string).filter((each) => !!each) ||
-          []),
+        ...(participantsContacts
+          ?.map((c) => c?.email as string)
+          .filter((each) => !!each) || []),
       ];
 
       if (emails.length <= 0) {
@@ -209,22 +211,24 @@ export const sendMessage = async (
     organizationId: organizationId!,
     conversationId: conversationId,
     channel: payload.channel as ConversationChannel,
-    userId: session?.user?.id,
     // if the user is not logged in, then the conversation is in the human requested state
     // This way we not miss messages sent on resovled conversations
-    status: !session?.user?.id ? ConversationStatus.HUMAN_REQUESTED : undefined,
+    // status: !session?.user?.id ? ConversationStatus.HUMAN_REQUESTED : undefined,
   });
 
   const answerMsgId = cuid();
 
-  conversationManager.push({
+  const conv = await conversationManager.createMessage({
     id: answerMsgId,
     from: MessageFrom.human,
     text: payload.message,
     attachments: payload.attachments,
+
+    visitorId: payload.visitorId!,
+    userId: !!payload.visitorId ? undefined : session?.user?.id,
   });
 
-  await conversationManager.save();
+  return conv;
 };
 
 handler.post(

@@ -97,24 +97,6 @@ export async function inboundWebhook(
   console.log('attachements', mail.attachments);
   console.log('replyto ----------->', mail.inReplyTo);
 
-  // const conversation = await prisma.conversation.findUnique({
-  //   where: {
-  //     channelExternalId: messageId,
-  //   },
-  // });
-
-  // const conversationId = conversation?.id || cuid();
-
-  // const attachments = mail.attachments?.map(each => ({
-
-  // }))
-
-  // Retrieve email from S3
-  // Parse email with mailparser
-  // Check if email exisists in DB
-  // Process attachments and save to S3
-  // Create message in DB
-
   const filter = `@${process.env.INBOUND_EMAIL_DOMAIN}`;
   const aliases = toEmails
     .filter((one) => one?.endsWith(filter))
@@ -146,170 +128,192 @@ export async function inboundWebhook(
     include: {},
   });
 
-  if (inboxes.length <= 0 || inboxes.length > 1) {
+  if (inboxes.length <= 0) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  let references: string[] = [messageId];
+  await pMap(inboxes, async (inbox) => {
+    let references: string[] = [messageId];
 
-  if (mail.references) {
-    references = [
-      ...references,
-      ...(Array.isArray(mail.references) ? mail.references : [mail.references]),
-    ];
-  }
+    if (mail.references) {
+      references = [
+        ...references,
+        ...(Array.isArray(mail.references)
+          ? mail.references
+          : [mail.references]),
+      ];
+    }
 
-  if (mail.inReplyTo) {
-    references = [...references, mail.inReplyTo];
-  }
+    if (mail.inReplyTo) {
+      references = [...references, mail.inReplyTo];
+    }
 
-  let prevConversation = null;
+    let prevConversation = null;
 
-  if (references.length > 0) {
-    prevConversation = await prisma.conversation.findFirst({
+    if (references.length > 0) {
+      prevConversation = await prisma.conversation.findFirst({
+        where: {
+          channelExternalId: {
+            in: references,
+          },
+        },
+      });
+    }
+    const conversationId = prevConversation?.id || cuid();
+
+    const handleUpload = async (
+      attachment: mailparser.Attachment,
+      fileName?: string
+    ) => {
+      const key = creatChatUploadKey({
+        conversationId,
+        organizationId: inbox.organizationId!,
+        fileName: (fileName || attachment.filename)!,
+      });
+
+      const params = {
+        Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
+        ContentType: attachment.contentType,
+        Key: key,
+        Body: attachment.content,
+      } as S3.Types.PutObjectRequest;
+
+      const upload = await s3.upload(params).promise();
+
+      // return upload.Location;
+      return `${getS3RootDomain()}/${key}`;
+    };
+
+    const attachments =
+      mail.attachments.length > 0
+        ? await pMap(
+            mail.attachments,
+            async (attachment) => {
+              const id = cuid();
+
+              const uploadUrl = await handleUpload(
+                attachment,
+                `${id}.${mime.extension(attachment.contentType)}`
+              );
+
+              return {
+                id,
+                url: uploadUrl,
+                size: attachment.size,
+                name: attachment.filename,
+                mimeType: attachment.contentType,
+              } as Partial<Attachment>;
+            },
+            { concurrency: mail.attachments.length }
+          )
+        : [];
+
+    let lastMessage = '';
+    try {
+      lastMessage = new EmailReplyParser().read(mail.text!).getVisibleText();
+    } catch (err) {
+      console.log(err, err);
+    }
+
+    console.log('current message', mail.text);
+    console.log('parsed message', lastMessage);
+
+    // Get From Contact
+    const fromContact = fromEmails[0];
+    const contact = await prisma.contact.upsert({
       where: {
-        channelExternalId: {
-          in: references,
+        unique_email_for_org: {
+          email: fromContact!,
+          organizationId: inbox.organizationId!,
+        },
+      },
+      create: {
+        email: fromContact!,
+        organizationId: inbox.organizationId!,
+      },
+      update: {},
+    });
+
+    const msg = {
+      externalId: messageId,
+      contactId: contact.id,
+      from: MessageFrom.human,
+      text: lastMessage || mail.text,
+      html: mail.html,
+      attachments: {
+        createMany: {
+          data: attachments,
+        },
+      },
+      metadata: {
+        email: {
+          date: mail.date,
+          from: from as any,
+          to: to as any,
+          cc: cc as any,
+          bcc: bcc as any,
+        },
+      },
+    } as Prisma.MessageCreateInput;
+
+    // Only handle a single from email for now
+    const connectOrCreateContacts = [fromEmails[0]].map((email) => ({
+      where: {
+        unique_email_for_org: {
+          email: email!,
+          organizationId: inbox.organizationId!,
+        },
+      },
+      create: {
+        email,
+        organizationId: inbox.organizationId,
+      },
+    })) as Prisma.ContactCreateOrConnectWithoutConversationsInput[];
+
+    await prisma.conversation.upsert({
+      where: {
+        id: conversationId,
+      },
+      create: {
+        id: conversationId,
+        isAiEnabled: false,
+        channelExternalId: messageId,
+        title: mail.subject,
+        channel: ConversationChannel.mail,
+        mailInboxId: inbox.id,
+        organizationId: inbox.organizationId,
+        participantsContacts: {
+          connectOrCreate: connectOrCreateContacts,
+        },
+        messages: {
+          connectOrCreate: [
+            {
+              where: {
+                externalId: messageId,
+              },
+              create: msg,
+            },
+          ],
+        },
+      },
+      update: {
+        isAiEnabled: false,
+        status: 'UNRESOLVED',
+        participantsContacts: {
+          connectOrCreate: connectOrCreateContacts,
+        },
+        messages: {
+          connectOrCreate: [
+            {
+              where: {
+                externalId: messageId,
+              },
+              create: msg,
+            },
+          ],
         },
       },
     });
-  }
-  const conversationId = prevConversation?.id || cuid();
-
-  const handleUpload = async (
-    attachment: mailparser.Attachment,
-    fileName?: string
-  ) => {
-    const key = creatChatUploadKey({
-      conversationId,
-      organizationId: inboxes[0].organizationId!,
-      fileName: (fileName || attachment.filename)!,
-    });
-
-    const params = {
-      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
-      ContentType: attachment.contentType,
-      Key: key,
-      Body: attachment.content,
-    } as S3.Types.PutObjectRequest;
-
-    const upload = await s3.upload(params).promise();
-
-    // return upload.Location;
-    return `${getS3RootDomain()}/${key}`;
-  };
-
-  const attachments =
-    mail.attachments.length > 0
-      ? await pMap(
-          mail.attachments,
-          async (attachment) => {
-            const id = cuid();
-
-            const uploadUrl = await handleUpload(
-              attachment,
-              `${id}.${mime.extension(attachment.contentType)}`
-            );
-
-            return {
-              id,
-              url: uploadUrl,
-              size: attachment.size,
-              name: attachment.filename,
-              mimeType: attachment.contentType,
-            } as Partial<Attachment>;
-          },
-          { concurrency: mail.attachments.length }
-        )
-      : [];
-
-  let lastMessage = '';
-  try {
-    lastMessage = new EmailReplyParser().read(mail.text!).getVisibleText();
-  } catch (err) {
-    console.log(err, err);
-  }
-
-  console.log('current message', mail.text);
-  console.log('parsed message', lastMessage);
-
-  const msg = {
-    externalId: messageId,
-    from: MessageFrom.human,
-    text: lastMessage || mail.text,
-    html: mail.html,
-    attachments: {
-      createMany: {
-        data: attachments,
-      },
-    },
-    metadata: {
-      email: {
-        date: mail.date,
-        from: from as any,
-        to: to as any,
-        cc: cc as any,
-        bcc: bcc as any,
-      },
-    },
-  } as Prisma.MessageCreateInput;
-
-  const contacts = fromEmails.map((email) => ({
-    where: {
-      unique_email_for_org: {
-        email: email!,
-        organizationId: inboxes[0].organizationId!,
-      },
-    },
-    create: {
-      email,
-      organizationId: inboxes[0].organizationId,
-    },
-  })) as Prisma.ContactCreateOrConnectWithoutConversationsInput[];
-
-  await prisma.conversation.upsert({
-    where: {
-      id: conversationId,
-    },
-    create: {
-      id: conversationId,
-      isAiEnabled: false,
-      channelExternalId: messageId,
-      title: mail.subject,
-      channel: ConversationChannel.mail,
-      mailInboxId: inboxes[0].id,
-      organizationId: inboxes[0].organizationId,
-      contacts: {
-        connectOrCreate: contacts,
-      },
-      messages: {
-        connectOrCreate: [
-          {
-            where: {
-              externalId: messageId,
-            },
-            create: msg,
-          },
-        ],
-      },
-    },
-    update: {
-      isAiEnabled: false,
-      status: 'UNRESOLVED',
-      contacts: {
-        connectOrCreate: contacts,
-      },
-      messages: {
-        connectOrCreate: [
-          {
-            where: {
-              externalId: messageId,
-            },
-            create: msg,
-          },
-        ],
-      },
-    },
   });
 
   // Remove smpt message from mailS3
