@@ -259,6 +259,11 @@ export default class ConversationManager {
         : {}),
       ...(userId
         ? {
+            user: {
+              connect: {
+                id: userId,
+              },
+            },
             participantsUsers: {
               connect: {
                 id: userId,

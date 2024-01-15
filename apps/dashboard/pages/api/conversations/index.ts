@@ -36,12 +36,14 @@ export const getConversations = async (
       AND: [
         {
           organizationId: session.organization.id,
+          // userId: session?.user?.id,
           participantsUsers: {
             some: {
               id: session?.user?.id,
             },
           },
         },
+        // ...(agentId && agentId !== 'null' ? [{ agentId }] : []),
         ...(agentId && agentId !== 'null'
           ? [
               {

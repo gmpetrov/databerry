@@ -113,7 +113,10 @@ type HookBodyMessageUpdated = HookBodyBase & {
 
 type HookBody = HookBodyBase | HookBodyMessageSent | HookBodyMessageUpdated;
 
-const getIntegration = async (websiteId: string) => {
+const getIntegration = async (
+  websiteId: string,
+  channelExternalId?: string
+) => {
   const integration = await prisma.serviceProvider.findUnique({
     where: {
       unique_external_id: {
@@ -122,6 +125,15 @@ const getIntegration = async (websiteId: string) => {
       },
     },
     include: {
+      ...(channelExternalId
+        ? {
+            conversations: {
+              where: {
+                channelExternalId,
+              },
+            },
+          }
+        : {}),
       agents: {
         include: {
           organization: {
@@ -183,7 +195,6 @@ const getIntegration = async (websiteId: string) => {
 const handleQuery = async (
   websiteId: string,
   sessionId: string,
-  visitorId: string,
   query: string,
   t: TFunction<'translation', undefined>
 ) => {
@@ -231,7 +242,7 @@ const handleQuery = async (
     from: MessageFrom.human,
     text: query,
 
-    externalVisitorId: visitorId,
+    externalVisitorId: sessionId,
   });
 
   const { answer, sources } = await new AgentManager({ agent }).query({
@@ -335,16 +346,15 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           body.data.type === 'text'
         ) {
           if (metadata?.aiStatus === AIStatus.disabled) {
-            const conversation = await prisma.conversation.findUnique({
-              where: {
-                channelExternalId: body.data.session_id,
-              },
-            });
+            const integration = await getIntegration(
+              body.website_id,
+              body.data.session_id
+            );
 
             const conversationManager = new ConversationManager({
-              organizationId: conversation?.organizationId as string,
-              conversationId: conversation?.id,
-              channel: conversation?.channel as ConversationChannel,
+              channel: ConversationChannel.crisp as ConversationChannel,
+              organizationId: integration?.organizationId as string,
+              conversationId: integration?.conversations?.[0]?.id,
             });
 
             await conversationManager.createMessage({
@@ -369,7 +379,6 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             await handleQuery(
               body.website_id,
               body.data.session_id,
-              body.data.visitorId,
               body.data.content,
               t
             );
