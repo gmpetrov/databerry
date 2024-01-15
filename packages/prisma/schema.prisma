@@ -368,13 +368,13 @@ model Conversation {
   participantsContacts Contact[] @relation("participants_contacts")
   participantsVisitors Visitor[] @relation("participants_visitors")
 
+  // Still need this one as multiple use cases are based on single agent/conversation this e.g. /agents/:id/query
+  agent    Agent?    @relation(fields: [agentId], references: [id])
+  agentId  String?   @map("agent_id")
+
   // Todo: deprecate in favor of participants
   userId    String? @map("user_id")
   user      User?   @relation(fields: [userId], references: [id])
-
-  // Todo: deprecate in favor of participants
-  agent    Agent?    @relation(fields: [agentId], references: [id])
-  agentId  String?   @map("agent_id")
 
   // Todo: deprecate in favor of visitorID relation
   visitorId String? @map("visitor_id")

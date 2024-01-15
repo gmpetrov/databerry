@@ -247,6 +247,12 @@ export default class ConversationManager {
         : {}),
       ...(agentId
         ? {
+            //  We keep agentId until we migrate conversations to be multi-agent
+            agent: {
+              connect: {
+                id: agentId,
+              },
+            },
             participantsAgents: {
               connect: {
                 id: agentId,
