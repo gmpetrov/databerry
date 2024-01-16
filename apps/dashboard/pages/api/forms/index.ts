@@ -81,6 +81,9 @@ export const createForm = async (
       agent: {
         create: {
           hidden: true,
+          restrictKnowledge: false,
+          useMarkdown: false,
+          useLanguageDetection: false,
           visibility: 'public',
           name: 'Hidden Agent',
           description: "Form's hidden agent",
