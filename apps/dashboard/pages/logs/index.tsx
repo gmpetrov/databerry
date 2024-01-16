@@ -1207,6 +1207,9 @@ export default function LogsPage() {
                     key={state.currentConversationId}
                     conversationId={state.currentConversationId}
                     onStatusChange={handleStatusChange}
+                    onDeleteConversationSuccess={() => {
+                      getConversationsQuery.mutate();
+                    }}
                   />
                 )}
               </Stack>

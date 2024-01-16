@@ -35,9 +35,14 @@ import Input from '../Input';
 type Props = {
   conversationId: string;
   onStatusChange?: (status: ConversationStatus) => any;
+  onDeleteConversationSuccess?: () => any;
 };
 
-function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
+function InboxConversationSettings({
+  conversationId,
+  onStatusChange,
+  onDeleteConversationSuccess,
+}: Props) {
   const getMembershipsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getMemberships>
   >(`/api/memberships`, fetcher);
@@ -316,7 +321,8 @@ function InboxConversationSettings({ conversationId, onStatusChange }: Props) {
 
                 if (confirmed) {
                   await deleteMutation.trigger();
-                  window.location.href = window.location.href;
+
+                  onDeleteConversationSuccess?.();
                 }
               }}
             >
