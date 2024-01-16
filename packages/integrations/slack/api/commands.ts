@@ -212,29 +212,38 @@ const handleAsk = async (payload: CommandEvent) => {
     return;
   }
 
+  console.log('PAYLOAD ------------->', JSON.stringify(payload));
+
   const integration = await getIntegrationByTeamId(payload.team_id);
   const agent = integration?.agents?.[0]!;
 
+  console.log('integration ------------->', JSON.stringify(integration));
+
   const conversation = await prisma.conversation.findUnique({
     where: {
-      channelExternalId: payload.trigger_id,
+      channelExternalId: payload.channel_id,
     },
   });
 
-  const conversationId = conversation?.id || cuid();
-
   const conversationManager = new ConversationManager({
+    conversationId: conversation?.id,
     organizationId: agent?.organizationId!,
-    conversationId,
     channel: ConversationChannel.slack,
-    channelExternalId: payload.trigger_id,
+    channelExternalId: payload.channel_id,
+    channelCredentialsId: integration?.id,
+  });
+
+  console.log('ConversationManager ------------------------>', {
+    organizationId: agent?.organizationId!,
+    channel: ConversationChannel.slack,
+    channelExternalId: payload.channel_id,
     channelCredentialsId: integration?.id,
   });
 
   const conv = await conversationManager.createMessage({
     from: MessageFrom.human,
     text: payload.text,
-    externalId: payload.user_id,
+    externalId: payload.trigger_id,
   });
 
   if (conversation?.isAiEnabled) {

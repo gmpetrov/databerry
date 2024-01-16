@@ -275,7 +275,14 @@ export default class ConversationManager {
 
     return prisma.conversation.upsert({
       where: {
-        id: this.conversationId,
+        organizationId: this.organizationId!,
+        ...(this.channelExternalId
+          ? {
+              channelExternalId: this.channelExternalId,
+            }
+          : {
+              id: this.conversationId,
+            }),
       },
       create: {
         ...(ConversationPayload as Prisma.ConversationCreateInput),
