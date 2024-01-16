@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.189"></a>
+## 0.1.189 (2024-01-16)
+
+### Fixed
+
+- 🐛 fix: crisp send messsage broken since participant refacto [[330bc16](https://github.com/gmpetrov/databerry/commit/330bc1605e052262fd213ae892efe8d474623548)]
+
+
 <a name="0.1.188"></a>
 ## 0.1.188 (2024-01-15)
 
