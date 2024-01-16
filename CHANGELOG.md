@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.190"></a>
+## 0.1.190 (2024-01-16)
+
+### Fixed
+
+- 🐛 prevent form to make up field values [[8f5f4d8](https://github.com/gmpetrov/databerry/commit/8f5f4d8dee055f3aced5d7a942fb8c92df2a6f9b)]
+- 🐛 form agents disable behaviors [[a3a0b2a](https://github.com/gmpetrov/databerry/commit/a3a0b2aa2d72a38dba994663f4419b4191048ba7)]
+- 🐛 delete conversation without hard refresh window [[ca5e17d](https://github.com/gmpetrov/databerry/commit/ca5e17d266c28911e0adaffdcd69a8bda1ec241e)]
+
+### Miscellaneous
+
+- 🤖 backup migration script [[cb4f447](https://github.com/gmpetrov/databerry/commit/cb4f44780db57aa761dcafa8e32916da6e41fb81)]
+
+
 <a name="0.1.189"></a>
 ## 0.1.189 (2024-01-16)
 
