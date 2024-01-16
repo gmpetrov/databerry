@@ -138,10 +138,14 @@ export const formChat = async (
   Use the language specified by locale = ${locale}. 
   Never request or accept any information beyond what's defined in the schema.
 
-  ${config?.overview || ''}
-  
   Always end your question with __BLABLA_FIELD__: name of the field your asking for in order to keep track of the current field, spelled like in the json schema.
-  Example with a field named firstname: What is your first name? __BLABLA_FIELD__: firstname`;
+  Example with a field named firstname: What is your first name? __BLABLA_FIELD__: firstname
+  
+  Never fill up the form yourself, always ask the user for the information or use the provided default from values.
+  
+  Context: ### ${config?.overview || ''} ###
+  JSON Schema: ${JSON.stringify(config?.schema, null, 2)}
+  `;
 
   if (data.streaming) {
     res.writeHead(200, {
