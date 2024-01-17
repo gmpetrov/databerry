@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.192"></a>
+## 0.1.192 (2024-01-17)
+
+### Miscellaneous
+
+- 🤖 add fb pixel [[7d76437](https://github.com/gmpetrov/databerry/commit/7d764371de9a7215405910e180fb2c8c28d2a726)]
+
+
 <a name="0.1.191"></a>
 ## 0.1.191 (2024-01-17)
 
