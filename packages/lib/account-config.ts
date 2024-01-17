@@ -29,7 +29,7 @@ const config: {
     label: 'Free',
     limits: {
       maxAgents: 1,
-      maxAgentsQueries: 1000,
+      maxAgentsQueries: 50,
       maxDatastores: 1,
       maxDatasources: 10, // per datastore
       maxFileSize: 1000000, // 1 MB
