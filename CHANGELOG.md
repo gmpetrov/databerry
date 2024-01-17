@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.191"></a>
+## 0.1.191 (2024-01-17)
+
+### Fixed
+
+- 🐛 crisp metadata override [[ca40a12](https://github.com/gmpetrov/databerry/commit/ca40a12d22af0a8ce527363179b01252879bf109)]
+- 🐛 follow google signin button branding guidelines [[c20ebbd](https://github.com/gmpetrov/databerry/commit/c20ebbd157f9574b712bc8eee740bbb8e8478176)]
+- 🐛 try to identify what&#x27;s breaks the signin page styles [[d0147c7](https://github.com/gmpetrov/databerry/commit/d0147c78bc553f513c5b01157d1bc6af1c5dbd68)]
+- 🐛 type pricing page [[b73464b](https://github.com/gmpetrov/databerry/commit/b73464b53736d0b7470f75efb33e77d4f440cec0)]
+
+### Miscellaneous
+
+-  debug slack [[a92ae3f](https://github.com/gmpetrov/databerry/commit/a92ae3f5eb71a4fb67c2c47462d23cc63d09536e)]
+
+
 <a name="0.1.190"></a>
 ## 0.1.190 (2024-01-16)
 
