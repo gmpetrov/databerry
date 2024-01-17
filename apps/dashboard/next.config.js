@@ -27,6 +27,11 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/signin',
+        destination: '/auth/signin',
+        permanent: true,
+      },
+      {
         source: '/',
         destination: '/agents',
         permanent: true,

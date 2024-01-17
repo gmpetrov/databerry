@@ -176,7 +176,7 @@ export const authOptions = (req: NextApiRequest): AuthOptions => {
     pages: {
       verifyRequest: '/auth/verify-request',
       error: '/auth/error',
-      signIn: '/signin',
+      signIn: '/auth/signin',
     },
     callbacks: {
       async session(props) {
