@@ -179,12 +179,27 @@ export default function SignInPage() {
                         variant="outlined"
                         color="neutral"
                         startDecorator={
-                          <img className="w-5" src="/google-icon.png" />
+                          <img
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              marginRight: '0px',
+                            }}
+                            src="/google-icon.png"
+                          />
                         }
                         sx={{
                           fontFamily: 'Roboto',
                           backgroundColor: 'white',
-                          color: '#7C7F82',
+                          // color: '#7C7F82',
+                          color: '#1F1F1F',
+                          fontWeight: 500,
+                          fontSize: '14px',
+                          minHeight: '40px',
+
+                          '&:hover': {
+                            backgroundColor: 'white',
+                          },
                         }}
                       >
                         Sign in with Google
@@ -196,6 +211,11 @@ export default function SignInPage() {
                         // className="bg-white"
                         variant="outlined"
                         color="neutral"
+                        sx={{
+                          fontWeight: 500,
+                          fontSize: '14px',
+                          minHeight: '40px',
+                        }}
                       >
                         <GitHubIcon />
                       </Button>
