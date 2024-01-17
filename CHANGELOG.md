@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.193"></a>
+## 0.1.193 (2024-01-17)
+
+### Miscellaneous
+
+- 🤖 lower number free queries [[4e36ab9](https://github.com/gmpetrov/databerry/commit/4e36ab9f1538cb8056813f49911f4637cf267110)]
+
+
 <a name="0.1.192"></a>
 ## 0.1.192 (2024-01-17)
 
