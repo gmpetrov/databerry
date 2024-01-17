@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.194"></a>
+## 0.1.194 (2024-01-17)
+
+### Miscellaneous
+
+- 🤖 meta pixel [[3ec65e2](https://github.com/gmpetrov/databerry/commit/3ec65e27fc0b1fcd7c15869ec7ee8255e86414d1)]
+
+
 <a name="0.1.193"></a>
 ## 0.1.193 (2024-01-17)
 
