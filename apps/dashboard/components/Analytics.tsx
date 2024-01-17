@@ -91,6 +91,10 @@ function Analytics({ children }: Props) {
       if (process.env.NEXT_PUBLIC_POSTHOG_KEY) {
         posthog?.capture('$pageview');
       }
+
+      if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID) {
+        (window as any)?.fbq?.('track', 'PageView');
+      }
     }
 
     router.events.on('routeChangeComplete', onRouteChangeComplete);
