@@ -395,6 +395,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             body.data.session_id,
             {
               data: {
+                ...metadata,
                 aiStatus: AIStatus.disabled,
                 aiDisabledDate: new Date(),
               } as ConversationMetadata,
@@ -437,6 +438,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
                 body.data.session_id,
                 {
                   data: {
+                    ...metadata,
                     aiStatus: AIStatus.disabled,
                     aiDisabledDate: new Date(),
                   } as ConversationMetadata,
@@ -477,6 +479,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
                 body.data.session_id,
                 {
                   data: {
+                    ...metadata,
                     aiStatus: AIStatus.disabled,
                   } as ConversationMetadata,
                 }
@@ -524,6 +527,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               body.data.session_id,
               {
                 data: {
+                  ...metadata,
                   aiStatus: AIStatus.enabled,
                 },
               }
