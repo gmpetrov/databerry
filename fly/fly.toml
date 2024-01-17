@@ -28,7 +28,7 @@ worker = "node --max-old-space-size=1536 apps/dashboard/.next/server/datasource-
     NEXT_PUBLIC_POSTHOG_KEY="phc_p3uvX6R1Fvcm67AunUsNpXK78DV5ePoTxGz7oun38sJ"
     NEXT_PUBLIC_POSTHOG_HOST="https://eu.posthog.com"
     NEXT_PUBLIC_MIXPANEL_TOKEN="94455b8b9fa77f7189a8a7f2cde402ea"
-    NEXT_PUBLIC_FACEBOOK_PIXEL_ID="239163085895799"
+    NEXT_PUBLIC_FACEBOOK_PIXEL_ID="758575418708314"
 
 
 [http_service]
