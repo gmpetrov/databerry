@@ -1,6 +1,16 @@
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import MailRoundedIcon from '@mui/icons-material/MailRounded';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Button, IconButton, Stack, Theme, useColorScheme } from '@mui/joy';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import {
+  Alert,
+  Button,
+  Chip,
+  IconButton,
+  Stack,
+  Theme,
+  useColorScheme,
+} from '@mui/joy';
 import Box from '@mui/joy/Box';
 import { SxProps } from '@mui/joy/styles/types';
 import Typography from '@mui/joy/Typography';
@@ -71,6 +81,70 @@ export default function Layout(props: Props) {
             <Navigation />
           </Box>
         </SideDrawer>
+      )}
+      {status !== 'loading' && !session?.organization?.isPremium && (
+        <Stack
+          sx={{
+            width: '100vw',
+            maxWidth: '100%',
+            // height: '40px',
+            p: 1,
+          }}
+        >
+          <Alert
+            size="sm"
+            // direction={'row'}
+            // alignItems={'center'}
+            // gap={1}
+            // sx={(t) => ({ background: t.palette.background })}
+            variant="soft"
+            color="warning"
+            sx={{ justifyContent: 'center', alignItems: 'center', gap: 3 }}
+            invertedColors
+          >
+            <Stack direction="row" gap={1}>
+              <Chip color="danger">Ending Soon!</Chip>
+              <Typography>
+                Share on social and get 30% off on your subscription!
+              </Typography>
+            </Stack>
+
+            <Stack direction="row" gap={1}>
+              <a
+                target="_blank"
+                className="w-full"
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`This is a game changer! 
+          
+          Chaindesk has transformed the way we handle customer queries with its next-gen AI native solution. Definitely a game-changer!
+          
+          Find out more: https://www.chaindesk.ai`)}`}
+              >
+                <Button
+                  color="neutral"
+                  // variant="outlined"
+                  startDecorator={<TwitterIcon />}
+                  size="sm"
+                >
+                  Share
+                </Button>
+              </a>
+              <a
+                target="_blank"
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=https://www.chaindesk.ai`}
+                className="w-full"
+              >
+                <Button
+                  color="neutral"
+                  // variant="outlined"
+                  startDecorator={<LinkedInIcon />}
+                  size="sm"
+                >
+                  Share
+                </Button>
+              </a>
+            </Stack>
+          </Alert>
+        </Stack>
       )}
       <Root
         className={mounted ? mode : ''}

@@ -225,7 +225,7 @@ function AccountCard({}: Props) {
         </Button>
       </Link>
 
-      {!session?.data?.organization?.isPremium && (
+      {/* {!session?.data?.organization?.isPremium && (
         <Card size="sm">
           <Stack gap={1}>
             <Alert
@@ -275,7 +275,7 @@ function AccountCard({}: Props) {
             </Stack>
           </Stack>
         </Card>
-      )}
+      )} */}
     </Stack>
   );
 }
