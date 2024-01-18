@@ -23,7 +23,7 @@ export const ModelConfig = {
   },
   [AgentModelName.gpt_3_5_turbo_16k]: {
     name: 'gpt-3.5-turbo-1106',
-    maxTokens: 16384,
+    maxTokens: 16385,
     cost: 1,
     providerPriceByInputToken: 0.000001,
     providerPricePriceByOutputToken: 0.000002,

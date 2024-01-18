@@ -157,12 +157,15 @@ export const updateAgent = async (
     }
   }
 
+  const { id, ownerId, organizationId, formId, organization, ...rest } =
+    data as any;
+
   return prisma.agent.update({
     where: {
       id: agentId,
     },
     data: {
-      ...data,
+      ...(rest as UpdateAgentSchema),
       interfaceConfig: data.interfaceConfig || {},
       tools: {
         createMany: {
