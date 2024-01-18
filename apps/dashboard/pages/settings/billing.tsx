@@ -34,7 +34,6 @@ import { Prisma, SubscriptionPlan } from '@chaindesk/prisma';
 export default function BillingSettingsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const { capture } = React.useContext(AnalyticsContext);
 
   const handleClickManageSubscription = async () => {
     try {
@@ -47,65 +46,6 @@ export default function BillingSettingsPage() {
       console.log(err);
     }
   };
-
-  React.useEffect(() => {
-    function getClientReferenceId() {
-      return (
-        ((window as any)?.Rewardful && (window as any)?.Rewardful?.referral) ||
-        'checkout_' + new Date().getTime()
-      );
-    }
-
-    (async () => {
-      const checkoutSessionId = router.query?.checkout_session_id;
-
-      if (!checkoutSessionId) {
-        return;
-      }
-
-      try {
-        const checkoutDataRes = await axios.post(
-          '/api/stripe/get-checkout-session',
-          {
-            checkoutSessionId,
-          }
-        );
-
-        const checkoutData = checkoutDataRes.data;
-
-        if (checkoutData) {
-          console.debug(checkoutData);
-
-          capture?.({
-            event: 'purchase',
-            payload: {
-              transaction_id: checkoutData.id,
-              value: checkoutData.amount_total,
-              currency: checkoutData.currency / 100,
-            },
-          });
-        }
-      } catch (err) {
-        console.log(err);
-      }
-
-      let utmParams = {};
-      try {
-        utmParams = JSON.parse(Cookies.get('utmParams') || '{}');
-      } catch {}
-
-      await axios
-        .post('/api/stripe/referral', {
-          checkoutSessionId,
-          referralId: getClientReferenceId(),
-          utmParams,
-        })
-        .catch(console.log);
-
-      delete router.query.checkout_session_id;
-      router.replace(router, undefined, { shallow: true });
-    })();
-  }, []);
 
   const currentPlan = accountConfig[session?.organization?.currentPlan!];
 

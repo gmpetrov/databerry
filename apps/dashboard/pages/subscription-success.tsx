@@ -12,11 +12,79 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import * as React from 'react';
 
+import { AnalyticsContext } from '@app/components/Analytics';
+import useConfetti from '@app/hooks/useConfetti';
+
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 
 export default function SubscriptionSuccessPage() {
   const router = useRouter();
+  const { capture } = React.useContext(AnalyticsContext);
+  const triggerConfetti = useConfetti();
+
+  React.useEffect(() => {
+    triggerConfetti();
+  }, []);
+
+  React.useEffect(() => {
+    function getClientReferenceId() {
+      return (
+        ((window as any)?.Rewardful && (window as any)?.Rewardful?.referral) ||
+        'checkout_' + new Date().getTime()
+      );
+    }
+
+    (async () => {
+      const checkoutSessionId = router.query?.checkout_session_id;
+
+      if (!checkoutSessionId) {
+        return;
+      }
+
+      try {
+        const checkoutDataRes = await axios.post(
+          '/api/stripe/get-checkout-session',
+          {
+            checkoutSessionId,
+          }
+        );
+
+        const checkoutData = checkoutDataRes.data;
+
+        if (checkoutData) {
+          console.debug(checkoutData);
+
+          capture?.({
+            event: 'purchase',
+            payload: {
+              transaction_id: checkoutData.id,
+              value: checkoutData.amount_total,
+              currency: checkoutData.currency / 100,
+            },
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
+      let utmParams = {};
+      try {
+        utmParams = JSON.parse(Cookies.get('utmParams') || '{}');
+      } catch {}
+
+      await axios
+        .post('/api/stripe/referral', {
+          checkoutSessionId,
+          referralId: getClientReferenceId(),
+          utmParams,
+        })
+        .catch(console.log);
+
+      delete router.query.checkout_session_id;
+      router.replace(router, undefined, { shallow: true });
+    })();
+  }, []);
 
   return (
     <Box
