@@ -57,5 +57,8 @@
     "tsx": "^3.13.0",
     "turbo": "^1.11.2"
   },
-  "packageManager": "pnpm@8.7.5"
+  "packageManager": "pnpm@8.7.5",
+  "@parcel/resolver-default": {
+    "packageExports": true
+  }
 }
