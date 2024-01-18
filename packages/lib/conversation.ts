@@ -131,7 +131,7 @@ export default class ConversationManager {
                   id: visitorId,
                 },
                 create: {
-                  id: visitorId || cuid(),
+                  id: visitorId,
                   organizationId: this.organizationId!,
                 },
               },
@@ -236,8 +236,14 @@ export default class ConversationManager {
       ...(visitorId
         ? {
             participantsVisitors: {
-              connect: {
-                id: visitorId,
+              connectOrCreate: {
+                where: {
+                  id: visitorId,
+                },
+                create: {
+                  id: visitorId,
+                  organizationId: this.organizationId!,
+                },
               },
             },
           }
