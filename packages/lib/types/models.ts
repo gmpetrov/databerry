@@ -219,6 +219,7 @@ export const AgentInterfaceConfig = z.object({
   isHumanRequestedDisabled: z.boolean().optional(),
   isMarkAsResolvedDisabled: z.boolean().optional(),
   isLeadCaptureDisabled: z.boolean().optional(),
+  isBrandingDisabled: z.boolean().optional(),
   messageTemplates: z.array(z.string()).optional(),
   position: z.enum(['left', 'right']).optional(),
   authorizedDomains: z.array(z.string()).optional(),

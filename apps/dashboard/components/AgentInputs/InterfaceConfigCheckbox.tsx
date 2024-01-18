@@ -5,14 +5,17 @@ type CheckboxField =
   | 'isInitMessagePopupDisabled'
   | 'isHumanRequestedDisabled'
   | 'isMarkAsResolvedDisabled'
-  | 'isLeadCaptureDisabled';
+  | 'isLeadCaptureDisabled'
+  | 'isBrandingDisabled';
 
 function InterfaceConfigCheckbox({
   label,
   field,
+  disabled,
 }: {
   label: string;
   field: CheckboxField;
+  disabled?: boolean;
 }) {
   const { register, setValue, getValues } = useFormContext();
   const { interfaceConfig } = getValues();
@@ -29,6 +32,7 @@ function InterfaceConfigCheckbox({
         onChange={handleCheckboxChange}
         checked={Boolean(interfaceConfig?.[field])}
         aria-label={label}
+        disabled={!!disabled}
       />
       <Typography>{label}</Typography>
     </Stack>

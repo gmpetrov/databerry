@@ -61,6 +61,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
   }, [primaryColor]);
 
+  const isPremium = !!(agent as any)?.organization?.subscriptions?.[0]?.id;
+
   // TODO: find why onSuccess is not working
   // useSWR<Agent>(`${API_URL}/api/agents/${agentId}`, fetcher, {
   //   onSuccess: (data) => {
@@ -178,6 +180,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           withFileUpload
           withSources={!!agent?.includeSources}
           isAiEnabled={methods.isAiEnabled}
+          disableWatermark={isPremium && !!config?.isBrandingDisabled}
         />
       </Box>
     </ChatContext.Provider>

@@ -20,6 +20,21 @@ import { prisma } from '@chaindesk/prisma/client';
 const handler = createLazyAuthHandler();
 
 export const agentInclude: Prisma.AgentInclude = {
+  organization: {
+    select: {
+      id: true,
+      subscriptions: {
+        select: {
+          id: true,
+        },
+        where: {
+          status: {
+            in: ['active'],
+          },
+        },
+      },
+    },
+  },
   tools: {
     include: {
       datastore: {

@@ -1,4 +1,5 @@
 import { Divider } from '@mui/joy';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -12,6 +13,7 @@ type Props = {};
 
 export default function CommonInterfaceInput(props: Props) {
   const { watch, control, register } = useFormContext();
+  const { data: session } = useSession();
 
   const config = watch('interfaceConfig');
   return (
@@ -38,6 +40,11 @@ export default function CommonInterfaceInput(props: Props) {
       <InterfaceConfigCheckbox
         field="isMarkAsResolvedDisabled"
         label="Disable the ability to mark a conversation as resolved"
+      />
+      <InterfaceConfigCheckbox
+        field="isBrandingDisabled"
+        label="Remove Chaindesk Branding (premium account required)"
+        disabled={!session?.organization?.isPremium}
       />
       <SuggestionsInput />
       <Input

@@ -1,5 +1,4 @@
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-// import MapsUgcRoundedIcon from '@mui/icons-material/MapsUgcRounded';
+import MapsUgcRoundedIcon from '@mui/icons-material/MapsUgcRounded';
 import IconButton from '@mui/joy/IconButton';
 import Tooltip from '@mui/joy/Tooltip';
 import React, { ComponentProps, useContext } from 'react';
@@ -32,8 +31,7 @@ function NewChatButton(props: Props) {
         size="sm"
         {...props}
       >
-        {/* <MapsUgcRoundedIcon /> */}
-        <AutorenewRoundedIcon />
+        <MapsUgcRoundedIcon />
       </IconButton>
     </Tooltip>
   );

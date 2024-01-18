@@ -89,6 +89,9 @@ function App(props: {
     );
   }, [state.config.primaryColor]);
 
+  const isPremium = !!(state as any)?.agent?.organization?.subscriptions?.[0]
+    ?.id;
+
   // TODO: find why onSuccess is not working
   // useSWR<Agent>(`${API_URL}/api/agents/${agentId}`, fetcher, {
   //   onSuccess: (data) => {
@@ -475,6 +478,9 @@ function App(props: {
                     withFileUpload
                     withSources={!!state?.agent?.includeSources}
                     isAiEnabled={methods.isAiEnabled}
+                    disableWatermark={
+                      isPremium && !!state?.config?.isBrandingDisabled
+                    }
                   />
                 </Stack>
               </Card>
