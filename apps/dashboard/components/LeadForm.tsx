@@ -102,7 +102,7 @@ export default function LeadForm(props: {
           !!props.visitorEmail ||
           state.isCaptureSuccess
         }
-        autoFocus
+        autoFocus={false}
         defaultValue={props.visitorEmail}
         endDecorator={
           !state.visitorEmail && (

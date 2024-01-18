@@ -336,6 +336,7 @@ export default function AgentPage() {
                 userImgUrl={session?.user?.image!}
                 refreshConversation={refreshConversation}
                 withSources={!!query?.data?.includeSources}
+                autoFocus
               />
 
               {(query?.data?.tools?.length || 0) > 0 && (

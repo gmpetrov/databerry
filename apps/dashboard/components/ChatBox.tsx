@@ -86,6 +86,7 @@ export type ChatBoxProps = {
   draftReplyInput?: JSX.Element | null;
   withSources?: boolean;
   isAiEnabled?: boolean;
+  autoFocus?: boolean;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -172,6 +173,7 @@ function ChatBox({
   draftReplyInput,
   withSources,
   isAiEnabled,
+  autoFocus,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -654,7 +656,7 @@ function ChatBox({
             )}
 
             <Textarea
-              autoFocus
+              autoFocus={!!autoFocus}
               slotProps={{
                 textarea: {
                   id: 'chatbox-input',

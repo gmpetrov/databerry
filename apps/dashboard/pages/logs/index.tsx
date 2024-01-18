@@ -1178,6 +1178,7 @@ export default function LogsPage() {
                 withFileUpload
                 withSources
                 isAiEnabled={getConversationQuery?.data?.isAiEnabled!}
+                autoFocus
                 draftReplyInput={
                   <DraftReplyInput
                     key={state.currentConversationId}

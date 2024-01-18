@@ -359,6 +359,7 @@ export default function ChatPage() {
               }
               userImgUrl={session?.user?.image!}
               refreshConversation={refreshConversation}
+              autoFocus
             />
 
             {datasourceViewId && (
