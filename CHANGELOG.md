@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.201"></a>
+## 0.1.201 (2024-01-18)
+
+### Fixed
+
+- 🐛 emptied converstion on first message + update agent broken WTF 🤔 [[10a8bf4](https://github.com/gmpetrov/databerry/commit/10a8bf40f48e79863bc6e9f04980d2d3a931ed74)]
+
+
 <a name="0.1.200"></a>
 ## 0.1.200 (2024-01-18)
 
