@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.197"></a>
+## 0.1.197 (2024-01-18)
+
+### Fixed
+
+- 🐛 /message error [[bf00a99](https://github.com/gmpetrov/databerry/commit/bf00a9933a9ff21db5755f3e3e290f6fec0a298b)]
+
+
 <a name="0.1.196"></a>
 ## 0.1.196 (2024-01-18)
 
