@@ -13,7 +13,8 @@ import {
 } from '@chaindesk/lib/createa-api-handler';
 import { client as CrispClient } from '@chaindesk/lib/crisp';
 import mailer from '@chaindesk/lib/mailer';
-import runMiddleware from '@chaindesk/lib/run-middleware';
+import cors from '@chaindesk/lib/middlewares/cors';
+import pipe from '@chaindesk/lib/middlewares/pipe';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
 import {
   ConversationMetadataSlack,
@@ -237,4 +238,4 @@ handler.post(
   })
 );
 
-export default handler;
+export default pipe(cors({ methods: ['POST', 'HEAD'] }), handler);
