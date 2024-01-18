@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.200"></a>
+## 0.1.200 (2024-01-18)
+
+### Fixed
+
+- 🐛 layout height with promo banner [[dcf3e31](https://github.com/gmpetrov/databerry/commit/dcf3e31ff4d76928dbd9536f69e87578b05f80fa)]
+
+### Miscellaneous
+
+- 🤖 default model to gpt-3.5-turbo [[9cd8772](https://github.com/gmpetrov/databerry/commit/9cd877237298ccb0561a1dc6e0a637c883f1bf6c)]
+
+
 <a name="0.1.199"></a>
 ## 0.1.199 (2024-01-18)
 
