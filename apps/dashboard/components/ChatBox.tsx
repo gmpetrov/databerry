@@ -342,7 +342,7 @@ function ChatBox({
               </Stack>
             )}
 
-            {isLoadingConversation && (
+            {isLoadingConversation && messages?.length <= 0 && (
               <Stack gap={2}>
                 {Array(1)
                   .fill(0)
@@ -361,7 +361,7 @@ function ChatBox({
 
             {messages?.length <= 0 && !isLoadingConversation && emptyComponent}
 
-            {!isLoadingConversation &&
+            {(!isLoadingConversation || messages?.length > 0) &&
               messages.map((each, index) => (
                 <Stack
                   key={index}

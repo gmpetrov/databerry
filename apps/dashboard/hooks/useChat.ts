@@ -519,6 +519,7 @@ const useChat = ({
     (value?: string) => {
       setState({
         conversationId: value || '',
+        history: [],
       });
       try {
         localStorage.setItem(localStorageConversationIdKey, value || '');
