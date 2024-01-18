@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.195"></a>
+## 0.1.195 (2024-01-18)
+
+### Fixed
+
+- 🐛 cors on /message endpoint [[127d4bb](https://github.com/gmpetrov/databerry/commit/127d4bbdd65a5a69ae45eb7fc20a4a4c723a1ff4)]
+- 🐛 do not show message loader on first message [[4896db0](https://github.com/gmpetrov/databerry/commit/4896db0d1531469539d48e45d77bf0e3168d3ffd)]
+- 🐛 autofocus [[a578d4e](https://github.com/gmpetrov/databerry/commit/a578d4e3725614a14a3c42fe972ae6ab90e0796b)]
+
+### Miscellaneous
+
+- 🤖 bump chatbubble version [[38de8d5](https://github.com/gmpetrov/databerry/commit/38de8d572be363f265b038164cdeadf947af2866)]
+
+
 <a name="0.1.194"></a>
 ## 0.1.194 (2024-01-17)
 
