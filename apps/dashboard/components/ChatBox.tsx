@@ -260,23 +260,25 @@ function ChatBox({
         position: 'relative',
       }}
     >
-      {typeof isAiEnabled === 'boolean' && !isAiEnabled && (
-        <Chip
-          color="danger"
-          sx={{
-            left: '50%',
-            transform: 'translateX(-50%)',
-            top: 10,
-            position: 'absolute',
-            zIndex: 1,
-          }}
-          variant="soft"
-          size="sm"
-          startDecorator={<SmartToyRoundedIcon />}
-        >
-          off
-        </Chip>
-      )}
+      {typeof isAiEnabled === 'boolean' &&
+        !isAiEnabled &&
+        messages?.length > 0 && (
+          <Chip
+            color="danger"
+            sx={{
+              left: '50%',
+              transform: 'translateX(-50%)',
+              top: 10,
+              position: 'absolute',
+              zIndex: 1,
+            }}
+            variant="soft"
+            size="sm"
+            startDecorator={<SmartToyRoundedIcon />}
+          >
+            off
+          </Chip>
+        )}
 
       <Stack
         ref={scrollableRef}
