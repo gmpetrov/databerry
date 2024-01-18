@@ -45,7 +45,7 @@ function AgentForm(props: Props) {
     defaultValues: {
       promptType: PromptType.raw,
       // prompt: CUSTOMER_SUPPORT,
-      modelName: AgentModelName.gpt_4_turbo,
+      modelName: AgentModelName.gpt_3_5_turbo,
       systemPrompt: CUSTOMER_SUPPORT_V3,
       userPrompt: '{query}',
       includeSources: true,

@@ -196,8 +196,10 @@ export default function AgentsPage() {
                 <GeneralInput />
 
                 <details>
-                  <summary>Model / Prompt Settings</summary>
-                  <ModelInput />
+                  <summary>GPT Model / Prompt Settings</summary>
+                  <Stack sx={{ pt: 2, px: 1 }}>
+                    <ModelInput />
+                  </Stack>
                 </details>
 
                 <SettingCard

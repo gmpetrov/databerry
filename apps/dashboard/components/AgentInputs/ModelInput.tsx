@@ -142,13 +142,13 @@ export default function ModelInput({}: Props) {
   // const promptType = watch('promptType');
 
   return (
-    <>
+    <Stack gap={2}>
       <FormControl>
         <FormLabel>Model</FormLabel>
 
         <Select
           {...register('modelName')}
-          defaultValue={modelName || AgentModelName.gpt_4_turbo}
+          defaultValue={modelName || AgentModelName.gpt_3_5_turbo}
           value={modelName}
           onChange={(_, value) => {
             setValue('modelName', value as AgentModelName, {
@@ -178,7 +178,7 @@ export default function ModelInput({}: Props) {
           </Option>
           <Option
             value={AgentModelName.gpt_4_turbo}
-            // disabled={!session?.data?.organization?.isPremium}
+            disabled={!session?.data?.organization?.isPremium}
           >
             gpt-4-turbo - 128k - {ModelConfig[AgentModelName.gpt_4_turbo].cost}{' '}
             credits/query (premium)
@@ -613,6 +613,6 @@ export default function ModelInput({}: Props) {
           </Stack>
         </Stack>
       </promptTemplatesModal.component>
-    </>
+    </Stack>
   );
 }
