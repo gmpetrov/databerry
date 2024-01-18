@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.199"></a>
+## 0.1.199 (2024-01-18)
+
+### Miscellaneous
+
+- 🤖 move promo banner at the top [[f19eba8](https://github.com/gmpetrov/databerry/commit/f19eba81617b2d29740f58baf23bc369b2c0f7ac)]
+- 🎸 enable payment success page to improve converion track [[154770e](https://github.com/gmpetrov/databerry/commit/154770e8e67d94280551718d3e437eb141511878)]
+
+
 <a name="0.1.198"></a>
 ## 0.1.198 (2024-01-18)
 
