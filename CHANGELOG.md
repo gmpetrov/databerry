@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.196"></a>
+## 0.1.196 (2024-01-18)
+
+### Miscellaneous
+
+- 🎸 option to disable chaindesk branding for premium users [[6732e8a](https://github.com/gmpetrov/databerry/commit/6732e8a3e8e9573e9d0d39671c8d20514adf2882)]
+
+
 <a name="0.1.195"></a>
 ## 0.1.195 (2024-01-18)
 
