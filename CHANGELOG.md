@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.198"></a>
+## 0.1.198 (2024-01-18)
+
+### Fixed
+
+- 🐛 remove off label when new conversation started [[0ec74f6](https://github.com/gmpetrov/databerry/commit/0ec74f638f912e3772169f2b0708308b82ad7754)]
+- 🐛 react-markdown crash + open links in new window [[45f388a](https://github.com/gmpetrov/databerry/commit/45f388a6a2a6dce8f7ff2b67b2040425223888ef)]
+
+### Miscellaneous
+
+- 🤖 bump chatbubble version [[b090364](https://github.com/gmpetrov/databerry/commit/b090364ca5a12eb310d0e4d23b714d54df34d96e)]
+
+
 <a name="0.1.197"></a>
 ## 0.1.197 (2024-01-18)
 
