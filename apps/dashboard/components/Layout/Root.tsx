@@ -1,4 +1,4 @@
-import { Box, BoxProps } from '@mui/joy';
+import { Box, BoxProps, Stack } from '@mui/joy';
 
 export default function Root(props: BoxProps) {
   return (
@@ -13,7 +13,6 @@ export default function Root(props: BoxProps) {
             md: 'minmax(160px, 300px) minmax(500px, 1fr)',
           },
           gridTemplateRows: '64px 1fr',
-          minHeight: '100vh',
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}

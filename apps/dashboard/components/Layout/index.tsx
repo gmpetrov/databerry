@@ -64,6 +64,10 @@ export default function Layout(props: Props) {
     setUserMenuElement(null);
   };
 
+  const showPromoBanner =
+    status !== 'loading' && !session?.organization?.isPremium;
+  const promoBannerHeight = showPromoBanner ? 45.5 : 0;
+
   return (
     <>
       <SEO
@@ -82,13 +86,12 @@ export default function Layout(props: Props) {
           </Box>
         </SideDrawer>
       )}
-      {status !== 'loading' && !session?.organization?.isPremium && (
+      {showPromoBanner && (
         <Stack
           sx={{
             width: '100vw',
             maxWidth: '100%',
-            // height: '40px',
-            p: 1,
+            p: 0,
           }}
         >
           <Alert
@@ -99,7 +102,12 @@ export default function Layout(props: Props) {
             // sx={(t) => ({ background: t.palette.background })}
             variant="soft"
             color="warning"
-            sx={{ justifyContent: 'center', alignItems: 'center', gap: 3 }}
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 3,
+              borderRadius: 0,
+            }}
             invertedColors
           >
             <Stack direction="row" gap={1}>
@@ -150,10 +158,11 @@ export default function Layout(props: Props) {
         className={mounted ? mode : ''}
         sx={{
           ...(drawerOpen && {
-            height: '100vh',
+            height: `calc(100dvh - ${promoBannerHeight}px)`,
             overflow: 'hidden',
           }),
-          maxHeight: '100dvh',
+          maxHeight: `calc(100dvh - ${promoBannerHeight}px)`,
+          minHeight: `calc(100dvh - ${promoBannerHeight}px)`,
           overflow: 'hidden',
         }}
       >
