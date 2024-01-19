@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.202"></a>
+## 0.1.202 (2024-01-19)
+
+### Fixed
+
+- 🐛 new conversation email not sent [[874dcf4](https://github.com/gmpetrov/databerry/commit/874dcf40047af968f918779993cb57a379245871)]
+
+
 <a name="0.1.201"></a>
 ## 0.1.201 (2024-01-18)
 
