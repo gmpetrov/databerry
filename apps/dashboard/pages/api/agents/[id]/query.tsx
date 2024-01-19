@@ -55,7 +55,6 @@ export const chatAgentRequest = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  const isNewConversation = !data.conversationId;
   const conversationId = data.conversationId || cuid();
   if (
     session?.authType == 'apiKey' &&
@@ -186,6 +185,8 @@ export const chatAgentRequest = async (
 
     throw err;
   }
+
+  const isNewConversation = !agent?.organization?.conversations?.[0]?.id;
 
   let retrievalQuery = '';
   if (data.isDraft) {
