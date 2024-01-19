@@ -117,6 +117,38 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
     }),
   }),
   DatasourceBaseSchema.extend({
+    type: z.literal(DatasourceType.shopify),
+    config: DatasourceConfigBaseSchema.extend({
+      shop: z.string().refine((val) => val.includes('.myshopify.com'), {
+        message: 'shop name is not valid.',
+      }),
+      collections: z.array(z.object({ id: z.number(), name: z.string() })),
+    }),
+  }),
+  DatasourceBaseSchema.extend({
+    type: z.literal(DatasourceType.shopify_collection),
+    config: DatasourceConfigBaseSchema.extend({
+      shop: z.string().refine((val) => val.includes('.myshopify.com'), {
+        message: 'shop name is not valid.',
+      }),
+      collectionId: z.number(),
+      title: z.string(),
+      productIds: z.array(z.number()),
+    }),
+  }),
+  DatasourceBaseSchema.extend({
+    type: z.literal(DatasourceType.shopify_product),
+    config: DatasourceConfigBaseSchema.extend({
+      shop: z.string().refine((val) => val.includes('.myshopify.com'), {
+        message: 'shop name is not valid.',
+      }),
+      productId: z.number(),
+      title: z.string(),
+      description: z.string(),
+      productIds: z.array(z.number()),
+    }),
+  }),
+  DatasourceBaseSchema.extend({
     type: z.literal(DatasourceType.youtube_bulk),
     config: DatasourceConfigBaseSchema.extend({
       source_url: z
@@ -203,6 +235,16 @@ export type DatasourceYoutube = Extract<
   DatasourceSchema,
   { type: 'youtube_bulk' | 'youtube_video' }
 >;
+export type DatasourceShopify = Extract<DatasourceSchema, { type: 'shopify' }>;
+export type DatasourceShopifyCollection = Extract<
+  DatasourceSchema,
+  { type: 'shopify_collection' }
+>;
+export type DatasourceShopifyProduct = Extract<
+  DatasourceSchema,
+  { type: 'shopify_product' }
+>;
+
 export type DatasourceGoogleDrive = Extract<
   DatasourceSchema,
   { type: 'google_drive_file' | 'google_drive_folder' }

@@ -39,7 +39,7 @@ import type { DatasourceFormProps } from './types';
 
 type Props = DatasourceFormProps & {
   schema: any;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   mode?: keyof ValidationMode;
   hideName?: boolean;
   hideText?: boolean;

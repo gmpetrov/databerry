@@ -9,6 +9,9 @@ import { GoogleDriveFolderLoader } from './google-drive-folder';
 import { NotionLoader } from './notion';
 import { NotionPageLoader } from './notion-page';
 import { QALoader } from './qa';
+import { ShopifyLoader } from './shopify';
+import { ShopifyCollectionLoader } from './shopify-collection';
+import { ShopifyProductLoader } from './shopify-product';
 import { TextLoader } from './text';
 import { WebPageLoader } from './web-page';
 import { WebSiteLoader } from './web-site';
@@ -34,6 +37,9 @@ export class DatasourceLoader {
     [DatasourceType.notion]: NotionLoader,
     [DatasourceType.youtube_video]: YoutubeVideoLoader,
     [DatasourceType.youtube_bulk]: BulkYoutubesLoader,
+    [DatasourceType.shopify]: ShopifyLoader,
+    [DatasourceType.shopify_collection]: ShopifyCollectionLoader,
+    [DatasourceType.shopify_product]: ShopifyProductLoader,
   };
 
   constructor(datasource: Datasource) {
