@@ -101,7 +101,7 @@ export default function Home() {
         <FAQ />
         <Cta /> */}
 
-        <Body />
+        <Body hero2 />
       </main>
       <Footer />
     </>

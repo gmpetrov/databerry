@@ -28,13 +28,16 @@ import PartnerLogos from '../PartnerLogos';
 
 import Feature from './Feature';
 import Hero from './Hero';
+import Hero2 from './Hero2';
 
-type Props = {};
+type Props = {
+  hero2?: boolean;
+};
 
-function Body({}: Props) {
+function Body({ hero2 }: Props) {
   return (
     <>
-      <Hero />
+      {hero2 ? <Hero2 /> : <Hero />}
 
       <PartnerLogos />
 
