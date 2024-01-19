@@ -86,12 +86,7 @@ function MobileNavigation() {
             className="absolute inset-x-0 flex flex-col p-4 mt-4 text-lg tracking-tight origin-top bg-white shadow-xl top-full rounded-2xl text-slate-900 ring-1 ring-slate-900/5"
           >
             <MobileNavLink href="/pricing">Pricing</MobileNavLink>
-            <MobileNavLink
-              href="https://github.com/gmpetrov/chaindesk"
-              target={'_blank'}
-            >
-              GitHub
-            </MobileNavLink>
+
             <MobileNavLink
               href="https://databerry.getrewardful.com/"
               target={'_blank'}
@@ -103,6 +98,12 @@ function MobileNavigation() {
             </MobileNavLink>
             <MobileNavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
               API Docs
+            </MobileNavLink>
+            <MobileNavLink
+              href="https://github.com/gmpetrov/chaindesk"
+              target={'_blank'}
+            >
+              GitHub
             </MobileNavLink>
 
             {/* <MobileNavLink href="#testimonials">Testimonials</MobileNavLink> */}
@@ -185,8 +186,6 @@ export function Header() {
                 </Button>
               </Link> */}
 
-                <Menu />
-
                 {/* <Button
                   href="/products/crisp-plugin"
                   size="sm"
@@ -199,19 +198,23 @@ export function Header() {
                 </Button> */}
 
                 {/* <NavLink href="/help">Help Center</NavLink> */}
+                <NavLink
+                  href="https://databerry.getrewardful.com/"
+                  target={'_blank'}
+                >
+                  Affiliates
+                </NavLink>
                 <NavLink href="/pricing">Pricing</NavLink>
+
+                <Menu />
+
                 {/* <NavLink href="https://github.com/gmpetrov/chaindesk" target={'_blank'}>
                 GitHub
               </NavLink> */}
                 {/* <NavLink href="https://docs.chaindesk.ai/" target={'_blank'}>
                 Docs
               </NavLink> */}
-                {/* <NavLink
-                  href="https://databerry.getrewardful.com/"
-                  target={'_blank'}
-                >
-                  Affiliates
-                </NavLink> */}
+
                 {/* <NavLink href="#testimonials">Testimonials</NavLink> */}
               </div>
             </div>
