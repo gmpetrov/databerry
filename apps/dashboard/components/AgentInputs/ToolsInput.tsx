@@ -337,6 +337,7 @@ function ToolsInput({}: Props) {
               shouldDirty: true,
               shouldValidate: true,
             });
+            btnSubmitRef?.current?.click();
             newApiToolForm.close();
           }}
         />
