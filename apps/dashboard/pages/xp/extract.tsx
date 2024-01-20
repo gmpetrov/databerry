@@ -37,7 +37,6 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import { XPBNPLabels } from '@chaindesk/lib/config';

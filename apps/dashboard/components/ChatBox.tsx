@@ -55,12 +55,10 @@ const acceptedMimeTypesStr = [
   ...AcceptedDocumentMimeTypes,
 ].join(',');
 
-export type ChatBoxProps = {
+export type ChatBoxBaseProps = {
   messages: ChatMessage[];
-  onSubmit: (message: string, attachments?: File[]) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
-  readOnly?: boolean;
   disableWatermark?: boolean;
   renderAfterMessages?: JSX.Element | null;
   renderBottom?: JSX.Element | null;
@@ -88,6 +86,15 @@ export type ChatBoxProps = {
   isAiEnabled?: boolean;
   autoFocus?: boolean;
 };
+
+type ChatBoxProps = ChatBoxBaseProps &
+  (
+    | {
+        readOnly?: false | boolean;
+        onSubmit: (message: string, attachments?: File[]) => Promise<any>;
+      }
+    | { readOnly: true; onSubmit?: never }
+  );
 
 const Schema = z.object({ query: z.string().min(1) });
 
@@ -203,7 +210,7 @@ function ChatBox({
       setHideTemplateMessages(true);
       setIsTextAreaExpended(false);
       methods.reset();
-      await onSubmit(query, files);
+      await onSubmit?.(query, files);
       setFiles([]);
     } catch (err) {
     } finally {

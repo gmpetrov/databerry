@@ -5,7 +5,13 @@ const config = {
   datasourceTable: {
     limit: 20,
   },
-};
+  workflowTable: {
+    limit: 20,
+  },
+  defaultTable: {
+    limit: 20,
+  },
+} as const;
 
 export const XPBNPLabels = {
   qa: 'Question/Réponse sur documents',

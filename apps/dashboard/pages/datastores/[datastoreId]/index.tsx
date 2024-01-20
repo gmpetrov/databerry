@@ -26,8 +26,10 @@ import * as React from 'react';
 
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
+import usePaginatedQuery from '@app/hooks/usePaginatedQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { getDatasources } from '@app/pages/api/datasources';
+import { getDatastore } from '@app/pages/api/datastores/[id]';
 
 import guardDataProcessingUsage from '@chaindesk/lib/guard-data-processing-usage';
 import { RouteNames } from '@chaindesk/lib/types';
@@ -62,7 +64,17 @@ export default function DatastorePage() {
     isUsageLimitModalOpen: false,
   });
 
-  const { getDatastoreQuery } = useGetDatastoreQuery({});
+  const { getPagniatedQuery: getDatastoreQuery } = usePaginatedQuery<
+    typeof getDatastore
+  >({
+    swrConfig: {
+      refreshInterval: 5000,
+    },
+    baseEndpoint: '/api/datastores',
+    path: ['datastoreId'],
+    filters: ['type', 'status', 'groupId', 'search'],
+    tableType: 'datasourceTable',
+  });
 
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;

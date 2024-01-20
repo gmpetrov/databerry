@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 
 import DatasourceTable from '@app/components/DatasourceTable';
-import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
+import usePaginatedQuery from '@app/hooks/usePaginatedQuery';
 import { BulkDeleteDatasourcesSchema } from '@app/pages/api/datasources/bulk-delete';
 
 import guardDataProcessingUsage from '@chaindesk/lib/guard-data-processing-usage';
@@ -19,10 +19,14 @@ function Datasources(props: Props) {
   const { data: session, status } = useSession();
   const [isUsageModalOpen, setIsUsageModalOpen] = React.useState(false);
 
-  const { getDatastoreQuery } = useGetDatastoreQuery({
+  const { getPagniatedQuery: getDatastoreQuery } = usePaginatedQuery({
     swrConfig: {
       refreshInterval: 5000,
     },
+    baseEndpoint: '/api/datastores',
+    path: ['datastoreId'],
+    filters: ['type', 'status', 'groupId', 'search'],
+    tableType: 'datasourceTable',
   });
 
   const handleSynchDatasource = async (datasourceId: string) => {
