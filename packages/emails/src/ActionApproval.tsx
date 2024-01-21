@@ -22,11 +22,21 @@ import { Message } from '@chaindesk/prisma';
 interface ActionApprovalProps {
   history: Partial<Message>[];
   ctaLink: string;
-  toolNames: string[];
+  agentName: string;
+  approvals: { name: string; payload: any }[];
 }
 
 export const ActionApprovalTemplate = ({
-  toolNames = ['cat picture generator', 'api solver request'],
+  agentName = 'Adam',
+  approvals = [
+    {
+      name: 'cat picture generator',
+      payload: {
+        catType: 'cute',
+      },
+    },
+    { name: 'http tool request', payload: {} },
+  ],
   ctaLink = '/emails',
   history = [
     {
@@ -52,8 +62,8 @@ export const ActionApprovalTemplate = ({
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Section className="mt-[22px]">
               <Img
-                src={`https://www.chaindesk.ai/app-logo-icon.png`}
-                width="50"
+                src={`https://www.chaindesk.ai/app-logo-light.png`}
+                width="200"
                 height="auto"
                 alt="Vercel"
                 className="mx-auto my-0"
@@ -61,25 +71,33 @@ export const ActionApprovalTemplate = ({
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
               {previewText}
+              {' from agent '}
+              <br />
+              <strong>{agentName}</strong>
             </Heading>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
             <Row>
               <Container>
-                <Text className="text-black text-lg ">
-                  Approval Requested For The Following Tools:
+                <Text className="font-bold text-black text-md">
+                  The following action(s) require your approval:
                 </Text>
                 <Section
                   className={clsx(
                     'px-4  border mb-1 border-solid border-[#eaeaea] rounded-lg'
                   )}
                 >
-                  {(toolNames || []).map((name, i) => (
-                    <li className="my-5 capitalize text-sm">{name}</li>
+                  {(approvals || []).map(({ name, payload }, i) => (
+                    <li className="my-5 text-sm capitalize">
+                      {name}{' '}
+                      {!!payload && Object.keys(payload).length > 0
+                        ? JSON.stringify(payload, null, 2)
+                        : ''}
+                    </li>
                   ))}
                 </Section>
 
-                <Text className="text-black text-lg">
-                  Conversation History:
+                <Text className="font-bold text-black text-md">
+                  Conversation history:
                 </Text>
 
                 {(history || [])
@@ -104,7 +122,7 @@ export const ActionApprovalTemplate = ({
                       <Button
                         pX={20}
                         pY={12}
-                        className="bg-[#fff] rounded text-black text-[12px] font-semibold no-underline text-center border border-solid border-[#eaeaea]"
+                        className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
                         href={ctaLink}
                       >
                         Take Action

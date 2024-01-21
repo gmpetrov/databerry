@@ -15,6 +15,7 @@ import {
   createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
+import EventDispatcher from '@chaindesk/lib/events/dispatcher';
 import getRequestCountry from '@chaindesk/lib/get-request-country';
 import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
 import mailer from '@chaindesk/lib/mailer';
@@ -308,6 +309,15 @@ export const chatAgentRequest = async (
       metadata: chatRes.metadata,
       agentId: agent?.id,
     });
+
+    if (chatRes.approvals.length > 0) {
+      await EventDispatcher.dispatch({
+        type: 'tool-approval-requested',
+        conversationId,
+        approvals: chatRes.approvals,
+        agentName: agent?.name!,
+      });
+    }
   }
 
   // Send new conversation notfication from website visitor
@@ -344,7 +354,7 @@ export const chatAgentRequest = async (
             ]}
             ctaLink={`${
               process.env.NEXT_PUBLIC_DASHBOARD_URL
-            }/logs?tab=all&conversationId=${encodeURIComponent(
+            }/logs?tab=all&targetConversationId=${encodeURIComponent(
               conversationId
             )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
           />

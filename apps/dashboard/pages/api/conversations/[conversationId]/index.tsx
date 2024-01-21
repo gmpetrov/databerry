@@ -194,7 +194,7 @@ export const updateConversation = async (
               messages={updated?.messages}
               ctaLink={`${
                 process.env.NEXT_PUBLIC_DASHBOARD_URL
-              }/logs?tab=all&conversationId=${encodeURIComponent(
+              }/logs?tab=all&targetConversationId=${encodeURIComponent(
                 conversationId
               )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
             />
@@ -231,7 +231,7 @@ export const updateConversation = async (
               messages={updated?.messages}
               ctaLink={`${
                 process.env.NEXT_PUBLIC_DASHBOARD_URL
-              }/logs?tab=human_requested&conversationId=${encodeURIComponent(
+              }/logs?tab=human_requested&targetConversationId=${encodeURIComponent(
                 conversationId
               )}&targetOrgId=${encodeURIComponent(updated.organizationId!)}`}
             />

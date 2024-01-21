@@ -187,7 +187,7 @@ export const updateInboxConversation = async (
             label: 'View Conversation',
             href: `${
               process.env.NEXT_PUBLIC_DASHBOARD_URL
-            }/logs?tab=all&conversationId=${encodeURIComponent(
+            }/logs?tab=all&targetConversationId=${encodeURIComponent(
               id
             )}&targetOrgId=${encodeURIComponent(session?.organization.id!)}`,
           }}

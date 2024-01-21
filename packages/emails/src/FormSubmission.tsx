@@ -35,7 +35,7 @@ export const FormSubmission = ({
     'overall-satisfaction-1-5': '4',
   },
 }: FormSubmissionProps) => {
-  const previewText = `📬 New ${formName} Submission`;
+  const previewText = `📬 New Submission`;
 
   return (
     <Html>
@@ -55,6 +55,9 @@ export const FormSubmission = ({
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
               {previewText}
+              {' from '}
+              <br />
+              <strong>{formName}</strong>
             </Heading>
 
             <Row>
@@ -64,7 +67,7 @@ export const FormSubmission = ({
                 {Object.keys(values).map((key, i) => (
                   <Row className="my-2">
                     <Column colSpan={1}>
-                      <Text className="m-0 text-md font-semibold">{key}</Text>
+                      <Text className="m-0 font-semibold text-md">{key}</Text>
                     </Column>
                     <Column colSpan={1} className="text-right">
                       <Text className="m-0">
