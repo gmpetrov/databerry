@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.203"></a>
+## 0.1.203 (2024-01-21)
+
+### Miscellaneous
+
+- 🎸 email notifications ([#302](https://github.com/gmpetrov/databerry/issues/302)) [[800ce62](https://github.com/gmpetrov/databerry/commit/800ce62d5ce4ec45ad50ea2595e7191b6f399e59)]
+- 🤖 update landing page [[45dedee](https://github.com/gmpetrov/databerry/commit/45dedee9c4a34ec8543a03617c895bf895cb638c)]
+- 🤖 add back affiliate link to header [[22b4b45](https://github.com/gmpetrov/databerry/commit/22b4b45441c933ca2aacad7d6b7c62f10a942e2a)]
+
+
 <a name="0.1.202"></a>
 ## 0.1.202 (2024-01-19)
 
