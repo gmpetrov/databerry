@@ -147,7 +147,7 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
           messages={agent?.conversations?.[0]?.messages}
           ctaLink={`${
             process.env.NEXT_PUBLIC_DASHBOARD_URL
-          }/logs?tab=all&conversationId=${encodeURIComponent(
+          }/logs?tab=all&targetConversationId=${encodeURIComponent(
             data.conversationId
           )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
         />

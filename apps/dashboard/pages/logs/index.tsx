@@ -43,7 +43,7 @@ import Tab, { tabClasses } from '@mui/joy/Tab';
 import Typography from '@mui/joy/Typography';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
-import { ReactElement, useEffect, useMemo } from 'react';
+import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 import React from 'react';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -192,7 +192,7 @@ export default function LogsPage() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const conversationId = router.query.conversationId as string;
+  const targetConversationId = router.query.targetConversationId as string;
 
   const hasFilterApplied =
     router.query.eval ||
@@ -228,7 +228,7 @@ export default function LogsPage() {
 
     const params = new URLSearchParams({
       cursor: cursor || '',
-      conversationId: conversationId || '',
+      conversationId: targetConversationId || '',
       eval: (router.query.eval as string) || '',
       agentId: (router.query.agentId as string) || '',
       channel: (router.query.channel as string) || '',
@@ -323,15 +323,20 @@ export default function LogsPage() {
 
     await getConversationQuery.mutate();
   };
-  const handleChangeTab = (tab: TabEnum) => {
-    router.query.tab = tab;
-    router.replace(router);
-  };
+  const handleChangeTab = useCallback(
+    (tab: TabEnum) => {
+      router.query.tab = tab;
+      router.replace(router, undefined, {
+        shallow: true,
+      });
+    },
+    [router]
+  );
 
   // Fetch single converstaion from query parameter (e.g: load converstaion from email notification)
   const getSingleConversationQuery = useSWR<
     Prisma.PromiseReturnType<typeof getConversation>
-  >(conversationId ? `/api/logs/${conversationId}` : null, fetcher);
+  >(targetConversationId ? `/api/logs/${targetConversationId}` : null, fetcher);
 
   const handleBannerAction = async ({
     conversationId,
@@ -394,11 +399,11 @@ export default function LogsPage() {
   }, [getSingleConversationQuery?.data?.id]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !router.query.tab) {
+    if (typeof window !== 'undefined' && router.isReady && !router.query.tab) {
       handleChangeTab(TabEnum.unresolved);
     }
     setState({ currentConversationIndex: 0 });
-  }, [router.query.tab]);
+  }, [router.query.tab, router.isReady, handleChangeTab]);
 
   useEffect(() => {
     if (getConversationQuery.isLoading || getConversationQuery.isValidating) {

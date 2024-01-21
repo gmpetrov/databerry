@@ -1,6 +1,7 @@
 import type { Schema as JSONSchema } from 'jsonschema';
 
 import createToolParser from '@chaindesk/lib/create-tool-parser';
+import EventDispatcher from '@chaindesk/lib/events/dispatcher';
 import { handleFormValid } from '@chaindesk/lib/forms';
 import slugify from '@chaindesk/lib/slugify';
 import {
@@ -48,11 +49,11 @@ export const createHandler = ((tool: FormToolSchema, config) =>
       useDraftConfig ? form?.draftConfig : form?.publishedConfig
     ) as FormConfigSchema;
 
-    await handleFormValid({
+    await EventDispatcher.dispatch({
+      type: 'blablaform-submission',
       conversationId,
       formId: tool.formId,
-      values: payload,
-      webhookUrl: formConfig?.webhook?.url!,
+      formValues: payload,
     });
 
     return {

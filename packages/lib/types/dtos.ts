@@ -700,3 +700,31 @@ export type CreateContactSchema = z.infer<typeof CreateContactSchema>;
 export const UpdateContactSchema = CreateContactSchema;
 
 export type UpdateContactSchema = z.infer<typeof UpdateContactSchema>;
+
+const AppEventBaseSchema = z.object({
+  // organizationId: z.string().cuid(),
+});
+
+export const AppEventSchema = z.discriminatedUnion('type', [
+  AppEventBaseSchema.extend({
+    type: z.literal('tool-approval-requested'),
+    conversationId: z.string().cuid(),
+    approvals: ChatResponse.shape.approvals,
+    agentName: z.string(),
+  }),
+  AppEventBaseSchema.extend({
+    type: z.literal('blablaform-submission'),
+    formId: z.string().cuid(),
+    formValues: z.record(z.string(), z.unknown()),
+    conversationId: z.string().cuid(),
+    submissionId: z.string().cuid().optional().nullable(),
+  }),
+]);
+export type AppEventSchema = z.infer<typeof AppEventSchema>;
+
+export const AppeEventHandlerSchema = z.object({
+  event: AppEventSchema,
+  token: z.string().min(1),
+});
+
+export type AppeEventHandlerSchema = z.infer<typeof AppeEventHandlerSchema>;

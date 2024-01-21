@@ -216,8 +216,8 @@ function ChatBox({
       return;
     }
 
-    scrollableRef.current.scrollTo(0, scrollableRef.current.scrollHeight);
-  }, [lastMessageLength]);
+    scrollableRef.current.scrollTo(0, scrollableRef.current.scrollHeight + 100);
+  }, [lastMessageLength, messages?.length]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -401,29 +401,57 @@ function ChatBox({
                       ></Avatar>
                     )}
 
-                    <Stack gap={1}>
+                    <Stack gap={1} sx={{ overflow: 'visible' }}>
                       {each?.step?.type === 'tool_call' && (
-                        <Card
-                          size="sm"
-                          variant="plain"
-                          sx={{ p: 0.5, background: 'transparent' }}
+                        <Chip
+                          size="md"
+                          sx={{ overflow: 'visible' }}
+                          slotProps={{
+                            label: {
+                              sx: {
+                                overflow: 'visible',
+                              },
+                            },
+                          }}
                         >
-                          <Stack direction="row" alignItems={'center'} gap={1}>
-                            <CircularProgress
-                              size="sm"
-                              color="primary"
-                              sx={{
-                                '--_root-size': '9px',
-                              }}
-                            />
-
-                            <Typography level="body-sm">{`${
-                              each?.step?.description
-                                ? each?.step?.description
-                                : 'Thinking'
-                            }`}</Typography>
+                          <Stack
+                            direction="row"
+                            alignItems={'center'}
+                            gap={0.5}
+                            sx={{ overflow: 'visible' }}
+                          >
+                            <Box
+                              className="animate-[bounce_1s_infinite]"
+                              sx={(t) => ({
+                                width: '9px',
+                                height: '9px',
+                                background: t.palette.neutral[400],
+                                borderRadius: '100%',
+                                opacity: 0.7,
+                              })}
+                            ></Box>
+                            <Box
+                              className="animate-[bounce_1s_infinite_-100ms]"
+                              sx={(t) => ({
+                                width: '9px',
+                                height: '9px',
+                                background: t.palette.neutral[400],
+                                borderRadius: '100%',
+                                opacity: 0.7,
+                              })}
+                            ></Box>
+                            <Box
+                              className="animate-[bounce_1s_infinite_-200ms]"
+                              sx={(t) => ({
+                                width: '9px',
+                                height: '9px',
+                                background: t.palette.neutral[400],
+                                borderRadius: '100%',
+                                opacity: 0.7,
+                              })}
+                            ></Box>
                           </Stack>
-                        </Card>
+                        </Chip>
                       )}
 
                       {each?.approvals?.length > 0 && (
