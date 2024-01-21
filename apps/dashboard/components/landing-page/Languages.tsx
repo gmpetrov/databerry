@@ -139,7 +139,7 @@ function Languages({}: Props) {
       })}
       suppressHydrationWarning
     >
-      <Stack>
+      <Stack sx={{ position: 'relative' }}>
         <Stack sx={{ textAlign: 'center' }}>
           <span className="text-base font-semibold leading-7 text-indigo-500">
             MULTILINGUAL
