@@ -23,6 +23,7 @@ import React, { useEffect } from 'react';
 import Cta from '../landing-page/Cta';
 import FAQ from '../landing-page/FAQ';
 import { Footer } from '../landing-page/Footer';
+import Integrations from '../landing-page/Integrations';
 import Languages from '../landing-page/Languages';
 import PartnerLogos from '../PartnerLogos';
 
@@ -220,6 +221,8 @@ function Body({ hero2 }: Props) {
         ]}
         inversed
       />
+
+      <Integrations />
 
       <Feature
         label="We respect your privacy"

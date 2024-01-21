@@ -162,14 +162,19 @@ export default function Hero() {
               mt={6}
               className="justify-center sm:justify-start"
             >
-              <Link target="_blank" href={`${appUrl}/signin`}>
-                <Button
-                  variant="solid"
-                  size="lg"
-                  // startDecorator={<RocketLaunchRounded />}
-                  sx={{ borderRadius: 100 }}
-                >{`⚡️ Get Started Now`}</Button>
-              </Link>
+              <Stack>
+                <Link target="_blank" href={`${appUrl}/signin`}>
+                  <Button
+                    variant="solid"
+                    size="lg"
+                    // startDecorator={<RocketLaunchRounded />}
+                    sx={{ borderRadius: 100 }}
+                  >{`⚡️ Get Started Now`}</Button>
+                </Link>
+                <p className="mt-2 text-sm italic text-center">
+                  No credit card required
+                </p>
+              </Stack>
               <Link
                 target="_blank"
                 href={'https://calendar.app.google/js1tgwSh2CUvV4CA7'}

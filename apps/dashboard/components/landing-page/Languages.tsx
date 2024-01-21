@@ -1,4 +1,5 @@
 import { Stack } from '@mui/joy';
+import clsx from 'clsx';
 import { shuffle } from 'radash';
 import React, { useEffect } from 'react';
 
@@ -147,7 +148,19 @@ function Languages({}: Props) {
             +100 languages supported
           </h3>
         </Stack>
-        <section className="flex flex-col -space-y-8">
+        <div
+          className={clsx(
+            'absolute left-0 h-full w-14 sm:w-32 pointer-events-none bg-gradient-to-r z-10',
+            'via-black from-black'
+          )}
+        />
+        <div
+          className={clsx(
+            'absolute right-0 h-full w-14 sm:w-32 pointer-events-none bg-gradient-to-l z-10',
+            'via-black from-black'
+          )}
+        />
+        <section className="relative flex flex-col -space-y-8">
           <div className="slider">
             <div
               className="space-x-4 slide-left"

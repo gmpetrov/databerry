@@ -204,6 +204,7 @@ export function Header() {
                 >
                   Affiliates
                 </NavLink>
+                <NavLink href="/#integrations">Integrations</NavLink>
                 <NavLink href="/pricing">Pricing</NavLink>
 
                 <Menu />
