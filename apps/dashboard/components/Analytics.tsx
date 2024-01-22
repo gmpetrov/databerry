@@ -58,6 +58,10 @@ function Analytics({ children }: Props) {
         if (process.env.NEXT_PUBLIC_GA_ID && window?.gtag) {
           window?.gtag?.('event', data.event, data.payload);
         }
+        
+        if (process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID) {
+          (window as any)?.fbq?.('track', data.event, data.payload);
+        }
       } catch (err) {
         console.error(err);
       }
