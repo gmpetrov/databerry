@@ -8,10 +8,15 @@ import {
   ChatRequest,
   FormConfigSchema,
   FormToolSchema,
+  ToolResponseSchema,
 } from '@chaindesk/lib/types/dtos';
 import { Form } from '@chaindesk/prisma';
 
-import { CreateToolHandler, ToolToJsonSchema } from './type';
+import {
+  CreateToolHandler,
+  CreateToolHandlerConfig,
+  ToolToJsonSchema,
+} from './type';
 
 export type FormToolPayload = Record<string, unknown>;
 
@@ -40,8 +45,9 @@ export const toJsonSchema = ((tool: FormToolSchema, config) => {
   };
 }) as ToolToJsonSchema;
 
-export const createHandler = ((tool: FormToolSchema, config) =>
-  async (payload: FormToolPayload) => {
+export const createHandler =
+  (tool: FormToolSchema, config: CreateToolHandlerConfig<{ type: 'form' }>) =>
+  async (payload: FormToolPayload): Promise<ToolResponseSchema> => {
     const form = tool.form as Form;
     const useDraftConfig = !!config?.toolConfig?.useDraftConfig;
     const conversationId = config?.conversationId as string;
@@ -59,7 +65,7 @@ export const createHandler = ((tool: FormToolSchema, config) =>
     return {
       data: 'Form submitted successfully',
     };
-  }) as CreateToolHandler;
+  };
 
 export const createParser =
   (tool: FormToolSchema, config: any) => (payload: string) => {
