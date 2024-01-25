@@ -24,7 +24,6 @@ import {
   ProductType,
 } from '@app/hooks/useProduct';
 import useUTMTracking from '@app/hooks/useUTMTracking';
-import createEmotionCache from '@app/utils/create-emotion-cache';
 
 import { NextPageWithLayout, RouteNames } from '@chaindesk/lib/types';
 

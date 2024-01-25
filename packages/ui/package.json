@@ -15,11 +15,11 @@
   "dependencies": {
     "@chaindesk/lib": "workspace:*",
     "@chaindesk/prisma": "workspace:*",
-    "@emotion/cache": "^11.10.5",
+    "@emotion/cache": "^11.10.6",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.14.19",
-    "@mui/joy": "5.0.0-beta.17",
+    "@mui/joy": "5.0.0-beta.24",
     "@mui/lab": "5.0.0-alpha.155",
     "@mui/material": "^5.14.20",
     "@mui/utils": "5.14.20",
@@ -29,6 +29,7 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
+    "@types/node": "18.15.10",
     "@chaindesk/tsconfig": "workspace:*",
     "@types/react": "18.0.29",
     "@types/react-dom": "18.0.11",

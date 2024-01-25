@@ -38,6 +38,7 @@ const createCredentials = async (
   const config = req.body.config as ServiceProviderZendesk['config'];
 
   return defaultAddServiceProvider<ServiceProviderZendesk['config']>({
+    type: 'zendesk',
     config,
     session: req.session,
     agentId: req.query.agentId as string,

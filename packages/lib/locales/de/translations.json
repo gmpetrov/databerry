@@ -1,8 +1,8 @@
 {
   "crisp": {
     "choices": {
-      "resolve": "Als gelöst markieren",
-      "request": "Einen menschlichen Operator anfordern",
+      "resolve": "Als Gelöst Markieren",
+      "request": "Einen Mensch anfordern",
       "enableAi": "AI erneut aktivieren"
     },
     "instructions": {
@@ -13,12 +13,12 @@
   "chatbubble": {
     "actions": {
       "resolve": "Als Gelöst Markieren",
-      "request": "Menschenoperator anfordern"
+      "request": "Einen Mensch anfordern"
     },
     "lead": {
-      "instruction": "Lassen Sie uns wissen, wie wir Sie kontaktieren können",
+      "instruction": "Lass uns wissen, wie wir dich kontaktieren können",
       "email": "email",
-      "required": "Erforderlich, um einen Menschenoperator anzufordern"
+      "required": "Erforderlich, um einen Mensch anfordern"
     }
   }
 }

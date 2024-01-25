@@ -7,16 +7,22 @@ import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 const defaultCreateServiceProvider = async <
   T extends {} = ServiceProviderSchema
 >({
+  type,
   name,
   session,
   agentId,
   config,
+  accessToken,
+  externalId,
   validate,
 }: {
   name?: string;
+  type: ServiceProviderType;
   config: T;
   agentId?: string;
   session: AppNextApiRequest['session'];
+  accessToken?: string;
+  externalId?: string;
   validate?: (config: T) => Promise<boolean>;
 }) => {
   let agent = null;
@@ -37,17 +43,22 @@ const defaultCreateServiceProvider = async <
       const isValid = await validate(config);
 
       if (!isValid) {
-        throw new ApiError(ApiErrorType.INTEGRATION_CREDENTIALS_INVALID);
+        throw new ApiError(ApiErrorType.INTEGRATION_VALIDATION_FAILED);
       }
     } catch (err) {
-      console.log(JSON.stringify(err, null, 2));
-      throw new ApiError(ApiErrorType.INTEGRATION_CREDENTIALS_INVALID);
+      if (err instanceof ApiError) {
+        throw err;
+      } else {
+        console.log(JSON.stringify(err, null, 2));
+
+        throw new ApiError(ApiErrorType.INTEGRATION_CREDENTIALS_INVALID);
+      }
     }
   }
 
   const integration = await prisma.serviceProvider.create({
     data: {
-      type: ServiceProviderType.zendesk,
+      type,
       config: {
         ...config,
       },
@@ -71,6 +82,8 @@ const defaultCreateServiceProvider = async <
           id: session?.user?.id,
         },
       },
+      externalId,
+      accessToken,
     },
   });
 

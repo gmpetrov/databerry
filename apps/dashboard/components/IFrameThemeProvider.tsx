@@ -8,7 +8,6 @@ import {
 } from '@mui/joy/styles';
 import React from 'react';
 
-import createEmotionCache from '@app/utils/create-emotion-cache';
 import { theme, themeKeys } from '@app/utils/themes/iframe-widget';
 
 const cache = createCache({

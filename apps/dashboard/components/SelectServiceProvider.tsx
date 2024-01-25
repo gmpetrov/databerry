@@ -1,5 +1,6 @@
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
+import Button from '@mui/joy/Button';
+import FormControl, { FormControlProps } from '@mui/joy/FormControl';
+import FormLabel, { FormLabelProps } from '@mui/joy/FormLabel';
 import Option from '@mui/joy/Option';
 import Select, { SelectProps } from '@mui/joy/Select';
 import { ServiceProviderType } from '@prisma/client';
@@ -10,36 +11,70 @@ import useSWR from 'swr';
 import { getServiceProviders } from '@app/pages/api/service-providers';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import { ServiceProvider } from '@chaindesk/prisma';
+
+import Loader from './Loader';
 type Props = SelectProps<string, false> & {
   label?: string;
-  serviceProviderType?: ServiceProviderType;
+  type?: ServiceProviderType;
+  agentId?: string;
+  formControlProps?: FormControlProps;
+  formLabelProps?: FormLabelProps;
+  getOptionLabel?: (provider: ServiceProvider) => string;
+  withDelete?: boolean;
 };
 
 function SelectServiceProvider({
   label,
-  serviceProviderType,
+  type,
+  agentId,
+  formControlProps,
+  formLabelProps,
+  getOptionLabel,
+  withDelete,
   ...otherProps
 }: Props) {
-  const { data: session } = useSession();
-
   const getProvidersQuery = useSWR<
     Awaited<ReturnType<typeof getServiceProviders>>
-  >(
-    session?.organization.id
-      ? `/api/service-providers?${
-          serviceProviderType ? `type=${serviceProviderType}` : ''
-        }`
-      : null,
-    fetcher
-  );
+  >(() => {
+    const params = new URLSearchParams({
+      ...(type
+        ? {
+            type: `${type}`,
+          }
+        : {}),
+      ...(agentId
+        ? {
+            agentId: `${agentId}`,
+          }
+        : {}),
+    });
+
+    return `/api/service-providers?${params.toString()}`;
+  }, fetcher);
+
+  if (!getProvidersQuery.data && getProvidersQuery.isLoading) {
+    return <Loader />;
+  }
 
   return (
-    <FormControl>
-      <FormLabel>{label || 'Select Account'}</FormLabel>
+    <FormControl {...formControlProps}>
+      <FormLabel {...formLabelProps}>{label || 'Select Provider'}</FormLabel>
       <Select {...otherProps}>
         {getProvidersQuery?.data?.map((provider) => (
           <Option key={provider.id} value={provider.id}>
-            {provider.name || provider.id}
+            {getOptionLabel
+              ? getOptionLabel?.(provider)
+              : provider.name || provider.id}
+
+            <Button
+              color="danger"
+              onClick={(e) => {
+                console.log('DELETE _-------->');
+              }}
+            >
+              delete
+            </Button>
           </Option>
         ))}
       </Select>

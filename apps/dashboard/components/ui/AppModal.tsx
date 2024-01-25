@@ -6,7 +6,7 @@ import React, { ComponentProps } from 'react';
 import SettingCard from './SettingCard';
 
 type Props = {
-  title?: string;
+  title?: string | JSX.Element;
   description?: string;
   disableClose?: boolean;
 

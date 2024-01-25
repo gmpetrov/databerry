@@ -217,14 +217,43 @@ export const ServiceProviderZendeskSchema = ServiceProviderBaseSchema.extend({
   }),
 });
 
+export const ServiceProviderWhatsappSchema = ServiceProviderBaseSchema.extend({
+  type: z.literal(ServiceProviderType.whatsapp),
+  accessToken: z.string().min(1),
+  config: z.object({
+    appId: z.string().min(1),
+    phoneNumberId: z.string().min(1),
+    phoneNumber: z.string().min(1),
+    webhookVerifyToken: z.string().optional(),
+  }),
+});
+
+export type ServiceProviderWhatsappSchema = z.infer<
+  typeof ServiceProviderWhatsappSchema
+>;
+
 export const ServiceProviderSchema = z.discriminatedUnion('type', [
   ServiceProviderZendeskSchema,
+  ServiceProviderWhatsappSchema,
 ]);
+
+export const AddServiceProviderWhatsappSchema =
+  ServiceProviderWhatsappSchema.extend({
+    agentId: z.string().cuid(),
+  });
+
+export type AddServiceProviderWhatsappSchema = z.infer<
+  typeof AddServiceProviderWhatsappSchema
+>;
 
 export type ServiceProviderSchema = z.infer<typeof ServiceProviderSchema>;
 export type ServiceProviderZendesk = Extract<
   ServiceProviderSchema,
   { type: 'zendesk' }
+>;
+export type ServiceProviderWhatsapp = Extract<
+  ServiceProviderSchema,
+  { type: 'whatsapp' }
 >;
 
 const ToolBaseSchema = z.object({
@@ -728,3 +757,93 @@ export const AppeEventHandlerSchema = z.object({
 });
 
 export type AppeEventHandlerSchema = z.infer<typeof AppeEventHandlerSchema>;
+
+const WhatsAppActionSchema = z.object({
+  buttons: z.array(
+    z.object({
+      type: z.literal('reply'),
+      reply: z.object({ id: z.string(), title: z.string() }),
+    })
+  ),
+});
+
+const WhatsAppMediaSchema = z.object({ link: z.string() });
+
+const WhatsAppHeaderSchema = z
+  .object({
+    type: z.literal('image'),
+    image: WhatsAppMediaSchema,
+  })
+  .or(
+    z.object({
+      type: z.literal('video'),
+      video: WhatsAppMediaSchema,
+    })
+  )
+  .or(
+    z.object({
+      type: z.literal('text'),
+      text: z.string(),
+    })
+  );
+
+const WhatsAppBodySchema = z.object({
+  text: z.string(),
+});
+
+const WhatsAppTemplateSchema = z.object({
+  name: z.string(),
+  language: z.object({
+    code: z.string(),
+  }),
+});
+
+const interactiveSchema = z.object({
+  type: z.literal('button'),
+  header: WhatsAppHeaderSchema.optional(),
+  body: WhatsAppBodySchema.optional(),
+  action: WhatsAppActionSchema,
+});
+
+const WhatsAppSendMessageBaseSchema = z.object({
+  // id: z.string(),
+  // from: z.string(),
+  // timestamp: z.string(),
+});
+
+export const WhatsAppSendMessagechema = z.discriminatedUnion('type', [
+  WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('text'),
+    text: z.object({
+      body: z.string(),
+      preview_url: z.boolean().optional(),
+    }),
+    preview_url: z.boolean().optional(),
+  }),
+  WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('image'),
+    image: WhatsAppMediaSchema,
+  }),
+  WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('audio'),
+    audio: WhatsAppMediaSchema,
+  }),
+  WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('video'),
+    video: WhatsAppMediaSchema,
+  }),
+  WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('document'),
+    document: WhatsAppMediaSchema,
+  }),
+  WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('interactive'),
+    interactive: interactiveSchema,
+  }),
+  WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('template'),
+    template: WhatsAppTemplateSchema,
+  }),
+]);
+
+export type WhatsAppSendMessagechema = z.infer<typeof WhatsAppSendMessagechema>;

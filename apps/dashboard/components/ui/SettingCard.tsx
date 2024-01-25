@@ -4,7 +4,7 @@ import React, { ComponentProps, forwardRef } from 'react';
 
 type Props = {
   children: React.ReactNode;
-  title?: string;
+  title?: string | JSX.Element;
   description?: string;
   disableSubmitButton?: boolean;
 
