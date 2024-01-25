@@ -7,12 +7,12 @@
     "@chaindesk/lib": "workspace:*",
     "@chaindesk/prisma": "workspace:*",
     "@chaindesk/ui": "workspace:*",
-    "@emotion/cache": "^11.10.5",
+    "@emotion/cache": "^11.10.6",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@hookform/resolvers": "^3.3.2",
     "@mui/icons-material": "^5.14.19",
-    "@mui/joy": "5.0.0-beta.17",
+    "@mui/joy": "5.0.0-beta.24",
     "@mui/lab": "5.0.0-alpha.155",
     "@mui/material": "^5.14.20",
     "@mui/utils": "5.14.20",
@@ -23,6 +23,7 @@
     "cuid": "^3.0.0",
     "i18next": "^23.6.0",
     "react-hook-form": "^7.49.2",
+    "react-hot-toast": "^2.4.1",
     "zod": "3.22.4"
   },
   "devDependencies": {

@@ -793,6 +793,8 @@ model Contact {
   id String  @id @default(cuid())
 
   email String?
+  phoneNumber String? @map("phone_number")
+  externalId String? @map("external_id")
 
   firstName String? @map("first_name")
   lastName String? @map("last_name")
@@ -813,6 +815,8 @@ model Contact {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([email, organizationId], name: "unique_email_for_org")
+  @@unique([phoneNumber, organizationId], name: "unique_phone_number_for_org")
+  @@unique([externalId, organizationId], name: "unique_external_id_for_org")  
   @@map("contacts") 
 }
 
@@ -893,6 +897,7 @@ enum ServiceProviderType {
   crisp
   slack
   zendesk
+  whatsapp
   // smtp
 }
 
@@ -963,6 +968,7 @@ enum ConversationChannel {
   api
   form
   mail
+  whatsapp
 }
 
 enum AgentModelName {

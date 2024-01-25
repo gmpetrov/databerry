@@ -9,6 +9,7 @@ import Typography from '@mui/joy/Typography';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
@@ -16,7 +17,6 @@ import useAgent from '@app/hooks/useAgent';
 import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
-import { IntegrationSettingsMap } from '@chaindesk/integrations/import.browser';
 import { AgentVisibility, DatastoreVisibility } from '@chaindesk/prisma';
 
 import SettingCard from './ui/SettingCard';
@@ -63,6 +63,13 @@ const ZendeskSettings = dynamic(
   }
 );
 
+const WhatsAppSettings = dynamic(
+  () => import('@app/components/WhatsAppSettings'),
+  {
+    ssr: false,
+  }
+);
+
 type Props = {
   agentId: string;
 };
@@ -70,6 +77,7 @@ type Props = {
 function AgentDeployTab(props: Props) {
   const { data: session, status } = useSession();
 
+  const router = useRouter();
   const [state, setState] = useStateReducer({
     isSlackModalOpen: false,
     isUsageModalOpen: false,
@@ -80,6 +88,7 @@ function AgentDeployTab(props: Props) {
   const iframeWidgetModal = useModal();
   const standalonePageModal = useModal();
   const zendeskModal = useModal();
+  const whatsappModal = useModal();
 
   const { query, mutation } = useAgent({
     id: props.agentId as string,
@@ -148,37 +157,38 @@ function AgentDeployTab(props: Props) {
               publicAgentRequired: true,
             },
             {
-              name: 'WordPress',
+              hidden: true,
+              name: 'WhatsApp',
               icon: (
                 <Image
                   className="w-8"
-                  src="https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg"
+                  src="/integrations/whatsapp/icon.svg"
                   width={100}
                   height={100}
-                  alt="Wordpress Logo"
+                  alt="Whatsapp Logo"
                 />
               ),
-              action: () => {
-                window.open(
-                  'https://wordpress.com/plugins/databerry',
-                  '_blank'
-                );
+              action: async () => {
+                whatsappModal.open();
               },
-              publicAgentRequired: true,
+              isPremium: true,
             },
             {
-              name: 'Zendesk',
-              isPremium: false,
+              name: 'Zapier',
+              isPremium: true,
               icon: (
                 <img
                   className="w-8"
-                  src="/integrations/zendesk/icon.svg"
-                  alt="zendesk logo"
+                  src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
+                  alt="zapier logo"
                 ></img>
               ),
 
-              action: async () => {
-                zendeskModal.open();
+              action: () => {
+                window.open(
+                  'https://zapier.com/apps/databerry/integrations',
+                  '_blank'
+                );
               },
             },
             {
@@ -214,98 +224,118 @@ function AgentDeployTab(props: Props) {
               },
             },
             {
-              name: 'Zapier',
-              isPremium: true,
+              name: 'WordPress',
               icon: (
-                <img
+                <Image
                   className="w-8"
-                  src="https://images.ctfassets.net/lzny33ho1g45/6YoKV9RS3goEx54iFv96n9/78100cf9cba971d04ac52d927489809a/logo-symbol.png"
-                  alt="zapier logo"
-                ></img>
+                  src="https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg"
+                  width={100}
+                  height={100}
+                  alt="Wordpress Logo"
+                />
               ),
-
               action: () => {
                 window.open(
-                  'https://zapier.com/apps/databerry/integrations',
+                  'https://wordpress.com/plugins/databerry',
                   '_blank'
                 );
               },
+              publicAgentRequired: true,
             },
-          ].map((each, index, arr) => (
-            <ListItem
-              key={index}
-              sx={(theme) => ({
-                borderBottomWidth: index < arr.length - 1 ? 0.1 : 0,
-                borderBottomColor: theme.palette.divider,
-                minHeight: 70,
-              })}
-            >
-              {/* <ListItemButton> */}
-              <Stack direction="row" gap={2} alignItems={'center'}>
-                {each.icon}
-                <Typography fontWeight={'bold'}>{each.name}</Typography>
+            {
+              name: 'Zendesk',
+              isPremium: false,
+              icon: (
+                <img
+                  className="w-8"
+                  src="/integrations/zendesk/icon.svg"
+                  alt="zendesk logo"
+                ></img>
+              ),
 
-                {each.isPremium && (
-                  <Chip color="warning" size="sm" variant="soft">
-                    premium
-                  </Chip>
+              action: async () => {
+                zendeskModal.open();
+              },
+            },
+          ]
+            .filter((each) =>
+              router.query.showHidden === 'true' ? true : !each.hidden
+            )
+            .map((each, index, arr) => (
+              <ListItem
+                key={index}
+                sx={(theme) => ({
+                  borderBottomWidth: index < arr.length - 1 ? 0.1 : 0,
+                  borderBottomColor: theme.palette.divider,
+                  minHeight: 70,
+                })}
+              >
+                {/* <ListItemButton> */}
+                <Stack direction="row" gap={2} alignItems={'center'}>
+                  {each.icon}
+                  <Typography fontWeight={'bold'}>{each.name}</Typography>
+
+                  {each.isPremium && (
+                    <Chip color="warning" size="sm" variant="soft">
+                      premium
+                    </Chip>
+                  )}
+                </Stack>
+
+                {(!each?.isPremium ||
+                  (each.isPremium && session?.organization?.isPremium)) &&
+                  (each?.publicAgentRequired &&
+                  agent?.visibility === DatastoreVisibility.private ? (
+                    <Button
+                      size="sm"
+                      variant="outlined"
+                      startDecorator={<ToggleOffIcon />}
+                      sx={{ ml: 'auto' }}
+                      loading={mutation.isMutating}
+                      onClick={async () => {
+                        const accepted = await confirm(
+                          'This feature requires your Agent to be public. Unauthenticated users (visitors) can query it. Make it public?'
+                        );
+
+                        if (!accepted) {
+                          return;
+                        }
+
+                        await mutation.trigger({
+                          ...agent,
+                          visibility: AgentVisibility.public,
+                        } as any);
+
+                        await query.mutate();
+                      }}
+                    >
+                      Enable
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="outlined"
+                      startDecorator={<TuneRoundedIcon />}
+                      sx={{ ml: 'auto' }}
+                      onClick={each.action}
+                    >
+                      Settings
+                    </Button>
+                  ))}
+
+                {each.isPremium && !session?.organization?.isPremium && (
+                  <Button
+                    size="sm"
+                    variant="outlined"
+                    color="warning"
+                    sx={{ ml: 'auto' }}
+                    onClick={() => setState({ isUsageModalOpen: true })}
+                  >
+                    Subscribe
+                  </Button>
                 )}
-              </Stack>
-
-              {(!each?.isPremium ||
-                (each.isPremium && session?.organization?.isPremium)) &&
-                (each?.publicAgentRequired &&
-                agent?.visibility === DatastoreVisibility.private ? (
-                  <Button
-                    size="sm"
-                    variant="outlined"
-                    startDecorator={<ToggleOffIcon />}
-                    sx={{ ml: 'auto' }}
-                    loading={mutation.isMutating}
-                    onClick={async () => {
-                      const accepted = await confirm(
-                        'This feature requires your Agent to be public. Unauthenticated users (visitors) can query it. Make it public?'
-                      );
-
-                      if (!accepted) {
-                        return;
-                      }
-
-                      await mutation.trigger({
-                        ...agent,
-                        visibility: AgentVisibility.public,
-                      } as any);
-
-                      await query.mutate();
-                    }}
-                  >
-                    Enable
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outlined"
-                    startDecorator={<TuneRoundedIcon />}
-                    sx={{ ml: 'auto' }}
-                    onClick={each.action}
-                  >
-                    Settings
-                  </Button>
-                ))}
-
-              {each.isPremium && !session?.organization?.isPremium && (
-                <Button
-                  size="sm"
-                  variant="outlined"
-                  color="warning"
-                  sx={{ ml: 'auto' }}
-                  onClick={() => setState({ isUsageModalOpen: true })}
-                >
-                  Subscribe
-                </Button>
-              )}
-            </ListItem>
-          ))}
+              </ListItem>
+            ))}
         </List>
       </SettingCard>
 
@@ -369,6 +399,32 @@ function AgentDeployTab(props: Props) {
           >
             <ZendeskSettings agentId={props.agentId} />
           </zendeskModal.component>
+
+          <whatsappModal.component
+            title={
+              <Typography
+                startDecorator={
+                  <Image
+                    className="w-6"
+                    src="/integrations/whatsapp/icon.svg"
+                    width={100}
+                    height={100}
+                    alt="Whatsapp Logo"
+                  />
+                }
+              >
+                WhatsApp
+              </Typography>
+            }
+            dialogProps={{
+              sx: {
+                maxWidth: 'sm',
+                height: 'auto',
+              },
+            }}
+          >
+            <WhatsAppSettings agentId={props.agentId} />
+          </whatsappModal.component>
         </>
       )}
 

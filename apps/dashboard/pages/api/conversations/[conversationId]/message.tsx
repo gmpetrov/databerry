@@ -5,6 +5,7 @@ import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
 import { InboxTemplate, render } from '@chaindesk/emails';
+import sendWhatsAppMessage from '@chaindesk/integrations/whatsapp/lib/send-whatsapp-message';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import ConversationManager from '@chaindesk/lib/conversation';
 import {
@@ -22,11 +23,7 @@ import {
 } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import {
-  ConversationChannel,
-  ConversationStatus,
-  MessageFrom,
-} from '@chaindesk/prisma';
+import { ConversationChannel, MessageFrom } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 const handler = createLazyAuthHandler();
 
@@ -200,6 +197,25 @@ export const sendMessage = async (
         ),
       });
 
+      break;
+    case 'whatsapp':
+      try {
+        await sendWhatsAppMessage({
+          to: channelExternalId!,
+          credentials: channelCredentials as any,
+          message: {
+            type: 'text',
+            text: {
+              body: payload.message!,
+            },
+          },
+        });
+      } catch (e) {
+        console.error(e);
+        throw Error(
+          `could not send message through whatsapp ${(e as any)?.message}`
+        );
+      }
       break;
     case 'website':
       // no special treatement for website channel.

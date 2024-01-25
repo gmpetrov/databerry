@@ -14,6 +14,7 @@ import React, { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import useSWR from 'swr';
 
+import CopyButton from '@app/components/CopyButton';
 import useInboxConversation from '@app/hooks/useInboxConversation';
 import { getConversation } from '@app/pages/api/logs/[id]';
 import { getMemberships } from '@app/pages/api/memberships';
@@ -28,7 +29,6 @@ import {
   Prisma,
 } from '@chaindesk/prisma';
 
-import CopyButton from '../CopyButton';
 import InboxConversationFormProvider from '../InboxConversationFormProvider';
 import Input from '../Input';
 

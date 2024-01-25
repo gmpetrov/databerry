@@ -4,6 +4,9 @@ export const IntegrationSettingsMap = {
   zendesk: dynamic(() => import('./zendesk/components/IntegrationSettings'), {
     ssr: false,
   }),
+  whatsapp: dynamic(() => import('./whatsapp/components/IntegrationSettings'), {
+    ssr: false,
+  }),
 };
 {
 }
