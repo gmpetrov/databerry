@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.204"></a>
+## 0.1.204 (2024-01-25)
+
+### Fixed
+
+- 🐛 language section overflow [[ccccecc](https://github.com/gmpetrov/databerry/commit/ccccecccf89378650c7e6b2e79aff4bc65aafc8a)]
+
+### Miscellaneous
+
+- 🎸 Whatsapp ([#314](https://github.com/gmpetrov/databerry/issues/314)) [[fdb8d4a](https://github.com/gmpetrov/databerry/commit/fdb8d4a39c038b795528d5eed108639bc5836462)]
+-  Update Analytics.tsx [[2259d4c](https://github.com/gmpetrov/databerry/commit/2259d4cb6383a2fa189b38f166549fc695e0a45e)]
+- 🤖 landing page add integrations section [[ac7c4bd](https://github.com/gmpetrov/databerry/commit/ac7c4bda84159e041da109982b587cc7469f98c2)]
+
+
 <a name="0.1.203"></a>
 ## 0.1.203 (2024-01-21)
 
