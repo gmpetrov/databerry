@@ -210,6 +210,54 @@ export const sendMessage = async (
             },
           },
         });
+
+        if (payload.attachments?.length) {
+          await Promise.all(
+            payload.attachments.map((each) => {
+              const isVideo = each.mimeType?.includes('video');
+              const isImage = each.mimeType?.includes('image');
+              const isAudio = each.mimeType?.includes('audio');
+
+              let message = {};
+
+              if (isVideo) {
+                message = {
+                  type: 'video',
+                  video: {
+                    link: each.url,
+                  },
+                };
+              } else if (isImage) {
+                message = {
+                  type: 'image',
+                  image: {
+                    link: each.url,
+                  },
+                };
+              } else if (isAudio) {
+                message = {
+                  type: 'audio',
+                  audio: {
+                    link: each.url,
+                  },
+                };
+              } else {
+                message = {
+                  type: 'document',
+                  document: {
+                    link: each.url,
+                  },
+                };
+              }
+
+              return sendWhatsAppMessage({
+                to: channelExternalId!,
+                credentials: channelCredentials as any,
+                message: message as any,
+              });
+            })
+          );
+        }
       } catch (e) {
         console.error(e);
         throw Error(

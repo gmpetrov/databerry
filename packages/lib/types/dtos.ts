@@ -833,6 +833,10 @@ export const WhatsAppSendMessagechema = z.discriminatedUnion('type', [
     video: WhatsAppMediaSchema,
   }),
   WhatsAppSendMessageBaseSchema.extend({
+    type: z.literal('document'),
+    document: WhatsAppMediaSchema,
+  }),
+  WhatsAppSendMessageBaseSchema.extend({
     type: z.literal('interactive'),
     interactive: interactiveSchema,
   }),
