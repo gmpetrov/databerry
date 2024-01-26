@@ -238,6 +238,8 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   }
 };
 
+handler.post(webhook);
+
 export default handler;
 
 export type WhatsAppWebhookPayload = {
