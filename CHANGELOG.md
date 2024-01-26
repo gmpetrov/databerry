@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.211"></a>
+## 0.1.211 (2024-01-26)
+
+### Fixed
+
+- 🐛 scale value [[046adbb](https://github.com/gmpetrov/databerry/commit/046adbb389710a35d77850b9ac9c35737818eec7)]
+
+
 <a name="0.1.210"></a>
 ## 0.1.210 (2024-01-26)
 
