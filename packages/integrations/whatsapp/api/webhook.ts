@@ -228,7 +228,9 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
             const downloaded = await axios.get(data.url, {
               headers: {
                 Authorization: `Bearer ${credentials?.accessToken}`,
+                'Content-Type': file.mime_type,
               },
+              responseType: 'arraybuffer',
             });
 
             const fileName = `${data.id}.${getFileExtFromMimeType(
@@ -240,30 +242,14 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               fileName: `${data.id}.${getFileExtFromMimeType(file.mime_type)}`,
             });
 
-            console.log('DOWNLOADED FILE _------->', downloaded);
-
-            // await s3.putObject({
-            //   Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-            //   Key: fileKey,
-            //   Body: downloaded.data,
-            //   ContentType: file.mime_type,
-            //   ACL: 'public-read',
-            // });
-
-            const param = {
-              Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
-              Key: fileKey,
-              Expires: 900,
-              ContentType: file.mime_type,
-            };
-
-            const signedUrl = await s3.getSignedUrlPromise('putObject', param);
-
-            await axios.put(signedUrl, downloaded.data, {
-              headers: {
-                'Content-Type': file.mime_type,
-              },
-            });
+            await s3
+              .putObject({
+                Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+                Key: fileKey,
+                Body: Buffer.from(downloaded.data, 'binary'),
+                ContentType: file.mime_type,
+              })
+              .promise();
 
             attachments.push({
               name: file.caption || fileName,
