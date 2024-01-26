@@ -36,6 +36,21 @@ function WhatsAppSettings({ agentId }: Props) {
             return (provider.config as ServiceProviderWhatsappSchema['config'])
               ?.phoneNumber;
           }}
+          renderItemActions={(provider) => {
+            return (
+              <a
+                href={`https://wa.me/${
+                  (provider.config as ServiceProviderWhatsappSchema['config'])
+                    ?.phoneNumber
+                }?text=Start`}
+                target="_blank"
+              >
+                <Button size="sm" color="neutral" variant="soft">
+                  Try it
+                </Button>
+              </a>
+            );
+          }}
           withDelete
         />
 

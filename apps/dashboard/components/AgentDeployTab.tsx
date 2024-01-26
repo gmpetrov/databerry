@@ -157,7 +157,7 @@ function AgentDeployTab(props: Props) {
               publicAgentRequired: true,
             },
             {
-              hidden: true,
+              hidden: false,
               name: 'WhatsApp',
               icon: (
                 <Image

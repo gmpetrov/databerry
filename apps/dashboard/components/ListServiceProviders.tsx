@@ -1,5 +1,5 @@
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { CircularProgress, ListItemDecorator } from '@mui/joy';
+import { Button, CircularProgress, ListItemDecorator } from '@mui/joy';
 import IconButton from '@mui/joy/IconButton';
 import List, { ListProps } from '@mui/joy/List';
 import ListDivider from '@mui/joy/ListDivider';
@@ -24,6 +24,7 @@ type Props = ListProps & {
   withDelete?: boolean;
   emptyLabel?: string | JSX.Element;
   listItemDecorator?: JSX.Element;
+  renderItemActions?: (item: ServiceProvider) => JSX.Element;
 };
 
 function ListServiceProviders({
@@ -34,6 +35,7 @@ function ListServiceProviders({
   withDelete,
   emptyLabel = 'No Connections',
   listItemDecorator,
+  renderItemActions,
   ...otherProps
 }: Props) {
   const [state, setState] = useStateReducer({
@@ -88,6 +90,9 @@ function ListServiceProviders({
                 ? getListItemLabel?.(provider)
                 : provider.name || provider.id}
             </ListItemContent>
+
+            {renderItemActions ? renderItemActions(provider) : null}
+
             {withDelete && (
               <IconButton
                 variant="soft"

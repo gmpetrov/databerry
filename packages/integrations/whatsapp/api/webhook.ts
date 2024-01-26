@@ -252,6 +252,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               Key: fileKey,
               Body: downloaded.data,
               ContentType: file.mime_type,
+              ACL: 'public-read',
             });
 
             attachments.push({

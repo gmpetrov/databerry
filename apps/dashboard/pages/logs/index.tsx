@@ -735,6 +735,13 @@ export default function LogsPage() {
             >
               {ConversationChannel.website}
             </Option>
+            <Option
+              key={ConversationChannel.whatsapp}
+              value={ConversationChannel.whatsapp}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.whatsapp}
+            </Option>
 
             <Option
               key={ConversationChannel.api}
