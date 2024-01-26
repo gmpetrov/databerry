@@ -1,5 +1,16 @@
 # Changelog
 
+<a name="0.1.210"></a>
+## 0.1.210 (2024-01-26)
+
+### Miscellaneous
+
+- 🎸 chatbubble - multiple init messages [[878e188](https://github.com/gmpetrov/databerry/commit/878e188f99f31f3588d4a386eb7b02c02241f6a2)]
+-  bump version chatbubble [[ab310e5](https://github.com/gmpetrov/databerry/commit/ab310e53220b318b5b67b3c4017f094a4477a91d)]
+- 🎸 chatbubble init message discard icon [[403a6b2](https://github.com/gmpetrov/databerry/commit/403a6b2d272b6c5d764c76bf40d7cabe3ff7e7be)]
+- 🤖 highlight whatsapp landing page [[c4b0079](https://github.com/gmpetrov/databerry/commit/c4b007933ec5dad25190ab181fff88a39807afd7)]
+
+
 <a name="0.1.209"></a>
 ## 0.1.209 (2024-01-26)
 
