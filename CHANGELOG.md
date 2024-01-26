@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.206"></a>
+## 0.1.206 (2024-01-26)
+
+### Fixed
+
+- 🐛 displaying sources for crisp, slack, whatsapp [[46aea79](https://github.com/gmpetrov/databerry/commit/46aea797d2886d6a9cc2a80bd05191ef71a54468)]
+
+
 <a name="0.1.205"></a>
 ## 0.1.205 (2024-01-26)
 
