@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.207"></a>
+## 0.1.207 (2024-01-26)
+
+### Fixed
+
+- 🐛 whatsapp media message upload [[7db9851](https://github.com/gmpetrov/databerry/commit/7db98516b7de916434ff0d2497d901d747fc5576)]
+- 🐛 debug whatsapp media messages [[2b13b51](https://github.com/gmpetrov/databerry/commit/2b13b5105b9d92fadf9a5f7c8d1e66baf0a20b7c)]
+
+
 <a name="0.1.206"></a>
 ## 0.1.206 (2024-01-26)
 
