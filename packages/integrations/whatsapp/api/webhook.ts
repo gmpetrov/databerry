@@ -162,7 +162,6 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     const conversation = agent?.conversations?.[0];
     const conversationId = conversation?.id || cuid();
     let appContact = credentials?.organization?.contacts?.[0];
-    const message = payload.entry[0].changes[0].value.messages[0];
 
     // Create a single message from all text messages
     const textMessages = payload.entry
@@ -178,9 +177,6 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       )
       .flat()
       .filter((each) => !!each);
-
-    const msgText = textMessages.join('\n\n');
-    console.log('Msg-->', msgText);
 
     const files = payload.entry
       .map((entry) =>
@@ -204,6 +200,15 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       )
       .flat()
       .filter((each) => !!each);
+
+    const captionsText = files
+      .map((each) => each.caption)
+      .filter((each) => !!each)
+      .join('\n')
+      .trim();
+
+    const msgText = `${textMessages.join('\n\n')}\n${captionsText}`.trim();
+    console.log('Msg-->', msgText);
 
     const attachments = [] as CreateAttachmentSchema[];
 
@@ -291,7 +296,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       await conversationManager.createMessage({
         id: inputMessageId,
         from: MessageFrom.human,
-        text: msgText || ' ',
+        text: msgText || '🧷',
         contactId: appContact?.id,
         attachments,
         // externalVisitorId: sessionId,
@@ -310,6 +315,9 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       const finalAnswer = `${answer}\n\n${formatSourcesRawText(
         !!agent?.includeSources ? filterInternalSources(sources || []) : []
       )}`.trim();
+
+      console.log('agent-->', agent);
+      console.log('finalAnswer-->', finalAnswer);
 
       await conversationManager.createMessage({
         inputId: inputMessageId,
