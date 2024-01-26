@@ -1,4 +1,5 @@
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import CloseIcon from '@mui/icons-material/Close';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -252,16 +253,62 @@ function App(props: {
                   },
                 }}
               >
-                <Stack spacing={1}>
+                <Stack spacing={1} sx={{ position: 'relative' }}>
                   <motion.div
                     variants={{
                       visible: { opacity: 1, y: 0 },
                       hidden: { opacity: 0, y: 100 },
                     }}
                   >
+                    <IconButton
+                      sx={{
+                        position: 'absolute',
+                        zIndex: 2,
+                        top: 0,
+
+                        transform: 'translate(0px, -125%)',
+                        p: 0.2,
+                        backgroundColor: 'white',
+                        minWidth: '10px',
+                        minHeight: '10px',
+                        // opacity: 0.6,
+
+                        ...(state.config.position === 'left'
+                          ? {
+                              left: 0,
+                            }
+                          : {}),
+                        ...(state.config.position === 'right'
+                          ? {
+                              right: 0,
+                            }
+                          : {}),
+                      }}
+                      variant="outlined"
+                      color="neutral"
+                      size="sm"
+                      onClick={() =>
+                        setState({
+                          showInitialMessage: false,
+                        })
+                      }
+                    >
+                      <CloseIcon fontSize="sm" />
+                    </IconButton>
                     <ChatMessageCard
+                      onClick={() => {
+                        setState({
+                          isOpen: true,
+                          hasOpenOnce: true,
+                        });
+                      }}
                       sx={{
                         maxWidth: 1000,
+                        '&:hover': {
+                          cursor: 'pointer',
+                          transform: 'scale(1.05)',
+                          transition: 'all 100ms ease-in-out',
+                        },
                       }}
                     >
                       <Markdown>{state.config?.initialMessage}</Markdown>
