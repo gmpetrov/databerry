@@ -10,6 +10,7 @@ import {
   createHandler as createFormToolHandler,
   // createHandlerTest as createFormToolHandlerTest,
   createParser as createParserFormTool,
+  FormToolPayload,
   // createParserTest as createParserFormToolTest,
   toJsonSchema as formToolToJsonSchema,
   // toJsonSchemaTest as formToolToJsonSchemaTest,
@@ -17,9 +18,14 @@ import {
 import {
   createHandler as createHttpToolHandler,
   createParser as createParserHttpTool,
+  HttpToolPayload,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
-import { CreateToolHandler, CreateToolHandlerConfig } from './agent/tools/type';
+import {
+  CreateToolHandler,
+  CreateToolHandlerConfig,
+  ToolPayload,
+} from './agent/tools/type';
 import type { Source } from './types/document';
 import {
   ChatModelConfigSchema,
@@ -102,39 +108,41 @@ const chat = async ({
   let metadata: object | undefined = undefined;
 
   const createHandler =
-    (handler: CreateToolHandler) =>
-    (tool: ToolSchema, config: CreateToolHandlerConfig) =>
-    async (args: unknown) => {
+    <T extends { type: ToolType }>(handler: CreateToolHandler<T>) =>
+    (tool: ToolSchema & T, config: CreateToolHandlerConfig<T>) =>
+    async (args: ToolPayload<T>) => {
       const res = await handler(tool, config)(args);
 
-      if (res.approvalRequired) {
+      if (res?.approvalRequired) {
         return handleToolWithApproval({
           tool,
           payload: args,
         });
       }
 
-      if (res.metadata) {
+      if (res?.metadata) {
         metadata = {
           ...metadata,
-          ...res.metadata,
+          ...res?.metadata,
         };
       }
 
-      return res.data;
+      return res?.data;
     };
 
   const formatedHttpTools = httpTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId };
+    const config = { toolConfig, conversationId, modelName };
 
     return {
       type: 'function',
-
       function: {
-        ...httpToolToJsonSchema(each, config),
+        ...httpToolToJsonSchema(each),
         parse: createParserHttpTool(each, config),
-        function: createHandler(createHttpToolHandler)(each, config),
+        function: createHandler<{ type: 'http' }>(createHttpToolHandler)(
+          each,
+          config
+        ),
       },
       // } as RunnableToolFunction<HttpToolPayload>)
     } as ChatCompletionTool;

@@ -1,17 +1,19 @@
-import axios, { Axios, AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
-// import { jsonSchemaToZod } from 'json-schema-to-zod';
-// import z from 'zod';
+import { ModelConfig } from '@chaindesk/lib/config';
+import { countTokensEstimation } from '@chaindesk/lib/count-tokens';
 import createToolParser from '@chaindesk/lib/create-tool-parser';
-import { HttpToolSchema } from '@chaindesk/lib/types/dtos';
+import splitTextIntoChunks from '@chaindesk/lib/split-text-by-token';
+import { HttpToolSchema, ToolSchema } from '@chaindesk/lib/types/dtos';
+import { AgentModelName } from '@chaindesk/prisma';
 
-import { CreateToolHandler, ToolToJsonSchema } from './type';
+import { CreateToolHandlerConfig, HttpToolResponseSchema } from './type';
 
 export type HttpToolPayload = {
   [key: string]: unknown;
 };
 
-export const toJsonSchema = ((tool: HttpToolSchema) => {
+export const toJsonSchema = (tool: HttpToolSchema) => {
   return {
     name: `${tool.id}`,
     description: tool?.config?.description,
@@ -47,14 +49,18 @@ export const toJsonSchema = ((tool: HttpToolSchema) => {
       required: [],
     },
   };
-}) as ToolToJsonSchema;
+};
 
-export const createHandler = ((httpTool: HttpToolSchema) =>
-  async (payload: HttpToolPayload) => {
+export const createHandler =
+  (
+    httpTool: HttpToolSchema,
+    toolHandlerConfig?: CreateToolHandlerConfig<{ type: 'http' }>
+  ) =>
+  async (payload: HttpToolPayload): Promise<HttpToolResponseSchema> => {
     console.log('HTTP Tool Config', httpTool?.config);
     console.log('HTTP Tool Payload', payload);
 
-    const config = httpTool?.config as HttpToolSchema['config'];
+    const config = httpTool?.config;
 
     if (config?.withApproval) {
       return {
@@ -111,22 +117,35 @@ export const createHandler = ((httpTool: HttpToolSchema) =>
 
     try {
       const { data } = await axios(url, reqConfig);
+      const MAX_TOKENS =
+        ModelConfig[
+          toolHandlerConfig?.modelName || AgentModelName.gpt_3_5_turbo_16k
+        ].maxTokens * 0.7;
 
-      return { data };
+      const totalTokens = countTokensEstimation({ text: data.toString() });
+
+      let chunkedText = data;
+      if (totalTokens > MAX_TOKENS) {
+        const chunks = await splitTextIntoChunks({
+          text: data.toString(),
+          chunkSize: MAX_TOKENS,
+        });
+
+        chunkedText = chunks[0];
+      }
+
+      return { data: chunkedText };
     } catch (err) {
       console.log('HTTP Tool Error', err);
+      return {
+        data: 'The Http tool has failed. you need to answer the user query based on the general knowledge of chatgpt. make sure to give an approriate answer that would satisfy the user as if the tool did not fail, if you can not fulfil the user request, inform him that the call has failed and to try again later.',
+      };
     }
-  }) as CreateToolHandler;
+  };
 
 export const createParser =
   (tool: HttpToolSchema, config: any) => (payload: string) => {
     try {
-      // const schema = eval(
-      //   jsonSchemaToZod(toJsonSchema(tool)?.parameters, { module: 'cjs' })
-      // ) as z.ZodSchema;
-
-      // const values = schema.parse(JSON.parse(payload));
-
       return createToolParser(toJsonSchema(tool)?.parameters)(payload);
     } catch (err) {
       console.log('Parser Error', err);
