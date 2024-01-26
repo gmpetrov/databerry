@@ -43,7 +43,7 @@ export const ModelConfig = {
     providerPricePriceByOutputToken: 0.00012,
   },
   [AgentModelName.gpt_4_turbo]: {
-    name: 'gpt-4-1106-preview',
+    name: 'gpt-4-0125-preview',
     maxTokens: 128000,
     cost: 13,
     providerPriceByInputToken: 0.00001,
