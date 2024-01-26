@@ -312,7 +312,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       });
 
       const finalAnswer = `${answer}\n\n${formatSourcesRawText(
-        filterInternalSources(sources || [])!
+        !!agent?.includeSources ? filterInternalSources(sources || []) : []
       )}`.trim();
 
       await conversationManager.createMessage({

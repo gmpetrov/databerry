@@ -259,7 +259,9 @@ const handleAsk = async (payload: CommandEvent) => {
     });
 
     const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
-      filterInternalSources(chatRes?.sources || [])
+      !!agent?.includeSources
+        ? filterInternalSources(chatRes?.sources || [])
+        : []
     )}`.trim();
 
     return axios.post(payload.response_url, {

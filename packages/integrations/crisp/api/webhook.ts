@@ -251,7 +251,7 @@ const handleQuery = async (
   });
 
   const finalAnswer = `${answer}\n\n${formatSourcesRawText(
-    filterInternalSources(sources || [])!
+    !!agent?.includeSources ? filterInternalSources(sources || [])! : []
   )}`.trim();
 
   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
