@@ -225,14 +225,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               },
             });
 
-            const downloaded = await axios.get<{
-              messaging_product: 'whatsapp';
-              url: string;
-              mime_type: string;
-              sha256: string;
-              file_size: string;
-              id: string;
-            }>(data.url, {
+            const downloaded = await axios.get(data.url, {
               headers: {
                 Authorization: `Bearer ${credentials?.accessToken}`,
               },
@@ -247,12 +240,29 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               fileName: `${data.id}.${getFileExtFromMimeType(file.mime_type)}`,
             });
 
-            await s3.putObject({
-              Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+            console.log('DOWNLOADED FILE _------->', downloaded);
+
+            // await s3.putObject({
+            //   Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+            //   Key: fileKey,
+            //   Body: downloaded.data,
+            //   ContentType: file.mime_type,
+            //   ACL: 'public-read',
+            // });
+
+            const param = {
+              Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
               Key: fileKey,
-              Body: downloaded.data,
+              Expires: 900,
               ContentType: file.mime_type,
-              ACL: 'public-read',
+            };
+
+            const signedUrl = await s3.getSignedUrlPromise('putObject', param);
+
+            await axios.put(signedUrl, downloaded.data, {
+              headers: {
+                'Content-Type': file.mime_type,
+              },
             });
 
             attachments.push({
