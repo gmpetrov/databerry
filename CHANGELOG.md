@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.205"></a>
+## 0.1.205 (2024-01-26)
+
+### Fixed
+
+- 🐛 missing whatsapp post handler [[ada533c](https://github.com/gmpetrov/databerry/commit/ada533c58543b44479d37a1ea3de0a7f3ceb7ced)]
+- 🐛 empower http tool ([#313](https://github.com/gmpetrov/databerry/issues/313)) [[8801123](https://github.com/gmpetrov/databerry/commit/8801123ec4d125928f1f93c6928edc38680b251a)]
+
+### Miscellaneous
+
+- 🤖 improve whatsapp doc [[c1cd020](https://github.com/gmpetrov/databerry/commit/c1cd020678d8965a5b8748061cc482e2bb906582)]
+- 🎸 whatsapp handle media messages [[6d619c1](https://github.com/gmpetrov/databerry/commit/6d619c12b27da058c7e37940f82b6e3850b7d6a9)]
+- 🤖 use latest gpt-4-turbo model [[408a01f](https://github.com/gmpetrov/databerry/commit/408a01f63b2d7af1aeb963f60af2e1724131a18b)]
+
+
 <a name="0.1.204"></a>
 ## 0.1.204 (2024-01-25)
 
