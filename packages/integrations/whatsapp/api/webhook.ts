@@ -1,10 +1,17 @@
+import { creatChatUploadKey } from '@chaindesk/lib/file-upload';
+import getFileExtFromMimeType from '@chaindesk/lib/get-file-ext-from-mime-type';
 import formatSourcesRawText from '@chaindesk/lib/form-sources-raw-text';
+import { s3 } from '@chaindesk/lib/aws';
 import {
+  CreateAttachmentSchema,
   ServiceProviderWhatsappSchema,
-  WhatsAppSendMessagechema,
+  WhatsAppReceivedMessageMediaSchema,
+  WhatsAppReceivedMessageTextSchema,
+  WhatsAppReceivedMessageSchema,
 } from '@chaindesk/lib/types/dtos';
 import { NextApiResponse } from 'next';
-
+import pMap from 'p-map';
+import axios from 'axios';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import { AppNextApiRequest } from '@chaindesk/lib/types';
@@ -71,7 +78,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const payload = req.body as WhatsAppWebhookPayload;
   const providerId = req.query.service_provider_id as string;
 
-  console.log('PAYLOIAD-->', payload);
+  console.log('PAYLOIAD-->', JSON.stringify(payload, null, 2));
   console.log('providerId-->', providerId);
 
   if (!providerId) {
@@ -157,6 +164,112 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     let appContact = credentials?.organization?.contacts?.[0];
     const message = payload.entry[0].changes[0].value.messages[0];
 
+    // Create a single message from all text messages
+    const textMessages = payload.entry
+      .map((entry) =>
+        entry.changes
+          .map((change) =>
+            (change?.value?.messages as WhatsAppReceivedMessageTextSchema[])
+              ?.filter((each) => each?.type === 'text')
+              ?.map((each: WhatsAppReceivedMessageTextSchema) => each.text.body)
+              .flat()
+          )
+          .flat()
+      )
+      .flat()
+      .filter((each) => !!each);
+
+    const msgText = textMessages.join('\n\n');
+    console.log('Msg-->', msgText);
+
+    const files = payload.entry
+      .map((entry) =>
+        entry.changes
+          .map((change) =>
+            change?.value?.messages
+              ?.filter((each) =>
+                ['image', 'video', 'audio', 'document'].includes(each?.type)
+              )
+              ?.map((each) => {
+                const item = each as Extract<
+                  WhatsAppReceivedMessageMediaSchema,
+                  { type: 'image' }
+                >;
+
+                return item?.[item.type];
+              })
+              .flat()
+          )
+          .flat()
+      )
+      .flat()
+      .filter((each) => !!each);
+
+    const attachments = [] as CreateAttachmentSchema[];
+
+    if (files.length > 0) {
+      await pMap(
+        files,
+        async (file) => {
+          try {
+            const { data } = await axios.get<{
+              messaging_product: 'whatsapp';
+              url: string;
+              mime_type: string;
+              sha256: string;
+              file_size: string;
+              id: string;
+            }>(`https://graph.facebook.com/v19.0/${file.id}`, {
+              headers: {
+                Authorization: `Bearer ${credentials?.accessToken}`,
+              },
+            });
+
+            const downloaded = await axios.get<{
+              messaging_product: 'whatsapp';
+              url: string;
+              mime_type: string;
+              sha256: string;
+              file_size: string;
+              id: string;
+            }>(data.url, {
+              headers: {
+                Authorization: `Bearer ${credentials?.accessToken}`,
+              },
+            });
+
+            const fileName = `${data.id}.${getFileExtFromMimeType(
+              file.mime_type
+            )}`;
+            const fileKey = creatChatUploadKey({
+              organizationId: agent?.organizationId!,
+              conversationId,
+              fileName: `${data.id}.${getFileExtFromMimeType(file.mime_type)}`,
+            });
+
+            await s3.putObject({
+              Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+              Key: fileKey,
+              Body: downloaded.data,
+              ContentType: file.mime_type,
+            });
+
+            attachments.push({
+              name: file.caption || fileName,
+              url: `${process.env.NEXT_PUBLIC_AWS_ENDPOINT}/${fileKey}`,
+              size: Number(data.file_size),
+              mimeType: file.mime_type,
+            });
+          } catch (err) {
+            console.log('whatsapp upload attachment error', err);
+          }
+        },
+        {
+          concurrency: 4,
+        }
+      );
+    }
+
     const conversationManager = new ConversationManager({
       organizationId: agent?.organizationId!,
       channel: ConversationChannel.whatsapp,
@@ -175,12 +288,15 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       });
     }
 
-    if (message?.type === 'text') {
-      await conversationManager.createMessage({
-        from: MessageFrom.human,
-        text: message?.text?.body,
+    if (msgText || attachments.length > 0) {
+      const inputMessageId = cuid();
 
+      await conversationManager.createMessage({
+        id: inputMessageId,
+        from: MessageFrom.human,
+        text: msgText || ' ',
         contactId: appContact?.id,
+        attachments,
         // externalVisitorId: sessionId,
       });
 
@@ -190,7 +306,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       }
 
       const { answer, sources } = await new AgentManager({ agent }).query({
-        input: message?.text?.body,
+        input: msgText,
         history: conversation?.messages || [],
       });
 
@@ -199,6 +315,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       )}`.trim();
 
       await conversationManager.createMessage({
+        inputId: inputMessageId,
         from: MessageFrom.agent,
         text: finalAnswer,
         agentId: agent?.id,
@@ -219,15 +336,47 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       const phoneNumber = response?.data?.contacts?.[0]?.input;
 
       if (phoneNumber && !appContact?.phoneNumber) {
-        await prisma.contact.update({
+        const contactWithPhoneNumber = await prisma.contact.findUnique({
           where: {
-            id: appContact?.id,
-          },
-          data: {
-            phoneNumber,
-            externalId: waContactId!,
+            unique_phone_number_for_org: {
+              phoneNumber,
+              organizationId: agent?.organizationId!,
+            },
           },
         });
+
+        if (contactWithPhoneNumber) {
+          // a contact with this phone number already exists so we need to delete the contact created earlier and update the input message with the new contact id
+          await prisma.$transaction([
+            prisma.message.update({
+              where: {
+                id: inputMessageId,
+              },
+              data: {
+                contact: {
+                  connect: {
+                    id: contactWithPhoneNumber.id,
+                  },
+                },
+              },
+            }),
+            prisma.contact.delete({
+              where: {
+                id: appContact?.id,
+              },
+            }),
+          ]);
+        } else {
+          await prisma.contact.update({
+            where: {
+              id: appContact?.id,
+            },
+            data: {
+              phoneNumber,
+              externalId: waContactId!,
+            },
+          });
+        }
       }
     }
 
@@ -260,7 +409,7 @@ export type WhatsAppWebhookPayload = {
           };
           wa_id: string;
         }[];
-        messages: WhatsAppSendMessagechema[];
+        messages: WhatsAppReceivedMessageSchema[];
       };
     }[];
   }[];

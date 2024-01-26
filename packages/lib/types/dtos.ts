@@ -767,7 +767,9 @@ const WhatsAppActionSchema = z.object({
   ),
 });
 
-const WhatsAppMediaSchema = z.object({ link: z.string() });
+const WhatsAppMediaSchema = z.object({
+  link: z.string(),
+});
 
 const WhatsAppHeaderSchema = z
   .object({
@@ -811,7 +813,7 @@ const WhatsAppSendMessageBaseSchema = z.object({
   // timestamp: z.string(),
 });
 
-export const WhatsAppSendMessagechema = z.discriminatedUnion('type', [
+export const WhatsAppSendMessageSchema = z.discriminatedUnion('type', [
   WhatsAppSendMessageBaseSchema.extend({
     type: z.literal('text'),
     text: z.object({
@@ -846,4 +848,75 @@ export const WhatsAppSendMessagechema = z.discriminatedUnion('type', [
   }),
 ]);
 
-export type WhatsAppSendMessagechema = z.infer<typeof WhatsAppSendMessagechema>;
+export type WhatsAppSendMessageSchema = z.infer<
+  typeof WhatsAppSendMessageSchema
+>;
+export type WhatsAppSendMessageTextSchema = Extract<
+  WhatsAppSendMessageSchema,
+  { type: 'text' }
+>;
+
+export type WhatsAppSendMessageMediaSchema = Extract<
+  WhatsAppSendMessageSchema,
+  { type: 'image' | 'audio' | 'video' | 'document' }
+>;
+
+const WhatsAppReceivedMessageBaseSchema = z.object({
+  from: z.string(),
+  id: z.string(),
+  timestamp: z.string(),
+});
+
+const WhatsAppReceivedMediaSchema = z.object({
+  caption: z.string().optional(),
+  mime_type: z.string(),
+  sha256: z.string(),
+  id: z.string(),
+});
+
+export const WhatsAppReceivedMessageSchema = z.discriminatedUnion('type', [
+  WhatsAppReceivedMessageBaseSchema.extend({
+    type: z.literal('text'),
+    text: z.object({
+      body: z.string(),
+    }),
+  }),
+  WhatsAppReceivedMessageBaseSchema.extend({
+    type: z.literal('image'),
+    image: WhatsAppReceivedMediaSchema,
+  }),
+  WhatsAppReceivedMessageBaseSchema.extend({
+    type: z.literal('audio'),
+    audio: WhatsAppReceivedMediaSchema,
+  }),
+  WhatsAppReceivedMessageBaseSchema.extend({
+    type: z.literal('video'),
+    video: WhatsAppReceivedMediaSchema,
+  }),
+  WhatsAppReceivedMessageBaseSchema.extend({
+    type: z.literal('document'),
+    document: WhatsAppReceivedMediaSchema,
+  }),
+  WhatsAppReceivedMessageBaseSchema.extend({
+    type: z.literal('interactive'),
+    interactive: interactiveSchema,
+  }),
+  WhatsAppReceivedMessageBaseSchema.extend({
+    type: z.literal('template'),
+    template: WhatsAppTemplateSchema,
+  }),
+]);
+
+export type WhatsAppReceivedMessageSchema = z.infer<
+  typeof WhatsAppReceivedMessageSchema
+>;
+
+export type WhatsAppReceivedMessageTextSchema = Extract<
+  WhatsAppReceivedMessageSchema,
+  { type: 'text' }
+>;
+
+export type WhatsAppReceivedMessageMediaSchema = Extract<
+  WhatsAppReceivedMessageSchema,
+  { type: 'image' | 'audio' | 'video' | 'document' }
+>;

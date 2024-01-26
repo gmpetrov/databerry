@@ -22,6 +22,7 @@
     "crisp-api": "^7.4.1",
     "cuid": "^3.0.0",
     "i18next": "^23.6.0",
+    "p-map": "^5.5.0",
     "react-hook-form": "^7.49.2",
     "react-hot-toast": "^2.4.1",
     "zod": "3.22.4"

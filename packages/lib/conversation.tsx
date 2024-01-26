@@ -14,7 +14,7 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 import { Source } from './types/document';
-import { ChatResponse } from './types/dtos';
+import { ChatResponse, CreateAttachmentSchema } from './types/dtos';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -36,7 +36,7 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   approvals?: ChatResponse['approvals'];
   inputId?: string;
   metadata?: Record<string, any>;
-  attachments?: Pick<Attachment, 'mimeType' | 'name' | 'size' | 'url'>[];
+  attachments?: CreateAttachmentSchema[];
   externalId?: string;
   externalVisitorId?: string;
 };

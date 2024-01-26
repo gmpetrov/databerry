@@ -341,6 +341,7 @@ export default function ContactsTable({}: // handleSynch,
                 />
               </th> */}
               <th style={{}}>Email</th>
+              <th style={{}}>Phone Number</th>
               {/* <th style={{ width: 120, padding: 12 }}>Type</th> */}
               {/* <th style={{ width: 120, padding: 12 }}>Size</th> */}
               {/* <th style={{ width: 120, padding: 12 }}>Last Sync</th> */}
@@ -362,6 +363,7 @@ export default function ContactsTable({}: // handleSynch,
                   }}
                 >
                   <td>{contact.email}</td>
+                  <td>{contact.phoneNumber}</td>
                   {/* <td style={{ textAlign: 'center' }}>
                   <Checkbox
                     checked={selected.includes(row.id)}
