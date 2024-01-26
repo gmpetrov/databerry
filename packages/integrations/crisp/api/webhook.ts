@@ -239,6 +239,7 @@ const handleQuery = async (
   });
 
   const conv = await conversationManager.createMessage({
+    conversationStatus: ConversationStatus.UNRESOLVED,
     from: MessageFrom.human,
     text: query,
 

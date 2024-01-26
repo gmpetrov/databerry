@@ -30,6 +30,7 @@ import { ChatRequest } from '@chaindesk/lib/types/dtos';
 import {
   AgentVisibility,
   ConversationChannel,
+  ConversationStatus,
   MembershipRole,
   MessageFrom,
   PromptType,
@@ -253,6 +254,7 @@ export const chatAgentRequest = async (
 
   if (!data.isDraft) {
     await conversationManager.createMessage({
+      conversationStatus: ConversationStatus.UNRESOLVED,
       id: inputMessageId,
       from: MessageFrom.human,
       text: data.query,

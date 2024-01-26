@@ -24,6 +24,7 @@ import {
   MessageFrom,
   ServiceProviderType,
   SubscriptionPlan,
+  ConversationStatus,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 import cuid from 'cuid';
@@ -212,12 +213,8 @@ const handleAsk = async (payload: CommandEvent) => {
     return;
   }
 
-  console.log('PAYLOAD ------------->', JSON.stringify(payload));
-
   const integration = await getIntegrationByTeamId(payload.team_id);
   const agent = integration?.agents?.[0]!;
-
-  console.log('integration ------------->', JSON.stringify(integration));
 
   const conversation = await prisma.conversation.findUnique({
     where: {
@@ -233,14 +230,8 @@ const handleAsk = async (payload: CommandEvent) => {
     channelCredentialsId: integration?.id,
   });
 
-  console.log('ConversationManager ------------------------>', {
-    organizationId: agent?.organizationId!,
-    channel: ConversationChannel.slack,
-    channelExternalId: payload.channel_id,
-    channelCredentialsId: integration?.id,
-  });
-
   const conv = await conversationManager.createMessage({
+    conversationStatus: ConversationStatus.UNRESOLVED,
     from: MessageFrom.human,
     text: payload.text,
     externalId: payload.trigger_id,

@@ -294,6 +294,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       const inputMessageId = cuid();
 
       await conversationManager.createMessage({
+        conversationStatus: ConversationStatus.UNRESOLVED,
         id: inputMessageId,
         from: MessageFrom.human,
         text: msgText || '🧷',

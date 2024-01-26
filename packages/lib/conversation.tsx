@@ -39,6 +39,7 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   attachments?: CreateAttachmentSchema[];
   externalId?: string;
   externalVisitorId?: string;
+  conversationStatus?: ConversationStatus;
 };
 
 export default class ConversationManager {
@@ -87,6 +88,7 @@ export default class ConversationManager {
       agentId,
       visitorId,
       externalVisitorId,
+      conversationStatus,
       ...rest
     } = message;
 
@@ -202,6 +204,8 @@ export default class ConversationManager {
       },
 
       ...(this.metadata ? { metadata: this.metadata } : {}),
+
+      ...(conversationStatus ? { status: conversationStatus } : {}),
 
       ...(this.formId
         ? {
