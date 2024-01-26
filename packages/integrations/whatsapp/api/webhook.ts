@@ -18,7 +18,11 @@ import { AppNextApiRequest } from '@chaindesk/lib/types';
 import prisma from '@chaindesk/prisma/client';
 import cuid from 'cuid';
 import ConversationManager from '@chaindesk/lib/conversation';
-import { ConversationChannel, MessageFrom } from '@chaindesk/prisma';
+import {
+  ConversationChannel,
+  ConversationStatus,
+  MessageFrom,
+} from '@chaindesk/prisma';
 import AgentManager from '@chaindesk/lib/agent';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import { sendWhatsAppMessage } from '../lib/send-whatsapp-message';

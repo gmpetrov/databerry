@@ -131,6 +131,12 @@ function App(props: {
     }
   };
 
+  const initMessages = useMemo(() => {
+    return (state?.config?.initialMessages || [])
+      .map((each) => each?.trim?.())
+      .filter((each) => !!each);
+  }, [state?.config?.initialMessages]);
+
   useEffect(() => {
     if (props.agentId) {
       handleFetchAgent();
@@ -138,17 +144,22 @@ function App(props: {
   }, [props.agentId]);
 
   useEffect(() => {
-    if (
-      state.config?.initialMessage &&
-      !state.config?.isInitMessagePopupDisabled
-    ) {
-      setTimeout(() => {
+    let t: NodeJS.Timeout | null = null;
+
+    if (initMessages?.length > 0 && !state.config?.isInitMessagePopupDisabled) {
+      t = setTimeout(() => {
         setState({
           showInitialMessage: true,
         });
       }, 5000);
     }
-  }, [state?.config?.initialMessage]);
+
+    return () => {
+      if (t) {
+        clearTimeout(t);
+      }
+    };
+  }, [initMessages?.length, state?.config?.isInitMessagePopupDisabled]);
 
   useEffect(() => {
     if (props.initConfig) {
@@ -204,7 +215,7 @@ function App(props: {
           unmountOnExit
         >
           {(s) => ( */}
-        {state.config?.initialMessage &&
+        {initMessages?.length > 0 &&
           state.showInitialMessage &&
           !state.hasOpenOnce && (
             <Stack
@@ -295,24 +306,72 @@ function App(props: {
                     >
                       <CloseIcon fontSize="sm" />
                     </IconButton>
-                    <ChatMessageCard
-                      onClick={() => {
-                        setState({
-                          isOpen: true,
-                          hasOpenOnce: true,
-                        });
-                      }}
-                      sx={{
-                        maxWidth: 1000,
-                        '&:hover': {
-                          cursor: 'pointer',
-                          transform: 'scale(1.05)',
-                          transition: 'all 100ms ease-in-out',
+                    <motion.div
+                      initial="hidden"
+                      animate="visible"
+                      variants={{
+                        visible: {
+                          opacity: 1,
+                          transition: {
+                            when: 'beforeChildren',
+                            staggerChildren: 1.5,
+                          },
+                        },
+                        hidden: {
+                          opacity: 0,
+                          transition: {
+                            when: 'afterChildren',
+                          },
                         },
                       }}
                     >
-                      <Markdown>{state.config?.initialMessage}</Markdown>
-                    </ChatMessageCard>
+                      <Stack
+                        gap={1}
+                        sx={{
+                          ...(state.config.position === 'left'
+                            ? {
+                                alignItems: 'flex-start',
+                              }
+                            : {}),
+                          ...(state.config.position === 'right'
+                            ? {
+                                alignItems: 'flex-end',
+                              }
+                            : {}),
+                        }}
+                      >
+                        {initMessages?.map((each, index) => (
+                          <motion.div
+                            key={index}
+                            variants={{
+                              visible: { opacity: 1, y: 0 },
+                              hidden: { opacity: 0, y: 100 },
+                            }}
+                          >
+                            <ChatMessageCard
+                              key={index}
+                              onClick={() => {
+                                setState({
+                                  isOpen: true,
+                                  hasOpenOnce: true,
+                                });
+                              }}
+                              sx={{
+                                maxWidth: 1000,
+                                '&:hover': {
+                                  cursor: 'pointer',
+                                  transform: 'scale(1.05)',
+                                  transition: 'all 100ms ease-in-out',
+                                  justifySelf: 'flex-end',
+                                },
+                              }}
+                            >
+                              <Markdown>{each}</Markdown>
+                            </ChatMessageCard>
+                          </motion.div>
+                        ))}
+                      </Stack>
+                    </motion.div>
                   </motion.div>
                 </Stack>
               </motion.div>
@@ -512,6 +571,7 @@ function App(props: {
                     onSubmit={handleChatSubmit}
                     messageTemplates={state.config.messageTemplates}
                     initialMessage={state.config.initialMessage}
+                    initialMessages={state.config.initialMessages}
                     agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
                     isLoadingConversation={isLoadingConversation}
                     hasMoreMessages={hasMoreMessages}

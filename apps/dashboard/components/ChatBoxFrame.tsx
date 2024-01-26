@@ -169,6 +169,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           onSubmit={handleChatSubmit}
           messageTemplates={config.messageTemplates}
           initialMessage={config.initialMessage}
+          initialMessages={config.initialMessages}
           agentIconUrl={agent?.iconUrl!}
           isLoadingConversation={isLoadingConversation}
           hasMoreMessages={hasMoreMessages}

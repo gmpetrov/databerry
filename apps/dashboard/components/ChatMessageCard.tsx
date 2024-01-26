@@ -13,7 +13,7 @@ function ChatMessage({ sx, children, className, ...otherProps }: Props) {
       sx={(theme) => ({
         overflowY: 'hidden',
         overflowX: 'auto',
-        marginRight: 'auto',
+        // marginRight: 'auto',
         gap: 0,
         maxWidth: '100%',
         // whiteSpace: 'pre-line',

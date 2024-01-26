@@ -88,16 +88,28 @@ export default function BubbleWidgetSettings(props: Props) {
                             {...register('interfaceConfig.isBgTransparent')}
                           />
                         </FormControl>
+                      </Stack>
 
+                      {formState.isDirty && formState.isValid && (
                         <Button
                           type="submit"
                           loading={mutation.isMutating}
-                          disabled={!formState.isDirty || !formState.isValid}
-                          sx={{ ml: 'auto', mt: 2 }}
+                          sx={{
+                            zIndex: 2,
+                            ml: 'auto',
+                            mt: 2,
+                            position: 'fixed',
+                            bottom: 20,
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            borderRadius: '30px',
+                          }}
+                          size="lg"
+                          color="success"
                         >
-                          Update
+                          Save
                         </Button>
-                      </Stack>
+                      )}
 
                       <Stack
                         style={{

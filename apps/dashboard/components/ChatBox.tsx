@@ -60,6 +60,7 @@ export type ChatBoxProps = {
   onSubmit: (message: string, attachments?: File[]) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
+  initialMessages?: (string | undefined)[];
   readOnly?: boolean;
   disableWatermark?: boolean;
   renderAfterMessages?: JSX.Element | null;
@@ -150,6 +151,7 @@ function ChatBox({
   onSubmit,
   messageTemplates,
   initialMessage,
+  initialMessages,
   readOnly,
   renderAfterMessages,
   disableWatermark,
@@ -177,7 +179,9 @@ function ChatBox({
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [firstMsg, setFirstMsg] = useState<ChatMessage>();
+  const [firstMsgs, setFirstMsgs] = useState<ChatMessage[]>([]);
+  // const [ini, setFirstMsg] = useState<ChatMessage>();
+  // const [firstMsg, setFirstMsg] = useState<ChatMessage>();
   const [files, setFiles] = useState<File[]>([] as File[]);
   const [isTextAreaExpanded, setIsTextAreaExpended] = useState(false);
 
@@ -220,14 +224,25 @@ function ChatBox({
   }, [lastMessageLength, messages?.length]);
 
   React.useEffect(() => {
-    setTimeout(() => {
-      setFirstMsg(
-        initialMessage?.trim?.()
-          ? { from: 'agent', message: initialMessage, approvals: [] }
-          : undefined
-      );
+    const t = setTimeout(() => {
+      const msgs = (initialMessages || [])
+        .filter((each) => !!each?.trim?.())
+        .map(
+          (each) =>
+            ({
+              from: 'agent',
+              message: each?.trim?.(),
+              approvals: [],
+            } as ChatMessage)
+        );
+
+      setFirstMsgs(msgs);
     }, 0);
-  }, [initialMessage]);
+
+    return () => {
+      clearTimeout(t);
+    };
+  }, [initialMessages]);
 
   const handleOnDraftReply = useCallback(
     (query: string) => {
@@ -331,18 +346,23 @@ function ChatBox({
           }
         >
           <Stack gap={2}>
-            {firstMsg && (
-              <Stack sx={{ width: '100%' }} direction={'row'} gap={1}>
+            {firstMsgs?.map((each, index) => (
+              <Stack
+                key={index}
+                sx={{ width: '100%' }}
+                direction={'row'}
+                gap={1}
+              >
                 <Avatar
                   size="sm"
                   variant="outlined"
                   src={agentIconUrl || '/app-rounded-bg-white.png'}
                 ></Avatar>
                 <ChatMessageCard className="message-agent">
-                  <Markdown>{firstMsg?.message}</Markdown>
+                  {each && <Markdown>{each.message}</Markdown>}
                 </ChatMessageCard>
               </Stack>
-            )}
+            ))}
 
             {isLoadingConversation && messages?.length <= 0 && (
               <Stack gap={2}>

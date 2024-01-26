@@ -1,30 +1,44 @@
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import Button from '@mui/joy/Button';
 import FormControl from '@mui/joy/FormControl';
 import FormHelperText from '@mui/joy/FormHelperText';
 import FormLabel from '@mui/joy/FormLabel';
+import IconButton from '@mui/joy/IconButton';
 import JoyLink from '@mui/joy/Link';
+import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Input from '@app/components/Input';
+
+import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 type Props = {
   defaultValue?: string;
 };
 
 function InitMessageInput(props: Props) {
-  const { control, register } = useFormContext();
+  const { control, register, watch } = useFormContext<CreateAgentSchema>();
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'interfaceConfig.initialMessages',
+  });
+
+  const val = watch('interfaceConfig.initialMessages') || [];
+
+  useEffect(() => {
+    if (val.length <= 0) {
+      append('');
+    }
+  }, [val.length]);
 
   return (
-    <FormControl>
-      <FormLabel>Initial Message</FormLabel>
-      <Textarea
-        // control={control}
-        minRows={2}
-        maxRows={8}
-        defaultValue={props.defaultValue}
-        placeholder="👋 Hi, How can I help you?"
-        {...register('interfaceConfig.initialMessage')}
-      />
+    <Stack>
+      <FormControl>
+        <FormLabel>Initial Message</FormLabel>
+      </FormControl>
+
       <FormHelperText>
         This input accepts{' '}
         <JoyLink
@@ -34,7 +48,44 @@ function InitMessageInput(props: Props) {
           Markdown format
         </JoyLink>
       </FormHelperText>
-    </FormControl>
+      <Stack gap={1}>
+        {fields.map((field, index) => (
+          <Stack key={field.id} direction="row" gap={1} alignItems={'start'}>
+            <Textarea
+              // control={control}
+              minRows={1}
+              maxRows={8}
+              defaultValue={props.defaultValue}
+              placeholder="👋 Hi, How can I help you?"
+              sx={{ width: '100%' }}
+              {...register(`interfaceConfig.initialMessages.${index}`)}
+            />
+
+            {fields.length > 1 && (
+              <IconButton
+                size="sm"
+                color="neutral"
+                variant="outlined"
+                onClick={() => remove(index)}
+              >
+                <CloseIcon />
+              </IconButton>
+            )}
+          </Stack>
+        ))}
+
+        <Button
+          size="sm"
+          onClick={() => append('')}
+          sx={{ mx: 'auto' }}
+          startDecorator={<AddCircleIcon />}
+          color="primary"
+          variant="plain"
+        >
+          Add
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 

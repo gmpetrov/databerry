@@ -22,6 +22,7 @@ import {
   MessageFrom,
   ServiceProviderType,
   SubscriptionPlan,
+  ConversationStatus,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 

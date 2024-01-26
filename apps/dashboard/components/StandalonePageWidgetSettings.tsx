@@ -220,14 +220,26 @@ export default function StandalonePageSettings(props: Props) {
                     <Stack width="100%" gap={3}>
                       <CommonInterfaceInput />
 
-                      <Button
-                        type="submit"
-                        loading={mutation.isMutating}
-                        sx={{ ml: 'auto', mt: 2 }}
-                        disabled={!formState.isDirty || !formState.isValid}
-                      >
-                        Update
-                      </Button>
+                      {formState.isDirty && formState.isValid && (
+                        <Button
+                          type="submit"
+                          loading={mutation.isMutating}
+                          sx={{
+                            zIndex: 2,
+                            ml: 'auto',
+                            mt: 2,
+                            position: 'fixed',
+                            bottom: 20,
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            borderRadius: '30px',
+                          }}
+                          size="lg"
+                          color="success"
+                        >
+                          Save
+                        </Button>
+                      )}
 
                       <Stack gap={4}>
                         <Stack gap={1}>
@@ -293,15 +305,6 @@ export default function StandalonePageSettings(props: Props) {
                           </Stack>
                         </Stack>
                       </Stack>
-
-                      <Button
-                        type="submit"
-                        loading={mutation.isMutating}
-                        sx={{ ml: 'auto', mt: 2 }}
-                        disabled={!formState.isDirty || !formState.isValid}
-                      >
-                        Update
-                      </Button>
                     </Stack>
                   </Stack>
                 </Stack>
