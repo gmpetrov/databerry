@@ -264,7 +264,7 @@ function App(props: {
                   },
                 }}
               >
-                <Stack spacing={1} sx={{ position: 'relative' }}>
+                <Stack gap={1} sx={{ position: 'relative' }}>
                   <motion.div
                     variants={{
                       visible: { opacity: 1, y: 0 },
@@ -360,7 +360,7 @@ function App(props: {
                                 maxWidth: 1000,
                                 '&:hover': {
                                   cursor: 'pointer',
-                                  transform: 'scale(1.05)',
+                                  transform: 'scale(1.025)',
                                   transition: 'all 100ms ease-in-out',
                                   justifySelf: 'flex-end',
                                 },
