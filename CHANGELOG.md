@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.208"></a>
+## 0.1.208 (2024-01-26)
+
+### Fixed
+
+- 🐛 use media caption [[6ac1f33](https://github.com/gmpetrov/databerry/commit/6ac1f33ddc9303f4673ec21d1397095e2e6e7d98)]
+
+
 <a name="0.1.207"></a>
 ## 0.1.207 (2024-01-26)
 
