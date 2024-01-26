@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { ModelConfig } from '@chaindesk/lib/config';
-import countTokens from '@chaindesk/lib/count-tokens';
+import { countTokensEstimation } from '@chaindesk/lib/count-tokens';
 import createToolParser from '@chaindesk/lib/create-tool-parser';
 import splitTextIntoChunks from '@chaindesk/lib/split-text-by-token';
 import { HttpToolSchema, ToolSchema } from '@chaindesk/lib/types/dtos';
@@ -122,7 +122,7 @@ export const createHandler =
           toolHandlerConfig?.modelName || AgentModelName.gpt_3_5_turbo_16k
         ].maxTokens * 0.7;
 
-      const totalTokens = countTokens({ text: data.toString() });
+      const totalTokens = countTokensEstimation({ text: data.toString() });
 
       let chunkedText = data;
       if (totalTokens > MAX_TOKENS) {
