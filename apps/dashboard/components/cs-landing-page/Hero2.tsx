@@ -30,15 +30,24 @@ export default function Hero() {
       <div className="relative z-10">
         <div className="flex flex-col space-y-8 text-center sm:space-y-0 sm:flex-row sm:space-x-8 sm:text-left">
           <Stack sx={{ width: '100%' }}>
-            {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
+            <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
               <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
                 <span>New</span>
               </span>
-              Chat with any document
+              <span className="inline-flex items-center">
+                <img
+                  src="/integrations/whatsapp/icon.svg"
+                  alt=""
+                  className="w-4 h-auto mr-1"
+                />
+                WhatsApp plugin
+              </span>
+
               <Link
-                href="/products/chat"
+                href="https://www.chaindesk.ai/help/whatsapp"
                 style={{ background: 'none' }}
                 className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
+                target="_blank"
               >
                 Learn More{' '}
                 <svg
@@ -59,7 +68,7 @@ export default function Hero() {
                   <line x1="15" y1="8" x2="19" y2="12"></line>
                 </svg>
               </Link>
-            </div> */}
+            </div>
 
             <h2 className="mb-2 text-lg font-bold sm:text-2xl text-violet-300 sm:mb-4">
               Get Your Own
