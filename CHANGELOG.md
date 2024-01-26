@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.209"></a>
+## 0.1.209 (2024-01-26)
+
+### Fixed
+
+- 🐛 Re-unresolved conv when end-user send new msg [[492a8a5](https://github.com/gmpetrov/databerry/commit/492a8a5cc871b0411945df11620aa8d8e549f955)]
+
+
 <a name="0.1.208"></a>
 ## 0.1.208 (2024-01-26)
 
