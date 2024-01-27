@@ -55,6 +55,12 @@ const options: DatsourceOption[] = [
     isPremium: true,
   },
   {
+    type: DatasourceType.qa,
+    label: 'Q&A',
+    description: 'Improve Answers with explicit Q&A',
+    disabled: false,
+  },
+  {
     type: DatasourceType.text,
     label: 'Text',
     description: 'Paste some text',
@@ -71,12 +77,6 @@ const options: DatsourceOption[] = [
     label: 'Web Page',
     description: 'Crawl text from a single web page',
     icon: undefined,
-  },
-  {
-    type: DatasourceType.qa,
-    label: 'Q&A',
-    description: 'Improve Answers with explicit Q&A content',
-    disabled: false,
   },
 ];
 

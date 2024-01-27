@@ -10,7 +10,7 @@ export class QALoader extends DatasourceLoaderBase<DatasourceQA> {
   }
 
   async load() {
-    const text = `${this.datasource.config?.question}\n${this.datasource.config?.answer}`;
+    const text = `QUESTION: """${this.datasource.config?.question}"""\nANSWER: """${this.datasource.config?.answer}"""`;
 
     return [
       new AppDocument({
