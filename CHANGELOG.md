@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.212"></a>
+## 0.1.212 (2024-01-27)
+
+### Fixed
+
+- 🐛 improve emphasis Q&amp;A datasource [[7262863](https://github.com/gmpetrov/databerry/commit/726286381e61e4e79614942d37168b27db342a3d)]
+
+### Miscellaneous
+
+- 🤖 enable model behaviors by default [[82e2974](https://github.com/gmpetrov/databerry/commit/82e2974395e01fdab46f4b5ed97885639113c896)]
+- 🤖 disable gpt-4 choice [[7de24f8](https://github.com/gmpetrov/databerry/commit/7de24f8db45db612e8c6d0f616162090b0b4856e)]
+
+
 <a name="0.1.211"></a>
 ## 0.1.211 (2024-01-26)
 
