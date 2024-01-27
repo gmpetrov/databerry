@@ -57,7 +57,7 @@ const options: DatsourceOption[] = [
   {
     type: DatasourceType.qa,
     label: 'Q&A',
-    description: 'Improve Answers with explicit Q&A',
+    description: 'Improve Answers with explicit Q&A pairs',
     disabled: false,
   },
   {

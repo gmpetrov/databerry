@@ -49,6 +49,9 @@ function AgentForm(props: Props) {
       systemPrompt: CUSTOMER_SUPPORT_V3,
       userPrompt: '{query}',
       includeSources: true,
+      restrictKnowledge: true,
+      useLanguageDetection: true,
+      useMarkdown: true,
       ...props.defaultValues,
     },
   });
