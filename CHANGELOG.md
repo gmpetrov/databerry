@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.213"></a>
+## 0.1.213 (2024-01-28)
+
+### Miscellaneous
+
+- 🤖 increase number of allowed seats [[d087c71](https://github.com/gmpetrov/databerry/commit/d087c7124c51fb04b5a3290605bff4511743ce40)]
+
+
 <a name="0.1.212"></a>
 ## 0.1.212 (2024-01-27)
 
