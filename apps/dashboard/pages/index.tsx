@@ -61,6 +61,7 @@ export default function Home() {
         title="Chaindesk - ChatGPT AI Chat Bot for your business"
         description="Chaindesk brings a no-code platform to create custom AI chatbots trained on your data. Our solution makes customer support easy and simplifies team workflow."
         uri="/"
+        ogImage="https://www.chaindesk.ai/og-image.jpg"
       />
 
       {/* <div className="w-full p-2 text-center bg-indigo-500">

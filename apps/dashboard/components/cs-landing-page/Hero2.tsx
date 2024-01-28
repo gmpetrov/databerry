@@ -200,14 +200,14 @@ export default function Hero() {
             </Stack>
           </Stack>
 
-          <div className="flex items-center w-full sm:w-2/3">
-            {/* <Image
+          <div className="flex flex-col items-center w-full sm:w-2/3">
+            <Image
               src="/landing-page/inputs.png"
               width="500"
               height="150"
               className="w-full"
               alt="Datasources"
-            /> */}
+            />
             <div className="w-full h-[500px] overflow-hidden rounded-3xl bg-white">
               <iframe
                 src={`${appUrl}/agents/clq6g5cuv000wpv8iddswwvnd/iframe`}
