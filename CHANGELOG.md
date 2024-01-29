@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.214"></a>
+## 0.1.214 (2024-01-29)
+
+### Fixed
+
+- 🐛 Show contact phonenumber [[c81d5ec](https://github.com/gmpetrov/databerry/commit/c81d5ec8d86e6489292760745f2079c97a63d9f7)]
+
+### Miscellaneous
+
+- 🤖 add back datasources logos [[c9d69ca](https://github.com/gmpetrov/databerry/commit/c9d69cae9f90fef371e05ea169a98681a820b8de)]
+
+
 <a name="0.1.213"></a>
 ## 0.1.213 (2024-01-28)
 
