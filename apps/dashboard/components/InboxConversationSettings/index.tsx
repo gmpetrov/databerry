@@ -19,6 +19,7 @@ import useInboxConversation from '@app/hooks/useInboxConversation';
 import { getConversation } from '@app/pages/api/logs/[id]';
 import { getMemberships } from '@app/pages/api/memberships';
 
+import formatPhoneNumber from '@chaindesk/lib/format-phone-number';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import {
   Attachment,
@@ -296,13 +297,29 @@ function InboxConversationSettings({
               <FormLabel>Contact</FormLabel>
 
               {query?.data?.participantsContacts?.map((each) => (
-                <Stack key={each.id}>
-                  <JoyInput
-                    key={each.id}
-                    endDecorator={<CopyButton text={each.email!} />}
-                    variant="outlined"
-                    value={each.email!}
-                  ></JoyInput>
+                <Stack key={each.id} gap={1}>
+                  {each.email && (
+                    <JoyInput
+                      endDecorator={<CopyButton text={each.email!} />}
+                      variant="outlined"
+                      value={each.email!}
+                    ></JoyInput>
+                  )}
+                  {each?.phoneNumber && (
+                    <JoyInput
+                      endDecorator={
+                        <CopyButton
+                          text={formatPhoneNumber({
+                            phoneNumber: each?.phoneNumber,
+                          })}
+                        />
+                      }
+                      variant="outlined"
+                      value={formatPhoneNumber({
+                        phoneNumber: each?.phoneNumber,
+                      })}
+                    ></JoyInput>
+                  )}
                 </Stack>
               ))}
             </FormControl>
