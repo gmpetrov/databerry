@@ -1,3 +1,6 @@
+import '../../../styles/globals.css';
+import '../../../styles/preflight.css';
+
 import createCache, { EmotionCache } from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import ScopedCssBaseline from '@mui/joy/ScopedCssBaseline';
@@ -16,8 +19,7 @@ const contactAttributes = {
 };
 
 class WebChatBubble extends HTMLElement {
-  cssProvider =
-    (process.env.NEXT_PUBLIC_ASSETS_BASE_URL || '') + '/chat-bubble.css';
+  cssProvider = './module.css';
   root: Root;
   cache: EmotionCache;
   shadowRootElement: HTMLDivElement;
