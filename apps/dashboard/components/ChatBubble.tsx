@@ -22,8 +22,9 @@ import useChat, { ChatContext } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
+import { NonNull } from '@chaindesk/lib/type-utilites';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
-import type { Agent } from '@chaindesk/prisma';
+import type { Agent, Contact } from '@chaindesk/prisma';
 
 import ChatMessageCard from './ChatMessageCard';
 import CustomerSupportActions from './CustomerSupportActions';
@@ -43,10 +44,16 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 
 export const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
+export type CustomContact = Omit<
+  NonNull<Partial<Contact>>,
+  'updatedAt' | 'createdAt' | 'agentId' | 'organizationId'
+>;
+
 function App(props: {
   agentId: string;
   initConfig?: AgentInterfaceConfig;
   onAgentLoaded?: (agent: Agent) => any;
+  contact?: CustomContact;
 }) {
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
@@ -70,6 +77,7 @@ function App(props: {
     // channel: ConversationChannel.website // not working with bundler parcel,
     agentId: props?.agentId,
     localStorageConversationIdKey: `chatBubbleConversationId-${props.agentId}`,
+    contact: props?.contact,
   });
 
   const {
@@ -113,7 +121,6 @@ function App(props: {
     try {
       const res = await fetch(`${API_URL}/api/agents/${props.agentId}`);
       const data = (await res.json()) as Agent;
-
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
 
       setState({

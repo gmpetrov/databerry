@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="module">
+      //😕 import ChaindeskFactory from './dist/module.js'
+      import './dist/module.js';
+      console.log(window.ChaindeskFactory);
+
+      // you can comment this, and use the web component directly ⬇️
+      window.ChaindeskFactory.initChatBubble({
+        agentId: 'local-agent-id',
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Web module: ChaindeskFactory</h1>
+
+    <!-- use webcomponent directly ⬇️ -->
+    <!-- <web-chat-bubble id="local-agent-id"></web-chat-bubble> -->
+  </body>
+</html>

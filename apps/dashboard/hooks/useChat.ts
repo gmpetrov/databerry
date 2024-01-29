@@ -3,6 +3,9 @@ import { createContext, useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
+import { CustomContact } from '@app/components/ChatBubble';
+import { createContact } from '@app/pages/api/contacts';
+
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import {
   EventStreamContentType,
@@ -33,7 +36,7 @@ import useRateLimit from './useRateLimit';
 import useStateReducer from './useStateReducer';
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
-
+const isEmpty = (obj: any) => Object?.keys(obj || {}).length === 0;
 type Props = {
   endpoint?: string;
   channel?: ConversationChannel;
@@ -42,6 +45,7 @@ type Props = {
   localStorageConversationIdKey?: string;
   agentId?: string;
   disableFetchHistory?: boolean;
+  contact?: CustomContact;
 };
 
 export type MessageEvalUnion = 'good' | 'bad';
@@ -127,6 +131,10 @@ const useChat = ({
     state.conversationId
       ? `${API_URL}/api/conversations/${state.conversationId}/message`
       : null,
+    generateActionFetcher(HTTP_METHOD.POST)
+  );
+  const createContactMutation = useSWRMutation(
+    `${API_URL}/api/contacts`,
     generateActionFetcher(HTTP_METHOD.POST)
   );
 
@@ -614,6 +622,15 @@ const useChat = ({
       });
     }
   }, [state.conversationId]);
+
+  if (otherProps.contact && !isEmpty(otherProps.contact)) {
+    createContactMutation.trigger({
+      ...(state?.conversationId
+        ? { conversationId: state?.conversationId }
+        : {}),
+      ...otherProps.contact,
+    });
+  }
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
