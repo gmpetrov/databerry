@@ -54,6 +54,7 @@ export const callback = async (
     }
     const ExistingAccount = await prisma.serviceProvider.findFirst({
       where: {
+        organizationId: state as string,
         accessToken: data.access_token,
       },
     });

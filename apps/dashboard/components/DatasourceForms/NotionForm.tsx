@@ -1,8 +1,11 @@
 import { Done } from '@mui/icons-material';
 import { Close } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
+import BugReportRoundedIcon from '@mui/icons-material/BugReportRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import {
+  Alert,
+  Box,
   Button,
   CircularProgress,
   FormControl,
@@ -137,6 +140,19 @@ function Nested() {
               }}
             />
           </FormControl>
+
+          <Alert color="warning" startDecorator={<BugReportRoundedIcon />}>
+            {`Can't see your notebooks? There is currently an issue with the Notion API that requires you to manually link a page to our integration. For guidance on how to do this, please watch the video below.`}
+          </Alert>
+          <Box
+            component={'video'}
+            src="/integrations/notion/link-page-bug.mp4"
+            sx={{
+              width: '100%',
+            }}
+            autoPlay
+            controls
+          />
         </>
       )}
     </>
