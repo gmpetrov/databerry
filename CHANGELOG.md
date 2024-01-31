@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.215"></a>
+## 0.1.215 (2024-01-31)
+
+### Fixed
+
+- 🐛 guide to bypass notion bug [[44f9424](https://github.com/gmpetrov/databerry/commit/44f9424947a0198bc6d0c37c96995c79bd517a73)]
+
+
 <a name="0.1.214"></a>
 ## 0.1.214 (2024-01-29)
 
