@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.216"></a>
+## 0.1.216 (2024-02-01)
+
+### Miscellaneous
+
+- 🤖 Add Google Drive opt-in [[bab8ab0](https://github.com/gmpetrov/databerry/commit/bab8ab01437fa1d41aaf28473d5953860008c8bb)]
+- 🤖 emphasis http tool description [[818106f](https://github.com/gmpetrov/databerry/commit/818106f1eee85dcbb8906215b54873acfdd7a1c2)]
+
+
 <a name="0.1.215"></a>
 ## 0.1.215 (2024-01-31)
 
