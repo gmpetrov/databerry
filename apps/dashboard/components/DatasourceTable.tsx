@@ -4,10 +4,11 @@ import AutorenewRounded from '@mui/icons-material/AutorenewRounded';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import SourceRoundedIcon from '@mui/icons-material/SourceRounded';
-import { Badge, Checkbox } from '@mui/joy';
+import { Alert, Badge, Checkbox } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
@@ -197,6 +198,22 @@ export default function DatasourceTable({
 
   return (
     <React.Fragment>
+      <Alert startDecorator={<InfoRoundedIcon />} sx={{ mt: -3, mb: 2 }}>
+        <Stack>
+          <p>
+            Datastores are{' '}
+            <strong>automatically synchronized every Monday</strong> at
+            approximately <strong>2 AM UTC</strong> to ensure the most
+            up-to-date information is available{' '}
+            <strong>(for premium users only)</strong>.
+          </p>
+          <p>
+            We are actively working on reducing the refresh interval to provide
+            even timelier data updates.
+          </p>
+        </Stack>
+      </Alert>
+
       {selected?.length > 0 && (
         <Button
           loading={state.isBulkDeleting}
