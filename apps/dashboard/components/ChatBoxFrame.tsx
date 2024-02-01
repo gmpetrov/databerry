@@ -1,8 +1,9 @@
 import Box from '@mui/joy/Box';
 import CircularProgress from '@mui/joy/CircularProgress';
 import { useColorScheme } from '@mui/joy/styles';
+import { SxProps } from '@mui/joy/styles/types';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import React, { ReactPropTypes, useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import useChat, { ChatContext } from '@app/hooks/useChat';
@@ -26,22 +27,29 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
-function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
+function ChatBoxFrame(props: {
+  initConfig?: AgentInterfaceConfig;
+  agentId?: string;
+  styles?: SxProps;
+}) {
   const router = useRouter();
-  const { mode, setMode } = useColorScheme();
 
-  const agentId = router.query.agentId as string;
+  const agentId = (props.agentId || router.query.agentId) as string;
   const [agent, setAgent] = React.useState<Agent | undefined>();
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
   );
 
   const methods = useChat({
-    endpoint: `${API_URL}/api/agents/${router.query?.agentId}/query`,
-
-    channel: ConversationChannel.website,
+    endpoint: `${API_URL}/api/agents/${
+      props.agentId || router.query?.agentId
+    }/query`,
+    // TODO: replace with ConversationChannel.channel when parcel resolver fixed.
+    channel: 'website',
     agentId,
-    localStorageConversationIdKey: `iFrameConversationId-${router.query?.agentId}`,
+    localStorageConversationIdKey: `iFrameConversationId-${
+      props.agentId || router.query?.agentId
+    }`,
   });
 
   const {
@@ -119,6 +127,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           justifyContent: 'center',
           alignItems: 'center',
           background: 'transparent',
+          ...(props.styles ? props.styles : {}),
         }}
       >
         <CircularProgress size="sm" variant="soft" color="neutral" />
@@ -134,26 +143,29 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     >
       <Box
         className="chaindesk-iframe"
-        sx={(theme) => ({
-          px: 2,
-          pb: 2,
-          position: 'relative',
-          width: '100vw',
-          height: '100vh',
-          maxHeight: '100%',
-          boxSizing: 'border-box',
-          backgroundColor: config?.isBgTransparent
-            ? 'transparent'
-            : theme.palette.background.default,
+        sx={(theme) =>
+          ({
+            px: 2,
+            pb: 2,
+            position: 'relative',
+            width: '100vw',
+            height: '100vh',
+            maxHeight: '100%',
+            boxSizing: 'border-box',
+            backgroundColor: config?.isBgTransparent
+              ? 'transparent'
+              : theme.palette.background.default,
 
-          '& .message-agent': {},
-          '& .message-human': {
-            backgroundColor: primaryColor,
-          },
-          '& .message-human *': {
-            color: textColor,
-          },
-        })}
+            '& .message-agent': {},
+            '& .message-human': {
+              backgroundColor: primaryColor,
+            },
+            '& .message-human *': {
+              color: textColor,
+            },
+            ...(props.styles ? props.styles : {}),
+          } as any)
+        }
       >
         <NewChatButton
           sx={{

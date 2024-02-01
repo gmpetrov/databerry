@@ -5,16 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script async type="module">
-      import ChaindeskFactory from './dist/module.js';
+      import Chatbox from './dist/index.js';
 
       // you can comment this, and use the web component directly ⬇️
-      ChaindeskFactory.initChatBubble({
+      Chatbox.initChatBubble({
         agentId: 'clryuyw8m0002w4737f39vbpg',
+      });
+
+      Chatbox.initStandard({
+        agentId: 'clryuyw8m0002w4737f39vbpg',
+        styles: {
+          height: '600px',
+        },
       });
     </script>
   </head>
   <body>
-    <h1>Web module: ChaindeskFactory</h1>
+    <h1>WebChatbubble:</h1>
 
     <!-- use webcomponent directly ⬇️ -->
     <!-- <web-chat-bubble id="local-agent-id"></web-chat-bubble> -->

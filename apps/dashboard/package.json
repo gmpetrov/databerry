@@ -3,16 +3,8 @@
   "version": "0.1.21",
   "private": true,
   "browserslist": "> 0.5%, last 4 versions, not dead",
-  "parcelModuleSource": "tests/web-module/dist/module.js",
-  "parcelModuleStylesSource": "tests/web-module/dist/chat-bubble-styles.js",
   "targets": {
-    "parcelModuleSource": {
-      "includeNodeModules": true,
-      "context": "browser",
-      "isLibrary": true,
-      "outputFormat": "esmodule"
-    },
-    "parcelModuleStylesSource": {
+    "frontend": {
       "includeNodeModules": true,
       "context": "browser",
       "isLibrary": true,
@@ -32,11 +24,8 @@
     "e2e:api:watch": "jest __tests__/api --watch",
     "widget:chat-bubble:dev": "concurrently \"npx serve tests/chat-bubble\" \"mkdir -p tests/chat-bubble/dist && NEXT_PUBLIC_ASSETS_BASE_URL=/dist NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel watch widgets/chat-bubble.tsx --dist-dir tests/chat-bubble/dist\"",
     "widget:chat-bubble:build": "NEXT_PUBLIC_ASSETS_BASE_URL=https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest NEXT_PUBLIC_DASHBOARD_URL=https://app.chaindesk.ai npx parcel build widgets/chat-bubble.tsx",
-    "widget:module:chat-bubble:dev": "concurrently  \"npx serve tests/web-components/chat-bubble\" \"mkdir -p tests/web-components/chat-bubble/dist && NEXT_PUBLIC_ASSETS_BASE_URL=/dist NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel watch widgets/web-module/inject-chatbubble.ts --dist-dir tests/web-components/chat-bubble/dist\"",
-    "widget:module:dev": "concurrently \"npm run widget:chatbubble:styles\" \"npx serve tests/web-module\" \"mkdir -p tests/web-module/dist && NEXT_PUBLIC_ASSETS_BASE_URL=/dist  NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel watch --no-cache --no-source-maps --dist-dir tests/web-module/dist widgets/web-module/module.ts\"",
-    "widget:chatbubble:styles": "npx parcel  widgets/web-module/web-components/styles.ts --no-cache --no-source-maps --dist-dir tests/web-module/dist",
-    "widget:module:build": "concurrently \"npm run widget:chatbubble:styles\" \"npx serve tests/web-module\" \"mkdir -p tests/web-module/dist && NEXT_PUBLIC_ASSETS_BASE_URL=/dist  NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel build --no-cache --no-source-maps --dist-dir tests/web-module/dist widgets/web-module/module.ts\"",
-    "widget:inject:build": "NEXT_PUBLIC_ASSETS_BASE_URL=https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest NEXT_PUBLIC_DASHBOARD_URL=https://chaindesk.ai npx parcel build widgets/web-module/inject-chatbubble.ts",
+    "widget:chatbox:build": "mkdir -p tests/chatbox/dist && concurrently  \"npx serve tests/chatbox\" \" npx parcel build --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/styles.ts\"  \"NEXT_PUBLIC_ASSETS_BASE_URL=/dist  NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel build --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/index.ts\"",
+    "widget:chatbox:dev": "mkdir -p tests/chatbox/dist && concurrently  \"npx serve tests/chatbox\" \" npx parcel watch --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/styles.ts\"  \"NEXT_PUBLIC_ASSETS_BASE_URL=/dist  NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel watch --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/index.ts\"",
     "widget:chat-bubble:publish": "npm run widget:chat-bubble:build && cp dist/chat-bubble* ../../packages/chat-bubble/ && cd ../../packages/chat-bubble && npm version patch && npm publish --access public",
     "build:widget:prestashop": "cd widgets/prestashop && bash build.sh",
     "build:widget:wordpress": "cd widgets/wordpress && bash build.sh",
@@ -158,10 +147,10 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "parcel-resolver-chaindesk": "file:./chaindesk-resolver",
     "@chaindesk/tsconfig": "workspace:*",
     "@parcel/config-default": "^2.11.0",
     "@parcel/plugin": "^2.11.0",
+    "@parcel/resolver-default": "^2.11.0",
     "@swc/core": "^1.3.51",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.0.0",
@@ -182,6 +171,7 @@
     "@types/react-transition-group": "^4.4.6",
     "@types/uuid": "^9.0.1",
     "autoprefixer": "^10.4.14",
+    "buffer": "^5.5.0||^6.0.0",
     "concurrently": "^8.2.1",
     "copy-webpack-plugin": "^11.0.0",
     "cssnano": "^6.0.1",
@@ -191,7 +181,9 @@
     "jest-environment-jsdom": "^29.6.2",
     "medium-zoom": "^1.1.0",
     "parcel": "^2.11.0",
+    "parcel-resolver-emulate-packages": "^3.0.0",
     "postcss": "^8.4.21",
+    "process": "^0.11.10",
     "property-information": "^6.4.0",
     "rehype-raw": "^7.0.0",
     "release-it": "^16.1.5",
