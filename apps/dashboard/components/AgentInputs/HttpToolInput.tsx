@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {
+  Alert,
   Button,
   Card,
   Checkbox,
@@ -168,10 +170,18 @@ export default function HttpToolInput({ name }: Props) {
         <Input
           control={methods.control}
           label={'Description'}
-          helperText="The description helps the Agent to determine when to use the tool."
           {...methods.register(`${prefix}config.description`)}
           placeholder="e.g: Useful for getting the current weather in a given city."
         />
+        <Alert color="warning" startDecorator={<InfoRoundedIcon />}>
+          <Stack>
+            <p>
+              The description is very important, this is what the Agent will use
+              to decide when to use it and what to do.
+            </p>
+            <p>{`For instance for tool that retrieves the current weather of a given city: "Useful for getting the current weather in a given city." is better than "Weather API"`}</p>
+          </Stack>
+        </Alert>
 
         <Input
           control={methods.control}
@@ -244,6 +254,7 @@ export default function HttpToolInput({ name }: Props) {
           dialogProps={{
             sx: {
               maxWidth: 'sm',
+              height: 'auto',
             },
           }}
         >
