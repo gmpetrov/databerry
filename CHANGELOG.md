@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.217"></a>
+## 0.1.217 (2024-02-01)
+
+### Miscellaneous
+
+- 🤖 Alert info about auto-sync [[ff364e0](https://github.com/gmpetrov/databerry/commit/ff364e0ea02c258788eacc880a773c2032c3288e)]
+
+
 <a name="0.1.216"></a>
 ## 0.1.216 (2024-02-01)
 
