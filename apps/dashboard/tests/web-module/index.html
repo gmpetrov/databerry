@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script type="module">
+    <script async type="module">
       import ChaindeskFactory from './dist/module.js';
 
       // console.log('-------->', ChaindeskFactory);
@@ -15,7 +15,7 @@
       // console.log(window.ChaindeskFactory);
 
       // you can comment this, and use the web component directly ⬇️
-      window.ChaindeskFactory.initChatBubble({
+      ChaindeskFactory.initChatBubble({
         agentId: 'clryuyw8m0002w4737f39vbpg',
       });
     </script>
