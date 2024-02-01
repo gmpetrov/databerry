@@ -141,6 +141,7 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
   }),
   DatasourceBaseSchema.extend({
     type: z.literal(DatasourceType.google_drive_folder),
+    hasOptIn: z.boolean().optional(),
     config: DatasourceConfigBaseSchema.extend({
       mime_type: z.string().min(1),
       serviceProviderId: z.string().min(1),
@@ -150,6 +151,7 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
   }),
   DatasourceBaseSchema.extend({
     type: z.literal(DatasourceType.google_drive_file),
+    hasOptIn: z.boolean().optional(),
     config: DatasourceConfigBaseSchema.extend({
       mime_type: z.string().min(1),
       serviceProviderId: z.string().min(1),
