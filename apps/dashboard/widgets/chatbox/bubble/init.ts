@@ -1,26 +1,27 @@
 import { CustomContact } from '@app/components/ChatBubble';
 
-import WebChatBubble from './web-components/chatbubble';
-import { hookFunctionsToWindow, toDashedCase } from './utils';
+import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 
-export const initChatBubble = async (props: {
+import { hookFunctionsToWindow, toDashedCase } from '../utils';
+
+import WebChatBubble from './bubble';
+const initChatBubble = async (props: {
   agentId?: string;
   onMarkedAsResolved?(): any;
   contact?: CustomContact;
+  initConfig: AgentInterfaceConfig;
 }) => {
   const currentScriptSrc = (document?.currentScript as any)?.src;
+
   // To fix retro-compatibility.
   const currentScriptId = (document?.currentScript as any)?.id;
 
-  let agentId;
-  if (props.agentId) {
-    agentId = props.agentId;
-  } else if (currentScriptId) {
-    agentId = currentScriptId;
-  } else if (currentScriptSrc) {
+  let agentId = props.agentId || currentScriptId;
+
+  if (!agentId && currentScriptSrc) {
     const urlObj = new URL(currentScriptSrc);
     agentId =
-      urlObj?.searchParams?.get('agentId') || currentScriptId || props?.agentId;
+      urlObj.searchParams.get('agentId') || currentScriptId || props.agentId;
   }
 
   hookFunctionsToWindow(props);
@@ -43,12 +44,4 @@ export const initChatBubble = async (props: {
   document?.body?.appendChild(webChatBubble);
 };
 
-export const generateFactory = () => ({
-  initChatBubble,
-});
-
-// TODO: workaround to module has no default export, directly use ChaindeskFactory when issue solved.
-export const injectFactoryInWindow = (factory: any) => {
-  if (typeof window === 'undefined') return;
-  window.ChaindeskFactory = { ...factory };
-};
+export default initChatBubble;

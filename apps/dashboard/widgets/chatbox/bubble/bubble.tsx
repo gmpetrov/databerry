@@ -83,6 +83,6 @@ class WebChatBubble extends HTMLElement {
   }
 }
 
-customElements.define('web-chat-bubble', WebChatBubble);
+customElements.define('chat-bubble', WebChatBubble);
 
 export default WebChatBubble;
