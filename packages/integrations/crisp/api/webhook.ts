@@ -3,14 +3,15 @@ import cuid from 'cuid';
 import { TFunction } from 'i18next';
 import { NextApiResponse } from 'next';
 
-import i18n from '@chaindesk/lib/locales/i18next';
-
-import AgentManager from '@chaindesk/lib/agent';
 import ConversationManager from '@chaindesk/lib/conversation';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import formatSourcesRawText from '@chaindesk/lib/form-sources-raw-text';
-import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
+import handleChatMessage, {
+  ChatAgentArgs,
+  ChatConversationArgs,
+} from '@chaindesk/lib/handle-chat-message';
+import i18n from '@chaindesk/lib/locales/i18next';
 import {
   Action,
   AIStatus,
@@ -19,10 +20,10 @@ import {
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import {
   ConversationChannel,
+  ConversationStatus,
   MessageFrom,
   ServiceProviderType,
   SubscriptionPlan,
-  ConversationStatus,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
@@ -114,10 +115,7 @@ type HookBodyMessageUpdated = HookBodyBase & {
 
 type HookBody = HookBodyBase | HookBodyMessageSent | HookBodyMessageUpdated;
 
-const getIntegration = async (
-  websiteId: string,
-  channelExternalId?: string
-) => {
+const getIntegration = async (websiteId: string, channelExternalId: string) => {
   const integration = await prisma.serviceProvider.findUnique({
     where: {
       unique_external_id: {
@@ -126,30 +124,16 @@ const getIntegration = async (
       },
     },
     include: {
-      ...(channelExternalId
-        ? {
-            conversations: {
-              where: {
-                channelExternalId,
-              },
-            },
-          }
-        : {}),
-      agents: {
-        include: {
-          organization: {
-            include: {
-              usage: true,
-              subscriptions: true,
-            },
-          },
-          tools: {
-            include: {
-              datastore: true,
-              form: true,
-            },
-          },
+      conversations: {
+        ...ChatConversationArgs,
+        where: {
+          channelExternalId,
         },
+        take: 1,
+      },
+      agents: {
+        ...ChatAgentArgs,
+        take: 1,
       },
     },
   });
@@ -199,99 +183,57 @@ const handleQuery = async (
   query: string,
   t: TFunction<'translation', undefined>
 ) => {
-  const integration = await getIntegration(websiteId);
+  const integration = await getIntegration(websiteId, sessionId);
   const agent = integration?.agents?.[0];
 
-  const usage = agent?.organization?.usage!;
-  const plan =
-    agent?.organization?.subscriptions?.[0]?.plan || SubscriptionPlan.level_0;
-
-  try {
-    guardAgentQueryUsage({
-      usage,
-      plan,
-    });
-  } catch {
-    return;
-  }
-  let conversation = await prisma.conversation.findUnique({
-    where: {
-      channelExternalId: sessionId,
-    },
-    include: {
-      messages: {
-        take: -24,
-        orderBy: {
-          createdAt: 'asc',
-        },
-      },
-    },
-  });
-
-  const conversationId = conversation?.id || cuid();
-
-  const conversationManager = new ConversationManager({
-    organizationId: agent?.organizationId!,
+  const chatResponse = await handleChatMessage({
     channel: ConversationChannel.crisp,
-
-    conversationId,
+    query,
+    agent: agent!,
+    conversation: integration?.conversations?.[0]!,
+    externalVisitorId: sessionId,
     channelExternalId: sessionId,
     channelCredentialsId: integration?.id,
   });
 
-  const conv = await conversationManager.createMessage({
-    conversationStatus: ConversationStatus.UNRESOLVED,
-    from: MessageFrom.human,
-    text: query,
+  if (chatResponse?.agentResponse) {
+    const { answer, sources } = chatResponse?.agentResponse;
 
-    externalVisitorId: sessionId,
-  });
+    const finalAnswer = `${answer}\n\n${formatSourcesRawText(
+      !!agent?.includeSources ? filterInternalSources(sources || [])! : []
+    )}`.trim();
 
-  const { answer, sources } = await new AgentManager({ agent }).query({
-    input: query,
-    history: conversation?.messages || [],
-  });
+    await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
+      type: 'picker',
+      from: 'operator',
+      origin: 'chat',
 
-  const finalAnswer = `${answer}\n\n${formatSourcesRawText(
-    !!agent?.includeSources ? filterInternalSources(sources || [])! : []
-  )}`.trim();
-
-  await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
-    type: 'picker',
-    from: 'operator',
-    origin: 'chat',
-
-    content: {
-      id: 'chaindesk-answer',
-      text: finalAnswer,
-      choices: [
-        {
-          value: Action.mark_as_resolved,
-          icon: '✅',
-          label: t('crisp:choices.resolve'),
-          selected: false,
-        },
-        {
-          value: Action.request_human,
-          icon: '💬',
-          label: t('crisp:choices.request'),
-          selected: false,
-        },
-      ],
-    },
-    user: {
-      type: 'participant',
-      nickname: agent?.name || 'Chaindesk',
-      avatar: agent.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
-    },
-  });
-
-  await conversationManager.createMessage({
-    inputId: conv?.messages?.[0].id,
-    from: MessageFrom.agent,
-    text: answer,
-    agentId: agent?.id,
-  });
+      content: {
+        id: 'chaindesk-answer',
+        text: finalAnswer,
+        choices: [
+          {
+            value: Action.mark_as_resolved,
+            icon: '✅',
+            label: t('crisp:choices.resolve'),
+            selected: false,
+          },
+          {
+            value: Action.request_human,
+            icon: '💬',
+            label: t('crisp:choices.request'),
+            selected: false,
+          },
+        ],
+      },
+      user: {
+        type: 'participant',
+        nickname: agent?.name || 'Chaindesk',
+        avatar:
+          agent.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
+      },
+    });
+  }
 };
 
 export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {

@@ -1,6 +1,7 @@
+import axios from 'axios';
+
 import { WhatsAppSendMessageSchema } from '@chaindesk/lib/types/dtos';
 import { ServiceProviderWhatsapp } from '@chaindesk/lib/types/dtos';
-import axios from 'axios';
 
 type Props<T> = {
   to: string;

@@ -8,26 +8,22 @@
 // ATM Dockerizing the app and host it on Fly.io for handling that type of use-cases
 import { WebClient } from '@slack/web-api';
 import axios from 'axios';
+import cuid from 'cuid';
 import { NextApiResponse } from 'next';
 
-import AgentManager from '@chaindesk/lib/agent';
-import ConversationManager from '@chaindesk/lib/conversation';
-import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
+import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import formatSourcesRawText from '@chaindesk/lib/form-sources-raw-text';
 import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
+import handleChatMessage, {
+  ChatAgentArgs,
+  ChatConversationArgs,
+} from '@chaindesk/lib/handle-chat-message';
 import logger from '@chaindesk/lib/logger';
 import slackAgent from '@chaindesk/lib/slack-agent';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
-import {
-  ConversationChannel,
-  MessageFrom,
-  ServiceProviderType,
-  SubscriptionPlan,
-  ConversationStatus,
-} from '@chaindesk/prisma';
+import { ServiceProviderType, SubscriptionPlan } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
-import cuid from 'cuid';
 
 const handler = createApiHandler();
 
@@ -106,20 +102,7 @@ const getIntegrationByTeamId = async (teamId: string) => {
     },
     include: {
       agents: {
-        include: {
-          organization: {
-            include: {
-              usage: true,
-              subscriptions: true,
-            },
-          },
-          tools: {
-            include: {
-              datastore: true,
-              form: true,
-            },
-          },
-        },
+        ...ChatAgentArgs,
       },
     },
   });
@@ -217,41 +200,29 @@ const handleAsk = async (payload: CommandEvent) => {
   const agent = integration?.agents?.[0]!;
 
   const conversation = await prisma.conversation.findUnique({
+    ...ChatConversationArgs,
     where: {
       channelExternalId: payload.channel_id,
     },
   });
 
-  const conversationManager = new ConversationManager({
-    conversationId: conversation?.id,
-    organizationId: agent?.organizationId!,
-    channel: ConversationChannel.slack,
+  const chatResponse = await handleChatMessage({
+    channel: 'slack',
+    agent: agent!,
+    conversation: conversation!,
+    query: payload.text!,
+
     channelExternalId: payload.channel_id,
     channelCredentialsId: integration?.id,
-  });
-
-  const conv = await conversationManager.createMessage({
-    conversationStatus: ConversationStatus.UNRESOLVED,
-    from: MessageFrom.human,
-    text: payload.text,
-    externalId: payload.trigger_id,
+    externalMessageId: payload.trigger_id,
   });
 
   if (conversation?.isAiEnabled) {
-    const chatRes = await new AgentManager({ agent }).query({
-      input: payload.text,
-    });
-
-    await conversationManager.createMessage({
-      inputId: conv?.messages?.[0].id,
-      from: MessageFrom.agent,
-      text: chatRes?.answer,
-      agentId: agent?.id!,
-    });
-
-    const finalAnser = `${chatRes?.answer}\n\n${formatSourcesRawText(
+    const finalAnser = `${
+      chatResponse?.agentResponse?.answer
+    }\n\n${formatSourcesRawText(
       !!agent?.includeSources
-        ? filterInternalSources(chatRes?.sources || [])
+        ? filterInternalSources(chatResponse?.agentResponse?.sources || [])
         : []
     )}`.trim();
 

@@ -1,30 +1,36 @@
-import { creatChatUploadKey } from '@chaindesk/lib/file-upload';
-import getFileExtFromMimeType from '@chaindesk/lib/get-file-ext-from-mime-type';
-import formatSourcesRawText from '@chaindesk/lib/form-sources-raw-text';
+import axios from 'axios';
+import cuid from 'cuid';
+import { NextApiResponse } from 'next';
+import pMap from 'p-map';
+
+import AgentManager from '@chaindesk/lib/agent';
+import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import { s3 } from '@chaindesk/lib/aws';
+import ConversationManager from '@chaindesk/lib/conversation';
+import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
+import { creatChatUploadKey } from '@chaindesk/lib/file-upload';
+import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
+import formatSourcesRawText from '@chaindesk/lib/form-sources-raw-text';
+import getFileExtFromMimeType from '@chaindesk/lib/get-file-ext-from-mime-type';
+import handleChatMessage, {
+  ChatAgentArgs,
+  ChatConversationArgs,
+} from '@chaindesk/lib/handle-chat-message';
+import { AppNextApiRequest } from '@chaindesk/lib/types';
 import {
   CreateAttachmentSchema,
   ServiceProviderWhatsappSchema,
   WhatsAppReceivedMessageMediaSchema,
-  WhatsAppReceivedMessageTextSchema,
   WhatsAppReceivedMessageSchema,
+  WhatsAppReceivedMessageTextSchema,
 } from '@chaindesk/lib/types/dtos';
-import { NextApiResponse } from 'next';
-import pMap from 'p-map';
-import axios from 'axios';
-import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
-import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
-import { AppNextApiRequest } from '@chaindesk/lib/types';
-import prisma from '@chaindesk/prisma/client';
-import cuid from 'cuid';
-import ConversationManager from '@chaindesk/lib/conversation';
 import {
   ConversationChannel,
   ConversationStatus,
   MessageFrom,
 } from '@chaindesk/prisma';
-import AgentManager from '@chaindesk/lib/agent';
-import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
+import prisma from '@chaindesk/prisma/client';
+
 import { sendWhatsAppMessage } from '../lib/send-whatsapp-message';
 
 interface notionSuccessResponse {
@@ -120,26 +126,15 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           },
         },
         agents: {
+          ...ChatAgentArgs,
           take: 1,
           include: {
-            tools: {
-              include: {
-                datastore: true,
-                form: true,
-              },
-            },
+            ...ChatAgentArgs.include,
             conversations: {
+              ...ChatConversationArgs,
               take: 1,
               where: {
                 channelExternalId,
-              },
-              include: {
-                messages: {
-                  take: -24,
-                  orderBy: {
-                    createdAt: 'asc',
-                  },
-                },
               },
             },
           },
@@ -276,14 +271,6 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    const conversationManager = new ConversationManager({
-      organizationId: agent?.organizationId!,
-      channel: ConversationChannel.whatsapp,
-      conversationId,
-      channelExternalId,
-      channelCredentialsId: credentials?.id,
-    });
-
     if (!appContact) {
       appContact = await prisma.contact.create({
         data: {
@@ -295,97 +282,83 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     }
 
     if (msgText || attachments.length > 0) {
-      const inputMessageId = cuid();
-
-      await conversationManager.createMessage({
-        conversationStatus: ConversationStatus.UNRESOLVED,
-        id: inputMessageId,
-        from: MessageFrom.human,
-        text: msgText || '🧷',
+      const chatResponse = await handleChatMessage({
+        logger: req.logger,
+        channel: ConversationChannel.whatsapp,
+        agent: agent!,
+        conversation: conversation!,
+        query: msgText || '🧷',
         contactId: appContact?.id,
         attachments,
-        // externalVisitorId: sessionId,
+        channelExternalId,
+        channelCredentialsId: credentials?.id,
       });
 
-      if (conversation && !conversation?.isAiEnabled) {
-        // AI is disabled
-        return res.send('ok');
-      }
+      if (chatResponse?.agentResponse) {
+        const { answer, sources } = chatResponse?.agentResponse;
 
-      const { answer, sources } = await new AgentManager({ agent }).query({
-        input: msgText,
-        history: conversation?.messages || [],
-      });
+        const finalAnswer = `${answer}\n\n${formatSourcesRawText(
+          !!agent?.includeSources ? filterInternalSources(sources || []) : []
+        )}`.trim();
 
-      const finalAnswer = `${answer}\n\n${formatSourcesRawText(
-        !!agent?.includeSources ? filterInternalSources(sources || []) : []
-      )}`.trim();
+        console.log('agent-->', agent);
+        console.log('finalAnswer-->', finalAnswer);
 
-      console.log('agent-->', agent);
-      console.log('finalAnswer-->', finalAnswer);
-
-      await conversationManager.createMessage({
-        inputId: inputMessageId,
-        from: MessageFrom.agent,
-        text: finalAnswer,
-        agentId: agent?.id,
-        sources,
-      });
-
-      const response = await sendWhatsAppMessage({
-        to: waContactId,
-        message: {
-          type: 'text',
-          text: {
-            body: finalAnswer,
-          },
-        },
-        credentials: credentials as any,
-      });
-
-      const phoneNumber = response?.data?.contacts?.[0]?.input;
-
-      if (phoneNumber && !appContact?.phoneNumber) {
-        const contactWithPhoneNumber = await prisma.contact.findUnique({
-          where: {
-            unique_phone_number_for_org: {
-              phoneNumber,
-              organizationId: agent?.organizationId!,
+        const response = await sendWhatsAppMessage({
+          to: waContactId,
+          message: {
+            type: 'text',
+            text: {
+              body: finalAnswer,
             },
           },
+          credentials: credentials as any,
         });
 
-        if (contactWithPhoneNumber) {
-          // a contact with this phone number already exists so we need to delete the contact created earlier and update the input message with the new contact id
-          await prisma.$transaction([
-            prisma.message.update({
-              where: {
-                id: inputMessageId,
+        const phoneNumber = response?.data?.contacts?.[0]?.input;
+
+        if (phoneNumber && !appContact?.phoneNumber) {
+          const contactWithPhoneNumber = await prisma.contact.findUnique({
+            where: {
+              unique_phone_number_for_org: {
+                phoneNumber,
+                organizationId: agent?.organizationId!,
               },
-              data: {
-                contact: {
-                  connect: {
-                    id: contactWithPhoneNumber.id,
+            },
+          });
+
+          if (contactWithPhoneNumber) {
+            // a contact with this phone number already exists so we need to delete the contact created earlier and update the input message with the new contact id
+            await prisma.$transaction([
+              prisma.message.update({
+                where: {
+                  id: chatResponse?.inputMessageId,
+                },
+                data: {
+                  contact: {
+                    connect: {
+                      id: contactWithPhoneNumber.id,
+                    },
                   },
                 },
-              },
-            }),
-            prisma.contact.delete({
+              }),
+              prisma.contact.delete({
+                where: {
+                  id: appContact?.id,
+                },
+              }),
+            ]);
+          } else {
+            await prisma.contact.update({
               where: {
                 id: appContact?.id,
               },
-            }),
-          ]);
-        } else {
-          await prisma.contact.update({
-            where: {
-              id: appContact?.id,
-            },
-            data: {
-              phoneNumber,
-              externalId: waContactId!,
-            },
-          });
+              data: {
+                phoneNumber,
+                externalId: waContactId!,
+              },
+            });
+          }
         }
       }
     }

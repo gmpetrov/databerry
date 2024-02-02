@@ -395,12 +395,22 @@ const useChat = ({
             } else if (event.data?.startsWith('[ERROR]')) {
               ctrl.abort();
 
+              let message = event.data.replace('[ERROR]', '');
+
+              if (message === ApiErrorType.USAGE_LIMIT) {
+                if (!channel || channel === 'dashboard') {
+                  message = `Message limit reached. Please upgrade your plan to get higher usage.`;
+                } else {
+                  return;
+                }
+              }
+
               setState({
                 history: [
                   ...history,
                   {
                     from: 'agent',
-                    message: event.data.replace('[ERROR]', ''),
+                    message,
                   } as any,
                 ],
               });
