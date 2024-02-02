@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.218"></a>
+## 0.1.218 (2024-02-02)
+
+### Fixed
+
+- 🐛 factorize agent chat message accross channels [[68df83d](https://github.com/gmpetrov/databerry/commit/68df83d52966f1c2f5e7e21c148134419d27656d)]
+
+
 <a name="0.1.217"></a>
 ## 0.1.217 (2024-02-01)
 
