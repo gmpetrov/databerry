@@ -720,7 +720,7 @@ function ChatBox({
                   methods.handleSubmit(submit)(e);
                 }
               }}
-              sx={{
+              sx={(t) => ({
                 ...(isTextAreaExpanded
                   ? {
                       position: 'absolute',
@@ -728,6 +728,7 @@ function ChatBox({
                       zIndex: 1,
                     }
                   : {}),
+                background: t.palette.background.surface,
                 width: '100%',
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -745,7 +746,7 @@ function ChatBox({
                   marginTop: 'auto',
                   // margin: 0,
                 },
-              }}
+              })}
               variant="outlined"
               startDecorator={
                 <Stack

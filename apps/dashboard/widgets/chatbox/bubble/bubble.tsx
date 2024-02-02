@@ -27,6 +27,14 @@ class WebChatBubble extends HTMLElement {
     super();
     const shadowContainer = this.attachShadow({ mode: 'open' });
 
+    const remoteFonts = document.createElement('link');
+    remoteFonts.setAttribute('rel', 'stylesheet');
+    remoteFonts.setAttribute('type', 'text/css');
+    remoteFonts.setAttribute(
+      'href',
+      'https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap'
+    );
+
     const remoteSyles = document.createElement('link');
     remoteSyles.setAttribute('rel', 'stylesheet');
     remoteSyles.setAttribute('type', 'text/css');
@@ -34,6 +42,8 @@ class WebChatBubble extends HTMLElement {
 
     const emotionRoot = document.createElement('style');
     this.shadowRootElement = document.createElement('div');
+    this.shadowRootElement.id = 'chat-bubble-root';
+    shadowContainer.appendChild(remoteFonts);
     shadowContainer.appendChild(remoteSyles);
     shadowContainer.appendChild(emotionRoot);
     shadowContainer.appendChild(this.shadowRootElement);

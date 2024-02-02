@@ -21,19 +21,29 @@ class WebChatBoxFrame extends HTMLElement {
   cache: EmotionCache;
   constructor() {
     super();
+
+    const remoteFonts = document.createElement('link');
+    remoteFonts.setAttribute('rel', 'stylesheet');
+    remoteFonts.setAttribute('type', 'text/css');
+    remoteFonts.setAttribute(
+      'href',
+      'https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap'
+    );
+
     const remoteSyles = document.createElement('link');
     remoteSyles.setAttribute('rel', 'stylesheet');
     remoteSyles.setAttribute('type', 'text/css');
     remoteSyles.setAttribute('href', this.cssProvider);
 
     this.shadowRootElement = document.createElement('div');
+    this.shadowRootElement.id = 'standard-root';
 
     const shadowContainer = this.attachShadow({ mode: 'open' });
     this.root = createRoot(this.shadowRootElement);
     const emotionRoot = document.createElement('style');
-    this.shadowRootElement = document.createElement('div');
-    shadowContainer.appendChild(emotionRoot);
+    shadowContainer.appendChild(remoteFonts);
     shadowContainer.appendChild(remoteSyles);
+    shadowContainer.appendChild(emotionRoot);
     shadowContainer.appendChild(this.shadowRootElement);
 
     this.cache = createCache({
