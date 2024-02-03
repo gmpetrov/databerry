@@ -3,9 +3,13 @@ import * as esbuild from 'esbuild';
 const isProd = process.env.NODE_ENV === 'production';
 
 let ctx = await esbuild.context({
-  entryPoints: ['widgets/chatbox/index.ts', 'widgets/chatbox/styles.ts'],
+  entryPoints: [
+    'widgets/chatbox/index.ts',
+    'widgets/chatbox/styles.ts',
+    'widgets/form/index.ts',
+  ],
   bundle: true,
-  outdir: 'tests/chatbox/dist',
+  outdir: 'tests/embeds/dist',
   external: ['fs', 'stream', 'zlib', 'process'],
   allowOverwrite: true,
   format: 'esm',
@@ -47,7 +51,7 @@ if (isProd) {
   console.log('✅ Build complete!');
 } else {
   let { host, port } = await ctx.serve({
-    servedir: 'tests/chatbox',
+    servedir: 'tests/embeds',
   });
   console.log(
     `🚀 Server running at http://${

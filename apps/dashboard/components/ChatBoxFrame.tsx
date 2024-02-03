@@ -154,29 +154,27 @@ function ChatBoxFrame(props: {
     >
       <Box
         className="chaindesk-iframe"
-        sx={(theme) =>
-          ({
-            px: 2,
-            pb: 2,
-            position: 'relative',
-            width: '100vw',
-            height: '100vh',
-            maxHeight: '100%',
-            boxSizing: 'border-box',
-            backgroundColor: config?.isBgTransparent
-              ? 'transparent'
-              : theme.palette.background.default,
+        sx={(theme) => ({
+          px: 2,
+          pb: 2,
+          position: 'relative',
+          width: '100vw',
+          height: '100vh',
+          maxHeight: '100%',
+          boxSizing: 'border-box',
+          backgroundColor: config?.isBgTransparent
+            ? 'transparent'
+            : theme.palette.background.default,
 
-            '& .message-agent': {},
-            '& .message-human': {
-              backgroundColor: primaryColor,
-            },
-            '& .message-human *': {
-              color: textColor,
-            },
-            ...(props.styles ? props.styles : {}),
-          } as any)
-        }
+          '& .message-agent': {},
+          '& .message-human': {
+            backgroundColor: primaryColor,
+          },
+          '& .message-human *': {
+            color: textColor,
+          },
+          ...((props.styles ? props.styles : {}) as any),
+        })}
       >
         <NewChatButton
           sx={{

@@ -1,0 +1,17 @@
+{
+  "name": "@chaindesk/embeds",
+  "version": "1.0.141",
+  "description": "Chaindesk Embeds",
+  "main": "chatbox.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmpetrov/databerry.git"
+  },
+  "author": "Georges Petrov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gmpetrov/databerry/issues"
+  },
+  "homepage": "https://github.com/gmpetrov/databerry#readme"
+}

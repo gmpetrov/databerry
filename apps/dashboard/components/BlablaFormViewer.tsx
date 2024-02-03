@@ -79,8 +79,6 @@ import { ConversationChannel, Prisma } from '@chaindesk/prisma';
 import Motion from './Motion';
 import MotionBottom from './MotionBottom';
 
-export const isEmpty = (obj: any) => Object?.keys(obj || {}).length === 0;
-
 type Props = {
   formId: string;
   config?: FormConfigSchema;
@@ -199,8 +197,8 @@ function BlablaFormViewer({ formId, config }: Props) {
               //   size="sm"
               // />
               <span className="relative flex w-8 h-8 mt-[0px]">
-                <span className="absolute inline-flex w-full h-full bg-gray-400 rounded-full opacity-75 animate-ping"></span>
-                <span className="relative inline-flex w-8 h-8 bg-gray-500 rounded-full"></span>
+                <span className="inline-flex absolute w-full h-full bg-gray-400 rounded-full opacity-75 animate-ping"></span>
+                <span className="inline-flex relative w-8 h-8 bg-gray-500 rounded-full"></span>
               </span>
             )}
 
@@ -258,7 +256,7 @@ function BlablaFormViewer({ formId, config }: Props) {
                 {currentField?.type !== 'multiple_choice' && (
                   <Input
                     autoFocus
-                    className="w-full p-0 text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
+                    className="p-0 w-full text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
                     placeholder="Type your answer"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {

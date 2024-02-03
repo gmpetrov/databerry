@@ -74,8 +74,6 @@ import { Prisma } from '@chaindesk/prisma';
 
 import BlablaFormViewer from './BlablaFormViewer';
 
-export const isEmpty = (obj: any) => Object?.keys(obj || {}).length === 0;
-
 type Props = {
   formId: string;
   useDraftConfig?: boolean;
