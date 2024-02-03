@@ -2,7 +2,6 @@ import Box from '@mui/joy/Box';
 import CircularProgress from '@mui/joy/CircularProgress';
 import { useColorScheme } from '@mui/joy/styles';
 import { SxProps } from '@mui/joy/styles/types';
-import { useRouter } from 'next/router';
 import React, { ReactPropTypes, useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
@@ -32,24 +31,20 @@ function ChatBoxFrame(props: {
   agentId?: string;
   styles?: SxProps;
 }) {
-  const router = useRouter();
-
-  const agentId = (props.agentId || router.query.agentId) as string;
+  const [agentId, setAgentId] = React.useState<string | undefined>(
+    props.agentId
+  );
   const [agent, setAgent] = React.useState<Agent | undefined>();
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
   );
 
   const methods = useChat({
-    endpoint: `${API_URL}/api/agents/${
-      props.agentId || router.query?.agentId
-    }/query`,
+    endpoint: `${API_URL}/api/agents/${agentId}/query`,
     // TODO: replace with ConversationChannel.channel when parcel resolver fixed.
     channel: 'website',
     agentId,
-    localStorageConversationIdKey: `iFrameConversationId-${
-      props.agentId || router.query?.agentId
-    }`,
+    localStorageConversationIdKey: `iFrameConversationId-${agentId}`,
   });
 
   const {
@@ -62,8 +57,7 @@ function ChatBoxFrame(props: {
     handleEvalAnswer,
   } = methods;
 
-  const primaryColor =
-    (router?.query?.primaryColor as string) || config.primaryColor || '#ffffff';
+  const primaryColor = config.primaryColor || '#ffffff';
 
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
@@ -86,6 +80,23 @@ function ChatBoxFrame(props: {
   //     console.error(err);
   //   },
   // });
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !!agentId) {
+      return;
+    }
+
+    try {
+      // Can't use useRouter outside of Next.js (widget context)
+      const id = window?.location?.href?.match?.(/agents\/([a-zA-Z0-9]+)/)?.[1];
+
+      if (id) {
+        setAgentId(id);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [agentId]);
 
   const handleFetchAgent = async () => {
     try {

@@ -3,7 +3,6 @@ import { createContext, useCallback, useEffect } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
-import { CustomContact } from '@app/components/ChatBubble';
 import { createContact } from '@app/pages/api/contacts';
 
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
@@ -16,6 +15,7 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
+import { NonNull } from '@chaindesk/lib/type-utilites';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type {
@@ -26,6 +26,7 @@ import type {
 import type {
   ActionApproval,
   Attachment,
+  Contact,
   ConversationChannel,
   ConversationStatus,
   Prisma,
@@ -49,6 +50,11 @@ type Props = {
 };
 
 export type MessageEvalUnion = 'good' | 'bad';
+
+export type CustomContact = Omit<
+  NonNull<Partial<Contact>>,
+  'updatedAt' | 'createdAt' | 'agentId' | 'organizationId'
+>;
 
 export type ChatMessage = {
   id?: string;

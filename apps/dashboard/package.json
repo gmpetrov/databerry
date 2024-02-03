@@ -2,15 +2,6 @@
   "name": "dashboard",
   "version": "0.1.21",
   "private": true,
-  "browserslist": "> 0.5%, last 4 versions, not dead",
-  "targets": {
-    "frontend": {
-      "includeNodeModules": true,
-      "context": "browser",
-      "isLibrary": true,
-      "outputFormat": "esmodule"
-    }
-  },
   "scripts": {
     "_dev": "NODE_OPTIONS=\"--max_old_space_size=8192\" npm run dotenv -- next dev | pino-pretty --colorize",
     "dev": "concurrently \"pnpm _dev\" \"pnpm worker:datasource-loader\"",
@@ -24,8 +15,9 @@
     "e2e:api:watch": "jest __tests__/api --watch",
     "widget:chat-bubble:dev": "concurrently \"npx serve tests/chat-bubble\" \"mkdir -p tests/chat-bubble/dist && NEXT_PUBLIC_ASSETS_BASE_URL=/dist NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel watch widgets/chat-bubble.tsx --dist-dir tests/chat-bubble/dist\"",
     "widget:chat-bubble:build": "NEXT_PUBLIC_ASSETS_BASE_URL=https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest NEXT_PUBLIC_DASHBOARD_URL=https://app.chaindesk.ai npx parcel build widgets/chat-bubble.tsx",
-    "widget:chatbox:build": "mkdir -p tests/chatbox/dist && concurrently  \"npx serve tests/chatbox\" \" npx parcel build --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/styles.ts\"  \"NEXT_PUBLIC_ASSETS_BASE_URL=/dist  NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel build --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/index.ts\"",
+    "widget:chatbox:build": "rm -r tests/chatbox/dist && mkdir -p tests/chatbox/dist && concurrently  \" npx parcel build --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/styles.ts\"  \"NEXT_PUBLIC_ASSETS_BASE_URL=/dist  NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel build --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/index.ts\"",
     "widget:chatbox:dev": "mkdir -p tests/chatbox/dist && concurrently  \"npx serve tests/chatbox\" \" npx parcel watch --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/styles.ts\"  \"NEXT_PUBLIC_ASSETS_BASE_URL=/dist  NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000 npx parcel watch --no-cache --no-source-maps --dist-dir tests/chatbox/dist widgets/chatbox/index.ts\"",
+    "widget:chatbox:dev:esbuild": "mkdir -p tests/chatbox/dist && concurrently  \"npx serve tests/chatbox\" \"node esbuild.config.mjs\"",
     "widget:chat-bubble:publish": "npm run widget:chat-bubble:build && cp dist/chat-bubble* ../../packages/chat-bubble/ && cd ../../packages/chat-bubble && npm version patch && npm publish --access public",
     "build:widget:prestashop": "cd widgets/prestashop && bash build.sh",
     "build:widget:wordpress": "cd widgets/wordpress && bash build.sh",
@@ -176,6 +168,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "cssnano": "^6.0.1",
     "dotenv-cli": "^7.1.0",
+    "esbuild": "^0.20.0",
     "eslint-config-custom": "workspace:*",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",

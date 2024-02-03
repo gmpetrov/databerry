@@ -18,11 +18,10 @@ import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
-import useChat, { ChatContext } from '@app/hooks/useChat';
+import useChat, { ChatContext, CustomContact } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
-import { NonNull } from '@chaindesk/lib/type-utilites';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { Agent, Contact } from '@chaindesk/prisma';
 
@@ -43,11 +42,6 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 };
 
 export const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
-
-export type CustomContact = Omit<
-  NonNull<Partial<Contact>>,
-  'updatedAt' | 'createdAt' | 'agentId' | 'organizationId'
->;
 
 function App(props: {
   agentId: string;

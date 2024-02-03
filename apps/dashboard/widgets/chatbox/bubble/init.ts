@@ -1,16 +1,9 @@
-import { CustomContact } from '@app/components/ChatBubble';
-
-import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
-
+import setupAttributes from '../common/setup-attributes';
+import { InitWidgetProps } from '../common/types';
 import { hookFunctionsToWindow, toDashedCase } from '../utils';
 
 import WebChatBubble from './bubble';
-const initChatBubble = async (props: {
-  agentId?: string;
-  onMarkedAsResolved?(): any;
-  contact?: CustomContact;
-  initConfig: AgentInterfaceConfig;
-}) => {
+const initChatBubble = async (props: InitWidgetProps) => {
   const currentScriptSrc = (document?.currentScript as any)?.src;
 
   // To fix retro-compatibility.
@@ -25,23 +18,15 @@ const initChatBubble = async (props: {
   }
 
   hookFunctionsToWindow(props);
-  const webChatBubble = new WebChatBubble();
 
-  webChatBubble.setAttribute('agent-id', agentId || '');
+  const element = new WebChatBubble();
 
-  if (props.contact) {
-    for (const info in props.contact) {
-      webChatBubble.setAttribute(toDashedCase(info), info || '');
-    }
-  }
+  setupAttributes({
+    element,
+    ...props,
+  });
 
-  props?.onMarkedAsResolved &&
-    webChatBubble.setAttribute(
-      'on-marked-as-resolved',
-      props?.onMarkedAsResolved.name
-    );
-
-  document?.body?.appendChild(webChatBubble);
+  document?.body?.appendChild(element);
 };
 
 export default initChatBubble;

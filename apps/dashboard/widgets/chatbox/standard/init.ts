@@ -1,23 +1,20 @@
-import { SxProps } from '@mui/joy/styles/types';
-
+import setupAttributes from '../common/setup-attributes';
+import { InitWidgetProps } from '../common/types';
 import { hookFunctionsToWindow } from '../utils';
 
 import WebChatBoxFrame from './standard';
 
-const initStandard = async (props: { agentId?: string; styles?: SxProps }) => {
-  let agentId = props.agentId;
-
+const initStandard = async (props: InitWidgetProps) => {
   hookFunctionsToWindow(props);
-  const webChatBox = new WebChatBoxFrame();
 
-  webChatBox.setAttribute('agent-id', agentId || '');
-  if (props.styles) {
-    console.log('before', props.styles);
-    console.log('after', JSON.stringify(props.styles));
-    webChatBox.setAttribute('styles', JSON.stringify(props.styles));
-  }
+  const element = new WebChatBoxFrame();
 
-  document?.body?.appendChild(webChatBox);
+  setupAttributes({
+    element,
+    ...props,
+  });
+
+  document?.body?.appendChild(element);
 };
 
 export default initStandard;
