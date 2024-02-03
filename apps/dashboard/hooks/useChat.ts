@@ -13,6 +13,7 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
+import { NonNull } from '@chaindesk/lib/type-utilites';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type {
@@ -23,6 +24,7 @@ import type {
 import type {
   ActionApproval,
   Attachment,
+  Contact,
   ConversationChannel,
   ConversationStatus,
   Prisma,
@@ -33,7 +35,6 @@ import useRateLimit from './useRateLimit';
 import useStateReducer from './useStateReducer';
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
-
 type Props = {
   endpoint?: string;
   channel?: ConversationChannel;
@@ -42,9 +43,16 @@ type Props = {
   localStorageConversationIdKey?: string;
   agentId?: string;
   disableFetchHistory?: boolean;
+  contact?: CustomContact;
+  context?: string;
 };
 
 export type MessageEvalUnion = 'good' | 'bad';
+
+export type CustomContact = Omit<
+  NonNull<Partial<Contact>>,
+  'updatedAt' | 'createdAt' | 'agentId' | 'organizationId'
+>;
 
 export type ChatMessage = {
   id?: string;
@@ -284,6 +292,8 @@ const useChat = ({
             channel,
             attachments,
             isDraft,
+            contact: otherProps.contact,
+            context: otherProps.context,
           }),
           signal: ctrl.signal,
 

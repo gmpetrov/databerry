@@ -121,7 +121,7 @@ function AgentDeployTab(props: Props) {
         >
           {[
             {
-              name: 'Website (bubble widget)',
+              name: 'Web / Bubble - Embed in a chat bubble',
               // icon: <LanguageRoundedIcon sx={{ fontSize: 32 }} />,
               icon: (
                 <IconButton
@@ -141,21 +141,22 @@ function AgentDeployTab(props: Props) {
               publicAgentRequired: true,
             },
             {
-              name: 'No-Code WebPage',
-              icon: <Typography sx={{ fontSize: 32 }}>💅</Typography>,
-              action: () => {
-                standalonePageModal.open();
-              },
-              publicAgentRequired: true,
-            },
-            {
-              name: 'iFrame',
+              name: 'Web / Standard - Embed in a container on your website',
               icon: <Typography sx={{ fontSize: 32 }}>📺</Typography>,
               action: () => {
                 iframeWidgetModal.open();
               },
               publicAgentRequired: true,
             },
+            {
+              name: 'Web / Standalone - No-code web page hosted on Chaindesk',
+              icon: <Typography sx={{ fontSize: 32 }}>💅</Typography>,
+              action: () => {
+                standalonePageModal.open();
+              },
+              publicAgentRequired: true,
+            },
+
             {
               hidden: false,
               name: 'WhatsApp',
@@ -354,7 +355,7 @@ function AgentDeployTab(props: Props) {
           />
 
           <bubbleWidgetModal.component
-            title="Bubble Widget"
+            title="Chatbox Bubble"
             description="Settings"
             dialogProps={{
               sx: {
@@ -366,7 +367,7 @@ function AgentDeployTab(props: Props) {
           </bubbleWidgetModal.component>
 
           <iframeWidgetModal.component
-            title="IFrame Widget"
+            title="Chatbox Standard"
             description="Settings"
             dialogProps={{
               sx: {

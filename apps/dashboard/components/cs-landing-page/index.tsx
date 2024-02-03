@@ -53,12 +53,23 @@ function CSLandingPage({}: Props) {
 
       <Header />
 
-      <script
+      {/* <script
         defer
         src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
         id="clq6g5cuv000wpv8iddswwvnd"
         data-name="databerry-chat-bubble"
-      ></script>
+      ></script> */}
+
+      <script
+        type="module"
+        dangerouslySetInnerHTML={{
+          __html: `import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+  Chatbox.initBubble({
+    agentId: 'clq6g5cuv000wpv8iddswwvnd',
+  });`,
+        }}
+      />
 
       <Body />
 

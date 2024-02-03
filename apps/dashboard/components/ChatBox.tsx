@@ -720,7 +720,7 @@ function ChatBox({
                   methods.handleSubmit(submit)(e);
                 }
               }}
-              sx={{
+              sx={(t) => ({
                 ...(isTextAreaExpanded
                   ? {
                       position: 'absolute',
@@ -745,7 +745,7 @@ function ChatBox({
                   marginTop: 'auto',
                   // margin: 0,
                 },
-              }}
+              })}
               variant="outlined"
               startDecorator={
                 <Stack

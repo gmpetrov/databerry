@@ -126,6 +126,10 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     agent.userPrompt = `{query}`;
   }
 
+  if (data?.context?.trim()) {
+    agent.systemPrompt = `${agent.systemPrompt}\n${data?.context?.trim()}`;
+  }
+
   const manager = new AgentManager({ agent, topK: 50 });
 
   const conversationManager = new ConversationManager({

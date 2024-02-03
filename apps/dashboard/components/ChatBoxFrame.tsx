@@ -1,11 +1,11 @@
 import Box from '@mui/joy/Box';
 import CircularProgress from '@mui/joy/CircularProgress';
 import { useColorScheme } from '@mui/joy/styles';
-import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import { SxProps } from '@mui/joy/styles/types';
+import React, { ReactPropTypes, useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
-import useChat, { ChatContext } from '@app/hooks/useChat';
+import useChat, { ChatContext, CustomContact } from '@app/hooks/useChat';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
@@ -26,22 +26,31 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
-function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
-  const router = useRouter();
-  const { mode, setMode } = useColorScheme();
-
-  const agentId = router.query.agentId as string;
+function ChatBoxFrame(props: {
+  initConfig?: AgentInterfaceConfig;
+  agentId?: string;
+  styles?: SxProps;
+  contact?: CustomContact;
+  context?: string;
+  initialMessages?: string[];
+  onAgentLoaded?: (agent: Agent) => any;
+}) {
+  const [agentId, setAgentId] = React.useState<string | undefined>(
+    props.agentId
+  );
   const [agent, setAgent] = React.useState<Agent | undefined>();
   const [config, setConfig] = React.useState<AgentInterfaceConfig>(
     props.initConfig || defaultChatBubbleConfig
   );
 
   const methods = useChat({
-    endpoint: `${API_URL}/api/agents/${router.query?.agentId}/query`,
-
-    channel: ConversationChannel.website,
+    endpoint: `${API_URL}/api/agents/${agentId}/query`,
+    // TODO: replace with ConversationChannel.channel when parcel resolver fixed.
+    channel: 'website',
     agentId,
-    localStorageConversationIdKey: `iFrameConversationId-${router.query?.agentId}`,
+    localStorageConversationIdKey: `iFrameConversationId-${agentId}`,
+    contact: props.contact,
+    context: props.context,
   });
 
   const {
@@ -54,8 +63,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     handleEvalAnswer,
   } = methods;
 
-  const primaryColor =
-    (router?.query?.primaryColor as string) || config.primaryColor || '#ffffff';
+  const primaryColor = config.primaryColor || '#ffffff';
 
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
@@ -79,6 +87,23 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
   //   },
   // });
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !!agentId) {
+      return;
+    }
+
+    try {
+      // Can't use useRouter outside of Next.js (widget context)
+      const id = window?.location?.href?.match?.(/agents\/([a-zA-Z0-9]+)/)?.[1];
+
+      if (id) {
+        setAgentId(id);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, [agentId]);
+
   const handleFetchAgent = async () => {
     try {
       const res = await fetch(`${API_URL}/api/agents/${agentId}`);
@@ -91,6 +116,8 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
         ...defaultChatBubbleConfig,
         ...agentConfig,
       });
+
+      props?.onAgentLoaded?.(data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -109,6 +136,17 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
     }
   }, [props.initConfig]);
 
+  const initialMessages = useMemo(() => {
+    let msgs = [] as string[];
+    if (!!props?.initialMessages?.length) {
+      msgs = props.initialMessages;
+    } else {
+      msgs = config?.initialMessages || [];
+    }
+
+    return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
+  }, [props.initialMessages, config?.initialMessages]);
+
   if (!agent) {
     return (
       <Box
@@ -119,6 +157,7 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           justifyContent: 'center',
           alignItems: 'center',
           background: 'transparent',
+          ...(props.styles ? props.styles : {}),
         }}
       >
         <CircularProgress size="sm" variant="soft" color="neutral" />
@@ -153,23 +192,15 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           '& .message-human *': {
             color: textColor,
           },
+          ...((props.styles ? props.styles : {}) as any),
         })}
       >
-        <NewChatButton
-          sx={{
-            position: 'absolute',
-            right: 15,
-            top: 15,
-            background: 'white',
-            zIndex: 1,
-          }}
-        />
         <ChatBox
           messages={history}
           onSubmit={handleChatSubmit}
           messageTemplates={config.messageTemplates}
           initialMessage={config.initialMessage}
-          initialMessages={config.initialMessages}
+          initialMessages={initialMessages}
           agentIconUrl={agent?.iconUrl!}
           isLoadingConversation={isLoadingConversation}
           hasMoreMessages={hasMoreMessages}
@@ -182,6 +213,17 @@ function ChatBoxFrame(props: { initConfig?: AgentInterfaceConfig }) {
           withSources={!!agent?.includeSources}
           isAiEnabled={methods.isAiEnabled}
           disableWatermark={isPremium && !!config?.isBrandingDisabled}
+          renderAfterMessages={
+            <NewChatButton
+              sx={{
+                position: 'absolute',
+                right: 15,
+                top: 15,
+                background: 'white',
+                zIndex: 1,
+              }}
+            />
+          }
         />
       </Box>
     </ChatContext.Provider>

@@ -18,6 +18,6 @@
   }
 
   kbd {
-    @apply px-0.5 py-0.5 text-current text-white rounded-sm bg-zinc-600 bg-opacity-50;
+    @apply px-0.5 py-0.5 text-current text-white bg-opacity-50 rounded-sm bg-zinc-600;
   }
 }

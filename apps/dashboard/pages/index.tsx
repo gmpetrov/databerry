@@ -64,7 +64,7 @@ export default function Home() {
         ogImage="https://www.chaindesk.ai/og-image.jpg"
       />
 
-      {/* <div className="w-full p-2 text-center bg-indigo-500">
+      {/* <div className="p-2 w-full text-center bg-indigo-500">
         <h2>
           🔔 Rebranding Alert - Databerry.ai is now ⛓️{' '}
           <strong>Chaindesk</strong>
@@ -72,12 +72,23 @@ export default function Home() {
       </div> */}
       <Header />
 
-      <script
+      {/* <script
         defer
         src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
         id="clq6g5cuv000wpv8iddswwvnd"
         data-name="databerry-chat-bubble"
-      ></script>
+      ></script> */}
+
+      <script
+        type="module"
+        dangerouslySetInnerHTML={{
+          __html: `import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+  Chatbox.initBubble({
+    agentId: 'clq6g5cuv000wpv8iddswwvnd',
+  });`,
+        }}
+      />
 
       {/* <Script id="chaindesk" strategy="afterInteractive">
         {`(function() {

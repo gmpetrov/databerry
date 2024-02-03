@@ -1,3 +1,4 @@
+import { Prettify } from '@chaindesk/lib/type-utilites';
 import {
   ChatRequest,
   ToolResponseSchema,
@@ -7,10 +8,6 @@ import { AgentModelName, ToolType } from '@chaindesk/prisma';
 
 import { FormToolPayload } from './form';
 import { HttpToolPayload } from './http';
-
-type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
 
 export type CreateToolHandlerConfig<T> = Prettify<
   | {

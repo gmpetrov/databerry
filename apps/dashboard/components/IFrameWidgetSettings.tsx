@@ -39,14 +39,23 @@ type Props = {
 };
 
 export default function BubbleWidgetSettings(props: Props) {
-  const installScript = `<iframe
+  const installScript = `<script type="module">
+  import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+  Chatbox.initStandard({
+    agentId: '${props.agentId}',
+  });
+</script>
+
+<chaindesk-chatbox-standard style="width: 100%; height: 650px" />
+`;
+  const installScriptIframe = `<iframe
   src="${appUrl}/agents/${props.agentId}/iframe"
   width="100%"
   height="100%"
   frameborder="0"
   allow="clipboard-write"
 ></iframe>
-
 `;
 
   return (

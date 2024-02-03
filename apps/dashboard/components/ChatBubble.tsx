@@ -18,12 +18,12 @@ import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { Transition } from 'react-transition-group';
 
 import ChatBox from '@app/components/ChatBox';
-import useChat, { ChatContext } from '@app/hooks/useChat';
+import useChat, { ChatContext, CustomContact } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
-import type { Agent } from '@chaindesk/prisma';
+import type { Agent, Contact } from '@chaindesk/prisma';
 
 import ChatMessageCard from './ChatMessageCard';
 import CustomerSupportActions from './CustomerSupportActions';
@@ -47,6 +47,9 @@ function App(props: {
   agentId: string;
   initConfig?: AgentInterfaceConfig;
   onAgentLoaded?: (agent: Agent) => any;
+  contact?: CustomContact;
+  context?: string;
+  initialMessages?: string[];
 }) {
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
@@ -70,6 +73,8 @@ function App(props: {
     // channel: ConversationChannel.website // not working with bundler parcel,
     agentId: props?.agentId,
     localStorageConversationIdKey: `chatBubbleConversationId-${props.agentId}`,
+    contact: props?.contact,
+    context: props?.context,
   });
 
   const {
@@ -113,7 +118,6 @@ function App(props: {
     try {
       const res = await fetch(`${API_URL}/api/agents/${props.agentId}`);
       const data = (await res.json()) as Agent;
-
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
 
       setState({
@@ -132,10 +136,15 @@ function App(props: {
   };
 
   const initMessages = useMemo(() => {
-    return (state?.config?.initialMessages || [])
-      .map((each) => each?.trim?.())
-      .filter((each) => !!each);
-  }, [state?.config?.initialMessages]);
+    let msgs = [] as string[];
+    if (!!props?.initialMessages?.length) {
+      msgs = props.initialMessages;
+    } else {
+      msgs = state?.config?.initialMessages || [];
+    }
+
+    return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
+  }, [props.initialMessages, state?.config?.initialMessages]);
 
   useEffect(() => {
     if (props.agentId) {

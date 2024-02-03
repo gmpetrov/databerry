@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <script
+      defer
+      src="./dist/chatbox/legacy.js"
+      id="clrz0tn6h000108kxfyomdzxg"
+      data-name="databerry-chat-bubble"
+    ></script> -->
+    <script type="module">
+      import Chatbox from './dist/chatbox/index.js';
+
+      Chatbox.initBubble({
+        agentId: 'clrz0tn6h000108kxfyomdzxg',
+        // contact: {
+        //   firstName: 'Georges',
+        //   lastName: 'Petrov',
+        //   email: 'georges+test@chaindesk.ai',
+        //   phoneNumber: '+33612345644',
+        //   userId: '42424242',
+        // },
+        // initialMessages: [
+        //   'Hello Georges how are you doing today?',
+        //   'How can I help you ?',
+        // ],
+      });
+
+      Chatbox.initStandard({
+        agentId: 'clrz0tn6h000108kxfyomdzxg',
+        // styles: {
+        //   height: '600px',
+        // },
+        // contact: {
+        //   firstName: 'StandardGeorges',
+        //   lastName: 'StandardPetrov',
+        //   email: 'standardgeorges+test@chaindesk.ai',
+        //   phoneNumber: '+33612345678',
+        //   userId: '44444444',
+        // },
+
+        // context: `The user you are talking to is Georges. Start by Greeting him by his name.`,
+      });
+    </script>
+  </head>
+  <body>
+    <h1>WebChatbubble:</h1>
+
+    <!-- use webcomponent directly ⬇️ -->
+    <chaindesk-chatbox-standard style="width: 100%; height: 650px" />
+  </body>
+</html>

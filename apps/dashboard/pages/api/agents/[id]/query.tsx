@@ -22,6 +22,7 @@ import {
   AgentVisibility,
   ConversationChannel,
   MembershipRole,
+  Prisma,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
@@ -35,6 +36,8 @@ export const chatAgentRequest = async (
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
   const visitorId = data.visitorId || cuid();
+  const hasContact =
+    data?.contact?.email || data?.contact?.phoneNumber || data?.contact?.userId;
 
   if (data.isDraft && !session?.organization?.id) {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
@@ -56,8 +59,29 @@ export const chatAgentRequest = async (
       ...ChatAgentArgs.include,
       organization: {
         ...ChatAgentArgs.include?.organization,
+
         include: {
           ...ChatAgentArgs.include?.organization.include,
+          ...(hasContact
+            ? {
+                contacts: {
+                  take: 1,
+                  where: {
+                    OR: [
+                      ...(data?.contact?.email
+                        ? [{ email: data.contact.email }]
+                        : []),
+                      ...(data?.contact?.phoneNumber
+                        ? [{ phoneNumber: data.contact.phoneNumber }]
+                        : []),
+                      ...(data?.contact?.userId
+                        ? [{ externalId: data.contact.userId }]
+                        : []),
+                    ],
+                  },
+                },
+              }
+            : {}),
           conversations: {
             ...ChatConversationArgs,
             take: 1,
@@ -129,6 +153,29 @@ export const chatAgentRequest = async (
       res,
     });
 
+  let existingContact = agent?.organization?.contacts?.[0];
+
+  if (hasContact && !existingContact) {
+    try {
+      existingContact = await prisma.contact.create({
+        data: {
+          email: data?.contact?.email,
+          phoneNumber: data?.contact?.phoneNumber,
+          externalId: data?.contact?.userId,
+          firstName: data?.contact?.firstName,
+          lastName: data?.contact?.lastName,
+          organization: {
+            connect: {
+              id: agent?.organization?.id!,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
   const chatRes = await handleChatMessage({
     ...data,
     logger: req.logger,
@@ -139,6 +186,8 @@ export const chatAgentRequest = async (
     country: getRequestCountry(req),
     userId: session?.user?.id,
     visitorId,
+    contactId: existingContact?.id || data?.contactId,
+    context: data.context,
   });
 
   if (data.streaming) {
