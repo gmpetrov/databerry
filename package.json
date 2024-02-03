@@ -41,7 +41,6 @@
     }
   },
   "devDependencies": {
-    "buffer": "^5.5.0||^6.0.0",
     "cz-emoji": "1.3.2-canary.2",
     "dotenv-cli": "^7.1.0",
     "eslint": "8.36.0",
@@ -50,7 +49,6 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "2.8.4",
-    "process": "^0.11.10",
     "release-it": "^16.1.5",
     "syncpack": "^11.2.1",
     "terminate": "^2.6.1",
