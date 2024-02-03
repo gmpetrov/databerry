@@ -41,23 +41,32 @@ type Props = {
 };
 
 export default function BubbleWidgetSettings(props: Props) {
-  const installScript = `<script
-    defer
-    id="${props.agentId}"
-    data-name="databerry-chat-bubble"
-    src="https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest"
-  ></script>`;
-  //   const installScript = `<script type="text/javascript">
-  //   (function() {
-  //     d = document;
-  //     s = d.createElement('script');
-  //     s.id = '${getAgentQuery?.data?.id}';
-  //     s.setAttribute('data-name', 'databerry-chat-bubble');
-  //     s.src = 'https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest';
-  //     s.async = 1;
-  //     d.getElementsByTagName('head')[0].appendChild(s);
-  //   })();
-  // </script>`;
+  const installScript = `<script type="module">
+  import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+  Chatbox.initBubble({
+    agentId: '${props.agentId}',
+    
+    // optional 
+    // If provided will create a contact for the user and link it to the conversation
+    contact: {
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'customer@email.com',
+      phoneNumber: '+33612345644',
+      userId: '42424242',
+    },
+    // optional
+    // Override initial messages
+    initialMessages: [
+      'Hello Georges how are you doing today?',
+      'How can I help you ?',
+    ],
+    // optional
+    // Provided context will be appended to the Agent system prompt
+    context: "The user you are talking to is John. Start by Greeting him by his name.",
+  });
+</script>`;
 
   return (
     <AgentForm

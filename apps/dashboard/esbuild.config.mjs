@@ -17,7 +17,7 @@ let ctx = await esbuild.context({
   jsx: 'automatic',
   define: {
     'process.env': '{}',
-    'process.env.NEXT_PUBLIC_ASSETS_BASE_URL': '"/dist"',
+    'process.env.NEXT_PUBLIC_ASSETS_BASE_URL': '""',
     'process.env.NEXT_PUBLIC_DASHBOARD_URL': '"http://localhost:3000"',
 
     ...(isProd

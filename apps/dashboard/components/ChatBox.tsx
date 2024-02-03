@@ -728,7 +728,6 @@ function ChatBox({
                       zIndex: 1,
                     }
                   : {}),
-                background: t.palette.background.surface,
                 width: '100%',
                 flexDirection: 'row',
                 alignItems: 'center',

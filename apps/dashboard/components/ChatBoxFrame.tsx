@@ -218,7 +218,7 @@ function ChatBoxFrame(props: {
               sx={{
                 position: 'absolute',
                 right: 15,
-                top: 0,
+                top: 15,
                 background: 'white',
                 zIndex: 1,
               }}

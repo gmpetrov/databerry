@@ -26,7 +26,7 @@ const initBubble = async (props: InitWidgetProps) => {
     ...props,
   });
 
-  document?.body?.appendChild(element);
+  document?.body?.prepend(element);
 };
 
 export default initBubble;

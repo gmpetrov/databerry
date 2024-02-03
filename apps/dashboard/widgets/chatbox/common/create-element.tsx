@@ -56,7 +56,6 @@ const createElement = ({ name, widget }: Props) =>
 
       const emotionRoot = document.createElement('style');
       this.shadowRootElement = document.createElement('div');
-      // this.shadowRootElement.id = 'chat-bubble-root';
       shadowContainer.appendChild(remoteFonts);
       shadowContainer.appendChild(remoteSyles);
       shadowContainer.appendChild(emotionRoot);
