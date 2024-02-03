@@ -162,7 +162,7 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     });
   }
 
-  if (!conversation?.isAiEnabled) {
+  if (!!conversation && !conversation?.isAiEnabled) {
     return {
       inputMessageId,
       conversationId,

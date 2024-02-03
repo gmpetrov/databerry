@@ -57,6 +57,7 @@ export const chatAgentRequest = async (
       organization: {
         ...ChatAgentArgs.include?.organization,
         include: {
+          ...ChatAgentArgs.include?.organization.include,
           conversations: {
             ...ChatConversationArgs,
             take: 1,
