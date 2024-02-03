@@ -2,7 +2,7 @@ import ChatBoxFrame from '@app/components/ChatBoxFrame';
 
 import createElement from '../common/create-element';
 
-const name = 'chatbox-standard';
+const name = 'chaindesk-chatbox-standard';
 
 const element = createElement({
   widget: ChatBoxFrame,

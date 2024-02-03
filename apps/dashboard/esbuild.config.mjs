@@ -6,6 +6,7 @@ let ctx = await esbuild.context({
   entryPoints: [
     'widgets/chatbox/index.ts',
     'widgets/chatbox/styles.ts',
+    'widgets/chatbox/legacy.js',
     'widgets/form/index.ts',
   ],
   bundle: true,

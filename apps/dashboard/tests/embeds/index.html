@@ -4,11 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script async type="module">
+    <!-- <script
+      defer
+      src="./dist/chatbox/legacy.js"
+      id="clrz0tn6h000108kxfyomdzxg"
+      data-name="databerry-chat-bubble"
+    ></script> -->
+    <script type="module">
       import Chatbox from './dist/chatbox/index.js';
 
       // you can comment this, and use the web component directly ⬇️
-      Chatbox.initChatBubble({
+      Chatbox.initBubble({
         agentId: 'clrz0tn6h000108kxfyomdzxg',
         contact: {
           firstName: 'Georges',
@@ -44,6 +50,8 @@
     <h1>WebChatbubble:</h1>
 
     <!-- use webcomponent directly ⬇️ -->
-    <!-- <web-chat-bubble id="local-agent-id"></web-chat-bubble> -->
+    <!-- <chaindesk-chatbox-standard
+      agent-id="clrz0tn6h000108kxfyomdzxg"
+    ></chaindesk-chatbox-standard> -->
   </body>
 </html>

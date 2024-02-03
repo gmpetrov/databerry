@@ -33,6 +33,7 @@ function ChatBoxFrame(props: {
   contact?: CustomContact;
   context?: string;
   initialMessages?: string[];
+  onAgentLoaded?: (agent: Agent) => any;
 }) {
   const [agentId, setAgentId] = React.useState<string | undefined>(
     props.agentId
@@ -115,6 +116,8 @@ function ChatBoxFrame(props: {
         ...defaultChatBubbleConfig,
         ...agentConfig,
       });
+
+      props?.onAgentLoaded?.(data);
     } catch (err) {
       console.error(err);
     } finally {

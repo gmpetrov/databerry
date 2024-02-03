@@ -1,7 +1,7 @@
-import { CustomContact } from '@app/components/ChatBubble';
+import { CustomContact } from '@app/hooks/useChat';
 
 export interface ChaindeskFactory {
-  initChatBubble: (props: {
+  initBubble: (props: {
     agentId: string;
     onMarkedAsResolved?(): any;
     contact?: CustomContact;

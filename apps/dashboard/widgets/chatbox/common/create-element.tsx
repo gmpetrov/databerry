@@ -26,6 +26,7 @@ type Props = {
     styles?: any;
     context?: string;
     initialMessages?: string[];
+    onAgentLoaded?: (agent: any) => any;
   }>;
 };
 
@@ -112,6 +113,17 @@ const createElement = ({ name, widget }: Props) =>
                     ? JSON.parse(this.getAttribute('styles')!)
                     : {},
                   initialMessages,
+
+                  onAgentLoaded: (agent: any) => {
+                    const customCSS = (agent?.interfaceConfig as any)
+                      ?.customCSS as string;
+
+                    if (customCSS) {
+                      const customStyle = document.createElement('style');
+                      customStyle.innerHTML = customCSS;
+                      this.shadowRootElement.appendChild(customStyle);
+                    }
+                  },
                 })}
               </ScopedCssBaseline>
             </CssVarsProvider>
