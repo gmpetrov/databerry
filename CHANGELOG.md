@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.219"></a>
+## 0.1.219 (2024-02-03)
+
+### Fixed
+
+- 🐛 broken chat [[41412da](https://github.com/gmpetrov/databerry/commit/41412dabfdc08b7febce8755c3894d76c99ff84f)]
+
+
 <a name="0.1.218"></a>
 ## 0.1.218 (2024-02-02)
 
