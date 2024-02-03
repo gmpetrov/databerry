@@ -5,7 +5,7 @@ import { SxProps } from '@mui/joy/styles/types';
 import React, { ReactPropTypes, useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
-import useChat, { ChatContext } from '@app/hooks/useChat';
+import useChat, { ChatContext, CustomContact } from '@app/hooks/useChat';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
@@ -30,6 +30,9 @@ function ChatBoxFrame(props: {
   initConfig?: AgentInterfaceConfig;
   agentId?: string;
   styles?: SxProps;
+  contact?: CustomContact;
+  context?: string;
+  initialMessages?: string[];
 }) {
   const [agentId, setAgentId] = React.useState<string | undefined>(
     props.agentId
@@ -45,6 +48,8 @@ function ChatBoxFrame(props: {
     channel: 'website',
     agentId,
     localStorageConversationIdKey: `iFrameConversationId-${agentId}`,
+    contact: props.contact,
+    context: props.context,
   });
 
   const {
@@ -128,6 +133,17 @@ function ChatBoxFrame(props: {
     }
   }, [props.initConfig]);
 
+  const initialMessages = useMemo(() => {
+    let msgs = [] as string[];
+    if (!!props?.initialMessages?.length) {
+      msgs = props.initialMessages;
+    } else {
+      msgs = config?.initialMessages || [];
+    }
+
+    return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
+  }, [props.initialMessages, config?.initialMessages]);
+
   if (!agent) {
     return (
       <Box
@@ -176,21 +192,12 @@ function ChatBoxFrame(props: {
           ...((props.styles ? props.styles : {}) as any),
         })}
       >
-        <NewChatButton
-          sx={{
-            position: 'absolute',
-            right: 15,
-            top: 15,
-            background: 'white',
-            zIndex: 1,
-          }}
-        />
         <ChatBox
           messages={history}
           onSubmit={handleChatSubmit}
           messageTemplates={config.messageTemplates}
           initialMessage={config.initialMessage}
-          initialMessages={config.initialMessages}
+          initialMessages={initialMessages}
           agentIconUrl={agent?.iconUrl!}
           isLoadingConversation={isLoadingConversation}
           hasMoreMessages={hasMoreMessages}
@@ -203,6 +210,17 @@ function ChatBoxFrame(props: {
           withSources={!!agent?.includeSources}
           isAiEnabled={methods.isAiEnabled}
           disableWatermark={isPremium && !!config?.isBrandingDisabled}
+          renderAfterMessages={
+            <NewChatButton
+              sx={{
+                position: 'absolute',
+                right: 15,
+                top: 0,
+                background: 'white',
+                zIndex: 1,
+              }}
+            />
+          }
         />
       </Box>
     </ChatContext.Provider>

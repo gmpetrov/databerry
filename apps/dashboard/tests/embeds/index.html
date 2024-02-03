@@ -10,6 +10,17 @@
       // you can comment this, and use the web component directly ⬇️
       Chatbox.initChatBubble({
         agentId: 'clrz0tn6h000108kxfyomdzxg',
+        contact: {
+          firstName: 'Georges',
+          lastName: 'Petrov',
+          email: 'georges+test@chaindesk.ai',
+          phoneNumber: '+33612345644',
+          userId: '42424242',
+        },
+        initialMessages: [
+          'Hello Georges how are you doing today?',
+          'How can I help you ?',
+        ],
       });
 
       Chatbox.initStandard({
@@ -17,6 +28,15 @@
         styles: {
           height: '600px',
         },
+        contact: {
+          firstName: 'StandardGeorges',
+          lastName: 'StandardPetrov',
+          email: 'standardgeorges+test@chaindesk.ai',
+          phoneNumber: '+33612345678',
+          userId: '44444444',
+        },
+
+        context: `The user you are talking to is Georges. Start by Greeting him by his name.`,
       });
     </script>
   </head>

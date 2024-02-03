@@ -10,4 +10,6 @@ export type InitWidgetProps = {
   contact?: CustomContact;
   initConfig: AgentInterfaceConfig;
   styles?: SxProps;
+  context?: string;
+  initialMessages?: string[];
 };

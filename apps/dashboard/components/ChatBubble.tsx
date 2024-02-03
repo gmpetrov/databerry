@@ -48,6 +48,8 @@ function App(props: {
   initConfig?: AgentInterfaceConfig;
   onAgentLoaded?: (agent: Agent) => any;
   contact?: CustomContact;
+  context?: string;
+  initialMessages?: string[];
 }) {
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
@@ -72,6 +74,7 @@ function App(props: {
     agentId: props?.agentId,
     localStorageConversationIdKey: `chatBubbleConversationId-${props.agentId}`,
     contact: props?.contact,
+    context: props?.context,
   });
 
   const {
@@ -133,10 +136,15 @@ function App(props: {
   };
 
   const initMessages = useMemo(() => {
-    return (state?.config?.initialMessages || [])
-      .map((each) => each?.trim?.())
-      .filter((each) => !!each);
-  }, [state?.config?.initialMessages]);
+    let msgs = [] as string[];
+    if (!!props?.initialMessages?.length) {
+      msgs = props.initialMessages;
+    } else {
+      msgs = state?.config?.initialMessages || [];
+    }
+
+    return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
+  }, [props.initialMessages, state?.config?.initialMessages]);
 
   useEffect(() => {
     if (props.agentId) {

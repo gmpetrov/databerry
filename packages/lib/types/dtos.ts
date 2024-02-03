@@ -166,6 +166,21 @@ export const CreateAttachmentSchema = z.object({
 });
 export type CreateAttachmentSchema = z.infer<typeof CreateAttachmentSchema>;
 
+export const CreateContactSchema = z.object({
+  email: z.string().email().optional(),
+  phoneNumber: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  conversationId: z.string().cuid().optional(),
+  userId: z.string().optional(),
+});
+
+export type CreateContactSchema = z.infer<typeof CreateContactSchema>;
+
+export const UpdateContactSchema = CreateContactSchema;
+
+export type UpdateContactSchema = z.infer<typeof UpdateContactSchema>;
+
 export const ChatRequest = ChatModelConfigSchema.extend({
   isDraft: z.boolean().optional().default(false),
   query: z.string(),
@@ -175,6 +190,7 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   conversationId: z.union([z.string().cuid().nullish(), z.literal('')]),
   channel: z.nativeEnum(ConversationChannel).default('dashboard'),
   truncateQuery: z.boolean().optional(),
+  context: z.string().optional(),
 
   systemPrompt: z.string().optional(),
   userPrompt: z.string().optional(),
@@ -188,6 +204,8 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   formId: z.union([z.string().cuid().nullish(), z.literal('')]),
 
   attachments: z.array(CreateAttachmentSchema).optional(),
+
+  contact: CreateContactSchema.optional(),
 
   //  DEPRECATED
   promptTemplate: z.string().optional(),
@@ -716,19 +734,6 @@ export const UpdateInboxConversationSchema = z.object({
 export type UpdateInboxConversationSchema = z.infer<
   typeof UpdateInboxConversationSchema
 >;
-
-export const CreateContactSchema = z.object({
-  email: z.string().email().optional(),
-  firtName: z.string().optional(),
-  lastName: z.string().optional(),
-  conversationId: z.string().cuid().optional(),
-});
-
-export type CreateContactSchema = z.infer<typeof CreateContactSchema>;
-
-export const UpdateContactSchema = CreateContactSchema;
-
-export type UpdateContactSchema = z.infer<typeof UpdateContactSchema>;
 
 const AppEventBaseSchema = z.object({
   // organizationId: z.string().cuid(),

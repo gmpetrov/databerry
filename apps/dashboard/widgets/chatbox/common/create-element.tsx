@@ -9,7 +9,8 @@ import { CustomContact } from '@app/hooks/useChat';
 import { theme, themeKeys } from '@app/utils/themes/chat-bubble';
 
 const contactAttributes = {
-  'user-id': 'id',
+  'phone-number': 'phoneNumber',
+  'user-id': 'userId',
   'first-name': 'firstName',
   'last-name': 'lastName',
   email: 'email',
@@ -23,6 +24,8 @@ type Props = {
     agentId: string;
     contact: CustomContact;
     styles?: any;
+    context?: string;
+    initialMessages?: string[];
   }>;
 };
 
@@ -79,6 +82,15 @@ const createElement = ({ name, widget }: Props) =>
         {} as CustomContact
       );
 
+      const context = this.getAttribute('context') as string;
+      let initialMessages = [] as string[];
+
+      try {
+        initialMessages = JSON.parse(
+          this.getAttribute('initial-messages')!
+        ) as string[];
+      } catch {}
+
       this.root.render(
         <StrictMode>
           <CacheProvider value={this.cache}>
@@ -90,6 +102,7 @@ const createElement = ({ name, widget }: Props) =>
             >
               <ScopedCssBaseline>
                 {React.createElement(widget, {
+                  context,
                   agentId:
                     this.getAttribute('agent-id') ||
                     this.getAttribute('id') ||
@@ -98,6 +111,7 @@ const createElement = ({ name, widget }: Props) =>
                   styles: this.getAttribute('styles')
                     ? JSON.parse(this.getAttribute('styles')!)
                     : {},
+                  initialMessages,
                 })}
               </ScopedCssBaseline>
             </CssVarsProvider>

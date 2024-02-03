@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-#chat-bubble-root,
-#standard-root {
-  font-family: 'Josefin Sans', sans-serif;
-}
-
 .popover-button {
   background: none;
   outline: none;

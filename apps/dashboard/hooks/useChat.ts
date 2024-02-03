@@ -44,6 +44,7 @@ type Props = {
   agentId?: string;
   disableFetchHistory?: boolean;
   contact?: CustomContact;
+  context?: string;
 };
 
 export type MessageEvalUnion = 'good' | 'bad';
@@ -291,7 +292,8 @@ const useChat = ({
             channel,
             attachments,
             isDraft,
-            // contact: otherProps.contact,
+            contact: otherProps.contact,
+            context: otherProps.context,
           }),
           signal: ctrl.signal,
 

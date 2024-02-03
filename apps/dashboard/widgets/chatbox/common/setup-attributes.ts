@@ -10,9 +10,23 @@ const setupAttributes = (
   props.element.setAttribute('agent-id', props.agentId || '');
 
   if (props.contact) {
-    for (const info in props.contact) {
-      props.element.setAttribute(toDashedCase(info), info || '');
+    for (const key of Object.keys(props.contact)) {
+      props.element.setAttribute(
+        toDashedCase(key),
+        props.contact?.[key as keyof typeof props.contact] || ''
+      );
     }
+  }
+
+  if (props.context) {
+    props.element.setAttribute('context', props.context);
+  }
+
+  if (props.initialMessages && props.initialMessages.length > 0) {
+    props.element.setAttribute(
+      'initial-messages',
+      JSON.stringify(props.initialMessages)
+    );
   }
 
   if (props.styles) {
