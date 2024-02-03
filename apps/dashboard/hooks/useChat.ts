@@ -291,7 +291,7 @@ const useChat = ({
             channel,
             attachments,
             isDraft,
-            contact: otherProps.contact,
+            // contact: otherProps.contact,
           }),
           signal: ctrl.signal,
 
