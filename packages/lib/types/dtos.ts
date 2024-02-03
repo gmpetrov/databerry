@@ -344,12 +344,26 @@ export const ToolSchema = z.discriminatedUnion('type', [
     type: z.literal(ToolType.form),
     formId: z.string().cuid(),
   }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.mark_as_resolved),
+  }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.request_human),
+  }),
 ]);
 
 export type ToolSchema = z.infer<typeof ToolSchema>;
 
 export type HttpToolSchema = Extract<ToolSchema, { type: 'http' }>;
 export type FormToolSchema = Extract<ToolSchema, { type: 'form' }>;
+export type MarkAsResolvedToolSchema = Extract<
+  ToolSchema,
+  { type: 'mark_as_resolved' }
+>;
+export type RequestHumanToolSchema = Extract<
+  ToolSchema,
+  { type: 'request_human' }
+>;
 
 export const CreateAgentSchema = z.object({
   id: z.string().trim().cuid().optional(),

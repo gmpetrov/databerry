@@ -22,6 +22,14 @@ import {
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
 import {
+  createHandler as createMarkAsResolvedToolHandler,
+  toJsonSchema as markAsResolvedToolToJsonSchema,
+} from './agent/tools/mark-as-resolved';
+import {
+  createHandler as createRequestHumanToolHandler,
+  toJsonSchema as requestHumanToolToJsonSchema,
+} from './agent/tools/request-human';
+import {
   CreateToolHandler,
   CreateToolHandlerConfig,
   ToolPayload,
@@ -33,6 +41,8 @@ import {
   ChatResponse,
   FormToolSchema,
   HttpToolSchema,
+  MarkAsResolvedToolSchema,
+  RequestHumanToolSchema,
   ToolSchema,
 } from './types/dtos';
 import ChatModel from './chat-model';
@@ -94,6 +104,14 @@ const chat = async ({
   const formTools = (tools as ToolSchema[]).filter(
     (each) => each.type === ToolType.form
   ) as FormToolSchema[];
+
+  const markAsResolvedTool = (tools as ToolSchema[]).find(
+    (each) => each.type === ToolType.mark_as_resolved
+  ) as MarkAsResolvedToolSchema;
+
+  const requestHumanTool = (tools as ToolSchema[]).find(
+    (each) => each.type === ToolType.request_human
+  ) as RequestHumanToolSchema;
 
   const approvals: ChatResponse['approvals'] = [];
 
@@ -162,6 +180,39 @@ const chat = async ({
     } as ChatCompletionTool;
   });
 
+  // const formatedMarkAsResolvedTool = markAsResolvedTool
+  const formatedMarkAsResolvedTool = true
+    ? ({
+        type: 'function',
+        function: {
+          ...markAsResolvedToolToJsonSchema(markAsResolvedTool, {
+            conversationId,
+          }),
+          parse: JSON.parse,
+          function: createHandler(createMarkAsResolvedToolHandler)(
+            markAsResolvedTool,
+            { conversationId }
+          ),
+        },
+      } as ChatCompletionTool)
+    : undefined;
+
+  const formatedRequestHumanTool = true
+    ? ({
+        type: 'function',
+        function: {
+          ...requestHumanToolToJsonSchema(requestHumanTool, {
+            conversationId,
+          }),
+          parse: JSON.parse,
+          function: createHandler(createRequestHumanToolHandler)(
+            requestHumanTool,
+            { conversationId }
+          ),
+        },
+      } as ChatCompletionTool)
+    : undefined;
+
   let retrievalData:
     | Awaited<ReturnType<typeof datastoreToolHandler>>
     | undefined = undefined;
@@ -210,6 +261,8 @@ const chat = async ({
   const openAiTools = [
     ...formatedHttpTools,
     ...formatedFormTools,
+    ...(formatedMarkAsResolvedTool ? [formatedMarkAsResolvedTool] : []),
+    ...(formatedRequestHumanTool ? [formatedRequestHumanTool] : []),
     ...(nbDatastoreTools > 0
       ? [
           {
