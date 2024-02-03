@@ -32,7 +32,7 @@ type Props = {
 
 const createElement = ({ name, widget }: Props) =>
   class WebChatBubble extends HTMLElement {
-    cssProvider = assetsBaseUrl + '/chatbox/styles.css';
+    cssProvider = assetsBaseUrl + '/dist/chatbox/styles.css';
     root: Root;
     cache: EmotionCache;
     shadowRootElement: HTMLDivElement;

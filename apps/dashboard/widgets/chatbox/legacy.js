@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const script = document.createElement('script');
     script.type = 'module';
     script.innerHTML = `
-    import Chatbox from 'http://localhost:8000/dist/chatbox/index.js';
+    import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
 
     Chatbox.initBubble({
       agentId: '${me?.id}',
