@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.220"></a>
+## 0.1.220 (2024-02-03)
+
+### Miscellaneous
+
+-  Feature/web component alt ([#320](https://github.com/gmpetrov/databerry/issues/320)) [[5321652](https://github.com/gmpetrov/databerry/commit/5321652e44a0f2cca1914beff98faf2ec61c9e7b)]
+
+
 <a name="0.1.219"></a>
 ## 0.1.219 (2024-02-03)
 
