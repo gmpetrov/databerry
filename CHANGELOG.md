@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.222"></a>
+## 0.1.222 (2024-02-04)
+
+### Fixed
+
+- 🐛 improve button broken [[2f67ef7](https://github.com/gmpetrov/databerry/commit/2f67ef757207d7bd9f34cbac5a4406522578c0ed)]
+
+
 <a name="0.1.221"></a>
 ## 0.1.221 (2024-02-04)
 
