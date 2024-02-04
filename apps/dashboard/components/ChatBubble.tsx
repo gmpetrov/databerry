@@ -588,9 +588,9 @@ function App(props: {
                     handleEvalAnswer={handleEvalAnswer}
                     handleAbort={handleAbort}
                     hideInternalSources
-                    renderBottom={
-                      <CustomerSupportActions config={state.config} />
-                    }
+                    // renderBottom={
+                    //   <CustomerSupportActions config={state.config} />
+                    // }
                     withFileUpload
                     withSources={!!state?.agent?.includeSources}
                     isAiEnabled={methods.isAiEnabled}

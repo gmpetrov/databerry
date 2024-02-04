@@ -326,12 +326,25 @@ export const HttpToolSchema = ToolBaseSchema.extend({
   }),
 });
 
+export const LeadCaptureToolchema = ToolBaseSchema.extend({
+  type: z.literal(ToolType.lead_capture),
+  config: z.object({
+    email: z.string().email().optional(),
+    phoneNumber: z.string().optional(),
+    phoneNumberCountryCode: z.string().optional(),
+    isRequired: z.boolean().optional(),
+    isEmailEnabled: z.boolean().optional(),
+    isPhoneNumberEnabled: z.boolean().optional(),
+  }),
+});
+
 export const ToolSchema = z.discriminatedUnion('type', [
+  HttpToolSchema,
+  LeadCaptureToolchema,
   ToolBaseSchema.extend({
     type: z.literal(ToolType.datastore),
     datastoreId: z.string().cuid().optional(),
   }),
-  HttpToolSchema,
   ToolBaseSchema.extend({
     type: z.literal(ToolType.connector),
     config: z.any({}),
@@ -344,12 +357,34 @@ export const ToolSchema = z.discriminatedUnion('type', [
     type: z.literal(ToolType.form),
     formId: z.string().cuid(),
   }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.mark_as_resolved),
+  }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.request_human),
+  }),
 ]);
 
 export type ToolSchema = z.infer<typeof ToolSchema>;
 
 export type HttpToolSchema = Extract<ToolSchema, { type: 'http' }>;
+export type LeadCaptureToolchema = Extract<
+  ToolSchema,
+  { type: 'lead_capture' }
+>;
 export type FormToolSchema = Extract<ToolSchema, { type: 'form' }>;
+export type MarkAsResolvedToolSchema = Extract<
+  ToolSchema,
+  { type: 'mark_as_resolved' }
+>;
+export type RequestHumanToolSchema = Extract<
+  ToolSchema,
+  { type: 'request_human' }
+>;
+export type LeadCaptureToolSchema = Extract<
+  ToolSchema,
+  { type: 'lead_capture' }
+>;
 
 export const CreateAgentSchema = z.object({
   id: z.string().trim().cuid().optional(),
@@ -752,6 +787,30 @@ export const AppEventSchema = z.discriminatedUnion('type', [
     formValues: z.record(z.string(), z.unknown()),
     conversationId: z.string().cuid(),
     submissionId: z.string().cuid().optional().nullable(),
+  }),
+  AppEventBaseSchema.extend({
+    type: z.literal('conversation-resolved'),
+    agent: z.any(),
+    conversation: z.any(),
+    messages: z.array(z.any()),
+    adminEmail: z.string(),
+    customerEmail: z.string().optional(),
+  }),
+  AppEventBaseSchema.extend({
+    type: z.literal('human-requested'),
+    agent: z.any(),
+    conversation: z.any(),
+    messages: z.array(z.any()),
+    adminEmail: z.string(),
+    customerEmail: z.string().optional(),
+  }),
+  AppEventBaseSchema.extend({
+    type: z.literal('lead-captured'),
+    agent: z.any(),
+    conversation: z.any(),
+    messages: z.array(z.any()),
+    adminEmail: z.string(),
+    customerEmail: z.string().optional(),
   }),
 ]);
 export type AppEventSchema = z.infer<typeof AppEventSchema>;

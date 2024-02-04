@@ -138,11 +138,17 @@ const getIntegration = async (websiteId: string, channelExternalId: string) => {
     },
   });
 
-  const agent = integration?.agents?.[0];
+  let agent = integration?.agents?.[0];
 
   if (!agent) {
     throw new Error('Agent not found');
   }
+
+  // For now those tools implemented in the integration (legacy)
+  agent.tools = (agent.tools || []).filter(
+    (each) =>
+      !['request_human', 'mark_as_resolved', 'capture_lead'].includes(each.type)
+  );
 
   return integration;
 };
@@ -230,7 +236,7 @@ const handleQuery = async (
         type: 'participant',
         nickname: agent?.name || 'Chaindesk',
         avatar:
-          agent.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
+          agent?.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
       },
     });
   }

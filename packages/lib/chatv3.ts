@@ -8,19 +8,27 @@ import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
   createHandler as createFormToolHandler,
-  // createHandlerTest as createFormToolHandlerTest,
   createParser as createParserFormTool,
-  FormToolPayload,
-  // createParserTest as createParserFormToolTest,
   toJsonSchema as formToolToJsonSchema,
-  // toJsonSchemaTest as formToolToJsonSchemaTest,
 } from './agent/tools/form';
 import {
   createHandler as createHttpToolHandler,
   createParser as createParserHttpTool,
-  HttpToolPayload,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
+import {
+  createHandler as createLeadCaptureToolHandler,
+  createParser as createParserLeadCaptureTool,
+  toJsonSchema as leadCaptureToolToJsonSchema,
+} from './agent/tools/lead-capture';
+import {
+  createHandler as createMarkAsResolvedToolHandler,
+  toJsonSchema as markAsResolvedToolToJsonSchema,
+} from './agent/tools/mark-as-resolved';
+import {
+  createHandler as createRequestHumanToolHandler,
+  toJsonSchema as requestHumanToolToJsonSchema,
+} from './agent/tools/request-human';
 import {
   CreateToolHandler,
   CreateToolHandlerConfig,
@@ -33,6 +41,9 @@ import {
   ChatResponse,
   FormToolSchema,
   HttpToolSchema,
+  LeadCaptureToolSchema,
+  MarkAsResolvedToolSchema,
+  RequestHumanToolSchema,
   ToolSchema,
 } from './types/dtos';
 import ChatModel from './chat-model';
@@ -41,6 +52,11 @@ import createToolParser from './create-tool-parser';
 import formatMessagesOpenAI from './format-messages-openai';
 import getUsageCost from './get-usage-cost';
 import promptInject from './prompt-inject';
+import {
+  createLeadCapturePrompt,
+  MARK_AS_RESOLVED,
+  REQUEST_HUMAN,
+} from './prompt-templates';
 import truncateChatMessages from './truncateChatMessages';
 
 export type ChatProps = ChatModelConfigSchema & {
@@ -59,6 +75,8 @@ export type ChatProps = ChatModelConfigSchema & {
   topK?: number;
   toolsConfig?: ChatRequest['toolsConfig'];
   conversationId?: ChatRequest['conversationId'];
+  organizationId: string;
+  agentId: string;
 };
 
 const chat = async ({
@@ -76,6 +94,8 @@ const chat = async ({
   topK,
   toolsConfig,
   conversationId,
+  organizationId,
+  agentId,
   retrievalQuery,
   ...otherProps
 }: ChatProps) => {
@@ -95,6 +115,18 @@ const chat = async ({
     (each) => each.type === ToolType.form
   ) as FormToolSchema[];
 
+  const markAsResolvedTool = (tools as ToolSchema[]).find(
+    (each) => each.type === ToolType.mark_as_resolved
+  ) as MarkAsResolvedToolSchema;
+
+  const requestHumanTool = (tools as ToolSchema[]).find(
+    (each) => each.type === ToolType.request_human
+  ) as RequestHumanToolSchema;
+
+  const leadCaptureTool = (tools as ToolSchema[]).find(
+    (each) => each.type === ToolType.lead_capture
+  ) as LeadCaptureToolSchema;
+
   const approvals: ChatResponse['approvals'] = [];
 
   const handleToolWithApproval = async (
@@ -106,6 +138,13 @@ const chat = async ({
   };
 
   let metadata: object | undefined = undefined;
+
+  const baseConfig = {
+    conversationId,
+    modelName,
+    organizationId,
+    agentId,
+  };
 
   const createHandler =
     <T extends { type: ToolType }>(handler: CreateToolHandler<T>) =>
@@ -132,7 +171,7 @@ const chat = async ({
 
   const formatedHttpTools = httpTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId, modelName };
+    const config = { ...baseConfig, toolConfig };
 
     return {
       type: 'function',
@@ -150,7 +189,7 @@ const chat = async ({
 
   const formatedFormTools = formTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId };
+    const config = { ...baseConfig, toolConfig };
 
     return {
       type: 'function',
@@ -161,6 +200,56 @@ const chat = async ({
       },
     } as ChatCompletionTool;
   });
+
+  const formatedMarkAsResolvedTool = !!markAsResolvedTool
+    ? ({
+        type: 'function',
+        function: {
+          ...markAsResolvedToolToJsonSchema(markAsResolvedTool, {
+            ...baseConfig,
+          }),
+          parse: JSON.parse,
+          function: createHandler(createMarkAsResolvedToolHandler)(
+            markAsResolvedTool,
+            { ...baseConfig }
+          ),
+        },
+      } as ChatCompletionTool)
+    : undefined;
+
+  const formatedRequestHumanTool = !!requestHumanTool
+    ? ({
+        type: 'function',
+        function: {
+          ...requestHumanToolToJsonSchema(requestHumanTool, {
+            ...baseConfig,
+          }),
+          parse: JSON.parse,
+          function: createHandler(createRequestHumanToolHandler)(
+            requestHumanTool,
+            { ...baseConfig }
+          ),
+        },
+      } as ChatCompletionTool)
+    : undefined;
+
+  const formatedLeadCaptureTool = !!leadCaptureTool
+    ? ({
+        type: 'function',
+        function: {
+          ...leadCaptureToolToJsonSchema(leadCaptureTool, {
+            ...baseConfig,
+          }),
+          parse: createParserLeadCaptureTool(leadCaptureTool, {
+            ...baseConfig,
+          }),
+          function: createHandler(createLeadCaptureToolHandler)(
+            leadCaptureTool,
+            { ...baseConfig }
+          ),
+        },
+      } as ChatCompletionTool)
+    : undefined;
 
   let retrievalData:
     | Awaited<ReturnType<typeof datastoreToolHandler>>
@@ -185,12 +274,30 @@ const chat = async ({
     })
   ).reverse();
 
+  let _systemPrompt = systemPrompt || '';
+
+  if (!!markAsResolvedTool) {
+    _systemPrompt += `\n${MARK_AS_RESOLVED}`;
+  }
+
+  if (!!requestHumanTool) {
+    _systemPrompt += `\n${REQUEST_HUMAN}`;
+  }
+
+  if (!!leadCaptureTool) {
+    _systemPrompt += `\n${createLeadCapturePrompt({
+      isEmailEnabled: !!leadCaptureTool.config.isEmailEnabled,
+      isPhoneNumberEnabled: !!leadCaptureTool.config.isPhoneNumberEnabled,
+      isRequiredToContinue: !!leadCaptureTool.config.isRequired,
+    })}`;
+  }
+
   const messages: ChatCompletionMessageParam[] = [
-    ...(systemPrompt
+    ...(_systemPrompt
       ? [
           {
             role: 'system',
-            content: systemPrompt,
+            content: _systemPrompt,
           } as ChatCompletionMessageParam,
         ]
       : []),
@@ -210,6 +317,9 @@ const chat = async ({
   const openAiTools = [
     ...formatedHttpTools,
     ...formatedFormTools,
+    ...(formatedMarkAsResolvedTool ? [formatedMarkAsResolvedTool] : []),
+    ...(formatedRequestHumanTool ? [formatedRequestHumanTool] : []),
+    ...(formatedLeadCaptureTool ? [formatedLeadCaptureTool] : []),
     ...(nbDatastoreTools > 0
       ? [
           {

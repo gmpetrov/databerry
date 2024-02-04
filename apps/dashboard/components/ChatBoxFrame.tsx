@@ -208,7 +208,7 @@ function ChatBoxFrame(props: {
           handleEvalAnswer={handleEvalAnswer}
           handleAbort={handleAbort}
           hideInternalSources
-          renderBottom={<CustomerSupportActions config={config} />}
+          // renderBottom={<CustomerSupportActions config={config} />}
           withFileUpload
           withSources={!!agent?.includeSources}
           isAiEnabled={methods.isAiEnabled}

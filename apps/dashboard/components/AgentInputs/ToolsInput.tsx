@@ -16,7 +16,7 @@ import clsx from 'clsx';
 import cuid from 'cuid';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
 
@@ -24,6 +24,7 @@ import useModal from '@app/hooks/useModal';
 import { getDatastores } from '@app/pages/api/datastores';
 
 import agentToolFormat, {
+  agentToolConfig,
   createTool,
   NormalizedTool,
 } from '@chaindesk/lib/agent-tool-format';
@@ -39,6 +40,8 @@ import {
 } from '@chaindesk/prisma';
 
 import HttpToolForm from '../HttpToolForm';
+import LeadCaptureToolForm from '../LeadCaptureToolForm';
+import LeadCaptureToolFormInput from '../LeadCaptureToolForm/LeadCaptureToolFormInput';
 
 import FormToolInput from './FormToolInput';
 import HttpToolInput from './HttpToolInput';
@@ -70,7 +73,12 @@ const ToolCard = (props: ToolCardProps) => {
       <Stack direction={'row'} alignItems={'center'} gap={2}>
         {props.children}
 
-        <Stack direction={'column'} spacing={0} width={'100%'}>
+        <Stack
+          direction={'column'}
+          spacing={0}
+          width={'100%'}
+          sx={{ maxWidth: '85%' }}
+        >
           <Stack
             direction="row"
             spacing={2}
@@ -122,8 +130,10 @@ function ToolsInput({}: Props) {
 
   const newDatastoreModal = useModal();
   const newApiToolForm = useModal();
-  const newFormToolModal = useModal();
   const editApiToolForm = useModal();
+  const newFormToolModal = useModal();
+  const newLeadCaptureToolModal = useModal();
+  const editLeadCaptureToolModal = useModal();
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
@@ -132,6 +142,16 @@ function ToolsInput({}: Props) {
   const tools = watch('tools') || [];
 
   const formattedTools = tools.map(agentToolFormat);
+
+  const hasMarkAsResolved = !!tools.find(
+    (tool) => tool.type === ToolType.mark_as_resolved
+  );
+  const hasRequestHuman = !!tools.find(
+    (tool) => tool.type === ToolType.request_human
+  );
+  const hasLeadCapture = !!tools.find(
+    (tool) => tool.type === ToolType.lead_capture
+  );
 
   const getToolLink = (tool: Tool) => {
     switch (tool.type) {
@@ -143,6 +163,16 @@ function ToolsInput({}: Props) {
         return undefined;
     }
   };
+
+  const handleAddTool = useCallback(
+    (payload: Parameters<typeof createTool>[0]) => {
+      return setValue('tools', [...tools, createTool(payload)], {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    },
+    [tools, setValue]
+  );
 
   return (
     <Stack gap={1}>
@@ -170,6 +200,11 @@ function ToolsInput({}: Props) {
                 ? () => {
                     setCurrentToolIndex(index);
                     editApiToolForm.open();
+                  }
+                : tool.type === 'lead_capture'
+                ? () => {
+                    setCurrentToolIndex(index);
+                    editLeadCaptureToolModal.open();
                   }
                 : undefined
             }
@@ -202,8 +237,8 @@ function ToolsInput({}: Props) {
 
       <ToolCard
         id="datastore-tool"
-        name={'Datastore'}
-        description={'Connect custom data to your Agent'}
+        name={agentToolConfig.datastore.title}
+        description={agentToolConfig.datastore.description}
       >
         <IconButton
           size="sm"
@@ -219,8 +254,8 @@ function ToolsInput({}: Props) {
 
       <ToolCard
         id="http-tool"
-        name={'HTTP Tool'}
-        description={'Perform an HTTP request from your Agent'}
+        name={agentToolConfig.http.title}
+        description={agentToolConfig.http.description}
       >
         <IconButton
           size="sm"
@@ -236,8 +271,8 @@ function ToolsInput({}: Props) {
 
       <ToolCard
         id="form-tool"
-        name={'Form'}
-        description={'Connect a form to your Agent'}
+        name={agentToolConfig.form.title}
+        description={agentToolConfig.form.description}
       >
         <IconButton
           size="sm"
@@ -251,9 +286,70 @@ function ToolsInput({}: Props) {
         </IconButton>
       </ToolCard>
 
+      {!hasMarkAsResolved && (
+        <ToolCard
+          id="form-tool"
+          name={agentToolConfig.mark_as_resolved.title}
+          description={agentToolConfig.mark_as_resolved.description}
+        >
+          <IconButton
+            size="sm"
+            variant="plain"
+            color="success"
+            onClick={() => {
+              handleAddTool({
+                type: ToolType.mark_as_resolved,
+              });
+            }}
+          >
+            <AddCircleOutlineRoundedIcon />
+          </IconButton>
+        </ToolCard>
+      )}
+
+      {!hasRequestHuman && (
+        <ToolCard
+          id="form-tool"
+          name={agentToolConfig.request_human.title}
+          description={agentToolConfig.request_human.description}
+        >
+          <IconButton
+            size="sm"
+            variant="plain"
+            color="success"
+            onClick={() => {
+              handleAddTool({
+                type: ToolType.request_human,
+              });
+            }}
+          >
+            <AddCircleOutlineRoundedIcon />
+          </IconButton>
+        </ToolCard>
+      )}
+
+      {!hasLeadCapture && (
+        <ToolCard
+          id="form-tool"
+          name={agentToolConfig.lead_capture.title}
+          description={agentToolConfig.lead_capture.description}
+        >
+          <IconButton
+            size="sm"
+            variant="plain"
+            color="success"
+            onClick={() => {
+              newLeadCaptureToolModal.open();
+            }}
+          >
+            <AddCircleOutlineRoundedIcon />
+          </IconButton>
+        </ToolCard>
+      )}
+
       <newDatastoreModal.component
-        title="Datastore"
-        description="Connect a Datastore to your Agent."
+        title={agentToolConfig.datastore.title}
+        description={agentToolConfig.datastore.description}
         dialogProps={{
           sx: {
             maxWidth: 'sm',
@@ -322,8 +418,8 @@ function ToolsInput({}: Props) {
       </newDatastoreModal.component>
 
       <newApiToolForm.component
-        title="HTTP Tool"
-        description="Let your Agent call an HTTP endpoint."
+        title={agentToolConfig.http.title}
+        description={agentToolConfig.http.description}
         dialogProps={{
           sx: {
             maxWidth: 'md',
@@ -342,9 +438,27 @@ function ToolsInput({}: Props) {
         />
       </newApiToolForm.component>
 
+      <newLeadCaptureToolModal.component
+        title={agentToolConfig.lead_capture.title}
+        description={agentToolConfig.lead_capture.description}
+        dialogProps={{
+          sx: {
+            maxWidth: 'md',
+            height: 'auto',
+          },
+        }}
+      >
+        <LeadCaptureToolForm
+          onSubmit={(values) => {
+            handleAddTool(values);
+            newLeadCaptureToolModal.close();
+          }}
+        />
+      </newLeadCaptureToolModal.component>
+
       <newFormToolModal.component
-        title="Form Tool"
-        description="Connect a Form to your Agent"
+        title={agentToolConfig.form.title}
+        description={agentToolConfig.form.description}
         dialogProps={{
           sx: {
             maxWidth: 'sm',
@@ -405,8 +519,8 @@ function ToolsInput({}: Props) {
       />
 
       <editApiToolForm.component
-        title="HTTP Tool"
-        description="Let your Agent call an HTTP endpoint."
+        title={agentToolConfig.http.title}
+        description={agentToolConfig.http.description}
         dialogProps={{
           sx: {
             maxWidth: 'md',
@@ -430,6 +544,34 @@ function ToolsInput({}: Props) {
           </Stack>
         )}
       </editApiToolForm.component>
+      <editLeadCaptureToolModal.component
+        title={agentToolConfig.lead_capture.title}
+        description={agentToolConfig.lead_capture.description}
+        dialogProps={{
+          sx: {
+            maxWidth: 'md',
+            height: 'auto',
+          },
+        }}
+      >
+        {currentToolIndex >= 0 && (
+          <Stack gap={2}>
+            <LeadCaptureToolFormInput
+              name={`tools.${currentToolIndex}` as `tools.0`}
+            />
+            <Button
+              type="button"
+              loading={formState.isSubmitting}
+              onClick={() => {
+                editLeadCaptureToolModal.close();
+                btnSubmitRef?.current?.click();
+              }}
+            >
+              Update
+            </Button>
+          </Stack>
+        )}
+      </editLeadCaptureToolModal.component>
 
       {/* Trick to submit form from HttpToolInput modal */}
       <button

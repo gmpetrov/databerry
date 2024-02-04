@@ -912,6 +912,9 @@ enum ToolType {
   connector
   agent
   http
+  mark_as_resolved
+  request_human
+  lead_capture
 }
 
 enum SubscriptionPlan {

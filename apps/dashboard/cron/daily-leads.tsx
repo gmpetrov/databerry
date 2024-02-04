@@ -35,14 +35,14 @@ const createReport = async (org: Organization) => {
     return;
   }
 
-  const header = ['id', 'agent', 'email', 'created_at'];
+  const header = ['id', 'agent', 'email', 'phone_number', 'created_at'];
 
   const rows = leads.map((each) => [
     each.id,
     each?.agent?.name || '',
     each.email,
     // each.name,
-    // each.phone,
+    each.phoneNumber || '',
     each.createdAt,
   ]);
 

@@ -29,18 +29,18 @@ export default function CommonInterfaceInput(props: Props) {
         field="isInitMessagePopupDisabled"
         label="Disable initial message popup"
       />
-      <InterfaceConfigCheckbox
+      {/* <InterfaceConfigCheckbox
         field="isHumanRequestedDisabled"
         label="Disable the ability to request a human operator"
-      />
-      <InterfaceConfigCheckbox
+      /> */}
+      {/* <InterfaceConfigCheckbox
         field="isLeadCaptureDisabled"
         label="Disable the ability to capture a visitor's emails"
-      />
-      <InterfaceConfigCheckbox
+      /> */}
+      {/* <InterfaceConfigCheckbox
         field="isMarkAsResolvedDisabled"
         label="Disable the ability to mark a conversation as resolved"
-      />
+      /> */}
       <InterfaceConfigCheckbox
         field="isBrandingDisabled"
         label="Remove Chaindesk Branding (premium account required)"
