@@ -38,7 +38,9 @@ function ImproveAnswerModal(props: Props) {
     {
       onSuccess: (data) => {
         setCurrentDatastoreId(
-          data?.conversation?.agent?.tools?.[0]?.datastoreId || ''
+          data?.conversation?.agent?.tools?.find(
+            (one) => one.type === 'datastore'
+          )?.datastoreId || ''
         );
       },
     }
