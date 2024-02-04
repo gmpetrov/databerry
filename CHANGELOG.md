@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.223"></a>
+## 0.1.223 (2024-02-04)
+
+### Miscellaneous
+
+- 🎸 enh lead catpure [[3444f95](https://github.com/gmpetrov/databerry/commit/3444f950dba9c3efff5406ec90220b1dee26f300)]
+
+
 <a name="0.1.222"></a>
 ## 0.1.222 (2024-02-04)
 
