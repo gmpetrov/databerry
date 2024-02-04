@@ -41,7 +41,9 @@ import useChat from '@app/hooks/useChat';
 import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
-import agentToolFormat from '@chaindesk/lib/agent-tool-format';
+import agentToolFormat, {
+  agentToolConfig,
+} from '@chaindesk/lib/agent-tool-format';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 
@@ -521,7 +523,8 @@ export default function AgentPage() {
               )}
             </editApiToolModal.component>
             <editLeadToolModal.component
-              title="🎯 Lead Capture"
+              title={agentToolConfig.lead_capture.title}
+              description={agentToolConfig.lead_capture.description}
               dialogProps={{
                 sx: {
                   maxWidth: 'md',
