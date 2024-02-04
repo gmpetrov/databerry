@@ -32,6 +32,8 @@ import ChatBox from '@app/components/ChatBox';
 import ChatSection from '@app/components/ChatSection';
 import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
+import LeadCaptureToolForm from '@app/components/LeadCaptureToolForm';
+import LeadCaptureToolFormInput from '@app/components/LeadCaptureToolForm/LeadCaptureToolFormInput';
 import Loader from '@app/components/Loader';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgent from '@app/hooks/useAgent';
@@ -39,6 +41,7 @@ import useChat from '@app/hooks/useChat';
 import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
+import agentToolFormat from '@chaindesk/lib/agent-tool-format';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 
@@ -77,7 +80,8 @@ export default function AgentPage() {
     router.replace(router);
   };
 
-  const editApiToolForm = useModal();
+  const editApiToolModal = useModal();
+  const editLeadToolModal = useModal();
 
   const handleSelectConversation = (conversationId: string) => {
     setConversationId(conversationId);
@@ -404,7 +408,14 @@ export default function AgentPage() {
                                       setState({
                                         currentToolIndex: index,
                                       });
-                                      editApiToolForm.open();
+                                      editApiToolModal.open();
+                                    }
+                                  : tool.type === 'lead_capture'
+                                  ? () => {
+                                      setState({
+                                        currentToolIndex: index,
+                                      });
+                                      editLeadToolModal.open();
                                     }
                                   : undefined
                               }
@@ -421,13 +432,19 @@ export default function AgentPage() {
                               className="truncate"
                             >
                               <Typography
-                                sx={{ textDecoration: 'underline' }}
+                                sx={{
+                                  textDecoration: [
+                                    'http',
+                                    'datastore',
+                                    'lead_capture',
+                                  ].includes(tool.type)
+                                    ? 'underline'
+                                    : 'none',
+                                }}
                                 className="max-w-full truncate"
                                 level="body-sm"
                               >
-                                {(tool as any)?.datastore?.name ||
-                                  (tool as any)?.form?.name ||
-                                  (tool as any)?.config?.name ||
+                                {agentToolFormat(tool as any)?.name ||
                                   tool?.type}
                               </Typography>
                             </Link>
@@ -472,7 +489,7 @@ export default function AgentPage() {
               )}
             </Stack>
 
-            <editApiToolForm.component
+            <editApiToolModal.component
               title="HTTP Tool"
               description="Let your Agent call an HTTP endpoint."
               dialogProps={{
@@ -487,7 +504,7 @@ export default function AgentPage() {
                   agentId={agentId}
                   refreshQueryAfterMutation
                   onSubmitSucces={(agent) => {
-                    editApiToolForm.close();
+                    editApiToolModal.close();
                   }}
                 >
                   {({ mutation }) => (
@@ -502,7 +519,37 @@ export default function AgentPage() {
                   )}
                 </AgentForm>
               )}
-            </editApiToolForm.component>
+            </editApiToolModal.component>
+            <editLeadToolModal.component
+              title="🎯 Lead Capture"
+              dialogProps={{
+                sx: {
+                  maxWidth: 'md',
+                  height: 'auto',
+                },
+              }}
+            >
+              {state.currentToolIndex >= 0 && (
+                <AgentForm
+                  agentId={agentId}
+                  refreshQueryAfterMutation
+                  onSubmitSucces={(agent) => {
+                    editLeadToolModal.close();
+                  }}
+                >
+                  {({ mutation }) => (
+                    <Stack gap={2}>
+                      <LeadCaptureToolFormInput
+                        name={`tools.${state.currentToolIndex}` as `tools.0`}
+                      />
+                      <Button type="submit" loading={mutation.isMutating}>
+                        Update
+                      </Button>
+                    </Stack>
+                  )}
+                </AgentForm>
+              )}
+            </editLeadToolModal.component>
           </Box>
         )}
 

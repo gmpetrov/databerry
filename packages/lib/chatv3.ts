@@ -8,11 +8,8 @@ import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
   createHandler as createFormToolHandler,
-  // createHandlerTest as createFormToolHandlerTest,
   createParser as createParserFormTool,
-  // createParserTest as createParserFormToolTest,
   toJsonSchema as formToolToJsonSchema,
-  // toJsonSchemaTest as formToolToJsonSchemaTest,
 } from './agent/tools/form';
 import {
   createHandler as createHttpToolHandler,
@@ -55,6 +52,11 @@ import createToolParser from './create-tool-parser';
 import formatMessagesOpenAI from './format-messages-openai';
 import getUsageCost from './get-usage-cost';
 import promptInject from './prompt-inject';
+import {
+  createLeadCapturePrompt,
+  MARK_AS_RESOLVED,
+  REQUEST_HUMAN,
+} from './prompt-templates';
 import truncateChatMessages from './truncateChatMessages';
 
 export type ChatProps = ChatModelConfigSchema & {
@@ -74,6 +76,7 @@ export type ChatProps = ChatModelConfigSchema & {
   toolsConfig?: ChatRequest['toolsConfig'];
   conversationId?: ChatRequest['conversationId'];
   organizationId: string;
+  agentId: string;
 };
 
 const chat = async ({
@@ -92,6 +95,7 @@ const chat = async ({
   toolsConfig,
   conversationId,
   organizationId,
+  agentId,
   retrievalQuery,
   ...otherProps
 }: ChatProps) => {
@@ -135,6 +139,13 @@ const chat = async ({
 
   let metadata: object | undefined = undefined;
 
+  const baseConfig = {
+    conversationId,
+    modelName,
+    organizationId,
+    agentId,
+  };
+
   const createHandler =
     <T extends { type: ToolType }>(handler: CreateToolHandler<T>) =>
     (tool: ToolSchema & T, config: CreateToolHandlerConfig<T>) =>
@@ -160,7 +171,7 @@ const chat = async ({
 
   const formatedHttpTools = httpTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId, modelName, organizationId };
+    const config = { ...baseConfig, toolConfig };
 
     return {
       type: 'function',
@@ -178,7 +189,7 @@ const chat = async ({
 
   const formatedFormTools = formTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId, organizationId };
+    const config = { ...baseConfig, toolConfig };
 
     return {
       type: 'function',
@@ -190,56 +201,51 @@ const chat = async ({
     } as ChatCompletionTool;
   });
 
-  // const formatedMarkAsResolvedTool = markAsResolvedTool
-  const formatedMarkAsResolvedTool = true
+  const formatedMarkAsResolvedTool = !!markAsResolvedTool
     ? ({
         type: 'function',
         function: {
           ...markAsResolvedToolToJsonSchema(markAsResolvedTool, {
-            conversationId,
-            organizationId,
+            ...baseConfig,
           }),
           parse: JSON.parse,
           function: createHandler(createMarkAsResolvedToolHandler)(
             markAsResolvedTool,
-            { conversationId, organizationId }
+            { ...baseConfig }
           ),
         },
       } as ChatCompletionTool)
     : undefined;
 
-  const formatedRequestHumanTool = true
+  const formatedRequestHumanTool = !!requestHumanTool
     ? ({
         type: 'function',
         function: {
           ...requestHumanToolToJsonSchema(requestHumanTool, {
-            conversationId,
-            organizationId,
+            ...baseConfig,
           }),
           parse: JSON.parse,
           function: createHandler(createRequestHumanToolHandler)(
             requestHumanTool,
-            { conversationId, organizationId }
+            { ...baseConfig }
           ),
         },
       } as ChatCompletionTool)
     : undefined;
 
-  const formatedLeadCaptureTool = true
+  const formatedLeadCaptureTool = !!leadCaptureTool
     ? ({
         type: 'function',
         function: {
           ...leadCaptureToolToJsonSchema(leadCaptureTool, {
-            conversationId,
-            organizationId,
+            ...baseConfig,
           }),
           parse: createParserLeadCaptureTool(leadCaptureTool, {
-            conversationId,
-            organizationId,
+            ...baseConfig,
           }),
           function: createHandler(createLeadCaptureToolHandler)(
             leadCaptureTool,
-            { conversationId, organizationId }
+            { ...baseConfig }
           ),
         },
       } as ChatCompletionTool)
@@ -268,12 +274,30 @@ const chat = async ({
     })
   ).reverse();
 
+  let _systemPrompt = systemPrompt || '';
+
+  if (!!markAsResolvedTool) {
+    _systemPrompt += `\n${MARK_AS_RESOLVED}`;
+  }
+
+  if (!!requestHumanTool) {
+    _systemPrompt += `\n${REQUEST_HUMAN}`;
+  }
+
+  if (!!leadCaptureTool) {
+    _systemPrompt += `\n${createLeadCapturePrompt({
+      isEmailEnabled: !!leadCaptureTool.config.isEmailEnabled,
+      isPhoneNumberEnabled: !!leadCaptureTool.config.isPhoneNumberEnabled,
+      isRequiredToContinue: !!leadCaptureTool.config.isRequired,
+    })}`;
+  }
+
   const messages: ChatCompletionMessageParam[] = [
-    ...(systemPrompt
+    ...(_systemPrompt
       ? [
           {
             role: 'system',
-            content: systemPrompt,
+            content: _systemPrompt,
           } as ChatCompletionMessageParam,
         ]
       : []),

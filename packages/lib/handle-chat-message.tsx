@@ -12,6 +12,7 @@ import {
   MessageFrom,
   Prisma as PrismaType,
   PromptType,
+  ToolType,
   Usage,
 } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
@@ -29,6 +30,10 @@ import { CUSTOMER_SUPPORT_BASE } from './prompt-templates';
 export const ChatConversationArgs =
   Prisma.validator<PrismaType.ConversationDefaultArgs>()({
     include: {
+      lead: true,
+      participantsContacts: {
+        take: 1,
+      },
       messages: {
         take: -24,
         orderBy: {
@@ -130,6 +135,28 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     agent.systemPrompt = `${agent.systemPrompt}\n${data?.context?.trim()}`;
   }
 
+  const filteredTools = (agent?.tools || []).filter((each) => {
+    if (each?.type === ToolType.lead_capture) {
+      // already captured lead or contact for the conversation
+      if (
+        !!conversation?.lead ||
+        (conversation?.participantsContacts || [])?.length > 0
+      ) {
+        return false;
+      }
+    } else if (
+      conversation?.status === ConversationStatus.HUMAN_REQUESTED &&
+      (each?.type === ToolType.request_human ||
+        each?.type === ToolType.mark_as_resolved)
+    ) {
+      // Human has been requested
+      return false;
+    }
+    return true;
+  });
+
+  agent.tools = filteredTools;
+
   const manager = new AgentManager({ agent, topK: 50 });
 
   const conversationManager = new ConversationManager({
@@ -152,7 +179,10 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
 
   if (!data.isDraft) {
     await conversationManager.createMessage({
-      conversationStatus: ConversationStatus.UNRESOLVED,
+      conversationStatus:
+        conversation?.status === ConversationStatus.RESOLVED
+          ? ConversationStatus.UNRESOLVED
+          : conversation?.status,
       id: inputMessageId,
       from: MessageFrom.human,
       text: data.query,

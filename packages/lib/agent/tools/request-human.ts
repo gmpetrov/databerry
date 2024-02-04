@@ -1,3 +1,4 @@
+import EventDispatcher from '@chaindesk/lib/events/dispatcher';
 import {
   RequestHumanToolSchema,
   ToolResponseSchema,
@@ -25,13 +26,53 @@ export const createHandler =
   async (payload: RequestHumanToolPayload): Promise<ToolResponseSchema> => {
     const conversationId = config?.conversationId as string;
 
-    await prisma.conversation.update({
+    const updated = await prisma.conversation.update({
       where: {
         id: conversationId,
+      },
+      include: {
+        participantsAgents: {
+          where: {
+            id: config?.agentId as string,
+          },
+          include: {
+            serviceProviders: true,
+          },
+        },
+        messages: {
+          take: -24,
+          orderBy: {
+            createdAt: 'asc',
+          },
+          include: {
+            attachments: true,
+          },
+        },
+        organization: {
+          include: {
+            memberships: {
+              take: 1,
+              where: {
+                role: 'OWNER',
+              },
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
       },
       data: {
         status: ConversationStatus.HUMAN_REQUESTED,
       },
+    });
+
+    await EventDispatcher.dispatch({
+      type: 'human-requested',
+      agent: updated?.participantsAgents[0],
+      conversation: updated,
+      messages: updated?.messages,
+      adminEmail: updated?.organization?.memberships?.[0]?.user?.email!,
     });
 
     return {

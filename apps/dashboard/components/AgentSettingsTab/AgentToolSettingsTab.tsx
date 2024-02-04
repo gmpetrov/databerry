@@ -1,3 +1,4 @@
+import Button from '@mui/joy/Button';
 import Checkbox from '@mui/joy/Checkbox';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
@@ -30,13 +31,35 @@ export default function AgentToolSettingsTab(props: Props) {
               <SettingCard
                 title="Tools"
                 description="Give tools to your Agent to make it smarter"
-                submitButtonProps={{
-                  loading: mutation.isMutating,
-                  disabled: !formState.isDirty || !formState.isValid,
-                  children: 'Save',
-                }}
+                // submitButtonProps={{
+                //   loading: mutation.isMutating,
+                //   disabled: !formState.isDirty || !formState.isValid,
+                //   children: 'Save',
+                // }}
+                disableSubmitButton
               >
                 <ToolsInput />
+
+                {formState.isDirty && formState.isValid && (
+                  <Button
+                    type="submit"
+                    loading={mutation.isMutating}
+                    sx={{
+                      zIndex: 2,
+                      ml: 'auto',
+                      mt: 2,
+                      position: 'fixed',
+                      bottom: 20,
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      borderRadius: '30px',
+                    }}
+                    size="lg"
+                    color="success"
+                  >
+                    Save
+                  </Button>
+                )}
               </SettingCard>
             )}
           </ConnectForm>

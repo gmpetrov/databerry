@@ -88,16 +88,17 @@ export const HelpRequest = ({
               ❓ Visitor requested human assistance from Agent{' '}
               <strong>{agentName}</strong>
             </Heading>
-            <Row>
+            {/* <Row>
               <Text className="text-black text-[14px]">
                 Visitor Email: <strong>{visitorEmail}</strong>
               </Text>
-            </Row>
+            </Row> */}
             <Row>
               <Text className="text-black text-[14px]">
                 Agent Name: <strong>{agentName}</strong>
               </Text>
             </Row>
+
             <Row>
               <Text className="text-black text-[14px]">
                 Conversation History:
@@ -119,7 +120,7 @@ export const HelpRequest = ({
                 </Section>
               ))}
             </Container>
-            <Section className="text-center mt-[32px] mb-[32px]">
+            {/* <Section className="text-center mt-[32px] mb-[32px]">
               <Button
                 pX={20}
                 pY={12}
@@ -128,7 +129,7 @@ export const HelpRequest = ({
               >
                 Reply
               </Button>
-            </Section>
+            </Section> */}
 
             {/* <Section>
               <Row>
@@ -165,10 +166,10 @@ export const HelpRequest = ({
                   <Button
                     pX={20}
                     pY={12}
-                    className="bg-[#fff] rounded text-black text-[12px] font-semibold no-underline text-center border border-solid border-[#eaeaea]"
+                    className="bg-[#000] rounded text-white text-[12px] font-semibold no-underline text-center"
                     href={ctaLink}
                   >
-                    View Conversation
+                    Intervene
                   </Button>
                 </Section>
                 <Text className="text-black text-[14px] leading-[24px]">

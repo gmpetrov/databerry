@@ -17,6 +17,7 @@ export type CreateToolHandlerConfig<T> = Prettify<
       toolConfig?: Record<string, unknown>;
       conversationId?: ChatRequest['conversationId'];
       organizationId: string;
+      agentId?: string;
     } & (T extends { type: 'http' } ? { modelName: AgentModelName } : {})
 >;
 

@@ -97,6 +97,7 @@ ${
       tools: this.agent.tools,
       userPrompt,
       systemPrompt,
+      agentId: this.agent.id,
     });
     // let answer: string = '';
     // let sources: Source[] = [];

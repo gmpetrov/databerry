@@ -243,21 +243,21 @@ function AgentDeployTab(props: Props) {
               },
               publicAgentRequired: true,
             },
-            {
-              name: 'Zendesk',
-              isPremium: false,
-              icon: (
-                <img
-                  className="w-8"
-                  src="/integrations/zendesk/icon.svg"
-                  alt="zendesk logo"
-                ></img>
-              ),
+            // {
+            //   name: 'Zendesk',
+            //   isPremium: false,
+            //   icon: (
+            //     <img
+            //       className="w-8"
+            //       src="/integrations/zendesk/icon.svg"
+            //       alt="zendesk logo"
+            //     ></img>
+            //   ),
 
-              action: async () => {
-                zendeskModal.open();
-              },
-            },
+            //   action: async () => {
+            //     zendeskModal.open();
+            //   },
+            // },
           ]
             .filter((each) =>
               router.query.showHidden === 'true' ? true : !each.hidden
@@ -390,7 +390,7 @@ function AgentDeployTab(props: Props) {
             <StandalonePageWidgetSettings agentId={query?.data?.id!} />
           </standalonePageModal.component>
 
-          <zendeskModal.component
+          {/* <zendeskModal.component
             title="Zendesk"
             dialogProps={{
               sx: {
@@ -399,7 +399,7 @@ function AgentDeployTab(props: Props) {
             }}
           >
             <ZendeskSettings agentId={props.agentId} />
-          </zendeskModal.component>
+          </zendeskModal.component> */}
 
           <whatsappModal.component
             title={

@@ -17,6 +17,33 @@ To find if you are allowed to answer a user question follow the following strage
 export const ANSWER_IN_SAME_LANGUAGE = `Deliver your response in the same language that was used to frame the question.`;
 // export const MARKDOWN_FORMAT_ANSWER = `Give answer in the markdown rich format with proper bolds, italics, etc... as per heirarchy and readability requirements.`;
 export const MARKDOWN_FORMAT_ANSWER = `Give answer using markdown or any other techniques to display the content in a nice and aerated way.`;
+export const MARK_AS_RESOLVED = `Always end the conversation by asking if the user its question or issue is resolved. 
+Mark the conversation as resolved only when the user is happy and all his requests have been resolved.
+`;
+export const REQUEST_HUMAN = `If the customer is not happy or not satisfied with your answers, offer to request a human operator.`;
+export const createLeadCapturePrompt = (props: {
+  isEmailEnabled: boolean;
+  isPhoneNumberEnabled: boolean;
+  isRequiredToContinue: boolean;
+}) => {
+  const infos = [
+    ...(props.isEmailEnabled ? ['email'] : []),
+    ...(props.isPhoneNumberEnabled ? ['phoneNumber'] : []),
+  ].join(' and ');
+  return `Always start the conversation by asking the user to provide his ${infos} in order to be able to contact him later.
+NEVER fill up user details yourself, always ask the user for the information, this is life or death matter.
+${
+  props.isPhoneNumberEnabled
+    ? `If the number does not contains the country code extension ask it before subitting the ${infos}`
+    : ''
+}
+${
+  props.isRequiredToContinue
+    ? `If the user refuses to provide his ${infos}, politely say that you cannot continue the conversation without the ${infos}.`
+    : ''
+}
+`.trim();
+};
 export const QA_CONTEXT = `Context: ###
 {context}
 ###

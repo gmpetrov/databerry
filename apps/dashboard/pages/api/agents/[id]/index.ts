@@ -192,6 +192,11 @@ export const updateAgent = async (
                   config: tool.config,
                 }
               : {}),
+            ...(tool?.type === 'lead_capture'
+              ? {
+                  config: tool.config,
+                }
+              : {}),
           },
         })),
         deleteMany: removedTools,
