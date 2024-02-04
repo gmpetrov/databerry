@@ -350,6 +350,17 @@ export const ToolSchema = z.discriminatedUnion('type', [
   ToolBaseSchema.extend({
     type: z.literal(ToolType.request_human),
   }),
+  ToolBaseSchema.extend({
+    type: z.literal(ToolType.lead_capture),
+    config: z.object({
+      email: z.string().email().optional(),
+      phoneNumber: z.string().optional(),
+      phoneNumberCountryCode: z.string().optional(),
+      isRequired: z.boolean().optional(),
+      isEmailEnabled: z.boolean().optional(),
+      isPhoneNumberEnabled: z.boolean().optional(),
+    }),
+  }),
 ]);
 
 export type ToolSchema = z.infer<typeof ToolSchema>;
@@ -363,6 +374,10 @@ export type MarkAsResolvedToolSchema = Extract<
 export type RequestHumanToolSchema = Extract<
   ToolSchema,
   { type: 'request_human' }
+>;
+export type LeadCaptureToolSchema = Extract<
+  ToolSchema,
+  { type: 'lead_capture' }
 >;
 
 export const CreateAgentSchema = z.object({

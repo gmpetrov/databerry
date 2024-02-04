@@ -10,7 +10,6 @@ import {
   createHandler as createFormToolHandler,
   // createHandlerTest as createFormToolHandlerTest,
   createParser as createParserFormTool,
-  FormToolPayload,
   // createParserTest as createParserFormToolTest,
   toJsonSchema as formToolToJsonSchema,
   // toJsonSchemaTest as formToolToJsonSchemaTest,
@@ -18,9 +17,13 @@ import {
 import {
   createHandler as createHttpToolHandler,
   createParser as createParserHttpTool,
-  HttpToolPayload,
   toJsonSchema as httpToolToJsonSchema,
 } from './agent/tools/http';
+import {
+  createHandler as createLeadCaptureToolHandler,
+  createParser as createParserLeadCaptureTool,
+  toJsonSchema as leadCaptureToolToJsonSchema,
+} from './agent/tools/lead-capture';
 import {
   createHandler as createMarkAsResolvedToolHandler,
   toJsonSchema as markAsResolvedToolToJsonSchema,
@@ -41,6 +44,7 @@ import {
   ChatResponse,
   FormToolSchema,
   HttpToolSchema,
+  LeadCaptureToolSchema,
   MarkAsResolvedToolSchema,
   RequestHumanToolSchema,
   ToolSchema,
@@ -69,6 +73,7 @@ export type ChatProps = ChatModelConfigSchema & {
   topK?: number;
   toolsConfig?: ChatRequest['toolsConfig'];
   conversationId?: ChatRequest['conversationId'];
+  organizationId: string;
 };
 
 const chat = async ({
@@ -86,6 +91,7 @@ const chat = async ({
   topK,
   toolsConfig,
   conversationId,
+  organizationId,
   retrievalQuery,
   ...otherProps
 }: ChatProps) => {
@@ -112,6 +118,10 @@ const chat = async ({
   const requestHumanTool = (tools as ToolSchema[]).find(
     (each) => each.type === ToolType.request_human
   ) as RequestHumanToolSchema;
+
+  const leadCaptureTool = (tools as ToolSchema[]).find(
+    (each) => each.type === ToolType.lead_capture
+  ) as LeadCaptureToolSchema;
 
   const approvals: ChatResponse['approvals'] = [];
 
@@ -150,7 +160,7 @@ const chat = async ({
 
   const formatedHttpTools = httpTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId, modelName };
+    const config = { toolConfig, conversationId, modelName, organizationId };
 
     return {
       type: 'function',
@@ -168,7 +178,7 @@ const chat = async ({
 
   const formatedFormTools = formTools.map((each) => {
     const toolConfig = each?.id ? toolsConfig?.[each?.id] : undefined;
-    const config = { toolConfig, conversationId };
+    const config = { toolConfig, conversationId, organizationId };
 
     return {
       type: 'function',
@@ -187,11 +197,12 @@ const chat = async ({
         function: {
           ...markAsResolvedToolToJsonSchema(markAsResolvedTool, {
             conversationId,
+            organizationId,
           }),
           parse: JSON.parse,
           function: createHandler(createMarkAsResolvedToolHandler)(
             markAsResolvedTool,
-            { conversationId }
+            { conversationId, organizationId }
           ),
         },
       } as ChatCompletionTool)
@@ -203,11 +214,32 @@ const chat = async ({
         function: {
           ...requestHumanToolToJsonSchema(requestHumanTool, {
             conversationId,
+            organizationId,
           }),
           parse: JSON.parse,
           function: createHandler(createRequestHumanToolHandler)(
             requestHumanTool,
-            { conversationId }
+            { conversationId, organizationId }
+          ),
+        },
+      } as ChatCompletionTool)
+    : undefined;
+
+  const formatedLeadCaptureTool = true
+    ? ({
+        type: 'function',
+        function: {
+          ...leadCaptureToolToJsonSchema(leadCaptureTool, {
+            conversationId,
+            organizationId,
+          }),
+          parse: createParserLeadCaptureTool(leadCaptureTool, {
+            conversationId,
+            organizationId,
+          }),
+          function: createHandler(createLeadCaptureToolHandler)(
+            leadCaptureTool,
+            { conversationId, organizationId }
           ),
         },
       } as ChatCompletionTool)
@@ -263,6 +295,7 @@ const chat = async ({
     ...formatedFormTools,
     ...(formatedMarkAsResolvedTool ? [formatedMarkAsResolvedTool] : []),
     ...(formatedRequestHumanTool ? [formatedRequestHumanTool] : []),
+    ...(formatedLeadCaptureTool ? [formatedLeadCaptureTool] : []),
     ...(nbDatastoreTools > 0
       ? [
           {

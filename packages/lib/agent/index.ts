@@ -1,12 +1,4 @@
-import axios from 'axios';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { AIMessage, HumanMessage, SystemMessage } from 'langchain/schema';
-import { RunnableToolFunction } from 'openai/lib/RunnableFunction';
-import {
-  ChatCompletionCreateParams,
-  ChatCompletionMessageParam,
-  ChatCompletionTool,
-} from 'openai/resources';
+import { ChatCompletionMessageParam } from 'openai/resources';
 
 import {
   Agent,
@@ -15,26 +7,18 @@ import {
   Message,
   PromptType,
   Tool,
-  ToolType,
 } from '@chaindesk/prisma';
 
 import chatRetrieval from '../chains/chat-retrieval';
-import ChatModel from '../chat-model';
 import chatv3 from '../chatv3';
 import createPromptContext from '../create-prompt-context';
 import promptInject from '../prompt-inject';
 import {
   ANSWER_IN_SAME_LANGUAGE,
-  CUSTOMER_SUPPORT_BASE,
   KNOWLEDGE_RESTRICTION,
   MARKDOWN_FORMAT_ANSWER,
-  QA_CONTEXT,
 } from '../prompt-templates';
-import retrieval from '../retrieval';
 import truncateByModel from '../truncate-by-model';
-import truncateArray from '../truncateArray';
-import truncateChatMessages from '../truncateChatMessages';
-import { AppDocument, ChunkMetadataRetrieved, Source } from '../types/document';
 import { ChatRequest } from '../types/dtos';
 import { ChatModelConfigSchema } from '../types/dtos';
 
@@ -106,6 +90,7 @@ ${
 
     return chatv3({
       ...props,
+      organizationId: this.agent.organizationId!,
       modelName: this.agent.modelName,
       filters: props.filters,
       query: props.input,
