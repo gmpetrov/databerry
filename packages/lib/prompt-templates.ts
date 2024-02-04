@@ -20,7 +20,14 @@ export const MARKDOWN_FORMAT_ANSWER = `Give answer using markdown or any other t
 export const MARK_AS_RESOLVED = `Always end the conversation by asking if the user its question or issue is resolved. 
 Mark the conversation as resolved only when the user is happy and all his requests have been resolved.
 `;
-export const REQUEST_HUMAN = `If the customer is not happy or not satisfied with your answers, offer to request a human operator.`;
+export const REQUEST_HUMAN = `
+Task Request Human: Use the following step-by-step instructions to request a human when the user is not satisfied with your answer.
+###
+Step 1 - Do your best to answer the user's question or issue.
+Step 2 - If the user shows signs of dissatisfaction, politely ask the user if he would like to speak to a human.
+Step 3 - If the user agrees to speak to a human, transfer the conversation to a human agent.
+###
+`;
 export const createLeadCapturePrompt = (props: {
   isEmailEnabled: boolean;
   isPhoneNumberEnabled: boolean;
@@ -30,18 +37,28 @@ export const createLeadCapturePrompt = (props: {
     ...(props.isEmailEnabled ? ['email'] : []),
     ...(props.isPhoneNumberEnabled ? ['phoneNumber'] : []),
   ].join(' and ');
-  return `Always start the conversation by asking the user to provide his ${infos} in order to be able to contact him later.
-NEVER fill up user details yourself, always ask the user for the information, this is life or death matter.
-${
-  props.isPhoneNumberEnabled
-    ? `If the number does not contains the country code extension ask it before subitting the ${infos}`
-    : ''
-}
-${
-  props.isRequiredToContinue
-    ? `If the user refuses to provide his ${infos}, politely say that you cannot continue the conversation without the ${infos}.`
-    : ''
-}
+  return `
+  Task Lead Capture: Use the following step-by-step instructions and examples to collect the user's ${infos}.
+  ###
+  Step 1 - Always start the conversation by asking the user to provide his ${infos} in order to be able to contact him later.
+  Step 2 -  Make sure that informations are valid ${
+    props.isPhoneNumberEnabled
+      ? `and that the phone number includes a country code.`
+      : ``
+  }
+  Step 3 - If the user refuses to provide his ${infos}, politely say that you cannot continue the conversation without the ${infos}.
+  Step 4 - If the user has provided his ${infos}, ask him to validate that his information are correct.
+  Step 5 - After the user has validated his ${infos}, thank him and save the user informations.
+  
+  Example:
+  User: my email is test@email.com and my phone number is 123456789
+  You: Thank you for providing your email and phone number. Your phone number does not seem to include a country code, could you please provide it?
+
+  User: my email is exmaple@test.com and my phone number is +14155552671
+  You: Thank you for providing your email and phone number.
+
+  NEVER fill up user details yourself, always ask the user for the information, this is life or death matter.
+  ###
 `.trim();
 };
 export const QA_CONTEXT = `Context: ###

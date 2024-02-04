@@ -4,17 +4,16 @@
 */
 
 import OpenAI from 'openai';
-import {
-  ChatCompletionChunk,
-  ChatCompletionMessage,
-  ChatCompletionMessageParam,
-} from 'openai/resources/chat';
+import { ChatCompletionMessageParam } from 'openai/resources/chat';
 import {
   ChatCompletionCreateParamsBase,
   ChatCompletionTool,
 } from 'openai/resources/chat/completions';
 
+import { AgentModelName } from '@chaindesk/prisma';
+
 import ChatModel from '../chat-model';
+import { ModelConfig } from '../config';
 import partiallyIncludes from '../partially-includes';
 import { SSE_EVENT } from '../types';
 
@@ -34,7 +33,7 @@ export class BlaBlaForm {
   constructor({
     schema,
     values = {},
-    modelName = 'gpt-3.5-turbo-1106',
+    modelName = ModelConfig[AgentModelName.gpt_3_5_turbo].name,
     messages = [],
     systemPrompt = defaultSystemPrompt,
     locale = 'en',

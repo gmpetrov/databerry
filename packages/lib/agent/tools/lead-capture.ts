@@ -12,7 +12,7 @@ export type LeadCaptureToolPayload = Record<string, unknown>;
 
 export const toJsonSchema = ((tool: LeadCaptureToolSchema, config) => {
   return {
-    name: `lead_capture`,
+    name: `lead_capture_when_all_fields_filled`,
     description:
       'Trigger only when all the required field have been answered by the user. Each field is provided by the user not by the AI. Never fill a field if not provided by the user.',
     parameters: {
