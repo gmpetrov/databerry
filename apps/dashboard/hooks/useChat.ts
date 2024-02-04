@@ -167,6 +167,14 @@ const useChat = ({
     },
     fetcher,
     {
+      onSuccess: (data) => {
+        if (data === null || data?.[0] === null) {
+          // conversationId is invalid or does not exists (e.g: deleted by operator)
+          setState({
+            conversationId: '',
+          });
+        }
+      },
       ...(state.isAiEnabled
         ? {
             // check if AI is disabled every 30 seconds
