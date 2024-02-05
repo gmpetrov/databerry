@@ -49,6 +49,7 @@ function CSLandingPage({}: Props) {
         title="Resolve AI - Resolve 50% of your support tickets instantly"
         description="Resolve AI brings a no-code platform to create custom AI chatbots trained on your data. Our solution makes customer support easy and simplifies team workflow."
         baseUrl="https://www.resolveai.io"
+        ogImage="https://www.chaindesk.ai/api/og"
         uri="/"
       />
 

@@ -12,13 +12,40 @@ const JoseinSansBoldFontP = fetch(
   new URL('../../../public/fonts/JosefinSans-Bold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer());
 
+const BricolageGrotesqueExtraBoldFontP = fetch(
+  new URL(
+    '../../../public/fonts/BricolageGrotesque-ExtraBold.ttf',
+    import.meta.url
+  )
+).then((res) => res.arrayBuffer());
+const BricolageGrotesqueBoldFontP = fetch(
+  new URL('../../../public/fonts/BricolageGrotesque-Bold.ttf', import.meta.url)
+).then((res) => res.arrayBuffer());
+const BricolageGrotesqueRegularFontP = fetch(
+  new URL(
+    '../../../public/fonts/BricolageGrotesque-Regular.ttf',
+    import.meta.url
+  )
+).then((res) => res.arrayBuffer());
+
 export default async function handler(request: NextRequest) {
-  const [JoseinSansRegularFont, JoseinSansBoldFont] = await Promise.all([
+  const [
+    JoseinSansRegularFont,
+    JoseinSansBoldFont,
+    BricolageGrotesqueExtraBoldFont,
+    BricolageGrotesqueBoldFont,
+    BricolageGrotesqueRegularFont,
+  ] = await Promise.all([
     JoseinSansRegularFontP,
     JoseinSansBoldFontP,
+    BricolageGrotesqueExtraBoldFontP,
+    BricolageGrotesqueBoldFontP,
+    BricolageGrotesqueRegularFontP,
   ]);
   const { searchParams } = request.nextUrl;
   const image = searchParams.get('image');
+  const title =
+    searchParams.get('title') || `Custom GPT Agent For Your Startup`;
 
   return new ImageResponse(
     (
@@ -29,12 +56,11 @@ export default async function handler(request: NextRequest) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          //   justifyContent: 'center',
-          backgroundColor: 'black',
-          fontFamily: 'Josefin Sans',
+          fontFamily: 'Bricolage Grotesque',
+          backgroundImage: `url("https://www.chaindesk.ai/og-image-background.jpg")`,
         }}
       >
-        <img
+        {/* <img
           src={`https://chaindesk.ai/${image ? image : 'app-logo-dark'}.png`}
           alt="Chaindesk logo"
           style={{
@@ -44,7 +70,11 @@ export default async function handler(request: NextRequest) {
             marginTop: '-250px',
             marginLeft: '-800px',
           }}
-        />
+        /> */}
+
+        <h1 tw="flex flex-col justify-center mt-28 font-bold text-gray-900 px-[10%] text-center text-[2vw] sm:text-[6vw] truncate">
+          <span>{title}</span>
+        </h1>
       </div>
     ),
     {
@@ -60,6 +90,21 @@ export default async function handler(request: NextRequest) {
           name: 'Josefin Sans',
           data: JoseinSansBoldFont,
           weight: 700,
+        },
+        {
+          name: 'Bricolage Grotesque',
+          data: BricolageGrotesqueRegularFont,
+          weight: 400,
+        },
+        {
+          name: 'Bricolage Grotesque',
+          data: BricolageGrotesqueBoldFont,
+          weight: 700,
+        },
+        {
+          name: 'Bricolage Grotesque',
+          data: BricolageGrotesqueExtraBoldFont,
+          weight: 900,
         },
       ],
     }
