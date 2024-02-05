@@ -20,4 +20,36 @@
   kbd {
     @apply px-0.5 py-0.5 text-current text-white bg-opacity-50 rounded-sm bg-zinc-600;
   }
+
+  @keyframes spotlight {
+    0% {
+      opacity: 0;
+      transform: translate(-72%, -62%) scale(0.5);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, -25%) scale(2);
+    }
+  }
+
+  @keyframes spotlight-mobile {
+    0% {
+      opacity: 0;
+      transform: translate(-72%, -62%) scale(0.5);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, -40%) scale(2);
+    }
+  }
+
+  .animate-spotlight {
+    animation: spotlight 2s ease 0.75s 1 forwards;
+  }
+
+  .animate-spotlight-mobile {
+    animation: spotlight-mobile 2s ease 0.75s 1 forwards;
+  }
 }

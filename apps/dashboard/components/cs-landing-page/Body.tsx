@@ -38,6 +38,8 @@ type Props = {
 function Body({ hero2 }: Props) {
   return (
     <>
+      <div className="absolute top-0 -z-1 inset-0 h-[150%] pointer-events-none w-full bg-black bg-[linear-gradient(to_right,#80808022_1px,transparent_1px),linear-gradient(to_bottom,#80808022_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_bottom,white_70%,transparent_100%)] "></div>
+
       {hero2 ? <Hero2 /> : <Hero />}
 
       <PartnerLogos />

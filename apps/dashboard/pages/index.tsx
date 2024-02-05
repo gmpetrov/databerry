@@ -70,6 +70,7 @@ export default function Home() {
           <strong>Chaindesk</strong>
         </h2>
       </div> */}
+
       <Header />
 
       {/* <script
@@ -83,26 +84,28 @@ export default function Home() {
         type="module"
         dangerouslySetInnerHTML={{
           __html: `import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
-
-  Chatbox.initBubble({
-    agentId: 'clq6g5cuv000wpv8iddswwvnd',
-  });`,
+          
+          Chatbox.initBubble({
+            agentId: 'clq6g5cuv000wpv8iddswwvnd',
+          });`,
         }}
       />
 
       {/* <Script id="chaindesk" strategy="afterInteractive">
         {`(function() {
-      d = document;
-      s = d.createElement('script');
-      s.id = 'clq6g5cuv000wpv8iddswwvnd';
-      s.setAttribute('data-name', 'databerry-chat-bubble');
-      s.src = 'https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest';
-      s.async = 1;
-      d.getElementsByTagName('head')[0].appendChild(s);
-    })();`}
+          d = document;
+          s = d.createElement('script');
+          s.id = 'clq6g5cuv000wpv8iddswwvnd';
+          s.setAttribute('data-name', 'databerry-chat-bubble');
+          s.src = 'https://cdn.jsdelivr.net/npm/@databerry/chat-bubble@latest';
+          s.async = 1;
+          d.getElementsByTagName('head')[0].appendChild(s);
+        })();`}
       </Script> */}
 
-      <main className={clsx('bg-black min-heigh-full', mounted ? mode : '')}>
+      <main
+        className={clsx('bg-black z-1 min-heigh-full', mounted ? mode : '')}
+      >
         {/* <HeroChatGPTPlugin />
         <PartnerLogos />
         
