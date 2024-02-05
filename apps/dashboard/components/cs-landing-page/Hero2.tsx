@@ -65,51 +65,6 @@ export default function Hero() {
                   </defs>
                 </svg> */}
 
-                <svg
-                  className="animate-spotlight-mobile sm:animate-spotlight pointer-events-none absolute z-[1] h-[169%] w-[138%] lg:w-[84%] opacity-0 -top-40 left-0 md:left-60 md:-top-20"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 3787 2842"
-                  fill="none"
-                >
-                  <g filter="url(#filter)">
-                    <ellipse
-                      cx="1924.71"
-                      cy="273.501"
-                      rx="1924.71"
-                      ry="273.501"
-                      transform="matrix(-0.822377 -0.568943 -0.568943 0.822377 3631.88 2291.09)"
-                      className="fill-white/[0.4] fill-transparent"
-                      fill-opacity="0.31"
-                    ></ellipse>
-                  </g>
-                  <defs>
-                    <filter
-                      id="filter"
-                      x="0.860352"
-                      y="0.838989"
-                      width="3785.16"
-                      height="2840.26"
-                      filterUnits="userSpaceOnUse"
-                      color-interpolation-filters="sRGB"
-                    >
-                      <feFlood
-                        flood-opacity="0"
-                        result="BackgroundImageFix"
-                      ></feFlood>
-                      <feBlend
-                        mode="normal"
-                        in="SourceGraphic"
-                        in2="BackgroundImageFix"
-                        result="shape"
-                      ></feBlend>
-                      <feGaussianBlur
-                        stdDeviation="151"
-                        result="effect1_foregroundBlur_1065_8"
-                      ></feGaussianBlur>
-                    </filter>
-                  </defs>
-                </svg>
-
                 <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
                   <span className="flex justify-center items-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
                     <span>New</span>

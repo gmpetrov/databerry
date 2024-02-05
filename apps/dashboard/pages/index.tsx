@@ -90,6 +90,19 @@ export default function Home() {
           });`,
         }}
       />
+      <Head>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          body {
+            width: 100dvw;
+            max-width: 100d%;
+            overflow-x: hidden;
+          }
+          `,
+          }}
+        />
+      </Head>
 
       {/* <Script id="chaindesk" strategy="afterInteractive">
         {`(function() {

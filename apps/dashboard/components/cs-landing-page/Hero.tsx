@@ -22,16 +22,16 @@ import { appUrl } from '@chaindesk/lib/config';
 export default function Hero() {
   return (
     <Container className="relative z-10 pt-20 pb-16 mb-12 text-center lg:pt-10">
-      <img
-        className="absolute left-0 object-contain bg-top opacity-60 -translate-y-1/4"
+      {/* <img
+        className="object-contain absolute left-0 bg-top opacity-60 -translate-y-1/4"
         src="https://nextsiders.vercel.app/_next/static/media/Hero.Gradient.0bce135c.svg"
         alt=""
-      />
+      /> */}
       <div className="relative z-10">
         <div className="flex flex-col space-y-8 text-center sm:space-y-0 sm:flex-row sm:space-x-8 sm:text-left">
           <Stack sx={{ width: '100%' }}>
             {/* <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
-              <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
+              <span className="flex justify-center items-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
                 <span>New</span>
               </span>
               Chat with any document
@@ -61,7 +61,7 @@ export default function Hero() {
               </Link>
             </div> */}
 
-            <h2 className="mb-4 text-lg font-bold sm:text-2xl text-violet-300">
+            <h2 className="mb-4 text-lg font-bold text-violet-300 sm:text-2xl">
               With our Autonomous Agent
             </h2>
             <h1 className=" text-4xl font-bold !leading-snug tracking-tight text-white whitespace-pre-wrap font-display sm:text-7xl">
@@ -71,37 +71,37 @@ export default function Hero() {
             <div className="flex flex-col mt-4 space-y-4">
               <div className="inline-flex items-center space-x-2">
                 <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                   Secure AI trained on your data
                 </p>
               </div>
               {/* <div className="inline-flex items-center space-x-2">
                 <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                   Proactive - Identify and resolve customer issues before they
                   contact you
                 </p>
               </div> */}
               <div className="inline-flex items-center space-x-2">
                 <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                   No hallucinations or misleading answers
                 </p>
               </div>
               <div className="inline-flex items-center space-x-2">
                 <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                   Seamless human handoff
                 </p>
               </div>
               <div className="inline-flex items-center space-x-2">
                 <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                   Plug and play in minutes.
                 </p>
               </div>
             </div>
-            {/* <p className="max-w-md mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:mx-0 sm:max-w-lg">
+            {/* <p className="mx-auto mt-6 max-w-md text-lg tracking-tight text-gray-200 sm:mx-0 sm:max-w-lg">
               With our{' '}
               <strong className="text-violet-300">no-code platform</strong>, you
               can create a{' '}

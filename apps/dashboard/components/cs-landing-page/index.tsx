@@ -19,6 +19,7 @@ import {
   SparklesIcon,
 } from '@heroicons/react/20/solid';
 import { useColorScheme } from '@mui/joy';
+import Head from 'next/head';
 import React, { useEffect } from 'react';
 
 import Cta from '../landing-page/Cta';
@@ -59,6 +60,20 @@ function CSLandingPage({}: Props) {
         id="clq6g5cuv000wpv8iddswwvnd"
         data-name="databerry-chat-bubble"
       ></script> */}
+
+      <Head>
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          body {
+            width: 100dvw;
+            max-width: 100d%;
+            overflow-x: hidden;
+          }
+          `,
+          }}
+        />
+      </Head>
 
       <script
         type="module"
