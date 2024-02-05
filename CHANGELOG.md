@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.225"></a>
+## 0.1.225 (2024-02-05)
+
+### Fixed
+
+- 🐛 Chatbox standard options [[bf50fdd](https://github.com/gmpetrov/databerry/commit/bf50fdd9cd6c5a6b25801f8ba5685fbc350bd298)]
+
+### Miscellaneous
+
+- 🎸 user profile picture + embeds options &amp; improvements [[bd77759](https://github.com/gmpetrov/databerry/commit/bd777590a6586b4c98e9e6c8d099289d3565f163)]
+- 🤖 update og image [[55a4c80](https://github.com/gmpetrov/databerry/commit/55a4c809aece415b755523c1a757adf28877e2b6)]
+
+
 <a name="0.1.224"></a>
 ## 0.1.224 (2024-02-05)
 
