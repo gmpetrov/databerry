@@ -86,8 +86,8 @@ export default function ProfileSettingsPage() {
   React.useEffect(() => {
     if (status === 'authenticated') {
       methods.reset({
-        email: session?.user?.email,
-        name: session?.user?.name,
+        email: session?.user?.email || '',
+        name: session?.user?.name || '',
         customPicture: session?.user?.customPicture,
       });
     }
@@ -141,7 +141,7 @@ export default function ProfileSettingsPage() {
 
           <IconInput
             // innerIcon={<CorporateFareRoundedIcon />}
-            defaultIconUrl={session?.user?.customPicture}
+            defaultIconUrl={session?.user?.customPicture || ''}
             value={customPicture!}
             onChange={handleUploadPicture}
             onDelete={() => {

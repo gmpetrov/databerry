@@ -25,7 +25,7 @@ export default function Hero() {
       <div className="relative">
         {/* <div className="absolute top-0 z-0 inset-0 h-full pointer-events-none w-full bg-black bg-[linear-gradient(to_right,#80808022_1px,transparent_1px),linear-gradient(to_bottom,#80808022_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]"></div> */}
 
-        <Container className="relative z-10 pt-20 pb-16 mb-12 text-center lg:pt-10">
+        <Container className="relative z-10 pt-8 pb-16 mb-12 text-center lg:pt-10">
           {/* <img
         className="object-contain absolute left-0 bg-top opacity-60 -translate-y-1/4"
         src="https://nextsiders.vercel.app/_next/static/media/Hero.Gradient.0bce135c.svg"
@@ -105,14 +105,16 @@ export default function Hero() {
                   </Link>
                 </div>
 
-                <h2 className="mb-2 text-lg font-bold text-violet-300 sm:text-2xl sm:mb-4">
+                {/* <h2 className="mb-2 text-lg font-bold text-violet-300 sm:text-2xl sm:mb-4">
                   Get Your Own
-                </h2>
+                </h2> */}
                 <h1 className="text-4xl font-bold !leading-tight tracking-tight text-white whitespace-pre-wrap  font-display sm:text-7xl bg-clip-text">
                   {/* {`Custom\nGPT Agent\nFor Your Startup`} */}
                   {/* {`ChatGPT\nSupport Agent\nFor Your Startup`} */}
                   {/* {`Scale\nYour Startup\nWith AI At your side`} */}
                   {`Custom\nGPT Agent\nFor Your Startup`}
+                  {/* <span>AI Support</span>
+                  {`\nFor Your Startup`} */}
                 </h1>
 
                 <div className="hidden flex-col mt-4 space-y-4 sm:flex">

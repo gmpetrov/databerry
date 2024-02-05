@@ -7,6 +7,7 @@ import type {
   Subscription,
   SubscriptionPlan,
   Usage,
+  User,
 } from '@chaindesk/prisma';
 
 declare module 'next-auth' {

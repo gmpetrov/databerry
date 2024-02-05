@@ -7,7 +7,7 @@ import { Agent } from '@chaindesk/prisma';
 
 export type InitWidgetProps = {
   id?: string;
-  initConfig: AgentInterfaceConfig;
+  initConfig?: AgentInterfaceConfig;
   agentId?: string;
   contact?: CustomContact;
   styles?: SxProps;
