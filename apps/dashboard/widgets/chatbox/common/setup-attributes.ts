@@ -5,7 +5,9 @@ import { InitWidgetProps } from './types';
 const setupAttributes = (
   props: {
     element: HTMLElement;
-  } & InitWidgetProps
+  } & InitWidgetProps & {
+      interface?: InitWidgetProps['initConfig'];
+    }
 ) => {
   props.element.setAttribute('agent-id', props.agentId || '');
 
@@ -18,15 +20,16 @@ const setupAttributes = (
     }
   }
 
+  if (props.id) {
+    props.element.setAttribute('id', props.id);
+  }
+
   if (props.context) {
     props.element.setAttribute('context', props.context);
   }
 
-  if (props.initialMessages && props.initialMessages.length > 0) {
-    props.element.setAttribute(
-      'initial-messages',
-      JSON.stringify(props.initialMessages)
-    );
+  if (props.interface) {
+    props.element.setAttribute('interface', JSON.stringify(props.interface));
   }
 
   if (props.styles) {

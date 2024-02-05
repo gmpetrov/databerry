@@ -6,12 +6,14 @@ import React, { ReactPropTypes, useEffect, useMemo } from 'react';
 
 import ChatBox from '@app/components/ChatBox';
 import useChat, { ChatContext, CustomContact } from '@app/hooks/useChat';
+import { InitWidgetProps } from '@app/widgets/chatbox/common/types';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, ConversationChannel } from '@chaindesk/prisma';
 
 import CustomerSupportActions from './CustomerSupportActions';
+import Loader from './Loader';
 import NewChatButton from './NewChatButton';
 
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
@@ -26,15 +28,11 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
-function ChatBoxFrame(props: {
-  initConfig?: AgentInterfaceConfig;
-  agentId?: string;
-  styles?: SxProps;
-  contact?: CustomContact;
-  context?: string;
-  initialMessages?: string[];
-  onAgentLoaded?: (agent: Agent) => any;
-}) {
+export type ChatBoxStandardProps = InitWidgetProps & {
+  instanceId?: string;
+};
+
+function ChatBoxFrame(props: ChatBoxStandardProps) {
   const [agentId, setAgentId] = React.useState<string | undefined>(
     props.agentId
   );
@@ -68,6 +66,12 @@ function ChatBoxFrame(props: {
   const textColor = useMemo(() => {
     return pickColorBasedOnBgColor(primaryColor, '#ffffff', '#000000');
   }, [primaryColor]);
+
+  useEffect(() => {
+    if (props.initConfig) {
+      setConfig(props.initConfig);
+    }
+  }, [props.initConfig]);
 
   const isPremium = !!(agent as any)?.organization?.subscriptions?.[0]?.id;
 
@@ -115,6 +119,7 @@ function ChatBoxFrame(props: {
       setConfig({
         ...defaultChatBubbleConfig,
         ...agentConfig,
+        ...props.initConfig,
       });
 
       props?.onAgentLoaded?.(data);
@@ -138,14 +143,14 @@ function ChatBoxFrame(props: {
 
   const initialMessages = useMemo(() => {
     let msgs = [] as string[];
-    if (!!props?.initialMessages?.length) {
-      msgs = props.initialMessages;
+    if (!!props?.initConfig?.initialMessages?.length) {
+      msgs = props?.initConfig.initialMessages;
     } else {
       msgs = config?.initialMessages || [];
     }
 
     return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
-  }, [props.initialMessages, config?.initialMessages]);
+  }, [props?.initConfig?.initialMessages, config?.initialMessages]);
 
   if (!agent) {
     return (

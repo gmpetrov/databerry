@@ -8,6 +8,8 @@ import { createRoot, Root } from 'react-dom/client';
 import { CustomContact } from '@app/hooks/useChat';
 import { theme, themeKeys } from '@app/utils/themes/chat-bubble';
 
+import { InitWidgetProps } from './types';
+
 const contactAttributes = {
   'phone-number': 'phoneNumber',
   'user-id': 'userId',
@@ -20,14 +22,7 @@ const assetsBaseUrl = process.env.NEXT_PUBLIC_ASSETS_BASE_URL || '';
 
 type Props = {
   name: string;
-  widget: FunctionComponent<{
-    agentId: string;
-    contact: CustomContact;
-    styles?: any;
-    context?: string;
-    initialMessages?: string[];
-    onAgentLoaded?: (agent: any) => any;
-  }>;
+  widget: FunctionComponent<InitWidgetProps>;
 };
 
 const createElement = ({ name, widget }: Props) =>
@@ -83,12 +78,12 @@ const createElement = ({ name, widget }: Props) =>
       );
 
       const context = this.getAttribute('context') as string;
-      let initialMessages = [] as string[];
+      let initConfig = {} as InitWidgetProps['initConfig'];
 
       try {
-        initialMessages = JSON.parse(
-          this.getAttribute('initial-messages')!
-        ) as string[];
+        initConfig = JSON.parse(
+          this.getAttribute('interface')!
+        ) as InitWidgetProps['initConfig'];
       } catch {}
 
       this.root.render(
@@ -102,16 +97,13 @@ const createElement = ({ name, widget }: Props) =>
             >
               <ScopedCssBaseline>
                 {React.createElement(widget, {
+                  initConfig,
                   context,
-                  agentId:
-                    this.getAttribute('agent-id') ||
-                    this.getAttribute('id') ||
-                    '',
+                  agentId: this.getAttribute('agent-id') || '',
                   contact: contact,
                   styles: this.getAttribute('styles')
                     ? JSON.parse(this.getAttribute('styles')!)
                     : {},
-                  initialMessages,
 
                   onAgentLoaded: (agent: any) => {
                     const customCSS = (agent?.interfaceConfig as any)
@@ -123,7 +115,7 @@ const createElement = ({ name, widget }: Props) =>
                       this.shadowRootElement.appendChild(customStyle);
                     }
                   },
-                })}
+                } as InitWidgetProps)}
               </ScopedCssBaseline>
             </CssVarsProvider>
           </CacheProvider>

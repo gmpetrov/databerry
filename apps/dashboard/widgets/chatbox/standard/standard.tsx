@@ -9,6 +9,4 @@ const element = createElement({
   name,
 });
 
-customElements.define(name, element);
-
 export default element;

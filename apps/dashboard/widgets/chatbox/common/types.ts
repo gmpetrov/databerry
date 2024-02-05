@@ -3,13 +3,15 @@ import { SxProps } from '@mui/joy/styles/types';
 import { CustomContact } from '@app/hooks/useChat';
 
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
+import { Agent } from '@chaindesk/prisma';
 
 export type InitWidgetProps = {
-  agentId?: string;
-  onMarkedAsResolved?(): any;
-  contact?: CustomContact;
+  id?: string;
   initConfig: AgentInterfaceConfig;
+  agentId?: string;
+  contact?: CustomContact;
   styles?: SxProps;
   context?: string;
-  initialMessages?: string[];
+  onMarkedAsResolved?(): any;
+  onAgentLoaded?: (agent: Agent) => any;
 };

@@ -20,6 +20,7 @@ import { Transition } from 'react-transition-group';
 import ChatBox from '@app/components/ChatBox';
 import useChat, { ChatContext, CustomContact } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { InitWidgetProps } from '@app/widgets/chatbox/common/types';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
@@ -43,14 +44,11 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 
 export const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
-function App(props: {
-  agentId: string;
+export type BubbleProps = InitWidgetProps & {
   initConfig?: AgentInterfaceConfig;
-  onAgentLoaded?: (agent: Agent) => any;
-  contact?: CustomContact;
-  context?: string;
-  initialMessages?: string[];
-}) {
+};
+
+function App(props: BubbleProps) {
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
   const chatBoxRef = useRef(null);
@@ -125,6 +123,7 @@ function App(props: {
         config: {
           ...defaultChatBubbleConfig,
           ...agentConfig,
+          ...props.initConfig,
         },
       });
 
@@ -137,14 +136,14 @@ function App(props: {
 
   const initMessages = useMemo(() => {
     let msgs = [] as string[];
-    if (!!props?.initialMessages?.length) {
-      msgs = props.initialMessages;
+    if (!!props?.initConfig?.initialMessages?.length) {
+      msgs = props?.initConfig.initialMessages;
     } else {
       msgs = state?.config?.initialMessages || [];
     }
 
     return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
-  }, [props.initialMessages, state?.config?.initialMessages]);
+  }, [props?.initConfig?.initialMessages, state?.config?.initialMessages]);
 
   useEffect(() => {
     if (props.agentId) {
@@ -580,7 +579,7 @@ function App(props: {
                     onSubmit={handleChatSubmit}
                     messageTemplates={state.config.messageTemplates}
                     initialMessage={state.config.initialMessage}
-                    initialMessages={state.config.initialMessages}
+                    initialMessages={initMessages}
                     agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
                     isLoadingConversation={isLoadingConversation}
                     hasMoreMessages={hasMoreMessages}

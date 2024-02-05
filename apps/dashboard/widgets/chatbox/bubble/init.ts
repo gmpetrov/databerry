@@ -1,32 +1,37 @@
+import type { BubbleProps } from '@app/components/ChatBubble';
+
 import setupAttributes from '../common/setup-attributes';
-import { InitWidgetProps } from '../common/types';
 import { hookFunctionsToWindow, toDashedCase } from '../utils';
 
 import ChatboxBubble from './bubble';
-const initBubble = async (props: InitWidgetProps) => {
-  const currentScriptSrc = (document?.currentScript as any)?.src;
+const initBubble = async (props: BubbleProps) => {
+  if (typeof window !== 'undefined' && !(window as any)?.ChatboxBubble) {
+    const currentScriptSrc = (document?.currentScript as any)?.src;
 
-  // To fix retro-compatibility.
-  const currentScriptId = (document?.currentScript as any)?.id;
+    // To fix retro-compatibility.
+    const currentScriptId = (document?.currentScript as any)?.id;
 
-  let agentId = props.agentId || currentScriptId;
+    let agentId = props.agentId || currentScriptId;
 
-  if (!agentId && currentScriptSrc) {
-    const urlObj = new URL(currentScriptSrc);
-    agentId =
-      urlObj.searchParams.get('agentId') || currentScriptId || props.agentId;
+    if (!agentId && currentScriptSrc) {
+      const urlObj = new URL(currentScriptSrc);
+      agentId =
+        urlObj.searchParams.get('agentId') || currentScriptId || props.agentId;
+    }
+
+    hookFunctionsToWindow(props);
+
+    const element = new ChatboxBubble();
+
+    setupAttributes({
+      element,
+      ...props,
+    });
+
+    (window as any).ChatboxBubble = element;
+
+    document?.body?.prepend(element);
   }
-
-  hookFunctionsToWindow(props);
-
-  const element = new ChatboxBubble();
-
-  setupAttributes({
-    element,
-    ...props,
-  });
-
-  document?.body?.prepend(element);
 };
 
 export default initBubble;
