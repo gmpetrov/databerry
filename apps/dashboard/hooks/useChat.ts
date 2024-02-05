@@ -70,6 +70,8 @@ export type ChatMessage = {
   approvals: ActionApproval[];
   metadata?: Record<string, any>;
   attachments?: Attachment[];
+  iconUrl?: string;
+  fromName?: string;
 };
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
@@ -601,6 +603,8 @@ const useChat = ({
             approvals: message?.approvals || [],
             metadata: message?.metadata || ({} as any),
             attachments: message?.attachments || ([] as Attachment[]),
+            iconUrl: message?.user?.customPicture || message?.user?.picture,
+            fromName: message?.user?.name,
           })),
         conversationStatus:
           getConversationQuery.data[0]?.status ?? state.conversationStatus,

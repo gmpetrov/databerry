@@ -320,6 +320,7 @@ export const formatUserSession = (
 ) => {
   return {
     ...user,
+    customPicture: user?.customPicture || user?.picture,
     memberships: user?.memberships || [],
     usage: user?.usage as Usage,
     nbAgents: user?.['_count']?.agents as number,

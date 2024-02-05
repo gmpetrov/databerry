@@ -119,7 +119,10 @@ function App(props: BubbleProps) {
       const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
 
       setState({
-        agent: data,
+        agent: {
+          ...data,
+          iconUrl: props?.initConfig?.iconUrl || data?.iconUrl,
+        },
         config: {
           ...defaultChatBubbleConfig,
           ...agentConfig,
@@ -189,7 +192,12 @@ function App(props: BubbleProps) {
       return (
         <Avatar
           src={state.agent?.iconUrl}
-          sx={{ width: '100%', height: '100%' }}
+          sx={{
+            width: '100%',
+            height: '100%',
+            background: 'transparent',
+            ...props?.initConfig?.bubbleIconStyle,
+          }}
         />
       );
       // return <img src={state.agent?.iconUrl} width="100%" height="100%" />;
@@ -202,7 +210,7 @@ function App(props: BubbleProps) {
         />
       );
     }
-  }, [state.agent?.iconUrl]);
+  }, [state.agent?.iconUrl, props?.initConfig?.bubbleIconStyle]);
 
   if (!state.agent) {
     return null;
@@ -581,6 +589,7 @@ function App(props: BubbleProps) {
                     initialMessage={state.config.initialMessage}
                     initialMessages={initMessages}
                     agentIconUrl={state.agent?.iconUrl! || defaultAgentIconUrl}
+                    agentIconStyle={props?.initConfig?.iconStyle}
                     isLoadingConversation={isLoadingConversation}
                     hasMoreMessages={hasMoreMessages}
                     handleLoadMoreMessages={handleLoadMoreMessages}
@@ -657,6 +666,7 @@ function App(props: BubbleProps) {
                     filter: 'brightness(0.9)',
                     transform: 'scale(1.05)',
                   },
+                  ...props?.initConfig?.bubbleButtonStyle,
                 })}
               >
                 <AnimatePresence>

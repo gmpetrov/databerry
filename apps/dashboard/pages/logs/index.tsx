@@ -1166,6 +1166,15 @@ export default function LogsPage() {
                     approvals: each.approvals || [],
                     sources: (each.sources as any) || [],
                     attachments: each.attachments || [],
+                    iconUrl: (each?.from === 'human'
+                      ? each?.user?.customPicture || each?.user?.picture
+                      : each?.agent?.iconUrl) as string,
+                    fromName: (each?.from === 'human'
+                      ? each?.user?.name ||
+                        each?.contact?.email ||
+                        each?.contact?.phoneNumber ||
+                        (each?.visitorId ? `Visitor ${each?.visitorId}` : '')
+                      : each?.agent?.name) as string,
                   })) || []
                 }
                 isLoadingConversation={getConversationQuery?.isLoading}

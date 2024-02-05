@@ -1,6 +1,6 @@
 {
   "name": "@chaindesk/embeds",
-  "version": "1.0.147",
+  "version": "1.0.149",
   "description": "Chaindesk Embeds",
   "main": "dist/chatbox/index.js",
   "scripts": {},

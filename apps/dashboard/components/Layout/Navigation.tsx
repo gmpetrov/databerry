@@ -9,9 +9,12 @@ import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
+import MarkChatUnreadRoundedIcon from '@mui/icons-material/MarkChatUnreadRounded';
 import NewReleasesRoundedIcon from '@mui/icons-material/NewReleasesRounded';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import QuestionMarkRoundedIcon from '@mui/icons-material/QuestionMarkRounded';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded'; // Icons import
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
@@ -34,6 +37,7 @@ import Stack from '@mui/joy/Stack';
 import SvgIcon from '@mui/joy/SvgIcon';
 import Typography from '@mui/joy/Typography';
 import getConfig from 'next/config';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
@@ -401,6 +405,75 @@ export default function Navigation() {
     <Stack sx={{ height: '100%' }}>
       <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
         <ListItem nested>
+          {!!session?.user?.id && (
+            <Head>
+              <script
+                id="chatbox"
+                type="module"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                  // import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+                  import Chatbox from 'http://localhost:8000/dist/chatbox/index.js';
+                  
+                  try {
+
+                  
+                  Chatbox.initBubble({
+                      // agentId: 'clq6g5cuv000wpv8iddswwvnd',
+                      agentId: 'clrz0tn6h000108kxfyomdzxg',
+                      contact: {
+                        userId: '${session?.user?.id}',
+                        firstName: '${session?.user?.name || ''}',
+                        email: '${session?.user?.email}',
+                      },
+                      context: \`${`Task Bug Reporting: Use the following step-by-step to collect information about the bug and report it to the development team.
+                      1- Please describe the bug in detail.
+                      2- Please provide the steps to reproduce the bug.
+                      3- Please provide the expected behavior.
+                      4- Please provide your ressource ID (Agent ID or Datastore ID or Form ID)
+                      5- Please share a screenshot or a video if possible.
+                      6- Tell the user that the bug has been reported and that the development team will take care of it.
+                      `}\`,
+                      interface: {
+                        // iconUrl: 'https://www.chaindesk.ai/favicon.png',
+                        iconUrl: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png',
+                        position: 'right',
+                        bubbleButtonStyle: {
+                          width: '40px',
+                          height: '40px',
+                        },
+                        bubbleIconStyle: {
+                          // padding: '4px'
+                          padding: '5px'
+                        },
+                        iconStyle: {
+                          // padding: '7px'
+                          padding: '5px'
+                        },
+                        isInitMessagePopupDisabled: true,
+                        initialMessages: [
+                          'Hello <strong>${
+                            session?.user?.name || session?.user?.email || ''
+                          }</strong> 👋',
+                          'How can I help you ?',
+                        ],
+                        messageTemplates: [
+                          "🐛 Bug Report",
+                          "🤔 Missing Feature",
+                          "❤️ I Love Chaindesk",
+                        ]
+                      } 
+                    });
+
+                  } catch (error) {
+                    console.log(error)
+                  }
+                  `,
+                }}
+              />
+            </Head>
+          )}
+
           {/* <ListSubheader>
           Browse
           <IconButton
@@ -485,7 +558,7 @@ export default function Navigation() {
                         variant="soft"
                         // endDecorator={
                         //   <Chip
-                        //     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+                        //     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
                         //     size="sm"
                         //     sx={{
                         //       color: 'white',
@@ -514,7 +587,7 @@ export default function Navigation() {
                       variant="soft"
                       endDecorator={
                         <Chip
-                          className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 "
+                          className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
                           size="sm"
                           sx={{
                             color: 'white',

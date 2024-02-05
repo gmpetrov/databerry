@@ -56,6 +56,28 @@ export const getConversation = async (
           createdAt: 'asc',
         },
         include: {
+          agent: {
+            select: {
+              id: true,
+              name: true,
+              iconUrl: true,
+            },
+          },
+          contact: {
+            select: {
+              id: true,
+              phoneNumber: true,
+              email: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              picture: true,
+              customPicture: true,
+            },
+          },
           attachments: true,
           approvals: {
             include: {

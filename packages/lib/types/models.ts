@@ -235,6 +235,10 @@ export const AgentInterfaceConfig = z.object({
   githubURL: z.string().optional(),
   websiteURL: z.string().optional(),
   customCSS: z.string().optional(),
+  iconUrl: z.string().optional(),
+  bubbleButtonStyle: z.any({}).optional(),
+  bubbleIconStyle: z.any({}).optional(),
+  iconStyle: z.any({}).optional(),
   rateLimit: z
     .object({
       enabled: z.boolean().optional(),
@@ -251,4 +255,8 @@ export const AgentInterfaceConfig = z.object({
     .optional(),
 });
 
-export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig>;
+export type AgentInterfaceConfig = z.infer<typeof AgentInterfaceConfig> & {
+  bubbleButtonStyle?: React.CSSProperties;
+  bubbleIconStyle?: React.CSSProperties;
+  iconStyle?: React.CSSProperties;
+};
