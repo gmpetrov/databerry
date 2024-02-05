@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.224"></a>
+## 0.1.224 (2024-02-05)
+
+### Fixed
+
+- 🐛 landing page overflow [[fed4107](https://github.com/gmpetrov/databerry/commit/fed410753e579ec78c818f4789648f470a4da5fb)]
+- ✏️ enh langinge page hero [[173c1e2](https://github.com/gmpetrov/databerry/commit/173c1e2dca0f1f0e0d969b8990174b1d0d74424d)]
+
+
 <a name="0.1.223"></a>
 ## 0.1.223 (2024-02-04)
 
