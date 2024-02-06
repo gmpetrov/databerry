@@ -6,14 +6,15 @@ import { hookFunctionsToWindow } from '../utils';
 
 import ChatboxStandard, { name } from './standard';
 
-const initStandard = async (props: ChatBoxStandardProps) => {
+const initStandard = (props: ChatBoxStandardProps) => {
   if (!customElements.get(name)) {
     customElements.define(name, ChatboxStandard);
   }
 
   hookFunctionsToWindow(props);
 
-  const element = new ChatboxStandard();
+  const id = `ChatBoxStandard_` + (props.id || '');
+  const element = new ChatboxStandard({ instanceId: id });
 
   const standardElement = props.id
     ? (document.querySelector(`${name}[id="${props.id}"]`) as HTMLElement)
@@ -24,8 +25,6 @@ const initStandard = async (props: ChatBoxStandardProps) => {
         props.id ? ` with ID ${props.id}` : ``
       }`} not found.`
     );
-
-  const id = `ChatBoxStandard_` + (props.id || '');
 
   if (!(window as any)[id]) {
     const mergedStyles = {
@@ -47,6 +46,8 @@ const initStandard = async (props: ChatBoxStandardProps) => {
 
     standardElement.replaceWith(element);
   }
+
+  return (window as any)[id] as typeof element;
 };
 
 export default initStandard;

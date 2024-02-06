@@ -21,7 +21,7 @@ const initBubble = async (props: BubbleProps) => {
 
     hookFunctionsToWindow(props);
 
-    const element = new ChatboxBubble();
+    const element = new ChatboxBubble({ instanceId: 'ChatBoxBubble' });
 
     setupAttributes({
       element,
@@ -32,6 +32,7 @@ const initBubble = async (props: BubbleProps) => {
 
     document?.body?.prepend(element);
   }
+  (window as any)?.ChatboxBubble as HTMLElement;
 };
 
 export default initBubble;

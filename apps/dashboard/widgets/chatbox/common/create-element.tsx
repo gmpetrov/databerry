@@ -31,9 +31,18 @@ const createElement = ({ name, widget }: Props) =>
     root: Root;
     cache: EmotionCache;
     shadowRootElement: HTMLDivElement;
+    instanceId?: string;
 
-    constructor() {
+    destroy() {
+      this.innerHTML = '';
+      if (this.instanceId) {
+        (window as any)[this.instanceId!] = null;
+      }
+    }
+
+    constructor(props: { instanceId?: string }) {
       super();
+      this.instanceId = props?.instanceId;
       const shadowContainer = this.attachShadow({ mode: 'open' });
 
       const remoteFonts = document.createElement('link');
