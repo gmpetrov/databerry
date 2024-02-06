@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.226"></a>
+## 0.1.226 (2024-02-06)
+
+### Fixed
+
+- 🐛 rollback to gpt-3.5-turbo-1106 [[cf5a8a5](https://github.com/gmpetrov/databerry/commit/cf5a8a5722b89bef201dbe96036afd7d2c650686)]
+- 🐛 type error [[5ac7081](https://github.com/gmpetrov/databerry/commit/5ac708147c52a291a7885fd5dc30e72bb4499241)]
+
+
 <a name="0.1.225"></a>
 ## 0.1.225 (2024-02-05)
 
