@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.228"></a>
+## 0.1.228 (2024-02-06)
+
+### Fixed
+
+- 🐛 update auto-sync label [[968b8df](https://github.com/gmpetrov/databerry/commit/968b8df8839e7eeaf69602dbf9bb17eda6e1d735)]
+
+
 <a name="0.1.227"></a>
 ## 0.1.227 (2024-02-06)
 
