@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.227"></a>
+## 0.1.227 (2024-02-06)
+
+### Fixed
+
+- 🐛 Wrong info labels [[1645ff3](https://github.com/gmpetrov/databerry/commit/1645ff3c873112b1d3005496fe1e5f78260086b5)]
+
+
 <a name="0.1.226"></a>
 ## 0.1.226 (2024-02-06)
 
