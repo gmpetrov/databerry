@@ -200,16 +200,17 @@ export default function DatasourceTable({
     <React.Fragment>
       <Alert startDecorator={<InfoRoundedIcon />} sx={{ mt: -3, mb: 2 }}>
         <Stack>
-          <p>
+          {/* <p>
             Datastores are{' '}
             <strong>automatically synchronized every Monday</strong> at
             approximately <strong>2 AM UTC</strong> to ensure the most
             up-to-date information is available{' '}
             <strong>(for premium users only)</strong>.
-          </p>
+          </p> */}
           <p>
-            We are actively working on reducing the refresh interval to provide
-            even timelier data updates.
+            Datastores are <strong>automatically synchronized</strong> when the
+            underlying data changes{' '}
+            <strong>(Auto-sync is enabled for premium users only)</strong>.
           </p>
         </Stack>
       </Alert>
@@ -487,7 +488,7 @@ export default function DatasourceTable({
                   <Typography fontWeight="md">{row.id}</Typography>
                 </td> */}
                   <td>
-                    <div className="flex justify-center ">
+                    <div className="flex justify-center">
                       <Checkbox
                         disabled={state.isBulkDeleting}
                         checked={selected.includes(datasource.id)}
