@@ -27,7 +27,7 @@ export default function AgentTable({ items }: { items: Agent[] }) {
           flex: 1,
           overflow: 'auto',
           minHeight: 0,
-          my: 4,
+          mb: 4,
         }}
       >
         <Table

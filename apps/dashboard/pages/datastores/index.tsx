@@ -168,9 +168,10 @@ export default function DatasourcesPage() {
         startDecorator={<InfoRoundedIcon />}
         sx={{ mb: 2 }}
       >
-        A datastore is a container that holds different type of datasources
-        (files, web pages, etc...). At the moment an Agent can be connected to
-        one datastore only.
+        A Datastore serves as a repository that contains various types of data
+        sources, including files, web pages, Notion notebooks, etc.. Once data
+        is uploaded to a Datastore, it undergoes processing (vectorization) to
+        prepare it for use by an Agent (Large Language Model).
       </Alert>
 
       {getDatastoresQuery?.data && (

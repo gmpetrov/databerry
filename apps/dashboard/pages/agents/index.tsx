@@ -3,6 +3,7 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {
+  Alert,
   Box,
   Breadcrumbs,
   Button,
@@ -157,6 +158,17 @@ export default function AgentsPage() {
           </Button>
         </Box>
       </Box>
+
+      <Alert
+        variant="soft"
+        color="neutral"
+        startDecorator={<InfoRoundedIcon />}
+        sx={{ mb: 2 }}
+      >
+        Agents are customizable instances of large language models tailored to
+        fit your specific use cases. By connecting them to a datastore, you can
+        train them on your unique knowledge base.
+      </Alert>
 
       {getAgentsQuery.data && <AgentTable items={getAgentsQuery.data} />}
 
