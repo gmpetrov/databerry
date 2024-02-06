@@ -1,5 +1,5 @@
 import * as esbuild from 'esbuild';
-
+import postcss from 'esbuild-postcss';
 const isProd = process.env.NODE_ENV === 'production';
 
 let ctx = await esbuild.context({
@@ -8,6 +8,7 @@ let ctx = await esbuild.context({
     'widgets/chatbox/styles.ts',
     'widgets/chatbox/legacy.js',
     'widgets/form/index.ts',
+    'widgets/form/styles.css',
   ],
   bundle: true,
   outdir: 'tests/embeds/dist',
@@ -31,6 +32,7 @@ let ctx = await esbuild.context({
   },
   metafile: true,
   sourcemap: true,
+  plugins: [postcss()],
   ...(isProd
     ? {
         minify: true,

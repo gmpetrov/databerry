@@ -163,6 +163,7 @@
     "cssnano": "^6.0.1",
     "dotenv-cli": "^7.1.0",
     "esbuild": "^0.20.0",
+    "esbuild-postcss": "^0.0.4",
     "eslint-config-custom": "workspace:*",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",

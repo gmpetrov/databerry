@@ -73,6 +73,7 @@ import { withAuth } from '@chaindesk/lib/withAuth';
 import { Prisma } from '@chaindesk/prisma';
 
 import BlablaFormViewer from './BlablaFormViewer';
+import { API_URL } from './ChatBubble';
 
 type Props = {
   formId: string;
@@ -81,7 +82,7 @@ type Props = {
 
 function BlablaFormLoader(props: Props) {
   const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
-    props.formId ? `/api/forms/${props.formId}` : null,
+    props.formId ? `${API_URL}/api/forms/${props.formId}` : null,
     fetcher
   );
 

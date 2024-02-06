@@ -115,7 +115,7 @@ const createElement = ({ name, widget }: Props) =>
                       this.shadowRootElement.appendChild(customStyle);
                     }
                   },
-                } as InitWidgetProps)}
+                } satisfies InitWidgetProps)}
               </ScopedCssBaseline>
             </CssVarsProvider>
           </CacheProvider>
