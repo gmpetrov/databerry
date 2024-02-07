@@ -53,7 +53,7 @@ function CSLandingPage({}: Props) {
         uri="/"
       />
 
-      <Header />
+      {/* <Header /> */}
 
       {/* <script
         defer

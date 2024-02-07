@@ -70,8 +70,7 @@ export default function Home() {
           <strong>Chaindesk</strong>
         </h2>
       </div> */}
-
-      <Header />
+      {/* <Header /> */}
 
       {/* <script
         defer

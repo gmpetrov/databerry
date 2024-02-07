@@ -18,6 +18,8 @@ import React from 'react';
 import { Container } from '@app/components/landing-page/Container';
 
 import { appUrl } from '@chaindesk/lib/config';
+import { CardBody, CardContainer, CardItem } from '@chaindesk/ui/3dCard';
+import { BackgroundGradient } from '@chaindesk/ui/BackgroundGradient';
 
 export default function Hero() {
   return (
@@ -108,11 +110,13 @@ export default function Hero() {
                 {/* <h2 className="mb-2 text-lg font-bold text-violet-300 sm:text-2xl sm:mb-4">
                   Get Your Own
                 </h2> */}
-                <h1 className="text-4xl font-bold !leading-tight tracking-tight text-white whitespace-pre-wrap  font-display sm:text-7xl bg-clip-text">
+                <h1 className="text-4xl font-bold !leading-tight tracking-tight  whitespace-pre-wrap  font-display sm:text-7xl relative text-transparent bg-clip-text bg-gradient-to-b from-neutral-200 to-neutral-500">
                   {/* {`Custom\nGPT Agent\nFor Your Startup`} */}
                   {/* {`ChatGPT\nSupport Agent\nFor Your Startup`} */}
                   {/* {`Scale\nYour Startup\nWith AI At your side`} */}
-                  {`Custom\nGPT Agent\nFor Your Startup`}
+                  {/* {`Custom\nGPT Agent\nFor Your Startup`} */}
+                  {`Your Support\nOn Autopilot`}
+                  {/* {`Customer Support\nOn Autopilot`} */}
                   {/* <span>AI Support</span>
                   {`\nFor Your Startup`} */}
                 </h1>
@@ -120,6 +124,11 @@ export default function Hero() {
                 <div className="hidden flex-col mt-4 space-y-4 sm:flex">
                   <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
+
+                    {/* <TextGenerateEffect
+                      words="Custom ChatGPT chatbot trained on your data"
+                      className="mx-auto max-w-md font-medium tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg"
+                    ></TextGenerateEffect> */}
                     <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                       Custom ChatGPT chatbot trained on your data
                     </p>
@@ -134,19 +143,31 @@ export default function Hero() {
                   <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
                     <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
-                      No hallucinations or misleading answers
-                    </p>
-                  </div>
-                  <div className="inline-flex items-center space-x-2">
-                    <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                       Seamless human handoff
                     </p>
+
+                    {/* <TextGenerateEffect
+                      words="Seamless human handoff"
+                      className="mx-auto max-w-md font-medium tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg"
+                    ></TextGenerateEffect> */}
                   </div>
                   <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
                     <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
-                      Plug and play in minutes.
+                      Shared Inbox for your team
+                    </p>
+                  </div>
+                  {/* <div className="inline-flex items-center space-x-2">
+                    <CheckBadgeIcon className="w-5 h-5 text-green-400" />
+                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                      No hallucinations or misleading answers
+                    </p>
+                  </div> */}
+
+                  <div className="inline-flex items-center space-x-2">
+                    <CheckBadgeIcon className="w-5 h-5 text-green-400" />
+                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                      Plug and play in minutes
                     </p>
                   </div>
                 </div>
@@ -210,18 +231,23 @@ export default function Hero() {
                 >
                   <Stack>
                     <Link target="_blank" href={`${appUrl}/signin`}>
-                      <Button
+                      <button className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#603c96,45%,#ad93d4,55%,#603c96)] bg-[length:200%_100%] px-6 font-medium text-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                        ⚡️ Get Started Now
+                      </button>
+                      {/* <Button
+
+                 
                         variant="solid"
                         size="lg"
                         // startDecorator={<RocketLaunchRounded />}
                         sx={{ borderRadius: 100 }}
-                      >{`⚡️ Get Started Now`}</Button>
+                      >{`⚡️ Get Started Now`}</Button> */}
                     </Link>
                     <p className="mt-2 text-sm italic text-center">
                       No credit card required
                     </p>
                   </Stack>
-                  <Link
+                  {/* <Link
                     target="_blank"
                     href={'https://calendar.app.google/js1tgwSh2CUvV4CA7'}
                   >
@@ -233,26 +259,131 @@ export default function Hero() {
                     >
                       Book a Call
                     </Button>
-                  </Link>
+                  </Link> */}
                 </Stack>
               </Stack>
 
-              <div className="flex flex-col items-center w-full sm:w-2/3">
-                <Image
+              <div className="flex flex-col justify-center items-center w-full sm:w-2/3">
+                {/* <Image
                   src="/landing-page/inputs.png"
                   width="500"
                   height="150"
                   className="w-full"
                   alt="Datasources"
-                />
-                <div className="w-full h-[500px] overflow-hidden rounded-3xl bg-white">
-                  <iframe
+                /> */}
+                <div className="flex overflow-visible justify-center items-center w-full bg-transparent rounded-3xl">
+                  <CardContainer className="relative h-full inter-var">
+                    <BackgroundGradient className="p-0">
+                      <CardBody className="h-full bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] max-w-[400px] rounded-3xl px-6 py-2 border">
+                        {/* <CardItem translateZ="70" className="w-full">
+                          <Image
+                            src="/landing-page/inputs.png"
+                            width="500"
+                            height="150"
+                            className="w-full"
+                            alt="Datasources"
+                          />
+                        </CardItem> */}
+                        <CardItem translateZ="50" className="mt-2 w-full">
+                          <Image
+                            src="/images/messages/1.png"
+                            width="1000"
+                            height="150"
+                            className="w-full"
+                            alt="Datasources"
+                          />
+                        </CardItem>
+                        <CardItem translateZ="100" className="mt-2 w-full">
+                          <Image
+                            src="/images/messages/2.png"
+                            width="1000"
+                            height="150"
+                            className="w-full"
+                            alt="Datasources"
+                          />
+                        </CardItem>
+                        <CardItem translateZ="50" className="mt-2 w-full">
+                          <Image
+                            src="/images/messages/3.png"
+                            width="1000"
+                            height="150"
+                            className="w-full"
+                            alt="Datasources"
+                          />
+                        </CardItem>
+                        <CardItem translateZ="100" className="mt-2 w-full">
+                          <Image
+                            src="/images/messages/4.png"
+                            width="1000"
+                            height="150"
+                            className="w-full"
+                            alt="Datasources"
+                          />
+                        </CardItem>
+                        <CardItem translateZ="100" className="mt-2 w-full">
+                          <Image
+                            src="/images/messages/5.png"
+                            width="1000"
+                            height="150"
+                            className="w-full"
+                            alt="Datasources"
+                          />
+                        </CardItem>
+                        <CardItem translateZ="100" className="mt-2 w-full">
+                          <Image
+                            src="/images/messages/6.png"
+                            width="1000"
+                            height="150"
+                            className="w-full"
+                            alt="Datasources"
+                          />
+                        </CardItem>
+                        {/* <CardItem
+                          translateZ="50"
+                          className="text-xl font-bold text-neutral-600 dark:text-white"
+                        >
+                          Make things float in air
+                        </CardItem> */}
+                        {/* <CardItem
+                          as="p"
+                          translateZ="60"
+                          className="mt-2 max-w-sm text-sm text-neutral-500 dark:text-neutral-300"
+                        >
+                          Hover over this card to unleash the power of CSS
+                          perspective
+                        </CardItem> */}
+                        {/* <CardItem translateZ="100" className="w-full">
+                          <Image
+                            src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=2560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            height="1000"
+                            width="1000"
+                            className="object-cover w-full h-60 rounded-xl group-hover/card:shadow-xl"
+                            alt="thumbnail"
+                          />
+                        </CardItem> */}
+
+                        <div className="flex justify-center items-center mt-4 mb-4">
+                          <a href={`${appUrl}/signin`} target="_blank">
+                            <CardItem
+                              translateZ={20}
+                              as="button"
+                              className="px-4 py-2 text-xs font-bold text-white bg-black rounded-xl dark:bg-white dark:text-black"
+                            >
+                              Install On Your Website →
+                            </CardItem>
+                          </a>
+                        </div>
+                      </CardBody>
+                    </BackgroundGradient>
+                  </CardContainer>
+
+                  {/* <iframe
                     src={`${appUrl}/agents/clq6g5cuv000wpv8iddswwvnd/iframe`}
                     width="100%"
                     height="100%"
                     frameBorder="0"
                     allow="clipboard-write"
-                  ></iframe>
+                  ></iframe> */}
                 </div>
               </div>
             </div>

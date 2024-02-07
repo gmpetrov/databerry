@@ -20,6 +20,10 @@ import {
 } from '@heroicons/react/20/solid';
 import React, { useEffect } from 'react';
 
+import { Header } from '@app/components/landing-page/Header';
+
+import { Spotlight } from '@chaindesk/ui/Spotlight';
+
 import Cta from '../landing-page/Cta';
 import FAQ from '../landing-page/FAQ';
 import { Footer } from '../landing-page/Footer';
@@ -38,10 +42,23 @@ type Props = {
 function Body({ hero2 }: Props) {
   return (
     <div>
-      <div className="absolute top-0 z-0 inset-0 h-screen pointer-events-none w-full bg-black bg-[linear-gradient(to_right,#80808022_1px,transparent_1px),linear-gradient(to_bottom,#80808022_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_bottom,white_70%,transparent_100%)] "></div>
+      <div className="w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex flex-col  ">
+        <Spotlight
+          className="left-0 -top-20 md:left-60 md:top-12"
+          fill="white"
+        />
 
+        {/* Radial gradient for the container to give a faded look */}
+        <div className="absolute top-0 pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+        {/* <p className="relative z-20 py-8 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-b sm:text-7xl from-neutral-200 to-neutral-500">
+        Backgrounds
+      </p> */}
+        <Header />
+
+        {/* <div className="absolute top-0 z-0 inset-0 h-screen pointer-events-none w-full bg-black bg-[linear-gradient(to_right,#80808022_1px,transparent_1px),linear-gradient(to_bottom,#80808022_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:linear-gradient(to_bottom,white_70%,transparent_100%)] "></div> */}
+        {/* 
       <svg
-        className="animate-spotlight-mobile sm:animate-spotlight pointer-events-none absolute z-[1] h-[169%] w-[138%] lg:w-[84%] opacity-0 -top-40 left-0 md:left-60 md:-top-20"
+        className="animate-spotlight-mobile sm:animate-spotlight pointer-events-none absolute z-[1] h-[16´9%] w-[138%] lg:w-[84%] opacity-0 -top-40 left-0 md:left-60 md:-top-20"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 3787 2842"
         fill="none"
@@ -80,9 +97,10 @@ function Body({ hero2 }: Props) {
             ></feGaussianBlur>
           </filter>
         </defs>
-      </svg>
+      </svg> */}
 
-      {hero2 ? <Hero2 /> : <Hero />}
+        {hero2 ? <Hero2 /> : <Hero />}
+      </div>
 
       <PartnerLogos />
 
