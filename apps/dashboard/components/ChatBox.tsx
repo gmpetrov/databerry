@@ -24,7 +24,7 @@ import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import clsx from 'clsx';
-import React, { useCallback, useState } from 'react';
+import React, { ElementRef, useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { z } from 'zod';
@@ -180,6 +180,7 @@ function ChatBox({
   agentIconStyle,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
+  const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsgs, setFirstMsgs] = useState<ChatMessage[]>([]);
   // const [ini, setFirstMsg] = useState<ChatMessage>();
@@ -730,6 +731,7 @@ function ChatBox({
               slotProps={{
                 textarea: {
                   id: 'chatbox-input',
+                  ref: textAreaRef,
                 },
               }}
               maxRows={24}
@@ -794,13 +796,13 @@ function ChatBox({
                   direction={'row'}
                   justifyContent={'space-between'}
                   sx={{ width: '100%' }}
+                  spacing={1}
                 >
-                  {/* <Button>hello</Button> */}
-
                   {draftReplyInput &&
                     React.cloneElement(draftReplyInput, {
                       query,
                       onReply: handleOnDraftReply,
+                      inputRef: textAreaRef,
                     })}
 
                   {withFileUpload && (
