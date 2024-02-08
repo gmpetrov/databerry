@@ -7,6 +7,7 @@ import FormControl from '@mui/joy/FormControl';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import axios from 'axios';
+import cuid from 'cuid';
 import mime from 'mime-types';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -67,7 +68,7 @@ function GeneralInput({}: Props) {
     try {
       setState({ isUploadingAgentIcon: true });
       const file = event.target.files[0];
-      const fileName = `agent-icon.${mime.extension(file.type)}`;
+      const fileName = `${cuid()}.${mime.extension(file.type)}`;
 
       // upload text from file to AWS
       const uploadLinkRes = await axios.post(

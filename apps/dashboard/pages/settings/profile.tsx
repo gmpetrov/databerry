@@ -3,6 +3,7 @@ import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import Stack from '@mui/joy/Stack';
 import axios from 'axios';
+import cuid from 'cuid';
 import mime from 'mime-types';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
@@ -35,9 +36,8 @@ export default function ProfileSettingsPage() {
 
   const handleUploadPicture = async (event: any) => {
     const file = event?.target?.files?.[0];
-    const fileName = `icon.${mime.extension(file.type)}`;
+    const fileName = `${cuid()}.${mime.extension(file.type)}`;
 
-    console.log('fileName', fileName, file);
     const [customPictureUrl] = await upload([
       {
         case: 'userIcon',

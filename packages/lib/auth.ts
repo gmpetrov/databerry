@@ -224,16 +224,16 @@ export const authOptions = (req: NextApiRequest): AuthOptions => {
           const updated = await handleUpdateOrg(defaultOrgId!);
 
           organization = updated.organization!;
-        } else if (trigger === 'update' && newSession.orgId) {
+        } else if (trigger === 'update' && newSession?.orgId) {
           const found = user?.memberships?.find(
-            (one) => one.organizationId === newSession.orgId
+            (one) => one.organizationId === newSession?.orgId
           );
 
           if (!found) {
             throw new Error('Unauthorized');
           }
 
-          const updated = await handleUpdateOrg(newSession.orgId!);
+          const updated = await handleUpdateOrg(newSession?.orgId!);
 
           organization = updated.organization!;
         }
