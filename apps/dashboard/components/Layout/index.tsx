@@ -64,8 +64,9 @@ export default function Layout(props: Props) {
     setUserMenuElement(null);
   };
 
-  const showPromoBanner =
-    status !== 'loading' && !session?.organization?.isPremium;
+  // const showPromoBanner =
+  //   status !== 'loading' && !session?.organization?.isPremium;
+  const showPromoBanner = false;
   const promoBannerHeight = showPromoBanner ? 45.5 : 0;
 
   return (

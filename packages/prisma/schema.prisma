@@ -920,6 +920,7 @@ enum ToolType {
 
 enum SubscriptionPlan {
   level_0
+  level_0_5
   level_1
   level_2
   level_3

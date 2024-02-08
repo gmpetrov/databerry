@@ -41,11 +41,40 @@ const tiers = [
     ],
     mostPopular: false,
   },
+  // {
+  //   name: 'Hobby',
+  //   id: 'tier-hobby',
+  //   href: `${appUrl}/settings/billing`,
+  //   price: { monthly: '$15', annually: '$150' },
+  //   description: 'The essentials to get started quickly.',
+  //   features: [
+  //     `${accountConfig['level_0_5'].limits.maxAgents} agent(s)`,
+  //     `${accountConfig['level_0_5'].limits.maxDatastores} datastore(s)`,
+  //     `${accountConfig['level_0_5'].limits.maxAgentsQueries} GPT-3.5 or ${
+  //       accountConfig['level_0_5'].limits.maxAgentsQueries / 20
+  //     } GPT-4 agents queries / month`,
+  //     `${formatter.format(
+  //       accountConfig['level_0_5'].limits.maxStoredTokens
+  //     )} words storage`,
+  //     `File upload limited to ${
+  //       accountConfig['level_0_5'].limits.maxFileSize / 1000000
+  //     }MB / file`,
+
+  //     // `Data processing limited to ${accountConfig['level_0_5'].limits
+  //     //   .maxDataProcessing / 1000000}MB / month`,
+  //     `Website loader limited to  ${accountConfig['level_0_5'].limits.maxWebsiteURL} Pages`,
+  //     'Access to WhatsApp Plugin',
+  //     'Access to Crisp Plugin',
+  //     'Access to Slack Plugin',
+  //     `${accountConfig['level_0_5'].limits.maxSeats} Team seat(s) included`,
+  //   ],
+  //   mostPopular: false,
+  // },
   {
     name: 'Growth',
     id: 'tier-startup',
     href: 'https://app.chaindesk.ai/settings/billing',
-    price: { monthly: '$49', annually: '$490' },
+    price: { monthly: '$25', annually: '$250' },
     description: 'A plan that scales with your rapidly growing business.',
     features: [
       `${accountConfig['level_1'].limits.maxAgents} agent(s)`,
@@ -62,10 +91,11 @@ const tiers = [
       // `Data processing limited to ${accountConfig['level_1'].limits
       //   .maxDataProcessing / 1000000}MB / month`,
       'Manual data synching',
-      'ChatGPT plugin',
+      // 'ChatGPT plugin',
       `Website loader limited to  ${accountConfig['level_1'].limits.maxWebsiteURL} Pages`,
+      'Access to WhatsApp Plugin',
       'Access to Crisp Plugin',
-      'Access to Slack Bot',
+      'Access to Slack Plugin',
       `${accountConfig['level_1'].limits.maxSeats} Team seat(s) included`,
     ],
     mostPopular: false,
@@ -93,6 +123,9 @@ const tiers = [
       'Access to Chaindesk API',
       'Auto synch datasources',
       // 'ChatGPT plugin',
+      'Access to WhatsApp Plugin',
+      'Access to Crisp Plugin',
+      'Access to Slack Plugin',
       `Website loader limited to  ${accountConfig['level_2'].limits.maxWebsiteURL} Pages`,
       `${accountConfig['level_2'].limits.maxSeats} Team seat(s) included`,
     ],
@@ -197,7 +230,7 @@ export default function PricingSection() {
     <div className="py-24 bg-black sm:py-32">
       {/* <ForceDarkMode key={Date.now()} /> */}
       <div className="px-6 mx-auto max-w-[1500px] lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-400">
             Pricing
           </h2>
@@ -205,7 +238,7 @@ export default function PricingSection() {
             Pricing plans for teams of&nbsp;all&nbsp;sizes
           </p>
         </div>
-        <p className="max-w-2xl mx-auto mt-6 text-lg leading-8 text-center text-gray-300">
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-center text-gray-300">
           Choose an affordable plan that’s packed with the best features for
           engaging your audience, creating customer loyalty, and driving sales.
         </p>
@@ -213,7 +246,7 @@ export default function PricingSection() {
           <RadioGroup
             value={frequency}
             onChange={setFrequency}
-            className="grid grid-cols-2 p-1 text-xs font-semibold leading-5 text-center text-white rounded-full gap-x-1 bg-white/5"
+            className="grid grid-cols-2 gap-x-1 p-1 text-xs font-semibold leading-5 text-center text-white rounded-full bg-white/5"
           >
             <RadioGroup.Label className="sr-only">
               Payment frequency
@@ -234,7 +267,7 @@ export default function PricingSection() {
             ))}
           </RadioGroup>
         </div> */}
-        <div className="grid max-w-md grid-cols-1 gap-8 mx-auto mt-16 isolate lg:mx-0 lg:max-w-none lg:grid-cols-4">
+        <div className="grid isolate grid-cols-1 gap-8 mx-auto mt-16 max-w-md lg:mx-0 lg:max-w-none lg:grid-cols-4">
           {tiers.map((tier) => (
             <Card
               key={tier.id}
@@ -245,7 +278,7 @@ export default function PricingSection() {
                 'rounded-3xl p-8 xl:p-10'
               )}
             >
-              <div className="flex items-center justify-between gap-x-4">
+              <div className="flex gap-x-4 justify-between items-center">
                 <h3
                   id={tier.id}
                   className="text-lg font-semibold leading-8 text-white"
@@ -261,7 +294,7 @@ export default function PricingSection() {
               <p className="mt-4 text-sm leading-6 text-gray-300">
                 {tier.description}
               </p>
-              <p className="flex items-baseline mt-6 gap-x-1">
+              <p className="flex gap-x-1 items-baseline mt-6">
                 <span className="text-4xl font-bold tracking-tight text-white">
                   {tier.id === 'tier-free'
                     ? 'Free'
@@ -298,9 +331,10 @@ export default function PricingSection() {
                         feature.includes('Auto synch') ||
                         feature.includes('ChatGPT') ||
                         feature.includes('Crisp Plugin') ||
-                        feature.includes('Slack Bot') ||
+                        feature.includes('Slack Plugin') ||
                         feature.includes('Website loader') ||
-                        feature.includes('seat'),
+                        feature.includes('seat') ||
+                        feature.includes('WhatsApp'),
                     })}
                   >
                     <CheckIcon

@@ -29,7 +29,7 @@ const config: {
     label: 'Free',
     limits: {
       maxAgents: 1,
-      maxAgentsQueries: 50,
+      maxAgentsQueries: 100,
       maxDatastores: 1,
       maxDatasources: 10, // per datastore
       maxFileSize: 1000000, // 1 MB
@@ -38,6 +38,22 @@ const config: {
       maxWebsiteURL: 25,
       maxSeats: 1,
       maxStoredTokens: 20000,
+    },
+  },
+  [SubscriptionPlan.level_0_5]: {
+    type: SubscriptionPlan.level_0_5,
+    label: 'Hobby',
+    limits: {
+      maxAgents: 2,
+      maxAgentsQueries: 2500,
+      maxDatastores: 2,
+      maxDatasources: 100, // per datastore
+      maxFileSize: 5000000, // 5 MB
+      maxDataProcessing: 25000000, // 50 MB
+      maxSummary: 100,
+      maxWebsiteURL: 150,
+      maxSeats: 5,
+      maxStoredTokens: 15000000,
     },
   },
   [SubscriptionPlan.level_1]: {
@@ -56,6 +72,7 @@ const config: {
       maxStoredTokens: 30000000,
     },
   },
+
   [SubscriptionPlan.level_2]: {
     type: SubscriptionPlan.level_2,
     label: 'Pro',
