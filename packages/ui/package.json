@@ -23,6 +23,7 @@
     "@mui/lab": "5.0.0-alpha.155",
     "@mui/material": "^5.14.20",
     "@mui/utils": "5.14.20",
+    "@splinetool/runtime": "^1.0.50",
     "clsx": "^1.2.1",
     "framer-motion": "11.0.3",
     "radash": "^10.7.1",
