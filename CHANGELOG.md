@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.230"></a>
+## 0.1.230 (2024-02-08)
+
+### Fixed
+
+- 🐛 unique filenames to invalidate cloudflare cache [[125f1ad](https://github.com/gmpetrov/databerry/commit/125f1adc44548a0116ccd71f76a22f67ad5ab176)]
+- 🐛 add spline [[693c36a](https://github.com/gmpetrov/databerry/commit/693c36a5dfb8d77ab170e01ab90698c89a8b0738)]
+
+
 <a name="0.1.229"></a>
 ## 0.1.229 (2024-02-08)
 
