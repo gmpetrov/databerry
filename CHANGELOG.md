@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.229"></a>
+## 0.1.229 (2024-02-08)
+
+### Fixed
+
+- 🐛 image typo [[d531871](https://github.com/gmpetrov/databerry/commit/d531871cf98b0984451fc687d7b7609d2fdcedd0)]
+
+### Miscellaneous
+
+- 🤖 try lower pricing [[7408a49](https://github.com/gmpetrov/databerry/commit/7408a497058d1e3f4a05faefefb2c286181f230a)]
+- 💡 improve landing page hero [[c60473d](https://github.com/gmpetrov/databerry/commit/c60473d12c89c08c51b9135c9ef28fd24d0206d2)]
+- 🎸 add destroy method to embeds [[a53669b](https://github.com/gmpetrov/databerry/commit/a53669bb3b03c7647b16f1f8e2c8695a9687d6c9)]
+
+
 <a name="0.1.228"></a>
 ## 0.1.228 (2024-02-06)
 
