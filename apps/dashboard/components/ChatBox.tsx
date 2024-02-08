@@ -24,7 +24,7 @@ import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import clsx from 'clsx';
-import React, { ElementRef, useCallback, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { z } from 'zod';
@@ -256,8 +256,6 @@ function ChatBox({
     },
     [methods.setValue]
   );
-
-  const query = methods.watch('query');
 
   return (
     <Stack
@@ -800,7 +798,6 @@ function ChatBox({
                 >
                   {draftReplyInput &&
                     React.cloneElement(draftReplyInput, {
-                      query,
                       onReply: handleOnDraftReply,
                       inputRef: textAreaRef,
                     })}

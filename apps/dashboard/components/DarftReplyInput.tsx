@@ -1,7 +1,9 @@
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import BadgeIcon from '@mui/icons-material/Badge';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CompressIcon from '@mui/icons-material/Compress';
+import DeleteIcon from '@mui/icons-material/Delete';
 import LiquorIcon from '@mui/icons-material/Liquor';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
@@ -13,7 +15,7 @@ import ListItem from '@mui/joy/ListItem';
 import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
-import React, { useEffect } from 'react';
+import React, { RefObject, useEffect } from 'react';
 import useSWR from 'swr';
 
 import useChat from '@app/hooks/useChat';
@@ -39,9 +41,9 @@ interface MenuSection {
 }
 
 enum ActionsSystemPrompt {
-  grammar = `The text provided by the user may contain grammatical errors. Analyze the text for grammatical correctness, 
-  identify any issues with punctuation, sentence structure, verb tenses, and word usage. Provide a grammatically correct 
-  version of the text, ensuring that it maintains the original meaning and context intended by the user.`,
+  grammar = `Analyze the text for grammatical correctness, identify any issues with punctuation, sentence structure, verb tenses, 
+  and word usage. Provide a grammatically correct  version of the text, ensuring that it maintains the original meaning and context intended by the user.
+  However,and this is important, if the text is already grammatically correct and there are no issues to fix, please return the original text to me without any modifications or comments on its correctness..`,
   summarize = `The user has provided detailed text that needs to be made more concise. Extract the key points and main ideas
    from the text. Create a succinct summary that captures the essence of the message but is significantly shorter in length. 
    The summary should be clear, coherent, and retain all critical information.`,
@@ -58,19 +60,55 @@ enum ActionsSystemPrompt {
 
 type Props = {
   defaultAgentId?: string;
-  query?: string;
   onSubmit?: (props: { query?: string; agentId: string }) => any;
   onReply?: (message: string) => any;
   conversationId?: string;
-  inputRef?: any;
+  inputRef?: RefObject<HTMLTextAreaElement>;
 };
 
+const menuSections = [
+  {
+    title: 'Improve Text',
+    items: [
+      {
+        name: 'Fix Grammar',
+        icon: <AutoFixHighIcon color="primary" />,
+        action: ActionsSystemPrompt.grammar,
+      },
+      {
+        name: 'Make Shorter',
+        icon: <CompressIcon color="primary" />,
+        action: ActionsSystemPrompt.summarize,
+      },
+    ],
+  },
+  {
+    title: 'Change Tone',
+    items: [
+      {
+        name: 'More Casual',
+        icon: <SignLanguageIcon color="primary" />,
+        action: ActionsSystemPrompt.casual,
+      },
+      {
+        name: 'More Formal',
+        icon: <BadgeIcon color="primary" />,
+        action: ActionsSystemPrompt.formal,
+      },
+      {
+        name: 'More Fun',
+        icon: <LiquorIcon color="primary" />,
+        action: ActionsSystemPrompt.fun,
+      },
+    ],
+  },
+] satisfies MenuSection[];
+
 function DarftReplyInput({
-  inputRef,
   defaultAgentId,
-  query,
-  onReply,
+  inputRef,
   conversationId,
+  onReply,
 }: Props) {
   const getAgentsQuery = useSWR<Prisma.PromiseReturnType<typeof getAgents>>(
     '/api/agents',
@@ -83,6 +121,11 @@ function DarftReplyInput({
     isMenuOpen: false,
     // used to control the display the menu
     forceOpen: false,
+    shouldDisplayActions: false,
+    backup: {
+      value: '',
+      placeholder: '',
+    },
   });
   const {
     handleChatSubmit,
@@ -96,14 +139,12 @@ function DarftReplyInput({
       ? `/api/agents/${state.currentDraftAgentId}/query`
       : undefined,
     localStorageConversationIdKey: `draftReply`,
-    // channel: ConversationChannel.form,
   });
 
-  console.log('HISTORY', history);
-
-  const reply = history?.length > 1 ? history[history.length - 1]?.message : '';
-
-  console.log('reply', reply);
+  const reply =
+    history?.length > 1
+      ? history[history.length - 1]?.message
+      : inputRef?.current?.value;
 
   useEffect(() => {
     if (reply) {
@@ -122,9 +163,10 @@ function DarftReplyInput({
   }, [conversationId, setConversationId]);
 
   const rephraseAI = async (action: ActionsSystemPrompt) => {
-    const content = inputRef.current.value;
+    const content = inputRef?.current?.value;
 
-    if (content.trim() === '') return;
+    // empty input.
+    if (!content || content?.trim() === '') return;
 
     setState({
       loading: true,
@@ -132,8 +174,12 @@ function DarftReplyInput({
     const ctrl = new AbortController();
 
     let responseBuffer = '';
-    let backup = content;
+    let backup = {
+      value: inputRef.current.value,
+      placeholder: inputRef.current.placeholder,
+    };
     inputRef.current.value = '';
+    inputRef.current.placeholder = '⚡️Rephrazing. . .';
     await fetchEventSource(
       `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/agents/query`,
       {
@@ -148,61 +194,42 @@ function DarftReplyInput({
           if (event.data === '[DONE]') {
             setState({
               loading: false,
+              shouldDisplayActions: true,
+              backup,
             });
+            inputRef.current!.placeholder = backup.placeholder;
             try {
               ctrl.abort();
             } catch (err) {
               console.error(err);
-              inputRef.current.value = backup;
+              inputRef.current!.value = backup.value;
             }
-          } else {
-            if (event.event === SSE_EVENT.answer) {
-              responseBuffer = decodeURIComponent(event.data);
-              inputRef.current.value += responseBuffer;
-            }
+          } else if (event.event === SSE_EVENT.answer) {
+            responseBuffer = decodeURIComponent(event.data);
+            inputRef.current!.value += responseBuffer;
+          } else if (event.data?.startsWith('[ERROR]')) {
+            inputRef.current!.value = backup.value;
+            ctrl.abort();
           }
         },
       }
     );
   };
 
-  const menuSections = [
-    {
-      title: 'Improve Text',
-      items: [
-        {
-          name: 'Fix Grammar',
-          icon: <AutoFixHighIcon color="primary" />,
-          action: ActionsSystemPrompt.grammar,
-        },
-        {
-          name: 'Make Shorter',
-          icon: <CompressIcon color="primary" />,
-          action: ActionsSystemPrompt.summarize,
-        },
-      ],
-    },
-    {
-      title: 'Change Tone',
-      items: [
-        {
-          name: 'More Casual',
-          icon: <SignLanguageIcon color="primary" />,
-          action: ActionsSystemPrompt.casual,
-        },
-        {
-          name: 'More Formal',
-          icon: <BadgeIcon color="primary" />,
-          action: ActionsSystemPrompt.formal,
-        },
-        {
-          name: 'More Fun',
-          icon: <LiquorIcon color="primary" />,
-          action: ActionsSystemPrompt.fun,
-        },
-      ],
-    },
-  ] satisfies MenuSection[];
+  const resolveChanges = (choice: 'keep' | 'discard') => {
+    switch (choice) {
+      case 'discard':
+        inputRef!.current!.value = state.backup.value;
+        inputRef!.current!.placeholder = state.backup.placeholder;
+        setState({ shouldDisplayActions: false });
+        break;
+      case 'keep':
+        setState({ shouldDisplayActions: false });
+        break;
+      default:
+        throw new Error(`Unsupported Choice ${choice}`);
+    }
+  };
 
   return (
     <Dropdown
@@ -212,6 +239,21 @@ function DarftReplyInput({
         setState({ isMenuOpen: state.forceOpen ? true : !state.isMenuOpen })
       }
     >
+      {state.shouldDisplayActions && (
+        <>
+          <Tooltip title="Keep changes">
+            <IconButton onClick={() => resolveChanges('keep')}>
+              <CheckRoundedIcon color="success" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Discard changes">
+            <IconButton onClick={() => resolveChanges('discard')}>
+              <DeleteIcon color="danger" />
+            </IconButton>
+          </Tooltip>
+        </>
+      )}
+
       <MenuButton
         disabled={state.loading}
         variant="outlined"
@@ -262,6 +304,20 @@ function DarftReplyInput({
             <IconButton
               size="sm"
               disabled={state.loading || !state.currentDraftAgentId}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (state.currentDraftAgentId) {
+                  handleChatSubmit(
+                    `Reply previous message, use the queryKnowledgeBase tool, use this answer as a seed if provided: answer ###${
+                      inputRef?.current?.value || ''
+                    }### Reply: `,
+                    [],
+                    true
+                  );
+                }
+              }}
               color="primary"
               variant="soft"
             >
