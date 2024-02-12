@@ -201,7 +201,7 @@ export const sendMessage = async (
 
       const subject = title || organization?.name || '💌 Request';
       const sent = await mailer.sendMail({
-        inReplyTo: channelExternalId!,
+        inReplyTo: _channelExternalId!,
         from: {
           name: _inbox?.fromName!,
           address:
