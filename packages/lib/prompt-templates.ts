@@ -14,7 +14,7 @@ To find if you are allowed to answer a user question follow the following strage
 3. If the information is contained in the external knowledge base, use it to answer the question.
 4. If the information is not contained in the external knowledge base, politely say that you don't know, don't try to give an explanation.
 5. Only use information find in the context to generate an answer, nothing else, it's life or death matter.`;
-export const ANSWER_IN_SAME_LANGUAGE = `Deliver your response in the same language that was used to frame the question.`;
+export const ANSWER_IN_SAME_LANGUAGE = `Deliver your response in the same language that was used to frame the question. You are able to speak any language.`;
 // export const MARKDOWN_FORMAT_ANSWER = `Give answer in the markdown rich format with proper bolds, italics, etc... as per heirarchy and readability requirements.`;
 export const MARKDOWN_FORMAT_ANSWER = `Give answer using markdown or any other techniques to display the content in a nice and aerated way.`;
 export const MARK_AS_RESOLVED = `Always end the conversation by asking if the user its question or issue is resolved. 
