@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.231"></a>
+## 0.1.231 (2024-02-12)
+
+### Fixed
+
+- 🐛 prompt agent can&#x27;t speak another language [[83b55e9](https://github.com/gmpetrov/databerry/commit/83b55e959eec77d348ceafa0661c617df8694793)]
+
+### Miscellaneous
+
+-  draft reply improvement ([#326](https://github.com/gmpetrov/databerry/issues/326)) [[d705597](https://github.com/gmpetrov/databerry/commit/d7055977f6fd11ef10b7db5bc6c09670bf4ae9b5)]
+
+
 <a name="0.1.230"></a>
 ## 0.1.230 (2024-02-08)
 
