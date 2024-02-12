@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.232"></a>
+## 0.1.232 (2024-02-12)
+
+### Miscellaneous
+
+- 🎸 Send mail to contact from website channel [[e69fb18](https://github.com/gmpetrov/databerry/commit/e69fb18e361aa9d87a399fb6f11f61c01d20824f)]
+
+
 <a name="0.1.231"></a>
 ## 0.1.231 (2024-02-12)
 
