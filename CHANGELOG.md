@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.233"></a>
+## 0.1.233 (2024-02-12)
+
+### Fixed
+
+- 🐛 remove mock inbox id [[de6d142](https://github.com/gmpetrov/databerry/commit/de6d142b82fac609381f3051dd9151903ae31f5c)]
+
+
 <a name="0.1.232"></a>
 ## 0.1.232 (2024-02-12)
 
