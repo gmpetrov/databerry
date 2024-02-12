@@ -163,16 +163,9 @@ export async function inboundWebhook(
     .map((organization) => {
       if (organization.mailInboxes?.length <= 0) {
         return {
-          id: cuid(),
+          showBranding: true,
           alias: organization.id!,
           fromName: organization.name!,
-          signature: '',
-          customEmail: null,
-          customEmailVerificationTokenId: null,
-          isCustomEmailVerified: false,
-          showBranding: true,
-          createdAt: new Date(),
-          updatedAt: new Date(),
           organizationId: organization.id!,
           name: organization.name!,
           description: organization.name!,
