@@ -23,7 +23,7 @@ import {
 } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import { ConversationChannel, MessageFrom } from '@chaindesk/prisma';
+import { ConversationChannel, MailInbox, MessageFrom } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 const handler = createLazyAuthHandler();
 
@@ -32,6 +32,7 @@ const chatBodySchema = z.object({
   channel: z.nativeEnum(ConversationChannel),
   attachments: z.array(CreateAttachmentSchema).optional(),
   visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),
+  contactId: z.union([z.string().cuid().nullish(), z.literal('')]),
 });
 
 export const sendMessage = async (
@@ -44,6 +45,7 @@ export const sendMessage = async (
   let externalMessageId: string | undefined;
 
   const {
+    id,
     title,
     channelCredentials,
     channelExternalId,
@@ -152,10 +154,19 @@ export const sendMessage = async (
         );
       }
       break;
+    case 'website':
     case 'mail':
-      if (!mailInbox) {
+      if (payload.channel === 'mail' && !mailInbox) {
         throw new ApiError(ApiErrorType.NOT_FOUND);
       }
+
+      let _inbox = mailInbox
+        ? mailInbox
+        : ({
+            alias: organization?.id,
+            fromName: session?.user?.name || organization?.name,
+            showBranding: true,
+          } as MailInbox);
 
       const emails: string[] = [
         ...(participantsUsers
@@ -167,18 +178,36 @@ export const sendMessage = async (
       ];
 
       if (emails.length <= 0) {
-        throw new ApiError(ApiErrorType.INVALID_REQUEST);
+        if (payload.channel === 'mail') {
+          throw new ApiError(ApiErrorType.INVALID_REQUEST);
+        } else {
+          break;
+        }
+      }
+
+      let _channelExternalId = channelExternalId;
+
+      if (!_channelExternalId) {
+        _channelExternalId = cuid();
+        await prisma.conversation.update({
+          where: {
+            id,
+          },
+          data: {
+            channelExternalId: _channelExternalId,
+          },
+        });
       }
 
       const subject = title || organization?.name || '💌 Request';
       const sent = await mailer.sendMail({
         inReplyTo: channelExternalId!,
         from: {
-          name: mailInbox?.fromName!,
+          name: _inbox?.fromName!,
           address:
-            mailInbox?.customEmail && mailInbox?.isCustomEmailVerified
-              ? mailInbox?.customEmail
-              : `${mailInbox?.alias}@${process.env.INBOUND_EMAIL_DOMAIN}`,
+            _inbox?.customEmail && _inbox?.isCustomEmailVerified
+              ? _inbox?.customEmail
+              : `${_inbox?.alias}@${process.env.INBOUND_EMAIL_DOMAIN}`,
         },
         to: emails,
         subject,
@@ -191,8 +220,8 @@ export const sendMessage = async (
           <InboxTemplate
             title={subject}
             message={payload.message}
-            signature={mailInbox?.signature!}
-            showBranding={!!mailInbox?.showBranding}
+            signature={_inbox?.signature!}
+            showBranding={!!_inbox?.showBranding}
           />
         ),
       });
@@ -265,9 +294,6 @@ export const sendMessage = async (
         );
       }
       break;
-    case 'website':
-      // no special treatement for website channel.
-      break;
     default:
       throw new Error('Unsupported Communication Channel.');
   }
@@ -289,8 +315,11 @@ export const sendMessage = async (
     text: payload.message,
     attachments: payload.attachments,
 
+    contactId: payload.contactId!,
     visitorId: payload.visitorId!,
-    userId: !!payload.visitorId ? undefined : session?.user?.id,
+    userId: !!(payload.visitorId || payload.contactId)
+      ? undefined
+      : session?.user?.id,
   });
 
   return conv;

@@ -16,6 +16,7 @@ import validate from '@chaindesk/lib/validate';
 import {
   Attachment,
   ConversationChannel,
+  MailInbox,
   MessageFrom,
   Prisma,
 } from '@chaindesk/prisma';
@@ -110,23 +111,76 @@ export async function inboundWebhook(
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  const inboxes = await prisma.mailInbox.findMany({
+  const organizations = await prisma.organization.findMany({
     where: {
       OR: [
         {
-          alias: {
+          id: {
             in: aliases,
           },
         },
         {
-          customEmail: {
-            in: customDomains,
+          mailInboxes: {
+            some: {
+              OR: [
+                {
+                  alias: {
+                    in: aliases,
+                  },
+                },
+                {
+                  customEmail: {
+                    in: customDomains,
+                  },
+                },
+              ],
+            },
           },
         },
       ],
     },
-    include: {},
+    include: {
+      mailInboxes: {
+        where: {
+          OR: [
+            {
+              alias: {
+                in: aliases,
+              },
+            },
+            {
+              customEmail: {
+                in: customDomains,
+              },
+            },
+          ],
+        },
+      },
+    },
   });
+
+  const inboxes = organizations
+    .map((organization) => {
+      if (organization.mailInboxes?.length <= 0) {
+        return {
+          id: cuid(),
+          alias: organization.id!,
+          fromName: organization.name!,
+          signature: '',
+          customEmail: null,
+          customEmailVerificationTokenId: null,
+          isCustomEmailVerified: false,
+          showBranding: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          organizationId: organization.id!,
+          name: organization.name!,
+          description: organization.name!,
+        } as MailInbox;
+      }
+      return organization.mailInboxes;
+    })
+    .flat();
 
   if (inboxes.length <= 0) {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);

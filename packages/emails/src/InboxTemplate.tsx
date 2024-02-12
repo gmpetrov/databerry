@@ -33,7 +33,7 @@ Thank you for contacting us regarding your subscription concerns. We're here to 
 If the problem persists, please reply to this email with a description of the issue and any error messages you've received. We're committed to resolving this for you promptly.
     
 Best regards,`,
-  signature = '<strong>Georges Petrov</strong> - CEO',
+  signature,
   showBranding = true,
 }: Props) => {
   return (
@@ -43,7 +43,7 @@ Best regards,`,
       <Tailwind>
         <Body className="font-sans bg-white">
           {/* <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]"> */}
-          {/* <Section className="w-full p-2"> */}
+          {/* <Section className="p-2 w-full"> */}
           <Text className="text-black whitespace-pre-line">{message}</Text>
           {signature && (
             <>
