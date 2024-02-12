@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.236"></a>
+## 0.1.236 (2024-02-12)
+
+### Fixed
+
+- 🐛 use email format [[9aefb84](https://github.com/gmpetrov/databerry/commit/9aefb842e688e03f1f7900c3f0c75d0d4306a561)]
+
+
 <a name="0.1.235"></a>
 ## 0.1.235 (2024-02-12)
 
