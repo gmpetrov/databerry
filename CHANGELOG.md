@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.235"></a>
+## 0.1.235 (2024-02-12)
+
+### Fixed
+
+- 🐛 pass channelExternalId as reference [[50f32fc](https://github.com/gmpetrov/databerry/commit/50f32fc8f53f7720f62761430d247955434b7479)]
+
+
 <a name="0.1.234"></a>
 ## 0.1.234 (2024-02-12)
 
