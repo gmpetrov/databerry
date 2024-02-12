@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
@@ -33,6 +34,7 @@ import { Prisma, SubscriptionPlan } from '@chaindesk/prisma';
 export default function ApiKeysPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { t } = useTranslation('settings');
   const [state, setState] = useStateReducer({
     isLoadingCreateApiKey: false,
     isLoadingDeleteApiKey: false,
@@ -102,8 +104,8 @@ export default function ApiKeysPage() {
     <Stack>
       <Box id="api-keys">
         <SettingCard
-          title="API Keys"
-          description="Use the api key to access the Chaindesk API"
+          title={t('api-key')}
+          description={t('subtitle-key')}
           cardProps={{
             sx: { maxWidth: 'md', mx: 'auto' },
           }}
@@ -120,12 +122,12 @@ export default function ApiKeysPage() {
                     size="sm"
                     endDecorator={<ArrowForwardRoundedIcon />}
                   >
-                    Documentation
+                    {t('documentation')}
                   </Button>
                 </Link>
               }
             >
-              Learn more about the Datatberry API
+              {t('more-key')}
             </Alert>
             {getApiKeysQuery?.data?.map((each) => (
               <>
@@ -169,7 +171,7 @@ export default function ApiKeysPage() {
               variant="outlined"
               onClick={handleCreatApiKey}
             >
-              Create API Key
+              {t('createApiKey')}
             </Button>
           </Stack>
         </SettingCard>

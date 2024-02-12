@@ -15,6 +15,7 @@ import StepContent from '@mui/material/StepContent';
 import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import dynamic from 'next/dynamic';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -64,6 +65,7 @@ const initialState: State = {
 
 export default function CreateDatastoreModal(props: Props) {
   const [state, setState] = useStateReducer<State>(initialState);
+  const { t } = useTranslation('datenpool');
 
   const handleNext = () => {
     setState({
@@ -102,7 +104,7 @@ export default function CreateDatastoreModal(props: Props) {
     //   ),
     // },
     {
-      label: 'Datastore Configuration',
+      label: `${t('konfig')}`,
       // description: 'A Datastore can contain multiple datasources',
       disableButtons: true,
       component:
@@ -139,8 +141,8 @@ export default function CreateDatastoreModal(props: Props) {
         } as DatastoreFormProps),
     },
     {
-      label: 'Choose a Datasource type',
-      description: `An empty Datastore is not very useful! Now add some data in it`,
+      label: `${t('select')}`,
+      description: `${t('selectText')}`,
       disableButtons: true,
       component: (
         <DatasourceOptions
@@ -154,8 +156,8 @@ export default function CreateDatastoreModal(props: Props) {
       ),
     },
     {
-      label: 'Setup the Datasource',
-      description: `An empty Datastore is not very useful! Now add some data in it`,
+      label: `${t('moreSettings')}`,
+      description: `${t('moreSettingsSub')}`,
       disableButtons: true,
       component: state.selectedSourceType && (
         <DatasourceForm
@@ -180,7 +182,7 @@ export default function CreateDatastoreModal(props: Props) {
                   loading={btnProps.isLoading}
                   sx={{ mt: 1, mr: 1 }}
                 >
-                  Finish
+                  {t('finish')}
                 </Button>
                 <Button
                   disabled={btnProps.isLoading}
@@ -188,7 +190,7 @@ export default function CreateDatastoreModal(props: Props) {
                   sx={{ mt: 1, mr: 1 }}
                   variant="plain"
                 >
-                  Back
+                  {t('back')}
                 </Button>
               </div>
             </Box>

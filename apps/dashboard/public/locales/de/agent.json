@@ -1,0 +1,16 @@
+{
+  "title": "Agenten",
+  "cta": "Neuer Agent",
+  "name-table": "Name",
+  "description-table": "Beschreibung",
+  "visibility-table": "Sichtbarkeit",
+  "chatWithAgent": "Mit Agenten chatten",
+  "settingsAgent": "Einstellungen des Agenten",
+  "tools": "Werkzeuge",
+  "toolsSub": "Dein Agent kann Werkzeuge wie eigene Datenpools nutzen, um smarter zu werden.",
+  "toolsDanger": "Ihre KI-Agenten haben die Möglichkeit, ihre Datenquellen offenzulegen. Dies fördert Vertrauen und Transparenz.",
+  "connect": "Verbinde einen Datenpool mit deinem KI - Agenten",
+  "select": "Datenpool auswählen",
+  "ctaPopUp": "Erstelle einen Datenpool",
+  "create": "Erstellen"
+}

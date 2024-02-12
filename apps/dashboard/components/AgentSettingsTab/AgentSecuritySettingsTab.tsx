@@ -5,6 +5,7 @@ import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
 import router from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import Input from '@app/components/Input';
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export default function AgentSecuritySettings(props: Props) {
+  const { t } = useTranslation('chat');
   return props.agentId ? (
     <Stack gap={4}>
       <AgentForm agentId={router.query.agentId as string}>
@@ -64,10 +66,9 @@ export default function AgentSecuritySettings(props: Props) {
                         }}
                       />
                       <div className="flex flex-col">
-                        <FormLabel>Public</FormLabel>
+                        <FormLabel>{t('security-title')}</FormLabel>
                         <Typography level="body-xs">
-                          When activated, your agent will be available without
-                          an API Key.
+                          {t('security-open-subtitle')}
                         </Typography>
                       </div>
                     </FormControl>
@@ -86,8 +87,8 @@ export default function AgentSecuritySettings(props: Props) {
 
               return (
                 <SettingCard
-                  title="Authorized Domains"
-                  description="Restrict the chat widget to specific domains for security purposes. e.g: example.com"
+                  title={t('security-open')}
+                  description={t('domains-subtitle')}
                   submitButtonProps={{
                     loading: mutation.isMutating,
                     disabled: !formState.isDirty || !formState.isValid,
@@ -145,8 +146,8 @@ export default function AgentSecuritySettings(props: Props) {
 
               return (
                 <SettingCard
-                  title="Rate Limit"
-                  description="Use rate limiting to prevent abuse of your agent."
+                  title={t('limit')}
+                  description={t('limit-subtitle')}
                   submitButtonProps={{
                     loading: mutation.isMutating,
                     disabled: !formState.isDirty || !formState.isValid,
@@ -171,9 +172,9 @@ export default function AgentSecuritySettings(props: Props) {
                     />
 
                     <div className="flex flex-col">
-                      <FormLabel>Enable Rate Limit</FormLabel>
+                      <FormLabel>{t('rateActive')}</FormLabel>
                       <Typography level="body-xs">
-                        X messages max every Y seconds
+                        {t('rateActive-subtitle')}
                       </Typography>
                     </div>
                   </div>

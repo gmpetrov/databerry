@@ -10,6 +10,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import useStateReducer from '@app/hooks/useStateReducer';
@@ -51,6 +52,7 @@ const initialState: State = {
 
 export default function CreateDatastoreModal(props: Props) {
   const [state, setState] = useStateReducer<State>(initialState);
+  const { t } = useTranslation('datenpool');
 
   const handleNext = () => {
     setState({
@@ -72,8 +74,8 @@ export default function CreateDatastoreModal(props: Props) {
 
   const steps = [
     {
-      label: 'Choose a Datasource',
-      description: `An empty Datastore is not very useful! Now add some data in it`,
+      label: `${t('addDataText')}`,
+      description: `${t('addDataSubText')}`,
       disableButtons: true,
       component: (
         <DatasourceOptions
@@ -87,7 +89,7 @@ export default function CreateDatastoreModal(props: Props) {
       ),
     },
     {
-      label: 'Setup the Datasource',
+      label: `${t('moreInfo')}`,
       // description: `An empty Datastore is not very useful! Now add some data in it`,
       disableButtons: true,
       component: state?.selectedSourceType && (

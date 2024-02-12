@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
@@ -48,6 +49,7 @@ import { getDatastores } from '../api/datastores';
 export default function AgentsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { t } = useTranslation('agent');
 
   const [state, setState] = useStateReducer({
     isCreateDatastoreModalOpen: false,
@@ -106,7 +108,7 @@ export default function AgentsPage() {
           <HomeRoundedIcon />
         </Link>
         <Typography fontSize="inherit" color="neutral">
-          Agents
+          {t('title')}
         </Typography>
       </Breadcrumbs>
 
@@ -125,7 +127,7 @@ export default function AgentsPage() {
         }}
       >
         <Typography level="h1" fontSize="xl4">
-          Agents
+          {t('title')}
         </Typography>
         {/* <Box sx={{ flex: 999999 }} /> */}
         <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
@@ -154,7 +156,7 @@ export default function AgentsPage() {
               setState({ isAgentModalOpen: true });
             }}
           >
-            New Agent
+            {t('cta')}
           </Button>
         </Box>
       </Box>

@@ -6,6 +6,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Textarea from '@mui/joy/Textarea';
 // import countTokens from '@chaindesk/lib/count-tokens';
 import { encodingForModel, getEncoding } from 'js-tiktoken';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
@@ -47,6 +48,7 @@ export const QASourceSchema = DatasourceBaseSchema.extend({
 function Nested() {
   const { control, register, watch, trigger, formState, setValue } =
     useFormContext<DatasourceQA>();
+  const { t } = useTranslation('datenpool');
 
   const question = watch('config.question');
   const answer = watch('config.answer');
@@ -91,7 +93,7 @@ function Nested() {
           !!errors?.config?.question?.message
         }
       >
-        <FormLabel>Question</FormLabel>
+        <FormLabel>{t('question')}</FormLabel>
         <Textarea maxRows={12} minRows={2} {...register('config.question')} />
 
         {errors?.config?.question?.message && (
@@ -105,7 +107,7 @@ function Nested() {
           !!errors?.config?.answer?.message
         }
       >
-        <FormLabel>Answer</FormLabel>
+        <FormLabel>{t('answer')}</FormLabel>
         <Textarea maxRows={21} minRows={4} {...register('config.answer')} />
         {errors?.config?.answer?.message && (
           <FormHelperText>{errors?.config?.answer?.message}</FormHelperText>

@@ -1,0 +1,16 @@
+{
+  "title": "Agents",
+  "cta": "New Agent",
+  "name-table": "Name",
+  "description-table": "Description",
+  "visibility-table": "Visibility",
+  "chatWithAgent": "Chat with agent",
+  "settingsAgent": "Agent Settings",
+  "tools": "Tool",
+  "toolsSub": "Your agent can use tools like its own data pools to become smarter.",
+  "toolsDanger": "Your AI agents have the ability to disclose their data sources. This promotes trust and transparency.",
+  "connect": "Connect a data pool to your AI agent",
+  "select": "Select a data pool",
+  "ctaPopUp": "Create a data pool",
+  "create": "Create"
+}

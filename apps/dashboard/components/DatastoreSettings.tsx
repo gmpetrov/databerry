@@ -21,6 +21,7 @@ import axios from 'axios';
 import mime from 'mime-types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -54,6 +55,7 @@ type Schema = z.infer<typeof Schema>;
 
 function PluginSettings({ datastore }: { datastore: Datastore }) {
   const fileInputRef = useRef();
+  const { t } = useTranslation('chat');
   const [state, setState] = useStateReducer({
     isUploadingPluginIcon: false,
     isUpdatingPlugin: false,
@@ -189,7 +191,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
                 startDecorator={<AutorenewIcon />}
                 loading={state.isUploadingPluginIcon}
               >
-                Replace
+                {t('switchIcon')}
               </Button>
               {datastore?.pluginIconUrl && (
                 <Button
@@ -199,7 +201,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
                   size="sm"
                   startDecorator={<DeleteIcon />}
                 >
-                  Delete
+                  {t('delete')}
                 </Button>
               )}
             </Stack>
@@ -340,6 +342,7 @@ function PluginSettings({ datastore }: { datastore: Datastore }) {
 function DatastoreSettings() {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = React.useState(false);
+  const { t } = useTranslation('chat');
 
   const { getDatastoreQuery } = useGetDatastoreQuery({});
 
@@ -411,12 +414,12 @@ function DatastoreSettings() {
                   size="sm"
                   endDecorator={<ArrowForwardRoundedIcon />}
                 >
-                  Documentation
+                  {t('documatation')}
                 </Button>
               </Link>
             }
           >
-            Learn more about the Datatberry API
+            {t('findOut')}
           </Alert>
 
           <Alert

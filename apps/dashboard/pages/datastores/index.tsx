@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
@@ -41,6 +42,7 @@ const CreateDatastoreModal = dynamic(
 
 export default function DatasourcesPage() {
   const router = useRouter();
+  const { t } = useTranslation('datenpool');
   const { data: session, status } = useSession();
 
   const [state, setState] = useStateReducer({
@@ -110,7 +112,7 @@ export default function DatasourcesPage() {
           <HomeRoundedIcon />
         </Link>
         <Typography fontSize="inherit" color="neutral">
-          Datastores
+          {t('title')}
         </Typography>
         {/* <JoyLink
           underline="hover"
@@ -140,7 +142,7 @@ export default function DatasourcesPage() {
         }}
       >
         <Typography level="h1" fontSize="xl4">
-          Datastores
+          {t('title')}
         </Typography>
         {/* <Box sx={{ flex: 999999 }} /> */}
         <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
@@ -157,7 +159,7 @@ export default function DatasourcesPage() {
             startDecorator={<AddIcon />}
             onClick={handleClickNewDatastore}
           >
-            New Datastore
+            {t('cta')}
           </Button>
         </Box>
       </Box>
@@ -168,10 +170,7 @@ export default function DatasourcesPage() {
         startDecorator={<InfoRoundedIcon />}
         sx={{ mb: 2 }}
       >
-        A Datastore serves as a repository that contains various types of data
-        sources, including files, web pages, Notion notebooks, etc.. Once data
-        is uploaded to a Datastore, it undergoes processing (vectorization) to
-        prepare it for use by an Agent (Large Language Model).
+        {t('subtitle')}
       </Alert>
 
       {getDatastoresQuery?.data && (

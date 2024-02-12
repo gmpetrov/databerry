@@ -60,5 +60,11 @@
   "packageManager": "pnpm@8.7.5",
   "@parcel/resolver-default": {
     "packageExports": true
+  },
+  "dependencies": {
+    "i18next": "^23.8.2",
+    "next-i18next": "^15.2.0",
+    "ni18n": "^1.1.0",
+    "react-i18next": "^14.0.5"
   }
 }

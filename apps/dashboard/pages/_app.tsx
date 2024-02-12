@@ -11,6 +11,7 @@ import type { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { SessionProvider } from 'next-auth/react';
+import { appWithI18Next } from 'ni18n';
 import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 
@@ -27,6 +28,8 @@ import useUTMTracking from '@app/hooks/useUTMTracking';
 
 import { NextPageWithLayout, RouteNames } from '@chaindesk/lib/types';
 
+import { ni18nConfig } from './ni18n.config';
+
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
@@ -38,11 +41,7 @@ const TopProgressBar = dynamic(
   { ssr: false }
 );
 
-export default function App({
-  Component,
-  pageProps,
-  ...otherProps
-}: AppPropsWithLayout) {
+function App({ Component, pageProps, ...otherProps }: AppPropsWithLayout) {
   const router = useRouter();
   const getLayout = Component.getLayout ?? ((page) => page);
   const [product, setProduct] = React.useState<ProductType>(pageProps.product);
@@ -88,3 +87,6 @@ export default function App({
     </ProductContext.Provider>
   );
 }
+
+// @ts-ignore
+export default appWithI18Next(App, ni18nConfig);

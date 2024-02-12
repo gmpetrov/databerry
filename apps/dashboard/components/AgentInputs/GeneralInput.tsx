@@ -10,6 +10,7 @@ import axios from 'axios';
 import mime from 'mime-types';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React, { useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -35,6 +36,7 @@ const CreateDatastoreModal = dynamic(
 );
 
 function GeneralInput({}: Props) {
+  const { t } = useTranslation('chat');
   const { watch, setValue, register, getValues, formState, control } =
     useFormContext<CreateAgentSchema>();
 
@@ -155,7 +157,7 @@ function GeneralInput({}: Props) {
                 startDecorator={<AutorenewIcon />}
                 loading={state.isUploadingAgentIcon}
               >
-                Replace
+                {t('switchIcon')}
               </Button>
               {state?.iconUrl && state?.iconUrl !== defaultIconUrl && (
                 <Button
@@ -165,7 +167,7 @@ function GeneralInput({}: Props) {
                   size="sm"
                   startDecorator={<DeleteIcon />}
                 >
-                  Delete
+                  {t('delete')}
                 </Button>
               )}
             </Stack>
@@ -177,7 +179,7 @@ function GeneralInput({}: Props) {
       <FormControl>
         <Input
           control={control}
-          label="Description"
+          label={t('gerneralDescription')}
           {...register('description')}
         />
         {/* <Typography level="body-xs" mt={1}>

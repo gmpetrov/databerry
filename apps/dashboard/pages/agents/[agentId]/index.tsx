@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 
@@ -55,6 +56,7 @@ export default function AgentPage() {
     isUsageModalOpen: false,
     currentToolIndex: -1,
   });
+  const { t } = useTranslation('chat');
 
   const { query } = useAgent({
     id: router.query?.agentId as string,
@@ -289,13 +291,13 @@ export default function AgentPage() {
                     <ListItemDecorator>
                       <RocketLaunchRoundedIcon />
                     </ListItemDecorator>
-                    Deploy
+                    {t('publish')}
                   </Tab>
                   <Tab indicatorInset value={'settings'}>
                     <ListItemDecorator>
                       <SettingsIcon />
                     </ListItemDecorator>
-                    Settings
+                    {t('settings')}
                   </Tab>
                 </TabList>
               </Tabs>

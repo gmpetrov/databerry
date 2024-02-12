@@ -8,6 +8,7 @@ import Tabs from '@mui/joy/Tabs';
 import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import Layout from './Layout';
@@ -20,6 +21,7 @@ type Props = {
 
 function SettingsLayout(props: Props) {
   const router = useRouter();
+  const { t } = useTranslation('settings');
 
   return (
     <Layout mainSxProps={props.mainSxProps}>
@@ -52,7 +54,7 @@ function SettingsLayout(props: Props) {
           }}
         >
           <Typography level="h1" fontSize="xl4">
-            Settings
+            {t('settings')}
           </Typography>
         </Box>
 
@@ -148,7 +150,7 @@ function SettingsLayout(props: Props) {
                   {/* <ListItemDecorator>
                       <SettingsIcon />
                     </ListItemDecorator> */}
-                  API Keys
+                  {t('api-key')}{' '}
                 </Tab>
               </Link>
             </TabList>

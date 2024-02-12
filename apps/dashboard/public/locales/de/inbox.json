@@ -1,0 +1,12 @@
+{
+  "notRead": "Ungelesen",
+  "notSolved": "Ungelöst",
+  "usedHuman": "Menschen angefordert",
+  "all": "Alle",
+  "export": "Exportiere Konversation",
+  "noKonv": "Keine Konversation gefunden",
+  "filterByEva": "Filtern nach Evaluation",
+  "filterByAgent": "Filtern nach Agenten",
+  "good": "Gut",
+  "bad": "Schlecht"
+}

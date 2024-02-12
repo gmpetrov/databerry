@@ -12,6 +12,7 @@ import {
 } from '@mui/joy';
 import axios from 'axios';
 import router, { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
 
 import useAgent from '@app/hooks/useAgent';
@@ -29,6 +30,7 @@ type Props = {
 };
 
 function AgentSettingsTab(props: Props) {
+  const { t } = useTranslation('chat');
   const router = useRouter();
   const [state, setState] = useStateReducer({
     currentTab: (router?.query?.settingTab as string) || 'general',
@@ -83,7 +85,7 @@ function AgentSettingsTab(props: Props) {
               <ListItemDecorator>
                 <SettingsRoundedIcon />
               </ListItemDecorator>
-              <ListItemContent>General</ListItemContent>
+              <ListItemContent>{t('allg')}</ListItemContent>
             </ListItemButton>
           </ListItem>
           <ListItem>
@@ -94,7 +96,7 @@ function AgentSettingsTab(props: Props) {
               <ListItemDecorator>
                 <SmartToyRoundedIcon />
               </ListItemDecorator>
-              <ListItemContent>Model</ListItemContent>
+              <ListItemContent>{t('ki')}</ListItemContent>
             </ListItemButton>
           </ListItem>
           <ListItem>
@@ -105,7 +107,7 @@ function AgentSettingsTab(props: Props) {
               <ListItemDecorator>
                 <SpokeRoundedIcon />
               </ListItemDecorator>
-              <ListItemContent>Tools</ListItemContent>
+              <ListItemContent>{t('tool')}</ListItemContent>
             </ListItemButton>
           </ListItem>
           <ListItem>
@@ -116,7 +118,7 @@ function AgentSettingsTab(props: Props) {
               <ListItemDecorator>
                 <SecurityRoundedIcon />
               </ListItemDecorator>
-              <ListItemContent>Security</ListItemContent>
+              <ListItemContent>{t('secur')}</ListItemContent>
             </ListItemButton>
           </ListItem>
         </List>

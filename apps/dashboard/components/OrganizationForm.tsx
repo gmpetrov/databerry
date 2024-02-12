@@ -14,6 +14,7 @@ import Typography from '@mui/joy/Typography';
 import axios from 'axios';
 import mime from 'mime-types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -43,6 +44,7 @@ type Props = {};
 
 function OrganizationForm({}: Props) {
   const { data: session } = useSession();
+  const { t } = useTranslation('settings');
   const methods = useForm<OrganizationInviteSchema>({
     resolver: zodResolver(OrganizationInviteSchema),
   });
@@ -245,8 +247,8 @@ function OrganizationForm({}: Props) {
   return (
     <Stack gap={4} id="team">
       <SettingCard
-        title="Team Settings"
-        description="Personalize your team name and icon."
+        title={t('title-team')}
+        description={t('subtitle-profil')}
         disableSubmitButton
       >
         <form
@@ -292,15 +294,15 @@ function OrganizationForm({}: Props) {
               disabled={!hasAdminRole(session?.roles)}
               loading={state.isUpdatingOrg}
             >
-              Update
+              {t('save')}
             </Button>
           </Stack>
         </form>
       </SettingCard>
 
       <SettingCard
-        title="Team Members"
-        description="Invite a new member to collaborate"
+        title={t('team-member')}
+        description={t('invite-team')}
         disableSubmitButton
       >
         <form onSubmit={methods.handleSubmit(submitInvite)} className="p-2">
@@ -312,7 +314,7 @@ function OrganizationForm({}: Props) {
               onBlur={(e) => {}} // // Otherwise got error when submiting with return key 🤷
               endDecorator={
                 <Button type="submit" loading={state.isSubmitting}>
-                  Invite
+                  {t('invite')}
                 </Button>
               }
             />
@@ -342,9 +344,9 @@ function OrganizationForm({}: Props) {
                 <thead>
                   <tr>
                     <th style={{ width: '40%' }}>Email</th>
-                    <th>Role</th>
+                    <th>{t('role')}</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th>{t('action')}</th>
                   </tr>
                 </thead>
                 <tbody>

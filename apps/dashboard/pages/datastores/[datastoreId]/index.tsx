@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 
@@ -61,6 +62,7 @@ export default function DatastorePage() {
     currentDatastoreId: undefined as string | undefined,
     isUsageLimitModalOpen: false,
   });
+  const { t } = useTranslation('datenpool');
 
   const { getDatastoreQuery } = useGetDatastoreQuery({});
 
@@ -210,7 +212,7 @@ export default function DatastorePage() {
                 }
               }}
             >
-              Add Datasource
+              {t('addData')}
             </Button>
           </Box>
         </Box>
@@ -267,13 +269,13 @@ export default function DatastorePage() {
                 <ListItemDecorator>
                   <AutoGraphRoundedIcon />
                 </ListItemDecorator>
-                Datasources
+                {t('myData')}
               </Tab>
               <Tab indicatorInset value={'settings'}>
                 <ListItemDecorator>
                   <SettingsIcon />
                 </ListItemDecorator>
-                Settings
+                {t('settings')}{' '}
               </Tab>
             </TabList>
           </Tabs>

@@ -5,6 +5,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import router from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import AgentForm from '@app/components/AgentForm';
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export default function AgentToolSettingsTab(props: Props) {
+  const { t } = useTranslation('chat');
   return props.agentId ? (
     <Stack gap={4}>
       <AgentForm agentId={router.query.agentId as string}>
@@ -29,12 +31,12 @@ export default function AgentToolSettingsTab(props: Props) {
           <ConnectForm<CreateAgentSchema>>
             {({ formState }) => (
               <SettingCard
-                title="Tools"
-                description="Give tools to your Agent to make it smarter"
+                title={t('tools-title')}
+                description={t('tools-subtitle')}
                 // submitButtonProps={{
                 //   loading: mutation.isMutating,
                 //   disabled: !formState.isDirty || !formState.isValid,
-                //   children: 'Save',
+                //   children: `${t('save')}`,
                 // }}
                 disableSubmitButton
               >
@@ -72,12 +74,12 @@ export default function AgentToolSettingsTab(props: Props) {
               const includeSources = watch('includeSources');
               return (
                 <SettingCard
-                  title="Sources"
-                  description="View content pulled from your Datastores to generate answers."
+                  title={t('source')}
+                  description={t('source-subtitle')}
                   submitButtonProps={{
                     loading: mutation.isMutating,
                     disabled: !formState.isDirty || !formState.isValid,
-                    children: 'Save',
+                    children: `${t('save')}`,
                   }}
                 >
                   <Stack direction="row" mb={2}>
@@ -87,10 +89,9 @@ export default function AgentToolSettingsTab(props: Props) {
                         checked={!!includeSources}
                       />
                       <div className="flex flex-col">
-                        <FormLabel>Include sources in Agent Answer</FormLabel>
+                        <FormLabel>{t('source-include')}</FormLabel>
                         <Typography level="body-xs">
-                          When activated, your agent will include sources used
-                          to generate the answer.
+                          {t('source-include-subtitle')}
                         </Typography>
                       </div>
                     </FormControl>

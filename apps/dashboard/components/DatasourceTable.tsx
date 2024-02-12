@@ -26,6 +26,7 @@ import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import pDebounce from 'p-debounce';
 import * as React from 'react';
 import useSWR from 'swr';
@@ -148,6 +149,7 @@ export default function DatasourceTable({
   handleSynch: (datasourceId: string) => Promise<any>;
 }) {
   const router = useRouter();
+  const { t } = useTranslation('datenpool');
 
   const { getDatastoreQuery, offset, limit, search, status, type, groupId } =
     useGetDatastoreQuery({
@@ -277,7 +279,7 @@ export default function DatasourceTable({
               justifyContent={'space-between'}
               alignItems={'center'}
             >
-              <FormLabel>Search for datasource (name)</FormLabel>
+              <FormLabel>{t('search')}</FormLabel>
               <Typography level="body-sm" color="primary">{`${total} result${
                 total > 1 ? 's' : ''
               }`}</Typography>
@@ -285,7 +287,7 @@ export default function DatasourceTable({
             <Input
               autoFocus
               defaultValue={search}
-              placeholder="Search"
+              placeholder={`${t('searchPlaceholder')}`}
               startDecorator={<SearchRoundedIcon />}
               endDecorator={
                 getDatastoreQuery?.isLoading ? (
@@ -303,7 +305,7 @@ export default function DatasourceTable({
           <FormControl size="sm">
             <FormLabel sx={{ ml: 'auto' }}>Type</FormLabel>
             <Select
-              placeholder="Filter by type"
+              placeholder={t('filterByType')}
               value={type}
               slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
               onChange={(_, value) => {
@@ -346,7 +348,7 @@ export default function DatasourceTable({
           <FormControl size="sm">
             <FormLabel sx={{ ml: 'auto' }}>Status</FormLabel>
             <Select
-              placeholder="Filter by status"
+              placeholder={t('filterByStatus')}
               value={status}
               slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
               onChange={(_, value) => {
@@ -717,7 +719,7 @@ export default function DatasourceTable({
             }
           }}
         >
-          Previous
+          {t('before')}
         </Button>
 
         <Box sx={{ flex: 1 }} />
@@ -756,7 +758,7 @@ export default function DatasourceTable({
             }
           }}
         >
-          Next
+          {t('next')}
         </Button>
       </Box>
 

@@ -1,11 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FormLabel, Option, Select } from '@mui/joy';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import Stack from '@mui/joy/Stack';
 import axios from 'axios';
+import i18next from 'i18next';
 import mime from 'mime-types';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
@@ -28,6 +31,8 @@ export default function ProfileSettingsPage() {
     isUpdatingProfile: false,
   });
   const { upload, isUploading } = useFileUpload();
+
+  const { t, i18n } = useTranslation('settings');
 
   const methods = useForm<UpdateUserProfileSchema>({
     resolver: zodResolver(UpdateUserProfileSchema),
@@ -93,6 +98,15 @@ export default function ProfileSettingsPage() {
     }
   }, [status]);
 
+  const updateLanguage = (newValue: string) => {
+    methods.setValue('language', newValue as string, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    i18n.changeLanguage(newValue || 'de');
+    // methods.trigger('language');
+  };
+
   if (!session?.user) {
     return null;
   }
@@ -104,6 +118,7 @@ export default function ProfileSettingsPage() {
       sx={{
         height: '100%',
       }}
+      gap={4}
     >
       {/* <OrganizationForm /> */}
 
@@ -154,6 +169,50 @@ export default function ProfileSettingsPage() {
             loading={isUploading || methods.formState.isSubmitting}
           />
 
+          <input type="submit" hidden />
+        </form>
+      </SettingCard>
+
+      <SettingCard
+        title="Language Settings"
+        description="Select your Dashboard Language."
+        cardProps={{
+          sx: { maxWidth: 'md', mx: 'auto', width: '100%' },
+        }}
+        submitButtonProps={{
+          loading: state.isUpdatingProfile,
+          disabled: !methods.formState?.isValid || !methods?.formState?.isDirty,
+          children: 'Update',
+          onClick: () => updateProfile(methods.getValues()),
+        }}
+      >
+        <form
+          className="space-y-4"
+          onSubmit={methods.handleSubmit(updateProfile)}
+        >
+          <FormLabel id="select-lang-label" htmlFor="select-lang-button">
+            {t('language-profil')}
+          </FormLabel>
+          <Select
+            {...methods.register('language')}
+            key={methods.watch('language')}
+            // defaultValue={session?.user?.language || 'de'}
+            value={methods.watch('language')}
+            placeholder={'Sprache auswählen...'}
+            // onChange={(e, newValue) => i18n.changeLanguage(newValue || 'de')}
+            onChange={(e, newValue) => updateLanguage(newValue || 'de')}
+            slotProps={{
+              button: {
+                id: 'select-lang-button',
+                // TODO: Material UI set aria-labelledby correctly & automatically
+                // but Base UI and Joy UI don't yet.
+                'aria-labelledby': 'select-lang-label select-lang-button',
+              },
+            }}
+          >
+            <Option value="de">DE - Deutsch</Option>
+            <Option value="en">EN - Englisch</Option>
+          </Select>
           <input type="submit" hidden />
         </form>
       </SettingCard>

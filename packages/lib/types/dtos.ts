@@ -487,6 +487,7 @@ export type OrganizationInviteSchema = z.infer<typeof OrganizationInviteSchema>;
 export const UpdateUserProfileSchema = z.object({
   email: z.string().email(),
   name: z.string().trim().min(1).max(50),
+  language: z.string().default('en'),
   customPicture: z.union([z.string().url().nullish(), z.literal('')]),
   // iconUrl: z.union([
   //   z

@@ -2,6 +2,7 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import Button from '@mui/joy/Button';
 import Stack from '@mui/joy/Stack';
 import router from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import AgentForm from '@app/components/AgentForm';
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export default function AgentToolSettingsTab(props: Props) {
+  const { t } = useTranslation('chat');
   return props.agentId ? (
     <Stack gap={4}>
       <AgentForm agentId={router.query.agentId as string}>
@@ -30,14 +32,13 @@ export default function AgentToolSettingsTab(props: Props) {
             {({ formState }) => {
               return (
                 <SettingCard
-                  title="Language Model"
-                  description="Customize the language model your Agent uses."
-                  // submitButtonProps={{
-                  //   loading: mutation.isMutating,
-                  //   disabled: !formState.isDirty || !formState.isValid,
-                  //   children: 'Save',
-                  // }}
-                  disableSubmitButton
+                  title={t('ki-title')}
+                  description={t('ki-subtitle')}
+                  submitButtonProps={{
+                    loading: mutation.isMutating,
+                    disabled: !formState.isDirty || !formState.isValid,
+                    children: `${t('save')}`,
+                  }}
                 >
                   <ModelInput />
 
@@ -58,7 +59,7 @@ export default function AgentToolSettingsTab(props: Props) {
                           }}
                           startDecorator={<SaveRoundedIcon />}
                         >
-                          Save
+                          {t('save')}
                         </Button>
                       )}
                     </MotionBottom>

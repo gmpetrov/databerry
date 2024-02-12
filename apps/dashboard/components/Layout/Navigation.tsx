@@ -41,6 +41,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
@@ -118,6 +119,7 @@ function NavigationLink(props: {
 }
 
 export default function Navigation() {
+  const { t } = useTranslation('main');
   const router = useRouter();
   const { data: session } = useSession({
     required: true,
@@ -245,7 +247,7 @@ export default function Navigation() {
       ...(product === 'chaindesk'
         ? [
             {
-              label: 'Inbox',
+              label: t('inbox'),
               route: RouteNames.LOGS,
               icon: (
                 <Badge
@@ -263,7 +265,7 @@ export default function Navigation() {
               isNew: false,
             },
             {
-              label: 'Agents',
+              label: t('agent'),
               route: RouteNames.AGENTS,
               icon: <SmartToyRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.AGENTS),
@@ -271,7 +273,7 @@ export default function Navigation() {
               isNew: false,
             },
             {
-              label: 'Datastores',
+              label: t('dataPool'),
               route: RouteNames.DATASTORES,
               icon: <StorageRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.DATASTORES),
@@ -312,7 +314,7 @@ export default function Navigation() {
       ...(product === 'cs'
         ? [
             {
-              label: 'Inbox',
+              label: t('inbox'),
               route: RouteNames.LOGS,
               icon: (
                 <Badge
@@ -330,7 +332,7 @@ export default function Navigation() {
               isNew: false,
             },
             {
-              label: 'Agents',
+              label: t('agent'),
               route: RouteNames.AGENTS,
               icon: <SmartToyRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.AGENTS),
@@ -342,7 +344,7 @@ export default function Navigation() {
       ...(product === 'chat'
         ? [
             {
-              label: 'Chat',
+              label: t('inbox'),
               route: RouteNames.CHAT,
               icon: <ChatRoundedIcon fontSize="md" />,
               active: router.route === RouteNames.CHAT,
@@ -350,7 +352,7 @@ export default function Navigation() {
               isNew: false,
             },
             {
-              label: 'Datastores',
+              label: t('dataPool'),
               route: RouteNames.DATASTORES,
               icon: <StorageRoundedIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.DATASTORES),
@@ -359,7 +361,7 @@ export default function Navigation() {
           ]
         : []),
     ];
-  }, [router.route, countUnreadQuery?.data, product]);
+  }, [router.route, countUnreadQuery?.data, product, t]);
 
   const settingLinks = React.useMemo(() => {
     return [
@@ -370,7 +372,7 @@ export default function Navigation() {
       //   active: router.route === RouteNames.APPS,
       // },
       {
-        label: 'Settings',
+        label: t('settings'),
         route: RouteNames.SETTINGS,
         icon: <ManageAccountsRoundedIcon fontSize="small" />,
         active: router.route.startsWith(RouteNames.SETTINGS),
@@ -378,7 +380,7 @@ export default function Navigation() {
         isNew: false,
       },
     ];
-  }, [router.route]);
+  }, [router.route, t]);
 
   const docLinks = React.useMemo(() => {
     return [

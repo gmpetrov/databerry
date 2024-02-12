@@ -13,6 +13,7 @@ import Stack from '@mui/joy/Stack';
 import { SxProps } from '@mui/joy/styles/types';
 import Typography from '@mui/joy/Typography';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import useSWR, { useSWRConfig } from 'swr';
@@ -80,6 +81,7 @@ function ConversationList({
 }: Props) {
   const scrollParentRef = useRef(null);
   const router = useRouter();
+  const { t } = useTranslation('chat');
   const [state, setState] = useStateReducer({
     hasMore: true,
     hasLoadedOnce: false,
@@ -149,7 +151,7 @@ function ConversationList({
         startDecorator={<AddRoundedIcon fontSize="sm" />}
         sx={{ m: 1, whiteSpace: 'nowrap' }}
       >
-        New Chat
+        {t('newChat')}
       </Button>
       {/* <Divider /> */}
       <List

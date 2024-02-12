@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import useAgent from '@app/hooks/useAgent';
@@ -76,6 +77,7 @@ type Props = {
 
 function AgentDeployTab(props: Props) {
   const { data: session, status } = useSession();
+  const { t } = useTranslation('chat');
 
   const router = useRouter();
   const [state, setState] = useStateReducer({
@@ -103,8 +105,8 @@ function AgentDeployTab(props: Props) {
   return (
     <>
       <SettingCard
-        title="Deploy"
-        description="Deploy your agent with the following widgets or integrations"
+        title={t('publish')}
+        description={t('publish-subtitle')}
         disableSubmitButton
         cardProps={{
           sx: {

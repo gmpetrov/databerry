@@ -10,12 +10,14 @@ import { ColorPaletteProp } from '@mui/joy/styles';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
 import { RouteNames } from '@chaindesk/lib/types';
 import { Agent } from '@chaindesk/prisma';
 
 export default function AgentTable({ items }: { items: Agent[] }) {
+  const { t } = useTranslation('agent');
   return (
     <React.Fragment>
       <Sheet
@@ -45,9 +47,14 @@ export default function AgentTable({ items }: { items: Agent[] }) {
           <thead>
             <tr>
               <th style={{ width: 120, padding: 12 }}>Name</th>
-              <th style={{ width: 120, padding: 12 }}>Description</th>
+              <th style={{ width: 120, padding: 12 }}>
+                {t('description-table')}
+              </th>
               <th style={{ width: 120, padding: 12 }}>Model</th>
-              <th style={{ width: 220, padding: 12 }}>Visibility</th>
+              <th style={{ width: 220, padding: 12 }}>
+                {' '}
+                {t('visibility-table')}
+              </th>
               <th style={{ width: 160, padding: 12 }}> </th>
             </tr>
           </thead>
@@ -107,7 +114,7 @@ export default function AgentTable({ items }: { items: Agent[] }) {
                 <td>
                   <Stack direction="row" spacing={1}>
                     <Link href={`${RouteNames.AGENTS}/${agent.id}/?tab=chat`}>
-                      <Tooltip title="Chat with Agent">
+                      <Tooltip title={t('chatWithAgent')}>
                         <IconButton color="neutral" size="sm">
                           <MessageRoundedIcon />
                         </IconButton>
@@ -117,7 +124,7 @@ export default function AgentTable({ items }: { items: Agent[] }) {
                     <Link
                       href={`${RouteNames.AGENTS}/${agent.id}/?tab=settings`}
                     >
-                      <Tooltip title="Agent Settings">
+                      <Tooltip title={t('settingsAgent')}>
                         <IconButton color="neutral" size="sm">
                           <SettingsIcon />
                         </IconButton>

@@ -7,12 +7,15 @@ import { ColorPaletteProp } from '@mui/joy/styles';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
 import { RouteNames } from '@chaindesk/lib/types';
 import { Datastore } from '@chaindesk/prisma';
 
 export default function DatastoreTable({ items }: { items: Datastore[] }) {
+  const { t } = useTranslation('datenpool');
+
   return (
     <React.Fragment>
       <Sheet
@@ -39,10 +42,10 @@ export default function DatastoreTable({ items }: { items: Datastore[] }) {
         >
           <thead>
             <tr>
-              <th style={{ width: 120, padding: 12 }}>Name</th>
-              <th style={{ width: 120, padding: 12 }}>Nb Datasources</th>
-              {/* <th style={{ width: 220, padding: 12 }}>Provider</th> */}
-              <th style={{ width: 220, padding: 12 }}>Visibility</th>
+              <th style={{ width: 120, padding: 12 }}>{t('name')}</th>
+              <th style={{ width: 120, padding: 12 }}>{t('data')}</th>
+              {/* <th style={{ width: 220, padding: 12 }}>{t('provi')}</th> */}
+              <th style={{ width: 220, padding: 12 }}>{t('visibility')}</th>
               {/* <th style={{ width: 120, padding: 12 }}>Subscription</th> */}
               <th style={{ width: 160, padding: 12 }}> </th>
             </tr>

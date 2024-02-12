@@ -6,6 +6,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Typography from '@mui/joy/Typography';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -43,6 +44,7 @@ type Schema = z.infer<typeof Schema>;
 
 export default function BaseForm(props: Props) {
   const datastoreId = props?.defaultValues?.id;
+  const { t } = useTranslation('datenpool');
 
   const methods = useForm<Schema>({
     resolver: zodResolver(Schema),
@@ -110,7 +112,7 @@ export default function BaseForm(props: Props) {
         {networkError && <Alert color="danger">{networkError}</Alert>}
 
         <Input
-          label="Datastore Name"
+          label={t('nameKonfig')}
           helperText="e.g.: Nuclear Fusion latest research papers"
           control={control as any}
           {...register('name')}
@@ -132,10 +134,9 @@ export default function BaseForm(props: Props) {
               {...register('isPublic')}
             />
             <div className="flex flex-col">
-              <FormLabel>Public</FormLabel>
+              <FormLabel>{t('open')}</FormLabel>
               <Typography level="body-xs">
-                When activated, your datastore will be available by anyone on
-                the internet.{' '}
+                {t('openSub')}{' '}
                 {/* <Typography fontWeight={'bold'} color="primary">
                   Required for a public ChatGPT plugin.
                 </Typography> */}

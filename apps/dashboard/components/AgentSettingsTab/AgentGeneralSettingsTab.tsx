@@ -10,6 +10,7 @@ import Typography from '@mui/joy/Typography';
 import axios from 'axios';
 import Link from 'next/link';
 import router from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 import toast from 'react-hot-toast';
 
@@ -31,6 +32,7 @@ type Props = {
 };
 
 export default function AgentGeneralSettingsTab(props: Props) {
+  const { t } = useTranslation('chat');
   const handleDeleteAgent = async () => {
     if (
       window.confirm(
@@ -42,6 +44,8 @@ export default function AgentGeneralSettingsTab(props: Props) {
       router.push(RouteNames.AGENTS);
     }
   };
+
+  const deleteText = t('delete');
 
   return props.agentId ? (
     <Stack gap={4}>
@@ -55,7 +59,7 @@ export default function AgentGeneralSettingsTab(props: Props) {
                   submitButtonProps={{
                     loading: mutation.isMutating,
                     disabled: !formState.isDirty || !formState.isValid,
-                    children: 'Save',
+                    children: `${t('save')}`,
                   }}
                 >
                   <GeneralInput />
@@ -68,7 +72,7 @@ export default function AgentGeneralSettingsTab(props: Props) {
 
       <SettingCard
         title="Agent ID"
-        description="Use the Agent ID to query the agent through Chaindesk API"
+        description={t('subtitle-id')}
         disableSubmitButton
       >
         <Stack spacing={2}>
@@ -82,12 +86,12 @@ export default function AgentGeneralSettingsTab(props: Props) {
                   size="sm"
                   endDecorator={<ArrowForwardRoundedIcon />}
                 >
-                  Documentation
+                  {t('documatation')}
                 </Button>
               </Link>
             }
           >
-            Learn more about the Datatberry API
+            {t('findOut')}
           </Alert>
 
           <Alert
@@ -108,20 +112,20 @@ export default function AgentGeneralSettingsTab(props: Props) {
       </SettingCard>
 
       <SettingCard
-        title="Delete Agent"
-        description="It will delete the agent permanently"
+        title={t('delete-title')}
+        description={t('delete-subtitle')}
         cardProps={{
           color: 'danger',
         }}
         submitButtonProps={{
           onClick: handleDeleteAgent,
           color: 'danger',
-          children: 'Delete',
+          children: deleteText,
           startDecorator: <DeleteIcon />,
         }}
       >
         <FormControl sx={{ gap: 1 }}>
-          <Alert color="danger">Delete the Agent permanently</Alert>
+          <Alert color="danger">{t('delete-msg')}</Alert>
         </FormControl>
       </SettingCard>
     </Stack>

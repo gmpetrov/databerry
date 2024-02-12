@@ -36,7 +36,7 @@ COPY turbo.json turbo.json
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 # RUN mv next.config.docker.js next.config.js
-# RUN npm run prisma:generate
+# RUN npm run prisma:generateBzw. 
 
 ARG NEXT_PUBLIC_S3_BUCKET_NAME
 ARG NEXT_PUBLIC_AWS_ENDPOINT

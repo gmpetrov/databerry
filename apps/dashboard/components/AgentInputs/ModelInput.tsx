@@ -24,6 +24,7 @@ import ToggleButtonGroup from '@mui/joy/ToggleButtonGroup';
 import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -119,6 +120,7 @@ const promptTemplates = [
 ];
 
 export default function ModelInput({}: Props) {
+  const { t } = useTranslation('chat');
   const session = useSession();
   const { watch, setValue, register, formState, control } =
     useFormContext<CreateAgentSchema>();
@@ -144,7 +146,7 @@ export default function ModelInput({}: Props) {
   return (
     <Stack gap={2}>
       <FormControl>
-        <FormLabel>Model</FormLabel>
+        <FormLabel>{t('ki-model')}</FormLabel>
 
         <Select
           {...register('modelName')}
@@ -187,15 +189,9 @@ export default function ModelInput({}: Props) {
       </FormControl>
 
       <FormControl>
-        <FormLabel>Model Temperature</FormLabel>
+        <FormLabel>{t('ki-temp')}</FormLabel>
 
-        <Alert color="neutral">
-          Temperature is a parameter of the model that governs the randomness
-          and thus the creativity of the responses. A temperature of 0 means the
-          responses will be very straightforward, almost deterministic (meaning
-          you almost always get the same response to a given prompt) A
-          temperature of 1 means the responses can vary wildly.
-        </Alert>
+        <Alert color="neutral">{t('ki-temp-descr')}</Alert>
 
         <Slider
           // {...register('temperature')}

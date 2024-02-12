@@ -6,6 +6,7 @@ import Card from '@mui/joy/Card';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
@@ -40,6 +41,7 @@ function Nested() {
   const { control, register, setValue, reset, watch, trigger } =
     useFormContext<DatasourceFile>();
   const fileInputRef = useRef();
+  const { t } = useTranslation('datenpool');
 
   const [state, setState] = useStateReducer({
     file: null as File | null,
@@ -156,10 +158,10 @@ function Nested() {
             color={state.isDragEnter ? 'primary' : 'neutral'}
             variant="soft"
           >
-            Select or Drop file
+            {t('selectDataOrDrop')}
           </Button>
           <Typography level="body-xs" textAlign={'center'} mt={2}>
-            PDF, PowerPoint, Excel, Word, Text, Markdown,
+            {t('selectDataOrDropData')}
           </Typography>
           <UsageLimitModal
             isOpen={state.isUsageLimitModalOpen}
