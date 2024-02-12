@@ -96,13 +96,21 @@ export default function ProfileSettingsPage() {
         customPicture: session?.user?.customPicture,
       });
     }
-  }, [status]);
+    i18n.changeLanguage(i18n.language == undefined ? 'de' : i18n.language);
+  }, [
+    i18n,
+    methods,
+    session?.user?.customPicture,
+    session?.user?.email,
+    session?.user?.name,
+    status,
+  ]);
 
   const updateLanguage = (newValue: string) => {
-    methods.setValue('language', newValue as string, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
+    // methods.setValue('language', newValue as string, {
+    //   shouldDirty: true,
+    //   shouldValidate: true,
+    // });
     i18n.changeLanguage(newValue || 'de');
     // methods.trigger('language');
   };
@@ -123,8 +131,8 @@ export default function ProfileSettingsPage() {
       {/* <OrganizationForm /> */}
 
       <SettingCard
-        title="Profile Settings"
-        description="Your personal information and settings."
+        title={t('title-profil')}
+        description={t('subtitle-profil')}
         cardProps={{
           sx: { maxWidth: 'md', mx: 'auto', width: '100%' },
         }}
@@ -141,7 +149,7 @@ export default function ProfileSettingsPage() {
         >
           <Input
             control={methods.control}
-            label="Email"
+            label={t('mail-profil')}
             value={session?.user?.email || ''}
             disabled
             {...methods.register('email')}
@@ -174,17 +182,18 @@ export default function ProfileSettingsPage() {
       </SettingCard>
 
       <SettingCard
-        title="Language Settings"
+        title={t('language-profil')}
         description="Select your Dashboard Language."
         cardProps={{
           sx: { maxWidth: 'md', mx: 'auto', width: '100%' },
         }}
-        submitButtonProps={{
-          loading: state.isUpdatingProfile,
-          disabled: !methods.formState?.isValid || !methods?.formState?.isDirty,
-          children: 'Update',
-          onClick: () => updateProfile(methods.getValues()),
-        }}
+        disableSubmitButton={true}
+        // submitButtonProps={{
+        //   loading: state.isUpdatingProfile,
+        //   disabled: !methods.formState?.isValid || !methods?.formState?.isDirty,
+        //   children: 'Update',
+        //   onClick: () => updateProfile(methods.getValues()),
+        // }}
       >
         <form
           className="space-y-4"
@@ -196,8 +205,8 @@ export default function ProfileSettingsPage() {
           <Select
             {...methods.register('language')}
             key={methods.watch('language')}
-            // defaultValue={session?.user?.language || 'de'}
-            value={methods.watch('language')}
+            defaultValue={i18n.language}
+            // value={methods.watch('language')}
             placeholder={'Sprache auswählen...'}
             // onChange={(e, newValue) => i18n.changeLanguage(newValue || 'de')}
             onChange={(e, newValue) => updateLanguage(newValue || 'de')}
@@ -211,9 +220,8 @@ export default function ProfileSettingsPage() {
             }}
           >
             <Option value="de">DE - Deutsch</Option>
-            <Option value="en">EN - Englisch</Option>
+            <Option value="en">EN - English</Option>
           </Select>
-          <input type="submit" hidden />
         </form>
       </SettingCard>
     </Stack>

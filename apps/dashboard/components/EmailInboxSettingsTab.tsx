@@ -4,6 +4,7 @@ import Alert from '@mui/joy/Alert';
 import FormControl from '@mui/joy/FormControl';
 import Stack from '@mui/joy/Stack';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import { RouteNames } from '@chaindesk/lib/types';
@@ -20,6 +21,7 @@ type Props = {
 
 function EmailInboxSettingsTab({ inboxId }: Props) {
   const router = useRouter();
+  const { t } = useTranslation('email');
 
   return (
     <MailInboxFormProvider inboxId={inboxId}>
@@ -45,7 +47,7 @@ function EmailInboxSettingsTab({ inboxId }: Props) {
               }}
             >
               <FormControl>
-                <FormLabel>Email Inbox Name</FormLabel>
+                <FormLabel>{t('titleSmall')} Name</FormLabel>
 
                 <Input
                   control={methods.control}
@@ -55,8 +57,8 @@ function EmailInboxSettingsTab({ inboxId }: Props) {
             </SettingCard>
 
             <SettingCard
-              title="Delete Email Inbox"
-              description="Delete the Email Inbox permanently"
+              title={t('deleteEmail')}
+              description={t('deleteEmailSub')}
               cardProps={{
                 color: 'danger',
               }}
@@ -75,13 +77,13 @@ function EmailInboxSettingsTab({ inboxId }: Props) {
                   }
                 },
                 color: 'danger',
-                children: 'Delete',
+                children: `${t('deleteCta')}`,
                 startDecorator: <DeleteIcon />,
                 loading: deleteMutation.isMutating,
               }}
             >
               <FormControl sx={{ gap: 1 }}>
-                <Alert color="danger">Delete the email inbox permanently</Alert>
+                <Alert color="danger">{t('deleteEmailSub')}</Alert>
               </FormControl>
             </SettingCard>
           </Stack>

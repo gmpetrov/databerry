@@ -25,6 +25,7 @@ import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import pDebounce from 'p-debounce';
 import * as React from 'react';
 import useSWR from 'swr';
@@ -54,6 +55,7 @@ export default function ContactsTable({}: // handleSynch,
   // handleSynch: (datasourceId: string) => Promise<any>;
 }) {
   const router = useRouter();
+  const { t } = useTranslation('contacts');
 
   const { contactsQuery, offset, limit, search } = useContactsQuery({
     swrConfig: {
@@ -167,15 +169,15 @@ export default function ContactsTable({}: // handleSynch,
               justifyContent={'space-between'}
               alignItems={'center'}
             >
-              <FormLabel>Search for contacts (email)</FormLabel>
-              <Typography level="body-sm" color="primary">{`${total} result${
-                total > 1 ? 's' : ''
-              }`}</Typography>
+              <FormLabel>{t('searchTitle')}</FormLabel>
+              <Typography level="body-sm" color="primary">{`${total} ${t(
+                'results'
+              )}${total > 1 ? 's' : ''}`}</Typography>
             </Stack>
             <Input
               autoFocus
               defaultValue={search}
-              placeholder="Search"
+              placeholder={t('search')}
               startDecorator={<SearchRoundedIcon />}
               endDecorator={
                 contactsQuery?.isLoading ? (
@@ -342,14 +344,14 @@ export default function ContactsTable({}: // handleSynch,
                 />
               </th> */}
               <th style={{}}>Email</th>
-              <th style={{}}>Phone Number</th>
+              <th style={{}}>{t('phone')}</th>
               <th style={{}}>Name</th>
               {/* <th style={{ width: 120, padding: 12 }}>Type</th> */}
               {/* <th style={{ width: 120, padding: 12 }}>Size</th> */}
               {/* <th style={{ width: 120, padding: 12 }}>Last Sync</th> */}
               {/* <th style={{ width: 120, padding: 12 }}>Status</th> */}
               {/* <th style={{ width: 120, padding: 12 }}>Subscription</th> */}
-              <th style={{}}> Created At</th>
+              <th style={{}}>{t('createAt')}</th>
             </tr>
           </thead>
           <tbody>
@@ -543,7 +545,7 @@ export default function ContactsTable({}: // handleSynch,
             }
           }}
         >
-          Previous
+          {t('previous')}
         </Button>
 
         <Box sx={{ flex: 1 }} />
@@ -582,7 +584,7 @@ export default function ContactsTable({}: // handleSynch,
             }
           }}
         >
-          Next
+          {t('next')}
         </Button>
       </Box>
 

@@ -18,6 +18,7 @@ import {
 import axios from 'axios';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next/types';
+import { useTranslation } from 'next-i18next';
 import React, { useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
@@ -102,6 +103,7 @@ function aggregateConversationsByKey(key: string, data: Record<string, any>[]) {
 }
 
 export default function AnalyticsPage() {
+  const { t } = useTranslation('analytics');
   const [state, setState] = useStateReducer({
     conversation_count: 0,
     bad_message_count: 0,
@@ -182,7 +184,7 @@ export default function AnalyticsPage() {
       </Breadcrumbs>
 
       <Alert startDecorator={<InfoIcon />} color="primary" variant="soft">
-        This view is refreshed every hour
+        {t('sub')}
       </Alert>
 
       <Stack display="flex" direction="row" spacing={2} mt={1}>
@@ -192,7 +194,7 @@ export default function AnalyticsPage() {
           flexShrink="initial"
           sx={{ mt: 2 }}
         >
-          <Typography level="body-xs">Date Range</Typography>
+          <Typography level="body-xs">{t('dateRange')}</Typography>
           <Select
             defaultValue="all_time"
             startDecorator={<EventIcon fontSize="lg" />}
@@ -203,8 +205,8 @@ export default function AnalyticsPage() {
               }
             }}
           >
-            <Option value="all_time">All Time</Option>
-            <Option value="monthly">This Month</Option>
+            <Option value="all_time">{t('allTime')}</Option>
+            <Option value="monthly">{t('thisMonth')}</Option>
           </Select>
         </Box>
         <Box
@@ -262,7 +264,7 @@ export default function AnalyticsPage() {
       >
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            label="Total Conversations"
+            label={t('totalConversations')}
             value={state.conversation_count}
             loading={state.isLoading}
           />
@@ -270,7 +272,7 @@ export default function AnalyticsPage() {
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            label="Liked Responses"
+            label={t('likedResp')}
             value={state.good_message_count}
             loading={state.isLoading}
           />
@@ -278,7 +280,7 @@ export default function AnalyticsPage() {
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            label="Disliked Responses"
+            label={t('disResp')}
             value={state.bad_message_count}
             loading={state.isLoading}
           />
@@ -286,14 +288,14 @@ export default function AnalyticsPage() {
 
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            label="Leads Generated"
+            label={t('leads')}
             value={state.lead_count}
             loading={state.isLoading}
           />
         </Box>
         <Box flexGrow={1} flexShrink={1}>
           <AnalyticsCard
-            label="Most Used Datasource"
+            label={t('mUData')}
             value={state.most_common_datasource}
             loading={state.isLoading}
           />
@@ -307,7 +309,7 @@ export default function AnalyticsPage() {
             viewBy="year"
             aggregation={aggregateConversationsByKey}
             area_key="conversation_count"
-            title="Number of Conversations Over Time"
+            title={t('numberOf')}
             XAxisFormatter={getMonthName}
             loading={state.isLoading}
           />
@@ -318,7 +320,7 @@ export default function AnalyticsPage() {
             aggregation={aggregateRepliesByKey}
             positive_area_key="good_count"
             negative_area_key="bad_count"
-            title="Replies Quality Performance"
+            title={t('replies')}
             XAxisFormatter={getMonthName}
             loading={state.isLoading}
           />
@@ -337,13 +339,13 @@ export default function AnalyticsPage() {
             xkey="day"
             positive_area_key="good_count"
             negative_area_key="bad_count"
-            title="Replies Quality Performance"
+            title={t('replies')}
             loading={state.isLoading}
           />
         </>
       )}
       <Card variant="outlined" sx={{ px: 5, py: 2, mt: 4 }}>
-        <Typography textAlign="center">Conversations By Country</Typography>
+        <Typography textAlign="center">{t('countryCon')}</Typography>
         <GeoChart
           label="visits"
           data={state.visitsPerCountry}

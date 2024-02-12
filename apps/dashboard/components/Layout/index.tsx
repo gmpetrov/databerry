@@ -16,6 +16,7 @@ import { SxProps } from '@mui/joy/styles/types';
 import Typography from '@mui/joy/Typography';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import useModal from '@app/hooks/useModal';
@@ -41,6 +42,7 @@ type Props = {
 export default function Layout(props: Props) {
   const router = useRouter();
   const { mode, setMode } = useColorScheme();
+  const { i18n } = useTranslation();
   const { data: session, status } = useSession();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [userMenuElement, setUserMenuElement] =
@@ -48,10 +50,17 @@ export default function Layout(props: Props) {
 
   const shareFeedbackModal = useModal();
 
+  console.log('Session', session);
+
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
+    if (session?.user?.language) {
+      i18n.changeLanguage(session?.user?.language);
+    } else {
+      i18n.changeLanguage('en');
+    }
   }, []);
 
   const isMenuOpen = Boolean(userMenuElement);

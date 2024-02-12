@@ -1,0 +1,21 @@
+{
+  "title": "Email Inboxes",
+  "subtitle": "Receive your support emails in Chaindesk. Emails are working as redirections, forwarding for instance contact@yourcompany.com to your Chaindesk inbox. You will love it!",
+  "cta": "New Email Inbox",
+  "titleSmall": "Email Inbox",
+  "aliasSub": "Emails will be sent from: ",
+  "customMail": "Custom Mail",
+  "fromName": "FROM Name",
+  "signature": "Signature",
+  "signatureSub": "Basic HTML is allowed",
+  "showBranding": "Show Chaindesk Branding",
+  "showBrandingSub": "A premium account is required to disable this option",
+  "settings": "Settings",
+  "generalSettings": "General Settings",
+  "deleteEmail": "Delete Email Inbox",
+  "deleteEmailSub": "Delete the Email Inbox permanently",
+  "deleteCta": "Delete",
+  "instructions": "Instructions",
+  "setUp": "Set up email forwarding from your email provider to:",
+  "fullDocu": "Full Documentation"
+}

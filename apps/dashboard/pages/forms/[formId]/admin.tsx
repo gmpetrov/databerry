@@ -21,6 +21,7 @@ import {
 } from '@mui/joy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import BlablaFormEditor from '@app/components/BlablaFormEditor';
@@ -36,6 +37,7 @@ interface FormDashboardProps {}
 
 function FormDashboard(props: FormDashboardProps) {
   const router = useRouter();
+  const { t } = useTranslation('forms');
   const formId = router.query.formId as string;
 
   const { query } = useBlablaForm({ id: formId });
@@ -214,13 +216,13 @@ function FormDashboard(props: FormDashboardProps) {
               <ListItemDecorator>
                 <SettingsIcon />
               </ListItemDecorator>
-              Settings
+              {t('settings')}
             </Tab>
             <Tab indicatorInset value={'submissions'}>
               <ListItemDecorator>
                 <TocRoundedIcon />
               </ListItemDecorator>
-              Submissions
+              {t('submissions')}
             </Tab>
           </TabList>
 

@@ -1,0 +1,17 @@
+{
+  "sub": "This view is refreshed every hour",
+  "dateRange": "Date Range",
+  "allTime": "All Time",
+  "thisMonth": "This Month",
+  "filterAgent": "Filter by Agents",
+  "totalConversations": "Total Conversations",
+  "likedResp": "Liked Responses",
+  "disResp": "Disliked Responses",
+  "leads": "Leads Generated",
+  "mUData": "Most Used Datasource",
+  "numberOf": "Number of Conversations Over Time",
+  "insuff": "Insufficient Data For The Selected filters.",
+  "replies": "Replies Quality Performance",
+  "countryCon": "Conversations By Country",
+  "country": "Country"
+}

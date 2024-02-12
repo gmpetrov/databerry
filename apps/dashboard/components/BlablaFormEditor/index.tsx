@@ -26,6 +26,7 @@ import {
   useColorScheme,
 } from '@mui/joy';
 import clsx from 'clsx';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -52,6 +53,7 @@ type Props = { formId: string };
 
 function Form({ formId }: Props) {
   const { mode } = useColorScheme();
+  const { t } = useTranslation('forms');
   const methods = useFormContext<CreateFormSchema>();
   const { query, mutation } = useBlablaForm({ id: formId });
 
@@ -145,12 +147,12 @@ function Form({ formId }: Props) {
             >
               <AccordionSummary>
                 <Typography startDecorator={<LooksOneRoundedIcon />}>
-                  Overview
+                  {t('overview')}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <FormControl>
-                  <FormLabel>Overview</FormLabel>
+                  <FormLabel> {t('overview')}</FormLabel>
                   <Textarea
                     minRows={4}
                     // maxRows={4}
@@ -184,7 +186,7 @@ function Form({ formId }: Props) {
                     />
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t('description')}</FormLabel>
                     <Textarea
                       minRows={2}
                       maxRows={4}
@@ -194,7 +196,7 @@ function Form({ formId }: Props) {
                     />
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Call to action</FormLabel>
+                    <FormLabel>{t('cta')}</FormLabel>
                     <Input
                       control={methods.control}
                       {...methods.register('draftConfig.startScreen.cta.label')}
@@ -204,14 +206,14 @@ function Form({ formId }: Props) {
                   <Divider />
                   <Typography level="body-md">End Screen</Typography>
                   <FormControl>
-                    <FormLabel>Call to action</FormLabel>
+                    <FormLabel>{t('cta')}</FormLabel>
                     <Input
                       control={methods.control}
                       {...methods.register('draftConfig.endScreen.cta.label')}
                     />
                   </FormControl>
                   <FormControl>
-                    <FormLabel>Call to action URL</FormLabel>
+                    <FormLabel>{t('cta')} URL</FormLabel>
                     <Stack
                       direction="row"
                       gap={1.5}
@@ -302,10 +304,7 @@ function Form({ formId }: Props) {
                     placeholder="https://example.com/api/webhook"
                     {...methods.register('draftConfig.webhook.url')}
                   />
-                  <FormHelperText>
-                    Send form submission to the provided endpoint with a HTTP
-                    POST request
-                  </FormHelperText>
+                  <FormHelperText>{t('urlSub')}</FormHelperText>
                 </FormControl>
               </AccordionDetails>
             </Accordion>

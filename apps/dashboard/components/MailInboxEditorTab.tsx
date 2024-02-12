@@ -11,6 +11,7 @@ import {
   Textarea,
 } from '@mui/joy';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import React, { useRef } from 'react';
 import useSWRMutation from 'swr/mutation';
 
@@ -30,6 +31,7 @@ type Props = {
 
 function MailInboxEditorTab({ inboxId }: Props) {
   const { data: session } = useSession();
+  const { t } = useTranslation('email');
 
   const startVerifyEmailMutation = useSWRMutation(
     `/api/mail-inboxes/${inboxId}/start-verify-email`,
@@ -50,7 +52,7 @@ function MailInboxEditorTab({ inboxId }: Props) {
               <Input
                 control={methods.control}
                 label="Alias"
-                helperText={`Emails will be sent from: ${inboxEmail}`}
+                helperText={`${t('aliasSub')} ${inboxEmail}`}
                 endDecorator={
                   !!methods.formState.dirtyFields?.alias &&
                   (methods.formState.isValidating ||
@@ -72,7 +74,7 @@ function MailInboxEditorTab({ inboxId }: Props) {
                 <UserPremium>
                   <Input
                     control={methods.control}
-                    label="Custom email"
+                    label={t('customMail')}
                     endDecorator={
                       query.data?.customEmail &&
                       query.data?.isCustomEmailVerified ? (
@@ -102,7 +104,7 @@ function MailInboxEditorTab({ inboxId }: Props) {
 
                 <UserFree>
                   <FormControl>
-                    <FormLabel>Custom Email</FormLabel>
+                    <FormLabel>{t('customMail')}</FormLabel>
                     <AlertPremiumFeature title="Custom email is a premium feature" />
                   </FormControl>
                 </UserFree>
@@ -118,7 +120,7 @@ function MailInboxEditorTab({ inboxId }: Props) {
 
               <Input
                 control={methods.control}
-                label="FROM name"
+                label={t('fromName')}
                 {...methods.register('fromName')}
               />
 
@@ -129,7 +131,7 @@ function MailInboxEditorTab({ inboxId }: Props) {
                   minRows={2}
                   {...methods.register('signature')}
                 />
-                <FormHelperText>Basic HTML is allowed</FormHelperText>
+                <FormHelperText>{t('signatureSub')}</FormHelperText>
               </FormControl>
 
               <FormControl>
@@ -137,13 +139,11 @@ function MailInboxEditorTab({ inboxId }: Props) {
 
                 <Checkbox
                   checked={Boolean(values.showBranding)}
-                  label="Show Chaindesk Branding"
+                  label={t('showBranding')}
                   {...methods.register('showBranding')}
                   disabled={!session?.organization?.isPremium}
                 />
-                <FormHelperText>
-                  A premium account is required to disable this option
-                </FormHelperText>
+                <FormHelperText>{t('showBrandingSub')}</FormHelperText>
               </FormControl>
             </Stack>
 

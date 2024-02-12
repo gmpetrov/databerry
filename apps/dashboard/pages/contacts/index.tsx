@@ -12,6 +12,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import useSWR from 'swr';
@@ -34,6 +35,7 @@ import { getContacts } from '../api/contacts';
 
 export default function FormsPage() {
   const router = useRouter();
+  const { t } = useTranslation('contacts');
   const { data: session, status } = useSession();
 
   const [state, setState] = useStateReducer({
@@ -125,7 +127,7 @@ export default function FormsPage() {
           <HomeRoundedIcon />
         </Link>
         <Typography fontSize="inherit" color="primary">
-          Contacts
+          {t('title')}
         </Typography>
       </Breadcrumbs>
 
@@ -144,7 +146,7 @@ export default function FormsPage() {
         }}
       >
         <Typography level="h1" fontSize="xl4">
-          Contacts
+          {t('title')}
         </Typography>
         {/* <Box sx={{ flex: 999999 }} /> */}
         <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
@@ -187,9 +189,7 @@ export default function FormsPage() {
         startDecorator={<InfoRoundedIcon />}
         sx={{ mb: 2 }}
       >
-        Contacts by Chaindesk is cutting edge CRM powered by AI. Here you can
-        view all leads, customers and contacts that you have collected from your
-        Agents or Forms.
+        {t('subtitle')}
       </Alert>
 
       {getContactsQuery.data && <ContactsTable />}

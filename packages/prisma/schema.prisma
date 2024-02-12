@@ -76,6 +76,7 @@ model User {
   picture       String?
   customPicture String? @map("custom_picture")
   hasOptInEmail Boolean? @default(false) @map("has_opt_in_email")
+  language      String? @map("language")
 
   agents        Agent[]
   datastores    Datastore[]
@@ -474,6 +475,7 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
+  language          String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

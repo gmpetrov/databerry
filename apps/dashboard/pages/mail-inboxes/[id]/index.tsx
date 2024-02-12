@@ -20,6 +20,7 @@ import {
 } from '@mui/joy';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
 
 import EmailInboxSettingsTab from '@app/components/EmailInboxSettingsTab';
@@ -39,6 +40,7 @@ function FormDashboard(props: FormDashboardProps) {
   const inboxId = router.query.id as string;
 
   const { query } = useMailInbox({ id: inboxId });
+  const { t } = useTranslation('email');
 
   const [state, setState] = useStateReducer({
     currentAnswer: '',
@@ -208,13 +210,13 @@ function FormDashboard(props: FormDashboardProps) {
               <ListItemDecorator>
                 <AutoAwesomeRoundedIcon />
               </ListItemDecorator>
-              Email Inbox
+              {t('titleSmall')}
             </Tab>
             <Tab indicatorInset value={'settings'}>
               <ListItemDecorator>
                 <SettingsIcon />
               </ListItemDecorator>
-              Settings
+              {t('settings')}
             </Tab>
             <Tab indicatorInset value={'install'}>
               <ListItemDecorator>

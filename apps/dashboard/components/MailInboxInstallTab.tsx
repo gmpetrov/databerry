@@ -7,6 +7,7 @@ import Input from '@mui/joy/Input';
 import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import SettingCard from './ui/SettingCard';
@@ -18,6 +19,7 @@ type Props = {
 };
 
 function MailInboxInstallTab({ inboxId }: Props) {
+  const { t } = useTranslation('email');
   return (
     <MailInboxFormProvider inboxId={inboxId}>
       {({ methods, refinement }) => {
@@ -30,11 +32,9 @@ function MailInboxInstallTab({ inboxId }: Props) {
             <SettingCard title="Setup" disableSubmitButton>
               <Stack gap={2}>
                 <FormControl>
-                  <FormLabel>Instructions</FormLabel>
+                  <FormLabel>{t('instructions')}</FormLabel>
                   <Stack gap={1}>
-                    <Typography level="body-md">
-                      Set up email forwarding from your email provider to:
-                    </Typography>
+                    <Typography level="body-md">{t('setUp')}</Typography>
                     <Alert>
                       <Typography
                         level="title-lg"
@@ -49,7 +49,7 @@ function MailInboxInstallTab({ inboxId }: Props) {
                       href="https://www.chaindesk.ai/help/email-inbox"
                       target="_blank"
                     >
-                      Full Documentation
+                      {t('fullDocu')}
                     </Link>
                   </FormHelperText>
                 </FormControl>

@@ -13,6 +13,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
@@ -38,6 +39,7 @@ import { createEmailInbox, getEmailInboxes } from '../api/mail-inboxes';
 
 export default function FormsPage() {
   const router = useRouter();
+  const { t } = useTranslation('email');
   const { data: session, status } = useSession();
 
   const [state, setState] = useStateReducer({
@@ -128,7 +130,7 @@ export default function FormsPage() {
           <HomeRoundedIcon />
         </Link>
         <Typography fontSize="inherit" color="primary">
-          Email Inboxes
+          {t('title')}
         </Typography>
       </Breadcrumbs>
 
@@ -179,7 +181,7 @@ export default function FormsPage() {
               mailInboxMutation.isMutating || getMailInboxesQuery.isLoading
             }
           >
-            New Email Inbox
+            {t('cta')}
           </Button>
         </Box>
       </Box>
@@ -190,9 +192,7 @@ export default function FormsPage() {
         startDecorator={<InfoRoundedIcon />}
         sx={{ mb: 2 }}
       >
-        Receive your support emails in Chaindesk. Emails are working as
-        redirections, forwarding for instance contact@yourcompany.com to your
-        Chaindesk inbox. You will love it!
+        {t('subtitle')}
       </Alert>
 
       {getMailInboxesQuery.data && (

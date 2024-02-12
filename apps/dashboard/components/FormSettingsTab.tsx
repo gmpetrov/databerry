@@ -4,6 +4,7 @@ import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Stack from '@mui/joy/Stack';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import Input from '@app/components/Input';
@@ -20,6 +21,7 @@ type Props = {
 
 function FormSettingsTab({ formId }: Props) {
   const router = useRouter();
+  const { t } = useTranslation('forms');
 
   return (
     <BlablaFormProvider formId={formId}>
@@ -31,7 +33,7 @@ function FormSettingsTab({ formId }: Props) {
         return (
           <Stack sx={{ width: '100%', maxWidth: 'md', mx: 'auto', gap: 2 }}>
             <SettingCard
-              title="General Settings"
+              title={t('settingsGeneral')}
               // description="Deploy your agent with the following widgets or integrations"
               disableSubmitButton
               cardProps={{
@@ -53,8 +55,8 @@ function FormSettingsTab({ formId }: Props) {
             </SettingCard>
 
             <SettingCard
-              title="Delete Form"
-              description="It will delete the form permanently"
+              title={t('deleteForm')}
+              description={t('deleteFormSub')}
               cardProps={{
                 color: 'danger',
               }}
@@ -73,15 +75,13 @@ function FormSettingsTab({ formId }: Props) {
                   }
                 },
                 color: 'danger',
-                children: 'Delete',
+                children: `${t('deleteFormCta')}`,
                 startDecorator: <DeleteIcon />,
                 loading: deleteMutation.isMutating,
               }}
             >
               <FormControl sx={{ gap: 1 }}>
-                <Alert color="danger">
-                  Delete the form and all submissions permanently
-                </Alert>
+                <Alert color="danger">{t('deleteFormText')}</Alert>
               </FormControl>
             </SettingCard>
           </Stack>

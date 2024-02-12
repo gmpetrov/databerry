@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement } from 'react';
 import * as React from 'react';
 import toast from 'react-hot-toast';
@@ -61,6 +62,7 @@ import { createForm, getForms } from '../api/forms';
 export default function FormsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { t } = useTranslation('forms');
   const createFormModal = useModal();
 
   const [state, setState] = useStateReducer({
@@ -190,7 +192,7 @@ export default function FormsPage() {
             }}
             loading={formMutation.isMutating}
           >
-            New Form
+            {t('cta')}
           </Button>
         </Box>
       </Box>
@@ -209,7 +211,7 @@ export default function FormsPage() {
       />
 
       <createFormModal.component
-        title="Create Form"
+        title={t('cta')}
         dialogProps={{
           sx: {
             maxWidth: 'sm',

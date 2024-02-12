@@ -3,6 +3,7 @@ import Chip from '@mui/joy/Chip';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 
 import BlablaFormLoader from '@app/components/BlablaFormLoader';
@@ -13,6 +14,7 @@ import { Agent } from '@chaindesk/prisma';
 
 export default function FormPage(props: { agent: Agent }) {
   const router = useRouter();
+  const { t } = useTranslation('forms');
   const formId = router.query.formId as string;
 
   return (

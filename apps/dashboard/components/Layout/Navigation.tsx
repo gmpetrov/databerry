@@ -373,9 +373,9 @@ export default function Navigation() {
       // },
       {
         label: t('settings'),
-        route: RouteNames.SETTINGS,
+        route: RouteNames.PROFILE,
         icon: <ManageAccountsRoundedIcon fontSize="small" />,
-        active: router.route.startsWith(RouteNames.SETTINGS),
+        active: router.route.startsWith(RouteNames.PROFILE),
         isExperimental: false,
         isNew: false,
       },

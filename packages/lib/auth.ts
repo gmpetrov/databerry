@@ -184,6 +184,7 @@ export const authOptions = (req: NextApiRequest): AuthOptions => {
         const user = props.user as AdapterUser &
           Prisma.UserGetPayload<{ include: typeof sessionUserInclude }> & {
             sessionId: string;
+            language: string;
             organization: Prisma.OrganizationGetPayload<{
               include: typeof sessionOrganizationInclude;
             }>;

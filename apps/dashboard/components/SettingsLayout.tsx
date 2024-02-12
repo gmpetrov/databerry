@@ -69,7 +69,7 @@ function SettingsLayout(props: Props) {
           <Tabs
             aria-label="tabs"
             // value={(router.query.tab as string) || 'chat'}
-            value={router.pathname}
+            value={router.route}
             size="md"
             sx={{
               // borderRadius: 'lg',
@@ -139,8 +139,8 @@ function SettingsLayout(props: Props) {
               <Link href={'/settings/billing'}>
                 <Tab indicatorInset value={'/settings/billing'}>
                   {/* <ListItemDecorator>
-                      <RocketLaunchRoundedIcon />
-                    </ListItemDecorator> */}
+                    <RocketLaunchRoundedIcon />
+                  </ListItemDecorator> */}
                   Billing
                 </Tab>
               </Link>

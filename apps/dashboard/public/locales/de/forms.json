@@ -1,0 +1,15 @@
+{
+  "title": "Titel",
+  "submissions": "Einreichungen",
+  "ctaForm": "Neues Formular",
+  "overview": "Übersicht",
+  "settings": "Einstellungen",
+  "cta": "Erstelle neues Formular",
+  "description": "Beschreibung",
+  "urlSub": "Sende Formulareinreichung an den angegebenen Endpunkt mit einem HTTP-POST-Antrag",
+  "settingsGeneral": "Allgemeine Einstellungen",
+  "deleteForm": "Formular löschen",
+  "deleteFormSub": "Es wird das Formular dauerhaft gelöscht",
+  "deleteFormText": "Lösche das Formular und alle Einreichungen dauerhaft",
+  "deleteFormCta": "Löschen"
+}

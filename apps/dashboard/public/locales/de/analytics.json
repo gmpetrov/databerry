@@ -1,0 +1,17 @@
+{
+  "sub": "Diese Ansicht wird alle Stunde aktualisiert",
+  "dateRange": "Datumsbereich",
+  "allTime": "Gesamte Zeit",
+  "thisMonth": "Dieser Monat",
+  "filterAgent": "Filtern nach Agenten",
+  "totalConversations": "Gesamtunterhaltungen",
+  "likedResp": "Gefallene Antworten",
+  "disResp": "Nicht gefallene Antworten",
+  "leads": "Generierte Leads",
+  "mUData": "Meistgenutzte Datenquelle",
+  "numberOf": "Anzahl der Unterhaltungen im Laufe der Zeit",
+  "insuff": "Unzureichende Daten für die ausgewählten Filter.",
+  "replies": "Antwortqualitätsleistung",
+  "countryCon": "Unterhaltungen nach Land",
+  "country": "Land"
+}

@@ -1,0 +1,15 @@
+{
+  "title": "Title",
+  "submissions": "Submissions",
+  "ctaForm": "New Form",
+  "overview": "Overview",
+  "settings": "Settings",
+  "cta": "Call to action",
+  "description": "Description",
+  "urlSub": "Send form submission to the provided endpoint with a HTTP POST request",
+  "settingsGeneral": "General Settings",
+  "deleteForm": "Delete Form",
+  "deleteFormSub": "It will delete the form permanently",
+  "deleteFormText": "Delete the form and all submissions permanently",
+  "deleteFormCta": "Delete"
+}

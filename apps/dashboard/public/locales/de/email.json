@@ -1,0 +1,21 @@
+{
+  "title": "E-Mail-Posteingänge",
+  "subtitle": "Empfangen Sie Ihre Support-E-Mails in Chaindesk. E-Mails funktionieren als Weiterleitungen, zum Beispiel von contact@ihrefirma.com zu Ihrem Chaindesk-Posteingang. Sie werden es lieben!",
+  "cta": "Neuer E-Mail-Posteingang",
+  "titleSmall": "E-Mail-Posteingang",
+  "aliasSub": "E-Mails werden gesendet von: ",
+  "customMail": "Benutzerdefinierte E-Mail",
+  "fromName": "Von Name",
+  "signature": "Signatur",
+  "signatureSub": "Einfaches HTML ist erlaubt",
+  "showBranding": "Chaindesk-Branding anzeigen",
+  "showBrandingSub": "Ein Premium-Konto ist erforderlich, um diese Option zu deaktivieren",
+  "settings": "Einstellungen",
+  "generalSettings": "Allgemeine Einstellungen",
+  "deleteEmail": "E-Mail-Posteingang löschen",
+  "deleteEmailSub": "Löschen Sie den E-Mail-Posteingang dauerhaft",
+  "deleteCta": "Löschen",
+  "instructions": "Anweisungen",
+  "setUp": "Richten Sie die E-Mail-Weiterleitung von Ihrem E-Mail-Anbieter ein auf:",
+  "fullDocu": "Vollständige Dokumentation"
+}
