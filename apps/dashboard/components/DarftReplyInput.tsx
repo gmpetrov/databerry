@@ -257,7 +257,8 @@ function DarftReplyInput({
       <MenuButton
         disabled={state.loading}
         variant="outlined"
-        color="primary"
+        color="neutral"
+        sx={{ borderRadius: '100px' }}
         endDecorator={
           state.loading ? (
             <></>
@@ -266,14 +267,14 @@ function DarftReplyInput({
           )
         }
       >
-        {state.loading ? <Loader /> : 'Ask AI'}
+        {state.loading ? <Loader /> : '✍️ Ask AI'}
       </MenuButton>
       <Menu
         sx={{
           boxShadow: '0 0 4px 0 rgba(128, 0, 128, 0.7)',
         }}
       >
-        <ListItem
+        {/* <ListItem
           onClick={() => {
             setState({ forceOpen: true });
           }}
@@ -325,7 +326,7 @@ function DarftReplyInput({
             </IconButton>
           </Tooltip>
         </ListItem>
-        <ListDivider />
+        <ListDivider /> */}
         {menuSections.map((section, index) => (
           <React.Fragment key={index}>
             <ListItem sticky>
