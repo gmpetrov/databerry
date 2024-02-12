@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.234"></a>
+## 0.1.234 (2024-02-12)
+
+### Fixed
+
+- 🐛 wrong id [[82ccfe0](https://github.com/gmpetrov/databerry/commit/82ccfe0f5093a1e2fec267c204a7677586979bf5)]
+
+
 <a name="0.1.233"></a>
 ## 0.1.233 (2024-02-12)
 
