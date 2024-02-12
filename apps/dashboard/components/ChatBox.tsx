@@ -180,6 +180,7 @@ function ChatBox({
   agentIconStyle,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
+  const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [firstMsgs, setFirstMsgs] = useState<ChatMessage[]>([]);
   // const [ini, setFirstMsg] = useState<ChatMessage>();
@@ -255,8 +256,6 @@ function ChatBox({
     },
     [methods.setValue]
   );
-
-  const query = methods.watch('query');
 
   return (
     <Stack
@@ -730,6 +729,7 @@ function ChatBox({
               slotProps={{
                 textarea: {
                   id: 'chatbox-input',
+                  ref: textAreaRef,
                 },
               }}
               maxRows={24}
@@ -794,13 +794,12 @@ function ChatBox({
                   direction={'row'}
                   justifyContent={'space-between'}
                   sx={{ width: '100%' }}
+                  spacing={1}
                 >
-                  {/* <Button>hello</Button> */}
-
                   {draftReplyInput &&
                     React.cloneElement(draftReplyInput, {
-                      query,
                       onReply: handleOnDraftReply,
+                      inputRef: textAreaRef,
                     })}
 
                   {withFileUpload && (
