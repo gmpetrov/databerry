@@ -17,8 +17,8 @@
   "invite": "send invite",
   "role": "Role",
   "action": "Actions",
-  "subtitle-key": "Use the api key to access the Localmind API",
-  "more-key": "Find out more about localmind API",
+  "subtitle-key": "Use the api key to access the ChainDesk API",
+  "more-key": "Find out more about ChainDesk API",
   "documentation": "Documentation",
   "createApiKey": "Create API Key",
   "settings": "Settings"
