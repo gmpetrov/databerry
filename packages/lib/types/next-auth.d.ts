@@ -39,6 +39,7 @@ declare module 'next-auth' {
       usage: Usage;
       nbAgents: number;
       nbDatastores: number;
+      language: string;
     } & DefaultSession['user'] &
       User;
   }

@@ -50,8 +50,6 @@ export default function Layout(props: Props) {
 
   const shareFeedbackModal = useModal();
 
-  console.log('Session', session);
-
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {

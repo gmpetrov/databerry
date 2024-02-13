@@ -107,12 +107,12 @@ export default function ProfileSettingsPage() {
   ]);
 
   const updateLanguage = (newValue: string) => {
-    // methods.setValue('language', newValue as string, {
-    //   shouldDirty: true,
-    //   shouldValidate: true,
-    // });
+    session!.user!.language = newValue;
+    methods.setValue('language', newValue as string, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
     i18n.changeLanguage(newValue || 'de');
-    // methods.trigger('language');
   };
 
   if (!session?.user) {
