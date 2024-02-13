@@ -56,10 +56,11 @@ export default function Layout(props: Props) {
     setMounted(true);
     if (session?.user?.language) {
       i18n.changeLanguage(session?.user?.language);
-    } else {
-      i18n.changeLanguage('en');
     }
-  }, []);
+    // else {
+    //   i18n.changeLanguage('en');
+    // }
+  }, [i18n, session?.user?.language]);
 
   const isMenuOpen = Boolean(userMenuElement);
 

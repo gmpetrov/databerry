@@ -59,8 +59,6 @@ export default function ProfileSettingsPage() {
     await methods.handleSubmit(updateProfile)();
   };
 
-  console.log('EROORS', methods.formState);
-
   const updateProfile = async (data: UpdateUserProfileSchema) => {
     try {
       setState({
@@ -96,24 +94,78 @@ export default function ProfileSettingsPage() {
         customPicture: session?.user?.customPicture,
       });
     }
-    i18n.changeLanguage(i18n.language == undefined ? 'de' : i18n.language);
+    // i18n.changeLanguage(i18n.language == undefined ? 'de' : i18n.language);
+    if (session?.user?.language) {
+      methods.setValue('language', session?.user?.language);
+      i18n.changeLanguage(session?.user?.language);
+    }
   }, [
     i18n,
     methods,
     session?.user?.customPicture,
     session?.user?.email,
+    session?.user?.language,
     session?.user?.name,
     status,
   ]);
 
-  const updateLanguage = (newValue: string) => {
-    session!.user!.language = newValue;
-    methods.setValue('language', newValue as string, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    i18n.changeLanguage(newValue || 'de');
+  const updateLang = async (language: string) => {
+    try {
+      setState({
+        isUpdatingProfile: true,
+      });
+
+      await axios.patch('/api/accounts/profile', {
+        name: methods.getValues().name,
+        email: methods.getValues().email,
+        language: language,
+      });
+
+      await update();
+
+      toast.success('Profile updated successfully.');
+    } catch (err) {
+      console.error(err);
+      toast.success('Error updating profile.');
+    } finally {
+      setState({
+        isUpdatingProfile: false,
+      });
+    }
   };
+
+  const updateLanguage: any = async (language: string) => {
+    // session!.user!.language = language;
+    // methods.setValue('language', language as string, {
+    //   shouldDirty: true,
+    //   shouldValidate: true,
+    // });
+    // // updateProfile(methods.getValues() ? methods.getValues() : '');
+    // i18n.changeLanguage(language || 'de');
+
+    // language ? updateLang(language) : toast.error('No language');
+
+    // console.log('Did this');
+    i18n.changeLanguage(language || 'de');
+
+    // Optionally, update the language in session user data
+    session!.user!.language = language;
+
+    // Synchronize state updates with side effects
+    try {
+      // Perform any side effects (e.g., API calls) after the language has been updated
+      await updateLang(language);
+
+      // Optionally, trigger any additional actions upon successful update
+      console.log('Language updated successfully');
+    } catch (error) {
+      // Handle errors if needed
+      console.error('Error updating language:', error);
+      toast.error('Error updating language');
+    }
+  };
+
+  console.log(methods.getValues().language);
 
   if (!session?.user) {
     return null;
@@ -195,21 +247,22 @@ export default function ProfileSettingsPage() {
         //   onClick: () => updateProfile(methods.getValues()),
         // }}
       >
-        <form
-          className="space-y-4"
-          onSubmit={methods.handleSubmit(updateProfile)}
-        >
+        <form className="space-y-4">
           <FormLabel id="select-lang-label" htmlFor="select-lang-button">
             {t('language-profil')}
           </FormLabel>
           <Select
             {...methods.register('language')}
-            key={methods.watch('language')}
-            defaultValue={i18n.language}
-            // value={methods.watch('language')}
+            key={methods.watch('language') || 'en'}
+            defaultValue={'en'}
+            value={
+              methods.watch('language') != undefined
+                ? methods.watch('language')
+                : 'en'
+            }
             placeholder={'Sprache auswählen...'}
             // onChange={(e, newValue) => i18n.changeLanguage(newValue || 'de')}
-            onChange={(e, newValue) => updateLanguage(newValue || 'de')}
+            onChange={(e, newValue) => updateLanguage(newValue)}
             slotProps={{
               button: {
                 id: 'select-lang-button',
@@ -219,8 +272,12 @@ export default function ProfileSettingsPage() {
               },
             }}
           >
-            <Option value="de">DE - Deutsch</Option>
-            <Option value="en">EN - English</Option>
+            <Option key="de" value="de">
+              DE - Deutsch
+            </Option>
+            <Option key="en" value="en">
+              EN - English
+            </Option>
           </Select>
         </form>
       </SettingCard>

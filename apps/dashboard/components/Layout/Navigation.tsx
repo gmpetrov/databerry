@@ -288,14 +288,14 @@ export default function Navigation() {
               isExperimental: true,
             },
             {
-              label: 'Analytics',
+              label: t('analytics'),
               route: RouteNames.ANALYTICS,
               icon: <ShowChartIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.ANALYTICS),
               isNew: true,
             },
             {
-              label: 'Email Inboxes',
+              label: t('email'),
               route: RouteNames.EMAIL_INBOXES,
               icon: <AllInboxRoundedIcon fontSize="small" />,
               active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
@@ -303,7 +303,7 @@ export default function Navigation() {
               isNew: true,
             },
             {
-              label: 'Contacts',
+              label: t('contacts'),
               route: RouteNames.CONTACTS,
               icon: <RecentActorsIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.CONTACTS),

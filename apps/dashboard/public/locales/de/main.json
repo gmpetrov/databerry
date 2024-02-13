@@ -2,5 +2,8 @@
   "inbox": "Inbox",
   "agent": "Agenten",
   "dataPool": "Datenpools",
-  "settings": "Einstellungen"
+  "settings": "Einstellungen",
+  "analytics": "Analyse",
+  "email": "Email Postfach",
+  "contacts": "Kontakte"
 }
