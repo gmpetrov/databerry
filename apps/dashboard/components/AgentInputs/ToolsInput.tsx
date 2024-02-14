@@ -20,6 +20,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
 
+import useDeepCompareEffect from '@app/hooks/useDeepCompareEffect';
 import useModal from '@app/hooks/useModal';
 import { getDatastores } from '@app/pages/api/datastores';
 
@@ -39,7 +40,7 @@ import {
   ToolType,
 } from '@chaindesk/prisma';
 
-import HttpToolForm from '../HttpToolForm';
+import HttpToolForm, { HttpToolTestForm } from '../HttpToolForm';
 import LeadCaptureToolForm from '../LeadCaptureToolForm';
 import LeadCaptureToolFormInput from '../LeadCaptureToolForm/LeadCaptureToolFormInput';
 
@@ -120,20 +121,35 @@ const ToolCard = (props: ToolCardProps) => {
 };
 
 function ToolsInput({}: Props) {
-  const { watch, setValue, register, formState } =
+  const { watch, setValue, register, formState, getValues } =
     useFormContext<CreateAgentSchema>();
   const [isCreateDatastoreModalOpen, setIsCreateDatastoreModalOpen] =
     useState(false);
   const btnSubmitRef = useRef<HTMLButtonElement>(null);
+  const isToolValidRef = useRef(false);
 
   const [currentToolIndex, setCurrentToolIndex] = useState(-1);
 
+  const currentToolConfig = getValues([
+    `tools.${currentToolIndex}.config.url`,
+    `tools.${currentToolIndex}.config.body`,
+    `tools.${currentToolIndex}.config.headers`,
+    `tools.${currentToolIndex}.config.method`,
+    `tools.${currentToolIndex}.config.pathVariables`,
+    `tools.${currentToolIndex}.config.queryParameters`,
+  ] as any);
+
   const newDatastoreModal = useModal();
   const newApiToolForm = useModal();
-  const editApiToolForm = useModal();
+  const editApiToolForm = useModal({
+    onClose: () => {
+      isToolValidRef.current = false;
+    },
+  });
   const newFormToolModal = useModal();
   const newLeadCaptureToolModal = useModal();
   const editLeadCaptureToolModal = useModal();
+  const validateToolModal = useModal();
 
   const getDatastoresQuery = useSWR<
     Prisma.PromiseReturnType<typeof getDatastores>
@@ -152,7 +168,6 @@ function ToolsInput({}: Props) {
   const hasLeadCapture = !!tools.find(
     (tool) => tool.type === ToolType.lead_capture
   );
-
   const getToolLink = (tool: Tool) => {
     switch (tool.type) {
       case ToolType.datastore:
@@ -173,6 +188,11 @@ function ToolsInput({}: Props) {
     },
     [tools, setValue]
   );
+
+  // config changed, allow re-test.
+  useDeepCompareEffect(() => {
+    isToolValidRef.current = false;
+  }, [currentToolConfig]);
 
   return (
     <Stack gap={1}>
@@ -531,15 +551,36 @@ function ToolsInput({}: Props) {
         {currentToolIndex >= 0 && (
           <Stack gap={2}>
             <HttpToolInput name={`tools.${currentToolIndex}` as `tools.0`} />
+            <validateToolModal.component
+              title="Set up a request to your endpoint"
+              description="Send a request to your endpoint to make sure it's working well."
+              dialogProps={{
+                sx: {
+                  maxWidth: '50%',
+                },
+              }}
+            >
+              <HttpToolTestForm
+                setToolValidState={(state: boolean) => {
+                  isToolValidRef.current = state;
+                }}
+                name={`tools.${currentToolIndex}` as `tools.0`}
+              />
+            </validateToolModal.component>
+
             <Button
               type="button"
               loading={formState.isSubmitting}
               onClick={() => {
+                if (!isToolValidRef.current && formState.isValid) {
+                  validateToolModal.open();
+                  return;
+                }
                 editApiToolForm.close();
                 btnSubmitRef?.current?.click();
               }}
             >
-              Update
+              {isToolValidRef.current ? 'Update' : 'Test Tool'}
             </Button>
           </Stack>
         )}

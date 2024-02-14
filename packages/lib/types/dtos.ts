@@ -297,8 +297,9 @@ const ToolKeyValueField = z
     key: z.string().min(1),
     value: z.string().optional(),
     isUserProvided: z.boolean().optional(),
+    description: z.string().optional(),
+    acceptedValues: z.array(z.string().optional()).optional(),
   })
-
   .refine(
     (val) => {
       if (!val.isUserProvided && !val.value) {
@@ -323,6 +324,7 @@ export const HttpToolSchema = ToolBaseSchema.extend({
     headers: z.array(ToolKeyValueField).optional(),
     body: z.array(ToolKeyValueField).optional(),
     queryParameters: z.array(ToolKeyValueField).optional(),
+    pathVariables: z.array(ToolKeyValueField).optional(),
   }),
 });
 

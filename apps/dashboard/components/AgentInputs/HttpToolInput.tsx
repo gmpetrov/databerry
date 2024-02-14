@@ -1,8 +1,9 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
+  Accordion,
+  AccordionGroup,
   Alert,
   Button,
   Card,
@@ -18,7 +19,22 @@ import {
   Stack,
   Typography,
 } from '@mui/joy';
-import React, { useCallback, useMemo } from 'react';
+import AccordionDetails, {
+  accordionDetailsClasses,
+} from '@mui/joy/AccordionDetails';
+import AccordionSummary, {
+  accordionSummaryClasses,
+} from '@mui/joy/AccordionSummary';
+import pDebounce from 'p-debounce';
+import React, {
+  ElementRef,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Control,
   FieldValue,
@@ -28,7 +44,6 @@ import {
   useForm,
   useFormContext,
 } from 'react-hook-form';
-import z from 'zod';
 
 import useModal from '@app/hooks/useModal';
 
@@ -38,77 +53,349 @@ import {
   ToolSchema,
 } from '@chaindesk/lib/types/dtos';
 
+import { Choices } from '../BlablaFormEditor/FieldsInput';
 import Input from '../Input';
 
-const KeyValueFieldArray = (props: {
+export type Fields =
+  | {
+      key: string;
+      value?: string | undefined;
+      isUserProvided?: boolean | undefined;
+      description?: string;
+      acceptedValues?: (string | undefined)[];
+    }[]
+  | undefined;
+
+const KeyValueFieldArray = ({
+  name,
+  label,
+  userOnly = false,
+  prefix,
+}: {
   name:
     | 'config.queryParameters'
+    | 'config.pathVariables'
     | 'config.body'
     | 'config.headers'
     | 'tools.0.config.queryParameters'
+    | 'tools.0.config.pathVariables'
     | 'tools.0.config.body'
     | 'tools.0.config.headers';
   label?: string;
+  userOnly?: boolean;
+  prefix: '' | 'tools.0.';
 }) => {
   const methods = useFormContext<HttpToolSchema | CreateAgentSchema>();
+
   const parameters = useFieldArray({
     control: methods.control as Control<HttpToolSchema>,
-    name: props.name,
+    name,
   });
+
+  const url = methods.watch(`${prefix}config.url`);
+
+  useEffect(() => {
+    try {
+      if (name.includes('queryParameters')) {
+        const Url = new URL(url);
+        const searchParams = Url.searchParams;
+
+        //TODO: https://github.com/microsoft/TypeScript/issues/54466
+        const diff = parameters?.fields?.length - (searchParams as any).size;
+
+        if (diff < 0) {
+          parameters.append(
+            {
+              key: '',
+              value: '',
+            },
+            {
+              shouldFocus: false,
+            }
+          );
+        } else if (diff > 0) {
+          const indexsToRemove = parameters.fields.reduce(
+            (acc, field, index) => {
+              if (!searchParams.has(field.key)) {
+                acc.push(index);
+              }
+              return acc;
+            },
+            [] as number[]
+          );
+          parameters.remove(indexsToRemove);
+        }
+
+        Array.from(searchParams.entries()).forEach(([key, value], index) => {
+          const fieldKey = methods.getValues(`${name}.${index}.key`);
+          const fieldValue = methods.getValues(`${name}.${index}.value`);
+          const isUserPovided = methods.getValues(
+            `${name}.${index}.isUserProvided`
+          );
+
+          // handle key field.
+          if (fieldKey !== key) methods.setValue(`${name}.${index}.key`, key);
+
+          if (value === '{user}') {
+            if (!isUserPovided) {
+              parameters.update(index, {
+                key: fieldKey,
+                value: '',
+                isUserProvided: true,
+              });
+            }
+          } else if (fieldValue !== value) {
+            if (isUserPovided) {
+              parameters.update(index, {
+                key: fieldKey,
+                value,
+                isUserProvided: false,
+              });
+            } else {
+              methods.setValue(`${name}.${index}.value`, value);
+            }
+          }
+        });
+      } else if (name.includes('pathVariables')) {
+        const urlPaths: string[] = (url.match(/:(\w+)/g) || []).map(
+          (path: string) => path.substring(1)
+        );
+        const diff = parameters.fields.length - urlPaths.length;
+
+        if (diff < 0) {
+          parameters.append(
+            {
+              key: '',
+              value: '',
+              isUserProvided: true,
+            },
+            {
+              shouldFocus: false,
+            }
+          );
+        } else if (diff > 0) {
+          const indexsToRemove = parameters.fields.reduce(
+            (acc, field, index) => {
+              if (!urlPaths.includes(field.key)) {
+                acc.push(index);
+              }
+              return acc;
+            },
+            [] as number[]
+          );
+          parameters.remove(indexsToRemove);
+        }
+
+        urlPaths.forEach((path, index) => {
+          const fieldKeyPath = `${name}.${index}.key` as const;
+          if (fieldKeyPath !== path) methods.setValue(fieldKeyPath, path);
+        });
+      }
+    } catch (e) {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
 
   return (
     <FormControl>
-      {props.label && <FormLabel>{props.label}</FormLabel>}
+      {label && <FormLabel>{label}</FormLabel>}
       <Stack gap={1}>
         {parameters.fields.map((field, index) => (
-          <Stack key={field.id} direction="row" gap={1} alignItems={'end'}>
-            <Input
-              control={methods.control}
-              placeholder="Key"
-              {...methods.register(`${props.name}.${index}.key` as const)}
-            />
+          <Stack key={field.id} gap={1}>
+            <Stack direction="row" gap={1} alignItems={'end'}>
+              <Input
+                control={methods.control}
+                placeholder="Key"
+                {...methods.register(`${name}.${index}.key` as any)}
+                onChange={pDebounce((e) => {
+                  try {
+                    if (name.includes('queryParameters')) {
+                      const Url = new URL(url);
+                      const searchParams = Url.search
+                        ?.replace('?', '')
+                        ?.split('&');
 
-            <Input
-              control={methods.control}
-              placeholder="Value"
-              {...methods.register(`${props.name}.${index}.value` as const)}
-              disabled={!!field.isUserProvided}
-            />
+                      // New key, add it.
+                      if (searchParams.length === 0) {
+                        methods.setValue(
+                          `${prefix}config.url`,
+                          `${Url.toString()}?${e.target.value}=`
+                        );
+                        return;
+                      }
 
-            <FormControl>
-              <Card variant="outlined" size="sm">
-                <Checkbox
-                  size="sm"
-                  label="Provided By User"
-                  checked={!!field.isUserProvided}
-                  slotProps={{
-                    label: {
-                      sx: {
-                        whiteSpace: 'nowrap',
-                      },
-                    },
-                  }}
-                  onChange={(e) => {
-                    const fieldValues = methods.getValues(
-                      `${props.name}.${index}`
+                      const [_, valueInUrl] =
+                        searchParams[index]?.split('=') || [];
+
+                      searchParams[index] = `${e.target.value}=${
+                        valueInUrl || ''
+                      }`;
+
+                      Url.search = `?${searchParams.join('&')}`;
+
+                      methods.setValue(
+                        `${prefix}config.url`,
+                        decodeURI(Url.toString())
+                      );
+                    } else if (name.includes('pathVariables')) {
+                      const Url = new URL(url);
+                      const cleanPath = Url.pathname
+                        .replace(/\/:([^\/]*)/g, '') // no /:vars
+                        .replace(/\/$/, ''); // no '/' at the end.
+
+                      const baseUrl = Url.origin + cleanPath;
+
+                      const urlPaths = url.match(/:(\w+)/g) || [];
+                      urlPaths[index] = `:${e.target.value.replace(':', '')}`;
+
+                      const newUrl =
+                        baseUrl + '/' + urlPaths.join('/') + Url.search;
+
+                      methods.setValue(`${prefix}config.url`, newUrl);
+                    }
+                  } catch (e) {}
+                }, 500)}
+              />
+
+              <Input
+                control={methods.control}
+                placeholder="Value"
+                {...methods.register(`${name}.${index}.value` as any)}
+                disabled={!!field.isUserProvided}
+                onChange={pDebounce((e) => {
+                  try {
+                    const Url = new URL(url);
+                    const searchParams = Url.search.replace('?', '').split('&');
+                    const [keyInUrl, valueInUrl] =
+                      searchParams[index].split('=');
+
+                    if (valueInUrl !== e.target.value) {
+                      searchParams[index] = `${keyInUrl}=${e.target.value}`;
+                    }
+
+                    Url.search = `?${searchParams.join('&')}`;
+
+                    methods.setValue(
+                      `${prefix}config.url`,
+                      decodeURI(Url.toString())
                     );
-                    parameters.update(index, {
-                      ...fieldValues,
-                      value: '',
-                      isUserProvided: e.target.checked,
-                    });
-                  }}
-                />
-              </Card>
-            </FormControl>
+                  } catch (e) {
+                    console.log('error', e);
+                  }
+                }, 500)}
+              />
+              <FormControl>
+                <Card variant="outlined" size="sm">
+                  <Checkbox
+                    id={`${field.key}-user-provided`}
+                    size="sm"
+                    label="Provided By User"
+                    checked={!!field.isUserProvided}
+                    slotProps={{
+                      label: {
+                        sx: {
+                          whiteSpace: 'nowrap',
+                        },
+                      },
+                    }}
+                    onChange={(e) => {
+                      const fieldValues = methods.getValues(`${name}.${index}`);
+                      parameters.update(index, {
+                        ...fieldValues,
+                        value: '',
+                        isUserProvided: e.target.checked,
+                      });
+                    }}
+                  />
+                </Card>
+              </FormControl>
 
-            <IconButton
-              variant="outlined"
-              color="neutral"
-              onClick={() => parameters.remove(index)}
-            >
-              <DeleteIcon />
-            </IconButton>
+              <IconButton
+                variant="outlined"
+                color="neutral"
+                onClick={() => {
+                  parameters.remove(index);
+                  try {
+                    if (name.includes('queryParameters')) {
+                      const Url = new URL(url);
+                      Url.searchParams.delete(field.key);
+                      methods.setValue(
+                        `${prefix}config.url`,
+                        decodeURI(Url.toString())
+                      );
+                    } else if (name.includes('pathVariables')) {
+                      const Url = new URL(url);
+                      const cleanPath = Url.pathname
+                        .replace(/\/:([^\/]*)/g, '') // no /:vars
+                        .replace(/\/$/, ''); // no '/' at the end.
+
+                      const baseUrl = Url.origin + cleanPath;
+
+                      const urlPaths = url.match(/:(\w+)/g) || [];
+
+                      // use index instead of key, to avoid out_of_sync issue
+                      urlPaths.splice(index, 1);
+
+                      const newUrl = baseUrl + '/' + urlPaths.join('');
+
+                      methods.setValue(`${prefix}config.url`, newUrl);
+                    }
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Stack>
+            {field.isUserProvided && (
+              <AccordionGroup
+                transition="0.4s ease"
+                sx={{
+                  [`& .${accordionSummaryClasses.indicator}`]: {
+                    transition: '0.2s',
+                  },
+                  [`& [aria-expanded="true"] .${accordionSummaryClasses.indicator}`]:
+                    {
+                      transform: 'rotate(180deg)',
+                    },
+                }}
+              >
+                <Accordion sx={{ ml: 1 }}>
+                  <AccordionSummary>
+                    <Typography
+                      level="body-sm"
+                      color="primary"
+                      startDecorator={
+                        <SettingsIcon fontSize="sm" color="primary" />
+                      }
+                    >
+                      Advanced
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack gap={2}>
+                      <Divider />
+                      <Input
+                        control={methods.control}
+                        label="Describe your key usage for better AI inference :"
+                        placeholder="Description"
+                        {...methods.register(
+                          `${name}.${index}.description` as any
+                        )}
+                      />
+
+                      <Choices<HttpToolSchema | CreateAgentSchema>
+                        actionLabel="Add A Value"
+                        name={`${name}.${index}.acceptedValues`}
+                        init={false}
+                        label="Specify the accepted values for the key :"
+                      />
+                      <Divider sx={{ my: 2 }} />
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              </AccordionGroup>
+            )}
           </Stack>
         ))}
         <Button
@@ -118,6 +405,7 @@ const KeyValueFieldArray = (props: {
             parameters.append({
               key: '',
               value: '',
+              ...(userOnly ? { isUserProvided: userOnly } : {}),
             })
           }
         >
@@ -132,14 +420,23 @@ type Props = {
   name?: 'tools.0';
 };
 
-export default function HttpToolInput({ name }: Props) {
+function HttpToolInput({ name }: Props) {
   const methods = useFormContext<HttpToolSchema | CreateAgentSchema>();
-  const prefix = useMemo(() => {
-    return name ? `${name}.` : '';
-  }, [name]) as 'tools.0.' | '';
+  const prefix: 'tools.0.' | '' = name ? `${name}.` : '';
   const templatesModal = useModal();
   const [withApprovalChecked] = methods.watch([`${prefix}config.withApproval`]);
   const [methodValue] = methods.watch([`${prefix}config.method`]);
+
+  // Fallback request method to GET.
+  useEffect(() => {
+    const requestMethod = methods.getValues(`${prefix}config.method`);
+    if (!requestMethod) {
+      methods.setValue(`${prefix}config.method`, 'GET', {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
+    }
+  }, [methods, prefix]);
 
   return (
     <Stack>
@@ -216,17 +513,34 @@ export default function HttpToolInput({ name }: Props) {
           </Select>
         </FormControl>
 
-        <KeyValueFieldArray label="Headers" name={`${prefix}config.headers`} />
+        <KeyValueFieldArray
+          label="Path Variables"
+          prefix={prefix}
+          name={`${prefix}config.pathVariables`}
+          userOnly
+        />
+
+        <KeyValueFieldArray
+          label="Headers"
+          prefix={prefix}
+          name={`${prefix}config.headers`}
+        />
 
         <KeyValueFieldArray
           label="Query Parameters"
+          prefix={prefix}
           name={`${prefix}config.queryParameters`}
         />
 
-        <KeyValueFieldArray
-          label="Body Parameters"
-          name={`${prefix}config.body`}
-        />
+        {!['GET', 'DELETE'].includes(
+          methods.getValues(`${prefix}config.method`)
+        ) && (
+          <KeyValueFieldArray
+            label="Body Parameters"
+            prefix={prefix}
+            name={`${prefix}config.body`}
+          />
+        )}
 
         {/* <Card size="sm" variant="outlined"> */}
         <FormControl>
@@ -277,6 +591,7 @@ export default function HttpToolInput({ name }: Props) {
                       name: 'Random Cat Image',
                       description: 'Useful for getting a random cat image',
                       url: 'https://api.thecatapi.com/v1/images/search',
+                      method: 'GET',
                       headers: [],
                       queryParameters: [],
                       body: [],
@@ -299,3 +614,5 @@ export default function HttpToolInput({ name }: Props) {
     </Stack>
   );
 }
+
+export default memo(HttpToolInput);

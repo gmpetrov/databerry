@@ -11,7 +11,7 @@ import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
 import roles from '@chaindesk/lib/middlewares/roles';
-import { UpdateAgentSchema } from '@chaindesk/lib/types/dtos';
+import { ToolSchema, UpdateAgentSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
 import { AgentVisibility, MembershipRole, Prisma } from '@chaindesk/prisma';
@@ -175,13 +175,17 @@ export const updateAgent = async (
               serviceProvider,
               datastore, // ⚠️ do not remove datastore from spreading as passing the object to createMany will throw an error
               form, // Same
+              type,
               ...otherToolProps
             }) => ({
-              ...otherToolProps,
+              type,
+              // TODO: fix tools types.
+              ...(otherToolProps as Record<string, unknown>),
               ...(serviceProviderId ? { serviceProviderId } : {}),
             })
           ),
         },
+        // TODO: fix tools types.
         updateMany: updatedTools.map((tool) => ({
           where: {
             id: tool.id,
@@ -198,7 +202,7 @@ export const updateAgent = async (
                 }
               : {}),
           },
-        })),
+        })) as any,
         deleteMany: removedTools,
       },
     },

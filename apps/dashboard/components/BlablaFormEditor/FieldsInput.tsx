@@ -13,6 +13,7 @@ import cuid from 'cuid';
 import debounce from 'p-debounce';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ArrayPath,
   Controller,
   FormProvider,
   useFieldArray,
@@ -28,57 +29,68 @@ import { forceSubmit } from './utils';
 
 type Props = {};
 
-const Choices = (props: { name: 'draftConfig.fields.0.choices' }) => {
-  const { control, handleSubmit, register, trigger } =
-    useFormContext<CreateFormSchema>();
+export const Choices = <T extends Record<string, unknown>>({
+  name,
+  actionLabel,
+  label,
+  init = true,
+}: {
+  name: ArrayPath<T>;
+  actionLabel: string;
+  label?: string;
+  init?: boolean;
+}) => {
+  const { control, handleSubmit, register, trigger } = useFormContext<T>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: props.name,
+    name: name,
   });
 
   useEffect(() => {
-    if (fields.length === 0) {
-      append('');
+    if (fields.length === 0 && init) {
+      append('' as ArrayPath<T>);
     }
-  }, [fields.length]);
+  }, [append, fields.length]);
 
   return (
-    <Stack gap={1}>
-      <Stack gap={1}>
+    <Stack gap={1} direction="row">
+      <Stack gap={1} width={'100%'}>
+        <FormLabel>{label}</FormLabel>
         {fields?.map((field, i) => (
-          <Stack key={field.id} direction="row" gap={1}>
+          <Stack key={field.id} width={'100%'} direction="row" gap={1}>
             <Input
               size="sm"
               control={control}
               variant="soft"
-              // color="primary"
-              // sx={{ borderRadius: '100px', minWidth: 'auto' }}
               endDecorator={
                 <IconButton
                   onClick={() => {
                     remove(i);
                     forceSubmit();
                   }}
-                  disabled={fields.length <= 1}
                 >
                   <CloseIcon fontSize="sm" />
                 </IconButton>
               }
-              {...register(`${props.name}.${i}`)}
+              {...register(`${name}.${i}`)}
             />
           </Stack>
         ))}
       </Stack>
-
-      <Button
-        size="sm"
-        onClick={() => append('')}
-        variant="plain"
-        sx={{ ml: 'auto' }}
-        startDecorator={<AddCircleRoundedIcon fontSize="sm" />}
-      >
-        Add Choice
-      </Button>
+      <div className="flex flex-col justify-end  h-full">
+        <Button
+          size="sm"
+          onClick={() => append('' as ArrayPath<T>)}
+          variant="plain"
+          sx={{
+            ml: 'auto',
+            minWidth: '200px',
+          }}
+          startDecorator={<AddCircleRoundedIcon fontSize="sm" />}
+        >
+          {actionLabel}
+        </Button>
+      </div>
     </Stack>
   );
 };
@@ -150,7 +162,10 @@ function FieldsInput({}: Props) {
 
             {fieldsValues?.[index]?.type === 'multiple_choice' && (
               <Stack sx={{ ml: 'auto' }}>
-                <Choices name={`draftConfig.fields.${index}.choices` as any} />
+                <Choices<CreateFormSchema>
+                  actionLabel="Add Choice"
+                  name={`draftConfig.fields.${index}.choices` as any}
+                />
               </Stack>
             )}
           </Stack>

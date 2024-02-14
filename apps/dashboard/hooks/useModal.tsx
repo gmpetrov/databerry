@@ -3,9 +3,10 @@ import React, { ComponentProps, useCallback, useEffect, useMemo } from 'react';
 import AppModal from '@app/components/ui/AppModal';
 type Props = {
   disableClose?: boolean;
+  onClose?(...args: any[]): any;
 };
 
-function useModal({ disableClose }: Props = {}) {
+function useModal({ disableClose, onClose }: Props = {}) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const open = useCallback(() => {
@@ -13,6 +14,7 @@ function useModal({ disableClose }: Props = {}) {
   }, [setIsOpen]);
 
   const close = useCallback(() => {
+    onClose?.();
     setIsOpen(false);
   }, [setIsOpen]);
 
