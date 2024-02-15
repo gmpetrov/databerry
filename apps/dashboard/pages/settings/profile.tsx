@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FormLabel, Option, Select } from '@mui/joy';
+import { FormControl, FormLabel, Option, Select } from '@mui/joy';
 import Button from '@mui/joy/Button';
 import Divider from '@mui/joy/Divider';
 import Stack from '@mui/joy/Stack';
@@ -33,6 +33,10 @@ export default function ProfileSettingsPage() {
   const { upload, isUploading } = useFileUpload();
 
   const { t, i18n } = useTranslation('settings');
+
+  const [selectedLanguage, setSelectedLanguage] = React.useState<string>(() => {
+    return session?.user?.language || 'en'; // Initialize with session language or 'en'
+  });
 
   const methods = useForm<UpdateUserProfileSchema>({
     resolver: zodResolver(UpdateUserProfileSchema),
@@ -97,7 +101,11 @@ export default function ProfileSettingsPage() {
     // i18n.changeLanguage(i18n.language == undefined ? 'de' : i18n.language);
     if (session?.user?.language) {
       methods.setValue('language', session?.user?.language);
+      setSelectedLanguage(session?.user?.language);
       i18n.changeLanguage(session?.user?.language);
+    } else {
+      i18n.changeLanguage('en');
+      setSelectedLanguage('en');
     }
   }, [
     i18n,
@@ -135,20 +143,9 @@ export default function ProfileSettingsPage() {
   };
 
   const updateLanguage: any = async (language: string) => {
-    // session!.user!.language = language;
-    // methods.setValue('language', language as string, {
-    //   shouldDirty: true,
-    //   shouldValidate: true,
-    // });
-    // // updateProfile(methods.getValues() ? methods.getValues() : '');
-    // i18n.changeLanguage(language || 'de');
+    setSelectedLanguage(language);
+    i18n.changeLanguage(language);
 
-    // language ? updateLang(language) : toast.error('No language');
-
-    // console.log('Did this');
-    i18n.changeLanguage(language || 'de');
-
-    // Optionally, update the language in session user data
     session!.user!.language = language;
 
     // Synchronize state updates with side effects
@@ -164,8 +161,6 @@ export default function ProfileSettingsPage() {
       toast.error('Error updating language');
     }
   };
-
-  console.log(methods.getValues().language);
 
   if (!session?.user) {
     return null;
@@ -235,7 +230,7 @@ export default function ProfileSettingsPage() {
 
       <SettingCard
         title={t('language-profil')}
-        description="Select your Dashboard Language."
+        description={t('subtitle')}
         cardProps={{
           sx: { maxWidth: 'md', mx: 'auto', width: '100%' },
         }}
@@ -247,22 +242,18 @@ export default function ProfileSettingsPage() {
         //   onClick: () => updateProfile(methods.getValues()),
         // }}
       >
-        <form className="space-y-4">
+        <FormControl>
           <FormLabel id="select-lang-label" htmlFor="select-lang-button">
             {t('language-profil')}
           </FormLabel>
           <Select
             {...methods.register('language')}
-            key={methods.watch('language') || 'en'}
-            defaultValue={'en'}
-            value={
-              methods.watch('language') != undefined
-                ? methods.watch('language')
-                : 'en'
-            }
+            value={selectedLanguage}
             placeholder={'Sprache auswählen...'}
             // onChange={(e, newValue) => i18n.changeLanguage(newValue || 'de')}
-            onChange={(e, newValue) => updateLanguage(newValue)}
+            onChange={(e, newValue) => {
+              updateLanguage(newValue);
+            }}
             slotProps={{
               button: {
                 id: 'select-lang-button',
@@ -278,8 +269,11 @@ export default function ProfileSettingsPage() {
             <Option key="en" value="en">
               EN - English
             </Option>
+            <Option key="fr" value="fr">
+              FR - Français
+            </Option>
           </Select>
-        </form>
+        </FormControl>
       </SettingCard>
     </Stack>
   );

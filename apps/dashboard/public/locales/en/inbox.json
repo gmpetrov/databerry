@@ -1,12 +1,16 @@
 {
   "notRead": "Unread",
   "notSolved": "Unsolved",
+  "unresolved": "Unresolved",
   "usedHuman": "Humans Requested",
   "all": "All",
   "export": "Export Conversation",
+  "filterByAssignment": "Filter by Assignee",
   "noKonv": "No conversation found",
+  "filterByChannel": "Filter by channel",
   "filterByEva": "Filter by Evaluation",
   "filterByAgent": "Filter by Agenten",
+  "filterByPro": "Filter by Priority",
   "good": "Good",
   "bad": "Bad"
 }

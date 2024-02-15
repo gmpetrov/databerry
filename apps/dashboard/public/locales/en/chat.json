@@ -56,5 +56,18 @@
   "rateActive-msg": "Rate Limit Reached - Message",
   "connect": "Connect a data pool to your AI agent",
   "select": "Select a data pool",
-  "create": "Create a data pool"
+  "create": "Create a data pool",
+  "limitKnowledge": "Limit your Agent knowledge to informations contains in the prompt or a Datastore",
+  "limitKnowledgeSub": "When activated extra instructions are added to the system prompt",
+  "forceAgents": "Force the Agent to format answers in markdown format for better readability (bold, italic, links, etc...)",
+  "extraInstructions": "When activated extra instructions are added to the system prompt",
+  "reply": "Reply to the user in the same language as the query",
+  "replySub": "When activated extra instructions are added to the system prompt",
+  "autLang": "Automatic Language Detection",
+  "knowRest": "Knowledge Restriction",
+  "behavior": "Behavior",
+  "markDown": "Output in markdown format",
+  "markDown2": "recommended",
+  "promptEng": "Learn about prompt engineering best practices",
+  "here": "here"
 }

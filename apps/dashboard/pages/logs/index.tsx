@@ -43,6 +43,7 @@ import Tab, { tabClasses } from '@mui/joy/Tab';
 import Typography from '@mui/joy/Typography';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 import React from 'react';
 import toast from 'react-hot-toast';
@@ -191,6 +192,7 @@ const tabToParams = (tab: string): Record<string, unknown> => {
 export default function LogsPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const { t } = useTranslation('inbox');
 
   const targetConversationId = router.query.targetConversationId as string;
 
@@ -593,19 +595,19 @@ export default function LogsPage() {
           }}
         >
           <Tab indicatorInset value={TabEnum.unresolved}>
-            Unresolved
+            {t('unresolved')}
           </Tab>
 
           <Tab indicatorInset value={TabEnum.unread}>
-            Unread
+            {t('notRead')}
           </Tab>
 
           <Tab indicatorInset value={TabEnum.human_requested}>
-            Human Requested
+            {t('usedHuman')}
           </Tab>
 
           <Tab indicatorInset value={TabEnum.all}>
-            All
+            {t('all')}
           </Tab>
         </TabList>
       </Tabs>
@@ -701,7 +703,7 @@ export default function LogsPage() {
 
           <SelectQueryParamFilter<EvalSchema>
             filterName="assigneeId"
-            placeholder="Filter by Assignee"
+            placeholder={t('filterByAssignment')}
           >
             {currentMembership && (
               <Option value={currentMembership.id} sx={{ fontSize: 14 }}>
@@ -719,7 +721,7 @@ export default function LogsPage() {
 
           <SelectQueryParamFilter<ConversationChannel>
             filterName="channel"
-            placeholder="Filter by Channel"
+            placeholder={t('filterByChannel')}
           >
             <Option
               key={ConversationChannel.mail}
@@ -783,7 +785,7 @@ export default function LogsPage() {
 
           <SelectQueryParamFilter<string>
             filterName="agentId"
-            placeholder="Filter by Agent"
+            placeholder={t('filterByAgent')}
           >
             {getAgentsQuery.data?.map((each) => (
               <Option key={each.id} value={each.id}>
@@ -794,7 +796,7 @@ export default function LogsPage() {
 
           <SelectQueryParamFilter<EvalSchema>
             filterName="eval"
-            placeholder="Filter by Evaluation"
+            placeholder={t('filterByEva')}
           >
             <Option
               key={MessageEval.good}
@@ -813,7 +815,7 @@ export default function LogsPage() {
           </SelectQueryParamFilter>
           <SelectQueryParamFilter<EvalSchema>
             filterName="priority"
-            placeholder="Filter by Priority"
+            placeholder={t('filterByPro')}
           >
             <Option
               key={ConversationPriority.LOW}

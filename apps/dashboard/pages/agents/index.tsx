@@ -167,9 +167,7 @@ export default function AgentsPage() {
         startDecorator={<InfoRoundedIcon />}
         sx={{ mb: 2 }}
       >
-        Agents are customizable instances of large language models tailored to
-        fit your specific use cases. By connecting them to a datastore, you can
-        train them on your unique knowledge base.
+        {t('text')}
       </Alert>
 
       {getAgentsQuery.data && <AgentTable items={getAgentsQuery.data} />}

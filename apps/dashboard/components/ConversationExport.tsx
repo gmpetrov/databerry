@@ -3,6 +3,7 @@ import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import { Alert, Button, Card, Stack } from '@mui/joy';
 import axios from 'axios';
 import { saveAs } from 'file-saver';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
@@ -10,6 +11,7 @@ interface Props {}
 
 export function ConversationExport({}: Props) {
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation('inbox');
   const exportConversations = async () => {
     try {
       setIsLoading(true);
@@ -45,7 +47,7 @@ export function ConversationExport({}: Props) {
       startDecorator={<DownloadForOfflineRoundedIcon fontSize="lg" />}
       size="md"
     >
-      Export Conversations
+      {t('export')}
     </Button>
   );
 }

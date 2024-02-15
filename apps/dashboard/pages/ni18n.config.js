@@ -1,4 +1,4 @@
-const supportedLngs = ['en', 'de'];
+const supportedLngs = ['en', 'de', 'fr'];
 export const ni18nConfig = {
   supportedLngs,
   ns: [

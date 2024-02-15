@@ -35,7 +35,7 @@ function EmailInboxSettingsTab({ inboxId }: Props) {
         return (
           <Stack sx={{ width: '100%', maxWidth: 'md', mx: 'auto', gap: 2 }}>
             <SettingCard
-              title="General Settings"
+              title={t('generalSettings')}
               // description="Deploy your agent with the following widgets or integrations"
               disableSubmitButton
               cardProps={{

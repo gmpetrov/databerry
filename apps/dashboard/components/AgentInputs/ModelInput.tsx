@@ -225,48 +225,42 @@ export default function ModelInput({}: Props) {
       {/* <Divider /> */}
 
       <Stack sx={{ py: 2 }} gap={1}>
-        <Typography level="title-md">Behavior</Typography>
+        <Typography level="title-md">{t('behavior')}</Typography>
 
         <FormControl>
-          <FormLabel>Knowledge Restriction</FormLabel>
+          <FormLabel>{t('knowRest')}</FormLabel>
 
           <Checkbox
-            label="Limit your Agent knowledge to informations contains in the prompt or a Datastore"
+            label={t('limitKnowledge')}
             checked={!!restrictKnowledge}
             {...register('restrictKnowledge')}
           />
-          <FormHelperText>
-            When activated extra instructions are added to the system prompt
-          </FormHelperText>
+          <FormHelperText>{t('limitKnowledgeSub')}</FormHelperText>
         </FormControl>
         <FormControl>
           <FormLabel>
-            Output in markdown format{' '}
+            {t('markDown')}{' '}
             <Chip color="primary" sx={{ ml: 1 }} size="sm">
-              recommended
+              {t('markDown2')}
             </Chip>
           </FormLabel>
 
           <Checkbox
-            label="Force the Agent to format answers in markdown format for better readability (bold, italic, links, etc...)"
+            label={t('forceAgents')}
             checked={!!useMarkdown}
             {...register('useMarkdown')}
           />
-          <FormHelperText>
-            When activated extra instructions are added to the system prompt
-          </FormHelperText>
+          <FormHelperText>{t('extraInstructions')}</FormHelperText>
         </FormControl>
         <FormControl>
-          <FormLabel>Automatic Language Detection</FormLabel>
+          <FormLabel>{t('autLang')}</FormLabel>
 
           <Checkbox
-            label="Reply to the user in the same language as the query"
+            label={t('reply')}
             checked={!!useLanguageDetection}
             {...register('useLanguageDetection')}
           />
-          <FormHelperText>
-            When activated extra instructions are added to the system prompt
-          </FormHelperText>
+          <FormHelperText>{t('replySub')}</FormHelperText>
         </FormControl>
       </Stack>
 
@@ -278,8 +272,8 @@ export default function ModelInput({}: Props) {
           target="_blank"
         >
           <Typography>
-            Learn about prompt engineering best practices{' '}
-            <Typography color="primary">here</Typography>
+            {t('promptEng')}{' '}
+            <Typography color="primary">{t('here')}</Typography>
           </Typography>
         </Link>
       </Alert>

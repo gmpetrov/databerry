@@ -1,0 +1,17 @@
+{
+  "sub": "Cette vue est actualisée toutes les heures",
+  "dateRange": "Plage de dates",
+  "allTime": "Tout le temps",
+  "thisMonth": "Ce mois-ci",
+  "filterAgent": "Filtrer par Agents",
+  "totalConversations": "Total des conversations",
+  "likedResp": "Réponses aimées",
+  "disResp": "Réponses désaimées",
+  "leads": "Leads générés",
+  "mUData": "Source de données la plus utilisée",
+  "numberOf": "Nombre de conversations au fil du temps",
+  "insuff": "Données insuffisantes pour les filtres sélectionnés.",
+  "replies": "Performance de qualité des réponses",
+  "countryCon": "Conversations par pays",
+  "country": "Pays"
+}

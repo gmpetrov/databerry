@@ -55,7 +55,7 @@ export default function AgentGeneralSettingsTab(props: Props) {
             {({ formState }) => {
               return (
                 <SettingCard
-                  title="General Settings"
+                  title={t('gerneralTitle')}
                   submitButtonProps={{
                     loading: mutation.isMutating,
                     disabled: !formState.isDirty || !formState.isValid,

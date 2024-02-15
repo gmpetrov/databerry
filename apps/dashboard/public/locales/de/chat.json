@@ -56,5 +56,18 @@
   "rateActive-msg": "Rate Limit erreicht - Nachricht",
   "connect": "Verbinde einen Datenpool mit deinem KI-Agenten",
   "select": "Wähle einen Datenpool aus",
-  "create": "Erstelle einen Datenpool"
+  "create": "Erstelle einen Datenpool",
+  "limitKnowledge": "Beschränken Sie das Wissen Ihres Agents auf Informationen, die im Prompt oder in einem Datenstore enthalten sind.",
+  "limitKnowledgeSub": "Wenn aktiviert, werden zusätzliche Anweisungen zum System-Prompt hinzugefügt.",
+  "forceAgents": "Zwingen Sie den Agenten, Antworten im Markdown-Format für bessere Lesbarkeit zu formatieren (fett, kursiv, Links usw.).",
+  "extraInstructions": "Wenn aktiviert, werden zusätzliche Anweisungen zum System-Prompt hinzugefügt.",
+  "reply": "Antworten Sie dem Benutzer in derselben Sprache wie der Query.",
+  "replySub": "Wenn aktiviert, werden zusätzliche Anweisungen zum System-Prompt hinzugefügt.",
+  "autLang": "Automatische Spracherkennung",
+  "knowRest": "Wissensbeschränkung",
+  "behavior": "Verhalten",
+  "markDown": "Ausgabe im Markdown-Format",
+  "markDown2": "empfohlen",
+  "promptEng": "Erfahren Sie mehr über bewährte Methoden im Bereich Prompt-Engineering",
+  "here": "hier"
 }

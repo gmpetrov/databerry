@@ -1,6 +1,7 @@
 {
   "title": "Agenten",
   "cta": "Neuer Agent",
+  "text": "Agents sind anpassbare Instanzen von großen Sprachmodellen, die speziell auf Ihre individuellen Anforderungen zugeschnitten sind. Indem Sie sie mit einer Datenbank verbinden, können Sie sie auf Ihrer einzigartigen Wissensbasis trainieren.",
   "name-table": "Name",
   "description-table": "Beschreibung",
   "visibility-table": "Sichtbarkeit",
@@ -12,5 +13,12 @@
   "connect": "Verbinde einen Datenpool mit deinem KI - Agenten",
   "select": "Datenpool auswählen",
   "ctaPopUp": "Erstelle einen Datenpool",
-  "create": "Erstellen"
+  "create": "Erstellen",
+  "limitKnowledge": "Beschränken Sie das Wissen Ihres Agents auf Informationen, die im Prompt oder in einem Datenstore enthalten sind.",
+  "limitKnowledgeSub": "Wenn aktiviert, werden zusätzliche Anweisungen zum System-Prompt hinzugefügt.",
+  "forceAgents": "Zwingen Sie den Agenten, Antworten im Markdown-Format für bessere Lesbarkeit zu formatieren (fett, kursiv, Links usw.).",
+  "extraInstructions": "Wenn aktiviert, werden zusätzliche Anweisungen zum System-Prompt hinzugefügt.",
+  "reply": "Antworten Sie dem Benutzer in derselben Sprache wie der Query.",
+  "replySub": "Wenn aktiviert, werden zusätzliche Anweisungen zum System-Prompt hinzugefügt.",
+  "autLang": "Automatische Spracherkennung"
 }

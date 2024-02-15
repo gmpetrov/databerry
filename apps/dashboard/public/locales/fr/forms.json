@@ -1,0 +1,15 @@
+{
+  "title": "Titre",
+  "submissions": "Soumissions",
+  "ctaForm": "Nouveau Formulaire",
+  "overview": "Vue d'ensemble",
+  "settings": "Paramètres",
+  "cta": "Appel à l'action",
+  "description": "Description",
+  "urlSub": "Envoyez la soumission du formulaire à l'endpoint fourni avec une requête HTTP POST",
+  "settingsGeneral": "Paramètres généraux",
+  "deleteForm": "Supprimer le Formulaire",
+  "deleteFormSub": "Cela supprimera définitivement le formulaire",
+  "deleteFormText": "Supprimer le formulaire et toutes les soumissions de manière permanente",
+  "deleteFormCta": "Supprimer"
+}

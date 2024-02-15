@@ -1,6 +1,7 @@
 {
   "title": "Agents",
   "cta": "New Agent",
+  "text": "Agents are customizable instances of large language models tailored to fit your specific use cases. By connecting them to a datastore, you can train them on your unique knowledge base.",
   "name-table": "Name",
   "description-table": "Description",
   "visibility-table": "Visibility",
@@ -12,5 +13,12 @@
   "connect": "Connect a data pool to your AI agent",
   "select": "Select a data pool",
   "ctaPopUp": "Create a data pool",
-  "create": "Create"
+  "create": "Create",
+  "limitKnowledge": "Limit your Agent knowledge to informations contains in the prompt or a Datastore",
+  "limitKnowledgeSub": "When activated extra instructions are added to the system prompt",
+  "forceAgents": "Force the Agent to format answers in markdown format for better readability (bold, italic, links, etc...)",
+  "extraInstructions": "When activated extra instructions are added to the system prompt",
+  "reply": "Reply to the user in the same language as the query",
+  "replySub": "When activated extra instructions are added to the system prompt",
+  "autLang": "Automatic Language Detection"
 }

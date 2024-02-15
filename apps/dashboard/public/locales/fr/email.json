@@ -1,0 +1,21 @@
+{
+  "title": "Boîtes de réception email",
+  "subtitle": "Recevez vos emails de support dans Chaindesk. Les emails fonctionnent comme des redirections, par exemple, en transférant contact@votresociete.com vers votre boîte de réception Chaindesk. Vous allez adorer !",
+  "cta": "Nouvelle Boîte de Réception Email",
+  "titleSmall": "Boîte de Réception Email",
+  "aliasSub": "Les emails seront envoyés depuis : ",
+  "customMail": "Email personnalisé",
+  "fromName": "Nom DE",
+  "signature": "Signature",
+  "signatureSub": "HTML basique autorisé",
+  "showBranding": "Afficher le branding Chaindesk",
+  "showBrandingSub": "Un compte premium est requis pour désactiver cette option",
+  "settings": "Paramètres",
+  "generalSettings": "Paramètres généraux",
+  "deleteEmail": "Supprimer la Boîte de Réception Email",
+  "deleteEmailSub": "Supprimer définitivement la Boîte de Réception Email",
+  "deleteCta": "Supprimer",
+  "instructions": "Instructions",
+  "setUp": "Configurer la redirection d'email depuis votre fournisseur de messagerie vers :",
+  "fullDocu": "Documentation Complète"
+}

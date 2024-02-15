@@ -1,0 +1,16 @@
+{
+  "notRead": "Non lu",
+  "notSolved": "Non résolu",
+  "unresolved": "Non résolu",
+  "usedHuman": "Humains requis",
+  "all": "Tous",
+  "export": "Exporter la conversation",
+  "filterByAssignment": "Filtrer par assigné",
+  "noKonv": "Aucune conversation trouvée",
+  "filterByChannel": "Filtrer par canal",
+  "filterByEva": "Filtrer par évaluation",
+  "filterByAgent": "Filtrer par agent",
+  "filterByPro": "Filtrer par priorité",
+  "good": "Bon",
+  "bad": "Mauvais"
+}

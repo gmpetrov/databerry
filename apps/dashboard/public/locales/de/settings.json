@@ -21,5 +21,6 @@
   "more-key": "Erfahre mehr über die ChainDesk API",
   "documentation": "Dokumentation",
   "createApiKey": "Erstelle API Schlüssel",
-  "settings": "Settings"
+  "settings": "Settings",
+  "subtitle": "Wähle deine Dashboard-Sprache."
 }
