@@ -1,4 +1,5 @@
 import { PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 import cuid from 'cuid';
 import EmailReplyParser from 'email-reply-parser';
 import mime from 'mime-types';
@@ -23,21 +24,15 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 export const mailS3 = new S3({
-  // The key signatureVersion is no longer supported in v3, and can be removed.
-  // @deprecated SDK v3 only supports signature v4.
-  signatureVersion: 'v4',
-
   credentials: {
     accessKeyId: process.env.INBOUND_EMAIL_AWS_ACCESS_KEY,
     secretAccessKey: process.env.INBOUND_EMAIL_AWS_SECRET_KEY,
   },
-
   region: process.env.INBOUND_EMAIL_AWS_REGION,
-
   ...(process.env.INBOUND_EMAIL_AWS_S3_ENDPOINT
     ? {
         endpoint: process.env.INBOUND_EMAIL_AWS_S3_ENDPOINT,
-        s3ForcePathStyle:
+        forcePathStyle:
           process.env.INBOUND_EMAIL_APP_AWS_S3_FORCE_PATH_STYLE === 'true',
       }
     : {}),
@@ -228,7 +223,10 @@ export async function inboundWebhook(
         Body: attachment.content,
       } as PutObjectCommandInput;
 
-      const upload = await s3.upload(params).promise();
+      const upload = await new Upload({
+        client: s3,
+        params,
+      }).done();
 
       // return upload.Location;
       return `${getS3RootDomain()}/${key}`;
