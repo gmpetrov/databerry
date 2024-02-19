@@ -1,4 +1,4 @@
-import { S3 } from 'aws-sdk';
+import { PutObjectCommandInput, S3 } from '@aws-sdk/client-s3';
 import cuid from 'cuid';
 import EmailReplyParser from 'email-reply-parser';
 import mime from 'mime-types';
@@ -23,10 +23,17 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 export const mailS3 = new S3({
+  // The key signatureVersion is no longer supported in v3, and can be removed.
+  // @deprecated SDK v3 only supports signature v4.
   signatureVersion: 'v4',
-  accessKeyId: process.env.INBOUND_EMAIL_AWS_ACCESS_KEY,
-  secretAccessKey: process.env.INBOUND_EMAIL_AWS_SECRET_KEY,
+
+  credentials: {
+    accessKeyId: process.env.INBOUND_EMAIL_AWS_ACCESS_KEY,
+    secretAccessKey: process.env.INBOUND_EMAIL_AWS_SECRET_KEY,
+  },
+
   region: process.env.INBOUND_EMAIL_AWS_REGION,
+
   ...(process.env.INBOUND_EMAIL_AWS_S3_ENDPOINT
     ? {
         endpoint: process.env.INBOUND_EMAIL_AWS_S3_ENDPOINT,
@@ -39,12 +46,10 @@ export const mailS3 = new S3({
 const handler = createApiHandler();
 
 const clean = async ({ notificationId }: { notificationId: string }) => {
-  return mailS3
-    .deleteObject({
-      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
-      Key: `emails/${notificationId}`,
-    })
-    .promise();
+  return mailS3.deleteObject({
+    Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
+    Key: `emails/${notificationId}`,
+  });
 };
 
 export async function inboundWebhook(
@@ -63,12 +68,10 @@ export async function inboundWebhook(
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
-  const obj = await mailS3
-    .getObject({
-      Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
-      Key: `emails/${notificationId}`,
-    })
-    .promise();
+  const obj = await mailS3.getObject({
+    Bucket: process.env.INBOUND_EMAIL_BUCKET as string,
+    Key: `emails/${notificationId}`,
+  });
 
   const mail = await mailparser.simpleParser(obj.Body?.toString('utf-8')!);
   const messageId = mail?.messageId as string;
@@ -223,7 +226,7 @@ export async function inboundWebhook(
         ContentType: attachment.contentType,
         Key: key,
         Body: attachment.content,
-      } as S3.Types.PutObjectRequest;
+      } as PutObjectCommandInput;
 
       const upload = await s3.upload(params).promise();
 
