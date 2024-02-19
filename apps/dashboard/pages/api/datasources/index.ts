@@ -33,7 +33,7 @@ const cors = Cors({
 
 const handler = createAuthApiHandler();
 
-async function buffer(readable: Readable) {
+export async function buffer(readable: Readable) {
   const chunks = [];
   for await (const chunk of readable) {
     chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);

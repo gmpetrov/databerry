@@ -23,7 +23,6 @@ export const getOrderById = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ): Promise<ShopifyCollection[]> => {
-  console.log('called*');
   const result = schema.safeParse(req.query);
 
   if (!result.success) {

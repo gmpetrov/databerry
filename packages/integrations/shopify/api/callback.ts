@@ -24,10 +24,25 @@ export const callback = async (
     session: callback.session,
   });
 
-  if (!response['APP_UNINSTALLED'][0].success) {
+  if (!response?.['APP_UNINSTALLED']?.[0]?.success) {
     console.log(
-      `Failed to register APP_UNINSTALLED webhook: ${response['APP_UNINSTALLED'][0].result}`
+      `Failed to register APP_UNINSTALLED webhook: ${response?.['APP_UNINSTALLED']?.[0]?.result}`
     );
+  }
+
+  const hasPayment = await shopify.billing.check({
+    session: callback.session,
+    plans: 'one_time',
+    isTest: process.env.NODE_ENV !== 'production',
+  });
+
+  if (!hasPayment) {
+    const confirmationUrl = await shopify.billing.request({
+      session: callback.session,
+      plan: 'one_time',
+    });
+
+    res.redirect(confirmationUrl);
   }
 
   await prisma.serviceProvider.upsert({

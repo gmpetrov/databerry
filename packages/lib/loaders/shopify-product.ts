@@ -18,7 +18,7 @@ export class ShopifyProductLoader extends DatasourceLoaderBase<DatasourceShopify
 
   async load() {
     const cleanDescription = await getTextFromHTML(
-      this.datasource.config.description
+      this.datasource.config?.description || ''
     );
     const pageContent = `product title: ${this.datasource.config.title} \n description: ${cleanDescription}`;
     try {
