@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.238"></a>
+## 0.1.238 (2024-02-20)
+
+### Miscellaneous
+
+- 🤖 comment &quot;other products&quot; until ssl issue fixed [[fb2eef1](https://github.com/gmpetrov/databerry/commit/fb2eef1fb51551e786e673a41552a185891e8246)]
+
+
 <a name="0.1.237"></a>
 ## 0.1.237 (2024-02-12)
 
