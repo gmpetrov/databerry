@@ -528,7 +528,7 @@ export default function Navigation() {
                 target={(each as any).target}
               />
             ))}
-            {(['chaindesk', 'cs', 'chat'] as ProductType[]).includes(
+            {/* {(['chaindesk', 'cs', 'chat'] as ProductType[]).includes(
               product
             ) && (
               <>
@@ -599,7 +599,7 @@ export default function Navigation() {
                   </Link>
                 )}
               </>
-            )}
+            )} */}
           </List>
         </ListItem>
         {/* <ListItem nested sx={{ mt: 2 }}>
@@ -686,7 +686,7 @@ export default function Navigation() {
       </ListItem> */}
       </List>
 
-      <Divider sx={{ my: 2 }}></Divider>
+      {/* <Divider sx={{ my: 2 }}></Divider> */}
 
       <AccountCard />
 
