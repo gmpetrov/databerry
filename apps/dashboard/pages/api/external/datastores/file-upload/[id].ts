@@ -147,7 +147,7 @@ export const upload = async (req: AppNextApiRequest, res: NextApiResponse) => {
     ContentType: file.mimetype,
   };
 
-  await s3.putObject(params).promise();
+  await s3.putObject(params);
 
   const datasource = await prisma.appDatasource.create({
     data: {

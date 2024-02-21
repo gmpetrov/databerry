@@ -53,12 +53,10 @@ export class DatasourceLoader {
   }
 
   async loadText() {
-    const res = await s3
-      .getObject({
-        Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-        Key: `datastores/${this.datasource.datastoreId}/${this.datasource.id}/${this.datasource.id}.txt`,
-      })
-      .promise();
+    const res = await s3.getObject({
+      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+      Key: `datastores/${this.datasource.datastoreId}/${this.datasource.id}/${this.datasource.id}.txt`,
+    });
 
     return [
       new AppDocument<any>({

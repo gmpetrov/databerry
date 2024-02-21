@@ -7,15 +7,13 @@ const prepareSourceForWorker = (props: {
   datasourceId: string;
   text: string;
 }) => {
-  return s3
-    .putObject({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-      Key: `datastores/${props.datastoreId}/${props.datasourceId}/${props.datasourceId}.txt`,
-      Body: props.text,
-      CacheControl: 'no-cache',
-      ContentType: 'text/plain',
-    })
-    .promise();
+  return s3.putObject({
+    Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
+    Key: `datastores/${props.datastoreId}/${props.datasourceId}/${props.datasourceId}.txt`,
+    Body: props.text,
+    CacheControl: 'no-cache',
+    ContentType: 'text/plain',
+  });
 };
 
 export default prepareSourceForWorker;
