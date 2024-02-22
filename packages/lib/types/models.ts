@@ -72,31 +72,56 @@ export const DatasourceSchema = z.discriminatedUnion('type', [
     config: DatasourceConfigBaseSchema.extend({
       source_url: z.string().trim().optional(),
       sitemap: z.string().trim().optional(),
-    }).refine(
-      (data) => {
-        if (data.sitemap) {
-          return !!z
-            .string()
-            .url()
-            .parse(data.sitemap, {
-              path: ['sitemap'],
-            });
-        } else if (data.source_url) {
-          return !!z
-            .string()
-            .url()
-            .parse(data.source_url, {
-              path: ['source_url'],
-            });
+      black_listed_urls: z.array(z.string()).optional(),
+    }).superRefine((data, ctx) => {
+      if (data.sitemap) {
+        const result = z
+          .string()
+          .url()
+          .safeParse(data.sitemap, {
+            path: ['sitemap'],
+          });
+        if (!result.success) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.invalid_string,
+            validation: 'url',
+            fatal: true,
+            message: 'sitemap must be a valid url.',
+            path: ['sitemap'],
+          });
         }
-
-        return false;
-      },
-      {
-        message: 'You must provide either a web site URL or a sitemap URL',
-        path: ['source_url'],
+      } else if (data.source_url) {
+        const result = z.string().url().safeParse(data.source_url);
+        if (!result.success) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.invalid_string,
+            validation: 'url',
+            fatal: true,
+            message: 'source_url must be a valid url.',
+            path: ['source_url'],
+          });
+        }
+      } else if (data.black_listed_urls) {
+        data.black_listed_urls.forEach((url, index) => {
+          const isNotValid =
+            z
+              .string()
+              .url()
+              .safeParse(url, {
+                path: ['black_listed_urls'],
+              }).success !== true;
+          if (isNotValid) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.invalid_string,
+              validation: 'url',
+              message: 'invalid  url.',
+              fatal: true,
+              path: [`black_listed_urls.${index}`],
+            });
+          }
+        });
       }
-    ),
+    }),
   }),
   DatasourceBaseSchema.extend({
     type: z.literal(DatasourceType.web_page),

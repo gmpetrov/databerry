@@ -9,8 +9,10 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 import accountConfig from '../account-config';
+import bulkDeleteDatasources from '../bulk-delete-datasources';
 import findDomainPages, { getSitemapPages } from '../find-domain-pages';
 import findSitemap from '../find-sitemap';
+import isUrlBlocked from '../isUrlBlocked';
 import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
 import { DatasourceWebSite } from '../types/models';
 
@@ -28,6 +30,8 @@ export class WebSiteLoader extends DatasourceLoaderBase<DatasourceWebSite> {
     let nestedSitemaps: string[] = [];
     const sitemap = this.datasource.config.sitemap;
     const source = this.datasource.config.source_url;
+    const blackListedUrls = this.datasource.config?.black_listed_urls;
+
     const currentPlan =
       this.datasource?.organization?.subscriptions?.[0]?.plan ||
       SubscriptionPlan.level_0;
@@ -54,9 +58,6 @@ export class WebSiteLoader extends DatasourceLoaderBase<DatasourceWebSite> {
       urls = [];
     }
 
-    // TODO: not needed anymore as maxPages is already applied above
-    urls = urls.slice(0, maxPages);
-
     const groupId = this.datasource?.groupId || this.datasource?.id;
     const children = await prisma.appDatasource.findMany({
       where: {
@@ -68,7 +69,11 @@ export class WebSiteLoader extends DatasourceLoaderBase<DatasourceWebSite> {
       },
     });
 
-    const ids = urls.map((u) => {
+    const cleanUrls: string[] = blackListedUrls
+      ? urls?.filter((url) => !isUrlBlocked(url, blackListedUrls))
+      : urls;
+
+    const ids = cleanUrls.map((u) => {
       const found = children.find(
         (each) => (each as any)?.config?.source_url === u
       );
@@ -79,24 +84,24 @@ export class WebSiteLoader extends DatasourceLoaderBase<DatasourceWebSite> {
 
       return cuid();
     });
+
     const childrenIdsToDelete =
       children
-        ?.filter((each) => !urls?.includes((each as any)?.config?.source_url))
+        ?.filter(
+          (each) => !cleanUrls?.includes((each as any)?.config?.source_url)
+        )
         ?.map((each) => each.id) || [];
 
     if (childrenIdsToDelete?.length > 0) {
-      await prisma.appDatasource.deleteMany({
-        where: {
-          id: {
-            in: childrenIdsToDelete,
-          },
-        },
+      await bulkDeleteDatasources({
+        datastoreId: this.datasource.datastoreId!,
+        datasourceIds: childrenIdsToDelete,
       });
     }
 
     if (ids.length > 0) {
       await prisma.appDatasource.createMany({
-        data: urls.map((each, idx) => ({
+        data: cleanUrls.map((each, idx) => ({
           id: ids[idx],
           type: DatasourceType.web_page,
           name: each,
