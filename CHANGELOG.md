@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.240"></a>
+## 0.1.240 (2024-02-22)
+
+### Miscellaneous
+
+- 🎸 http tool improvements ([#332](https://github.com/gmpetrov/databerry/issues/332)) [[fc9db98](https://github.com/gmpetrov/databerry/commit/fc9db981765e805c9e3c6b811899d6a954966ff1)]
+
+
 <a name="0.1.239"></a>
 ## 0.1.239 (2024-02-22)
 
