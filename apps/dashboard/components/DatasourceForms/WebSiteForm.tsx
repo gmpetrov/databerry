@@ -81,9 +81,17 @@ function Nested() {
           </Stack>
         </Alert>
       </Stack>
-      <Divider />
-      <Stack>
-        <Typography>Blacklist urls</Typography>
+      <Divider sx={{ my: 2 }} />
+      <Stack gap={1}>
+        <Typography>Blacklisted URLs</Typography>
+        <Alert color="neutral">
+          <Stack>
+            <Typography>
+              Blacklisted URLs will be ignored during the scan. Glob patterns
+              can be used, e.g.: https://example.com/blog/*
+            </Typography>
+          </Stack>
+        </Alert>
 
         <Stack gap={1}>
           {parameters.fields.map((field, index) => (
@@ -91,6 +99,8 @@ function Nested() {
               <Input
                 key={index}
                 control={control}
+                sx={{ width: '100%', flex: 1 }}
+                formControlProps={{ sx: { flex: 1 } }}
                 {...register(`config.black_listed_urls.${index}`)}
               />
               <IconButton
@@ -98,13 +108,14 @@ function Nested() {
                 color="neutral"
                 onClick={() => parameters.remove(index)}
               >
-                <DeleteIcon />
+                <DeleteIcon fontSize="md" />
               </IconButton>
             </Stack>
           ))}
           <Button
             variant="outlined"
-            startDecorator={<AddIcon />}
+            startDecorator={<AddIcon fontSize="md" />}
+            size="sm"
             onClick={() => {
               parameters.append('');
             }}

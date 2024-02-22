@@ -1,4 +1,4 @@
-import FormControl from '@mui/joy/FormControl';
+import FormControl, { FormControlProps } from '@mui/joy/FormControl';
 import FormHelperText from '@mui/joy/FormHelperText';
 import FormLabel from '@mui/joy/FormLabel';
 import BaseInput, { InputProps } from '@mui/joy/Input';
@@ -10,6 +10,7 @@ type Props = InputProps & {
   control: Control<any>;
   label?: string;
   helperText?: string;
+  formControlProps?: FormControlProps;
 };
 
 const Input = forwardRef((props: Props, ref) => {
@@ -24,7 +25,7 @@ const Input = forwardRef((props: Props, ref) => {
   const helper = errorMsg ? errorMsg : helperText;
 
   return (
-    <FormControl error={!!errorMsg}>
+    <FormControl {...props.formControlProps} error={!!errorMsg}>
       {!props.hidden && label && (
         <FormLabel
           sx={{

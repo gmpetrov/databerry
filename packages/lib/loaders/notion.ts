@@ -6,6 +6,7 @@ import { AppDocument } from '@chaindesk/lib/types/document';
 import { DatasourceStatus, DatasourceType } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
+import bulkDeleteDatasources from '../bulk-delete-datasources';
 import triggerTaskLoadDatasource from '../trigger-task-load-datasource';
 import { DatasourceNotion } from '../types/models';
 
@@ -73,12 +74,9 @@ export class NotionLoader extends DatasourceLoaderBase<DatasourceNotion> {
           console.log('notebookIdsToRemove', notebookIdsToRemove);
 
           if (datasourceIdsToRemove?.length > 0) {
-            await tx.appDatasource.deleteMany({
-              where: {
-                id: {
-                  in: datasourceIdsToRemove,
-                },
-              },
+            await bulkDeleteDatasources({
+              datastoreId: this.datasource.datastoreId!,
+              datasourceIds: datasourceIdsToRemove,
             });
 
             await tx.appDatasource.update({

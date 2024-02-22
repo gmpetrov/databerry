@@ -9,6 +9,7 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 import accountConfig from '../account-config';
+import bulkDeleteDatasources from '../bulk-delete-datasources';
 import findDomainPages, { getSitemapPages } from '../find-domain-pages';
 import findSitemap from '../find-sitemap';
 import isUrlBlocked from '../isUrlBlocked';
@@ -92,12 +93,9 @@ export class WebSiteLoader extends DatasourceLoaderBase<DatasourceWebSite> {
         ?.map((each) => each.id) || [];
 
     if (childrenIdsToDelete?.length > 0) {
-      await prisma.appDatasource.deleteMany({
-        where: {
-          id: {
-            in: childrenIdsToDelete,
-          },
-        },
+      await bulkDeleteDatasources({
+        datastoreId: this.datasource.datastoreId!,
+        datasourceIds: childrenIdsToDelete,
       });
     }
 
