@@ -565,12 +565,14 @@ function ToolsInput({}: Props) {
                   isToolValidRef.current = state;
                 }}
                 name={`tools.${currentToolIndex}` as `tools.0`}
+                handleCloseModal={validateToolModal.close}
               />
             </validateToolModal.component>
 
             <Button
               type="button"
               loading={formState.isSubmitting}
+              color={isToolValidRef.current ? 'success' : 'primary'}
               onClick={() => {
                 if (!isToolValidRef.current && formState.isValid) {
                   validateToolModal.open();
@@ -580,7 +582,7 @@ function ToolsInput({}: Props) {
                 btnSubmitRef?.current?.click();
               }}
             >
-              {isToolValidRef.current ? 'Update' : 'Test Tool'}
+              {isToolValidRef.current ? 'Update' : 'Validate Config'}
             </Button>
           </Stack>
         )}

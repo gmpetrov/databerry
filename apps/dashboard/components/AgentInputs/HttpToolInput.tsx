@@ -521,12 +521,6 @@ function HttpToolInput({ name }: Props) {
         />
 
         <KeyValueFieldArray
-          label="Headers"
-          prefix={prefix}
-          name={`${prefix}config.headers`}
-        />
-
-        <KeyValueFieldArray
           label="Query Parameters"
           prefix={prefix}
           name={`${prefix}config.queryParameters`}
@@ -541,6 +535,12 @@ function HttpToolInput({ name }: Props) {
             name={`${prefix}config.body`}
           />
         )}
+
+        <KeyValueFieldArray
+          label="Headers"
+          prefix={prefix}
+          name={`${prefix}config.headers`}
+        />
 
         {/* <Card size="sm" variant="outlined"> */}
         <FormControl>

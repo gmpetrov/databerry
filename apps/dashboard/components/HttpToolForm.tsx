@@ -122,9 +122,11 @@ const ParamFields = memo(
 
 export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
   setToolValidState,
+  handleCloseModal,
   name,
 }: {
   setToolValidState(arg: boolean): void;
+  handleCloseModal?: () => void;
   name?: 'tools.0';
 }) {
   const methods =
@@ -321,13 +323,15 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
       </Stack>
 
       <Button
-        color="success"
         sx={{ mt: 2 }}
         onClick={testEndpoint}
         loading={state.loading}
+        color="neutral"
+        variant="solid"
       >
         Test
       </Button>
+
       {!!state.testResult && (
         <Stack sx={{ mt: 4 }} gap={1}>
           <Stack direction="row" gap={1} width="100%">
@@ -340,6 +344,7 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
           <Markdown>{state.testResult}</Markdown>
         </Stack>
       )}
+
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={state.isSnackBarOpen}
@@ -349,6 +354,17 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
         {state.responseStatus === 'OK'
           ? 'Congratualations! yourt test succeeded, you can close this modal.'
           : 'Ouch! your test  failed :('}
+
+        {state.responseStatus === 'OK' && (
+          <Button
+            size="sm"
+            color="success"
+            variant="solid"
+            onClick={handleCloseModal}
+          >
+            Continue
+          </Button>
+        )}
       </Snackbar>
     </Stack>
   );
@@ -405,7 +421,7 @@ function HttpToolForm({ onSubmit, defaultValues }: Props) {
         <HttpToolInput />
 
         <Button type="submit" color="success">
-          {isToolValidRef.current ? 'Create' : 'Test Tool'}
+          {isToolValidRef.current ? 'Create' : 'Validate Config'}
         </Button>
 
         <validateToolModal.component
@@ -421,6 +437,7 @@ function HttpToolForm({ onSubmit, defaultValues }: Props) {
             setToolValidState={(state: boolean) => {
               isToolValidRef.current = state;
             }}
+            handleCloseModal={validateToolModal.close}
           />
         </validateToolModal.component>
       </Stack>
