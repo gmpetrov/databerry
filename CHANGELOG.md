@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.241"></a>
+## 0.1.241 (2024-02-22)
+
+### Miscellaneous
+
+- 🎸 blacklist urls from website loader ([#333](https://github.com/gmpetrov/databerry/issues/333)) [[a0936c4](https://github.com/gmpetrov/databerry/commit/a0936c43e3e0da2b8028441230ab541164432366)]
+
+
 <a name="0.1.240"></a>
 ## 0.1.240 (2024-02-22)
 
