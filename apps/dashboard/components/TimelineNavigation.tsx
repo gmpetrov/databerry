@@ -2,8 +2,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton, Stack, Typography } from '@mui/joy';
 import { useMemo } from 'react';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 
+import useDeepCompareEffect from '@app/hooks/useDeepCompareEffect';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 type Props = {

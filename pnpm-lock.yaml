@@ -185,6 +185,9 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.10
+      dequal:
+        specifier: ^2.0.3
+        version: 2.0.3
       email-reply-parser:
         specifier: ^1.5.4
         version: 1.5.4
@@ -304,7 +307,7 @@ importers:
         version: 7.49.2(react@18.2.0)
       react-hot-toast:
         specifier: ^2.4.1
-        version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.4.1(csstype@3.1.3)(react-dom@18.2.0)(react@18.2.0)
       react-i18next:
         specifier: ^13.3.1
         version: 13.3.1(i18next@23.6.0)(react-dom@18.2.0)(react@18.2.0)
@@ -344,9 +347,6 @@ importers:
       typescript:
         specifier: 5.0.2
         version: 5.0.2
-      use-deep-compare-effect:
-        specifier: ^1.8.1
-        version: 1.8.1(react@18.2.0)
       uuid:
         specifier: ^9.0.0
         version: 9.0.0
@@ -710,7 +710,7 @@ importers:
         version: 7.49.2(react@18.2.0)
       react-hot-toast:
         specifier: ^2.4.1
-        version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.4.1(csstype@3.1.3)(react-dom@18.2.0)(react@18.2.0)
       zod:
         specifier: 3.22.4
         version: 3.22.4
@@ -876,7 +876,7 @@ importers:
         version: 18.2.0(react@18.2.0)
       react-hot-toast:
         specifier: ^2.4.1
-        version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
+        version: 2.4.1(csstype@3.1.3)(react-dom@18.2.0)(react@18.2.0)
       react-i18next:
         specifier: ^13.3.1
         version: 13.3.1(i18next@23.6.0)(react-dom@18.2.0)(react@18.2.0)
@@ -1395,13 +1395,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.0
-
-  /@babel/runtime@7.23.5:
-    resolution: {integrity: sha512-NdUTHcPe4C99WxPub+K9l9tK5/lV4UXIoaHSYgzco9BCyjKAAwzdBI+wWtYqHt7LJdbo74ZjRPJgzVweq1sz0w==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.14.0
-    dev: false
 
   /@babel/runtime@7.23.8:
     resolution: {integrity: sha512-Y7KbAP984rn1VGMbGqKmBLio9V7y5Je9GvU4rQPCPinCyNfUcToxIXl06d59URp/F3LwinvODxab5N/G6qggkw==}
@@ -11179,12 +11172,12 @@ packages:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
     dev: true
 
-  /goober@2.1.13(csstype@3.1.2):
+  /goober@2.1.13(csstype@3.1.3):
     resolution: {integrity: sha512-jFj3BQeleOoy7t93E9rZ2de+ScC4lQICLwiAQmKMg9F6roKGaLSHoCDYKkWlSafg138jejvq/mTdvmnwDQgqoQ==}
     peerDependencies:
       csstype: ^3.0.10
     dependencies:
-      csstype: 3.1.2
+      csstype: 3.1.3
     dev: false
 
   /google-auth-library@8.7.0:
@@ -17870,14 +17863,14 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-hot-toast@2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0):
+  /react-hot-toast@2.4.1(csstype@3.1.3)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-j8z+cQbWIM5LY37pR6uZR6D4LfseplqnuAO4co4u8917hBUvXlEqyP1ZzqVLcqoyUesZZv/ImreoCeHVDpE5pQ==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
     dependencies:
-      goober: 2.1.13(csstype@3.1.2)
+      goober: 2.1.13(csstype@3.1.3)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     transitivePeerDependencies:
@@ -20614,17 +20607,6 @@ packages:
       '@types/react': 18.0.25
       react: 18.2.0
       tslib: 2.6.2
-    dev: false
-
-  /use-deep-compare-effect@1.8.1(react@18.2.0):
-    resolution: {integrity: sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==}
-    engines: {node: '>=10', npm: '>=6'}
-    peerDependencies:
-      react: '>=16.13'
-    dependencies:
-      '@babel/runtime': 7.23.5
-      dequal: 2.0.3
-      react: 18.2.0
     dev: false
 
   /use-isomorphic-layout-effect@1.1.2(@types/react@18.0.25)(react@18.2.0):

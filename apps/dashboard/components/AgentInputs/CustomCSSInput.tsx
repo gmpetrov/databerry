@@ -1,6 +1,6 @@
 import Box from '@mui/joy/Box';
 import FormControl from '@mui/joy/FormControl';
-import React from 'react';
+import React, { memo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -13,27 +13,23 @@ if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
 }
 
-function CodeEditor({ code }: { code: string }) {
-  const editor = React.useMemo(() => {
-    return (
-      <SyntaxHighlighter
-        language="css"
-        style={docco}
-        customStyle={{
-          borderRadius: 10,
-          maxWidth: '100%',
-          flex: '1',
-          background: 'transparent',
-          minHeight: '100px',
-        }}
-      >
-        {code}
-      </SyntaxHighlighter>
-    );
-  }, [code]);
-
-  return editor;
-}
+const CodeEditor = memo(({ code }: { code: string }) => {
+  return (
+    <SyntaxHighlighter
+      language="css"
+      style={docco}
+      customStyle={{
+        borderRadius: 10,
+        maxWidth: '100%',
+        flex: '1',
+        background: 'transparent',
+        minHeight: '100px',
+      }}
+    >
+      {code}
+    </SyntaxHighlighter>
+  );
+});
 
 export default function SuggestionsInput(props: Props) {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
