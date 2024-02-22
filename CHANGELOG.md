@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.239"></a>
+## 0.1.239 (2024-02-22)
+
+### Fixed
+
+- 🐛 lead catpture notification wrong email [[48aba18](https://github.com/gmpetrov/databerry/commit/48aba18e362c2cfd15b99c9dced6be507e69401e)]
+
+
 <a name="0.1.238"></a>
 ## 0.1.238 (2024-02-20)
 
