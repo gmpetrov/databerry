@@ -162,6 +162,7 @@ export const createHandler =
             createdContact?.organization?.conversations?.[0]?.messages || [],
           adminEmail:
             createdContact?.organization?.memberships?.[0]?.user?.email!,
+          customerEmail: email,
         });
       } else {
         await prisma.conversation.update({
