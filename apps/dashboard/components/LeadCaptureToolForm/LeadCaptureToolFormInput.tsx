@@ -14,14 +14,14 @@ import {
 } from '@chaindesk/lib/types/dtos';
 
 type Props = {
-  name?: 'tools.0';
+  name?: `tools.${number}`;
 };
 
 export default function LeadCaptureToolFormInput({ name }: Props) {
   const methods = useFormContext<LeadCaptureToolSchema | CreateAgentSchema>();
   const prefix = useMemo(() => {
     return name ? `${name}.` : '';
-  }, [name]) as 'tools.0.' | '';
+  }, [name]) as `tools.${number}.` | '';
 
   const values = methods.watch(`${prefix}config` as const);
 

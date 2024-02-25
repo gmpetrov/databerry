@@ -137,7 +137,7 @@ function ToolsInput({}: Props) {
     `tools.${currentToolIndex}.config.method`,
     `tools.${currentToolIndex}.config.pathVariables`,
     `tools.${currentToolIndex}.config.queryParameters`,
-  ] as any);
+  ]);
 
   const newDatastoreModal = useModal();
   const newApiToolForm = useModal();
@@ -454,6 +454,8 @@ function ToolsInput({}: Props) {
               shouldValidate: true,
             });
             newApiToolForm.close();
+            // auto save.
+            btnSubmitRef?.current?.click();
           }}
         />
       </newApiToolForm.component>
@@ -550,7 +552,7 @@ function ToolsInput({}: Props) {
       >
         {currentToolIndex >= 0 && (
           <Stack gap={2}>
-            <HttpToolInput name={`tools.${currentToolIndex}` as `tools.0`} />
+            <HttpToolInput name={`tools.${currentToolIndex}`} />
             <validateToolModal.component
               title="Set up a request to your endpoint"
               description="Send a request to your endpoint to make sure it's working well."
@@ -564,7 +566,7 @@ function ToolsInput({}: Props) {
                 setToolValidState={(state: boolean) => {
                   isToolValidRef.current = state;
                 }}
-                name={`tools.${currentToolIndex}` as `tools.0`}
+                name={`tools.${currentToolIndex}`}
                 handleCloseModal={validateToolModal.close}
               />
             </validateToolModal.component>
@@ -577,9 +579,10 @@ function ToolsInput({}: Props) {
                 if (!isToolValidRef.current && formState.isValid) {
                   validateToolModal.open();
                   return;
+                } else if (isToolValidRef.current) {
+                  editApiToolForm.close();
+                  btnSubmitRef?.current?.click();
                 }
-                editApiToolForm.close();
-                btnSubmitRef?.current?.click();
               }}
             >
               {isToolValidRef.current ? 'Update' : 'Validate Config'}
@@ -599,9 +602,7 @@ function ToolsInput({}: Props) {
       >
         {currentToolIndex >= 0 && (
           <Stack gap={2}>
-            <LeadCaptureToolFormInput
-              name={`tools.${currentToolIndex}` as `tools.0`}
-            />
+            <LeadCaptureToolFormInput name={`tools.${currentToolIndex}`} />
             <Button
               type="button"
               loading={formState.isSubmitting}

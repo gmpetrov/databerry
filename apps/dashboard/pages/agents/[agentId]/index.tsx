@@ -511,9 +511,7 @@ export default function AgentPage() {
                 >
                   {({ mutation }) => (
                     <Stack gap={2}>
-                      <HttpToolInput
-                        name={`tools.${state.currentToolIndex}` as `tools.0`}
-                      />
+                      <HttpToolInput name={`tools.${state.currentToolIndex}`} />
                       <Button type="submit" loading={mutation.isMutating}>
                         Update
                       </Button>
@@ -543,7 +541,7 @@ export default function AgentPage() {
                   {({ mutation }) => (
                     <Stack gap={2}>
                       <LeadCaptureToolFormInput
-                        name={`tools.${state.currentToolIndex}` as `tools.0`}
+                        name={`tools.${state.currentToolIndex}`}
                       />
                       <Button type="submit" loading={mutation.isMutating}>
                         Update
