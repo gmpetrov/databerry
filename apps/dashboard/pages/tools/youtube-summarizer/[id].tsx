@@ -101,7 +101,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
   const { mode } = useColorScheme();
   const router = useRouter();
   const { data: session } = useSession();
-  const videoId = router.query.id as string;
+  const videoId = router.query.id?.slice(-11) as string;
   const [state, setState] = useStateReducer({
     isBannerOpen: false,
     currentChapter: 0,

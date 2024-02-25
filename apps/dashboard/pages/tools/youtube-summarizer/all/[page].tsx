@@ -385,7 +385,7 @@ export async function getStaticProps({
       skip: Number(page) * PAGE_SIZE,
       take: PAGE_SIZE,
       orderBy: {
-        createdAt: 'asc',
+        createdAt: 'desc',
       },
     }),
   ]);
