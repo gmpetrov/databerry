@@ -368,6 +368,10 @@ export async function getStaticProps({
     prisma.lLMTaskOutput.count({
       where: {
         type: 'youtube_summary',
+        output: {
+          path: ['metadata', 'title'],
+          not: Prisma.AnyNull,
+        },
       },
     }),
     prisma.lLMTaskOutput.findMany({
