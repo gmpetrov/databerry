@@ -38,6 +38,7 @@
     "langchain": "0.0.196",
     "mailparser": "^3.6.6",
     "mammoth": "^1.5.1",
+    "memory": "link:langchain/vectorstores/memory",
     "mime-types": "^2.1.35",
     "mixpanel": "^0.18.0",
     "msgpackr": "^1.9.3",

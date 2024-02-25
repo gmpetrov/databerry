@@ -19,8 +19,6 @@ type Props = Pick<ChatRequest, 'filters'> & {
 };
 
 export const handler = async (props: Props) => {
-  let ctx = '';
-
   const filterDatastoreIds = props.filters?.datastore_ids
     ? props.filters?.datastore_ids
     : props.tools

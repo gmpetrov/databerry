@@ -455,10 +455,10 @@ function IntegrationSettings({ onSubmitSuccess, agentId }: Props) {
                   <li>
                     Verify Token:
                     <JoyInput
-                      value={values.config.webhookVerifyToken}
+                      value={values.config?.webhookVerifyToken}
                       endDecorator={
                         <CopyButton
-                          text={values.config.webhookVerifyToken || ''}
+                          text={values.config?.webhookVerifyToken || ''}
                         />
                       }
                     />

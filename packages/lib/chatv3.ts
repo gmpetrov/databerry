@@ -1,3 +1,5 @@
+import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { MemoryVectorStore } from 'langchain/vectorstores/memory';
 import {
   ChatCompletionMessageParam,
   ChatCompletionTool,
@@ -255,7 +257,8 @@ const chat = async ({
     | Awaited<ReturnType<typeof datastoreToolHandler>>
     | undefined = undefined;
 
-  if (userPrompt?.includes('{context}')) {
+  const isContextAware = userPrompt?.includes('{context}');
+  if (isContextAware) {
     retrievalData = await datastoreToolHandler({
       maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
       query: retrievalQuery || query,
@@ -297,18 +300,22 @@ const chat = async ({
       ? [
           {
             role: 'system',
-            content: _systemPrompt,
+            content: `the system prompt to respect is the following: ${_systemPrompt}.${
+              isContextAware
+                ? `And the context for this chat is this ${promptInject({
+                    template: userPrompt || '{query}',
+                    query: query,
+                    context: retrievalData?.context,
+                  })}`
+                : ''
+            } `,
           } as ChatCompletionMessageParam,
         ]
       : []),
     ...truncatedHistory,
     {
       role: 'user',
-      content: promptInject({
-        template: userPrompt || '{query}',
-        query: query,
-        context: retrievalData?.context,
-      }),
+      content: query,
     },
   ];
 
@@ -320,15 +327,55 @@ const chat = async ({
     ...(formatedMarkAsResolvedTool ? [formatedMarkAsResolvedTool] : []),
     ...(formatedRequestHumanTool ? [formatedRequestHumanTool] : []),
     ...(formatedLeadCaptureTool ? [formatedLeadCaptureTool] : []),
+  ] as ChatCompletionTool[];
+
+  const embeddings = new OpenAIEmbeddings();
+
+  const toolVectorStore = await MemoryVectorStore.fromTexts(
+    openAiTools.map((tool) => tool?.function?.description || 'tool'),
+    openAiTools.map((_, index) => {
+      return { index }; // To conform to the Record<string,unknown> typing of the lib.
+    }),
+    embeddings
+  );
+
+  // Always try to make a highly similar datastore available to the model.
+  const datastoreVectorStore = await MemoryVectorStore.fromTexts(
+    datastoreTools.map((tool) => tool?.datastore?.pluginDescriptionForModel),
+    datastoreTools.map((_, index) => {
+      return { index };
+    }),
+    embeddings
+  );
+
+  const toolSimilarityScores = await toolVectorStore.similaritySearchWithScore(
+    query
+  );
+  const datastoreSimilarityScores =
+    await datastoreVectorStore.similaritySearchWithScore(query);
+
+  // high similar score.
+  const topToolsIndexs = toolSimilarityScores
+    .filter((each) => each[1] > 0.8)
+    .map((each) => each[0].metadata.index);
+
+  const topDatastoresIndexs = datastoreSimilarityScores
+    .filter((each) => each[1] > 0.8)
+    .map((each) => each[0].metadata.index);
+
+  const knowledgeTool = [
     ...(nbDatastoreTools > 0
       ? [
           {
             type: 'function',
             function: {
               name: 'queryKnowledgeBase',
-              description: `Useful to fetch informations from the knowledge base (${datastoreTools
-                .map((each) => each?.datastore?.name)
-                .join(', ')})`,
+              description: `${datastoreTools
+                .filter((_, index) => topToolsIndexs.includes(index))
+                .map(
+                  (store) =>
+                    `${store.datastore.name} - ${store.datastore.description}`
+                )}`,
               parameters: {
                 type: 'object',
                 properties: {},
@@ -342,10 +389,12 @@ const chat = async ({
                 retrievalData = await datastoreToolHandler({
                   maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
                   query: retrievalQuery || query,
-                  tools: tools,
+                  tools: datastoreTools.filter((_, index) =>
+                    topToolsIndexs.includes(index)
+                  ) as Tool[],
                   filters: filters,
                   topK: topK,
-                  similarityThreshold: 0.7,
+                  similarityThreshold: 0.8,
                 });
                 return retrievalData.context;
               },
@@ -353,32 +402,12 @@ const chat = async ({
           } as ChatCompletionTool,
         ]
       : []),
-  ] as ChatCompletionTool[];
+  ];
 
-  console.log(
-    'CHAT V3 PAYLOAD',
-    JSON.stringify(
-      {
-        handleStream: stream,
-        model: ModelConfig[modelName]?.name,
-        messages,
-        temperature: temperature || 0,
-        top_p: otherProps.topP,
-        frequency_penalty: otherProps.frequencyPenalty,
-        presence_penalty: otherProps.presencePenalty,
-        max_tokens: otherProps.maxTokens,
-        signal: abortController?.signal,
-        tools: openAiTools,
-        ...(openAiTools?.length > 0
-          ? {
-              tool_choice: 'auto',
-            }
-          : {}),
-      },
-      null,
-      2
-    )
-  );
+  const reducedTools = [
+    ...openAiTools.filter((_, index) => topDatastoresIndexs.includes(index)),
+    ...knowledgeTool,
+  ];
 
   try {
     const output = await model.call({
@@ -391,8 +420,8 @@ const chat = async ({
       presence_penalty: otherProps.presencePenalty,
       max_tokens: otherProps.maxTokens,
       signal: abortController?.signal,
-      tools: openAiTools,
-      ...(openAiTools?.length > 0
+      tools: reducedTools as ChatCompletionTool[],
+      ...(reducedTools?.length > 0
         ? {
             tool_choice: 'auto',
           }
