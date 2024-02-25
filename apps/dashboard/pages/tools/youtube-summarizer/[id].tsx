@@ -131,8 +131,11 @@ export default function SummaryPage({ output }: SummaryPageProps) {
     <>
       <TopBar href="/tools/youtube-summarizer" />
       <SEO
-        title="Free AI Youtube Video Summarizer | Chaindesk.ai"
-        description="Generate YouTube video summaries instantly for free with AI"
+        title={`${title} | AI YouTube Summary | Chaindesk`}
+        description={
+          content?.videoSummary ||
+          'Generate YouTube video summaries instantly for free with AI'
+        }
         uri={router.asPath}
         ogImage={`https://www.chaindesk.ai/api/og/youtube-summary?state=${encodeURIComponent(
           JSON.stringify({
