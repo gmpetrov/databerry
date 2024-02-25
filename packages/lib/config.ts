@@ -63,4 +63,8 @@ export const ModelConfig = {
 export const appUrl = 'https://app.chaindesk.ai';
 export const apiUrl = 'https://api.chaindesk.ai';
 
+export const youtubeSummaryTool = {
+  sitemapPageSize: 1000,
+};
+
 export default config;

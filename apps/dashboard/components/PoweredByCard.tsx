@@ -25,7 +25,10 @@ function PoweredByCard({ sx, ...otherProps }: Props) {
         data.
       </Typography>
 
-      <Link href="https://www.chaindesk.ai/" target="_blank">
+      <Link
+        href="https://www.chaindesk.ai/?utm_source=landing_page&utm_medium=tool&utm_campaign=youtube_summarizer"
+        target="_blank"
+      >
         <Button
           size="lg"
           variant="outlined"

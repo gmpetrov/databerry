@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { youtubeSummaryTool } from '@chaindesk/lib/config';
+import slugify from '@chaindesk/lib/slugify';
 import prisma from '@chaindesk/prisma/client';
 
 export default async function handler(
@@ -13,18 +15,20 @@ export default async function handler(
   res.setHeader('Cache-control', 'stale-while-revalidate, s-maxage=3600');
 
   const baseUrl = 'https://www.chaindesk.ai';
+  const offset = Number(req.query.index as string);
 
-  const outputs = await prisma.lLMTaskOutput.findMany({
-    where: {
-      type: 'youtube_summary',
-    },
-    select: {
-      externalId: true,
-    },
-  });
+  const outputs = (await prisma.$queryRaw`
+    SELECT external_id, output->'metadata'->'title' as title FROM llm_task_outputs OFFSET ${
+      offset * youtubeSummaryTool.sitemapPageSize
+    } LIMIT ${youtubeSummaryTool.sitemapPageSize}
+    ORDER BY created_at ASC
+  `) as { external_id: string; title: string }[];
 
   const paths = outputs.map(
-    (each) => `${baseUrl}/tools/youtube-summarizer/${each.externalId}`
+    (each) =>
+      `${baseUrl}/tools/youtube-summarizer/${slugify(each.title)}-${
+        each.external_id
+      }`
   );
 
   // generate sitemap here

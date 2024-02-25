@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import EastRoundedIcon from '@mui/icons-material/EastRounded';
-import YouTubeIcon from '@mui/icons-material/YouTube';
 import {
   Alert,
   AspectRatio,
@@ -23,6 +22,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import superjson from 'superjson';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
@@ -33,6 +33,7 @@ import PoweredByCard from '@app/components/PoweredByCard';
 import SEO from '@app/components/SEO';
 import TopBar from '@app/components/TopBar';
 
+import { youtubeSummaryTool } from '@chaindesk/lib/config';
 import slugify from '@chaindesk/lib/slugify';
 import {
   fetcher,
@@ -41,17 +42,21 @@ import {
 } from '@chaindesk/lib/swr-fetcher';
 import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
-import { Prisma } from '@chaindesk/prisma';
+import { LLMTaskOutput, Prisma } from '@chaindesk/prisma';
+import prisma from '@chaindesk/prisma/client';
 
-import { getLatestVideos } from '../../api/tools/youtube-summary';
-
-import { SummaryPageProps } from './[id]';
+import { getLatestVideos } from '../../../api/tools/youtube-summary';
+import { SummaryPageProps } from '../[id]';
 
 type FormType = z.infer<typeof YoutubeSummarySchema>;
 
-export default function Youtube() {
+export default function Youtube(props: {
+  items: LLMTaskOutput[];
+  total: number;
+}) {
   const { mode, systemMode, setMode } = useColorScheme();
   const router = useRouter();
+  const page = Number(router.query.page as string);
   const [isProcessing, setIsProcessing] = React.useState(false);
   const { control, register, handleSubmit, formState } = useForm<FormType>({
     mode: 'onChange',
@@ -59,10 +64,6 @@ export default function Youtube() {
   });
 
   const apiUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
-
-  const getLatestVideosQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getLatestVideos>
-  >(`${apiUrl}/api/tools/youtube-summary`, fetcher);
 
   const summaryMutation = useSWRMutation(
     `${apiUrl}/api/tools/youtube-summary`,
@@ -134,7 +135,7 @@ export default function Youtube() {
         ogImage={`https://www.chaindesk.ai/api/og/youtube-summary`}
       />
       <Stack sx={{ width: '100vw', minHeight: '100vh' }}>
-        <TopBar href="https://www.chaindesk.ai/?utm_source=landing_page&utm_medium=tool&utm_campaign=youtube_summarizer" />
+        <TopBar href="/tools/youtube-summarizer" />
 
         <Stack
           sx={{
@@ -163,7 +164,7 @@ export default function Youtube() {
                 AI YouTube Summarizer
               </Typography>
             </Stack>
-            <form
+            {/* <form
               onSubmit={handleSubmit(onSubmit)}
               className="flex-wrap items-center space-y-2 min-w-full md:flex md:space-y-0 md:space-x-2"
             >
@@ -198,7 +199,7 @@ export default function Youtube() {
                     }
                   />
                   <a
-                    href="https://www.chaindesk.ai/?utm_source=landing_page&utm_medium=tool&utm_campaign=youtube_summarizer"
+                    href="https://chaindesk.ai"
                     target="_blank"
                     style={{
                       textDecoration: 'none',
@@ -226,13 +227,13 @@ export default function Youtube() {
                   </Alert>
                 )}
               </Stack>
-            </form>
+            </form> */}
           </Stack>
 
-          {(getLatestVideosQuery?.data?.length || 0) > 0 && (
+          {(props.items?.length || 0) > 0 && (
             <Stack sx={{ mt: 10, width: '100%' }} spacing={2}>
               <Typography level="body-lg" sx={{ textAlign: 'center' }}>
-                Latest Video Summaries
+                🎬 All Summaries
               </Typography>
               <Stack
                 flexWrap="wrap"
@@ -248,7 +249,7 @@ export default function Youtube() {
                   },
                 })}
               >
-                {getLatestVideosQuery?.data?.map((each) => (
+                {props.items?.map((each) => (
                   <Box
                     key={each.id}
                     sx={(theme) => ({
@@ -297,18 +298,34 @@ export default function Youtube() {
                 ))}
               </Stack>
 
-              <Stack sx={{ justifyContent: 'center' }}>
-                <Link
-                  href="/tools/youtube-summarizer/all/0"
-                  style={{ marginLeft: 'auto', marginRight: 'auto' }}
-                >
-                  <Button
-                    endDecorator={<ArrowForwardRoundedIcon />}
-                    variant="outlined"
+              <Stack sx={{ justifyContent: 'center' }} direction="row" gap={1}>
+                {page > 0 && (
+                  <Link
+                    href={`/tools/youtube-summarizer/all/${page - 1}`}
+                    // style={{ marginLeft: 'auto', marginRight: 'auto' }}
                   >
-                    🎬 More Video Summaries
-                  </Button>
-                </Link>
+                    <Button
+                      startDecorator={<ArrowBackRoundedIcon />}
+                      variant="solid"
+                    >
+                      Prev
+                    </Button>
+                  </Link>
+                )}
+                {Math.ceil(props.total / youtubeSummaryTool.sitemapPageSize) >
+                  page + 1 && (
+                  <Link
+                    href={`/tools/youtube-summarizer/all/${page + 1}`}
+                    // style={{ marginLeft: 'auto', marginRight: 'auto' }}
+                  >
+                    <Button
+                      endDecorator={<ArrowForwardRoundedIcon />}
+                      variant="solid"
+                    >
+                      Next
+                    </Button>
+                  </Link>
+                )}
               </Stack>
             </Stack>
           )}
@@ -327,4 +344,49 @@ export default function Youtube() {
       </Stack>
     </>
   );
+}
+
+export async function getStaticPaths() {
+  const all: string[] = [];
+
+  return {
+    paths: all.map((path) => {
+      return { params: { site: path } };
+    }),
+    fallback: 'blocking',
+  };
+}
+
+export async function getStaticProps({
+  params: { page },
+}: {
+  params: {
+    page: string;
+  };
+}) {
+  const [total, items] = await Promise.all([
+    prisma.lLMTaskOutput.count({
+      where: {
+        type: 'youtube_summary',
+      },
+    }),
+    prisma.lLMTaskOutput.findMany({
+      where: {
+        type: 'youtube_summary',
+      },
+      skip: Number(page) * youtubeSummaryTool.sitemapPageSize,
+      take: youtubeSummaryTool.sitemapPageSize,
+      orderBy: {
+        createdAt: 'asc',
+      },
+    }),
+  ]);
+
+  return {
+    props: {
+      total,
+      items: superjson.serialize(items).json || null,
+    },
+    revalidate: 60,
+  };
 }
