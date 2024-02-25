@@ -18,10 +18,12 @@ export default async function handler(
   const offset = Number(req.query.index as string);
 
   const outputs = (await prisma.$queryRaw`
-    SELECT external_id, output->'metadata'->'title' as title FROM llm_task_outputs OFFSET ${
-      offset * youtubeSummaryTool.sitemapPageSize
-    } LIMIT ${youtubeSummaryTool.sitemapPageSize}
+    SELECT external_id, output->'metadata'->'title' as title FROM llm_task_outputs
+    WHERE type='youtube_summary' 
     ORDER BY created_at ASC
+    LIMIT ${youtubeSummaryTool.sitemapPageSize}
+    OFFSET ${offset * youtubeSummaryTool.sitemapPageSize} 
+    
   `) as { external_id: string; title: string }[];
 
   const paths = outputs.map(
