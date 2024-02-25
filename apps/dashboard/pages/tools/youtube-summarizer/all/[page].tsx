@@ -373,6 +373,10 @@ export async function getStaticProps({
     prisma.lLMTaskOutput.findMany({
       where: {
         type: 'youtube_summary',
+        output: {
+          path: ['metadata', 'title'],
+          not: Prisma.AnyNull,
+        },
       },
       skip: Number(page) * youtubeSummaryTool.sitemapPageSize,
       take: youtubeSummaryTool.sitemapPageSize,

@@ -19,11 +19,10 @@ export default async function handler(
 
   const outputs = (await prisma.$queryRaw`
     SELECT external_id, output->'metadata'->'title' as title FROM llm_task_outputs
-    WHERE type='youtube_summary' 
+    WHERE type='youtube_summary' AND output->'metadata'->'title' IS NOT NULL
     ORDER BY created_at ASC
     LIMIT ${youtubeSummaryTool.sitemapPageSize}
     OFFSET ${offset * youtubeSummaryTool.sitemapPageSize} 
-    
   `) as { external_id: string; title: string }[];
 
   const paths = outputs.map(

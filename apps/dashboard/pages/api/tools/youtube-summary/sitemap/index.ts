@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { youtubeSummaryTool } from '@chaindesk/lib/config';
-import slugify from '@chaindesk/lib/slugify';
+import { Prisma } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
 export default async function handler(
@@ -19,6 +19,10 @@ export default async function handler(
   const count = await prisma.lLMTaskOutput.count({
     where: {
       type: 'youtube_summary',
+      output: {
+        path: ['metadata', 'title'],
+        not: Prisma.AnyNull,
+      },
     },
   });
 
