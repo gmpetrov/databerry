@@ -66,6 +66,16 @@ export type Fields =
     }[]
   | undefined;
 
+type KeyValueNames =
+  | 'config.queryParameters'
+  | 'config.pathVariables'
+  | 'config.body'
+  | 'config.headers'
+  | `tools.${number}.config.queryParameters`
+  | `tools.${number}.config.pathVariables`
+  | `tools.${number}.config.body`
+  | `tools.${number}.config.headers`;
+
 const KeyValueFieldArray = ({
   name,
   label,
@@ -77,13 +87,13 @@ const KeyValueFieldArray = ({
     | 'config.pathVariables'
     | 'config.body'
     | 'config.headers'
-    | 'tools.0.config.queryParameters'
-    | 'tools.0.config.pathVariables'
-    | 'tools.0.config.body'
-    | 'tools.0.config.headers';
+    | `tools.${number}.config.queryParameters`
+    | `tools.${number}.config.pathVariables`
+    | `tools.${number}.config.body`
+    | `tools.${number}.config.headers`;
   label?: string;
   userOnly?: boolean;
-  prefix: '' | 'tools.0.';
+  prefix: `tools.${number}.` | '';
 }) => {
   const methods = useFormContext<HttpToolSchema | CreateAgentSchema>();
 
@@ -286,7 +296,6 @@ const KeyValueFieldArray = ({
               <FormControl>
                 <Card variant="outlined" size="sm">
                   <Checkbox
-                    id={`${field.key}-user-provided`}
                     size="sm"
                     label="Provided By User"
                     checked={!!field.isUserProvided}
@@ -317,7 +326,15 @@ const KeyValueFieldArray = ({
                   try {
                     if (name.includes('queryParameters')) {
                       const Url = new URL(url);
-                      Url.searchParams.delete(field.key);
+                      const searchParams = Url.search
+                        .replace('?', '')
+                        .split('&');
+
+                      // use index instead of key, to avoid out_of_sync issue
+                      const synchronizedKey = searchParams[index].split('=')[0];
+
+                      Url.searchParams.delete(synchronizedKey);
+
                       methods.setValue(
                         `${prefix}config.url`,
                         decodeURI(Url.toString())
@@ -335,7 +352,8 @@ const KeyValueFieldArray = ({
                       // use index instead of key, to avoid out_of_sync issue
                       urlPaths.splice(index, 1);
 
-                      const newUrl = baseUrl + '/' + urlPaths.join('');
+                      const newUrl =
+                        baseUrl + '/' + urlPaths.join('/') + Url.search;
 
                       methods.setValue(`${prefix}config.url`, newUrl);
                     }
@@ -417,12 +435,13 @@ const KeyValueFieldArray = ({
 };
 
 type Props = {
-  name?: 'tools.0';
+  name?: `tools.${number}`;
 };
 
 function HttpToolInput({ name }: Props) {
   const methods = useFormContext<HttpToolSchema | CreateAgentSchema>();
-  const prefix: 'tools.0.' | '' = name ? `${name}.` : '';
+  // Narrow down to prevent inference as string.
+  const prefix: `tools.${number}.` | '' = name ? `${name}.` : '';
   const templatesModal = useModal();
   const [withApprovalChecked] = methods.watch([`${prefix}config.withApproval`]);
   const [methodValue] = methods.watch([`${prefix}config.method`]);

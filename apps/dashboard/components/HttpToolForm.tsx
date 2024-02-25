@@ -67,7 +67,7 @@ const ParamFields = memo(
           {parameters?.map((field, index) => (
             <Stack
               direction="row"
-              key={field.key}
+              key={`${index}${field.key}`}
               gap={2}
               alignItems={'end'}
               pl={2}
@@ -127,13 +127,13 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
 }: {
   setToolValidState(arg: boolean): void;
   handleCloseModal?: () => void;
-  name?: 'tools.0';
+  name?: `tools.${number}`;
 }) {
   const methods =
     useFormContext<
       T extends HttpToolSchema ? HttpToolSchema : CreateAgentSchema
     >();
-  const prefix: 'tools.0.' | '' = name ? `${name}.` : '';
+  const prefix: `tools.${number}.` | '' = name ? `${name}.` : '';
   const config = methods.getValues(
     `${prefix}config` as any
   ) as HttpToolSchema['config'];
@@ -380,7 +380,7 @@ function HttpToolForm({ onSubmit, defaultValues }: Props) {
     },
   });
 
-  const config = methods.getValues([
+  const config = methods.watch([
     'config.body',
     'config.headers',
     'config.method',
