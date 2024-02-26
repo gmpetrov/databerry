@@ -1,7 +1,17 @@
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import PublicIcon from '@mui/icons-material/Public';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { ColorPaletteProp, Divider, FormControl, FormLabel } from '@mui/joy';
+import {
+  ColorPaletteProp,
+  Divider,
+  FormControl,
+  FormLabel,
+  Tooltip,
+  Typography,
+} from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -16,22 +26,19 @@ import useSWR from 'swr';
 
 import CopyButton from '@app/components/CopyButton';
 import useInboxConversation from '@app/hooks/useInboxConversation';
-import { getConversation } from '@app/pages/api/logs/[id]';
 import { getMemberships } from '@app/pages/api/memberships';
 
+import getCurrentTimeInTimezone from '@chaindesk/lib/currentTimeInTimezone';
 import formatPhoneNumber from '@chaindesk/lib/format-phone-number';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import {
-  Attachment,
   ConversationChannel,
   ConversationStatus,
-  MessageEval,
-  MessageFrom,
   Prisma,
 } from '@chaindesk/prisma';
 
+import { convertToCountryName } from '../charts/GeoChart';
 import InboxConversationFormProvider from '../InboxConversationFormProvider';
-import Input from '../Input';
 
 type Props = {
   conversationId: string;
@@ -126,6 +133,70 @@ function InboxConversationSettings({
                 </>
               )}
             ></Controller>
+
+            <Divider />
+
+            {query.data?.metadata && (
+              <Stack gap={1}>
+                <Typography level="title-md">Visitor Location</Typography>
+                {(query.data?.metadata as any)?.country && (
+                  <Stack direction="row">
+                    <Tooltip
+                      title="Visitor's City and Country"
+                      variant="soft"
+                      placement="top-start"
+                    >
+                      <Typography
+                        alignItems="center"
+                        justifyItems="center"
+                        startDecorator={<LocationOnIcon fontSize="lg" />}
+                      >
+                        {(query.data?.metadata as any)?.city &&
+                          `${(query.data?.metadata as any)?.city}, `}
+
+                        {convertToCountryName(
+                          (query.data?.metadata as any)?.country
+                        ) ?? (query.data?.metadata as any)?.country}
+                      </Typography>
+                    </Tooltip>
+                  </Stack>
+                )}
+
+                {(query.data?.metadata as any)?.timezone && (
+                  <>
+                    <Tooltip
+                      title="Visitor's timezone"
+                      variant="soft"
+                      placement="top-start"
+                    >
+                      <Typography
+                        alignItems="center"
+                        justifyItems="center"
+                        startDecorator={<PublicIcon fontSize="lg" />}
+                      >
+                        {(query.data?.metadata as any)?.timezone}
+                      </Typography>
+                    </Tooltip>
+
+                    <Tooltip
+                      title="Visitor's time"
+                      variant="soft"
+                      placement="top-start"
+                    >
+                      <Typography
+                        alignItems="center"
+                        justifyItems="center"
+                        startDecorator={<AccessTimeIcon fontSize="lg" />}
+                      >
+                        {getCurrentTimeInTimezone(
+                          (query.data?.metadata as any)?.timezone
+                        )}
+                      </Typography>
+                    </Tooltip>
+                  </>
+                )}
+              </Stack>
+            )}
 
             {!isHumanHandoffButtonHidden && <Divider />}
 
@@ -293,6 +364,8 @@ function InboxConversationSettings({
                 )}
               ></Controller>
             </FormControl>
+            <Divider />
+
             <FormControl>
               <FormLabel>Contact</FormLabel>
 

@@ -114,6 +114,7 @@
     "puppeteer-core": "10.1.0",
     "radash": "^10.7.1",
     "react": "18.2.0",
+    "react-country-flag": "^3.1.0",
     "react-dom": "18.2.0",
     "react-frame-component": "^5.2.6",
     "react-google-charts": "^4.0.1",

@@ -32,6 +32,7 @@ import {
 import prisma from '@chaindesk/prisma/client';
 
 import { sendWhatsAppMessage } from '../lib/send-whatsapp-message';
+import getRequestLocation from '@chaindesk/lib/get-request-location';
 
 interface notionSuccessResponse {
   access_token: string;
@@ -277,6 +278,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           externalId: waContactId!,
           organizationId: agent?.organizationId!,
           firstName: waContactName,
+          metadata: getRequestLocation(req),
         },
       });
     }
@@ -292,6 +294,7 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         attachments,
         channelExternalId,
         channelCredentialsId: credentials?.id,
+        location: getRequestLocation(req),
       });
 
       if (chatResponse?.agentResponse) {

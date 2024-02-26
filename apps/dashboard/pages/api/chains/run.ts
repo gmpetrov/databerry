@@ -6,6 +6,7 @@ import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import ChainManager from '@chaindesk/lib/chains';
 import ConversationManager from '@chaindesk/lib/conversation';
 import { createAuthApiHandler } from '@chaindesk/lib/createa-api-handler';
+import getRequestLocation from '@chaindesk/lib/get-request-location';
 import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
@@ -100,6 +101,7 @@ export const runChainRequest = async (
     organizationId: session?.organization?.id,
     channel: ConversationChannel.dashboard,
     conversationId,
+    location: getRequestLocation(req),
   });
 
   const conv = await conversationManager.createMessage({

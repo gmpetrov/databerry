@@ -26,6 +26,7 @@ import {
   SubscriptionPlan,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
+import getRequestLocation from '@chaindesk/lib/get-request-location';
 
 const handler = createApiHandler();
 
@@ -183,12 +184,19 @@ const getIntegration = async (websiteId: string, channelExternalId: string) => {
 //   });
 // };
 
-const handleQuery = async (
-  websiteId: string,
-  sessionId: string,
-  query: string,
-  t: TFunction<'translation', undefined>
-) => {
+const handleQuery = async ({
+  websiteId,
+  sessionId,
+  query,
+  t,
+  location,
+}: {
+  websiteId: string;
+  sessionId: string;
+  query: string;
+  t: TFunction<'translation', undefined>;
+  location?: ReturnType<typeof getRequestLocation>;
+}) => {
   const integration = await getIntegration(websiteId, sessionId);
   const agent = integration?.agents?.[0];
 
@@ -200,6 +208,7 @@ const handleQuery = async (
     externalVisitorId: sessionId,
     channelExternalId: sessionId,
     channelCredentialsId: integration?.id,
+    location,
   });
 
   if (chatResponse?.agentResponse) {
@@ -304,6 +313,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               channel: ConversationChannel.crisp as ConversationChannel,
               organizationId: integration?.organizationId as string,
               conversationId: integration?.conversations?.[0]?.id,
+              location: getRequestLocation(req),
             });
 
             await conversationManager.createMessage({
@@ -325,12 +335,13 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
           );
 
           try {
-            await handleQuery(
-              body.website_id,
-              body.data.session_id,
-              body.data.content,
-              t
-            );
+            await handleQuery({
+              websiteId: body.website_id,
+              sessionId: body.data.session_id,
+              query: body.data.content,
+              t,
+              location: getRequestLocation(req),
+            });
           } catch (err) {
             req.logger.error(err);
           }

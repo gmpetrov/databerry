@@ -113,7 +113,8 @@ const BarChartTable = ({
 };
 
 // browser env.
-function convertToCountryName(countryCode: string) {
+export function convertToCountryName(countryCode: string) {
+  if (typeof document === undefined) return undefined;
   try {
     const converter = new Intl.DisplayNames(['en'], { type: 'region' });
     return converter.of(countryCode);
