@@ -33,7 +33,7 @@ export const chatAgentRequest = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  logger.info(
+  console.log(
     'Cloudflare location headers ------->',
     JSON.stringify({
       'cf-ipcity': req.headers['cf-ipcity'],
