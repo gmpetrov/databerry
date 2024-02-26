@@ -12,6 +12,7 @@ import handleChatMessage, {
   ChatAgentArgs,
   ChatConversationArgs,
 } from '@chaindesk/lib/handle-chat-message';
+import logger from '@chaindesk/lib/logger';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import rateLimit from '@chaindesk/lib/middlewares/rate-limit';
@@ -32,6 +33,18 @@ export const chatAgentRequest = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
+  logger.info(
+    'Cloudflare location headers ------->',
+    JSON.stringify({
+      'cf-ipcity': req.headers['cf-ipcity'],
+      'cf-ipcountry': req.headers['cf-ipcountry'],
+      'cf-region': req.headers['cf-region'],
+      'cf-region-code': req.headers['cf-region-code'],
+      'cf-postal-code': req.headers['cf-postal-code'],
+      'cf-timezone': req.headers['cf-timezone'],
+      'cf-ipcontinent': req.headers['cf-ipcontinent'],
+    })
+  );
   const session = req.session;
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
