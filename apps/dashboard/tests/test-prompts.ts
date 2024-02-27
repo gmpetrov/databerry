@@ -1,7 +1,7 @@
 import pMap from 'p-map';
 
 import AgentManager from '@chaindesk/lib/agent';
-import { prisma } from '@chaindesk/prisma/client';
+import prisma from '@chaindesk/prisma/client';
 
 const customerSupportDataset = [
   {
@@ -33,7 +33,7 @@ const customerSupportDataset = [
 (async () => {
   const agent = await prisma.agent.findUnique({
     where: {
-      id: 'clpbfws6y00040ut3sck87t3x',
+      id: 'clrz0tn6h000108kxfyomdzxg',
     },
     include: {
       tools: {

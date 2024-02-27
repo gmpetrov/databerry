@@ -2,6 +2,7 @@ import {
   ChatCompletionMessageParam,
   ChatCompletionTool,
 } from 'openai/resources';
+import { z } from 'zod';
 
 import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
 
@@ -47,6 +48,7 @@ import {
   ToolSchema,
 } from './types/dtos';
 import ChatModel from './chat-model';
+import cleanTextForEmbeddings from './clean-text-for-embeddings';
 import { ModelConfig } from './config';
 import createToolParser from './create-tool-parser';
 import formatMessagesOpenAI from './format-messages-openai';
@@ -255,16 +257,16 @@ const chat = async ({
     | Awaited<ReturnType<typeof datastoreToolHandler>>
     | undefined = undefined;
 
-  if (userPrompt?.includes('{context}')) {
-    retrievalData = await datastoreToolHandler({
-      maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
-      query: retrievalQuery || query,
-      tools: tools,
-      filters: filters,
-      topK: topK,
-      similarityThreshold: 0.7,
-    });
-  }
+  // if (userPrompt?.includes('{context}')) {
+  retrievalData = await datastoreToolHandler({
+    maxTokens: Math.min(ModelConfig?.[modelName!]?.maxTokens * 0.2, 3000), // limit RAG to max 3K tokens
+    query: retrievalQuery || query,
+    tools: tools,
+    filters: filters,
+    topK: topK,
+    similarityThreshold: 0.7,
+  });
+  // }
 
   // Messages
   const truncatedHistory = (
@@ -276,111 +278,264 @@ const chat = async ({
 
   let _systemPrompt = systemPrompt || '';
 
-  if (!!markAsResolvedTool) {
-    _systemPrompt += `\n${MARK_AS_RESOLVED}`;
-  }
-
-  if (!!requestHumanTool) {
-    _systemPrompt += `\n${REQUEST_HUMAN}`;
-  }
-
-  if (!!leadCaptureTool) {
-    _systemPrompt += `\n${createLeadCapturePrompt({
-      isEmailEnabled: !!leadCaptureTool.config.isEmailEnabled,
-      isPhoneNumberEnabled: !!leadCaptureTool.config.isPhoneNumberEnabled,
-      isRequiredToContinue: !!leadCaptureTool.config.isRequired,
-    })}`;
-  }
-
-  const messages: ChatCompletionMessageParam[] = [
-    ...(_systemPrompt
-      ? [
-          {
-            role: 'system',
-            content: _systemPrompt,
-          } as ChatCompletionMessageParam,
-        ]
-      : []),
-    ...truncatedHistory,
-    {
-      role: 'user',
-      content: promptInject({
-        template: userPrompt || '{query}',
-        query: query,
-        context: retrievalData?.context,
-      }),
-    },
-  ];
-
   const model = new ChatModel();
 
-  const openAiTools = [
-    ...formatedHttpTools,
-    ...formatedFormTools,
-    ...(formatedMarkAsResolvedTool ? [formatedMarkAsResolvedTool] : []),
-    ...(formatedRequestHumanTool ? [formatedRequestHumanTool] : []),
-    ...(formatedLeadCaptureTool ? [formatedLeadCaptureTool] : []),
-    ...(nbDatastoreTools > 0
-      ? [
-          {
-            type: 'function',
-            function: {
-              name: 'queryKnowledgeBase',
-              description: `Useful to fetch informations from the knowledge base (${datastoreTools
-                .map((each) => each?.datastore?.name)
-                .join(', ')})`,
-              parameters: {
-                type: 'object',
-                properties: {},
-              },
-              parse: JSON.parse,
-              function: async () => {
-                if (retrievalData) {
-                  return retrievalData.context;
-                }
-
-                retrievalData = await datastoreToolHandler({
-                  maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
-                  query: retrievalQuery || query,
-                  tools: tools,
-                  filters: filters,
-                  topK: topK,
-                  similarityThreshold: 0.7,
-                });
-                return retrievalData.context;
-              },
-            },
-          } as ChatCompletionTool,
-        ]
-      : []),
-  ] as ChatCompletionTool[];
-
-  console.log(
-    'CHAT V3 PAYLOAD',
-    JSON.stringify(
-      {
-        handleStream: stream,
-        model: ModelConfig[modelName]?.name,
-        messages,
-        temperature: temperature || 0,
-        top_p: otherProps.topP,
-        frequency_penalty: otherProps.frequencyPenalty,
-        presence_penalty: otherProps.presencePenalty,
-        max_tokens: otherProps.maxTokens,
-        signal: abortController?.signal,
-        tools: openAiTools,
-        ...(openAiTools?.length > 0
-          ? {
-              tool_choice: 'auto',
-            }
-          : {}),
-      },
-      null,
-      2
-    )
-  );
-
   try {
+    let sequence = 'query_knowledge_base';
+
+    try {
+      const sequenceDetectionInstructions =
+        cleanTextForEmbeddings(`Your goal is to detect the most relevant sequence for the conversation based on the conversation history.
+      Possible Sequences:
+      ${
+        !!leadCaptureTool
+          ? `name: lead_capture
+            description: Until the AI has collected all user informations properly and the AI looks ready to move to another sequence.`
+          : ''
+      }
+      ${
+        !!requestHumanTool
+          ? `name: request_human
+      description: When the user isnot satisfied with the AI answers`
+          : ``
+      }
+      ${
+        !!markAsResolvedTool
+          ? `name: mark_as_resolved
+      description: When the user is satisfied with the AI answersm the user questions are properly answered and the conversation can be safely marked as resolved.`
+          : ``
+      }
+      ${
+        formatedHttpTools.length > 0
+          ? formatedHttpTools
+              .map(
+                (each) =>
+                  `name: ${each?.function?.name} \ndescription: ${each.function?.description}`
+              )
+              .join('\n')
+          : ''
+      }
+      ${
+        formatedFormTools.length > 0
+          ? formatedFormTools
+              .map(
+                (each) =>
+                  `name: ${each?.function?.name} \ndescription: ${each.function?.description}`
+              )
+              .join('\n')
+          : ''
+      }
+      name: None
+      description: When none of the above sequences are detected.
+
+    Sequences Priorities:
+    ${
+      !!leadCaptureTool
+        ? `
+    - The conversation should be in the lead_capture sequence until the user informations have been provided, even if the user ask questions related to another sequence.
+    - Only when the user informations have been provided, the conversation should move to another sequence.`
+        : ``
+    }
+    
+    Provide your output in json format with the key: sequence.
+      `);
+
+      console.log(
+        'sequenceDetectionInstructions',
+        sequenceDetectionInstructions
+      );
+
+      const sequenceDetection = await new ChatModel().call({
+        model: ModelConfig['gpt_3_5_turbo']?.name,
+        messages: [
+          {
+            role: 'system',
+            content: sequenceDetectionInstructions,
+          },
+          ...truncatedHistory,
+          {
+            role: 'user',
+            content: query,
+          },
+        ],
+        signal: abortController?.signal,
+        temperature: 0,
+        // tool_choice: 'auto',
+        response_format: {
+          type: 'json_object',
+        },
+        // tools: [
+        //   {
+        //     type: 'function',
+        //     function: {
+        //       name: 'sequence_detection',
+        //       description: 'Sequence detection',
+        //       parse: (data: string) =>
+        //         z.object({ sequence: z.string() }).parse(JSON.parse(data)),
+        //       function: async (sequence: string) => {
+        //         return { sequence };
+        //       },
+        //       parameters: {
+        //         type: 'object',
+        //         properties: {
+        //           sequence: {
+        //             type: 'string',
+        //             enum: [
+        //               'query_knowledge_base',
+        //               'request_human',
+        //               'mark_as_resolved',
+        //               'lead_capture',
+        //               'http_tool',
+        //             ],
+        //           },
+        //         },
+        //       },
+        //     },
+        //   },
+        // ],
+      });
+
+      sequence = JSON.parse(sequenceDetection?.answer!)?.sequence as string;
+    } catch (err) {
+      console.log('Sequence detection error', err);
+    }
+
+    console.log('SEQUENCE ----------------------------------->', sequence);
+
+    if (!!markAsResolvedTool && sequence === 'mark_as_resolved') {
+      _systemPrompt += `\n${MARK_AS_RESOLVED}`;
+    }
+
+    if (!!requestHumanTool && sequence === 'request_human') {
+      _systemPrompt += `\n${REQUEST_HUMAN}`;
+    }
+
+    if (!!leadCaptureTool && sequence === 'lead_capture') {
+      _systemPrompt += `\n${createLeadCapturePrompt({
+        isEmailEnabled: !!leadCaptureTool.config.isEmailEnabled,
+        isPhoneNumberEnabled: !!leadCaptureTool.config.isPhoneNumberEnabled,
+        isRequiredToContinue: !!leadCaptureTool.config.isRequired,
+      })}`;
+    }
+
+    // _systemPrompt += `\nStart the conversation by collecting the user informations specified by the lead capture v2 tool.`;
+
+    // _systemPrompt += `\n Finish your answer with a recommendation for a relevant html input element to show the user based on your answer. example:
+
+    // User: Hello,
+    // You: Can you provide your email adress in case we need to contact you later? UI: email
+
+    // Possible values are email, phone, file_upload, none`;
+
+    const messages: ChatCompletionMessageParam[] = [
+      ...(_systemPrompt
+        ? [
+            {
+              role: 'system',
+              content: `${_systemPrompt}${
+                sequence !== 'None'
+                  ? ``
+                  : `\n<knowledge-base>
+              ${retrievalData?.context}
+            </knowledge-base>`
+              }`,
+            } as ChatCompletionMessageParam,
+          ]
+        : []),
+      ...truncatedHistory,
+      {
+        role: 'user',
+        content: promptInject({
+          // template:
+          //   sequence === 'query_knowledge_base'
+          //     ? `<knowledge-base>
+          // ${retrievalData?.context}
+          // </knowledge-base>
+          // Question: {query}`
+          //     : '{query}',
+          template: userPrompt || '{query}',
+          query: query,
+          context: retrievalData?.context,
+        }),
+      },
+    ];
+
+    const openAiTools = [
+      ...(formatedHttpTools
+        ? formatedHttpTools.filter((each) => each.function?.name === sequence)
+        : []),
+      ...(formatedFormTools
+        ? formatedFormTools.filter((each) => each.function?.name === sequence)
+        : []),
+      ...(formatedMarkAsResolvedTool && sequence === 'mark_as_resolved'
+        ? [formatedMarkAsResolvedTool]
+        : []),
+      ...(formatedRequestHumanTool && sequence === 'request_human'
+        ? [formatedRequestHumanTool]
+        : []),
+      ...(formatedLeadCaptureTool && sequence === 'lead_capture'
+        ? [formatedLeadCaptureTool]
+        : []),
+      // ...(nbDatastoreTools > 0
+      //   ? [
+      //       {
+      //         type: 'function',
+      //         function: {
+      //           name: 'queryKnowledgeBase',
+      //           description: `Useful to fetch informations from the knowledge base (${datastoreTools
+      //             .map((each) => each?.datastore?.name)
+      //             .join(', ')})`,
+      //           parameters: {
+      //             type: 'object',
+      //             properties: {},
+      //           },
+      //           parse: JSON.parse,
+      //           function: async () => {
+      //             if (retrievalData) {
+      //               return retrievalData.context;
+      //             }
+
+      //             retrievalData = await datastoreToolHandler({
+      //               maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
+      //               query: retrievalQuery || query,
+      //               tools: tools,
+      //               filters: filters,
+      //               topK: topK,
+      //               similarityThreshold: 0.7,
+      //             });
+      //             return retrievalData.context;
+      //           },
+      //         },
+      //       } as ChatCompletionTool,
+      //     ]
+      //   : []),
+    ] as ChatCompletionTool[];
+
+    console.log(
+      'CHAT V3 PAYLOAD',
+      JSON.stringify(
+        {
+          handleStream: stream,
+          model: ModelConfig[modelName]?.name,
+          messages,
+          temperature: temperature || 0,
+          top_p: otherProps.topP,
+          frequency_penalty: otherProps.frequencyPenalty,
+          presence_penalty: otherProps.presencePenalty,
+          max_tokens: otherProps.maxTokens,
+          signal: abortController?.signal,
+          tools: openAiTools,
+          ...(openAiTools?.length > 0
+            ? {
+                tool_choice: 'auto',
+              }
+            : {}),
+        },
+        null,
+        2
+      )
+    );
+
     const output = await model.call({
       handleStream: stream,
       model: ModelConfig[modelName]?.name,

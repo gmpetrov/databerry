@@ -15,16 +15,16 @@ export const XPBNPLabels = {
 
 export const ModelConfig = {
   [AgentModelName.gpt_3_5_turbo]: {
-    name: 'gpt-3.5-turbo-1106',
-    // name: 'gpt-3.5-turbo-0125',
+    // name: 'gpt-3.5-turbo-1106',
+    name: 'gpt-3.5-turbo-0125',
     maxTokens: 16385,
     cost: 1,
     providerPriceByInputToken: 0.0000005,
     providerPricePriceByOutputToken: 0.0000015,
   },
   [AgentModelName.gpt_3_5_turbo_16k]: {
-    name: 'gpt-3.5-turbo-1106',
-    // name: 'gpt-3.5-turbo-0125',
+    // name: 'gpt-3.5-turbo-1106',
+    name: 'gpt-3.5-turbo-0125',
     maxTokens: 16385,
     cost: 1,
     providerPriceByInputToken: 0.0000005,

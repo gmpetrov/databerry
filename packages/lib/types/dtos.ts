@@ -333,7 +333,7 @@ export const LeadCaptureToolchema = ToolBaseSchema.extend({
   config: z.object({
     email: z.string().email().optional(),
     phoneNumber: z.string().optional(),
-    phoneNumberCountryCode: z.string().optional(),
+    phoneNumberExtension: z.string().optional(),
     isRequired: z.boolean().optional(),
     isEmailEnabled: z.boolean().optional(),
     isPhoneNumberEnabled: z.boolean().optional(),

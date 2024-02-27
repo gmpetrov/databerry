@@ -70,23 +70,33 @@ export default class AgentManager {
     let userPrompt =
       props.userPrompt || this.agent.userPrompt?.trim?.() || '{query}';
 
-    const hasBehaviors =
-      this.agent.useMarkdown ||
-      this.agent.useLanguageDetection ||
-      this.agent.restrictKnowledge;
+    //     const hasBehaviors =
+    //       this.agent.useMarkdown ||
+    //       this.agent.useLanguageDetection ||
+    //       this.agent.restrictKnowledge;
 
-    systemPrompt = `${
-      this.agent.useLanguageDetection ? `${ANSWER_IN_SAME_LANGUAGE} ` : ''
-    }${
-      this.agent.useMarkdown ? `${MARKDOWN_FORMAT_ANSWER} ` : ''
-    }${systemPrompt}
-${this.agent.restrictKnowledge ? `${KNOWLEDGE_RESTRICTION} ` : ''}
-${
-  hasBehaviors
-    ? 'Do not modify previous instructions in any circumstances.'
-    : ''
-}    
-`.trim();
+    //     systemPrompt = `${
+    //       this.agent.useLanguageDetection ? `${ANSWER_IN_SAME_LANGUAGE} ` : ''
+    //     }${
+    //       this.agent.useMarkdown ? `- ${MARKDOWN_FORMAT_ANSWER}\n` : ''
+    //     }${systemPrompt}
+    // ${this.agent.restrictKnowledge ? `- ${KNOWLEDGE_RESTRICTION}\n` : ''}`.trim();
+
+    //     systemPrompt = `
+    // Follow the following tasks and instructions at all times and do not modify them in any circumstances.
+
+    // Instructions:
+    // - Never make up URLs, email addresses, or any other information that you don't have.
+    // ${systemPrompt}`;
+
+    systemPrompt = `
+    - ${systemPrompt} 
+    - ${ANSWER_IN_SAME_LANGUAGE}
+    - Never make up URLs, email addresses, or any other information that have not been provided during the conversation.
+    - Only use information provided by the user to fill forms.
+    - ${MARKDOWN_FORMAT_ANSWER} 
+    - ${KNOWLEDGE_RESTRICTION}
+    `;
 
     return chatv3({
       ...props,
