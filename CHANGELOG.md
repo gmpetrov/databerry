@@ -1,5 +1,27 @@
 # Changelog
 
+<a name="0.1.242"></a>
+## 0.1.242 (2024-02-27)
+
+### Fixed
+
+- 🐛 og image yt summary [[57d56ea](https://github.com/gmpetrov/databerry/commit/57d56eaa7b2567e1143ad26f8bb36e582fbdaead)]
+- 🐛 yt summary meta title [[0fdb5b9](https://github.com/gmpetrov/databerry/commit/0fdb5b98268a4659a4dec66bef37c7d81fec8323)]
+- 🐛 yt chatper play clip [[3e47daa](https://github.com/gmpetrov/databerry/commit/3e47daa85c15d5e81d93ac16c32d5603be44947c)]
+- 🐛 sitemap markup [[f5a3113](https://github.com/gmpetrov/databerry/commit/f5a3113848c6285bc39ff70db82ca3b4098edb49)]
+- 🐛 missing filter [[3ee57d0](https://github.com/gmpetrov/databerry/commit/3ee57d0ed622937bc812e9f2593437ab9edaa0e8)]
+- 🐛 reduce page size [[d132022](https://github.com/gmpetrov/databerry/commit/d1320222e8800f92635dfecc65147745387e425a)]
+- 🐛 yt summaries directory crash on null title [[1cf1be5](https://github.com/gmpetrov/databerry/commit/1cf1be56dc10e69371de48b88afa710b3e989525)]
+- 🐛 yt sitemap sql query [[d4f22fa](https://github.com/gmpetrov/databerry/commit/d4f22fa1054b1552a61b798aad901889fb31e9e2)]
+
+### Miscellaneous
+
+- 🎸 fetch yt video category [[d90f611](https://github.com/gmpetrov/databerry/commit/d90f611b7fe45061b84aeeeb12b6229bf9a5a9d9)]
+-  Update query.tsx [[f3ba9b2](https://github.com/gmpetrov/databerry/commit/f3ba9b2cc53c7dc1d2a894a339cf0ac866301129)]
+- 🎸 log location headers [[78e5302](https://github.com/gmpetrov/databerry/commit/78e5302048964c8acd0fc98cfd3ad92e7d484cc5)]
+- 🎸 improve SEO yt summary tool [[0b84dc9](https://github.com/gmpetrov/databerry/commit/0b84dc98abc657830d5cf788092fa93e073e1c82)]
+
+
 <a name="0.1.241"></a>
 ## 0.1.241 (2024-02-22)
 
