@@ -74,7 +74,7 @@ export default class ChatModel {
               stream: true,
             })
             .on('message', (msg) => {
-              console.log('msg', msg);
+              console.log('msg', JSON.stringify(msg, null, 2));
             })
             .on('functionCall', (functionCall) => {
               console.log('functionCall', functionCall);

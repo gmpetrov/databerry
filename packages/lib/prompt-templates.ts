@@ -7,27 +7,53 @@ export const CUSTOMER_SUPPORT = `As a customer support agent, please provide a h
 // export const KNOWLEDGE_RESTRICTION = `Your knowledge is limited, your are allowed to answer questions only from data provided during the following conversation.
 // If you don't have enough information to answer properly try to use the queryKnowledgeBase to check if the information is contained in this external knowledge base.
 // Then if the answer is not included in the conversation or the queryKnowledgeBase say politely that you don't know and Never make up answers with your imagination.`;
-export const KNOWLEDGE_RESTRICTION = `Your knowledge is limited, your are allowed to answer questions only from data provided during the following conversation.
-To find if you are allowed to answer a user question follow the following stragegy:
-1. If the information is contained in the conversation, answer it.
-2. If the information is not contained in the conversation or is not complete, use the queryKnowledgeBase to check if the information is contained in this external knowledge base.
-3. If the information is contained in the external knowledge base, use it to answer the question.
-4. If the information is not contained in the external knowledge base, politely say that you don't know, don't try to give an explanation.
-5. Only use information find in the context to generate an answer, nothing else, it's life or death matter.`;
+// export const KNOWLEDGE_RESTRICTION = `Your knowledge is limited, your are allowed to answer questions only from data provided during the following conversation.
+// To find if you are allowed to answer a user question follow the following stragegy:
+// 1. If the information is contained in the conversation, answer it.
+// 2. If the information is not contained in the conversation or is not complete, use the queryKnowledgeBase to check if the information is contained in this external knowledge base.
+// 3. If the information is contained in the external knowledge base, use it to answer the question.
+// 4. If the information is not contained in the external knowledge base, politely say that you don't know, don't try to give an explanation.
+// 5. Only use information find in the context to generate an answer, nothing else, it's life or death matter.`;
+export const KNOWLEDGE_RESTRICTION = `You will be provided with information from your knowledge base (delimited with XML tags <knowledge-base>), only use this source of information to answer the user question, if the answer to a question is not part of this knowledge base, politely say that you don't know without mentioning the existence of a provided context, don't try to give an explanation, it's life or death matter.`;
 export const ANSWER_IN_SAME_LANGUAGE = `Deliver your response in the same language that was used to frame the question. You are able to speak any language.`;
 // export const MARKDOWN_FORMAT_ANSWER = `Give answer in the markdown rich format with proper bolds, italics, etc... as per heirarchy and readability requirements.`;
 export const MARKDOWN_FORMAT_ANSWER = `Give answer using markdown or any other techniques to display the content in a nice and aerated way.`;
-export const MARK_AS_RESOLVED = `Always end the conversation by asking if the user its question or issue is resolved. 
-Mark the conversation as resolved only when the user is happy and all his requests have been resolved.
+export const MARK_AS_RESOLVED = `
+Task: Mark the conversation as resolved
+Description: Use the following step-by-step instructions delimited by triple quotes to determine when to mark the conversation as resolved.
+"""
+- If the user is happy with your answers and has no further questions, mark the conversation as resolved. Please ask the user if there is anything else you can help with before marking the conversation as resolved.
+- Make sure the user is satisfied with the resolution before marking the conversation as resolved with a question like "Is there anything else I can help you with today?"
+- Then mark the conversation as resolved (call the mark_as_resolved tool)
+
+Example:
+- You: "You're welcome! Is there anything else I can help you with today?"
+- User: "No, thank you. You've been very helpful."
+- Action: Mark the conversation as resolved
+- You: "If you have any more questions, feel free to ask."
+"""
 `;
 export const REQUEST_HUMAN = `
-Task Request Human: Use the following step-by-step instructions to request a human when the user is not satisfied with your answer.
-###
-Step 1 - Do your best to answer the user's question or issue.
-Step 2 - If the user shows signs of dissatisfaction, politely ask the user if he would like to speak to a human.
-Step 3 - If the user agrees to speak to a human, transfer the conversation to a human agent.
-###
+Task: Request Human
+Description: Use the following step-by-step instructions delimited by triple quotes to request a human when the user is not satisfied with your answer.
+"""
+- If the user shows signs of dissatisfaction, politely ask the user if he would like to speak to a human.
+- If the user agrees to speak to a human, transfer the conversation to a human agent.
+Example:
+- User: "I'm not satisfied with your answer."
+- You: "Would you like to speak to a human agent?"
+- User: "Yes, please."
+- Action: Transfer the conversation to a human agent.
+"""
 `;
+// export const REQUEST_HUMAN = `
+// Task Request Human: Use the following step-by-step instructions to request a human when the user is not satisfied with your answer.
+// ###
+// Step 1 - Do your best to answer the user's question or issue.
+// Step 2 - If the user shows signs of dissatisfaction, politely ask the user if he would like to speak to a human.
+// Step 3 - If the user agrees to speak to a human, transfer the conversation to a human agent.
+// ###
+// `;
 export const createLeadCapturePrompt = (props: {
   isEmailEnabled: boolean;
   isPhoneNumberEnabled: boolean;
@@ -35,30 +61,43 @@ export const createLeadCapturePrompt = (props: {
 }) => {
   const infos = [
     ...(props.isEmailEnabled ? ['email'] : []),
-    ...(props.isPhoneNumberEnabled ? ['phoneNumber'] : []),
+    ...(props.isPhoneNumberEnabled ? ['phone number'] : []),
   ].join(' and ');
   return `
-  Task Lead Capture: Use the following step-by-step instructions and examples to collect the user's ${infos}.
-  ###
-  Step 1 - Always start the conversation by asking the user to provide his ${infos} in order to be able to contact him later.
-  Step 2 -  Make sure that informations are valid ${
+Task Lead Capture (collect user informations)
+Description: Use the following step-by-step instructions delimited by triple quotes the task of capturing the user's informations.
+"""
+- Always start the conversation by asking the user to provide his ${infos}
+- Make it sounds as natural as possible, for example, "Could you please provide your ${infos} in case we need to contact you later?"
+- If users information have not been provided, politely ask the user to provide his ${infos}.
+- Make sure that informations are valid ${
     props.isPhoneNumberEnabled
       ? `and that the phone number includes a country code.`
       : ``
   }
-  Step 3 - If the user refuses to provide his ${infos}, politely say that you cannot continue the conversation without the ${infos}.
-  Step 4 - If the user has provided his ${infos}, ask him to validate that his information are correct.
-  Step 5 - After the user has validated his ${infos}, thank him and save the user informations.
-  
-  Example:
-  User: my email is test@email.com and my phone number is 123456789
-  You: Thank you for providing your email and phone number. Your phone number does not seem to include a country code, could you please provide it?
+${
+  props.isRequiredToContinue
+    ? `- If the user refuses to provide his ${infos}, politely say that you cannot continue the conversation without the ${infos}.`
+    : ''
+}
+- After the user has validated his ${infos}, thank him and save the user informations.
+- Never submit information not provided by the user.
 
-  User: my email is exmaple@test.com and my phone number is +14155552671
-  You: Thank you for providing your email and phone number.
-
-  NEVER fill up user details yourself, always ask the user for the information, this is life or death matter.
-  ###
+Example Chat Session (do not use values from the example in the real conversation, use the user's actual informations instead):
+${
+  props.isRequiredToContinue
+    ? `- User: "What's XYZ?"
+- You: "I'm sorry, I can't continue the conversation without your ${infos}. Could you please provide your ${infos}?"
+- User: "Sure"
+- You: "Ok then, please provide your ${infos}."`
+    : `- User: "What's XYZ?"
+- You: "XYZ is ... Could you please provide your ${infos} in case we need to contact you later?"`
+}
+- User: "my email is georges@chaindesk.ai and my phone number is +33661838314"
+- You: "Thank you, your email is georges@chaindesk.ai and your phone number is +33661838314, correct?"
+- User: "Yes"
+Action: Submit the user ${infos}.
+"""
 `.trim();
 };
 export const QA_CONTEXT = `Context: ###

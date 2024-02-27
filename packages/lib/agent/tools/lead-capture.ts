@@ -1,5 +1,6 @@
 import createToolParser from '@chaindesk/lib/create-tool-parser';
 import EventDispatcher from '@chaindesk/lib/events/dispatcher';
+import formatPhoneNumber from '@chaindesk/lib/format-phone-number';
 import {
   LeadCaptureToolSchema,
   ToolResponseSchema,
@@ -12,9 +13,10 @@ export type LeadCaptureToolPayload = Record<string, unknown>;
 
 export const toJsonSchema = ((tool: LeadCaptureToolSchema, config) => {
   return {
-    name: `lead_capture_when_all_fields_filled`,
+    name: `lead_capture`,
     description:
-      'Trigger only when all the required field have been answered by the user. Each field is provided by the user not by the AI. Never fill a field if not provided by the user.',
+      'Useful to save the user informations to the organization once all filed have been provided. Trigger only when all the required field have been answered by the user. Each field is provided by the user not by the AI. Never fill a field if not provided by the user.',
+    // 'Trigger only when all the required field have been answered by the user. Each field is provided by the user not by the AI. Never fill a field if not provided by the user.',
     parameters: {
       type: 'object',
       properties: {
@@ -32,7 +34,7 @@ export const toJsonSchema = ((tool: LeadCaptureToolSchema, config) => {
               phoneNumber: {
                 type: 'string',
               },
-              phoneNumberCountryCode: {
+              phoneNumberExtension: {
                 type: 'string',
               },
             }
@@ -41,7 +43,7 @@ export const toJsonSchema = ((tool: LeadCaptureToolSchema, config) => {
       required: [
         ...(tool?.config?.isEmailEnabled ? ['email'] : []),
         ...(tool?.config?.isPhoneNumberEnabled
-          ? ['phoneNumber', 'phoneNumberCountryCode']
+          ? ['phoneNumber', 'phoneNumberExtension']
           : []),
       ],
     },
@@ -55,9 +57,14 @@ export const createHandler =
   ) =>
   async (payload: LeadCaptureToolPayload): Promise<ToolResponseSchema> => {
     const email = payload?.email as string;
-    const phoneNumber = payload?.phoneNumber as string;
+    const phoneNumber = (payload?.phoneNumber || '') as string;
+    const phoneNumberExtension = (payload?.phoneNumberExtension ||
+      '') as string;
+    const formattedPhoneNumber = formatPhoneNumber({
+      phoneNumber: phoneNumberExtension + phoneNumber,
+    });
 
-    if (email || phoneNumber) {
+    if (email || formattedPhoneNumber) {
       const contacts = await prisma.contact.findMany({
         where: {
           organizationId: config.organizationId,
@@ -66,7 +73,7 @@ export const createHandler =
               email,
             },
             {
-              phoneNumber,
+              phoneNumber: formattedPhoneNumber,
             },
           ],
         },
@@ -74,8 +81,14 @@ export const createHandler =
 
       if (contacts?.length === 0) {
         const [createdContact] = await Promise.all([
-          prisma.contact.create({
-            data: {
+          prisma.contact.upsert({
+            where: {
+              unique_email_for_org: {
+                email,
+                organizationId: config.organizationId!,
+              },
+            },
+            create: {
               organization: {
                 connect: {
                   id: config.organizationId!,
@@ -87,7 +100,21 @@ export const createHandler =
                 },
               },
               email,
-              phoneNumber,
+              phoneNumber: formattedPhoneNumber,
+            },
+            update: {
+              organization: {
+                connect: {
+                  id: config.organizationId!,
+                },
+              },
+              conversationsV2: {
+                connect: {
+                  id: config.conversationId!,
+                },
+              },
+              email,
+              phoneNumber: formattedPhoneNumber,
             },
             include: {
               organization: {
@@ -149,10 +176,12 @@ export const createHandler =
                 },
               },
               email,
-              phoneNumber,
+              phoneNumber: formattedPhoneNumber,
             },
           }),
         ]);
+
+        console.log('createdContact', createdContact);
 
         await EventDispatcher.dispatch({
           type: 'lead-captured',
