@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { load } from 'cheerio';
 import { google } from 'googleapis';
 import { TranscriptResponse, YoutubeTranscript } from 'youtube-transcript';
 
@@ -218,5 +219,49 @@ export default class YoutubeApi {
       }
     }
     return groups;
+  }
+
+  static async getVideoCategory(videoId: string) {
+    // Autos & Vehicles
+    // Comedy
+    // Education
+    // Entertainment
+    // Film & Animation
+    // Gaming
+    // Howto & Style
+    // Music
+    // News & Politics
+    // Nonprofits & Activism
+    // People & Blogs
+    // Pets & Animals
+    // Science & Technology
+    // Sports
+    // Travel & Events
+
+    const url = `https://www.youtube.com/watch?v=${videoId}`;
+    try {
+      const { data } = await axios.get(url);
+      const $ = load(data);
+      const scripts = $('script');
+      let category = null as string | null;
+
+      scripts.each((i: any, el: any) => {
+        const scriptContent = $(el).html();
+        if (scriptContent?.includes?.('"category"')) {
+          const jsonMatch = scriptContent.match(/"category": ?"([^"]+)"/);
+          if (jsonMatch && jsonMatch[1]) {
+            category = jsonMatch[1];
+            return false; // Break the loop
+          }
+        }
+      });
+
+      return category
+        ? Buffer.from(category.replace(/\\u0026/, '&')).toString('utf-8')
+        : category;
+    } catch (error) {
+      console.error('Error fetching page:', error);
+      return null;
+    }
   }
 }
