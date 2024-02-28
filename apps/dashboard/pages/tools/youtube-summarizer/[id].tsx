@@ -55,6 +55,8 @@ export interface Metadata {
   publishedAt: string;
   channelTitle: string;
   liveBroadcastContent: string;
+  category?: string;
+  keywords?: string[];
 }
 
 export type SummaryPageProps = LLMTaskOutput & {
@@ -145,6 +147,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
             videoThumbnail: output?.metadata?.thumbnails?.high?.url,
           })
         )}`}
+        keywords={output?.metadata?.keywords?.join(', ')}
       />
 
       <Stack

@@ -65,7 +65,9 @@ export const createYoutubeSummary = async (
     req?.session?.roles?.includes?.('SUPERADMIN');
 
   // const videoSnippet = await Youtube.getVideoSnippetById(videoId!);
-  const category = await YoutubeApi.getVideoCategory(videoId);
+  const { category, keywords } = await YoutubeApi.getVideoMetadataFromHTML(
+    videoId
+  );
   const metadata = await YoutubeApi.getVideoMetadataWithoutApiKeys(videoId);
 
   if (!metadata?.title) {
@@ -189,6 +191,7 @@ export const createYoutubeSummary = async (
       output: {
         metadata: {
           category,
+          keywords,
           title: metadata.title,
           thumbnails: {
             high: {

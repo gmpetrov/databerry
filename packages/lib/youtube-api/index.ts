@@ -221,7 +221,13 @@ export default class YoutubeApi {
     return groups;
   }
 
-  static async getVideoCategory(videoId: string) {
+  static async getVideoHTML(videoId: string) {
+    const url = `https://www.youtube.com/watch?v=${videoId}`;
+    const { data } = await axios.get(url);
+    return data;
+  }
+
+  static async _getVideoCategory(html: string) {
     // Autos & Vehicles
     // Comedy
     // Education
@@ -238,10 +244,8 @@ export default class YoutubeApi {
     // Sports
     // Travel & Events
 
-    const url = `https://www.youtube.com/watch?v=${videoId}`;
     try {
-      const { data } = await axios.get(url);
-      const $ = load(data);
+      const $ = load(html);
       const scripts = $('script');
       let category = null as string | null;
 
@@ -263,5 +267,35 @@ export default class YoutubeApi {
       console.error('Error fetching page:', error);
       return null;
     }
+  }
+
+  static async getVideoCategory(videoId: string) {
+    const html = await YoutubeApi.getVideoHTML(videoId);
+    return YoutubeApi._getVideoCategory(html);
+  }
+
+  static async _getVideoKeywords(html: string) {
+    try {
+      const $ = load(html);
+
+      return ($('meta[name="keywords"]').attr('content') || '').split(',');
+    } catch (error) {
+      console.error('Error fetching page:', error);
+      return [];
+    }
+  }
+
+  static async getVideoKeywords(videoId: string) {
+    const html = await YoutubeApi.getVideoHTML(videoId);
+    return YoutubeApi._getVideoKeywords(html);
+  }
+
+  static async getVideoMetadataFromHTML(videoId: string) {
+    const html = await YoutubeApi.getVideoHTML(videoId);
+
+    const category = await YoutubeApi._getVideoCategory(html);
+    const keywords = await YoutubeApi._getVideoKeywords(html);
+
+    return { category, keywords };
   }
 }
