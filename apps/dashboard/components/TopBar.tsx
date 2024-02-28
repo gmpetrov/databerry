@@ -1,5 +1,5 @@
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { Box, Button, Link, Stack, Typography } from '@mui/joy';
+import { Alert, Box, Button, Link, Stack, Typography } from '@mui/joy';
 
 import ColorSchemeToggle from './Layout/ColorSchemeToggle';
 import Header from './Layout/Header';
@@ -32,41 +32,40 @@ export default function TopBar(props: Props) {
           <ColorSchemeToggle />
         </Box>
       </Header>
-      <Box
-        sx={(t) => ({
-          mx: 'auto',
-          background: t.palette.primary.softBg,
+      <Alert
+        sx={{
           width: '100%',
           justifyContent: 'center',
-          display: 'flex',
-        })}
-        color="warning"
+          flex: 1,
+          p: 1,
+          alignItems: 'center',
+        }}
+        color="primary"
+        variant="soft"
       >
-        <Stack direction={'row'} sx={{ alignItems: 'center', p: 0.5 }} gap={2}>
-          <Typography
-            level="body-md"
-            sx={(t) => ({ color: t.palette.text.secondary })}
+        <Typography
+          level="body-md"
+          // sx={(t) => ({ color: t.palette.text.secondary })}
+        >
+          <Typography color="primary" sx={{ fontStyle: 'italic' }}>
+            <strong>NEW</strong>
+          </Typography>{' '}
+          Train a custom GPT Chatbot on YouTube videos
+        </Typography>
+        <Link
+          target="_blank"
+          href={`https://app.chaindesk.ai/agents?utm_source=landing_page&utm_medium=tool&utm_campaign=youtube_summarizer`}
+        >
+          <Button
+            size="sm"
+            sx={{ borderRadius: '100px' }}
+            variant="solid"
+            endDecorator={<ArrowForwardRoundedIcon />}
           >
-            <Typography color="primary" sx={{ fontStyle: 'italic' }}>
-              <strong>NEW</strong>
-            </Typography>{' '}
-            Train a custom GPT Chatbot on YouTube videos
-          </Typography>
-          <Link
-            target="_blank"
-            href={`https://app.chaindesk.ai/agents?utm_source=landing_page&utm_medium=tool&utm_campaign=youtube_summarizer`}
-          >
-            <Button
-              size="sm"
-              sx={{ borderRadius: '100px' }}
-              variant="solid"
-              endDecorator={<ArrowForwardRoundedIcon />}
-            >
-              Try Now
-            </Button>
-          </Link>
-        </Stack>
-      </Box>
+            Try Now
+          </Button>
+        </Link>
+      </Alert>
     </>
   );
 }
