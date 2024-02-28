@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.243"></a>
+## 0.1.243 (2024-02-28)
+
+### Fixed
+
+- 🐛 banner style [[b3b14fd](https://github.com/gmpetrov/databerry/commit/b3b14fd19cae79307407f59af3f46fac135b716e)]
+
+### Miscellaneous
+
+- 🎸 extract yt video keywords [[92f38f5](https://github.com/gmpetrov/databerry/commit/92f38f5f3990ccbe06b69e4b1d7a4b2ea5954a14)]
+
+
 <a name="0.1.242"></a>
 ## 0.1.242 (2024-02-27)
 
