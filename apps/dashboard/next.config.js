@@ -132,6 +132,10 @@ const nextConfig = {
           destination: '/api/tools/youtube-summary/sitemap/:index',
         },
         {
+          source: '/api/tools/youtube-summary/sitemap/:slug(.*).xml',
+          destination: '/api/tools/youtube-summary/sitemap/:slug',
+        },
+        {
           source: '/blog',
           destination: 'https://chaindesk-blog.vercel.app/blog',
         },

@@ -33,6 +33,7 @@ import PoweredByCard from '@app/components/PoweredByCard';
 import SEO from '@app/components/SEO';
 import TopBar from '@app/components/TopBar';
 
+import { youtubeSummaryTool } from '@chaindesk/lib/config';
 import slugify from '@chaindesk/lib/slugify';
 import {
   fetcher,
@@ -44,12 +45,9 @@ import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
 import { LLMTaskOutput, Prisma } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
-import { getLatestVideos } from '../../../api/tools/youtube-summary';
 import { SummaryPageProps } from '../[id]';
 
 type FormType = z.infer<typeof YoutubeSummarySchema>;
-
-const PAGE_SIZE = 100;
 
 export default function Youtube(props: {
   items: LLMTaskOutput[];
@@ -313,7 +311,8 @@ export default function Youtube(props: {
                     </Button>
                   </Link>
                 )}
-                {Math.ceil(props.total / PAGE_SIZE) > page + 1 && (
+                {Math.ceil(props.total / youtubeSummaryTool.paginationLimit) >
+                  page + 1 && (
                   <Link
                     href={`/tools/youtube-summarizer/all/${page + 1}`}
                     // style={{ marginLeft: 'auto', marginRight: 'auto' }}
@@ -382,8 +381,8 @@ export async function getStaticProps({
           not: Prisma.AnyNull,
         },
       },
-      skip: Number(page) * PAGE_SIZE,
-      take: PAGE_SIZE,
+      skip: Number(page) * youtubeSummaryTool.paginationLimit,
+      take: youtubeSummaryTool.paginationLimit,
       orderBy: {
         createdAt: 'desc',
       },

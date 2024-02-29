@@ -65,6 +65,7 @@ export const apiUrl = 'https://api.chaindesk.ai';
 
 export const youtubeSummaryTool = {
   sitemapPageSize: 1000,
+  paginationLimit: 100,
 };
 
 export default config;
