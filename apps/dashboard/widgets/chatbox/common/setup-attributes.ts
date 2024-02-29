@@ -33,8 +33,6 @@ const setupAttributes = (
   }
 
   if (props.styles) {
-    console.log('before', props.styles);
-    console.log('after', JSON.stringify(props.styles));
     props.element.setAttribute('styles', JSON.stringify(props.styles));
   }
 

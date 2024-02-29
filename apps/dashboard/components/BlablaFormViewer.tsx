@@ -256,7 +256,20 @@ function BlablaFormViewer({ formId, config }: Props) {
                 {currentField?.type !== 'multiple_choice' && (
                   <Input
                     autoFocus
-                    className="p-0 w-full text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
+                    sx={{
+                      p: 0,
+                      width: '100%',
+                      fontSize: '2.25rem',
+                      fontWeight: '600',
+                      textAlign: 'left',
+                      backgroundColor: 'transparent',
+                      border: 0,
+                      boxShadow: 'none',
+                      outline: 'none',
+                      '&::before': {
+                        boxShadow: 'none',
+                      },
+                    }}
                     placeholder="Type your answer"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
