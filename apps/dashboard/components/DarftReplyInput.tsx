@@ -41,9 +41,7 @@ interface MenuSection {
 }
 
 enum ActionsSystemPrompt {
-  grammar = `Analyze the text for grammatical correctness, identify any issues with punctuation, sentence structure, verb tenses, 
-  and word usage. Provide a grammatically correct  version of the text, ensuring that it maintains the original meaning and context intended by the user.
-  However,and this is important, if the text is already grammatically correct and there are no issues to fix, please return the original text to me without any modifications or comments on its correctness..`,
+  grammar = `Check for grammatical errors and correct them if any are found, send back the same user query without doing anything.`,
   summarize = `The user has provided detailed text that needs to be made more concise. Extract the key points and main ideas
    from the text. Create a succinct summary that captures the essence of the message but is significantly shorter in length. 
    The summary should be clear, coherent, and retain all critical information.`,
