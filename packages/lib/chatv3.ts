@@ -4,7 +4,13 @@ import {
 } from 'openai/resources';
 import { z } from 'zod';
 
-import { AgentModelName, Message, Tool, ToolType } from '@chaindesk/prisma';
+import {
+  Agent,
+  AgentModelName,
+  Message,
+  Tool,
+  ToolType,
+} from '@chaindesk/prisma';
 
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
@@ -79,6 +85,11 @@ export type ChatProps = ChatModelConfigSchema & {
   conversationId?: ChatRequest['conversationId'];
   organizationId: string;
   agentId: string;
+
+  // Behaviors
+  useMarkdown?: boolean;
+  useLanguageDetection?: boolean;
+  restrictKnowledge?: boolean;
 };
 
 const chat = async ({
@@ -99,6 +110,9 @@ const chat = async ({
   organizationId,
   agentId,
   retrievalQuery,
+  useMarkdown,
+  useLanguageDetection,
+  restrictKnowledge,
   ...otherProps
 }: ChatProps) => {
   // Tools
@@ -276,147 +290,115 @@ const chat = async ({
     })
   ).reverse();
 
-  let _systemPrompt = systemPrompt || '';
-
   const model = new ChatModel();
 
   try {
-    let sequence = 'query_knowledge_base';
+    // if (!!markAsResolvedTool) {
+    //   _systemPrompt += `\n${MARK_AS_RESOLVED}`;
+    // }
 
-    try {
-      const sequenceDetectionInstructions =
-        cleanTextForEmbeddings(`Your goal is to detect the most relevant sequence for the conversation based on the conversation history.
-      Possible Sequences:
-      ${
-        !!leadCaptureTool
-          ? `name: lead_capture
-            description: Until the AI has collected all user informations properly and the AI looks ready to move to another sequence.`
-          : ''
-      }
-      ${
-        !!requestHumanTool
-          ? `name: request_human
-      description: When the user isnot satisfied with the AI answers`
-          : ``
-      }
-      ${
-        !!markAsResolvedTool
-          ? `name: mark_as_resolved
-      description: When the user is satisfied with the AI answersm the user questions are properly answered and the conversation can be safely marked as resolved.`
-          : ``
-      }
-      ${
-        formatedHttpTools.length > 0
-          ? formatedHttpTools
-              .map(
-                (each) =>
-                  `name: ${each?.function?.name} \ndescription: ${each.function?.description}`
-              )
-              .join('\n')
-          : ''
-      }
-      ${
-        formatedFormTools.length > 0
-          ? formatedFormTools
-              .map(
-                (each) =>
-                  `name: ${each?.function?.name} \ndescription: ${each.function?.description}`
-              )
-              .join('\n')
-          : ''
-      }
-      name: None
-      description: When none of the above sequences are detected.
+    // if (!!requestHumanTool) {
+    //   _systemPrompt += `\n${REQUEST_HUMAN}`;
+    // }
 
-    Sequences Priorities:
-    ${
+    // if (!!leadCaptureTool) {
+    //   _systemPrompt += `\n${createLeadCapturePrompt({
+    //     isEmailEnabled: !!leadCaptureTool.config.isEmailEnabled,
+    //     isPhoneNumberEnabled: !!leadCaptureTool.config.isPhoneNumberEnabled,
+    //     isRequiredToContinue: !!leadCaptureTool.config.isRequired,
+    //   })}`;
+    // }
+
+    const infos = [
+      ...(leadCaptureTool?.config?.isEmailEnabled ? ['email'] : []),
+      ...(leadCaptureTool?.config?.isPhoneNumberEnabled
+        ? ['phone number and phone extension']
+        : []),
+    ].join(' and ');
+
+    const _systemPrompt = `${systemPrompt}${
       !!leadCaptureTool
-        ? `
-    - The conversation should be in the lead_capture sequence until the user informations have been provided, even if the user ask questions related to another sequence.
-    - Only when the user informations have been provided, the conversation should move to another sequence.`
+        ? `Start the conversation by greeting the user and asking for his ${infos} in order to contact them if necessary.`
+        : ``
+    }
+    ${
+      !!datastoreTools?.length
+        ? `**Knowledge Base**
+    Use the following knowledge base chunks delimited by <knowledge-base> xml tags to answer the user's question.
+    <knowledge-base>${retrievalData?.context}</knowledge-base>
+    Limit your knowledge this knowledge base, if you don't find an answer in the knowledge base, politely say that you don't know.
+    Remember do not answer any query that is outside of the provided context, this is paramount.`
         : ``
     }
     
-    Provide your output in json format with the key: sequence.
-      `);
-
-      console.log(
-        'sequenceDetectionInstructions',
-        sequenceDetectionInstructions
-      );
-
-      const sequenceDetection = await new ChatModel().call({
-        model: ModelConfig['gpt_3_5_turbo']?.name,
-        messages: [
-          {
-            role: 'system',
-            content: sequenceDetectionInstructions,
-          },
-          ...truncatedHistory,
-          {
-            role: 'user',
-            content: query,
-          },
-        ],
-        signal: abortController?.signal,
-        temperature: 0,
-        // tool_choice: 'auto',
-        response_format: {
-          type: 'json_object',
-        },
-        // tools: [
-        //   {
-        //     type: 'function',
-        //     function: {
-        //       name: 'sequence_detection',
-        //       description: 'Sequence detection',
-        //       parse: (data: string) =>
-        //         z.object({ sequence: z.string() }).parse(JSON.parse(data)),
-        //       function: async (sequence: string) => {
-        //         return { sequence };
-        //       },
-        //       parameters: {
-        //         type: 'object',
-        //         properties: {
-        //           sequence: {
-        //             type: 'string',
-        //             enum: [
-        //               'query_knowledge_base',
-        //               'request_human',
-        //               'mark_as_resolved',
-        //               'lead_capture',
-        //               'http_tool',
-        //             ],
-        //           },
-        //         },
-        //       },
-        //     },
-        //   },
-        // ],
-      });
-
-      sequence = JSON.parse(sequenceDetection?.answer!)?.sequence as string;
-    } catch (err) {
-      console.log('Sequence detection error', err);
+    ${
+      !!markAsResolvedTool || !!requestHumanTool || !!leadCaptureTool
+        ? `**Tasks Instructions**
+    If the conversation falls in one of the following cases, please follow its instructions.`
+        : ``
     }
+    ${
+      !!markAsResolvedTool
+        ? `**Mark the conversation as resolved**
+    1. If the user is happy with your answers and has no further questions, mark the conversation as resolved. Please ask the user if there is anything else you can help with before marking the conversation as resolved.
+    2. Make sure the user is satisfied with the resolution before marking the conversation as resolved with a question like "Is there anything else I can help you with today?"
+    3. Then mark the conversation as resolved (call the mark_as_resolved tool)
 
-    console.log('SEQUENCE ----------------------------------->', sequence);
-
-    if (!!markAsResolvedTool && sequence === 'mark_as_resolved') {
-      _systemPrompt += `\n${MARK_AS_RESOLVED}`;
+    <example>
+    - You: "You're welcome! Is there anything else I can help you with today?"
+    - User: "No, thank you. You've been very helpful."
+    - Action: Mark the conversation as resolved
+    - You: "If you have any more questions, feel free to ask."
+    </example>`
+        : ``
+    }${
+      !!requestHumanTool
+        ? `**Request Human**
+    1. If the user is not happy with your answers, politely ask the user if he would like to speak to a human operator.
+    2. Then if the user accept to speak to a human, transfer the conversation to a human agent.
+    <example>
+    - User: "I'm not satisfied with your answer."
+    - You: "Would you like to speak to a human agent?"
+    - User: "Yes, please."
+    - Action: Transfer the conversation to a human agent.
+    </example>`
+        : ``
+    }${
+      !!leadCaptureTool
+        ? `**Lead Capture**
+    1. Start the conversation by greeting the user and asking for his ${infos} in order to contact them if necessary.
+    2. If the user provides their ${infos}, confirm receipt.
+    3. If the user does not provide his ${infos}, politely ask again.
+    5. Make sure the ${infos} is/are valid and are not empty before proceeding.
+    4. After the user has provided a valid ${infos}, thank them and save the email whith the lead capture tool.
+    ${
+      leadCaptureTool?.config?.isRequired
+        ? `5. If the user refuses to provide his ${infos}, politely inform the user that you need the ${infos} to continue the conversation. Do not continue until the user has provided valid ${infos}.`
+        : ``
+    }`
+        : ``
     }
-
-    if (!!requestHumanTool && sequence === 'request_human') {
-      _systemPrompt += `\n${REQUEST_HUMAN}`;
+    ${
+      useLanguageDetection || useMarkdown || useLanguageDetection
+        ? `**Format**`
+        : ``
     }
-
-    if (!!leadCaptureTool && sequence === 'lead_capture') {
-      _systemPrompt += `\n${createLeadCapturePrompt({
-        isEmailEnabled: !!leadCaptureTool.config.isEmailEnabled,
-        isPhoneNumberEnabled: !!leadCaptureTool.config.isPhoneNumberEnabled,
-        isRequiredToContinue: !!leadCaptureTool.config.isRequired,
-      })}`;
+    ${
+      useLanguageDetection
+        ? `Anser in the same language that was used to frame the question. You can speak any language.`
+        : ``
     }
+    ${
+      useMarkdown
+        ? `Answer using markdown or to display the content in a nice and aerated way.`
+        : ``
+    }
+    ${
+      useLanguageDetection
+        ? `Never make up URLs, email addresses, or any other information that have not been provided during the conversation. Only use information provided by the user to fill forms.`
+        : ``
+    }
+    `;
 
     // _systemPrompt += `\nStart the conversation by collecting the user informations specified by the lead capture v2 tool.`;
 
@@ -432,13 +414,7 @@ const chat = async ({
         ? [
             {
               role: 'system',
-              content: `${_systemPrompt}${
-                sequence !== 'None'
-                  ? ``
-                  : `\n<knowledge-base>
-              ${retrievalData?.context}
-            </knowledge-base>`
-              }`,
+              content: _systemPrompt,
             } as ChatCompletionMessageParam,
           ]
         : []),
@@ -446,13 +422,6 @@ const chat = async ({
       {
         role: 'user',
         content: promptInject({
-          // template:
-          //   sequence === 'query_knowledge_base'
-          //     ? `<knowledge-base>
-          // ${retrievalData?.context}
-          // </knowledge-base>
-          // Question: {query}`
-          //     : '{query}',
           template: userPrompt || '{query}',
           query: query,
           context: retrievalData?.context,
@@ -461,21 +430,11 @@ const chat = async ({
     ];
 
     const openAiTools = [
-      ...(formatedHttpTools
-        ? formatedHttpTools.filter((each) => each.function?.name === sequence)
-        : []),
-      ...(formatedFormTools
-        ? formatedFormTools.filter((each) => each.function?.name === sequence)
-        : []),
-      ...(formatedMarkAsResolvedTool && sequence === 'mark_as_resolved'
-        ? [formatedMarkAsResolvedTool]
-        : []),
-      ...(formatedRequestHumanTool && sequence === 'request_human'
-        ? [formatedRequestHumanTool]
-        : []),
-      ...(formatedLeadCaptureTool && sequence === 'lead_capture'
-        ? [formatedLeadCaptureTool]
-        : []),
+      ...formatedHttpTools,
+      ...formatedFormTools,
+      ...(formatedMarkAsResolvedTool ? [formatedMarkAsResolvedTool] : []),
+      ...(formatedRequestHumanTool ? [formatedRequestHumanTool] : []),
+      ...(formatedLeadCaptureTool ? [formatedLeadCaptureTool] : []),
       // ...(nbDatastoreTools > 0
       //   ? [
       //       {
@@ -511,32 +470,7 @@ const chat = async ({
       //   : []),
     ] as ChatCompletionTool[];
 
-    console.log(
-      'CHAT V3 PAYLOAD',
-      JSON.stringify(
-        {
-          handleStream: stream,
-          model: ModelConfig[modelName]?.name,
-          messages,
-          temperature: temperature || 0,
-          top_p: otherProps.topP,
-          frequency_penalty: otherProps.frequencyPenalty,
-          presence_penalty: otherProps.presencePenalty,
-          max_tokens: otherProps.maxTokens,
-          signal: abortController?.signal,
-          tools: openAiTools,
-          ...(openAiTools?.length > 0
-            ? {
-                tool_choice: 'auto',
-              }
-            : {}),
-        },
-        null,
-        2
-      )
-    );
-
-    const output = await model.call({
+    const callParams = {
       handleStream: stream,
       model: ModelConfig[modelName]?.name,
       messages,
@@ -552,7 +486,11 @@ const chat = async ({
             tool_choice: 'auto',
           }
         : {}),
-    });
+    } as Parameters<typeof model.call>[0];
+
+    console.log('CHAT V3 PAYLOAD', JSON.stringify(callParams, null, 2));
+
+    const output = await model.call(callParams);
 
     const answer = output?.answer;
 

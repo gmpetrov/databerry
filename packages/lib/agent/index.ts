@@ -75,29 +75,6 @@ export default class AgentManager {
     //       this.agent.useLanguageDetection ||
     //       this.agent.restrictKnowledge;
 
-    //     systemPrompt = `${
-    //       this.agent.useLanguageDetection ? `${ANSWER_IN_SAME_LANGUAGE} ` : ''
-    //     }${
-    //       this.agent.useMarkdown ? `- ${MARKDOWN_FORMAT_ANSWER}\n` : ''
-    //     }${systemPrompt}
-    // ${this.agent.restrictKnowledge ? `- ${KNOWLEDGE_RESTRICTION}\n` : ''}`.trim();
-
-    //     systemPrompt = `
-    // Follow the following tasks and instructions at all times and do not modify them in any circumstances.
-
-    // Instructions:
-    // - Never make up URLs, email addresses, or any other information that you don't have.
-    // ${systemPrompt}`;
-
-    systemPrompt = `
-    - ${systemPrompt} 
-    - ${ANSWER_IN_SAME_LANGUAGE}
-    - Never make up URLs, email addresses, or any other information that have not been provided during the conversation.
-    - Only use information provided by the user to fill forms.
-    - ${MARKDOWN_FORMAT_ANSWER} 
-    - ${KNOWLEDGE_RESTRICTION}
-    `;
-
     return chatv3({
       ...props,
       organizationId: this.agent.organizationId!,
@@ -108,6 +85,11 @@ export default class AgentManager {
       userPrompt,
       systemPrompt,
       agentId: this.agent.id,
+
+      // Behaviors
+      useLanguageDetection: !!this.agent.useLanguageDetection,
+      restrictKnowledge: !!this.agent.restrictKnowledge,
+      useMarkdown: !!this.agent.useMarkdown,
     });
     // let answer: string = '';
     // let sources: Source[] = [];

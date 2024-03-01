@@ -146,6 +146,16 @@ export default function ModelInput({}: Props) {
       <FormControl>
         <FormLabel>Model</FormLabel>
 
+        <Alert
+          startDecorator={<InfoRoundedIcon />}
+          sx={{ mb: 1 }}
+          color="warning"
+        >
+          For better results, consider using gpt-4-turbo as it gives more
+          accurate responses and adheres to prompt instructions more
+          effectively.
+        </Alert>
+
         <Select
           {...register('modelName')}
           defaultValue={modelName || AgentModelName.gpt_3_5_turbo}
@@ -189,7 +199,7 @@ export default function ModelInput({}: Props) {
       <FormControl>
         <FormLabel>Model Temperature</FormLabel>
 
-        <Alert color="neutral">
+        <Alert color="neutral" startDecorator={<InfoRoundedIcon />}>
           Temperature is a parameter of the model that governs the randomness
           and thus the creativity of the responses. A temperature of 0 means the
           responses will be very straightforward, almost deterministic (meaning
