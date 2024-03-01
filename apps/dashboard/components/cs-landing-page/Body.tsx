@@ -42,7 +42,7 @@ type Props = {
 function Body({ hero2 }: Props) {
   return (
     <div>
-      <div className="w-full dark:bg-black bg-white  dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex flex-col  ">
+      <div className="w-full dark:bg-black bg-white  dark:bg-grid-white/[0.1] bg-grid-black/[0.2] relative flex flex-col  ">
         <Spotlight
           className="left-0 -top-20 md:left-60 md:top-12"
           fill="white"
