@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.244"></a>
+## 0.1.244 (2024-03-01)
+
+### Miscellaneous
+
+- 🎸 try to improve tool performances [[bace2f2](https://github.com/gmpetrov/databerry/commit/bace2f2e011613d30f53c7b664d2f5e10f157e22)]
+-  add sitemap for yt too &#x27;all/*&#x27; pages [[c155deb](https://github.com/gmpetrov/databerry/commit/c155deb2f1ee316c2c831fb77d0c0ecc7887c5d7)]
+-  1: with sequence detection model [[6e1f49c](https://github.com/gmpetrov/databerry/commit/6e1f49c61ae3c70a404444d0c7de73224e176ae9)]
+
+
 <a name="0.1.243"></a>
 ## 0.1.243 (2024-02-28)
 
