@@ -18,9 +18,7 @@ export const KNOWLEDGE_RESTRICTION = `You will be provided with information from
 export const ANSWER_IN_SAME_LANGUAGE = `Deliver your response in the same language that was used to frame the question. You are able to speak any language.`;
 // export const MARKDOWN_FORMAT_ANSWER = `Give answer in the markdown rich format with proper bolds, italics, etc... as per heirarchy and readability requirements.`;
 export const MARKDOWN_FORMAT_ANSWER = `Give answer using markdown or any other techniques to display the content in a nice and aerated way.`;
-export const MARK_AS_RESOLVED = `
-Task: Mark the conversation as resolved
-Description: Use the following step-by-step instructions delimited by triple quotes to determine when to mark the conversation as resolved.
+export const MARK_AS_RESOLVED = `Objective: Mark the conversation as resolved
 """
 - If the user is happy with your answers and has no further questions, mark the conversation as resolved. Please ask the user if there is anything else you can help with before marking the conversation as resolved.
 - Make sure the user is satisfied with the resolution before marking the conversation as resolved with a question like "Is there anything else I can help you with today?"
@@ -34,8 +32,7 @@ Example:
 """
 `;
 export const REQUEST_HUMAN = `
-Task: Request Human
-Description: Use the following step-by-step instructions delimited by triple quotes to request a human when the user is not satisfied with your answer.
+Objective: Request Human
 """
 - If the user shows signs of dissatisfaction, politely ask the user if he would like to speak to a human.
 - If the user agrees to speak to a human, transfer the conversation to a human agent.

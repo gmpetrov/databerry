@@ -34,18 +34,6 @@ export const chatAgentRequest = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  console.log(
-    'Cloudflare location headers ------->',
-    JSON.stringify({
-      'cf-ipcity': req.headers['cf-ipcity'],
-      'cf-ipcountry': req.headers['cf-ipcountry'],
-      'cf-region': req.headers['cf-region'],
-      'cf-region-code': req.headers['cf-region-code'],
-      'cf-postal-code': req.headers['cf-postal-code'],
-      'cf-timezone': req.headers['cf-timezone'],
-      'cf-ipcontinent': req.headers['cf-ipcontinent'],
-    })
-  );
   const session = req.session;
   const id = req.query.id as string;
   const data = req.body as ChatRequest;
