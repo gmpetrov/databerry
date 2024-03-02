@@ -1,0 +1,42 @@
+{
+  "name": "lp",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start",
+    "dotenv": "dotenv -e ../../.env.local",
+    "lint": "npm run dotenv -- next lint -- --fix",
+    "typecheck": "npm run dotenv -- tsc --noemit"
+  },
+  "dependencies": {
+    "@chaindesk/lib": "workspace:*",
+    "@chaindesk/prisma": "workspace:*",
+    "@chaindesk/ui": "workspace:*",
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.1.1",
+    "@types/node": "18.15.10",
+    "@types/react": "18.0.29",
+    "@types/react-dom": "^18.2.17",
+    "clsx": "^2.1.0",
+    "framer-motion": "^11.0.8",
+    "next": "14.0.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "swiper": "^11.0.7",
+    "tailwind-merge": "^2.2.1",
+    "typescript": "5.0.2"
+  },
+  "devDependencies": {
+    "@chaindesk/tsconfig": "workspace:*",
+    "eslint-config-custom": "workspace:*",
+    "@next/bundle-analyzer": "^13.3.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.16",
+    "dotenv-cli": "^7.1.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6"
+  }
+}

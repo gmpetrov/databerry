@@ -30,7 +30,7 @@
   "devDependencies": {
     "@chaindesk/tsconfig": "workspace:*",
     "@types/react": "18.0.29",
-    "@types/react-dom": "18.0.11",
+    "@types/react-dom": "^18.2.17",
     "eslint-config-custom": "workspace:*",
     "react": "18.2.0",
     "typescript": "5.0.2"
