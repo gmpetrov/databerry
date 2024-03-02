@@ -504,12 +504,63 @@ const chat = async ({
       }),
     };
 
+    let followupQuestions = [] as string[];
+
+    try {
+      const followup = await model.call({
+        signal: abortController?.signal,
+        model: ModelConfig['gpt_3_5_turbo']?.name,
+        temperature: 0,
+        response_format: {
+          type: 'json_object',
+        },
+        messages: [
+          {
+            role: 'system',
+            content: `Your role is too suggest up to 3 short followup questions based on data contained in the provided knowledge base context delimited by the <knowledge-base> tags. 
+            Use the knowledge base context to suggest relevant followup questions.
+            The followup questions should be short and to the point.
+          Output a JSON array of maximum 3 strings.
+          <example>
+          {
+            questions: ["Capital of France?", "Population of France?", "Currency of France?"]
+          }
+          </example>
+  
+          <knowledge-base>${retrievalData.context}</knowledge-base>
+          `,
+          },
+          {
+            role: 'user',
+            content: query,
+          },
+          {
+            role: 'assistant',
+            content: answer,
+          },
+          {
+            role: 'user',
+            content: 'output: ',
+          },
+        ],
+      });
+      console.log('followup', followup?.answer);
+
+      followupQuestions = (
+        JSON.parse(followup?.answer!)?.questions as string[]
+      )?.map((each) => each.trim());
+    } catch (err) {
+      console.error('Error while fetching followup questions', err);
+    }
+    console.log('TEST------------>', followupQuestions);
+
     return {
       answer,
       usage,
       sources: retrievalData?.sources || [],
       approvals,
       metadata,
+      followupQuestions,
     } as ChatResponse;
   } catch (err: any) {
     if (err?.message?.includes('ToolApprovalRequired')) {

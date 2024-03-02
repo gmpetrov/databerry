@@ -287,6 +287,7 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
       approvals: chatRes.approvals,
       metadata: chatRes.metadata,
       agentId: agent?.id,
+      followupQuestions: chatRes.followupQuestions,
     });
 
     if (chatRes.approvals.length > 0) {

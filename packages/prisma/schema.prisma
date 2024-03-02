@@ -396,6 +396,7 @@ model Message {
   conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   sources        Json?
+  // followupQuestions Json? @map("followup_questions")
 
   usage          Json?
 

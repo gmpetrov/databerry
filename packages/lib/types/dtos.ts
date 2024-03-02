@@ -535,6 +535,7 @@ export const ChatResponse = z.object({
   visitorId: z.string().optional(),
   messageId: z.string().cuid(),
   metadata: z.record(z.string(), z.unknown()).optional(),
+  followupQuestions: z.array(z.string()).optional(),
   usage: z
     .object({
       completionTokens: z.number(),
