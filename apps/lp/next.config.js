@@ -145,7 +145,7 @@ const nextConfig = {
         },
         {
           source: '/@:path',
-          destination: '/agents/@:path/standalone',
+          destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/@:path/standalone`,
         },
         {
           source: '/privacy',
