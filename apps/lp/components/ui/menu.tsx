@@ -17,7 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Fragment } from 'react';
 
-import products from '@/utils/products.json';
+import products from '@chaindesk/lib/data/products';
 
 const solutions = [
   ...products

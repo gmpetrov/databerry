@@ -1,4 +1,4 @@
-import { ImageResponse } from '@vercel/og';
+import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 export const config = {
   runtime: 'edge',
@@ -12,12 +12,12 @@ const JoseinSansBoldFontP = fetch(
   new URL('../../../public/fonts/JosefinSans-Bold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer());
 
-export default async function handler(request: NextRequest) {
+export async function GET(request: Request) {
   const [JoseinSansRegularFont, JoseinSansBoldFont] = await Promise.all([
     JoseinSansRegularFontP,
     JoseinSansBoldFontP,
   ]);
-  const { searchParams } = request.nextUrl;
+  const { searchParams } = new URL(request.url);
   let state = JSON.parse(searchParams.get('state') || '{}') as {
     title: string;
     channelThumbnail: string;

@@ -12,18 +12,18 @@ export default function Header() {
         <div className="mx-auto max-w-3xl">
           <div className="flex items-center justify-between h-14 border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] rounded-lg px-3">
             {/* Site branding */}
-            <div className="inline-flex items-center mr-4 space-x-2 shrink-0">
+            <Link
+              className="inline-flex items-center mr-4 space-x-2 shrink-0"
+              href="/"
+            >
               {/* Logo */}
-              <Link
-                className="flex justify-center items-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20"
-                href="/"
-              >
+              <div className="flex justify-center items-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20">
                 <Image src={Logo} width={24} height={24} alt="Logo" />
-              </Link>
+              </div>
               <span className="text-lg font-bold font-bricolage-grotesque">
                 Chaindesk
               </span>
-            </div>
+            </Link>
 
             {/* Desktop navigation */}
             <nav className="flex grow">
