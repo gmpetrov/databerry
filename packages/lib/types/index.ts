@@ -3,9 +3,11 @@ import { Session } from 'next-auth';
 import type { Logger } from 'pino';
 import { ReactElement, ReactNode } from 'react';
 
+import { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
 import {
   Agent,
   Conversation,
+  LLMTaskOutput,
   Message,
   ServiceProvider,
   ServiceProviderType,
@@ -111,3 +113,36 @@ export type AppEvent =
         credentials: ServiceProvider;
       };
     };
+
+export interface Thumbnail {
+  url: string;
+  width: number;
+  height: number;
+}
+
+export interface Metadata {
+  title: string;
+  channelId: string;
+  thumbnails: {
+    high: Thumbnail;
+    medium: Thumbnail;
+    default: Thumbnail;
+  };
+  description: string;
+  publishTime: string;
+  publishedAt: string;
+  channelTitle: string;
+  liveBroadcastContent: string;
+  category?: string;
+  keywords?: string[];
+}
+
+export type SummaryPageProps = LLMTaskOutput & {
+  output: {
+    ['en']: Schema & {
+      videoSummary?: string;
+    };
+  } & {
+    metadata: Metadata;
+  };
+};

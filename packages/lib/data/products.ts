@@ -7,12 +7,14 @@ export default [
       'Train a chatbot with your data. Copy/Paste your HTML snippet to go live! Your chatbot is automatically retrained when your data changes.',
     metadata: {
       title: 'Chat Bubble - Chaindesk: Train Your Chatbot in Minutes',
+      description: '',
     },
     logo: '/app-logo-icon.png',
     cta: {
       label: 'Create Your AI Chatbot',
       url: 'https://app.chaindesk.ai/agents',
     },
+    keywords: ['ChatGPT Chatbot For Your Website'],
 
     youtubeVideoId: '-NkVS2l66Zs',
     features: [

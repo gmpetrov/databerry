@@ -1,3 +1,6 @@
+'use client';
+import React from 'react';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import EastRoundedIcon from '@mui/icons-material/EastRounded';
@@ -19,20 +22,18 @@ import {
 import { LLMTaskOutputType } from '@prisma/client';
 import axios, { AxiosError } from 'axios';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+// import { useRouter } from 'next/router';
+
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
-
-import Input from '@app/components/Input';
-import { Footer } from '@app/components/landing-page/Footer';
-import PoweredByCard from '@app/components/PoweredByCard';
-import SEO from '@app/components/SEO';
-import TopBar from '@app/components/TopBar';
-
+import Input from '@chaindesk/ui/Input';
+// import { Footer } from '@app/components/landing-page/Footer';
+// import PoweredByCard from '@app/components/PoweredByCard';
+// import SEO from '@app/components/SEO';
+// import TopBar from '@app/components/TopBar';
 import slugify from '@chaindesk/lib/slugify';
 import {
   fetcher,
@@ -43,13 +44,15 @@ import { SummaryPageProps } from '@chaindesk/lib/types';
 import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
 import { Prisma } from '@chaindesk/prisma';
+import prisma from '@chaindesk/prisma/client';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 
-import { getLatestVideos } from '../../api/tools/youtube-summary';
+type Props = {};
 
 type FormType = z.infer<typeof YoutubeSummarySchema>;
 
-export default function Youtube() {
-  const { mode, systemMode, setMode } = useColorScheme();
+function YoutubeSummarizerForm({}: Props) {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = React.useState(false);
   const { control, register, handleSubmit, formState } = useForm<FormType>({
@@ -57,39 +60,32 @@ export default function Youtube() {
     resolver: zodResolver(YoutubeSummarySchema),
   });
 
-  const apiUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
-
-  const getLatestVideosQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getLatestVideos>
-  >(`${apiUrl}/api/tools/youtube-summary`, fetcher);
+  // const getLatestVideosQuery = useSWR<
+  //   Prisma.PromiseReturnType<typeof getLatestVideos>
+  // >(`${apiUrl}/api/tools/youtube-summary`, fetcher);
 
   const summaryMutation = useSWRMutation(
-    `${apiUrl}/api/tools/youtube-summary`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/tools/youtube-summary`,
     generateActionFetcher(HTTP_METHOD.POST)
   );
 
-  const onSubmit = async (payload: FormType) => {
+  const onSubmit = async (payload: any) => {
     try {
       const response = await summaryMutation.trigger({
         ...payload,
       });
-
       const videoId = payload.url.match(YOUTUBE_VIDEO_URL_RE)?.[1];
-
-      const videoUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/tools/youtube-summarizer/${videoId}`;
-
+      const videoUrl = `${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/tools/youtube-summarizer/${videoId}`;
       if (response?.externalId) {
         router.push(videoUrl);
       } else {
         setIsProcessing(true);
-
         await new Promise((resolve, reject) => {
           const interval = setInterval(async () => {
             try {
               const res = await axios.get(
-                `${apiUrl}/api/tools/youtube-summary/${videoId}`
+                `${process.env.NEXT_PUBLIC_API_URL}/api/tools/youtube-summary/${videoId}`
               );
-
               if (res.data) {
                 router.push(videoUrl);
                 resolve(true);
@@ -105,17 +101,14 @@ export default function Youtube() {
     } catch (err) {
       if (err instanceof AxiosError) {
         const msg = err?.response?.data;
-
         if (msg) {
           let text = msg;
-
           if (msg?.includes?.('RATE_LIMIT')) {
             text = 'Rate limit exceeded! Please try again in few minutes.';
           }
           return toast.error(JSON.stringify(text));
         }
       }
-
       toast.error('An error occurred. Please try again in few minutes.');
     } finally {
       setIsProcessing(false);
@@ -126,14 +119,25 @@ export default function Youtube() {
 
   return (
     <>
-      <SEO
+      {/* <SEO
         title="Free AI Youtube Video Summarizer"
         description="Generate YouTube video summaries instantly for free with AI"
         uri={router.asPath}
         ogImage={`https://www.chaindesk.ai/api/og/youtube-summary`}
-      />
-      <Stack sx={{ width: '100vw', minHeight: '100vh' }}>
-        <TopBar href="https://www.chaindesk.ai/?utm_source=landing_page&utm_medium=tool&utm_campaign=youtube_summarizer" />
+      /> */}
+      <motion.div
+        className="w-full h-full"
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: {
+            opacity: 1,
+            y: 0,
+          },
+        }}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* <TopBar href="https://www.chaindesk.ai/?utm_source=landing_page&utm_medium=tool&utm_campaign=youtube_summarizer" /> */}
 
         <Stack
           sx={{
@@ -145,22 +149,22 @@ export default function Youtube() {
             alignItems: 'center',
           }}
         >
-          <Stack sx={{ width: 'md', maxWidth: '100%', mt: 20 }} spacing={4}>
+          <Stack sx={{ width: 'md', maxWidth: '100%' }} spacing={4}>
             <Stack spacing={1}>
-              <Typography
-                sx={{ textAlign: 'center', fontStyle: 'italic' }}
-                level="h2"
-                color="neutral"
+              <span
+                // level="h2"
+                className="text-3xl font-bold text-center text-pink-400 font-caveat"
               >
                 Free
-              </Typography>
-              <Typography
-                sx={{ textAlign: 'center', fontWeight: 'bold' }}
-                level="display1"
-                color="primary"
+              </span>
+              <h1
+                // sx={{ textAlign: 'center', fontWeight: 'bold' }}
+                // level="h1"
+                // color="primary"
+                className="pb-4 text-5xl font-extrabold text-center text-transparent font-bricolage-grotesque md:text-7xl text-zinc-800"
               >
                 AI YouTube Summarizer
-              </Typography>
+              </h1>
             </Stack>
             <form
               onSubmit={handleSubmit(onSubmit)}
@@ -189,7 +193,7 @@ export default function Youtube() {
                           loading={isLoading}
                           size="lg"
                           sx={{ borderRadius: '20px' }}
-                          endDecorator={<EastRoundedIcon fontSize="md" />}
+                          endDecorator={<EastRoundedIcon />}
                         >
                           Summarize
                         </Button>
@@ -228,7 +232,7 @@ export default function Youtube() {
             </form>
           </Stack>
 
-          {(getLatestVideosQuery?.data?.length || 0) > 0 && (
+          {/* {(summaries?.length || 0) > 0 && (
             <Stack sx={{ mt: 10, width: '100%' }} spacing={2}>
               <Typography level="body-lg" sx={{ textAlign: 'center' }}>
                 Latest Video Summaries
@@ -310,8 +314,8 @@ export default function Youtube() {
                 </Link>
               </Stack>
             </Stack>
-          )}
-
+          )} */}
+          {/* 
           <PoweredByCard
             sx={{
               mt: 10,
@@ -320,10 +324,11 @@ export default function Youtube() {
               maxWidth: 'md',
               mb: 20,
             }}
-          />
+          /> */}
         </Stack>
-        <Footer />
-      </Stack>
+      </motion.div>
     </>
   );
 }
+
+export default YoutubeSummarizerForm;

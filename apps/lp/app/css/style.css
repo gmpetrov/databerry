@@ -1,3 +1,7 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 
@@ -6,3 +10,4 @@
 @import 'additional-styles/theme.css';
 
 @import 'tailwindcss/utilities';
+@import './preflight.css';

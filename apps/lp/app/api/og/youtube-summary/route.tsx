@@ -4,19 +4,19 @@ export const config = {
   runtime: 'edge',
 };
 
-const JoseinSansRegularFontP = fetch(
-  new URL('../../../public/fonts/JosefinSans-Regular.ttf', import.meta.url)
-).then((res) => res.arrayBuffer());
+// const JoseinSansRegularFontP = fetch(
+//   new URL('../../../public/fonts/JosefinSans-Regular.ttf', import.meta.url)
+// ).then((res) => res.arrayBuffer());
 
-const JoseinSansBoldFontP = fetch(
-  new URL('../../../public/fonts/JosefinSans-Bold.ttf', import.meta.url)
-).then((res) => res.arrayBuffer());
+// const JoseinSansBoldFontP = fetch(
+//   new URL('../../../public/fonts/JosefinSans-Bold.ttf', import.meta.url)
+// ).then((res) => res.arrayBuffer());
 
 export async function GET(request: Request) {
-  const [JoseinSansRegularFont, JoseinSansBoldFont] = await Promise.all([
-    JoseinSansRegularFontP,
-    JoseinSansBoldFontP,
-  ]);
+  // const [JoseinSansRegularFont, JoseinSansBoldFont] = await Promise.all([
+  //   JoseinSansRegularFontP,
+  //   JoseinSansBoldFontP,
+  // ]);
   const { searchParams } = new URL(request.url);
   let state = JSON.parse(searchParams.get('state') || '{}') as {
     title: string;
@@ -61,16 +61,16 @@ export async function GET(request: Request) {
       width: 600,
       height: 315,
       fonts: [
-        {
-          name: 'Josefin Sans',
-          data: JoseinSansRegularFont,
-          weight: 400,
-        },
-        {
-          name: 'Josefin Sans',
-          data: JoseinSansBoldFont,
-          weight: 700,
-        },
+        // {
+        //   name: 'Josefin Sans',
+        //   data: JoseinSansRegularFont,
+        //   weight: 400,
+        // },
+        // {
+        //   name: 'Josefin Sans',
+        //   data: JoseinSansBoldFont,
+        //   weight: 700,
+        // },
       ],
     }
   );

@@ -1,5 +1,7 @@
+// import './css/globals.css';
 import './css/style.css';
 
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { Metadata } from 'next';
 import {
   Bricolage_Grotesque,
@@ -8,6 +10,8 @@ import {
   Inter_Tight,
 } from 'next/font/google';
 import Script from 'next/script';
+
+import ThemeRegistry from '@chaindesk/ui/src/ThemeRegistry';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -64,24 +68,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Script
-        id="chaindesk-agent"
-        type="module"
-        dangerouslySetInnerHTML={{
-          __html: `import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
-          
-          Chatbox.initBubble({
-            agentId: 'clq6g5cuv000wpv8iddswwvnd',
-          });`,
-        }}
-      />
-      <body
-        className={`${inter.variable} ${inter_tight.variable} ${bricolage.variable} ${caveat.variable} font-inter antialiased bg-white text-zinc-900 tracking-tight relative`}
-      >
-        <div className="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip">
-          {children}
-        </div>
-      </body>
+      <ThemeRegistry>
+        <body
+          id="__next"
+          className={`${inter.variable} ${inter_tight.variable} ${bricolage.variable} ${caveat.variable} font-inter antialiased bg-white text-zinc-900 tracking-tight relative`}
+        >
+          <div className="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip">
+            {children}
+          </div>
+          {process.env.NEXT_PUBLIC_GA_ID && (
+            <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+          )}
+        </body>
+      </ThemeRegistry>
     </html>
   );
 }

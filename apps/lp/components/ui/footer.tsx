@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import products from '@chaindesk/lib/data/products';
+
 import Logo from '@/public/images/logo.png';
 
 export default function Footer() {
@@ -109,46 +111,16 @@ export default function Footer() {
           <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
             <h6 className="mb-2 text-sm font-medium text-zinc-800">Products</h6>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  About us
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Diversity & Inclusion
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Financial statements
-                </a>
-              </li>
+              {products.map((product) => (
+                <li key={product?.slug}>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href={`/products/${product?.slug}`}
+                  >
+                    {product?.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">

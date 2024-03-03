@@ -1,8 +1,8 @@
+'use client';
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
-import IosShareRoundedIcon from '@mui/icons-material/IosShareRounded';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import {
   AspectRatio,
   Box,
@@ -12,29 +12,22 @@ import {
   IconButton,
   Stack,
   Typography,
-  useColorScheme,
 } from '@mui/joy';
-import { LLMTaskOutput } from '@prisma/client';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import superjson from 'superjson';
-import useSWRMutation from 'swr/mutation';
 
-import PoweredByCard from '@app/components/PoweredByCard';
-import SEO from '@app/components/SEO';
-import TopBar from '@app/components/TopBar';
-import useConfetti from '@app/hooks/useConfetti';
-import useStateReducer from '@app/hooks/useStateReducer';
-
-import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
 import { SummaryPageProps } from '@chaindesk/lib/types';
 import writeClipboard from '@chaindesk/lib/write-clipboard';
 import prisma from '@chaindesk/prisma/client';
+import useConfetti from '@chaindesk/ui/hooks/useConfetti';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
+
+import PromoAlert from './promo-alert';
 
 var entities = {
   amp: '&',
@@ -55,22 +48,14 @@ function decodeHTMLEntities(text: string): string {
   });
 }
 
-// function decodeHTMLEntities(str: string) {
-//   if (typeof window === 'undefined') {
-//     return str;
-//   }
-//   let txt = document.createElement('textarea');
+type Props = {
+  summary: SummaryPageProps;
+};
 
-//   txt.innerHTML = str;
-
-//   return txt.value;
-// }
-
-export default function SummaryPage({ output }: SummaryPageProps) {
-  const { mode } = useColorScheme();
+export default function YoutubeSummary({ summary }: Props) {
+  // const router = useRouter();
+  // const { data: session } = useSession();
   const router = useRouter();
-  const { data: session } = useSession();
-  const videoId = router.query.id?.slice(-11) as string;
   const [state, setState] = useStateReducer({
     isBannerOpen: false,
     currentChapter: 0,
@@ -82,41 +67,25 @@ export default function SummaryPage({ output }: SummaryPageProps) {
     triggerConfetti();
   }, []);
 
+  // const summaryMutation = useSWRMutation(
+  //   `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/tools/youtube-summary?refresh=true`,
+  //   generateActionFetcher(HTTP_METHOD.POST),
+  //   {
+  //     onSuccess: () => {
+  //       window.location.reload();
+  //     },
+  //   }
+  // );
+
+  const output = summary?.output;
   const content = output[lang];
-
-  const summaryMutation = useSWRMutation(
-    `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/tools/youtube-summary?refresh=true`,
-    generateActionFetcher(HTTP_METHOD.POST),
-    {
-      onSuccess: () => {
-        window.location.reload();
-      },
-    }
-  );
-
   const title = decodeHTMLEntities(output?.metadata?.title);
-
+  console.log(
+    'content.chapters[state.currentChapter]',
+    content.chapters[state.currentChapter]
+  );
   return (
     <>
-      <TopBar href="/tools/youtube-summarizer" />
-      <SEO
-        title={`${title} | AI YouTube Summary | Chaindesk`}
-        description={
-          content?.videoSummary ||
-          'Generate YouTube video summaries instantly for free with AI'
-        }
-        uri={router.asPath}
-        ogImage={`https://www.chaindesk.ai/api/og/youtube-summary?state=${encodeURIComponent(
-          JSON.stringify({
-            title,
-            // TODO: Do we really want another call in the youtubeApi Class for this ?
-            channelThumbnail: output?.metadata?.thumbnails?.high?.url,
-            videoThumbnail: output?.metadata?.thumbnails?.high?.url,
-          })
-        )}`}
-        keywords={output?.metadata?.keywords?.join(', ')}
-      />
-
       <Stack
         direction="column"
         spacing={4}
@@ -126,57 +95,50 @@ export default function SummaryPage({ output }: SummaryPageProps) {
         }}
         className={clsx('container relative mx-auto max-w-6xl scroll-smooth')}
       >
-        <AspectRatio
-          objectFit="cover"
-          sx={{
-            // height: '200px',
-            overflow: 'hidden',
-            borderRadius: 'xl',
-          }}
-        >
-          <img src={output?.metadata?.thumbnails?.high?.url} />
-        </AspectRatio>
-        <Box>
-          {output?.metadata?.publishedAt && (
-            <Typography level="body-sm">
-              Published{' '}
-              {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
-              Youtube
-            </Typography>
-          )}
+        <PromoAlert />
 
-          <Stack
-            direction="row"
-            sx={{ justifyContent: 'space-between', alignItems: 'start' }}
-            gap={1}
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'flex-start', alignItems: 'center' }}
+          gap={2}
+        >
+          <IconButton
+            variant="outlined"
+            sx={{ borderRadius: '20px' }}
+            onClick={router.back}
+            size="sm"
           >
-            <Typography level="h3">{title}</Typography>
-            <Stack direction="row" gap={1}>
-              <IconButton
-                variant="outlined"
-                sx={{ borderRadius: '20px' }}
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: `AI YouTube Summary: ${title}`,
-                      text: output?.metadata?.title,
-                      url: window.location.href,
-                    });
-                  } else if (navigator.clipboard) {
-                    writeClipboard({
-                      content: window.location.href,
-                    });
-                  }
-                }}
-              >
-                <ContentCopyRoundedIcon />
-                {/* {!!navigator?.share ? (
+            <ChevronLeftRoundedIcon />
+          </IconButton>
+          <Typography level="h1" sx={{ mr: 'auto' }}>
+            {title}
+          </Typography>
+          <Stack direction="row" gap={1}>
+            <IconButton
+              variant="outlined"
+              sx={{ borderRadius: '20px' }}
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: `AI YouTube Summary: ${title}`,
+                    text: output?.metadata?.title,
+                    url: window.location.href,
+                  });
+                } else if (navigator.clipboard) {
+                  writeClipboard({
+                    content: window.location.href,
+                  });
+                }
+              }}
+            >
+              <ContentCopyRoundedIcon />
+              {/* {!!navigator?.share ? (
                 <IosShareRoundedIcon />
                 ) : (
                 )} */}
-              </IconButton>
+            </IconButton>
 
-              {session?.roles?.includes?.('SUPERADMIN') && (
+            {/* {session?.roles?.includes?.('SUPERADMIN') && (
                 <IconButton
                   color="danger"
                   variant="outlined"
@@ -190,9 +152,32 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 >
                   <RefreshIcon />
                 </IconButton>
-              )}
-            </Stack>
+              )} */}
           </Stack>
+        </Stack>
+        <AspectRatio
+          objectFit="cover"
+          sx={{
+            // height: '200px',
+            overflow: 'hidden',
+            borderRadius: 'xl',
+          }}
+        >
+          {/* <img src={output?.metadata?.thumbnails?.high?.url} /> */}
+          <iframe
+            src={`https://www.youtube.com/embed/${summary?.externalId}?controls=1`}
+            allowFullScreen
+            className="w-full h-auto"
+          />
+        </AspectRatio>
+        <Box>
+          {output?.metadata?.publishedAt && (
+            <Typography level="body-sm">
+              Published{' '}
+              {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
+              Youtube
+            </Typography>
+          )}
 
           {/* <Box mt={1}>
             {content.thematics.map((tag, i) => (
@@ -212,7 +197,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 Summary
               </Typography>
               <ReactMarkdown
-                className="min-w-full text-gray-700 prose dark:prose-invert dark:text-gray-300"
+                className="min-w-full text-zinc-600 prose"
                 remarkPlugins={[remarkGfm]}
               >
                 {content.videoSummary}
@@ -242,12 +227,12 @@ export default function SummaryPage({ output }: SummaryPageProps) {
               </ol>
             </Box>
           </Box>
-          <Box className="relative pt-10 w-full">
+          <Stack className="relative items-start pt-10 w-full">
             {content.chapters.map(({ title, summary }, index) => (
               <Stack
                 direction="row"
                 key={index}
-                justifyContent="flex-end"
+                justifyContent="flex-start"
                 className="flex justify-start space-x-6 space-y-6 w-full"
               >
                 {/* fix anchor hidden by header */}
@@ -267,7 +252,7 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 <Box className="spac-y-4">
                   <Typography level="title-lg">{title}</Typography>
                   <ReactMarkdown
-                    className="min-w-full text-gray-700 prose dark:text-gray-300"
+                    className="min-w-full text-zinc-500 prose"
                     remarkPlugins={[remarkGfm]}
                   >
                     {decodeHTMLEntities(summary)}
@@ -275,29 +260,33 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 </Box>
               </Stack>
             ))}
-          </Box>
+          </Stack>
         </Stack>
 
-        <PoweredByCard
+        {/* <PoweredByCard
           sx={{
             mt: 10,
             py: 8,
             width: '100%',
           }}
-        />
+        /> */}
       </Stack>
 
       {state.isBannerOpen && (
-        <Stack
-          sx={(theme) => ({
-            // Overlay the header.
-            zIndex: 1101,
-            background: theme.palette.background.tooltip,
-            p: 2,
-            justifyContent: 'center',
-            alignItems: 'center',
-          })}
-          className="fixed flex justify-center  inset-0 md:bottom-0 md:top-auto  w-full h-screen md:h-[250px] "
+        <motion.div
+          // sx={(theme) => ({
+          //   // Overlay the header.
+          //   zIndex: 1101,
+          //   // background: theme.palette.background.tooltip,
+          //   p: 2,
+          //   justifyContent: 'center',
+          //   alignItems: 'center',
+          // })}
+          style={{ zIndex: 1101 }}
+          className="fixed flex justify-center inset-0 md:bottom-0 md:top-auto  w-full h-screen md:h-[250px] bg-zinc-900"
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ bounce: 0, duration: 0.2 }}
         >
           <Box className="absolute top-4 right-4">
             <IconButton
@@ -314,11 +303,14 @@ export default function SummaryPage({ output }: SummaryPageProps) {
           <Stack
             gap={3}
             className="container mx-auto w-full max-w-5xl md:h-full md:flex-row"
+            direction="row"
           >
             <Box>
               {/* Turn timecode to seconds */}
               <iframe
-                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&start=${content.chapters[
+                src={`https://www.youtube.com/embed/${
+                  summary?.externalId
+                }?autoplay=1&mute=0&controls=1&start=${content.chapters[
                   state.currentChapter
                 ].offset?.replace('s', '')}`}
                 // .split(':')
@@ -328,64 +320,20 @@ export default function SummaryPage({ output }: SummaryPageProps) {
                 className="min-h-[400px] sm:min-h-[200px] sm:h-full w-full md:w-[500px]  md:rounded-xl"
               />
             </Box>
-            <Box className="flex flex-col justify-start self-center space-y-3 w-full text-white">
-              <Typography level="h3" className="text-white">
+            <Box className="flex flex-col justify-start self-center space-y-3 w-full text-red-500">
+              <Typography level="h3" className="!text-zinc-100">
                 {content.chapters[state.currentChapter].title}
               </Typography>
               <ReactMarkdown
-                className="min-w-full text-white"
+                className="min-w-full text-zinc-200"
                 remarkPlugins={[remarkGfm]}
               >
                 {content.chapters[state.currentChapter].summary}
               </ReactMarkdown>
             </Box>
           </Stack>
-        </Stack>
+        </motion.div>
       )}
     </>
   );
-}
-
-export async function getStaticPaths() {
-  const all: string[] = [];
-
-  return {
-    paths: all.map((path) => {
-      return { params: { site: path } };
-    }),
-    fallback: 'blocking',
-  };
-}
-
-export async function getStaticProps({
-  params: { id },
-}: {
-  params: {
-    id: string;
-  };
-}) {
-  const externalId = id.slice(-11) as string;
-  const llmTaskOutput = await prisma.lLMTaskOutput.findUnique({
-    where: {
-      unique_external_id: {
-        externalId: externalId,
-        type: 'youtube_summary',
-      },
-    },
-  });
-
-  if (!llmTaskOutput) {
-    return {
-      redirect: {
-        destination: `/tools/youtube-summarizer`,
-      },
-    };
-  }
-
-  return {
-    props: {
-      output: superjson.serialize(llmTaskOutput.output).json || null,
-    },
-    revalidate: 3600,
-  };
 }

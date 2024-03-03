@@ -1,3 +1,5 @@
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,6 +10,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        sans: ['var(--font-sans)', ...fontFamily.sans],
         inter: ['var(--font-inter)', 'sans-serif'],
         'inter-tight': ['var(--font-bricolage-grotesque)', 'sans-serif'],
         'bricolage-grotesque': [
@@ -46,5 +49,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  corePlugins: {
+    preflight: false,
+  },
+  // important: '#__next',
 };
