@@ -385,7 +385,7 @@ const chat = async ({
     }
     ${
       useLanguageDetection
-        ? `Anser in the same language that was used to frame the question. You can speak any language.`
+        ? `Answer in the same language that was used to frame the question. You can speak any language.`
         : ``
     }
     ${
@@ -394,7 +394,7 @@ const chat = async ({
         : ``
     }
     ${
-      useLanguageDetection
+      restrictKnowledge
         ? `Never make up URLs, email addresses, or any other information that have not been provided during the conversation. Only use information provided by the user to fill forms.`
         : ``
     }

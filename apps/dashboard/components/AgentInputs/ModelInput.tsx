@@ -132,12 +132,22 @@ export default function ModelInput({}: Props) {
     'simple' | 'advanced'
   >('advanced');
 
-  const modelName = watch('modelName');
-  const temperature = watch('temperature');
-  const systemPrompt = watch('systemPrompt');
-  const restrictKnowledge = watch('restrictKnowledge');
-  const useMarkdown = watch('useMarkdown');
-  const useLanguageDetection = watch('useLanguageDetection');
+  const [
+    modelName,
+    temperature,
+    systemPrompt,
+    restrictKnowledge,
+    useMarkdown,
+    useLanguageDetection,
+  ] = watch([
+    'modelName',
+    'temperature',
+    'systemPrompt',
+    'restrictKnowledge',
+    'useMarkdown',
+    'useLanguageDetection',
+  ]);
+
   // const prompt = watch('prompt');
   // const promptType = watch('promptType');
 
