@@ -300,12 +300,8 @@ export default function YoutubeSummary({ summary }: Props) {
               <CloseRoundedIcon />
             </IconButton>
           </Box>
-          <Stack
-            gap={3}
-            className="container mx-auto w-full max-w-5xl md:h-full md:flex-row"
-            direction="row"
-          >
-            <Box>
+          <div className="container flex flex-col p-4 mx-auto space-y-4 w-full max-w-5xl md:h-full md:flex-row md:space-x-4">
+            <Box className="w-full">
               {/* Turn timecode to seconds */}
               <iframe
                 src={`https://www.youtube.com/embed/${
@@ -331,7 +327,7 @@ export default function YoutubeSummary({ summary }: Props) {
                 {content.chapters[state.currentChapter].summary}
               </ReactMarkdown>
             </Box>
-          </Stack>
+          </div>
         </motion.div>
       )}
     </>
