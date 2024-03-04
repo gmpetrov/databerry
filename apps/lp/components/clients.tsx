@@ -73,7 +73,7 @@ export default function Clients() {
           >
             {/* Carousel built with Swiper.js [https://swiperjs.com/] */}
             {/* * Custom styles in src/css/additional-styles/theme.scss */}
-            <div className="relative clients-carousel swiper-container before:absolute before:inset-0 before:w-32 before:z-10 before:pointer-events-none before:bg-gradient-to-r before:from-white after:absolute after:inset-0 after:left-auto after:w-32 after:z-10 after:pointer-events-none after:bg-gradient-to-l after:from-white">
+            <div className="relative clients-carousel swiper-container before:absolute before:inset-0 before:w-32 before:z-10 before:pointer-events-none after:absolute after:inset-0 after:left-auto after:w-32 after:z-10 after:pointer-events-none before:bg-gradient-to-r before:from-white after:bg-gradient-to-l after:from-white">
               <div className="swiper-wrapper !ease-linear select-none items-center">
                 {/* Carousel items */}
                 <div className="swiper-slide !w-auto">

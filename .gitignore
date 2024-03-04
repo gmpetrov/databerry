@@ -66,3 +66,4 @@ docker/data
 
 # Copied integration images
 apps/dashboard/public/integrations
+apps/dashboard/public/shared

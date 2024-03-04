@@ -4,7 +4,7 @@ export default [
     name: 'Chat with PDFs via Chaindesk: Unlock Document Insights',
     description:
       'Chat with any PDF using Chaindesk. Easily upload your PDFs, create a Datastore, and start getting summaries or finding information. Always in sync.',
-    logo: '/images/chat-assistant-logo.png',
+    logo: '/shared/images/logo/chat-assistant.png',
     CTA: 'Upload a PDF',
     youtubeVideoId: '_n3VQM9N3-Q',
     disabledFromMenu: true,
@@ -57,7 +57,7 @@ export default [
     name: 'Chat with Powerpoint',
     description:
       'Chat with any Powerpoint document, ask questions, get summaries, find information, and more.',
-    logo: '/images/chat-assistant-logo.png',
+    logo: '/shared/images/logo/chat-assistant.png',
     CTA: 'Upload a Powerpoint',
     youtubeVideoId: '_n3VQM9N3-Q',
     disabledFromMenu: true,
@@ -89,7 +89,7 @@ export default [
     name: 'Chat with Word',
     description:
       'Chat with any Word document, ask questions, get summaries, find information, and more.',
-    logo: '/images/chat-assistant-logo.png',
+    logo: '/shared/images/logo/chat-assistant.png',
     CTA: 'Upload a Document',
     youtubeVideoId: '_n3VQM9N3-Q',
     disabledFromMenu: true,

@@ -33,6 +33,7 @@ module.exports = {
         '7xl': ['4.5rem', { lineHeight: '1.1666', letterSpacing: '-0.017em' }],
       },
       animation: {
+        spotlight: 'spotlight 2s ease .75s 1 forwards',
         'infinite-scroll': 'infinite-scroll 60s linear infinite',
         'infinite-scroll-inverse':
           'infinite-scroll-inverse 60s linear infinite',
@@ -45,6 +46,16 @@ module.exports = {
         'infinite-scroll-inverse': {
           from: { transform: 'translateX(-100%)' },
           to: { transform: 'translateX(0)' },
+        },
+        spotlight: {
+          '0%': {
+            opacity: 0,
+            transform: 'translate(-72%, -62%) scale(0.5)',
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translate(-50%,-40%) scale(1)',
+          },
         },
       },
     },

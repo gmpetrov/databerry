@@ -2,7 +2,7 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-import products from '@chaindesk/lib/data/products';
+import integrations from '@chaindesk/lib/data/integrations';
 
 import Clients from '@/components/clients';
 import Cta from '@/components/cta';
@@ -13,8 +13,10 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-const getProduct = (slug: string) => {
-  const product = products.find((p) => p.slug === slug) as (typeof products)[0];
+const getIntegration = (slug: string) => {
+  const product = integrations.find(
+    (p) => p.slug === slug
+  ) as (typeof integrations)[0];
 
   return product;
 };
@@ -24,7 +26,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const prev = await parent;
-  const product = getProduct(params.slug);
+  const product = getIntegration(params.slug);
 
   if (!product) {
     return {};
@@ -42,16 +44,16 @@ export async function generateMetadata(
       [...(product?.keywords || []), prev?.keywords]?.join(', ') || ''
     }`,
     alternates: {
-      canonical: `/products/${product?.slug}`,
+      canonical: `/integrations/${product?.slug}`,
     },
   };
 }
 type PageProps = {
-  product: (typeof products)[0];
+  product: (typeof integrations)[0];
 };
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
-  const product = getProduct(params.slug);
+  const product = getIntegration(params.slug);
 
   if (!product) {
     redirect('/');

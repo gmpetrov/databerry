@@ -156,6 +156,35 @@ const nextConfig = {
               );
             },
           },
+          {
+            from: '../../packages/integrations/**/static/**',
+            globOptions: {
+              ignore: ['**/integrations/node_modules'],
+            },
+            to({ context, absoluteFilename }) {
+              // Adds compatibility for windows path
+              if (os.platform() === 'win32') {
+                const absoluteFilenameWin = absoluteFilename.replaceAll(
+                  '\\',
+                  '/'
+                );
+                const contextWin = context.replaceAll('\\', '/');
+                const appName = /integrations\/(.*)\/static/.exec(
+                  absoluteFilenameWin
+                );
+                return Promise.resolve(
+                  `${contextWin}/public/integrations/${appName[1]}/[name][ext]`
+                );
+              }
+              const appName = /integrations\/(.*)\/static/.exec(
+                absoluteFilename
+              );
+
+              return Promise.resolve(
+                `${context}/public/integrations/${appName[1]}/[name][ext]`
+              );
+            },
+          },
         ],
       })
     );

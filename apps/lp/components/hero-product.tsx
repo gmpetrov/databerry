@@ -25,6 +25,7 @@ export default function Hero(props: {
     label: string;
     url?: string;
   };
+  imageUrl?: string;
   youtubeVideoId?: string;
 }) {
   const childTextVariants = makeVariants({
@@ -162,7 +163,8 @@ export default function Hero(props: {
           </div>
         </div>
         {/* Image */}
-        {props.youtubeVideoId && (
+
+        {(props.youtubeVideoId || props.imageUrl) && (
           <motion.div
             className="max-w-6xl mx-auto px-4 sm:px-6 flex justify-center relative before:absolute before:-top-12 before:w-96 before:h-96 before:bg-zinc-900 before:opacity-[.15] before:rounded-full before:blur-3xl before:-z-10"
             variants={makeVariants({
@@ -184,7 +186,22 @@ export default function Hero(props: {
             alt="Hero"
             priority
           /> */}
-            {
+
+            {/* https://www.youtube.com/watch?v=-NkVS2l66Zs */}
+
+            {props.imageUrl && (
+              // <div className="overflow-hidden border-b-2 border-solid border-b-zinc-900">
+              // <div className="overflow-hidden before:absolute before:inset-0 before:w-full before:z-10 before:pointer-events-none before:bg-gradient-to-t before:from-white">
+              <img
+                src={props.imageUrl}
+                alt="Product Screenshot"
+                className="w-full h-auto rounded-3xl"
+              />
+              // </div>
+              // </div>
+            )}
+
+            {props.youtubeVideoId && (
               <iframe
                 //   className="w-full h-[300px] rounded-2xl"
                 //   width="560"
@@ -194,8 +211,7 @@ export default function Hero(props: {
                 frameBorder="0"
                 allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               ></iframe>
-            }
-            {/* https://www.youtube.com/watch?v=-NkVS2l66Zs */}
+            )}
           </motion.div>
         )}
 

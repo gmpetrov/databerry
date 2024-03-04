@@ -1,3 +1,4 @@
+import integrations from '@chaindesk/lib/data/integrations';
 import products from '@chaindesk/lib/data/products';
 
 export async function GET(req: Request) {
@@ -8,6 +9,7 @@ export async function GET(req: Request) {
     // '/pricing',
     `/tools/youtube-summarizer`,
     ...products.map((product) => `/products/${product.slug}`),
+    ...integrations.map((product) => `/integrations/${product.slug}`),
   ].map((each) => `${baseUrl}${each}`);
 
   // generate sitemap here

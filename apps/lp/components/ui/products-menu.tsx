@@ -21,7 +21,7 @@ import products from '@chaindesk/lib/data/products';
 
 const solutions = [
   ...products
-    .filter((each) => !each.disabledFromMenu)
+    // .filter((each) => !each.disabledFromMenu)
     .map((product) => ({
       name: product.name,
       description: product.description,
@@ -124,8 +124,8 @@ const callsToAction = [
 export default function Example() {
   return (
     <Popover className="relative">
-      <Popover.Button className="flex items-center px-3 py-2 text-sm font-medium transition text-zinc-500 hover:text-zinc-900 lg:px-5 focus:outline-none">
-        <span>Solutions</span>
+      <Popover.Button className="flex items-center py-2 text-sm font-medium transition text-zinc-500 hover:text-zinc-900 focus:outline-none">
+        <span>Products</span>
         <ChevronDownIcon className="w-5 h-5" aria-hidden="true" />
       </Popover.Button>
 
