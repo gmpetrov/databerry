@@ -12,27 +12,27 @@ export default function TestimonialBadge({}: Props) {
         <div className="flex isolate overflow-hidden -space-x-2">
           <img
             className="inline-block relative z-30 w-10 h-10 rounded-full ring-2 ring-white"
-            src="https://media.licdn.com/dms/image/D4E03AQFhkQdAeTflUA/profile-displayphoto-shrink_400_400/0/1700006633108?e=1715212800&v=beta&t=WhycjUjh6spNYVmgi_Hur5NE6esfg3UIpzFkDdd64n4"
+            src="/images/testimonial-01.jpg"
             alt=""
           />
           <img
             className="inline-block relative z-20 w-10 h-10 rounded-full ring-2 ring-white"
-            src="https://pbs.twimg.com/profile_images/774501651273089024/JLZIRlxx_400x400.jpg"
+            src="/images/testimonial-02.jpg"
             alt=""
           />
           <img
             className="inline-block relative z-10 w-10 h-10 rounded-full ring-2 ring-white"
-            src="https://media.licdn.com/dms/image/C4D03AQFEqcSwnpjMYw/profile-displayphoto-shrink_800_800/0/1540892341575?e=1715212800&v=beta&t=jq1pF0hMhpRYPOid4b1W5xr6g0ST2n9z2BGoJsPij-M"
+            src="/images/testimonial-03.jpg"
             alt=""
           />
           <img
             className="inline-block relative z-0 w-10 h-10 rounded-full ring-2 ring-white"
-            src="https://media.licdn.com/dms/image/C4D03AQFj_V2TY2tYTQ/profile-displayphoto-shrink_800_800/0/1646860683958?e=1715212800&v=beta&t=RIH47WP9OJXhOY52YOJ4XTrzAj9YqmZL9u8Rj-tSQfw"
+            src="/images/testimonial-04.jpg"
             alt=""
           />
           <img
             className="inline-block relative w-10 h-10 rounded-full ring-2 ring-white -z-10"
-            src="https://media.licdn.com/dms/image/C5603AQFBoo-x9L2gCQ/profile-displayphoto-shrink_800_800/0/1563718250985?e=1715212800&v=beta&t=dldNta1BDhcV1yFm7jb_1CRNXfjZH28NRbmuOvGT2CI"
+            src="/images/testimonial-05.jpg"
             alt=""
           />
         </div>
