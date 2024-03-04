@@ -66,67 +66,33 @@ const nextConfig = {
     return {
       beforeFiles: [
         {
-          source: '/',
-          destination: '/use-cases/customer-support',
-          has: [
-            {
-              type: 'host',
-              value: 'www.resolveai.io',
-            },
-          ],
-        },
-        {
-          source: '/pricing',
-          destination: '/use-cases/customer-support/pricing',
-          has: [
-            {
-              type: 'host',
-              value: 'www.resolveai.io',
-            },
-          ],
-        },
-        {
           source: '/sitemap.xml',
-          destination: '/api/sitemaps/chaindesk',
+          destination: '/api/sitemaps',
           has: [
-            {
-              type: 'host',
-              value: 'www.chaindesk.ai',
-            },
+            ...(process.env.NEXT_PUBLIC_VERCEL_ENV === 'production'
+              ? [
+                  {
+                    type: 'host',
+                    value: 'www.chaindesk.ai',
+                  },
+                ]
+              : []),
           ],
         },
+
         {
-          source: '/sitemap.xml',
-          destination: '/api/sitemaps/chatbotgpt',
-          has: [
-            {
-              type: 'host',
-              value: 'www.chatbotgpt.ai',
-            },
-          ],
+          source: '/api/sitemaps/:slug(.*).xml',
+          destination: '/api/sitemaps/:slug',
         },
-        {
-          source: '/sitemap.xml',
-          destination: '/api/sitemaps/resolveai',
-          has: [
-            {
-              type: 'host',
-              value: 'www.resolveai.io',
-            },
-          ],
-        },
-        {
-          source: '/api/tools/youtube-summary/sitemap.xml',
-          destination: '/api/tools/youtube-summary/sitemap',
-        },
-        {
-          source: '/api/tools/youtube-summary/sitemap/:index(\\d+).xml',
-          destination: '/api/tools/youtube-summary/sitemap/:index',
-        },
-        {
-          source: '/api/tools/youtube-summary/sitemap/:slug(.*).xml',
-          destination: '/api/tools/youtube-summary/sitemap/:slug',
-        },
+
+        // {
+        //   source: '/api/tools/youtube-summary/sitemap/:index(\\d+).xml',
+        //   destination: '/api/tools/youtube-summary/sitemap/:index',
+        // },
+        // {
+        //   source: '/api/tools/youtube-summary/sitemap/:slug(.*).xml',
+        //   destination: '/api/tools/youtube-summary/sitemap/:slug',
+        // },
         {
           source: '/blog',
           destination: 'https://chaindesk-blog.vercel.app/blog',
@@ -155,14 +121,6 @@ const nextConfig = {
           source: '/terms',
           destination: '/terms.pdf',
         },
-        // {
-        //   source: '/.well-known/ai-plugin.json',
-        //   destination: '/api/openai/plugin/ai-plugin-json',
-        // },
-        // {
-        //   source: '/.well-known/openapi.yaml',
-        //   destination: '/api/openai/plugin/openapi-yaml',
-        // },
       ],
     };
   },

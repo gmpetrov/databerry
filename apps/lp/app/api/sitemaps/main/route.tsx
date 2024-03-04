@@ -1,0 +1,27 @@
+import products from '@chaindesk/lib/data/products';
+
+export async function GET(req: Request) {
+  const baseUrl = process.env.NEXT_PUBLIC_LANDING_PAGE_URL as string;
+
+  const paths = [
+    '/',
+    // '/pricing',
+    `/tools/youtube-summarizer`,
+    ...products.map((product) => `/products/${product.slug}`),
+  ].map((each) => `${baseUrl}${each}`);
+
+  // generate sitemap here
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
+
+      ${paths
+        .map(
+          (url) => `<url>
+      <loc>${url}</loc>
+    </url>`
+        )
+        .join('\n')}
+      </urlset>`;
+
+  return new Response(xml, { headers: { 'Content-Type': 'text/xml' } });
+}
