@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import Particles from './ui/particles';
 import Clients from './clients';
+import TestimonialBadge from './testimonial-badge';
 
 import Stats from '@/components/stats';
 import { TextGenerateEffect } from '@/components/ui/TextGenerateEffect';
@@ -185,43 +186,58 @@ export default function Hero() {
                 ></TextGenerateEffect>
               </motion.p>
 
-              <motion.div
-                className="mx-auto space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4"
-                variants={makeVariants({
-                  ...defaultContainerVariants,
-                  visible: {
-                    transition: {
-                      staggerChildren: 0.2,
+              <div className="flex flex-col space-y-6">
+                <motion.div
+                  className="mx-auto space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4"
+                  variants={makeVariants({
+                    ...defaultContainerVariants,
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.2,
+                      },
                     },
-                  },
-                })}
-              >
-                <motion.div
-                  variants={defaultChildVariants}
-                  //  custom={4}
+                  })}
                 >
-                  <div>
-                    <Link
-                      className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
-                      href="https://app.chaindesk.ai/agents"
-                    >
-                      Start for free
-                    </Link>
-                  </div>
-                </motion.div>
-                <motion.div
-                  variants={defaultChildVariants}
-                  //  custom={4.2}
-                >
-                  <a
-                    className="w-full bg-white shadow btn text-zinc-600 hover:text-zinc-900"
-                    href={config.demoBookingURL}
-                    target="_blank"
+                  <motion.div
+                    variants={defaultChildVariants}
+                    //  custom={4}
                   >
-                    Book a Demo
-                  </a>
+                    <div>
+                      <Link
+                        className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
+                        href="https://app.chaindesk.ai/agents"
+                      >
+                        Start for free
+                      </Link>
+                    </div>
+                  </motion.div>
+                  <motion.div
+                    variants={defaultChildVariants}
+                    //  custom={4.2}
+                  >
+                    <a
+                      className="w-full bg-white shadow btn text-zinc-600 hover:text-zinc-900"
+                      href={config.demoBookingURL}
+                      target="_blank"
+                    >
+                      Book a Demo
+                    </a>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
+                {/* <motion.div
+                  variants={{
+                    ...defaultChildVariants,
+                    visible: {
+                      ...defaultChildVariants.visible,
+                      transition: {
+                        delay: 2.5,
+                      },
+                    },
+                  }}
+                >
+                  <TestimonialBadge />
+                </motion.div> */}
+              </div>
             </div>
           </div>
         </div>

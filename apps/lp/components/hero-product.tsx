@@ -7,6 +7,7 @@ import { cn } from '@chaindesk/ui/utils/cn';
 
 import Particles from './ui/particles';
 import Clients from './clients';
+import TestimonialBadge from './testimonial-badge';
 
 import Stats from '@/components/stats';
 import { TextGenerateEffect } from '@/components/ui/TextGenerateEffect';
@@ -29,6 +30,8 @@ export default function Hero(props: {
   };
   imageUrl?: string;
   youtubeVideoId?: string;
+
+  withTestimonialBadge?: boolean;
 
   labelClassName?: string;
   titleClassName?: string;
@@ -137,7 +140,7 @@ export default function Hero(props: {
               {props.cta && (
                 <motion.div
                   className={cn(
-                    'w-full space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4 mx-auto',
+                    'w-full space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4 mx-auto items-center',
                     props.ctaClassName
                   )}
                   variants={makeVariants({
@@ -159,6 +162,11 @@ export default function Hero(props: {
                       {props?.cta?.label}
                     </Link>
                   </motion.div>
+                  {props.withTestimonialBadge && (
+                    <motion.div variants={defaultChildVariants}>
+                      <TestimonialBadge />
+                    </motion.div>
+                  )}
                   {/* <motion.div
                           variants={defaultChildVariants}
                           //  custom={4.2}

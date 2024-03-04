@@ -17,7 +17,9 @@ module.exports = {
           'var(--font-bricolage-grotesque)',
           'sans-serif',
         ],
+        title: ['var(--font-bricolage-grotesque)', 'sans-serif'],
         caveat: ['var(--font-caveat)', 'sans-serif'],
+        label: ['var(--font-caveat)', 'sans-serif'],
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1.5' }],
