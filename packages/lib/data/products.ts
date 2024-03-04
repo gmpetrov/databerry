@@ -1,4 +1,6 @@
-export default [
+import { Product } from '../types';
+
+const items: Product[] = [
   {
     slug: 'ai-chatbot',
     name: 'AI Agent',
@@ -165,3 +167,5 @@ export default [
     ],
   },
 ];
+
+export default items;

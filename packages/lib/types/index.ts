@@ -146,3 +146,29 @@ export type SummaryPageProps = LLMTaskOutput & {
     metadata: Metadata;
   };
 };
+
+export type Product = {
+  slug: string;
+  name: string;
+  title: string;
+  description: string;
+  metadata?: {
+    title?: string;
+    description?: string;
+  };
+  logo: string;
+  cta?: {
+    label: string;
+    url: string;
+  };
+  youtubeVideoId?: string;
+  imageUrl?: string;
+  features?: {
+    name: string;
+    description: string;
+  }[];
+  isChannel?: boolean;
+  isDatasource?: boolean;
+  isComingSoon?: boolean;
+  keywords?: string[];
+};

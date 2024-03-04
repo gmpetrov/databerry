@@ -1,4 +1,6 @@
-export default [
+import { Product } from '../types';
+
+const items: Product[] = [
   // Channels
   {
     slug: 'website',
@@ -18,6 +20,7 @@ export default [
     keywords: ['ChatGPT Chatbot For Your Website'],
 
     youtubeVideoId: '-NkVS2l66Zs',
+    imageUrl: '',
     features: [
       {
         name: 'Just paste your website url',
@@ -132,7 +135,11 @@ export default [
     title: 'Automate Your Crisp Chat with a Custom ChatGPT Agent in Minutes',
     description:
       'Enhance your Crisp experience with a custom AI chatbot. Train on your data in minutes, install the Crisp plugin, and keep your bot synced for optimal performance.',
-    CTA: 'Deploy Bot to Crisp',
+    cta: {
+      label: 'Start for free',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
+
     logo: '/shared/images/logos/crisp.svg',
     youtubeVideoId: 'rLgn1_MWGPM',
     isChannel: true,
@@ -169,7 +176,10 @@ export default [
     description:
       'Connect Chaindesk with over 5,000 apps via Zapier. Train your chatbot in minutes, integrate it seamlessly on your site, and keep your data always in sync.',
     logo: '/shared/images/logos/zapier.png',
-    CTA: 'Create Your Bot',
+    cta: {
+      label: 'Start for free',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
     youtubeVideoId: '-NkVS2l66Zs',
     isChannel: true,
     metadata: {
@@ -227,10 +237,15 @@ export default [
   {
     slug: 'wordpress',
     name: 'Wordpress',
+    title: 'Deploy a Custom GPT Chatbot to Your Wordpress Site in Minutes',
     description:
       'Train a chatbot with your data on Chaindesk platform. Install the Wordpress plugin! Stay updated with auto-sync.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg',
-    CTA: 'Start for free',
+    cta: {
+      label: 'Start for free',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
+
     isChannel: true,
     metadata: {
       title:
@@ -351,7 +366,10 @@ export default [
     description:
       'Easily train your AI with data from your website. Just paste your website URL and we will automatically get your website pages.',
     logo: 'https://www.svgrepo.com/show/197996/internet.svg',
-    CTA: 'Start for free',
+    cta: {
+      label: 'Start for free',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
     isDatasource: true,
     features: [
       {
@@ -373,8 +391,10 @@ export default [
     description:
       'Chat with any Notion notebook using Chaindesk. Easily add a Notion notebook and start getting summaries or finding information.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg',
-    CTA: 'Add a Notion notebook',
-    disabledFromMenu: false,
+    cta: {
+      label: 'Add a Notion notebook',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
     isDatasource: true,
     features: [
       {
@@ -396,8 +416,11 @@ export default [
     description:
       'Chat with any Notion notebook using Chaindesk. Easily add a Notion notebook and start getting summaries or finding information.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg',
-    CTA: 'Start for free',
-    disabledFromMenu: false,
+    cta: {
+      label: 'Connect your Google Drive account',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
+
     isDatasource: true,
     features: [
       {
@@ -424,8 +447,10 @@ export default [
     description:
       'Chat with any YouTube videos using Chaindesk. Easily add a YouTube video, playlist or channek, and start getting summaries or finding information.',
     logo: 'https://www.svgrepo.com/show/13671/youtube.svg',
-    CTA: 'Add a YouTube video',
-    disabledFromMenu: false,
+    cta: {
+      label: 'Add a YouTube video',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
     isDatasource: true,
     features: [
       {
@@ -447,9 +472,11 @@ export default [
     description:
       'Chat with any Powerpoint document, ask questions, get summaries, find information, and more.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Microsoft_Office_PowerPoint_%282019%E2%80%93present%29.svg',
-    CTA: 'Upload a Powerpoint',
+    cta: {
+      label: 'Upload a Powerpoint',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
     youtubeVideoId: '_n3VQM9N3-Q',
-    disabledFromMenu: true,
     isDatasource: true,
     features: [
       {
@@ -481,9 +508,12 @@ export default [
     description:
       'Chat with any Word document, ask questions, get summaries, find information, and more.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fd/Microsoft_Office_Word_%282019%E2%80%93present%29.svg',
-    CTA: 'Upload a Document',
+    cta: {
+      label: 'Upload a Document',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
+
     youtubeVideoId: '_n3VQM9N3-Q',
-    disabledFromMenu: true,
     isDatasource: true,
     features: [
       {
@@ -515,9 +545,11 @@ export default [
     description:
       'Chat with any Word document, ask questions, get summaries, find information, and more.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg',
-    CTA: 'Upload a Document',
+    cta: {
+      label: 'Upload a Document',
+      url: 'https://app.chaindesk.ai/datastores',
+    },
     youtubeVideoId: '_n3VQM9N3-Q',
-    disabledFromMenu: true,
     isDatasource: true,
     features: [
       {
@@ -549,9 +581,7 @@ export default [
     description:
       'Chat with any Word document, ask questions, get summaries, find information, and more.',
     logo: 'https://www.svgrepo.com/show/144578/pdf.svg',
-    CTA: 'Upload a Document',
     youtubeVideoId: '_n3VQM9N3-Q',
-    disabledFromMenu: true,
     isDatasource: true,
     features: [
       {
@@ -577,3 +607,5 @@ export default [
     ],
   },
 ];
+
+export default items;

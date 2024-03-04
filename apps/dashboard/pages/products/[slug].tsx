@@ -95,11 +95,11 @@ export default function ProductPage({ product }: PageProps) {
               sx={{ mt: 5, width: 1, maxWidth: 350 }}
               endDecorator={<ArrowForwardRoundedIcon />}
             >
-              {product.CTA}
+              {product?.cta?.label}
             </Button>
           </Link>
 
-          {product?.demoUrl && (
+          {/* {product?.demoUrl && (
             <Link href={product.demoUrl} className="w-full" target="_blank">
               <Button
                 variant="outlined"
@@ -110,7 +110,7 @@ export default function ProductPage({ product }: PageProps) {
                 Demo
               </Button>
             </Link>
-          )}
+          )} */}
 
           {product.youtubeVideoId && (
             <Box sx={{ width: 1, maxWidth: 800, mt: 8 }}>
@@ -154,7 +154,7 @@ export function PrimaryFeatures(props: {
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
           <dl className="grid grid-cols-1 gap-x-8 gap-y-10 max-w-xl lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-            {props.features.map((feature, idx) => (
+            {props?.features?.map((feature, idx) => (
               <div key={feature.name} className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-100">
                   <Box

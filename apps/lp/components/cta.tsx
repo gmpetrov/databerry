@@ -119,7 +119,7 @@ export default function Features02() {
                       height="1.114"
                       x="-.057"
                       y="-.057"
-                      color-interpolation-filters="sRGB"
+                      colorInterpolationFilters="sRGB"
                     >
                       <feGaussianBlur stdDeviation="3.531" />
                     </filter>

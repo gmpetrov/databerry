@@ -20,16 +20,14 @@ import { Fragment } from 'react';
 import products from '@chaindesk/lib/data/products';
 
 const solutions = [
-  ...products
-    .filter((each) => !each.disabledFromMenu)
-    .map((product) => ({
-      name: product.name,
-      description: product.description,
-      href: `/products/${product.slug}`,
-      icon: (props: any) => (
-        <img {...props} src={product.logo} alt={`${product.name} Logo}`} />
-      ),
-    })),
+  ...products.map((product) => ({
+    name: product.name,
+    description: product.description,
+    href: `/products/${product.slug}`,
+    icon: (props: any) => (
+      <img {...props} src={product.logo} alt={`${product.name} Logo}`} />
+    ),
+  })),
   // {
   //   name: 'Embed Agent on your website',
   //   description:
