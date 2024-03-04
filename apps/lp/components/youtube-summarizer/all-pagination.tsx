@@ -20,6 +20,10 @@ import slugify from '@chaindesk/lib/slugify';
 import { SummaryPageProps } from '@chaindesk/lib/types';
 import { LLMTaskOutput, Prisma } from '@chaindesk/prisma';
 
+import PromoAlert from '../promo-alert';
+
+import YoutubeSummarizerForm from './summarize-form';
+
 export default function Youtube(props: {
   index: number;
   items: LLMTaskOutput[];
@@ -38,7 +42,8 @@ export default function Youtube(props: {
             alignItems: 'center',
           }}
         >
-          <Stack sx={{ width: 'md', maxWidth: '100%' }} spacing={4}>
+          <YoutubeSummarizerForm />
+          {/* <Stack sx={{ width: 'md', maxWidth: '100%' }} spacing={4}>
             <Stack spacing={1}>
               <span className="text-3xl font-bold text-center text-pink-400 font-caveat">
                 Free
@@ -48,6 +53,7 @@ export default function Youtube(props: {
               </h1>
             </Stack>
           </Stack>
+           */}
 
           {(props.items?.length || 0) > 0 && (
             <Stack sx={{ mt: 10, width: '100%' }} spacing={2}>

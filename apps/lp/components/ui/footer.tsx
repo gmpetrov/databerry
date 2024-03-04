@@ -112,7 +112,7 @@ export default function Footer() {
 
           <div className="grid gap-8 sm:grid-cols-12 sm:col-span-10 md:col-span-10 lg:col-span-10">
             {/* 2nd block */}
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">
                 Products
               </h6>
@@ -137,7 +137,7 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            {/* <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">
                 Use Cases
               </h6>
@@ -183,26 +183,10 @@ export default function Footer() {
                   </a>
                 </li>
               </ul>
-            </div>
+            </div> */}
 
             {/* 3rd block */}
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
-                Free Tools
-              </h6>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
-                    href="/tools/youtube-summarizer"
-                  >
-                    Free YouTube Video Summarizer
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">
                 Free Tools
               </h6>
@@ -219,7 +203,7 @@ export default function Footer() {
             </div>
 
             {/* 4th block */}
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">
                 Help & Support
               </h6>
@@ -272,7 +256,7 @@ export default function Footer() {
               </ul>
             </div>
             {/* 5th block */}
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">
                 Community
               </h6>
@@ -307,7 +291,7 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">Add To</h6>
               <ul className="space-y-2 text-sm">
                 {integrations
@@ -324,7 +308,7 @@ export default function Footer() {
                   ))}
               </ul>
             </div>
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">
                 Chat with
               </h6>
@@ -343,7 +327,7 @@ export default function Footer() {
                   ))}
               </ul>
             </div>
-            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+            <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
               <h6 className="mb-2 text-sm font-medium text-zinc-800">
                 Compare
               </h6>

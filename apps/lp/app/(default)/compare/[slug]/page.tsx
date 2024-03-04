@@ -33,26 +33,22 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const prev = await parent;
-  const product = getProduct(params.slug);
+  const slug = params?.slug?.replace(/-alternative$/, '');
+  const name = competitors.find((one) => slug === slugify(one));
 
-  if (!product) {
+  // const prev = await parent;
+
+  if (!name) {
     return {};
   }
 
-  const previousImages = prev?.openGraph?.images || [];
+  // const previousImages = prev?.openGraph?.images || [];
 
   return {
-    title: product?.metadata?.title || product?.title,
-    description: product?.metadata?.description || product?.description,
-    openGraph: {
-      images: [...previousImages],
-    },
-    keywords: `${
-      [...(product?.keywords || []), prev?.keywords]?.join(', ') || ''
-    }`,
+    title: `${name} alternative - Chaindesk`,
+    description: `Chaindesk is the #1 ${name} alternative that helps you create a custom ChatGPT AI chatbot without code in minutes. `,
     alternates: {
-      canonical: `/products/${product?.slug}`,
+      canonical: `/compare/${slugify(name)}-alternative`,
     },
   };
 }

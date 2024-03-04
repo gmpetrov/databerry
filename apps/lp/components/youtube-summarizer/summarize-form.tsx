@@ -47,6 +47,8 @@ import { Prisma } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 import Input from '@chaindesk/ui/Input';
 
+import PromoAlert from '../promo-alert';
+
 type Props = {};
 
 type FormType = z.infer<typeof YoutubeSummarySchema>;
@@ -124,6 +126,9 @@ function YoutubeSummarizerForm({}: Props) {
         uri={router.asPath}
         ogImage={`https://www.chaindesk.ai/api/og/youtube-summary`}
       /> */}
+
+      <PromoAlert />
+
       <motion.div
         className="w-full h-full"
         variants={{
