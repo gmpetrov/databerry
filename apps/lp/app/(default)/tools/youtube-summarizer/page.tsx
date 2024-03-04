@@ -3,10 +3,10 @@ import { cache } from 'react';
 import React from 'react';
 
 import { SummaryPageProps } from '@chaindesk/lib/types';
-import YoutubeSummarizerForm from '@chaindesk/ui/YoutubeSummarizerForm';
 
-import LatestVideoSummaries from '@/components/LatestVideoSummaries';
 import PromoAlert from '@/components/promo-alert';
+import LatestVideoSummaries from '@/components/youtube-summarizer/latest-summaries';
+import YoutubeSummarizerForm from '@/components/youtube-summarizer/summarize-form';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_LANDING_PAGE_URL!),
@@ -45,7 +45,7 @@ export default async function YoutubeVideoSummarizer() {
       <section className="relative before:absolute before:inset-0 before:h-80 before:pointer-events-none before:bg-gradient-to-b before:from-zinc-100 before:-z-10">
         <div className="pt-32 pb-12 md:pt-40 md:pb-20">
           <PromoAlert />
-          {/* <YoutubeSummarizerForm /> */}
+          <YoutubeSummarizerForm />
 
           <div className="px-4">
             <LatestVideoSummaries summaries={summaries || []} />

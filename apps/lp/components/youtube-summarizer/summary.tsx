@@ -27,7 +27,7 @@ import prisma from '@chaindesk/prisma/client';
 import useConfetti from '@chaindesk/ui/hooks/useConfetti';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
-import PromoAlert from './promo-alert';
+import PromoAlert from '@/components/promo-alert';
 
 var entities = {
   amp: '&',

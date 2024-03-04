@@ -7,7 +7,7 @@ import { SummaryPageProps } from '@chaindesk/lib/types';
 import prisma from '@chaindesk/prisma/client';
 
 import Cta from '@/components/cta';
-import YoutubeSummary from '@/components/youtube-summary';
+import YoutubeSummary from '@/components/youtube-summarizer/summary';
 
 type Props = {
   params: { id: string };

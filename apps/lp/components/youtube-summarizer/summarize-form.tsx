@@ -1,6 +1,4 @@
 'use client';
-import React from 'react';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import EastRoundedIcon from '@mui/icons-material/EastRounded';
@@ -21,15 +19,17 @@ import {
 } from '@mui/joy';
 import { LLMTaskOutputType } from '@prisma/client';
 import axios, { AxiosError } from 'axios';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 // import { useRouter } from 'next/router';
-
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
-import Input from '@chaindesk/ui/Input';
+
 // import { Footer } from '@app/components/landing-page/Footer';
 // import PoweredByCard from '@app/components/PoweredByCard';
 // import SEO from '@app/components/SEO';
@@ -45,8 +45,7 @@ import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
 import { Prisma } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import Input from '@chaindesk/ui/Input';
 
 type Props = {};
 
