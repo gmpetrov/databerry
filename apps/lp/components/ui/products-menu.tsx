@@ -111,7 +111,7 @@ const solutions = [
 const callsToAction = [
   {
     name: 'Watch demo',
-    href: 'https://www.youtube.com/watch?v=LPISZdaiDBM',
+    href: 'https://www.youtube.com/watch?v=-NkVS2l66Zs',
     icon: PlayCircleIcon,
   },
   {

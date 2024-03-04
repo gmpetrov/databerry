@@ -3,6 +3,8 @@ import { motion, stagger, useAnimate, Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { cn } from '@chaindesk/ui/utils/cn';
+
 import Particles from './ui/particles';
 import Clients from './clients';
 
@@ -27,6 +29,11 @@ export default function Hero(props: {
   };
   imageUrl?: string;
   youtubeVideoId?: string;
+
+  labelClassName?: string;
+  titleClassName?: string;
+  descriptionClassName?: string;
+  ctaClassName?: string;
 }) {
   const childTextVariants = makeVariants({
     ...defaultChildVariants,
@@ -59,8 +66,11 @@ export default function Hero(props: {
           <div className="mx-auto max-w-3xl">
             <div className="pb-12 text-center md:pb-16">
               {props?.name && (
-                <motion.span
-                  className="text-3xl font-bold text-center text-pink-400 font-caveat"
+                <motion.div
+                  className={cn(
+                    'text-3xl font-bold text-pink-400 font-caveat',
+                    props.labelClassName
+                  )}
                   variants={{
                     ...defaultChildVariants,
                     visible: {
@@ -72,10 +82,13 @@ export default function Hero(props: {
                   }}
                 >
                   {props?.name}
-                </motion.span>
+                </motion.div>
               )}
               <motion.h1
-                className="pb-4 text-5xl font-extrabold text-transparent font-bricolage-grotesque md:text-7xl text-zinc-800"
+                className={cn(
+                  'pb-4 text-5xl font-extrabold text-transparent font-bricolage-grotesque md:text-7xl text-zinc-800',
+                  props.titleClassName
+                )}
                 // className="pb-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r font-bricolage-grotesque md:text-5xl from-zinc-500 via-zinc-900 to-zinc-900"
                 // initial={{ opacity: 0 }}
                 // whileInView={{ opacity: 1 }}
@@ -106,7 +119,10 @@ export default function Hero(props: {
                 for your startup */}
               </motion.h1>
               <motion.p
-                className="mx-auto mb-8 max-w-xl text-lg text-zinc-500 md:text-2xl"
+                className={cn(
+                  'mx-auto mb-8 max-w-xl text-lg text-zinc-500 md:text-2xl',
+                  props.descriptionClassName
+                )}
                 variants={childTextVariants}
 
                 // custom={2}
@@ -120,7 +136,10 @@ export default function Hero(props: {
 
               {props.cta && (
                 <motion.div
-                  className="mx-auto space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4"
+                  className={cn(
+                    'w-full space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4 mx-auto',
+                    props.ctaClassName
+                  )}
                   variants={makeVariants({
                     ...defaultContainerVariants,
                     visible: {
@@ -130,20 +149,15 @@ export default function Hero(props: {
                     },
                   })}
                 >
-                  <motion.div
-                    variants={defaultChildVariants}
-                    //  custom={4}
-                  >
-                    <div>
-                      <Link
-                        className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
-                        href={
-                          props?.cta?.url || `https://app.chaindesk.ai/agents`
-                        }
-                      >
-                        {props?.cta?.label}
-                      </Link>
-                    </div>
+                  <motion.div variants={defaultChildVariants}>
+                    <Link
+                      className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
+                      href={
+                        props?.cta?.url || `https://app.chaindesk.ai/agents`
+                      }
+                    >
+                      {props?.cta?.label}
+                    </Link>
                   </motion.div>
                   {/* <motion.div
                           variants={defaultChildVariants}

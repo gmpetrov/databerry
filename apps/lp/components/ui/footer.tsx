@@ -1,7 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import competitors from '@chaindesk/lib/data/competitors';
+import integrations from '@chaindesk/lib/data/integrations';
 import products from '@chaindesk/lib/data/products';
+import slugify from '@chaindesk/lib/slugify';
 
 import Logo from '@/public/images/logo.png';
 
@@ -22,7 +25,7 @@ export default function Footer() {
                 <Image src={Logo} width={24} height={24} alt="Logo" />
               </Link>
             </div>
-            <div className="text-sm grow text-zinc-500">
+            <div className="text-sm text-zinc-500">
               &copy; Chaindesk All rights reserved.
             </div>
             {/* Social links */}
@@ -107,174 +110,256 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* 2nd block */}
-          <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
-            <h6 className="mb-2 text-sm font-medium text-zinc-800">Products</h6>
-            <ul className="space-y-2 text-sm">
-              {products.map((product) => (
-                <li key={product?.slug}>
+          <div className="grid gap-8 sm:grid-cols-12 sm:col-span-10 md:col-span-10 lg:col-span-10">
+            {/* 2nd block */}
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Products
+              </h6>
+              <ul className="space-y-2 text-sm">
+                {products.map((product) => (
+                  <li key={product?.slug}>
+                    <a
+                      className="transition text-zinc-500 hover:text-zinc-900"
+                      href={`/products/${product?.slug}`}
+                    >
+                      {product?.name}
+                    </a>
+                  </li>
+                ))}
+                <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900"
-                    href={`/products/${product?.slug}`}
+                    href={`/integrations`}
                   >
-                    {product?.name}
+                    Integrations
                   </a>
                 </li>
-              ))}
-            </ul>
-          </div>
-          <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
-            <h6 className="mb-2 text-sm font-medium text-zinc-800">
-              Use Cases
-            </h6>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  About us
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Diversity & Inclusion
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="#0"
-                >
-                  Financial statements
-                </a>
-              </li>
-            </ul>
-          </div>
+              </ul>
+            </div>
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Use Cases
+              </h6>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="#0"
+                  >
+                    About us
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="#0"
+                  >
+                    Diversity & Inclusion
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="#0"
+                  >
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="#0"
+                  >
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="#0"
+                  >
+                    Financial statements
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          {/* 3rd block */}
-          <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
-            <h6 className="mb-2 text-sm font-medium text-zinc-800">
-              Free Tools
-            </h6>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="/tools/youtube-summarizer"
-                >
-                  Free YouTube Video Summarizer
-                </a>
-              </li>
-            </ul>
-          </div>
+            {/* 3rd block */}
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Free Tools
+              </h6>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="/tools/youtube-summarizer"
+                  >
+                    Free YouTube Video Summarizer
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          {/* 4th block */}
-          <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
-            <h6 className="mb-2 text-sm font-medium text-zinc-800">
-              Help & Support
-            </h6>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://chaindesk.ai/help"
-                  target="_blank"
-                >
-                  Help Center
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://docs.chaindesk.ai/"
-                  target="_blank"
-                >
-                  API Documentation
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://www.chaindesk.ai/help/gdpr"
-                  target="_blank"
-                >
-                  GDPR
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://www.chaindesk.ai/help/privacy-policy"
-                  target="_blank"
-                >
-                  Privacy
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://www.chaindesk.ai/help/terms-conditions"
-                  target="_blank"
-                >
-                  Terms
-                </a>
-              </li>
-            </ul>
-          </div>
-          {/* 5th block */}
-          <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
-            <h6 className="mb-2 text-sm font-medium text-zinc-800">
-              Community
-            </h6>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://databerry.getrewardful.com/"
-                  target="_blank"
-                >
-                  Affiliates
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://github.com/gmpetrov/databerry"
-                  target="_blank"
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  className="transition text-zinc-500 hover:text-zinc-900"
-                  href="https://discord.gg/FSWKj49ckX"
-                  target="_blank"
-                >
-                  Discord
-                </a>
-              </li>
-            </ul>
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Free Tools
+              </h6>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="/tools/youtube-summarizer"
+                  >
+                    Free YouTube Video Summarizer
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* 4th block */}
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Help & Support
+              </h6>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://chaindesk.ai/help"
+                    target="_blank"
+                  >
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://docs.chaindesk.ai/"
+                    target="_blank"
+                  >
+                    API Documentation
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://www.chaindesk.ai/help/gdpr"
+                    target="_blank"
+                  >
+                    GDPR
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://www.chaindesk.ai/help/privacy-policy"
+                    target="_blank"
+                  >
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://www.chaindesk.ai/help/terms-conditions"
+                    target="_blank"
+                  >
+                    Terms
+                  </a>
+                </li>
+              </ul>
+            </div>
+            {/* 5th block */}
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Community
+              </h6>
+              <ul className="space-y-2 text-sm">
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://databerry.getrewardful.com/"
+                    target="_blank"
+                  >
+                    Affiliates
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://github.com/gmpetrov/databerry"
+                    target="_blank"
+                  >
+                    GitHub
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="https://discord.gg/FSWKj49ckX"
+                    target="_blank"
+                  >
+                    Discord
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">Add To</h6>
+              <ul className="space-y-2 text-sm">
+                {integrations
+                  .filter((each) => each.isChannel)
+                  .map((integration) => (
+                    <li key={integration?.slug}>
+                      <a
+                        className="transition text-zinc-500 hover:text-zinc-900"
+                        href={`/integrations/${integration?.slug}`}
+                      >
+                        Add AI chatbot to {integration?.name}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Chat with
+              </h6>
+              <ul className="space-y-2 text-sm">
+                {integrations
+                  .filter((each) => each.isDatasource)
+                  .map((integration) => (
+                    <li key={integration?.slug}>
+                      <a
+                        className="transition text-zinc-500 hover:text-zinc-900"
+                        href={`/integrations/${integration?.slug}`}
+                      >
+                        Chat with {integration?.name}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            <div className="sm:col-span-6 md:col-span-2 lg:col-span-2">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+                Compare
+              </h6>
+              <ul className="space-y-2 text-sm">
+                {competitors.map((name) => (
+                  <li key={name}>
+                    <a
+                      className="transition text-zinc-500 hover:text-zinc-900"
+                      href={`/compare/${slugify(name)}-alternative`}
+                    >
+                      {`${name} alternative`}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
