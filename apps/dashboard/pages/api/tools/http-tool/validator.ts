@@ -12,8 +12,8 @@ const handler = createAuthApiHandler();
 
 const bodySchema = z.object({
   url: z.string().url(),
-  headers: z.record(z.string(), z.string()),
-  body: z.record(z.string(), z.unknown()),
+  headers: z.record(z.string(), z.string()).optional(),
+  body: z.record(z.string(), z.unknown()).optional(),
   method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).default('GET'),
 });
 

@@ -80,6 +80,7 @@ export type ChatAgentArgs = PrismaType.AgentGetPayload<typeof ChatAgentArgs>;
 type Props = Omit<ChatRequest, 'isDraft' | 'streaming'> & {
   logger?: Logger;
   country?: string; // Request country origin
+  metadata?: Record<string, unknown>;
   userId?: string;
   agent: ChatAgentArgs;
   conversation?: ChatConversationArgs;
@@ -166,13 +167,7 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     conversationId,
     channelExternalId: data?.channelExternalId,
     channelCredentialsId: data?.channelCredentialsId,
-    ...(!data.userId && !!isNewConversation && data.country
-      ? {
-          metadata: {
-            country: data.country,
-          },
-        }
-      : {}),
+    ...(data.metadata ? { metadata: data.metadata } : {}),
   });
 
   const inputMessageId = cuid();

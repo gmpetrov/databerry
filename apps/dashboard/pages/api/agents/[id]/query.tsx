@@ -198,7 +198,9 @@ export const chatAgentRequest = async (
     conversation: agent?.organization?.conversations?.[0],
     handleStream,
     abortController: ctrl,
-    country: getRequestCountry(req),
+    metadata: {
+      country: getRequestCountry(req),
+    },
     userId: session?.user?.id,
     visitorId,
     contactId: existingContact?.id || data?.contactId,
