@@ -912,6 +912,7 @@ enum ServiceProviderType {
   slack
   zendesk
   whatsapp
+  telegram
   // smtp
 }
 
@@ -987,6 +988,7 @@ enum ConversationChannel {
   form
   mail
   whatsapp
+  telegram
 }
 
 enum FormType {

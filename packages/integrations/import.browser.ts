@@ -7,6 +7,9 @@ export const IntegrationSettingsMap = {
   whatsapp: dynamic(() => import('./whatsapp/components/IntegrationSettings'), {
     ssr: false,
   }),
+  telegram: dynamic(() => import('./telegram/components/IntegrationSettings'), {
+    ssr: false,
+  }),
 };
 {
 }

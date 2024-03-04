@@ -1,5 +1,11 @@
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import { Button, CircularProgress, ListItemDecorator } from '@mui/joy';
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  ListItemDecorator,
+  Typography,
+} from '@mui/joy';
 import IconButton from '@mui/joy/IconButton';
 import List, { ListProps } from '@mui/joy/List';
 import ListDivider from '@mui/joy/ListDivider';
@@ -47,7 +53,6 @@ function ListServiceProviders({
     type,
     agentId,
   });
-
   const handleDelete = useCallback(
     (id: string) => async () => {
       try {
@@ -58,6 +63,24 @@ function ListServiceProviders({
         }
 
         setState({ isDeleteLoading: true });
+
+        // clean up webhooks
+        if (type === 'telegram') {
+          const providerToRemove = query?.data?.find(
+            (provider) => provider?.id == id
+          );
+
+          const { data } = await axios.post(
+            `https://api.telegram.org/bot${
+              (providerToRemove?.config as any).http_token
+            }/deleteWebhook`
+          );
+
+          if (!data.ok) {
+            throw new Error('Unable to remove webhook');
+          }
+        }
+
         await axios.delete(`/api/service-providers/${id}`);
         query.mutate();
       } catch (err) {
@@ -79,6 +102,8 @@ function ListServiceProviders({
 
   return (
     <List {...otherProps}>
+      <Typography>Available {type} Integrations</Typography>
+      <Divider sx={{ mb: 3, mt: 1 }} />
       {query?.data?.map((provider, index) => (
         <React.Fragment key={provider.id}>
           <ListItem>

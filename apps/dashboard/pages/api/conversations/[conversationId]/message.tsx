@@ -5,6 +5,7 @@ import { NextApiResponse } from 'next';
 import { z } from 'zod';
 
 import { InboxTemplate, render } from '@chaindesk/emails';
+import sendTelegramMessage from '@chaindesk/integrations/whatsapp/lib/send-telegram-message';
 import sendWhatsAppMessage from '@chaindesk/integrations/whatsapp/lib/send-whatsapp-message';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import ConversationManager from '@chaindesk/lib/conversation';
@@ -329,6 +330,19 @@ export const sendMessage = async (
         throw Error(
           `could not send message through whatsapp ${(e as any)?.message}`
         );
+      }
+      break;
+    case 'telegram':
+      try {
+        await sendTelegramMessage({
+          message: payload.message,
+          chatId: channelExternalId!,
+          messageId: (metadata as any)?.messageId!,
+          attachments: payload.attachments!,
+          token: (channelCredentials?.config as any)?.http_token,
+        });
+      } catch (e) {
+        console.error(e);
       }
       break;
     default:
