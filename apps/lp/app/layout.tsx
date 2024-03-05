@@ -29,6 +29,7 @@ const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-bricolage-grotesque',
   display: 'swap',
+  adjustFontFallback: false,
 });
 
 const inter_tight = Inter_Tight({

@@ -276,7 +276,9 @@ export default function Hero() {
           ></iframe>
           {/* https://www.youtube.com/watch?v=-NkVS2l66Zs */}
         </motion.div>
-        {/* <Stats /> */}
+        {/* <div className="mt-12">
+          <Stats />
+        </div> */}
         {/* <Clients /> */}
       </motion.div>
     </section>
