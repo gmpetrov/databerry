@@ -14,7 +14,7 @@ const items: Product[] = [
     },
     logo: 'https://www.svgrepo.com/show/197996/internet.svg',
     cta: {
-      label: 'Start for free',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/agents',
     },
     keywords: ['ChatGPT Chatbot For Your Website'],
@@ -142,7 +142,7 @@ const items: Product[] = [
     description:
       'Enhance your Crisp experience with a custom AI chatbot. Train on your data in minutes, install the Crisp plugin, and keep your bot synced for optimal performance.',
     cta: {
-      label: 'Start for free',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/datastores',
     },
 
@@ -185,7 +185,7 @@ const items: Product[] = [
       'Connect Chaindesk with over 5,000 apps via Zapier. Train your chatbot in minutes, integrate it seamlessly on your site, and keep your data always in sync.',
     logo: '/shared/images/logos/zapier.png',
     cta: {
-      label: 'Start for free',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/datastores',
     },
     youtubeVideoId: '-NkVS2l66Zs',
@@ -252,7 +252,7 @@ const items: Product[] = [
       'Train a chatbot with your data on Chaindesk platform. Install the Wordpress plugin! Stay updated with auto-sync.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg',
     cta: {
-      label: 'Start for free',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/datastores',
     },
 
@@ -383,7 +383,7 @@ const items: Product[] = [
       'Easily train your AI with data from your website. Just paste your website URL and we will automatically get your website pages.',
     logo: 'https://www.svgrepo.com/show/197996/internet.svg',
     cta: {
-      label: 'Start for free',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/datastores',
     },
     isDatasource: true,

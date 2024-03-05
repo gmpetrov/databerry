@@ -13,7 +13,7 @@ const items: Product[] = [
     },
     logo: '/images/logo.png',
     cta: {
-      label: 'Create Your AI Chatbot',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/agents',
     },
     keywords: [
@@ -51,9 +51,9 @@ const items: Product[] = [
             'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
         },
         {
-          name: 'Copy/Paste the HTML snippet',
+          name: 'Add to your site',
           description:
-            'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
+            'Easily embed on your website or add it to your existing tools with one of our integrations',
         },
         {
           name: 'Auto Sync',
@@ -64,63 +64,61 @@ const items: Product[] = [
     },
   },
   {
-    slug: 'shared-inbox',
-    name: 'Shared Inbox',
-    title: 'Shared Inbox for Your Team',
+    slug: 'ai-form',
+    name: 'AI Form',
+    title: 'Build AI-Powered Forms in Minutes',
+    icon: (props: any) => {
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          {...props}
+        >
+          <path
+            fillRule="evenodd"
+            d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5Zm6.61 10.936a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 14.47a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
+            clipRule="evenodd"
+          />
+          <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+        </svg>
+      );
+    },
     description:
-      'Monitor and manage all your customer conversations in one place. Take over your AI chatbot when needed. Assign conversations to your team members. Automate your workflows.',
+      'Collect data from your website visitors in a conversational way!',
     metadata: {
-      title: 'AI-Driven Shared Inbox',
+      title: 'AI-Driven Forms',
       description: '',
     },
     logo: '/images/logo.png',
-    icon: (props: any) => (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        {...props}
-      >
-        <path
-          fillRule="evenodd"
-          d="M5.478 5.559A1.5 1.5 0 0 1 6.912 4.5H9A.75.75 0 0 0 9 3H6.912a3 3 0 0 0-2.868 2.118l-2.411 7.838a3 3 0 0 0-.133.882V18a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0 0 17.088 3H15a.75.75 0 0 0 0 1.5h2.088a1.5 1.5 0 0 1 1.434 1.059l2.213 7.191H17.89a3 3 0 0 0-2.684 1.658l-.256.513a1.5 1.5 0 0 1-1.342.829h-3.218a1.5 1.5 0 0 1-1.342-.83l-.256-.512a3 3 0 0 0-2.684-1.658H3.265l2.213-7.191Z"
-          clipRule="evenodd"
-        />
-        <path
-          fillRule="evenodd"
-          d="M12 2.25a.75.75 0 0 1 .75.75v6.44l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 1.06-1.06l1.72 1.72V3a.75.75 0 0 1 .75-.75Z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
     cta: {
-      label: 'Create Your AI Form',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/forms',
     },
     keywords: ['AI-Driven Forms', 'ChatGPT Form', 'AI Form'],
 
-    youtubeVideoId: '-NkVS2l66Zs',
+    youtubeVideoId: 'gfoy81esFVg',
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Form Setup',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            "Use Chaindesk's form builder to configure your form. Give your AI a persona and add fields for data you want to collect.",
         },
         {
-          name: 'Training',
+          name: 'Publish',
           description:
-            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+            'Just click the publish button to get a public link you can share with anyone.',
         },
         {
-          name: 'Copy/Paste the HTML snippet',
+          name: 'Embed on your website',
           description:
-            'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
+            'Easily embed the form on your website with a simple HTML snippet.',
         },
         {
-          name: 'Auto Sync',
+          name: 'Connect your form to a Chaindesk AI Agent',
           description:
-            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+            'Optionally, AI Forms can be connected to a Chaindesk AI Agent to enhance their capabilities.',
         },
       ],
     },
@@ -147,7 +145,7 @@ const items: Product[] = [
       );
     },
     cta: {
-      label: 'Start for free',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/forms',
     },
     features: {
@@ -198,62 +196,67 @@ const items: Product[] = [
     //   },
     // ],
   },
+
   {
-    slug: 'ai-form',
-    name: 'AI Form',
-    title: 'Build a ChatGPT Powered Form in Minutes',
-    icon: (props: any) => {
-      return (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          {...props}
-        >
-          <path
-            fillRule="evenodd"
-            d="M9 1.5H5.625c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5Zm6.61 10.936a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 14.47a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
-            clipRule="evenodd"
-          />
-          <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
-        </svg>
-      );
-    },
+    slug: 'shared-inbox',
+    name: 'Shared Inbox',
+    title: 'Shared Inbox for Your Team',
     description:
-      'Collect data from your website visitors, automate your workflows, and more.',
+      'Monitor and manage all your customer conversations in one place. Take over your AI chatbot when needed. Assign conversations to your team members.',
     metadata: {
-      title: 'AI-Driven Forms',
+      title: 'AI-Driven Shared Inbox',
       description: '',
     },
     logo: '/images/logo.png',
+    icon: (props: any) => (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        {...props}
+      >
+        <path
+          fillRule="evenodd"
+          d="M5.478 5.559A1.5 1.5 0 0 1 6.912 4.5H9A.75.75 0 0 0 9 3H6.912a3 3 0 0 0-2.868 2.118l-2.411 7.838a3 3 0 0 0-.133.882V18a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3v-4.162c0-.299-.045-.596-.133-.882l-2.412-7.838A3 3 0 0 0 17.088 3H15a.75.75 0 0 0 0 1.5h2.088a1.5 1.5 0 0 1 1.434 1.059l2.213 7.191H17.89a3 3 0 0 0-2.684 1.658l-.256.513a1.5 1.5 0 0 1-1.342.829h-3.218a1.5 1.5 0 0 1-1.342-.83l-.256-.512a3 3 0 0 0-2.684-1.658H3.265l2.213-7.191Z"
+          clipRule="evenodd"
+        />
+        <path
+          fillRule="evenodd"
+          d="M12 2.25a.75.75 0 0 1 .75.75v6.44l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 1.06-1.06l1.72 1.72V3a.75.75 0 0 1 .75-.75Z"
+          clipRule="evenodd"
+        />
+      </svg>
+    ),
     cta: {
-      label: 'Create Your AI Form',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/forms',
     },
     keywords: ['AI-Driven Forms', 'ChatGPT Form', 'AI Form'],
 
-    youtubeVideoId: '-NkVS2l66Zs',
+    // youtubeVideoId: '-NkVS2l66Zs',
+    imageUrl: '/images/shared-inbox.jpg',
     features: {
+      label: 'All in one place',
+      title: 'AI-powered shared inbox',
+      description: 'Monitor, manage, assign conversations and more.',
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'All your conversations in one place',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Monitor and manage all your customer conversations in one place.',
         },
         {
-          name: 'Training',
-          description:
-            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+          name: 'Human Handoff',
+          description: 'Take over your AI chatbot when needed.',
         },
         {
-          name: 'Copy/Paste the HTML snippet',
-          description:
-            'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
+          name: 'Team Collaboration',
+          description: 'Assign conversations to your team members.',
         },
         {
-          name: 'Auto Sync',
+          name: 'AI-powered replies',
           description:
-            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+            'Even when you take over the conversation, our AI will help you draft the perfect answer.',
         },
       ],
     },

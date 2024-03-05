@@ -65,7 +65,7 @@ export default function IntegrationsPage({
         title={'Native integrations with your favorite tools and platforms'}
         description={`Train and Integrate your AI Agent with your favorite tools and platforms: WhatsApp, Shopify, WordPress, and more.`}
         cta={{
-          label: 'Start for free',
+          label: 'Get Started for Free',
           url: 'https://app.chaindesk.ai/agents',
         }}
         // youtubeVideoId={product?.youtubeVideoId}
