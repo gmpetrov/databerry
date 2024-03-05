@@ -8,8 +8,8 @@ import { TextGenerateEffect } from './ui/TextGenerateEffect';
 import FeatureImage01 from '@/public/images/feature-post-01.png';
 import FeatureImage02 from '@/public/images/feature-post-02.png';
 import FeatureImage03 from '@/public/images/feature-post-03.png';
-import FeatureImage04 from '@/public/images/feature-post-04.png';
 import FeatureImage05 from '@/public/images/feature-post-05.png';
+import FeatureImage04 from '@/public/images/monitor.png';
 import {
   defaultChildVariants,
   defaultContainerVariants,
@@ -51,7 +51,7 @@ export default function Features02() {
             >
               <TextGenerateEffect
                 duration={0.5}
-                text={`Whenever you are ready, just hit publish to turn your site sketches into an actual designs. No creating, no skills, no reshaping.`}
+                text={`Chaindesk leverages Generative AI models like GPT-4 to provide secure, precise responses, resolving customer inquiries and instantly reducing your team’s ticket volume.`}
               />
             </motion.p>
           </div>
@@ -81,7 +81,7 @@ export default function Features02() {
                     <path d="M17 9c.6 0 1 .4 1 1v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h6c.6 0 1 .4 1 1s-.4 1-1 1H4v12h12v-6c0-.6.4-1 1-1Zm-.7-6.7c.4-.4 1-.4 1.4 0 .4.4.4 1 0 1.4l-8 8c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.4-.4-.4-1 0-1.4l8-8Z" />
                   </svg>
                   <h3 className="font-semibold font-bricolage-grotesque text-zinc-900">
-                    Truly Collaborative
+                    Instantly Resolve 80% of Your Support Queries
                   </h3>
                 </div>
                 <p className="max-w-md text-sm grow text-zinc-500">
@@ -114,12 +114,13 @@ export default function Features02() {
                     <path d="m6.035 17.335-4-14c-.2-.8.5-1.5 1.3-1.3l14 4c.9.3 1 1.5.1 1.9l-6.6 2.9-2.8 6.6c-.5.9-1.7.8-2-.1Zm-1.5-12.8 2.7 9.5 1.9-4.4c.1-.2.3-.4.5-.5l4.4-1.9-9.5-2.7Z" />
                   </svg>
                   <h3 className="font-semibold font-bricolage-grotesque text-zinc-900">
-                    Advanced AI
+                    Trustworthy AI
                   </h3>
                 </div>
                 <p className="max-w-md text-sm grow text-zinc-500">
-                  Generate images and explore new ways of presenting your
-                  designs with AI.
+                  With built-in safeguards, Chaindesk Agents provides precise
+                  responses that stick to your knowledge base, eliminating
+                  off-topic conversations and misleading responses.
                 </p>
               </div>
               <figure>
@@ -147,12 +148,12 @@ export default function Features02() {
                     <path d="M8.974 16c-.3 0-.7-.2-.9-.5l-2.2-3.7-2.1 2.8c-.3.4-1 .5-1.4.2-.4-.3-.5-1-.2-1.4l3-4c.2-.3.5-.4.9-.4.3 0 .6.2.8.5l2 3.3 3.3-8.1c0-.4.4-.7.8-.7s.8.2.9.6l4 8c.2.5 0 1.1-.4 1.3-.5.2-1.1 0-1.3-.4l-3-6-3.2 7.9c-.2.4-.6.6-1 .6Z" />
                   </svg>
                   <h3 className="font-semibold font-bricolage-grotesque text-zinc-900">
-                    Simple Snippets
+                    Embed easily on your site
                   </h3>
                 </div>
                 <p className="max-w-md text-sm grow text-zinc-500">
-                  Get your scenes inside your projects using simple embed
-                  code/snippets.
+                  Choose a widget and add your AI chatbot to your website in
+                  minutes.
                 </p>
               </div>
               <figure>
@@ -180,11 +181,13 @@ export default function Features02() {
                     <path d="M9.3 11.7c-.4-.4-.4-1 0-1.4l7-7c.4-.4 1-.4 1.4 0 .4.4.4 1 0 1.4l-7 7c-.4.4-1 .4-1.4 0ZM9.3 17.7c-.4-.4-.4-1 0-1.4l7-7c.4-.4 1-.4 1.4 0 .4.4.4 1 0 1.4l-7 7c-.4.4-1 .4-1.4 0ZM2.3 12.7c-.4-.4-.4-1 0-1.4l7-7c.4-.4 1-.4 1.4 0 .4.4.4 1 0 1.4l-7 7c-.4.4-1 .4-1.4 0Z" />
                   </svg>
                   <h3 className="font-semibold font-bricolage-grotesque text-zinc-900">
-                    Precise Activity
+                    Omnichannel Conversations
                   </h3>
                 </div>
                 <p className="max-w-md text-sm grow text-zinc-500">
-                  Easily make drag and drop interactions without coding.
+                  Chaindesk ensures uninterrupted conversations across platforms
+                  including Embeddable Widgets, WhatsApp, Slack, Telegram, and
+                  more.
                 </p>
               </div>
               <figure>
@@ -212,11 +215,12 @@ export default function Features02() {
                     <path d="M16 2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h8.667l3.733 2.8A1 1 0 0 0 18 17V4a2 2 0 0 0-2-2Zm0 13-2.4-1.8a1 1 0 0 0-.6-.2H4V4h12v11Z" />
                   </svg>
                   <h3 className="font-semibold font-bricolage-grotesque text-zinc-900">
-                    Real-time Feedback
+                    Human Handoff
                   </h3>
                 </div>
                 <p className="max-w-md text-sm grow text-zinc-500">
-                  Create tasks, projects, issues and more in just seconds.
+                  Take over your AI chatbot when needed. Focus on important
+                  conversations.
                 </p>
               </div>
               <figure>

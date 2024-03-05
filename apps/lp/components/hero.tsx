@@ -65,7 +65,7 @@ export default function Hero() {
           <div className="mx-auto max-w-3xl">
             <div className="pb-12 text-center md:pb-16">
               <motion.h1
-                className="pb-4 text-5xl font-extrabold text-transparent font-bricolage-grotesque md:text-7xl text-zinc-800"
+                className="pb-4 mx-auto max-w-2xl text-5xl font-extrabold text-transparent font-bricolage-grotesque md:text-8xl text-zinc-800"
                 // className="pb-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r font-bricolage-grotesque md:text-5xl from-zinc-500 via-zinc-900 to-zinc-900"
                 // initial={{ opacity: 0 }}
                 // whileInView={{ opacity: 1 }}
@@ -77,7 +77,9 @@ export default function Hero() {
                   duration={0.5}
                   // text="Custom GPT Agent For Your Startup"
                   text={[
-                    'Custom',
+                    'Your',
+                    'Suport',
+                    'On',
                     // <em className="inline-flex relative justify-center items-center italic text-zinc-900">
                     //   {' '}
                     //   GPT Agent
@@ -118,7 +120,7 @@ export default function Hero() {
                       key="gpt-agent"
                       className="inline-flex relative justify-center items-end not-italic"
                     >
-                      GPT Agent
+                      AutoPilot
                       <motion.svg
                         className="absolute fill-pink-300 w-[calc(100%+1rem)] -z-10"
                         xmlns="http://www.w3.org/2000/svg"
@@ -150,9 +152,9 @@ export default function Hero() {
                         />
                       </motion.svg>
                     </em>,
-                    'For',
-                    'Your',
-                    'Startup',
+                    // 'For',
+                    // 'Your',
+                    // 'Startup',
                   ]}
                 ></TextGenerateEffect>
                 {/* Custom{' '}
@@ -181,7 +183,7 @@ export default function Hero() {
               >
                 <TextGenerateEffect
                   duration={0.5}
-                  text={`Train a custom chatbot on your data and let it handle support, lead generation, and more.`}
+                  text={`Train a custom GPT chatbot on your data and let it handle support, lead generation, and more.`}
                   // text={`Turbocharge your creative process with a powerful AI design platform that gives creatives the power of creating without limits.`}
                 ></TextGenerateEffect>
               </motion.p>

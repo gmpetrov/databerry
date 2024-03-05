@@ -7,9 +7,13 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import React from 'react';
 
+import { cn } from '@chaindesk/ui/utils/cn';
+
 import { defaultChildVariants, defaultContainerVariants } from '@/utils/motion';
 
-type Props = {};
+type Props = {
+  containerClassName?: string;
+};
 
 const integrations = [
   {
@@ -183,7 +187,7 @@ function IntegrationBox(props: { icon: any; name: string }) {
   );
 }
 
-function Integrations({}: Props) {
+function Integrations({ containerClassName }: Props) {
   return (
     <Stack id="integrations" sx={{ maxWidth: 'lg', mx: 'auto' }} gap={4} px={2}>
       {/* <h2 className="text-3xl font-bold tracking-tight text-center text-white sm:text-4xl">
@@ -216,7 +220,10 @@ function Integrations({}: Props) {
               gap: 2,
             },
           })}
-          className="before:absolute before:inset-0 before:w-32 sm:before:w-72 before:z-10 before:pointer-events-none after:absolute after:inset-0 after:left-auto after:w-32 sm:after:w-72 after:z-10 after:pointer-events-none before:bg-gradient-to-r before:from-white after:bg-gradient-to-l after:from-white"
+          className={cn(
+            'before:absolute before:inset-0 before:w-32 sm:before:w-72 before:z-10 before:pointer-events-none after:absolute after:inset-0 after:left-auto after:w-32 sm:after:w-72 after:z-10 after:pointer-events-none before:bg-gradient-to-r before:from-white after:bg-gradient-to-l after:from-white',
+            containerClassName
+          )}
         >
           {/* <div
           className={clsx(

@@ -6,9 +6,14 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 import { TextGenerateEffect } from './ui/TextGenerateEffect';
+import Integrations from './integrations-v1';
 
-import FeatureImage01 from '@/public/images/feature-01.png';
+import FeatureImage02 from '@/public/images/customize.png';
+import FeatureDeploy from '@/public/images/deploy.png';
 import FeatureIllustration from '@/public/images/feature-illustration.png';
+import FeatureImage04 from '@/public/images/feature-post-04.png';
+import FeatureImage01 from '@/public/images/import-data-2.png';
+import FeatureMonitor from '@/public/images/monitor.png';
 import {
   defaultChildVariants,
   defaultContainerVariants,
@@ -48,6 +53,12 @@ export default function Features01() {
       >
         <div className="px-4 mx-auto max-w-6xl sm:px-6">
           <div className="pb-12 mx-auto max-w-3xl text-center">
+            <motion.span
+              className="text-3xl font-bold text-center text-pink-400 font-label"
+              variants={defaultChildVariants}
+            >
+              How it works?
+            </motion.span>
             <motion.div
               key={0}
               className="mb-4 text-3xl font-bold font-bricolage-grotesque md:text-4xl text-zinc-900"
@@ -55,7 +66,8 @@ export default function Features01() {
             >
               <TextGenerateEffect
                 duration={0.5}
-                text={`An AI-powered support ecosystem`}
+                // text={`An AI-powered support ecosystem`}
+                text={`Your are few steps away from an AI-native support ecosystem`}
               ></TextGenerateEffect>
             </motion.div>
             <motion.p
@@ -65,7 +77,7 @@ export default function Features01() {
             >
               <TextGenerateEffect
                 duration={0.5}
-                text={`AI reads and understands your designs, and with nothing more than a single line of feedback, perform complex actions autonomously.`}
+                text={`Chaindesk's no-code platform makes it easy to train a custom ChatGPT chatbot on your company data in minutes.`}
               ></TextGenerateEffect>
             </motion.p>
           </div>
@@ -96,7 +108,7 @@ export default function Features01() {
                 >
                   <div className="flex justify-between items-center mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
-                      Shared Inbox
+                      1. Import your Data
                     </div>
                     <svg
                       className={`fill-zinc-400 shrink-0 ml-2 ${
@@ -110,7 +122,8 @@ export default function Features01() {
                     </svg>
                   </div>
                   <div className="text-sm text-zinc-500">
-                    Visually structure your designs and structure them easily.
+                    Train your AI from various data sources like Notion, Google
+                    Drive, etc...
                   </div>
                 </button>
               </motion.div>
@@ -129,7 +142,7 @@ export default function Features01() {
                 >
                   <div className="flex justify-between items-center mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
-                      Creative Mode
+                      2. Customize
                     </div>
                     <svg
                       className={`fill-zinc-400 shrink-0 ml-2 ${
@@ -143,7 +156,8 @@ export default function Features01() {
                     </svg>
                   </div>
                   <div className="text-sm text-zinc-500">
-                    Visually structure your designs and structure them easily.
+                    Setup your Agent persona and goals. Customize to fit your
+                    brand.
                   </div>
                 </button>
               </motion.div>
@@ -161,7 +175,7 @@ export default function Features01() {
                 >
                   <div className="flex justify-between items-center mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
-                      Realistic Images
+                      3. Deploy
                     </div>
                     <svg
                       className={`fill-zinc-400 shrink-0 ml-2 ${
@@ -175,7 +189,8 @@ export default function Features01() {
                     </svg>
                   </div>
                   <div className="text-sm text-zinc-500">
-                    Visually structure your designs and structure them easily.
+                    Add your chatbot to your website or to your existing tools
+                    in few clicks.
                   </div>
                 </button>
               </motion.div>
@@ -193,7 +208,7 @@ export default function Features01() {
                 >
                   <div className="flex justify-between items-center mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
-                      Powerful Plugins
+                      4. Monitor
                     </div>
                     <svg
                       className={`fill-zinc-400 shrink-0 ml-2 ${
@@ -207,7 +222,8 @@ export default function Features01() {
                     </svg>
                   </div>
                   <div className="text-sm text-zinc-500">
-                    Visually structure your designs and structure them easily.
+                    Monitor conversations across all channels. Take over your AI
+                    chatbot when needed.
                   </div>
                 </button>
               </motion.div>
@@ -232,21 +248,23 @@ export default function Features01() {
                   unmount={false}
                 >
                   <div className="inline-flex relative align-top">
-                    <Image
+                    {/* <Image
                       className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
                       src={FeatureImage01}
-                      width={600}
+                      width={500}
                       height={360}
                       alt="Feature 01"
-                    />
-                    <Image
-                      className="absolute top-0 left-full -translate-x-[70%] -mr-20 max-md:w-[45%]"
+                    /> */}
+
+                    <Integrations containerClassName="before:from-zinc-50 after:from-zinc-50" />
+                    {/* <Image
+                      className="absolute top-0 left-full -translate-x-[70%] -mr-20 max-md:w-[45%] z-10"
                       src={FeatureIllustration}
                       width={273}
                       height={288}
                       alt="Illustration"
                       aria-hidden="true"
-                    />
+                    /> */}
                   </div>
                 </Transition>
                 {/* Item 2 */}
@@ -265,13 +283,13 @@ export default function Features01() {
                   <div className="inline-flex relative align-top">
                     <Image
                       className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
-                      src={FeatureImage01}
-                      width={600}
+                      src={FeatureImage02}
+                      width={1050}
                       height={360}
                       alt="Feature 02"
                     />
                     <Image
-                      className="absolute top-0 left-full -translate-x-[70%] -mr-20 max-md:w-[45%]"
+                      className="absolute top-24 left-full -translate-x-[90%] -mr-20 max-md:w-[45%]"
                       src={FeatureIllustration}
                       width={273}
                       height={288}
@@ -295,8 +313,8 @@ export default function Features01() {
                 >
                   <div className="inline-flex relative align-top">
                     <Image
-                      className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
-                      src={FeatureImage01}
+                      className=" rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
+                      src={FeatureDeploy}
                       width={600}
                       height={360}
                       alt="Feature 03"
@@ -326,14 +344,15 @@ export default function Features01() {
                 >
                   <div className="inline-flex relative align-top">
                     <Image
-                      className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
-                      src={FeatureImage01}
+                      // className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
+                      className="-mt-24"
+                      src={FeatureMonitor}
                       width={600}
                       height={360}
                       alt="Feature 04"
                     />
                     <Image
-                      className="absolute top-0 left-full -translate-x-[70%] -mr-20 max-md:w-[45%]"
+                      className="absolute top-36 left-full -translate-x-[70%] -mr-20 max-md:w-[45%]"
                       src={FeatureIllustration}
                       width={273}
                       height={288}

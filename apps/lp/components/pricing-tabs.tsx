@@ -513,33 +513,45 @@ export default function PricingTabs() {
   const faqs = [
     {
       title: 'Can I use the product for free?',
-      text: 'Absolutely! Grey allows you to create as many commercial graphics/images as you like, for yourself or your clients.',
-      active: false,
-    },
-    {
-      title: 'What payment methods can I use?',
-      text: 'Absolutely! Grey allows you to create as many commercial graphics/images as you like, for yourself or your clients.',
+      text: 'Absolutely! Chaindesk allows offers a free with limited features to get started quickly.',
       active: false,
     },
     {
       title: 'Can I change from monthly to yearly billing?',
-      text: 'Absolutely! Grey allows you to create as many commercial graphics/images as you like, for yourself or your clients.',
+      text: 'Absolutely! You can update your billing preferences or change your plan at any time from your account settings. With yearly billing, you save 20% on your subscription.',
+      active: false,
+    },
+    {
+      title: 'Can you embed a chatbot on multiple websites?',
+      text: `Yes, you're able to add any chatbot to any number of sites that you want visitors to interact with.`,
+      active: false,
+    },
+
+    {
+      title: 'Does it work on websites in languages other than English?',
+      text: 'Yes, your website can be in any language, not just English. Chatbot can also answer questions in a different language. You can also ask questions in a different language and the chatbot will be able to answer them.',
+      active: true,
+    },
+    {
+      title:
+        'I need a custom integration or feature that is not supported by Chaindesk. Can you help?',
+      text: 'Absolutely! If you need us to build a custom integration for your company, you can join as an enterprise customer and we can figure out a custom pricing plan for you, based on your needs',
       active: false,
     },
     {
       title:
-        'Can I use the tool for personal, client, and commercial projects?',
-      text: 'Absolutely! Grey allows you to create as many commercial graphics/images as you like, for yourself or your clients.',
-      active: true,
-    },
-    {
-      title: 'How can I ask other questions about pricing?',
-      text: 'Absolutely! Grey allows you to create as many commercial graphics/images as you like, for yourself or your clients.',
+        'Do you retrain the chatbot automatically when the data source content changes?',
+      text: 'Absolutely! Starting with first paid plan, the chatbot is automatically retrained (currently every week). You can also manually trigger a retraining.',
       active: false,
     },
     {
-      title: 'Do you offer discount for students and no-profit companies?',
-      text: 'Absolutely! Grey allows you to create as many commercial graphics/images as you like, for yourself or your clients.',
+      title: 'How to improve my agent anwsers?',
+      text: 'If you observe that youro Agent is not following your instructions properly, consider setting your Agent model to GPT-4-turbo to get the best possible experience.',
+      active: false,
+    },
+    {
+      title: 'How to contact the support team?',
+      text: 'You can send us an email at support@chaindesk.ai or use the chat widget on the bottom right of the page.',
       active: false,
     },
   ];
@@ -549,8 +561,11 @@ export default function PricingTabs() {
       <div className="py-12 md:py-20">
         <div className="px-4 mx-auto max-w-6xl sm:px-6">
           <div className="relative pb-12 mx-auto max-w-3xl text-center">
+            <span className="text-2xl text-pink-400 font-label">
+              Predictable Pricing
+            </span>
             <h2 className="mb-4 text-3xl font-bold font-bricolage-grotesque md:text-4xl text-zinc-900">
-              Pricing plans for teams of all sizes
+              Saves on Support Costs Over Time
             </h2>
             <p className="text-lg text-zinc-500">
               Start creating your custom AI chatbot for free. Upgrade to unlock
