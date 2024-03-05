@@ -466,7 +466,7 @@ const items: Product[] = [
     ],
   },
   {
-    slug: 'powerpoint',
+    slug: 'chat-powerpoint',
     name: 'Microsoft Powerpoint',
     title: 'Chat with Powerpoint Documents',
     description:
@@ -502,7 +502,7 @@ const items: Product[] = [
     ],
   },
   {
-    slug: 'word',
+    slug: 'chat-word',
     name: 'Microsoft Word',
     title: 'Chat with Word Documents',
     description:

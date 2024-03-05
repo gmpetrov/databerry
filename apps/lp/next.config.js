@@ -60,6 +60,21 @@ const nextConfig = {
         destination: '/settings/profile',
         permanent: true,
       },
+      {
+        source: '/products/chat-word',
+        destination: '/integrations/chat-word',
+        permanent: true,
+      },
+      {
+        source: '/products/chat-powerpoint',
+        destination: '/integrations/chat-powerpoint',
+        permanent: true,
+      },
+      {
+        source: '/pricing',
+        destination: '/#pricing',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

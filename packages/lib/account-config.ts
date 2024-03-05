@@ -3,6 +3,14 @@ import { AgentModelName, SubscriptionPlan } from '@chaindesk/prisma';
 type Plan = {
   type: SubscriptionPlan;
   label: string;
+  description: string;
+  price: {
+    usd: {
+      monthly: number;
+      annually: number;
+      symbol: string;
+    };
+  };
   limits: {
     maxAgents: number;
     maxAgentsQueries: number;
@@ -27,6 +35,14 @@ const config: {
   [SubscriptionPlan.level_0]: {
     type: SubscriptionPlan.level_0,
     label: 'Free',
+    description: 'The essentials to get started quickly.',
+    price: {
+      usd: {
+        monthly: 0,
+        annually: 0,
+        symbol: '$',
+      },
+    },
     limits: {
       maxAgents: 1,
       maxAgentsQueries: 100,
@@ -43,6 +59,14 @@ const config: {
   [SubscriptionPlan.level_0_5]: {
     type: SubscriptionPlan.level_0_5,
     label: 'Hobby',
+    description: 'A plan that scales with your rapidly growing business.',
+    price: {
+      usd: {
+        monthly: 25,
+        annually: 250,
+        symbol: '$',
+      },
+    },
     limits: {
       maxAgents: 2,
       maxAgentsQueries: 2500,
@@ -59,6 +83,15 @@ const config: {
   [SubscriptionPlan.level_1]: {
     type: SubscriptionPlan.level_1,
     label: 'Growth',
+    description: 'A plan that scales with your rapidly growing business.',
+
+    price: {
+      usd: {
+        monthly: 25,
+        annually: 250,
+        symbol: '$',
+      },
+    },
     limits: {
       maxAgents: 2,
       maxAgentsQueries: 5000,
@@ -76,6 +109,14 @@ const config: {
   [SubscriptionPlan.level_2]: {
     type: SubscriptionPlan.level_2,
     label: 'Pro',
+    description: 'For power users who want access more powerful features.',
+    price: {
+      usd: {
+        monthly: 99,
+        annually: 990,
+        symbol: '$',
+      },
+    },
     limits: {
       maxAgents: 5,
       maxAgentsQueries: 10000,
@@ -92,6 +133,14 @@ const config: {
   [SubscriptionPlan.level_3]: {
     type: SubscriptionPlan.level_3,
     label: 'Enterprise',
+    description: 'Dedicated support and for your team.',
+    price: {
+      usd: {
+        monthly: 499,
+        annually: 4990,
+        symbol: '$',
+      },
+    },
     limits: {
       maxAgents: 100,
       maxAgentsQueries: 100000,
@@ -108,6 +157,14 @@ const config: {
   [SubscriptionPlan.level_4]: {
     type: SubscriptionPlan.level_4,
     label: 'Ultimate',
+    description: 'Dedicated support and for your team.',
+    price: {
+      usd: {
+        monthly: 999,
+        annually: 9990,
+        symbol: '$',
+      },
+    },
     limits: {
       maxAgents: 200,
       maxAgentsQueries: 200000,
