@@ -5,7 +5,7 @@ const items: Product[] = [
   {
     slug: 'website',
     name: 'Website',
-    title: 'Deploy a Custom GPT Agent to Your Website in Minutes',
+    title: 'Add a Custom GPT Agent to Your Website in Minutes',
     description:
       'Deploy your AI Chatbot on your website. Customize to fit your brand. Copy/Paste your HTML snippet to go live! Your chatbot is automatically retrained when your data changes.',
     metadata: {
@@ -48,7 +48,7 @@ const items: Product[] = [
   {
     slug: 'whatsapp',
     name: 'WhatsApp',
-    title: 'Deploy a Custom GPT Chatbot to WhatsApp in Minutes',
+    title: 'Add a Custom GPT Chatbot to WhatsApp in Minutes',
     description:
       'Deploy a custom AI Chatbot to your Slack workspace in minutes. Train with your company data, install the Slack plugin, and enjoy AI-driven interactions.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
@@ -90,7 +90,7 @@ const items: Product[] = [
   {
     slug: 'slack',
     name: 'Slack',
-    title: 'Deploy a Custom GPT Chatbot to Your Slack Workspace in Minutes',
+    title: 'Add a Custom GPT Chatbot to Your Slack Workspace in Minutes',
     description:
       'Deploy a custom AI Chatbot to your Slack workspace in minutes. Train with your company data, install the Slack plugin, and enjoy AI-driven interactions.',
     logo: '/shared/images/logos/slack.png',
@@ -237,7 +237,7 @@ const items: Product[] = [
   {
     slug: 'wordpress',
     name: 'Wordpress',
-    title: 'Deploy a Custom GPT Chatbot to Your Wordpress Site in Minutes',
+    title: 'Add a Custom GPT Chatbot to Your Wordpress Site in Minutes',
     description:
       'Train a chatbot with your data on Chaindesk platform. Install the Wordpress plugin! Stay updated with auto-sync.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg',
@@ -277,7 +277,7 @@ const items: Product[] = [
   {
     slug: 'telegram',
     name: 'Telegram',
-    title: 'Deploy a Custom GPT Chatbot to Telegram in Minutes',
+    title: 'Add a Custom GPT Chatbot to Telegram in Minutes',
     description:
       'Deploy a custom AI Chatbot to your Telegram in minutes. Train with your company data, install the Telegram plugin, and enjoy AI-driven interactions.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg',
@@ -319,7 +319,7 @@ const items: Product[] = [
   {
     slug: 'shopify',
     name: 'Shopify',
-    title: 'Deploy a Custom GPT Chatbot to Shopify in Minutes',
+    title: 'Add a Custom GPT Chatbot to Shopify in Minutes',
     description:
       'Deploy a custom AI Chatbot to your Shopify store in minutes. Train with your company data, install the Telegram plugin, and enjoy AI-driven interactions.',
     logo: 'https://www.svgrepo.com/show/303503/shopify-logo.svg',
