@@ -55,3 +55,65 @@
 input {
   box-shadow: none !important;
 }
+
+/* Pulsing animation */
+@keyframes pulseLoop {
+  0% {
+    opacity: 0.15;
+    transform: scale(1) translateZ(0);
+  }
+  30% {
+    opacity: 0.15;
+  }
+  60% {
+    opacity: 0;
+  }
+  80% {
+    opacity: 0;
+    transform: scale(1.8) translateZ(0);
+  }
+}
+@keyframes pulseMiniLoop {
+  0% {
+    opacity: 0;
+    transform: scale(1) translateZ(0);
+  }
+  30% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 0;
+    transform: scale(3) translateZ(0);
+  }
+}
+.pulse {
+  transform: scale(1);
+  opacity: 0;
+  transform-origin: center;
+  animation: pulseLoop 10000ms linear infinite;
+}
+.pulse-mini {
+  animation: pulseMiniLoop 6000ms linear infinite;
+}
+.pulse-1 {
+  animation-delay: -3000ms;
+}
+.pulse-2 {
+  animation-delay: -6000ms;
+}
+
+/* Animations delay */
+.animation-delay-500 {
+  animation-delay: 500ms !important;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms !important;
+}
+
+.translate-z-0 {
+  transform: translateZ(0);
+}

@@ -35,12 +35,18 @@ module.exports = {
         '7xl': ['4.5rem', { lineHeight: '1.1666', letterSpacing: '-0.017em' }],
       },
       animation: {
+        float: 'float 3s ease-in-out infinite',
+
         spotlight: 'spotlight 2s ease .75s 1 forwards',
         'infinite-scroll': 'infinite-scroll 60s linear infinite',
         'infinite-scroll-inverse':
           'infinite-scroll-inverse 60s linear infinite',
       },
       keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5%)' },
+        },
         'infinite-scroll': {
           from: { transform: 'translateX(0)' },
           to: { transform: 'translateX(-100%)' },
