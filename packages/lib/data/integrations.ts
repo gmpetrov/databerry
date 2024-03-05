@@ -21,28 +21,30 @@ const items: Product[] = [
 
     youtubeVideoId: '-NkVS2l66Zs',
     imageUrl: '',
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Customize to fit your brand',
-        description:
-          'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Customize to fit your brand',
+          description:
+            'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
     isChannel: true,
   },
   {
@@ -64,28 +66,30 @@ const items: Product[] = [
     isComingSoon: false,
     isDatasource: false,
     isChannel: true,
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Install Slack plugin',
-        description:
-          'The final step is to install Chaindesk Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Install Slack plugin',
+          description:
+            'The final step is to install Chaindesk Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'slack',
@@ -106,28 +110,30 @@ const items: Product[] = [
     isComingSoon: false,
     isDatasource: false,
     isChannel: true,
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Install Slack plugin',
-        description:
-          'The final step is to install Chaindesk Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Install Slack plugin',
+          description:
+            'The final step is to install Chaindesk Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'crisp',
@@ -146,28 +152,30 @@ const items: Product[] = [
     metadata: {
       title: 'ChatGPT bot for Crisp with Chaindesk: Supercharge Your Support',
     },
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Install Crisp plugin',
-        description:
-          'The final step is to install the Crisp. \nNow your website is spiced up \nwith some AI magic ✨',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Install Crisp plugin',
+          description:
+            'The final step is to install the Crisp. \nNow your website is spiced up \nwith some AI magic ✨',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'zapier',
@@ -185,28 +193,30 @@ const items: Product[] = [
     metadata: {
       title: 'Chaindesk & Zapier: Seamless Integration with 5,000+ Apps',
     },
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Copy/Paste the HTML snippet',
-        description:
-          'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Copy/Paste the HTML snippet',
+          description:
+            'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   // {
   //   slug: 'zendesk',
@@ -251,28 +261,30 @@ const items: Product[] = [
       title:
         'ChatGPT Chat Bot for Wordpress with Chaindesk: Supercharge Your Site',
     },
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Install Wordpress plugin',
-        description:
-          'The final step is to link your Wordpress website to your Chaindesk Agent via our plugin. Just install the plugin and follow the instructions.',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Install Wordpress plugin',
+          description:
+            'The final step is to link your Wordpress website to your Chaindesk Agent via our plugin. Just install the plugin and follow the instructions.',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'telegram',
@@ -293,28 +305,30 @@ const items: Product[] = [
     isComingSoon: true,
     isDatasource: false,
     isChannel: true,
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Install Telegram plugin',
-        description:
-          'The final step is to install Chaindesk Bot to your Telegram. \nNow your workspace is spiced up \nwith some AI magic ✨',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Install Telegram plugin',
+          description:
+            'The final step is to install Chaindesk Bot to your Telegram. \nNow your workspace is spiced up \nwith some AI magic ✨',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'shopify',
@@ -335,28 +349,30 @@ const items: Product[] = [
     isComingSoon: true,
     isDatasource: false,
     isChannel: true,
-    features: [
-      {
-        name: 'Just paste your website url',
-        description:
-          'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Training',
-        description:
-          'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-      },
-      {
-        name: 'Install Telegram plugin',
-        description:
-          'The final step is to install Chaindesk Bot to your Telegram. \nNow your workspace is spiced up \nwith some AI magic ✨',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Just paste your website url',
+          description:
+            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Install Telegram plugin',
+          description:
+            'The final step is to install Chaindesk Bot to your Telegram. \nNow your workspace is spiced up \nwith some AI magic ✨',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   // Datasources
   {
@@ -371,18 +387,20 @@ const items: Product[] = [
       url: 'https://app.chaindesk.ai/datastores',
     },
     isDatasource: true,
-    features: [
-      {
-        name: 'Add a Website URL',
-        description:
-          'Train your Agent with data from your website. Just paste your website or sitemap URL. It takes just a few seconds.',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more!',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Add a Website URL',
+          description:
+            'Train your Agent with data from your website. Just paste your website or sitemap URL. It takes just a few seconds.',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more!',
+        },
+      ],
+    },
   },
   {
     slug: 'notion',
@@ -396,18 +414,20 @@ const items: Product[] = [
       url: 'https://app.chaindesk.ai/datastores',
     },
     isDatasource: true,
-    features: [
-      {
-        name: 'Add a YouTube video',
-        description:
-          'Add a YouTube video, playlist or channel to your Datastore. It takes just a few seconds.',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more!',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Add a YouTube video',
+          description:
+            'Add a YouTube video, playlist or channel to your Datastore. It takes just a few seconds.',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more!',
+        },
+      ],
+    },
   },
   {
     slug: 'google-drive',
@@ -422,23 +442,25 @@ const items: Product[] = [
     },
 
     isDatasource: true,
-    features: [
-      {
-        name: 'Connect your Google Drive account',
-        description:
-          'Link your Google account and select the file or folders your want to use for training your AI Agent. It takes just a few seconds.',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more!',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'Your data is synched automatically. \nWe keep your Agent up to date with your data.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Connect your Google Drive account',
+          description:
+            'Link your Google account and select the file or folders your want to use for training your AI Agent. It takes just a few seconds.',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more!',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'Your data is synched automatically. \nWe keep your Agent up to date with your data.',
+        },
+      ],
+    },
   },
   {
     slug: 'youtube',
@@ -452,18 +474,20 @@ const items: Product[] = [
       url: 'https://app.chaindesk.ai/datastores',
     },
     isDatasource: true,
-    features: [
-      {
-        name: 'Add a YouTube video',
-        description:
-          'Add a YouTube video, playlist or channel to your Datastore. It takes just a few seconds.',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more!',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Add a YouTube video',
+          description:
+            'Add a YouTube video, playlist or channel to your Datastore. It takes just a few seconds.',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more!',
+        },
+      ],
+    },
   },
   {
     slug: 'chat-powerpoint',
@@ -478,28 +502,30 @@ const items: Product[] = [
     },
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
-    features: [
-      {
-        name: 'Create a Datastore',
-        description:
-          'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Add your data',
-        description:
-          'Upload documents, link your Google Drive, connect to Notion and more!',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more.',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Create a Datastore',
+          description:
+            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Add your data',
+          description:
+            'Upload documents, link your Google Drive, connect to Notion and more!',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more.',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'chat-word',
@@ -515,28 +541,30 @@ const items: Product[] = [
 
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
-    features: [
-      {
-        name: 'Create a Datastore',
-        description:
-          'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Add your data',
-        description:
-          'Upload documents, link your Google Drive, connect to Notion and more!',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more.',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Create a Datastore',
+          description:
+            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Add your data',
+          description:
+            'Upload documents, link your Google Drive, connect to Notion and more!',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more.',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'excel',
@@ -551,28 +579,30 @@ const items: Product[] = [
     },
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
-    features: [
-      {
-        name: 'Create a Datastore',
-        description:
-          'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Add your data',
-        description:
-          'Upload documents, link your Google Drive, connect to Notion and more!',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more.',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Create a Datastore',
+          description:
+            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Add your data',
+          description:
+            'Upload documents, link your Google Drive, connect to Notion and more!',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more.',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
   {
     slug: 'pdf',
@@ -583,28 +613,30 @@ const items: Product[] = [
     logo: 'https://www.svgrepo.com/show/144578/pdf.svg',
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
-    features: [
-      {
-        name: 'Create a Datastore',
-        description:
-          'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-      },
-      {
-        name: 'Add your data',
-        description:
-          'Upload documents, link your Google Drive, connect to Notion and more!',
-      },
-      {
-        name: 'Chat',
-        description:
-          'You can ask questions, get summaries, find information, and more.',
-      },
-      {
-        name: 'Auto Sync',
-        description:
-          'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-      },
-    ],
+    features: {
+      items: [
+        {
+          name: 'Create a Datastore',
+          description:
+            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
+        },
+        {
+          name: 'Add your data',
+          description:
+            'Upload documents, link your Google Drive, connect to Notion and more!',
+        },
+        {
+          name: 'Chat',
+          description:
+            'You can ask questions, get summaries, find information, and more.',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
   },
 ];
 

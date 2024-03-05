@@ -26,9 +26,17 @@ const solutions = [
       name: product.name,
       description: product.description,
       href: `/products/${product.slug}`,
-      icon: (props: any) => (
-        <img {...props} src={product.logo} alt={`${product.name} Logo}`} />
-      ),
+      icon: product.icon
+        ? product.icon
+        : (props: any) => {
+            return (
+              <img
+                {...props}
+                src={product.logo}
+                alt={`${product.name} Logo}`}
+              />
+            );
+          },
     })),
   // {
   //   name: 'Embed Agent on your website',
@@ -148,7 +156,7 @@ export default function Example() {
                 >
                   <div className="flex flex-none justify-center items-center mt-1 w-11 h-11 bg-gray-50 rounded-lg group-hover:bg-white">
                     <item.icon
-                      className="w-6 h-6 text-gray-600 group-hover:text-indigo-600"
+                      className="w-6 h-6 text-gray-600 group-hover:text-pink-400"
                       aria-hidden="true"
                     />
                   </div>

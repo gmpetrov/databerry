@@ -152,6 +152,7 @@ export type Product = {
   name: string;
   title: string;
   description: string;
+  icon?: any;
   metadata?: {
     title?: string;
     description?: string;
@@ -163,10 +164,25 @@ export type Product = {
   };
   youtubeVideoId?: string;
   imageUrl?: string;
+
   features?: {
-    name: string;
-    description: string;
-  }[];
+    label?: string;
+    title?: string;
+    description?: string;
+    items?: {
+      name: string;
+      description: string;
+    }[];
+  };
+
+  // labelFeatures?: string;
+  // titleFeatures?: string;
+  // descriptionFeatures?: string;
+  // features?: {
+  //   name: string;
+  //   description: string;
+  // }[];
+
   isChannel?: boolean;
   isDatasource?: boolean;
   isComingSoon?: boolean;

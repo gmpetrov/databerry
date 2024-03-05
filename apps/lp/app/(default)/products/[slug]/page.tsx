@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 
 import products from '@chaindesk/lib/data/products';
+import { cn } from '@chaindesk/ui/utils/cn';
 
 import Clients from '@/components/clients';
 import Cta from '@/components/cta';
@@ -77,21 +78,31 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 className="text-2xl font-bold text-pink-400 font-caveat"
                 color="primary"
               >
-                No-Code Required
+                {product?.features?.label || `No-Code Required`}
               </h3>
               <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl font-bricolage-grotesque">
-                Training a Custom ChatGPT Chatbot made easy
+                {product.features.title ||
+                  `Training a Custom ChatGPT Chatbot made easy`}
               </p>
               <p className="mt-6 text-lg leading-8 text-zinc-500">
-                Chaindesk makes it very easy to train a chatbot on your company
-                data.
+                {product.features.description ||
+                  `Chaindesk makes it very easy to train a chatbot on your company
+                data.`}
               </p>
             </div>
             <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-              <dl className="grid grid-cols-1 gap-x-8 gap-y-10 max-w-xl lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-                {product.features.map((feature, idx) => (
+              <dl
+                className={cn(
+                  'grid grid-cols-1 gap-x-8 gap-y-10 max-w-xl lg:max-w-none lg:grid-cols-2 lg:gap-y-16',
+                  {
+                    'lg:grid-cols-3 ':
+                      (product.features?.items?.length || 0) % 3 === 0,
+                  }
+                )}
+              >
+                {product.features?.items?.map((feature, idx) => (
                   <div key={feature.name} className="relative pl-16">
-                    <dt className="text-base font-bold leading-7 text-zinc-800 font-bricolage-grotesque">
+                    <dt className="text-base font-bold leading-7 text-zinc-800 font-title">
                       <div
                         className="flex absolute top-0 left-0 justify-center items-center w-10 h-10 text-2xl font-extrabold bg-pink-100 rounded-lg text-zinc-800 font-caveat"
                         // sx={{ backgroundColor: 'primary.600' }}
