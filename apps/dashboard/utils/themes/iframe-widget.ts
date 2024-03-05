@@ -11,8 +11,8 @@ export const themeKeys = {
 export const theme = extendTheme({
   cssVarPrefix: 'chaindesk-chat-iframe',
   fontFamily: {
-    body: 'Josefin Sans, sans-serif',
-    display: 'Josefin Sans, sans-serif',
+    body: 'Inter, sans-serif',
+    display: 'Bricolage Grotesque, sans-serif',
   },
   colorSchemes: {
     dark: {
