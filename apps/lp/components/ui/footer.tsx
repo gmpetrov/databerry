@@ -135,6 +135,14 @@ export default function Footer() {
                     Integrations
                   </a>
                 </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href={`/pricing`}
+                  >
+                    Pricing
+                  </a>
+                </li>
               </ul>
             </div>
             {/* <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">

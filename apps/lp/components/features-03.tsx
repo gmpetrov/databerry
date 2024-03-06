@@ -67,7 +67,7 @@ export default function Features03() {
         })}
         initial="hidden"
         whileInView={'visible'}
-        viewport={{ once: true, margin: '-300px' }}
+        viewport={{ once: true, amount: 0.5 }}
       >
         {/* Carousel */}
         <div className="px-4 mx-auto max-w-xl lg:max-w-6xl sm:px-6">
