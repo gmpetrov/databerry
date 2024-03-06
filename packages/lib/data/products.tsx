@@ -8,8 +8,8 @@ const items: Product[] = [
     description:
       'Train an AI chatbot with your data. Add it to your site or existing tools in minutes! Your chatbot is automatically retrained when your data changes.',
     metadata: {
-      title: 'Chat Bubble - Chaindesk: Train Your Chatbot in Minutes',
-      description: '',
+      title:
+        'AI Agent - Custom ChatGPT AI Chatbot for Your Website | Chaindesk',
     },
     logo: '/images/logo.png',
     cta: {
@@ -41,9 +41,9 @@ const items: Product[] = [
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -85,10 +85,9 @@ const items: Product[] = [
       );
     },
     description:
-      'Collect data from your website visitors in a conversational way!',
+      'Create beautiful AI-driven forms that talk naturally, ask/answer questions & engage users in any touch point.',
     metadata: {
-      title: 'AI-Driven Forms',
-      description: '',
+      title: 'AI Form - Build GPT-Powered form in minutes | Chaindesk',
     },
     logo: '/images/logo.png',
     cta: {
@@ -129,7 +128,9 @@ const items: Product[] = [
     title: 'Automate Your Email Support',
     description:
       'Automate your email support with the help of AI. Get 10x fast replies!',
-    metadata: {},
+    metadata: {
+      title: 'Email Support - Automate Your Email Support with AI | Chaindesk',
+    },
     logo: '/images/logo.png',
     icon: (props: any) => {
       return (
@@ -204,7 +205,8 @@ const items: Product[] = [
     description:
       'Monitor and manage all your customer conversations in one place. Take over your AI chatbot when needed. Assign conversations to your team members.',
     metadata: {
-      title: 'AI-Driven Shared Inbox',
+      title:
+        'Shared Inbox - All your AI chatbot conversations in one place | Chaindesk',
       description: '',
     },
     logo: '/images/logo.png',

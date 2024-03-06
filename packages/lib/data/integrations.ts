@@ -7,10 +7,9 @@ const items: Product[] = [
     name: 'Website',
     title: 'Add a Custom GPT Agent to Your Website in Minutes',
     description:
-      'Deploy your AI Chatbot on your website. Customize to fit your brand. Copy/Paste your HTML snippet to go live! Your chatbot is automatically retrained when your data changes.',
+      'Deploy your AI Chatbot on your website. Customize to fit your brand. Your chatbot is automatically retrained when your data changes.',
     metadata: {
-      title: 'Chat Bubble - Chaindesk: Train Your Chatbot in Minutes',
-      description: '',
+      title: 'Custom ChatGPT - AI Chatbot for Your Website | Chaindesk',
     },
     logo: 'https://www.svgrepo.com/show/197996/internet.svg',
     cta: {
@@ -24,9 +23,9 @@ const items: Product[] = [
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -36,7 +35,7 @@ const items: Product[] = [
         {
           name: 'Customize to fit your brand',
           description:
-            'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
+            'The final step is to install the widget on your website. \nJust add the simple HTML snippet to your website',
         },
         {
           name: 'Auto Sync',
@@ -50,17 +49,16 @@ const items: Product[] = [
   {
     slug: 'whatsapp',
     name: 'WhatsApp',
-    title: 'Add a Custom GPT Chatbot to WhatsApp in Minutes',
+    title: 'Add a Custom AI Chatbot to WhatsApp in Minutes',
     description:
-      'Deploy a custom AI Chatbot to your Slack workspace in minutes. Train with your company data, install the Slack plugin, and enjoy AI-driven interactions.',
+      'Deploy a custom AI Chatbot to WhatsApp Business in minutes. Train with your company data, setup the WhatsApp plugin, and enjoy AI-driven interactions.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
     cta: {
       label: 'Create your WhatsApp AI Chatbot',
       url: 'https://app.chaindesk.ai/agents',
     },
     metadata: {
-      title: 'ChatGPT Bot for Slack with Chaindesk: Elevate Your Workspace',
-      description: ``,
+      title: 'Custom ChatGPT - AI Chatbot for WhatsApp Business | Chaindesk',
     },
     youtubeVideoId: 'x8-poiGrBa8',
     isComingSoon: false,
@@ -69,9 +67,9 @@ const items: Product[] = [
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -79,9 +77,9 @@ const items: Product[] = [
             'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
         },
         {
-          name: 'Install Slack plugin',
+          name: 'Install WhatsApp plugin',
           description:
-            'The final step is to install Chaindesk Bot to your Slack workspace. \nNow your workspace is spiced up \nwith some AI magic ✨',
+            'The final step is to install Chaindesk Bot to your WhatsApp Business account. \nNow your WhatsApp is spiced up \nwith some AI magic ✨',
         },
         {
           name: 'Auto Sync',
@@ -103,8 +101,7 @@ const items: Product[] = [
       url: 'https://app.chaindesk.ai/agents',
     },
     metadata: {
-      title: 'ChatGPT Bot for Slack with Chaindesk: Elevate Your Workspace',
-      description: ``,
+      title: 'Custom ChatGPT - AI Chatbot for Slack | Chaindesk',
     },
     youtubeVideoId: 'x8-poiGrBa8',
     isComingSoon: false,
@@ -113,9 +110,9 @@ const items: Product[] = [
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -150,14 +147,15 @@ const items: Product[] = [
     youtubeVideoId: 'rLgn1_MWGPM',
     isChannel: true,
     metadata: {
-      title: 'ChatGPT bot for Crisp with Chaindesk: Supercharge Your Support',
+      title:
+        'Custom ChatGPT - AI Chatbot for Crisp - Supercharge Your Support | Chaindesk',
     },
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -196,9 +194,9 @@ const items: Product[] = [
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -218,36 +216,41 @@ const items: Product[] = [
       ],
     },
   },
-  // {
-  //   slug: 'zendesk',
-  //   name: 'Resolve your Zendesk support tickets instantly',
-  //   description:
-  //     'With our Zendesk integration you can automatically resolve tickets and provide instant support to your customers.',
-  //   logo: '/integrations/zendesk/icon.svg',
-  //   CTA: 'Connect to Zendesk',
-  //   disabledFromMenu: false,
-  //   features: [
-  //     {
-  //       name: 'AI Agent trained on your data',
-  //       description:
-  //         'Train your Agent with custom data with our easy to use interface. Get started in minutes!',
-  //     },
-  //     {
-  //       name: 'Smart Human Handoff',
-  //       description:
-  //         'When a human operator is requested, the AI will create a new ticket in Zendesk containing the email of the visitor.',
-  //     },
-  //     {
-  //       name: 'Resolve Tickets instantly',
-  //       description:
-  //         'When the conversation is marked as resolved, the AI will close the ticket in Zendesk automatically!',
-  //     },
-  //   ],
-  // },
+  {
+    slug: 'zendesk',
+    name: 'Zendesk',
+    title: 'Resolve your Zendesk support tickets instantly',
+    description:
+      'Use our Zendesk integration to connect your AI chatbot with your Zendesk account. Automatically resolve tickets and provide instant support to your customers.',
+    logo: '/integrations/zendesk/icon.svg',
+    cta: {
+      label: 'Get Started for Free',
+      url: 'https://app.chaindesk.ai/agents',
+    },
+    features: {
+      items: [
+        {
+          name: 'AI Agent trained on your data',
+          description:
+            'Train your Agent with custom data with our easy to use interface. Get started in minutes!',
+        },
+        {
+          name: 'Smart Human Handoff',
+          description:
+            'When a human operator is requested, the AI will create a new ticket in Zendesk containing the email of the visitor.',
+        },
+        {
+          name: 'Resolve Tickets instantly',
+          description:
+            'When the conversation is marked as resolved, the AI will close the ticket in Zendesk automatically!',
+        },
+      ],
+    },
+  },
   {
     slug: 'wordpress',
     name: 'Wordpress',
-    title: 'Add a Custom GPT Chatbot to Your Wordpress Site in Minutes',
+    title: 'Add a Custom AI Chatbot to Your Wordpress Site in Minutes',
     description:
       'Train a chatbot with your data on Chaindesk platform. Install the Wordpress plugin! Stay updated with auto-sync.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg',
@@ -258,15 +261,14 @@ const items: Product[] = [
 
     isChannel: true,
     metadata: {
-      title:
-        'ChatGPT Chat Bot for Wordpress with Chaindesk: Supercharge Your Site',
+      title: 'Custom ChatGPT - AI Chatbot for Wordpress | Chaindesk',
     },
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -294,11 +296,11 @@ const items: Product[] = [
       'Deploy a custom AI Chatbot to your Telegram in minutes. Train with your company data, install the Telegram plugin, and enjoy AI-driven interactions.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg',
     cta: {
-      label: 'Create your WhatsApp AI Chatbot',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/agents',
     },
     metadata: {
-      title: 'ChatGPT Bot for Telegram with Chaindesk: Elevate Your Workspace',
+      title: 'Custom ChatGPT - AI Chatbot for Telegram | Chaindesk',
       description: ``,
     },
     youtubeVideoId: 'x8-poiGrBa8',
@@ -308,9 +310,9 @@ const items: Product[] = [
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -352,9 +354,9 @@ const items: Product[] = [
     features: {
       items: [
         {
-          name: 'Just paste your website url',
+          name: 'Import your data',
           description:
-            'We automatically get your website pages.\nOther data sources are available too \n(e.g. PDF, Gdoc, Sheets, Notion, Airtable, etc...)',
+            'Import custom data from various data sources like File, Notion, Google, and more.',
         },
         {
           name: 'Training',
@@ -378,9 +380,9 @@ const items: Product[] = [
   {
     slug: 'train-ai-from-website',
     name: 'Website',
-    title: 'Train your AI with data from your website',
+    title: 'AI Chatbot trained with data from your website',
     description:
-      'Easily train your AI with data from your website. Just paste your website URL and we will automatically get your website pages.',
+      'Easily train your custom chatgpt chatbot with data from your website. Your chatbot is automatically retrained when your data changes.',
     logo: 'https://www.svgrepo.com/show/197996/internet.svg',
     cta: {
       label: 'Get Started for Free',
@@ -407,7 +409,7 @@ const items: Product[] = [
     name: 'Notion',
     title: 'Chat with Your Notion Notebooks',
     description:
-      'Chat with any Notion notebook using Chaindesk. Easily add a Notion notebook and start getting summaries or finding information.',
+      'Easily train your custom chatgpt chatbot with data from your Notion notebooks. Your chatbot is automatically retrained when your data changes.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/Notion-logo.svg',
     cta: {
       label: 'Add a Notion notebook',
