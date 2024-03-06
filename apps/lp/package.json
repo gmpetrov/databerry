@@ -8,7 +8,8 @@
     "start": "npm run dotenv -- next start",
     "dotenv": "dotenv -e ../../.env.local",
     "lint": "npm run dotenv -- next lint -- --fix",
-    "typecheck": "npm run dotenv -- tsc --noemit"
+    "typecheck": "npm run dotenv -- tsc --noemit",
+    "tunnel": "npm run dotenv -- pnpx localtunnel -- --port 3002 --subdomain $USER-chaindesk-lp"
   },
   "dependencies": {
     "@chaindesk/lib": "workspace:*",

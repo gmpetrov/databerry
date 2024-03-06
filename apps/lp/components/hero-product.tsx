@@ -74,13 +74,13 @@ export default function Hero(props: {
               {props?.name && (
                 <motion.div
                   className={cn(
-                    'text-3xl font-bold text-pink-400 font-caveat',
+                    'text-3xl font-bold text-pink-400 font-label',
                     props.labelClassName
                   )}
                   variants={{
                     start: {
                       opacity: 0,
-                      y: 20,
+                      y: 0,
                     },
                     end: {
                       opacity: 1,
@@ -99,14 +99,14 @@ export default function Hero(props: {
               )}
               <motion.h1
                 className={cn(
-                  'pb-4 text-5xl font-extrabold text-transparent font-bricolage-grotesque md:text-7xl text-zinc-800',
+                  'pb-4 text-5xl font-extrabold text-transparent font-title md:text-7xl text-zinc-800',
                   props.titleClassName
                 )}
                 variants={childTextVariants}
               >
                 <TextGenerateEffect
                   duration={0.5}
-                  text={props.title.split(' ')}
+                  text={props.title}
                 ></TextGenerateEffect>
                 {/* Custom{' '}
                 <em className="inline-flex relative justify-center items-center italic text-zinc-900">
