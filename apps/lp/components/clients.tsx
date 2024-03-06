@@ -59,7 +59,7 @@ export default function Clients() {
           variants={defaultContainerVariants}
           initial="hidden"
           whileInView={'visible'}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.3 }}
         >
           {/* <motion.h3
             className="mb-8 text-2xl font-semibold text-center font-bricolage-grotesque text-zinc-900"

@@ -33,7 +33,7 @@ export default function Features02() {
         variants={defaultContainerVariants}
         initial="hidden"
         whileInView={'visible'}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
       >
         <div className="px-4 mx-auto max-w-6xl sm:px-6">
           <div className="relative pb-12 mx-auto max-w-3xl text-center md:pb-20">
