@@ -8,7 +8,7 @@ export async function GET(req: Request) {
 
   const paths = [
     '/',
-    // '/pricing',
+    '/pricing',
     `/tools/youtube-summarizer`,
     ...products.map((product) => `/products/${product.slug}`),
     ...integrations.map((product) => `/integrations/${product.slug}`),
