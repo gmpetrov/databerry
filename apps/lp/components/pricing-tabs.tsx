@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 
 import config from '@chaindesk/lib/account-config';
 
+import TestimonialBadge from './testimonial-badge';
+
 import Accordion from '@/components/accordion';
 import Tooltip from '@/components/tooltip';
 import { cn } from '@/lib/utils';
@@ -558,13 +560,15 @@ export default function PricingTabs() {
 
   return (
     <section id="pricing">
-      <div className="py-12 md:py-20">
+      <div
+      //  className="py-12 md:py-20"
+      >
         <div className="px-4 mx-auto max-w-6xl sm:px-6">
           <div className="relative pb-12 mx-auto max-w-3xl text-center">
-            <span className="text-2xl text-pink-400 font-label">
+            <span className="text-3xl font-bold text-pink-400 font-label">
               Predictable Pricing
             </span>
-            <h2 className="mb-4 text-3xl font-bold font-bricolage-grotesque md:text-4xl text-zinc-900">
+            <h2 className="mb-4 text-3xl font-bold font-bricolage-grotesque md:text-7xl text-zinc-900">
               Saves on Support Costs Over Time
             </h2>
             <p className="text-lg text-zinc-500">

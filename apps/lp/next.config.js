@@ -70,11 +70,6 @@ const nextConfig = {
         destination: '/integrations/chat-powerpoint',
         permanent: true,
       },
-      {
-        source: '/pricing',
-        destination: '/#pricing',
-        permanent: true,
-      },
     ];
   },
   async rewrites() {

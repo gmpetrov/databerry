@@ -32,7 +32,7 @@ export default function Header() {
                 <li>
                   <Link
                     className="hidden items-center px-3 py-2 text-sm font-medium transition md:flex text-zinc-500 hover:text-zinc-900 lg:px-5"
-                    href="/#pricing"
+                    href="/pricing"
                   >
                     Pricing
                   </Link>
