@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+Sitemap: https://www.chaindesk.ai/sitemap.xml
+Sitemap: https://www.chaindesk.ai/api/sitemaps/tools/youtube-summarizer.xml
