@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run dotenv -- next dev -- -p 3002",
-    "build": "next build",
+    "build": "npm run dotenv -- next build",
     "start": "next start",
     "dotenv": "dotenv -e ../../.env.local",
     "lint": "npm run dotenv -- next lint -- --fix",

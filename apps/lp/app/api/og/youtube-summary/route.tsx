@@ -1,8 +1,7 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
-export const config = {
-  runtime: 'edge',
-};
+
+export const runtime = 'edge';
 
 // const JoseinSansRegularFontP = fetch(
 //   new URL('../../../public/fonts/JosefinSans-Regular.ttf', import.meta.url)
