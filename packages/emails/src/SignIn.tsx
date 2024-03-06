@@ -32,7 +32,7 @@ export const SignIn = ({ url, host }: Props) => {
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px]">
             <Section className="mt-[32px]">
               <Img
-                src={`https://www.chaindesk.ai/app-logo-icon.png`}
+                src={`https://www.chaindesk.ai/logo.png`}
                 width="60"
                 height="57"
                 alt="Your App Name"

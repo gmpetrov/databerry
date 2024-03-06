@@ -1,6 +1,6 @@
 <h1 align="center" style="font-weight: bold">
   <br>
-  <a href="https://chaindesk.ai"><img src="apps/dashboard/public/app-logo-icon.png" alt="Chaindesk" width="200"></a>
+  <a href="https://chaindesk.ai"><img src="apps/dashboard/public/logo.png" alt="Chaindesk" width="200"></a>
   <br>
   Chaindesk
   <br>

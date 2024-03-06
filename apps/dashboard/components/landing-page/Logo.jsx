@@ -13,7 +13,7 @@ export function Logo(props) {
         width="100"
         height="100"
         className={clsx(props.className)}
-        src="/app-logo-icon.png"
+        src="/logo.png"
         alt=""
       />
       <span className="text-xl">Chaindesk</span>

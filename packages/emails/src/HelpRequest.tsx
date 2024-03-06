@@ -77,7 +77,7 @@ export const HelpRequest = ({
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Section className="mt-[22px]">
               <Img
-                src={`https://www.chaindesk.ai/app-logo-icon.png`}
+                src={`https://www.chaindesk.ai/logo.png`}
                 width="50"
                 height="auto"
                 alt="Vercel"

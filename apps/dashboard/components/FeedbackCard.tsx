@@ -78,7 +78,7 @@ function FeedbackCard({
                 <Image
                   width="100"
                   height="100"
-                  src="/app-logo-icon.png"
+                  src="/logo.png"
                   alt=""
                   className="w-full height-auto"
                 />
