@@ -9,6 +9,7 @@ const pkg = require('../../package.json');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  crossOrigin: 'anonymous',
   assetPrefix: process.env.NEXT_PUBLIC_DASHBOARD_URL,
   reactStrictMode: true,
   output: 'standalone',
