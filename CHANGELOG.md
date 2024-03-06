@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.246"></a>
+## 0.1.246 (2024-03-06)
+
+### Fixed
+
+- 🐛 missing sentry files [[ab3a78d](https://github.com/gmpetrov/databerry/commit/ab3a78d62155e5bcf4c140d731ba651d4b454165)]
+- 🐛 font path [[b78bc3d](https://github.com/gmpetrov/databerry/commit/b78bc3d47c72aaf281f23e4ff8461af0550f8230)]
+
+### Miscellaneous
+
+- 🤖 bump embeds version [[73782bf](https://github.com/gmpetrov/databerry/commit/73782bf578196a67c6bf5d8f1be8c1c6e0c210d9)]
+
+
 <a name="0.1.245"></a>
 ## 0.1.245 (2024-03-06)
 
