@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.245"></a>
+## 0.1.245 (2024-03-06)
+
+### Fixed
+
+- 🐛 grid opacity [[e1d10f2](https://github.com/gmpetrov/databerry/commit/e1d10f258464544fc6304d523e81a4dab61a5c27)]
+
+### Miscellaneous
+
+-  Feature/new landing page ([#354](https://github.com/gmpetrov/databerry/issues/354)) [[3505952](https://github.com/gmpetrov/databerry/commit/3505952643fb8c7b32b8f418dc1009e4b96172d3)]
+
+
 <a name="0.1.244"></a>
 ## 0.1.244 (2024-03-01)
 
