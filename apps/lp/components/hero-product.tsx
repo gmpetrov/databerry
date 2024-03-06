@@ -60,7 +60,6 @@ export default function Hero(props: {
           visible: {
             transition: {
               staggerChildren: 1,
-              // delayChildren: -1,
             },
           },
         })}
@@ -103,16 +102,11 @@ export default function Hero(props: {
                   'pb-4 text-5xl font-extrabold text-transparent font-bricolage-grotesque md:text-7xl text-zinc-800',
                   props.titleClassName
                 )}
-                // className="pb-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r font-bricolage-grotesque md:text-5xl from-zinc-500 via-zinc-900 to-zinc-900"
-                // initial={{ opacity: 0 }}
-                // whileInView={{ opacity: 1 }}
-                // viewport={{ once: true }}
                 variants={childTextVariants}
-                // custom={0.1}
               >
                 <TextGenerateEffect
                   duration={0.5}
-                  text={props.title}
+                  text={props.title.split(' ')}
                 ></TextGenerateEffect>
                 {/* Custom{' '}
                 <em className="inline-flex relative justify-center items-center italic text-zinc-900">

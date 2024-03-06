@@ -267,7 +267,7 @@ export default function Features03() {
                       className="mx-auto w-auto max-w-none h-full rounded-lg"
                       src={'/videos/demo-form.mp4'}
                       controls
-                      autoPlay
+                      autoPlay={tab === 3}
                       muted
                       loop
                     />

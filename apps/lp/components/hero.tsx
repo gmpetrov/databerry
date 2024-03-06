@@ -66,12 +66,7 @@ export default function Hero() {
             <div className="pb-12 text-center md:pb-16">
               <motion.h1
                 className="pb-4 mx-auto max-w-2xl text-5xl font-extrabold text-transparent font-bricolage-grotesque md:text-8xl text-zinc-800"
-                // className="pb-4 text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r font-bricolage-grotesque md:text-5xl from-zinc-500 via-zinc-900 to-zinc-900"
-                // initial={{ opacity: 0 }}
-                // whileInView={{ opacity: 1 }}
-                // viewport={{ once: true }}
                 variants={childTextVariants}
-                // custom={0.1}
               >
                 <TextGenerateEffect
                   duration={0.5}
