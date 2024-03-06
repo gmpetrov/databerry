@@ -1,5 +1,16 @@
 # Changelog
 
+<a name="0.1.247"></a>
+## 0.1.247 (2024-03-06)
+
+### Fixed
+
+- 🐛 assets cors for dashboard subdomains (chat.) [[05d2ff6](https://github.com/gmpetrov/databerry/commit/05d2ff698e246d6fda8efc6ace4530a46fcb279c)]
+- 🐛 section no visible in mobile [[ca3e8d1](https://github.com/gmpetrov/databerry/commit/ca3e8d1d0b7bf5e964a1aa016991953fde62eccc)]
+- 🐛 dashboard build [[4baf3b8](https://github.com/gmpetrov/databerry/commit/4baf3b844de6392d43894b97ccccf81182654ff8)]
+- 🐛 next sitemap indexes [[747370e](https://github.com/gmpetrov/databerry/commit/747370e75bfe9a986a05bc17e1f641e5640df253)]
+
+
 <a name="0.1.246"></a>
 ## 0.1.246 (2024-03-06)
 
