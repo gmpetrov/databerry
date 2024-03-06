@@ -250,7 +250,7 @@ function IntegrationSettings({ onSubmitSuccess, agentId }: Props) {
         display: 'flex',
         ['kbd']: {
           fontSize: '1rem',
-          fontFamily: 'Josefin Sans',
+          fontFamily: 'Bricolage Grotesque',
         },
       }}
     >

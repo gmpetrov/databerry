@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import products from '@chaindesk/lib/data/products.json';
+import products from '@chaindesk/lib/data/products';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   res.statusCode = 200;

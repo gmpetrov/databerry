@@ -17,19 +17,17 @@ import {
 } from '@heroicons/react/24/outline';
 import { Fragment } from 'react';
 
-import products from '@chaindesk/lib/data/products.json';
+import products from '@chaindesk/lib/data/products';
 
 const solutions = [
-  ...products
-    .filter((each) => !each.disabledFromMenu)
-    .map((product) => ({
-      name: product.name,
-      description: product.description,
-      href: `/products/${product.slug}`,
-      icon: (props: any) => (
-        <img {...props} src={product.logo} alt={`${product.name} Logo}`} />
-      ),
-    })),
+  ...products.map((product) => ({
+    name: product.name,
+    description: product.description,
+    href: `/products/${product.slug}`,
+    icon: (props: any) => (
+      <img {...props} src={product.logo} alt={`${product.name} Logo}`} />
+    ),
+  })),
   // {
   //   name: 'Embed Agent on your website',
   //   description:
@@ -138,15 +136,15 @@ export default function Example() {
         leaveFrom="opacity-100 translate-y-0"
         leaveTo="opacity-0 translate-y-1"
       >
-        <Popover.Panel className="absolute z-10 flex w-screen px-4 mt-5 -translate-x-1/2 left-1/2 max-w-max">
-          <div className="flex-auto w-screen max-w-md overflow-hidden text-sm leading-6 bg-white shadow-lg rounded-3xl ring-1 ring-gray-900/5">
+        <Popover.Panel className="flex absolute left-1/2 z-10 px-4 mt-5 w-screen max-w-max -translate-x-1/2">
+          <div className="overflow-hidden flex-auto w-screen max-w-md text-sm leading-6 bg-white rounded-3xl ring-1 shadow-lg ring-gray-900/5">
             <div className="p-4">
               {solutions.map((item) => (
                 <div
                   key={item.name}
-                  className="relative flex p-4 rounded-lg group gap-x-6 hover:bg-gray-50"
+                  className="flex relative gap-x-6 p-4 rounded-lg group hover:bg-gray-50"
                 >
-                  <div className="flex items-center justify-center flex-none mt-1 rounded-lg h-11 w-11 bg-gray-50 group-hover:bg-white">
+                  <div className="flex flex-none justify-center items-center mt-1 w-11 h-11 bg-gray-50 rounded-lg group-hover:bg-white">
                     <item.icon
                       className="w-6 h-6 text-gray-600 group-hover:text-indigo-600"
                       aria-hidden="true"
@@ -162,7 +160,7 @@ export default function Example() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
+            <div className="grid grid-cols-2 bg-gray-50 divide-x divide-gray-900/5">
               {callsToAction.map((item) => (
                 <a
                   key={item.name}

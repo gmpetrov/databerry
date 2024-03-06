@@ -105,7 +105,7 @@ const tiers = [
     id: 'tier-pro',
     href: `${appUrl}/settings/billing`,
     price: { monthly: '$99', annually: '$990' },
-    description: 'Dedicated support and for your company.',
+    description: 'For power users who want access more powerful features.',
     features: [
       `${accountConfig['level_2'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_2'].limits.maxDatastores} datastore(s)`,
@@ -136,8 +136,7 @@ const tiers = [
     id: 'tier-enterprise',
     href: `${appUrl}/settings/billing`,
     price: { monthly: '$499', annually: '$4990' },
-    description:
-      'You’ve got a huge amount of assets but it’s not enough. To the moon.',
+    description: 'Dedicated support and for your team.',
     features: [
       `${accountConfig['level_3'].limits.maxAgents} agent(s)`,
       `${accountConfig['level_3'].limits.maxDatastores} datastore(s)`,

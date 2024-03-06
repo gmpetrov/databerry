@@ -11,8 +11,8 @@ export const themeKeys = {
 export const theme = extendTheme({
   cssVarPrefix: 'databerry-chat-bubble',
   fontFamily: {
-    body: 'Josefin Sans, sans-serif',
-    display: 'Josefin Sans, sans-serif',
+    body: 'Inter, sans-serif',
+    display: 'Bricolage Grotesque, sans-serif',
   },
 
   components: {

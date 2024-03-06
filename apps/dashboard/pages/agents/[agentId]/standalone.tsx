@@ -32,8 +32,9 @@ export default function AgentPage(props: { agent: Agent }) {
     config: {},
   });
 
+  const baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
   const getAgentConfigQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
-    `/api/agents/${agentId}`,
+    `${baseUrl}/api/agents/${agentId}`,
     fetcher
   );
 
@@ -499,7 +500,7 @@ export default function AgentPage(props: { agent: Agent }) {
                 width: '100%',
                 height: '100%',
               }}
-              src={`/agents/${agentId}/iframe?primaryColor="#ffffff"`}
+              src={`${baseUrl}/agents/${agentId}/iframe?primaryColor="#ffffff"`}
               frameBorder="0"
             />
           </Stack>

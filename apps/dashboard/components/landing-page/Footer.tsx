@@ -7,7 +7,7 @@ import { Container } from '@app/components/landing-page/Container';
 import { Logo } from '@app/components/landing-page/Logo';
 import { NavLink } from '@app/components/landing-page/NavLink';
 
-import products from '@chaindesk/lib/data/products.json';
+import products from '@chaindesk/lib/data/products';
 import { RouteNames } from '@chaindesk/lib/types';
 
 const navigation = {
@@ -167,7 +167,7 @@ export function Footer({
       <div className="px-6 pt-16 pb-8 mx-auto max-w-7xl sm:pt-24 lg:px-8 lg:pt-32">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-4">
-            <Logo className="w-auto h-8 mx-auto" />
+            <Logo className="mx-auto w-auto h-8" />
 
             <div className="flex space-x-6">
               {navigation.social.map((item) => (

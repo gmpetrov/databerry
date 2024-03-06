@@ -14,7 +14,7 @@
     "@react-email/button": "0.0.10",
     "@react-email/components": "^0.0.7",
     "@react-email/html": "0.0.4",
-    "clsx": "^1.2.1",
+    "clsx": "^2.1.0",
     "eslint-config-custom": "workspace:*",
     "react-email": "1.9.5"
   },

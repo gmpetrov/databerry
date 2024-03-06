@@ -197,7 +197,7 @@ function AgentDeployTab(props: Props) {
               icon: (
                 <Image
                   className="w-8"
-                  src="/slack-logo.png"
+                  src="/shared/images/logos/slack.png"
                   width={100}
                   height={100}
                   alt="slack logo"

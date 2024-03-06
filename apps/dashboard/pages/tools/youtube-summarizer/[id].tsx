@@ -31,43 +31,10 @@ import TopBar from '@app/components/TopBar';
 import useConfetti from '@app/hooks/useConfetti';
 import useStateReducer from '@app/hooks/useStateReducer';
 
-import { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
 import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
+import { SummaryPageProps } from '@chaindesk/lib/types';
 import writeClipboard from '@chaindesk/lib/write-clipboard';
 import prisma from '@chaindesk/prisma/client';
-
-export interface Thumbnail {
-  url: string;
-  width: number;
-  height: number;
-}
-
-export interface Metadata {
-  title: string;
-  channelId: string;
-  thumbnails: {
-    high: Thumbnail;
-    medium: Thumbnail;
-    default: Thumbnail;
-  };
-  description: string;
-  publishTime: string;
-  publishedAt: string;
-  channelTitle: string;
-  liveBroadcastContent: string;
-  category?: string;
-  keywords?: string[];
-}
-
-export type SummaryPageProps = LLMTaskOutput & {
-  output: {
-    ['en']: Schema & {
-      videoSummary?: string;
-    };
-  } & {
-    metadata: Metadata;
-  };
-};
 
 var entities = {
   amp: '&',

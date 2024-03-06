@@ -219,7 +219,7 @@ export default function DatasourcesPage() {
             <Stack direction={'column'} gap={1} mt={4}>
               <Image
                 className="w-16 mx-auto "
-                src="/slack-logo.png"
+                src="/shared/images/logos/slack.png"
                 width={100}
                 height={100}
                 alt="slack logo"

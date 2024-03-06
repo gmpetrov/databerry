@@ -227,8 +227,8 @@ const joyTheme = extendJoyTheme({
     },
   },
   fontFamily: {
-    body: 'Josefin Sans, sans-serif',
-    display: 'Josefin Sans, sans-serif',
+    body: 'Inter, sans-serif',
+    display: 'Bricolage Grotesque, sans-serif',
   },
   typography: {
     display1: {

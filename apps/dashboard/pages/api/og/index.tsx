@@ -5,25 +5,31 @@ export const config = {
 };
 
 const JoseinSansRegularFontP = fetch(
-  new URL('../../../public/fonts/JosefinSans-Regular.ttf', import.meta.url)
+  new URL(
+    '../../../public/shared/fonts/JosefinSans-Regular.ttf',
+    import.meta.url
+  )
 ).then((res) => res.arrayBuffer());
 
 const JoseinSansBoldFontP = fetch(
-  new URL('../../../public/fonts/JosefinSans-Bold.ttf', import.meta.url)
+  new URL('../../../public/shared/fonts/JosefinSans-Bold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer());
 
 const BricolageGrotesqueExtraBoldFontP = fetch(
   new URL(
-    '../../../public/fonts/BricolageGrotesque-ExtraBold.ttf',
+    '../../../public/shared/fonts/BricolageGrotesque-ExtraBold.ttf',
     import.meta.url
   )
 ).then((res) => res.arrayBuffer());
 const BricolageGrotesqueBoldFontP = fetch(
-  new URL('../../../public/fonts/BricolageGrotesque-Bold.ttf', import.meta.url)
+  new URL(
+    '../../../public/shared/fonts/BricolageGrotesque-Bold.ttf',
+    import.meta.url
+  )
 ).then((res) => res.arrayBuffer());
 const BricolageGrotesqueRegularFontP = fetch(
   new URL(
-    '../../../public/fonts/BricolageGrotesque-Regular.ttf',
+    '../../../public/shared/fonts/BricolageGrotesque-Regular.ttf',
     import.meta.url
   )
 ).then((res) => res.arrayBuffer());

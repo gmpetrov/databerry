@@ -10,7 +10,7 @@ import { Header } from '@app/components/landing-page/Header';
 import SEO from '@app/components/SEO';
 
 import { appUrl } from '@chaindesk/lib/config';
-import products from '@chaindesk/lib/data/products.json';
+import products from '@chaindesk/lib/data/products';
 import { RouteNames } from '@chaindesk/lib/types';
 
 type PageProps = {
@@ -32,7 +32,7 @@ export default function ProductPage({ product }: PageProps) {
       />
 
       <Header />
-      <main className="flex flex-col min-h-full mb-auto bg-black">
+      <main className="flex flex-col mb-auto min-h-full bg-black">
         <Box
           sx={{
             display: 'flex',
@@ -52,7 +52,7 @@ export default function ProductPage({ product }: PageProps) {
             <Typography
               level="h2"
               fontWeight={'bold'}
-              className="relative z-10 block"
+              className="block relative z-10"
               sx={(theme) => ({
                 ...theme.typography.display1,
               })}
@@ -68,7 +68,7 @@ export default function ProductPage({ product }: PageProps) {
               {/* <Link target="_blank" href={'https://crisp.chat/'}> */}
               {product?.logo?.startsWith('/') ? (
                 <Image
-                  className="w-20 mx-auto "
+                  className="mx-auto w-20"
                   src={product.logo!}
                   width={300}
                   height={20}
@@ -76,7 +76,7 @@ export default function ProductPage({ product }: PageProps) {
                 ></Image>
               ) : (
                 <img
-                  className="w-20 mx-auto "
+                  className="mx-auto w-20"
                   src={product.logo!}
                   width={300}
                   height={20}
@@ -95,11 +95,11 @@ export default function ProductPage({ product }: PageProps) {
               sx={{ mt: 5, width: 1, maxWidth: 350 }}
               endDecorator={<ArrowForwardRoundedIcon />}
             >
-              {product.CTA}
+              {product?.cta?.label}
             </Button>
           </Link>
 
-          {product?.demoUrl && (
+          {/* {product?.demoUrl && (
             <Link href={product.demoUrl} className="w-full" target="_blank">
               <Button
                 variant="outlined"
@@ -110,14 +110,14 @@ export default function ProductPage({ product }: PageProps) {
                 Demo
               </Button>
             </Link>
-          )}
+          )} */}
 
           {product.youtubeVideoId && (
             <Box sx={{ width: 1, maxWidth: 800, mt: 8 }}>
               <iframe
                 //   className="w-full h-[300px] rounded-2xl"
                 //   width="560"
-                className="w-full aspect-video rounded-3xl"
+                className="w-full rounded-3xl aspect-video"
                 src={`https://www.youtube.com/embed/${product.youtubeVideoId}`}
                 title="YouTube video player"
                 frameBorder="0"
@@ -140,7 +140,7 @@ export function PrimaryFeatures(props: {
   return (
     <div id="features" className="py-24 bg-black sm:py-32">
       <div className="px-6 mx-auto max-w-7xl lg:px-8">
-        <div className="max-w-2xl mx-auto lg:text-center">
+        <div className="mx-auto max-w-2xl lg:text-center">
           <Typography className="font-bold" level="body-md" color="primary">
             Make LLMs aware of your custom data
           </Typography>
@@ -152,13 +152,13 @@ export function PrimaryFeatures(props: {
             data.
           </p>
         </div>
-        <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl className="grid max-w-xl grid-cols-1 gap-y-10 gap-x-8 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-            {props.features.map((feature, idx) => (
+        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+          <dl className="grid grid-cols-1 gap-x-8 gap-y-10 max-w-xl lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+            {props?.features?.items?.map((feature, idx) => (
               <div key={feature.name} className="relative pl-16">
                 <dt className="text-base font-semibold leading-7 text-gray-100">
                   <Box
-                    className="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-lg"
+                    className="flex absolute top-0 left-0 justify-center items-center w-10 h-10 rounded-lg"
                     sx={{ backgroundColor: 'primary.600' }}
                   >
                     {/* <feature.icon

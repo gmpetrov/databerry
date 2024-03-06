@@ -14,7 +14,7 @@ const Logo = forwardRef<HTMLImageElement, Props>(
         {...(otherProps as any)}
         width="200"
         height="200"
-        className={clsx('h-auto w-12', className)}
+        className={clsx('w-5 h-auto', className)}
         alt="Chaindesk"
       />
     );
@@ -22,7 +22,7 @@ const Logo = forwardRef<HTMLImageElement, Props>(
 );
 
 Logo.defaultProps = {
-  src: '/app-logo-icon.png',
+  src: '/logo.png',
 };
 
 export default Logo;

@@ -39,13 +39,12 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
+import { SummaryPageProps } from '@chaindesk/lib/types';
 import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
 import { Prisma } from '@chaindesk/prisma';
 
 import { getLatestVideos } from '../../api/tools/youtube-summary';
-
-import { SummaryPageProps } from './[id]';
 
 type FormType = z.infer<typeof YoutubeSummarySchema>;
 
