@@ -54,13 +54,17 @@ const items: Product[] = [
       'Deploy a custom AI Chatbot to WhatsApp Business in minutes. Train with your company data, setup the WhatsApp plugin, and enjoy AI-driven interactions.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
     cta: {
-      label: 'Create your WhatsApp AI Chatbot',
+      label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/agents',
+    },
+    cta2: {
+      label: 'Demo - Chat with our AI on WhatsApp',
+      url: 'https://api.whatsapp.com/send/?phone=%2B33652640931&text=Start&type=phone_number&app_absent=0',
     },
     metadata: {
       title: 'Custom ChatGPT - AI Chatbot for WhatsApp Business | Chaindesk',
     },
-    youtubeVideoId: 'x8-poiGrBa8',
+    youtubeVideoId: '-NkVS2l66Zs',
     isComingSoon: false,
     isDatasource: false,
     isChannel: true,
@@ -92,7 +96,7 @@ const items: Product[] = [
   {
     slug: 'slack',
     name: 'Slack',
-    title: 'Add a Custom GPT Chatbot to Your Slack Workspace in Minutes',
+    title: 'Add a Custom GPT Chatbot to Slack in Minutes',
     description:
       'Deploy a custom AI Chatbot to your Slack workspace in minutes. Train with your company data, install the Slack plugin, and enjoy AI-driven interactions.',
     logo: '/shared/images/logos/slack.png',
@@ -148,7 +152,7 @@ const items: Product[] = [
     isChannel: true,
     metadata: {
       title:
-        'Custom ChatGPT - AI Chatbot for Crisp - Supercharge Your Support | Chaindesk',
+        'Custom ChatGPT - AI Chatbot for Crisp - Automate Your Support | Chaindesk',
     },
     features: {
       items: [
@@ -178,7 +182,7 @@ const items: Product[] = [
   {
     slug: 'zapier',
     name: 'Zapier',
-    title: 'Connect Chaindesk with Anything via Zapier in Minutes',
+    title: 'Connect Chaindesk with Anything via Zapier',
     description:
       'Connect Chaindesk with over 5,000 apps via Zapier. Train your chatbot in minutes, integrate it seamlessly on your site, and keep your data always in sync.',
     logo: '/shared/images/logos/zapier.png',
@@ -186,7 +190,7 @@ const items: Product[] = [
       label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/datastores',
     },
-    youtubeVideoId: '-NkVS2l66Zs',
+    youtubeVideoId: 'eV7vbhskUaM',
     isChannel: true,
     metadata: {
       title: 'Chaindesk & Zapier: Seamless Integration with 5,000+ Apps',
@@ -204,9 +208,9 @@ const items: Product[] = [
             'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
         },
         {
-          name: 'Copy/Paste the HTML snippet',
+          name: 'Zapier Setup',
           description:
-            'The final step is to the widget on your website. \nJust add the generated HTML code to your website',
+            'Create your Zapier worflow and connect Chaindesk with over 5,000 apps.',
         },
         {
           name: 'Auto Sync',
@@ -250,7 +254,7 @@ const items: Product[] = [
   {
     slug: 'wordpress',
     name: 'Wordpress',
-    title: 'Add a Custom AI Chatbot to Your Wordpress Site in Minutes',
+    title: 'Add a Custom AI Chatbot to Wordpress in Minutes',
     description:
       'Train a chatbot with your data on Chaindesk platform. Install the Wordpress plugin! Stay updated with auto-sync.',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Wordpress-Logo.svg',
@@ -258,6 +262,7 @@ const items: Product[] = [
       label: 'Get Started for Free',
       url: 'https://app.chaindesk.ai/datastores',
     },
+    youtubeVideoId: '-NkVS2l66Zs',
 
     isChannel: true,
     metadata: {
@@ -303,7 +308,7 @@ const items: Product[] = [
       title: 'Custom ChatGPT - AI Chatbot for Telegram | Chaindesk',
       description: ``,
     },
-    youtubeVideoId: 'x8-poiGrBa8',
+    youtubeVideoId: 'eV7vbhskUaM',
     isComingSoon: true,
     isDatasource: false,
     isChannel: true,
@@ -337,14 +342,14 @@ const items: Product[] = [
     name: 'Shopify',
     title: 'Add a Custom GPT Chatbot to Shopify in Minutes',
     description:
-      'Deploy a custom AI Chatbot to your Shopify store in minutes. Train with your company data, install the Telegram plugin, and enjoy AI-driven interactions.',
+      'Deploy a custom AI Chatbot to your Shopify store in minutes. Train with your company data, install the Shopify plugin, and enjoy AI-driven interactions.',
     logo: 'https://www.svgrepo.com/show/303503/shopify-logo.svg',
     cta: {
       label: 'Create your WhatsApp AI Chatbot',
       url: 'https://app.chaindesk.ai/agents',
     },
     metadata: {
-      title: 'ChatGPT Bot for Telegram with Chaindesk: Elevate Your Workspace',
+      title: 'Custom ChatGPT - AI Chatbot for Shopify | Chaindesk',
       description: ``,
     },
     youtubeVideoId: '-NkVS2l66Zs',
@@ -364,9 +369,9 @@ const items: Product[] = [
             'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
         },
         {
-          name: 'Install Telegram plugin',
+          name: 'Install Shopify plugin',
           description:
-            'The final step is to install Chaindesk Bot to your Telegram. \nNow your workspace is spiced up \nwith some AI magic ✨',
+            'The final step is to install Chaindesk Bot to your Shopify store. \nNow your store is spiced up \nwith some AI magic ✨',
         },
         {
           name: 'Auto Sync',
@@ -378,11 +383,16 @@ const items: Product[] = [
   },
   // Datasources
   {
-    slug: 'train-ai-from-website',
+    slug: 'train-ai-with-website',
     name: 'Website',
-    title: 'AI Chatbot trained with data from your website',
+    title: 'AI Chatbot trained with your website data',
     description:
       'Easily train your custom chatgpt chatbot with data from your website. Your chatbot is automatically retrained when your data changes.',
+    metadata: {
+      title:
+        'Chaindesk Plugin: Website - AI Chatbot trained with your Website data',
+    },
+    youtubeVideoId: '-NkVS2l66Zs',
     logo: 'https://www.svgrepo.com/show/197996/internet.svg',
     cta: {
       label: 'Get Started for Free',
@@ -415,18 +425,28 @@ const items: Product[] = [
       label: 'Add a Notion notebook',
       url: 'https://app.chaindesk.ai/datastores',
     },
+    youtubeVideoId: 'A8Ke7mjX16A',
+    metadata: {
+      title:
+        'Chaindesk Plugin: Notion - AI Chatbot trained with your Notion data',
+    },
     isDatasource: true,
     features: {
       items: [
         {
-          name: 'Add a YouTube video',
+          name: 'Connect your Notion Account',
           description:
-            'Add a YouTube video, playlist or channel to your Datastore. It takes just a few seconds.',
+            'Select the notebooks your want to import in Chaindesk. It takes just a few seconds.',
         },
         {
           name: 'Chat',
           description:
             'You can ask questions, get summaries, find information, and more!',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'Your data is synched automatically. \nWe keep your Agent up to date with your data.',
         },
       ],
     },
@@ -442,7 +462,11 @@ const items: Product[] = [
       label: 'Connect your Google Drive account',
       url: 'https://app.chaindesk.ai/datastores',
     },
-
+    metadata: {
+      title:
+        'Chaindesk Plugin: Google Drive - AI Chatbot trained with your Google Drive data',
+    },
+    youtubeVideoId: 'Jq_XKf5slVc',
     isDatasource: true,
     features: {
       items: [
@@ -469,12 +493,17 @@ const items: Product[] = [
     name: 'YouTube',
     title: 'Chat with YouTube videos',
     description:
-      'Chat with any YouTube videos using Chaindesk. Easily add a YouTube video, playlist or channek, and start getting summaries or finding information.',
+      'Easily train your custom chatgpt chatbot any YouTube videos using Chaindesk.',
     logo: 'https://www.svgrepo.com/show/13671/youtube.svg',
     cta: {
       label: 'Add a YouTube video',
       url: 'https://app.chaindesk.ai/datastores',
     },
+    metadata: {
+      title:
+        'Chaindesk Plugin: YoutTube - AI Chatbot trained with your YouTube videos',
+    },
+    youtubeVideoId: '-NkVS2l66Zs',
     isDatasource: true,
     features: {
       items: [
@@ -487,6 +516,11 @@ const items: Product[] = [
           name: 'Chat',
           description:
             'You can ask questions, get summaries, find information, and more!',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'Your data is synched automatically. \nWe keep your Agent up to date with your data.',
         },
       ],
     },
@@ -502,29 +536,23 @@ const items: Product[] = [
       label: 'Upload a Powerpoint',
       url: 'https://app.chaindesk.ai/datastores',
     },
+    metadata: {
+      title:
+        'Chaindesk Plugin: Powerpoint - AI Chatbot trained with your Powerpoint documents',
+    },
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
     features: {
       items: [
         {
-          name: 'Create a Datastore',
-          description:
-            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-        },
-        {
           name: 'Add your data',
           description:
-            'Upload documents, link your Google Drive, connect to Notion and more!',
+            'Import your Powerpoint documents to Chaindesk. It takes just a few seconds.',
         },
         {
           name: 'Chat',
           description:
             'You can ask questions, get summaries, find information, and more.',
-        },
-        {
-          name: 'Auto Sync',
-          description:
-            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
         },
       ],
     },
@@ -540,30 +568,23 @@ const items: Product[] = [
       label: 'Upload a Document',
       url: 'https://app.chaindesk.ai/datastores',
     },
-
+    metadata: {
+      title:
+        'Chaindesk PluginL: Word - AI Chatbot trained with your Word documents',
+    },
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
     features: {
       items: [
         {
-          name: 'Create a Datastore',
-          description:
-            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-        },
-        {
           name: 'Add your data',
           description:
-            'Upload documents, link your Google Drive, connect to Notion and more!',
+            'Import your Word documents to Chaindesk. It takes just a few seconds.',
         },
         {
           name: 'Chat',
           description:
             'You can ask questions, get summaries, find information, and more.',
-        },
-        {
-          name: 'Auto Sync',
-          description:
-            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
         },
       ],
     },
@@ -579,29 +600,23 @@ const items: Product[] = [
       label: 'Upload a Document',
       url: 'https://app.chaindesk.ai/datastores',
     },
+    metadata: {
+      title:
+        'Chaindesk Plugin: Excel - AI Chatbot trained with your Excel documents',
+    },
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
     features: {
       items: [
         {
-          name: 'Create a Datastore',
-          description:
-            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-        },
-        {
           name: 'Add your data',
           description:
-            'Upload documents, link your Google Drive, connect to Notion and more!',
+            'Import your Excel documents to Chaindesk. It takes just a few seconds.',
         },
         {
           name: 'Chat',
           description:
             'You can ask questions, get summaries, find information, and more.',
-        },
-        {
-          name: 'Auto Sync',
-          description:
-            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
         },
       ],
     },
@@ -609,33 +624,27 @@ const items: Product[] = [
   {
     slug: 'pdf',
     name: 'PDF Documents',
-    title: 'Train your AI with PDF Documents',
+    title: 'Chat with PDF Documents',
     description:
-      'Chat with any Word document, ask questions, get summaries, find information, and more.',
+      'Chat with PDF documents, ask questions, get summaries, find information, and more.',
     logo: 'https://www.svgrepo.com/show/144578/pdf.svg',
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
+    metadata: {
+      title:
+        'Chaindesk Plugin: PDF Files - AI Chatbot trained with your PDF documents',
+    },
     features: {
       items: [
         {
-          name: 'Create a Datastore',
+          name: 'Add your PDF files',
           description:
-            'A Datastore is a kind of database that can hold any type of data (PDFs, Gdocs, Sheets, Notion, Airtable, etc...)',
-        },
-        {
-          name: 'Add your data',
-          description:
-            'Upload documents, link your Google Drive, connect to Notion and more!',
+            'Import your PDF documents to Chaindesk. It takes just a few seconds.',
         },
         {
           name: 'Chat',
           description:
             'You can ask questions, get summaries, find information, and more.',
-        },
-        {
-          name: 'Auto Sync',
-          description:
-            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
         },
       ],
     },

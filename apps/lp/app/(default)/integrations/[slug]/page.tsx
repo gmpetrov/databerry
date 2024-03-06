@@ -66,6 +66,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         title={product?.title!}
         description={product?.description}
         cta={product?.cta}
+        cta2={product?.cta2}
         youtubeVideoId={product?.youtubeVideoId}
         imageUrl={product?.imageUrl}
       />

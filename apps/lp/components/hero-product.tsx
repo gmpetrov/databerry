@@ -28,6 +28,10 @@ export default function Hero(props: {
     label: string;
     url?: string;
   };
+  cta2?: {
+    label: string;
+    url?: string;
+  };
   imageUrl?: string;
   youtubeVideoId?: string;
 
@@ -137,7 +141,7 @@ export default function Hero(props: {
                 ></TextGenerateEffect>
               </motion.p>
 
-              {props.cta && (
+              {(props.cta || props.cta2) && (
                 <motion.div
                   className={cn(
                     'w-full space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4 mx-auto items-center',
@@ -152,33 +156,35 @@ export default function Hero(props: {
                     },
                   })}
                 >
-                  <motion.div variants={defaultChildVariants}>
-                    <Link
-                      className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
-                      href={
-                        props?.cta?.url || `https://app.chaindesk.ai/agents`
-                      }
-                    >
-                      {props?.cta?.label}
-                    </Link>
-                  </motion.div>
+                  {props?.cta && (
+                    <motion.div variants={defaultChildVariants}>
+                      <Link
+                        className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
+                        href={
+                          props?.cta?.url || `https://app.chaindesk.ai/agents`
+                        }
+                      >
+                        {props?.cta?.label}
+                      </Link>
+                    </motion.div>
+                  )}
+
+                  {props?.cta2 && (
+                    <motion.div variants={defaultChildVariants}>
+                      <a
+                        className="w-full bg-white shadow btn text-zinc-600 hover:text-zinc-900"
+                        href={props?.cta2?.url}
+                        target="_blank"
+                      >
+                        {props?.cta2?.label}
+                      </a>
+                    </motion.div>
+                  )}
                   {props.withTestimonialBadge && (
                     <motion.div variants={defaultChildVariants}>
                       <TestimonialBadge />
                     </motion.div>
                   )}
-                  {/* <motion.div
-                          variants={defaultChildVariants}
-                          //  custom={4.2}
-                        >
-                          <a
-                            className="w-full bg-white shadow btn text-zinc-600 hover:text-zinc-900"
-                            href={config.demoBookingURL}
-                            target="_blank"
-                          >
-                            Book a Demo
-                          </a>
-                        </motion.div> */}
                 </motion.div>
               )}
             </div>

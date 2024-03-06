@@ -162,6 +162,10 @@ export type Product = {
     label: string;
     url: string;
   };
+  cta2?: {
+    label: string;
+    url: string;
+  };
   youtubeVideoId?: string;
   imageUrl?: string;
 
