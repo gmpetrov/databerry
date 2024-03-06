@@ -60,7 +60,7 @@ export default function Hero(props: {
           visible: {
             transition: {
               staggerChildren: 1,
-              delayChildren: -1,
+              // delayChildren: -1,
             },
           },
         })}
@@ -79,14 +79,21 @@ export default function Hero(props: {
                     props.labelClassName
                   )}
                   variants={{
-                    ...defaultChildVariants,
-                    visible: {
-                      ...defaultChildVariants.visible,
+                    start: {
+                      opacity: 0,
+                      y: 20,
+                    },
+                    end: {
+                      opacity: 1,
+                      y: 0,
                       transition: {
-                        delay: 3,
+                        delay: 2.5,
+                        duration: 0.2,
                       },
                     },
                   }}
+                  initial="start"
+                  animate="end"
                 >
                   {props?.name}
                 </motion.div>
@@ -200,7 +207,7 @@ export default function Hero(props: {
               visible: {
                 ...defaultChildVariants.visible,
                 transition: {
-                  delay: 2.5,
+                  delay: 2.3,
                 },
               },
             })}

@@ -1,14 +1,14 @@
 import { motion, stagger, useAnimate, Variants } from 'framer-motion';
-import { useEffect } from 'react';
-
-import { cn } from '../../utils/cn';
+import React from 'react';
 
 export function TextGenerateEffect(props: {
   text: string | any[];
   duration?: number;
 }) {
-  const words =
-    typeof props.text === 'string' ? props.text.split(' ') : props.text;
+  const words = React.useMemo(() => {
+    return typeof props.text === 'string' ? props.text.split(' ') : props.text;
+  }, [props.text]);
+
   const containerVariants = {
     hidden: {},
     visible: {
