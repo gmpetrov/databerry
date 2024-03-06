@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.248"></a>
+## 0.1.248 (2024-03-06)
+
+### Fixed
+
+- 🐛 logo path [[1ec348c](https://github.com/gmpetrov/databerry/commit/1ec348cb617e457f474f43b47eeecf29f4752bd8)]
+- 🐛 animation viewport [[27ebef9](https://github.com/gmpetrov/databerry/commit/27ebef97fc580cdf3f4d25ff9cb866772b751b27)]
+
+### Miscellaneous
+
+-  try fix animation mobile [[dbd934f](https://github.com/gmpetrov/databerry/commit/dbd934fb12ef6aa7c31c69408a0c10e3cf3838e0)]
+-  try fix animation mobile [[fe6d66d](https://github.com/gmpetrov/databerry/commit/fe6d66df0c773234ef52cf2f38f80868a3beeef0)]
+
+
 <a name="0.1.247"></a>
 ## 0.1.247 (2024-03-06)
 
