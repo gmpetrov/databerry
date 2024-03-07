@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.256"></a>
+## 0.1.256 (2024-03-07)
+
+### Fixed
+
+- 🐛 email forwarding setup [[f01978c](https://github.com/gmpetrov/databerry/commit/f01978c8457e0fa994db8645560e84c279147ca7)]
+
+### Miscellaneous
+
+-  fix standalone page bug [[8599d77](https://github.com/gmpetrov/databerry/commit/8599d77536da1d4a1ea2a5574a49bbe5ce517326)]
+
+
 <a name="0.1.255"></a>
 ## 0.1.255 (2024-03-07)
 
