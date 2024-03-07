@@ -9,7 +9,7 @@ const pkg = require('../../package.json');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: process.env.NEXT_PUBLIC_DASHBOARD_URL,
+  // assetPrefix: process.env.NEXT_PUBLIC_DASHBOARD_URL,
   reactStrictMode: true,
   output: 'standalone',
   publicRuntimeConfig: {

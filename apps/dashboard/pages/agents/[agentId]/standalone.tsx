@@ -177,7 +177,7 @@ export default function AgentPage(props: { agent: Agent }) {
                 <Typography
                   level="title-lg"
                   fontWeight={'bold'}
-                  className="text-left font-title"
+                  className="font-title"
                   sx={{
                     color: textColor,
                   }}

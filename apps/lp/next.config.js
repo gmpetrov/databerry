@@ -70,6 +70,11 @@ const nextConfig = {
         destination: '/integrations/chat-powerpoint',
         permanent: true,
       },
+      {
+        source: '/@:path',
+        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/@:path/standalone`,
+        permanent: false,
+      },
     ];
   },
   async rewrites() {
@@ -119,10 +124,7 @@ const nextConfig = {
           source: '/help/:path*',
           destination: 'https://help-center-wine.vercel.app/help/:path*',
         },
-        {
-          source: '/@:path',
-          destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/@:path/standalone`,
-        },
+
         {
           source: '/privacy',
           destination: '/privacy.pdf',
