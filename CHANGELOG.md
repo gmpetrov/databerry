@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.250"></a>
+## 0.1.250 (2024-03-07)
+
+### Fixed
+
+- 🐛 logo in email [[8ed81d0](https://github.com/gmpetrov/databerry/commit/8ed81d00e2b044a2fb39794350c529308e95f293)]
+- 🐛 hardcode url [[bb7fd0f](https://github.com/gmpetrov/databerry/commit/bb7fd0f2de850767019a5f62933e0ffd38099b96)]
+- 🐛 missing Toaster in lp [[fad6a96](https://github.com/gmpetrov/databerry/commit/fad6a96b18d09c3b14ae462db62137bb35704aaf)]
+
+### Miscellaneous
+
+- 🤖 add team seats to pricing table [[30a640f](https://github.com/gmpetrov/databerry/commit/30a640f1c01f961de8c4d677be35d9b39a9a42ab)]
+
+
 <a name="0.1.249"></a>
 ## 0.1.249 (2024-03-07)
 
