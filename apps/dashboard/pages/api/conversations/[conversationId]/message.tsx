@@ -106,9 +106,7 @@ export const sendMessage = async (
             user: {
               type: 'website',
               nickname: user?.name || 'Operator',
-              avatar:
-                user?.picture ||
-                'https://chaindesk.ai/app-rounded-bg-white.png',
+              avatar: user?.picture || 'https://chaindesk.ai/logo.png',
             },
           }
         );

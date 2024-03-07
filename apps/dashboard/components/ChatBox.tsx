@@ -357,7 +357,7 @@ function ChatBox({
                 <Avatar
                   size="sm"
                   variant="outlined"
-                  src={agentIconUrl || '/app-rounded-bg-white.png'}
+                  src={agentIconUrl || '/logo.png'}
                   sx={{
                     ...agentIconStyle,
                   }}
@@ -410,10 +410,7 @@ function ChatBox({
                       <Avatar
                         size="sm"
                         variant="outlined"
-                        src={
-                          agentIconUrl ||
-                          '/images/chatbubble-default-icon-sm.gif'
-                        }
+                        src={agentIconUrl || '/logo.png'}
                         sx={{
                           ...agentIconStyle,
                         }}

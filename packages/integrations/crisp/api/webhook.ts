@@ -171,7 +171,7 @@ const getIntegration = async (websiteId: string, channelExternalId: string) => {
 //     user: {
 //       type: 'participant',
 //       nickname: agentName || 'Chaindesk',
-//       avatar: 'https://chaindesk.ai/app-rounded-bg-white.png',
+//       avatar: 'https://chaindesk.ai/logo.png',
 //     },
 
 //     content: {
@@ -235,8 +235,7 @@ const handleQuery = async (
       user: {
         type: 'participant',
         nickname: agent?.name || 'Chaindesk',
-        avatar:
-          agent?.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
+        avatar: agent?.iconUrl || 'https://chaindesk.ai/logo.png',
       },
     });
   }
@@ -458,7 +457,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
                   // user: {
                   //   type: 'participant',
                   //   nickname: agent?.name || 'Chaindesk',
-                  //   avatar: agent.iconUrl || 'https://chaindesk.ai/app-rounded-bg-white.png',
+                  //   avatar: agent.iconUrl || 'https://chaindesk.ai/logo.png',
                   // },
                 }
               );

@@ -153,17 +153,17 @@ export default function AgentPage(props: { agent: Agent }) {
             >
               <Avatar
                 alt={agent?.name}
-                src={agent?.iconUrl || '/app-rounded-bg-white.png'}
+                src={agent?.iconUrl || '/logo.png'}
                 sx={{
                   bgcolor: 'white',
                   boxShadow: 'sm',
                   width: {
                     xs: 34,
-                    sm: 54,
+                    // sm: 54,
                   },
                   height: {
                     xs: 34,
-                    sm: 54,
+                    // sm: 54,
                   },
                 }}
               />
@@ -177,6 +177,7 @@ export default function AgentPage(props: { agent: Agent }) {
                 <Typography
                   level="title-lg"
                   fontWeight={'bold'}
+                  className="text-left font-title"
                   sx={{
                     color: textColor,
                   }}
