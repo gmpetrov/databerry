@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.249"></a>
+## 0.1.249 (2024-03-07)
+
+### Fixed
+
+- 🐛 yt meta tags [[b3178b3](https://github.com/gmpetrov/databerry/commit/b3178b35f86e599266d4c7f19a15cd104b444ccc)]
+- 🐛 animation bug [[dda07cb](https://github.com/gmpetrov/databerry/commit/dda07cbe4cccfbf3afc08ff6a2175b678f640c0b)]
+
+
 <a name="0.1.248"></a>
 ## 0.1.248 (2024-03-06)
 
