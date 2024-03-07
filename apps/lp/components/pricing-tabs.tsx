@@ -201,6 +201,51 @@ const Features = function (props: {
             Auto-Sync data sources
           </Tooltip>
         </li>
+
+        {props.plan === 'level_0' && (
+          <li className="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="mr-2 -ml-1 w-5 h-5 text-red-500"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18 18 6M6 6l12 12"
+              />
+            </svg>
+
+            <Tooltip
+              id="06"
+              content="Team seats are used to give access to your team members to your Chaindesk account"
+              dark={props.highlighted}
+            >
+              No team seats included
+            </Tooltip>
+          </li>
+        )}
+        {props.plan !== 'level_0' && (
+          <li className="flex items-center">
+            <svg
+              className="mr-3 w-3 h-3 fill-emerald-500 shrink-0"
+              viewBox="0 0 12 12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M10.28 2.28L3.989 8.575 1.695 6.28A1 1 0 00.28 7.695l3 3a1 1 0 001.414 0l7-7A1 1 0 0010.28 2.28z" />
+            </svg>
+
+            <Tooltip
+              id="06"
+              content="Team seats are used to give access to your team members to your Chaindesk account"
+              dark={props.highlighted}
+            >
+              {config[props.plan].limits.maxSeats} Team seats included
+            </Tooltip>
+          </li>
+        )}
         <li className="flex items-center">
           {['level_0', 'level_1'].includes(props.plan) && (
             <svg
@@ -236,6 +281,7 @@ const Features = function (props: {
             Remove Chaindesk branding
           </Tooltip>
         </li>
+
         {['level_0'].includes(props.plan) && (
           <>
             <li className="flex items-center">
