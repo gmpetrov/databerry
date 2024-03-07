@@ -981,10 +981,11 @@ export default function LogsPage() {
                           <Stack
                             direction="row"
                             justifyContent={'space-between'}
+                            gap={1}
                           >
                             <Typography
                               level="body-sm"
-                              className="font-semibold"
+                              className="font-semibold truncate"
                             >
                               {(() => {
                                 if (
@@ -1004,7 +1005,7 @@ export default function LogsPage() {
                               })()}
                             </Typography>
 
-                            <Typography level="body-xs">
+                            <Typography level="body-xs" className="text-nowrap">
                               {relativeDate(each?.updatedAt)}
                             </Typography>
                           </Stack>
@@ -1014,7 +1015,10 @@ export default function LogsPage() {
                             alignItems={'start'}
                             gap={1}
                           >
-                            <Typography level="body-sm" noWrap>
+                            <Typography
+                              level="body-sm"
+                              className="pr-4 line-clamp-2"
+                            >
                               {each?.messages?.[0]?.text}
                             </Typography>
                           </Stack>
