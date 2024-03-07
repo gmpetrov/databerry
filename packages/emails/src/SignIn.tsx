@@ -33,10 +33,9 @@ export const SignIn = ({ url, host }: Props) => {
             <Section className="mt-[32px]">
               <Img
                 src={`https://www.chaindesk.ai/logo.png`}
-                width="60"
-                height="57"
+                width="100"
                 alt="Your App Name"
-                className="mx-auto my-0"
+                className="mx-auto my-0 w-12"
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">

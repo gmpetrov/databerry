@@ -50,7 +50,7 @@ export const FormSubmission = ({
                 width="50"
                 height="auto"
                 alt="Vercel"
-                className="mx-auto my-0"
+                className="mx-auto my-0 w-12"
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">

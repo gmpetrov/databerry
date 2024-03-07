@@ -74,11 +74,11 @@ export const GenericTemplate = (props: Props) => {
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] w-[465px]">
             <Section className="mt-[32px]">
               <Img
-                src={`https://www.chaindesk.ai/app-logo-light.png`}
+                src={`https://www.chaindesk.ai/logo.png`}
                 width="200"
                 height="auto"
                 alt="Vercel"
-                className="mx-auto my-0"
+                className="mx-auto my-0 w-12"
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">

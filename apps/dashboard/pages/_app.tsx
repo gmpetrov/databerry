@@ -61,13 +61,13 @@ export default function App({
   ) {
     return getLayout(
       <ProductContext.Provider value={product}>
-        <SessionProvider>
-          <Analytics>
-            <DefaultSEOTags />
-            <SynchTailwindColorMode />
-            <Component {...pageProps} />
-          </Analytics>
-        </SessionProvider>
+        {/* <SessionProvider> */}
+        <Analytics>
+          <DefaultSEOTags />
+          <SynchTailwindColorMode />
+          <Component {...pageProps} />
+        </Analytics>
+        {/* </SessionProvider> */}
       </ProductContext.Provider>
     );
   }

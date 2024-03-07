@@ -7,7 +7,6 @@ import { Box, CircularProgress, IconButton, Stack, Typography } from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { SessionProvider } from 'next-auth/react';
 import React, { ReactElement, useEffect, useMemo } from 'react';
 import superjson from 'superjson';
 import useSWR from 'swr';
