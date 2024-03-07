@@ -514,24 +514,27 @@ AgentPage.getLayout = function getLayout(page: ReactElement) {
   return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
 };
 
-export async function getStaticPaths() {
-  const all: string[] = [];
+// export async function getStaticPaths() {
+//   const all: string[] = [];
 
-  return {
-    paths: all.map((path) => {
-      return { params: { site: path } };
-    }),
-    fallback: 'blocking',
-  };
-}
+//   return {
+//     paths: all.map((path) => {
+//       return { params: { site: path } };
+//     }),
+//     fallback: 'blocking',
+//   };
+// }
 
-export async function getStaticProps({
-  params: { agentId },
-}: {
-  params: {
-    agentId: string;
-  };
-}) {
+// export async function getStaticProps({
+// {
+//   params: { agentId },
+// }: {
+//   params: {
+//     agentId: string;
+//   };
+// })
+export async function getServerSideProps(context: any) {
+  const agentId = context.params.agentId as string;
   let agent = null;
 
   if (agentId.startsWith('@')) {
@@ -562,6 +565,6 @@ export async function getStaticProps({
     props: {
       agent: superjson.serialize(agent).json || null,
     },
-    revalidate: 10,
+    // revalidate: 10,
   };
 }
