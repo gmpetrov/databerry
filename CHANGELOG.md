@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.254"></a>
+## 0.1.254 (2024-03-07)
+
+### Fixed
+
+- 🐛 try disabling ISR [[c2363f7](https://github.com/gmpetrov/databerry/commit/c2363f726b1318f89d1181a9ff8f6be7378a7ae2)]
+
+
 <a name="0.1.253"></a>
 ## 0.1.253 (2024-03-07)
 
