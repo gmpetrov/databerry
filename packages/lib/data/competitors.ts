@@ -1,5 +1,6 @@
 export default [
   'Chatbase',
+  'CustomGPT',
   'SiteGPT',
   'Dante AI',
   'Botsonic',
