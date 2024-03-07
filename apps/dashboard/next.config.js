@@ -153,6 +153,10 @@ const nextConfig = {
           destination: 'https://help-center-wine.vercel.app/help/:path*',
         },
         {
+          source: '/@:path',
+          destination: '/agents/@:path/standalone',
+        },
+        {
           source: '/privacy',
           destination: '/privacy.pdf',
         },

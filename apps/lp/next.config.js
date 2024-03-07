@@ -72,7 +72,8 @@ const nextConfig = {
       },
       {
         source: '/@:path',
-        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/@:path/standalone`,
+        // destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/@:path/standalone`,
+        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/@:path`,
         permanent: false,
       },
     ];
