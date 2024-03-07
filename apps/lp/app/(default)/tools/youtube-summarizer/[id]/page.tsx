@@ -43,10 +43,13 @@ export async function generateMetadata(
 
   const title = summary?.output?.metadata?.title;
   return {
-    title: `${summary?.output?.metadata?.title} | AI YouTube Video Summary | Chaindesk`,
+    title: `${summary?.output?.metadata?.title} - AI YouTube Video Summary | Chaindesk`,
     description:
       summary?.output?.metadata?.description ||
       `Generate YouTube video summaries instantly for free with AI`,
+    alternates: {
+      canonical: `/tools/youtube-summarizer/${id}`,
+    },
     openGraph: {
       images: [
         `/api/og/youtube-summary?state=${encodeURIComponent(

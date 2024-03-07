@@ -18,6 +18,13 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
+        'bricolage-grotesque': [
+          'var(--font-bricolage-grotesque)',
+          'sans-serif',
+        ],
+        caveat: ['var(--font-caveat)', 'sans-serif'],
+        title: ['var(--font-bricolage-grotesque)', 'sans-serif'],
+        label: ['var(--font-caveat)', 'sans-serif'],
       },
       animation: {
         typewriterCursor: 'typewriterCursor 1s infinite',

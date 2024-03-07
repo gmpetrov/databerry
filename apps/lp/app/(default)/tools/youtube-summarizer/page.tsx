@@ -15,9 +15,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/tools/youtube-summarizer',
   },
-  openGraph: {
-    images: ['/api/og/youtube-summary'],
-  },
   icons: {
     icon: '/images/logo.png',
   },

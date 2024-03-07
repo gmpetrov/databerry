@@ -432,7 +432,7 @@ export default function Navigation() {
                       6- Tell the user that the bug has been reported and that the development team will take care of it.
                       `)}',
                       interface: {
-                        // iconUrl: 'https://www.chaindesk.ai/favicon.png',
+                        // iconUrl: 'https://www.chaindesk.ai/logo.png',
                         iconUrl: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png',
                         position: 'right',
                         bubbleButtonStyle: {

@@ -982,7 +982,10 @@ export default function LogsPage() {
                             direction="row"
                             justifyContent={'space-between'}
                           >
-                            <Typography>
+                            <Typography
+                              level="body-sm"
+                              className="font-semibold"
+                            >
                               {(() => {
                                 if (
                                   each?.channel === ConversationChannel.mail &&
