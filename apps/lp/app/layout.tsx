@@ -10,6 +10,7 @@ import {
   Inter_Tight,
 } from 'next/font/google';
 import Script from 'next/script';
+import { Toaster } from 'react-hot-toast';
 
 import ThemeRegistry from '@chaindesk/ui/src/ThemeRegistry';
 
@@ -74,6 +75,7 @@ export default function RootLayout({
           id="__next"
           className={`${inter.variable} ${inter_tight.variable} ${bricolage.variable} ${caveat.variable} font-inter antialiased bg-white text-zinc-900 tracking-tight relative`}
         >
+          <Toaster />
           <div className="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip">
             {children}
           </div>
