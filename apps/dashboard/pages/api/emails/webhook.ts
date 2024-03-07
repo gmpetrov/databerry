@@ -286,7 +286,7 @@ export async function inboundWebhook(
       contactId: contact.id,
       from: MessageFrom.human,
       text: lastMessage || mail.text,
-      html: mail.html,
+      html: mail.html || '',
       attachments: {
         createMany: {
           data: attachments,
