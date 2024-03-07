@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.251"></a>
+## 0.1.251 (2024-03-07)
+
+### Fixed
+
+- 🐛 404 image [[5198635](https://github.com/gmpetrov/databerry/commit/519863555d6bbc7b2d9403e2ece97a97ad4a5faf)]
+
+
 <a name="0.1.250"></a>
 ## 0.1.250 (2024-03-07)
 
