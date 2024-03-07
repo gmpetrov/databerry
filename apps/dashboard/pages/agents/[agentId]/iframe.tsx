@@ -7,8 +7,8 @@ function App() {
   return <ChatBoxFrame />;
 }
 
-// App.getLayout = function getLayout(page: ReactElement) {
-//   return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
-// };
+App.getLayout = function getLayout(page: ReactElement) {
+  return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
+};
 
 export default App;

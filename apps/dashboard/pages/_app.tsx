@@ -17,7 +17,6 @@ import { Toaster } from 'react-hot-toast';
 import Analytics from '@app/components/Analytics';
 import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
 import DefaultSEOTags from '@app/components/DefaultSEOTags';
-import IFrameThemeProvider from '@app/components/IFrameThemeProvider';
 import SynchTailwindColorMode from '@app/components/SynchTailwindColorMode';
 import {
   getProductFromHostname,
@@ -63,14 +62,12 @@ export default function App({
     return getLayout(
       <ProductContext.Provider value={product}>
         {/* <SessionProvider> */}
-        <IFrameThemeProvider>
-          <Analytics>
-            <Toaster />
-            <DefaultSEOTags />
-            <SynchTailwindColorMode />
-            <Component {...pageProps} />
-          </Analytics>
-        </IFrameThemeProvider>
+        <Analytics>
+          <Toaster />
+          <DefaultSEOTags />
+          <SynchTailwindColorMode />
+          <Component {...pageProps} />
+        </Analytics>
         {/* </SessionProvider> */}
       </ProductContext.Provider>
     );

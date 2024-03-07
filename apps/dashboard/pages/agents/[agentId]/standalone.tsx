@@ -22,8 +22,9 @@ import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
-export default function AgentPage(props: { agent: Agent }) {
-  const agentId = props.agent?.id;
+export default function AgentPage() {
+  const router = useRouter();
+  const agentId = router?.query?.agentId as string;
 
   const [state, setState] = useStateReducer({
     isPageReady: false,
@@ -33,7 +34,7 @@ export default function AgentPage(props: { agent: Agent }) {
 
   const baseUrl = process.env.NEXT_PUBLIC_DASHBOARD_URL;
   const getAgentConfigQuery = useSWR<Prisma.PromiseReturnType<typeof getAgent>>(
-    `${baseUrl}/api/agents/${agentId}`,
+    !!agentId ? `${baseUrl}/api/agents/${agentId}` : null,
     fetcher
   );
 
@@ -59,11 +60,11 @@ export default function AgentPage(props: { agent: Agent }) {
 
   return (
     <>
-      <SEO
+      {/* <SEO
         title={`${props?.agent?.name} - made with Chaindesk`}
         description={props?.agent?.description}
         url={`https://chaindesk.ai/@${props?.agent?.handle}`}
-      />
+      /> */}
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -500,7 +501,7 @@ export default function AgentPage(props: { agent: Agent }) {
                 width: '100%',
                 height: '100%',
               }}
-              src={`${baseUrl}/agents/${agentId}/iframe?primaryColor="#ffffff"`}
+              src={`${baseUrl}/agents/${agent?.id}/iframe?primaryColor="#ffffff"`}
               frameBorder="0"
             />
           </Stack>
@@ -510,9 +511,9 @@ export default function AgentPage(props: { agent: Agent }) {
   );
 }
 
-// AgentPage.getLayout = function getLayout(page: ReactElement) {
-//   return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
-// };
+AgentPage.getLayout = function getLayout(page: ReactElement) {
+  return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
+};
 
 // export async function getStaticPaths() {
 //   const all: string[] = [];
@@ -533,40 +534,40 @@ export default function AgentPage(props: { agent: Agent }) {
 //     agentId: string;
 //   };
 // })
-export async function getServerSideProps(context: any) {
-  const agentId = context.params.agentId as string;
-  let agent = null;
+// export async function getServerSideProps(context: any) {
+//   const agentId = context.params.agentId as string;
+//   let agent = null;
 
-  if (agentId.startsWith('@')) {
-    const handle = agentId.replace('@', '');
+//   if (agentId.startsWith('@')) {
+//     const handle = agentId.replace('@', '');
 
-    agent = await prisma.agent.findUnique({
-      where: {
-        handle,
-        visibility: 'public',
-      },
-    });
-  } else {
-    agent = await prisma.agent.findUnique({
-      where: {
-        id: agentId,
-        visibility: 'public',
-      },
-    });
-  }
+//     agent = await prisma.agent.findUnique({
+//       where: {
+//         handle,
+//         visibility: 'public',
+//       },
+//     });
+//   } else {
+//     agent = await prisma.agent.findUnique({
+//       where: {
+//         id: agentId,
+//         visibility: 'public',
+//       },
+//     });
+//   }
 
-  if (!agent) {
-    return {
-      redirect: {
-        destination: `/`,
-      },
-    };
-  }
+//   if (!agent) {
+//     return {
+//       redirect: {
+//         destination: `/`,
+//       },
+//     };
+//   }
 
-  return {
-    props: {
-      agent: superjson.serialize(agent).json || null,
-    },
-    // revalidate: 10,
-  };
-}
+//   return {
+//     props: {
+//       agent: superjson.serialize(agent).json || null,
+//     },
+//     // revalidate: 10,
+//   };
+// }

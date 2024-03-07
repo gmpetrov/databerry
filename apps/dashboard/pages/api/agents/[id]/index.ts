@@ -66,7 +66,7 @@ export const getAgent = async (
 
   const agent = await prisma.agent.findUnique({
     where: {
-      id,
+      ...(id.startsWith('@') ? { handle: id?.replace(/^@/, '') } : { id }),
     },
     include: {
       ...agentInclude,
