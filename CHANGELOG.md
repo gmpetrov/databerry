@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.252"></a>
+## 0.1.252 (2024-03-07)
+
+### Fixed
+
+- 🐛 standalone page + chat page [[68971a1](https://github.com/gmpetrov/databerry/commit/68971a11289c07becc038d85b63a36aca8ccf17c)]
+
+
 <a name="0.1.251"></a>
 ## 0.1.251 (2024-03-07)
 
