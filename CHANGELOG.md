@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.253"></a>
+## 0.1.253 (2024-03-07)
+
+### Fixed
+
+- 🐛 standalone page [[f7c7b66](https://github.com/gmpetrov/databerry/commit/f7c7b66c61d7407cd27abb2964fb6067e64789f3)]
+
+### Miscellaneous
+
+-  add item [[c49a2ef](https://github.com/gmpetrov/databerry/commit/c49a2ef7f168c0b22cde188ccd55a209edaadaf4)]
+
+
 <a name="0.1.252"></a>
 ## 0.1.252 (2024-03-07)
 
