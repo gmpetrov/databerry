@@ -16,6 +16,7 @@ import {
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -102,14 +103,16 @@ export default function YoutubeSummary({ summary }: Props) {
           sx={{ justifyContent: 'flex-start', alignItems: 'center' }}
           gap={2}
         >
-          <IconButton
-            variant="outlined"
-            sx={{ borderRadius: '20px' }}
-            onClick={router.back}
-            size="sm"
-          >
-            <ChevronLeftRoundedIcon />
-          </IconButton>
+          <Link href="/tools/youtube-summarizer">
+            <IconButton
+              variant="outlined"
+              sx={{ borderRadius: '20px' }}
+              // onClick={router.back}
+              size="sm"
+            >
+              <ChevronLeftRoundedIcon />
+            </IconButton>
+          </Link>
           <Typography level="h1" sx={{ mr: 'auto' }}>
             {title}
           </Typography>
