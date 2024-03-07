@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.257"></a>
+## 0.1.257 (2024-03-07)
+
+### Fixed
+
+- 🐛 improve readability inbox message lists [[0f9fe28](https://github.com/gmpetrov/databerry/commit/0f9fe28899716b5ae85dfd25dfa4a4bc9d00ea13)]
+
+
 <a name="0.1.256"></a>
 ## 0.1.256 (2024-03-07)
 
