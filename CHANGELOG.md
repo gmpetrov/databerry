@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.255"></a>
+## 0.1.255 (2024-03-07)
+
+### Fixed
+
+- 🐛 try to fix standalone page bug [[117b3ea](https://github.com/gmpetrov/databerry/commit/117b3ea07ef7a39f1de4f73b2f0ba5e22c88e28c)]
+
+
 <a name="0.1.254"></a>
 ## 0.1.254 (2024-03-07)
 
