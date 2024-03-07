@@ -208,12 +208,7 @@ export default function StandalonePageSettings(props: Props) {
                           height: '500px',
                           borderRadius: '15px',
                         }}
-                        src={`${process.env.NEXT_PUBLIC_DASHBOARD_URL?.replace(
-                          'app.',
-                          ''
-                        )}/agents/${query?.data?.id}/standalone?counter=${
-                          state.counter
-                        }`}
+                        src={`${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/${query?.data?.id}/standalone?counter=${state.counter}`}
                         frameBorder="0"
                       ></iframe>
                     </Stack>

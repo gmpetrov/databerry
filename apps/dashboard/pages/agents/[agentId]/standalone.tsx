@@ -53,7 +53,7 @@ export default function AgentPage(props: { agent: Agent }) {
         setState({
           isPageReady: true,
         });
-      }, 2000);
+      }, 300);
     }
   }, [getAgentConfigQuery?.isLoading]);
 
@@ -177,9 +177,9 @@ export default function AgentPage(props: { agent: Agent }) {
                 <Typography
                   level="title-lg"
                   fontWeight={'bold'}
-                  className="font-title"
                   sx={{
                     color: textColor,
+                    fontFamily: 'Bricolage Grotesque',
                   }}
                 >
                   {agent?.name}
@@ -510,9 +510,9 @@ export default function AgentPage(props: { agent: Agent }) {
   );
 }
 
-AgentPage.getLayout = function getLayout(page: ReactElement) {
-  return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
-};
+// AgentPage.getLayout = function getLayout(page: ReactElement) {
+//   return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
+// };
 
 // export async function getStaticPaths() {
 //   const all: string[] = [];
@@ -543,12 +543,14 @@ export async function getServerSideProps(context: any) {
     agent = await prisma.agent.findUnique({
       where: {
         handle,
+        visibility: 'public',
       },
     });
   } else {
     agent = await prisma.agent.findUnique({
       where: {
         id: agentId,
+        visibility: 'public',
       },
     });
   }
