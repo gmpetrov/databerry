@@ -17,7 +17,7 @@ type Props = {
 };
 
 function WhatsAppSettings({ agentId }: Props) {
-  const addAccountModal = useModal();
+  const addAccountModal = useModal({ title: 'WhatsApp' });
 
   const { query } = useServiceProviders({
     type: 'whatsapp',

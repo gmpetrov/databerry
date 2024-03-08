@@ -282,7 +282,6 @@ export default class ConversationManager {
           }
         : {}),
     } as Prisma.ConversationUpdateInput;
-
     return prisma.conversation.upsert({
       where: {
         organizationId: this.organizationId!,
