@@ -570,7 +570,7 @@ const items: Product[] = [
     },
     metadata: {
       title:
-        'Chaindesk PluginL: Word - AI Chatbot trained with your Word documents',
+        'Chaindesk Plugin: Word - AI Chatbot trained with your Word documents',
     },
     youtubeVideoId: '_n3VQM9N3-Q',
     isDatasource: true,
