@@ -27,8 +27,10 @@ import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
 import CustomCSSInput from './AgentInputs/CustomCSSInput';
 import AgentForm from './AgentForm';
 import ChatBoxFrame from './ChatBoxFrame';
+import ChatboxNavBarLayout from './ChatboxNavBarLayout';
 import ConnectForm from './ConnectForm';
 import ReactFrameStyleFix from './ReactFrameStyleFix';
+import WidgetThemeProvider from './WidgetThemeProvider';
 
 if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
@@ -145,42 +147,38 @@ export default function BubbleWidgetSettings(props: Props) {
                                 });
 
                                 return (
-                                  <StyledEngineProvider injectFirst>
-                                    <CacheProvider value={cache}>
-                                      <CssVarsProvider
-                                        theme={theme}
-                                        defaultMode="light"
-                                        {...themeKeys}
-                                      >
-                                        <CssBaseline enableColorScheme />
+                                  <WidgetThemeProvider
+                                    emotionCache={cache}
+                                    name="chaindesk-iframe"
+                                  >
+                                    <ReactFrameStyleFix />
 
-                                        <ReactFrameStyleFix />
+                                    <Box
+                                      style={{
+                                        width: '100vw',
+                                        height: '100vh',
+                                      }}
+                                      sx={{
+                                        body: {
+                                          padding: 0,
+                                          margin: 0,
+                                        },
+                                      }}
+                                    >
+                                      <ChatBoxFrame
+                                        initConfig={config!}
+                                        layout={ChatboxNavBarLayout}
+                                      />
+                                    </Box>
 
-                                        <Box
-                                          style={{
-                                            width: '100vw',
-                                            height: '100vh',
-                                          }}
-                                          sx={{
-                                            body: {
-                                              padding: 0,
-                                              margin: 0,
-                                            },
-                                          }}
-                                        >
-                                          <ChatBoxFrame initConfig={config!} />
-                                        </Box>
-
-                                        {config?.customCSS && (
-                                          <style
-                                            dangerouslySetInnerHTML={{
-                                              __html: config?.customCSS || '',
-                                            }}
-                                          ></style>
-                                        )}
-                                      </CssVarsProvider>
-                                    </CacheProvider>
-                                  </StyledEngineProvider>
+                                    {config?.customCSS && (
+                                      <style
+                                        dangerouslySetInnerHTML={{
+                                          __html: config?.customCSS || '',
+                                        }}
+                                      ></style>
+                                    )}
+                                  </WidgetThemeProvider>
                                 );
                               }}
                             </FrameContextConsumer>

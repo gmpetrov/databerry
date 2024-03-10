@@ -6,14 +6,15 @@ import {
 } from '@prisma/client';
 import { NextApiResponse } from 'next';
 
-import { MessageEvalUnion } from '@app/hooks/useChat';
-
 import { AnalyticsEvents, capture } from '@chaindesk/lib/analytics-server';
 import {
   createAuthApiHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
-import { AppNextApiRequest } from '@chaindesk/lib/types/index';
+import {
+  AppNextApiRequest,
+  MessageEvalUnion,
+} from '@chaindesk/lib/types/index';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createAuthApiHandler();

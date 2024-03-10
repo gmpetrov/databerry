@@ -7,7 +7,7 @@ import React from 'react';
 
 import type { Attachment } from '@chaindesk/prisma';
 
-import { ImageZoom } from './ImageZoom';
+import { ImageZoom } from '@chaindesk/ui/ImageZoom';
 
 type Props = {
   attachment: Attachment;

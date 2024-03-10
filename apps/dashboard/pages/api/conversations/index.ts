@@ -33,6 +33,8 @@ export const getConversations = async (
 
   const conversations = await prisma.conversation.findMany({
     where: {
+      channel: 'dashboard',
+      userId: session?.user?.id,
       AND: [
         {
           organizationId: session.organization.id,

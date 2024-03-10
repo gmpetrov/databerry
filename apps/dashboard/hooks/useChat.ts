@@ -14,7 +14,7 @@ import {
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
 import { NonNull } from '@chaindesk/lib/type-utilites';
-import { SSE_EVENT } from '@chaindesk/lib/types';
+import { ChatMessage, MessageEvalUnion, SSE_EVENT } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type {
   ChatResponse,
@@ -47,32 +47,10 @@ type Props = {
   context?: string;
 };
 
-export type MessageEvalUnion = 'good' | 'bad';
-
 export type CustomContact = Omit<
   NonNull<Partial<Contact>>,
   'updatedAt' | 'createdAt' | 'agentId' | 'organizationId'
 >;
-
-export type ChatMessage = {
-  id?: string;
-  eval?: MessageEvalUnion | null;
-  from: 'human' | 'agent';
-  message: string;
-  createdAt?: Date;
-  sources?: Source[];
-  component?: JSX.Element;
-  disableActions?: boolean;
-  step?: {
-    type: 'tool_call';
-    description?: string;
-  };
-  approvals: ActionApproval[];
-  metadata?: Record<string, any>;
-  attachments?: Attachment[];
-  iconUrl?: string;
-  fromName?: string;
-};
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
 
@@ -603,7 +581,10 @@ const useChat = ({
             approvals: message?.approvals || [],
             metadata: message?.metadata || ({} as any),
             attachments: message?.attachments || ([] as Attachment[]),
-            iconUrl: message?.user?.customPicture || message?.user?.picture,
+            iconUrl:
+              message?.from === 'agent'
+                ? undefined
+                : message?.user?.customPicture || message?.user?.picture,
             fromName: message?.user?.name,
           })),
         conversationStatus:
@@ -652,7 +633,7 @@ const useChat = ({
         });
       } catch {}
     }
-  }, []);
+  }, [localStorageConversationIdKey]);
 
   const refreshConversation = useCallback(() => {
     return getConversationQuery.mutate();
@@ -670,6 +651,8 @@ const useChat = ({
     handleAbort: state.handleAbort,
     conversationStatus: state.conversationStatus as ConversationStatus,
     visitorEmail: getConversationQuery?.data?.[0]?.lead?.email || '',
+    contact:
+      getConversationQuery?.data?.[0]?.participantsVisitors?.[0]?.contact,
     isStreaming: state.isStreaming,
     isAiEnabled: state.isAiEnabled,
     createNewConversation,

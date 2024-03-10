@@ -21,11 +21,11 @@ function CopyButton(props: { text: string }) {
 
   return copied ? (
     <IconButton size="sm" color="neutral" variant="plain">
-      <DoneRoundedIcon fontSize={'sm' as any} />
+      <DoneRoundedIcon sx={{ fontSize: 'sm' }} />
     </IconButton>
   ) : (
     <IconButton size="sm" color="neutral" variant="plain" onClick={handleCopy}>
-      <ContentPasteRoundedIcon fontSize={'sm' as any} />
+      <ContentPasteRoundedIcon sx={{ fontSize: 'sm' }} />
     </IconButton>
   );
 }

@@ -22,7 +22,11 @@ function ChatMessageApproval({
     <Card size="sm" variant="outlined" color="warning" key={approval.id}>
       <Typography
         level="body-sm"
-        startDecorator={<PublishedWithChangesRoundedIcon fontSize="md" />}
+        startDecorator={
+          <PublishedWithChangesRoundedIcon
+          // fontSize="md"
+          />
+        }
         color="warning"
       >
         {`Waiting for approval`}

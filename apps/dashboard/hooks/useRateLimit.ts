@@ -1,9 +1,9 @@
-import type { Agent } from '@chaindesk/prisma';
 import { useCallback, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
-import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
+import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
+import type { Agent } from '@chaindesk/prisma';
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 

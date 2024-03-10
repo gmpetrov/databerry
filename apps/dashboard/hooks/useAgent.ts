@@ -27,10 +27,11 @@ export type UseAgentQuery = SWRResponse<GetAgentResponse>;
 export type UseAgentMutation = SWRMutationResponse<
   Prisma.PromiseReturnType<typeof updateAgent>
 >;
+const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 function useAgent({ id }: Props) {
   const query = useSWR<GetAgentResponse>(
-    id ? `/api/agents/${id}` : null,
+    id ? `${API_URL}/api/agents/${id}` : null,
     fetcher
     // (args: any) =>
     //   fetcher(args).then((data) => {
@@ -42,7 +43,7 @@ function useAgent({ id }: Props) {
   );
 
   const mutation = useSWRMutation<Prisma.PromiseReturnType<typeof updateAgent>>(
-    id ? `/api/agents/${id}` : `/api/agents`,
+    id ? `${API_URL}/api/agents/${id}` : `${API_URL}/api/agents`,
     generateActionFetcher(id ? HTTP_METHOD.PATCH : HTTP_METHOD.POST),
     {
       onSuccess(data, key, config) {
