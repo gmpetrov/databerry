@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.258"></a>
+## 0.1.258 (2024-03-10)
+
+### Miscellaneous
+
+- 🎸 lead generation ui form [[97084cf](https://github.com/gmpetrov/databerry/commit/97084cf284d07bc0682ceb3e9ce5fad7f26c4ed9)]
+-  fix typo [[9651855](https://github.com/gmpetrov/databerry/commit/9651855908a72e7ed87acac699f4bd9a9e896659)]
+
+
 <a name="0.1.257"></a>
 ## 0.1.257 (2024-03-07)
 
