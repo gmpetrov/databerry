@@ -34,6 +34,12 @@ export const getConversation = async (
       userId: true,
       agent: true,
       lead: true,
+      participantsVisitors: {
+        include: {
+          contact: true,
+        },
+      },
+      participantsContacts: true,
       messages: {
         take: 50,
         include: {

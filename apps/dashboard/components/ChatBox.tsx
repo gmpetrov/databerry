@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
+import MoreVert from '@mui/icons-material/MoreVert';
 import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
@@ -18,7 +19,12 @@ import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
 import ChipDelete from '@mui/joy/ChipDelete';
 import CircularProgress from '@mui/joy/CircularProgress';
+import Dropdown from '@mui/joy/Dropdown';
 import IconButton from '@mui/joy/IconButton';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Menu from '@mui/joy/Menu';
+import MenuButton from '@mui/joy/MenuButton';
+import MenuItem from '@mui/joy/MenuItem';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
@@ -29,10 +35,6 @@ import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { z } from 'zod';
 
-import ChatMessageCard from '@app/components/ChatMessageCard';
-import Markdown from '@app/components/Markdown';
-import { ChatMessage, MessageEvalUnion } from '@app/hooks/useChat';
-
 import {
   AcceptedAudioMimeTypes,
   AcceptedDocumentMimeTypes,
@@ -40,12 +42,14 @@ import {
   AcceptedVideoMimeTypes,
 } from '@chaindesk/lib/accepted-mime-types';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
+import { ChatMessage, MessageEvalUnion } from '@chaindesk/lib/types';
 import type { Source } from '@chaindesk/lib/types/document';
+import { LeadCaptureToolchema } from '@chaindesk/lib/types/dtos';
+import Message from '@chaindesk/ui/Chatbox/ChatMessage';
+import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
+import LeadForm from '@chaindesk/ui/LeadForm';
+import Markdown from '@chaindesk/ui/Markdown';
 
-import ChatMessageApproval from './ChatMessageApproval';
-import ChatMessageAttachment from './ChatMessageAttachment';
-import CopyButton from './CopyButton';
-import SourceComponent from './Source';
 import VisuallyHiddenInput from './VisuallyHiddenInput';
 
 const acceptedMimeTypesStr = [
@@ -92,60 +96,6 @@ export type ChatBoxProps = {
 };
 
 const Schema = z.object({ query: z.string().min(1) });
-
-const EvalButton = (props: {
-  messageId: string;
-  eval?: MessageEvalUnion | null;
-  handleEvalAnswer?: (props: {
-    messageId: string;
-    value: MessageEvalUnion;
-  }) => any;
-}) => {
-  const [value, setValue] = useState(props.eval);
-
-  const handleClick = useCallback(
-    async (value: MessageEvalUnion) => {
-      setValue(value);
-
-      await props.handleEvalAnswer?.({
-        messageId: props.messageId,
-        value,
-      });
-    },
-    [props.handleEvalAnswer]
-  );
-
-  return (
-    <React.Fragment>
-      {(!value || value === 'good') && (
-        <IconButton
-          size="sm"
-          color={value ? 'success' : 'neutral'}
-          variant="plain"
-          onClick={async (e) => {
-            e.stopPropagation();
-            await handleClick('good');
-          }}
-        >
-          <ThumbUpAltRoundedIcon fontSize={'sm'} />
-        </IconButton>
-      )}
-      {(!value || value === 'bad') && (
-        <IconButton
-          size="sm"
-          color={value ? 'danger' : 'neutral'}
-          variant="plain"
-          onClick={async (e) => {
-            e.stopPropagation();
-            await handleClick('bad');
-          }}
-        >
-          <ThumbDownAltRoundedIcon fontSize={'sm'} />
-        </IconButton>
-      )}
-    </React.Fragment>
-  );
-};
 
 function ChatBox({
   messages,
@@ -223,7 +173,15 @@ function ChatBox({
       return;
     }
 
-    scrollableRef.current.scrollTo(0, scrollableRef.current.scrollHeight + 100);
+    const t = setTimeout(() => {
+      scrollableRef.current?.scrollTo(
+        0,
+        scrollableRef.current?.scrollHeight + 100
+      );
+    }, 50);
+    return () => {
+      clearTimeout(t);
+    };
   }, [lastMessageLength, messages?.length]);
 
   React.useEffect(() => {
@@ -235,6 +193,7 @@ function ChatBox({
             ({
               from: 'agent',
               message: each?.trim?.(),
+              iconUrl: agentIconUrl,
               approvals: [],
             } as ChatMessage)
         );
@@ -245,7 +204,7 @@ function ChatBox({
     return () => {
       clearTimeout(t);
     };
-  }, [initialMessages]);
+  }, [initialMessages, agentIconUrl]);
 
   const handleOnDraftReply = useCallback(
     (query: string) => {
@@ -312,7 +271,7 @@ function ChatBox({
           mb: -2,
 
           // Scrollbar
-          scrollbarColor: 'rgba(0,0,0,.3) transparent',
+          scrollbarColor: 'rgba(0,0,0,.1) transparent',
           '&::-webkit-scrollbar': {
             width: '0.4em',
           },
@@ -348,24 +307,7 @@ function ChatBox({
         >
           <Stack gap={2}>
             {firstMsgs?.map((each, index) => (
-              <Stack
-                key={index}
-                sx={{ width: '100%' }}
-                direction={'row'}
-                gap={1}
-              >
-                <Avatar
-                  size="sm"
-                  variant="outlined"
-                  src={agentIconUrl || '/logo.png'}
-                  sx={{
-                    ...agentIconStyle,
-                  }}
-                ></Avatar>
-                <ChatMessageCard className="message-agent">
-                  {each && <Markdown>{each.message}</Markdown>}
-                </ChatMessageCard>
-              </Stack>
+              <Message key={index} message={each} />
             ))}
 
             {isLoadingConversation && messages?.length <= 0 && (
@@ -389,222 +331,45 @@ function ChatBox({
 
             {(!isLoadingConversation || messages?.length > 0) &&
               messages.map((each, index) => (
-                <Stack
-                  key={index}
-                  sx={{
-                    width: '100%',
-                    maxWidth: '100%',
-                    mr: each.from === 'agent' ? 'auto' : 'none',
-                    ml: each.from === 'human' ? 'auto' : 'none',
-                  }}
-                >
-                  <Stack
-                    sx={{
-                      width: '100%',
-                      maxWidth: '100%',
+                <React.Fragment key={each?.id || index}>
+                  <Message
+                    index={index}
+                    message={{
+                      ...each,
+                      iconUrl:
+                        each.from === 'agent'
+                          ? agentIconUrl
+                          : userImgUrl || each.iconUrl,
                     }}
-                    direction={'row'}
-                    gap={1}
-                  >
-                    {each.from === 'agent' && (
-                      <Avatar
-                        size="sm"
-                        variant="outlined"
-                        src={agentIconUrl || '/logo.png'}
-                        sx={{
-                          ...agentIconStyle,
+                    withSources={withSources}
+                    hideInternalSources={hideInternalSources}
+                    handleEvalAnswer={handleEvalAnswer}
+                    handleImprove={handleImprove}
+                    handleSourceClick={handleSourceClick}
+                    refreshConversation={refreshConversation}
+                    organizationId={organizationId!}
+                  />
+                  {/* 
+                  {messages?.length >= 2 &&
+                    index === 1 &&
+                    !(messages?.length === 2 && isLoading) && (
+                      <Message
+                        key={'lead-form'}
+                        message={{
+                          id: 'lead-form',
+                          from: 'agent',
+                          message: '',
+                          component: <LeadForm />,
+                          disableActions: true,
+                          approvals: [],
                         }}
-                      ></Avatar>
-                    )}
-
-                    {each.from === 'human' && (
-                      <Avatar
-                        size="sm"
-                        variant="outlined"
-                        src={each?.iconUrl || undefined}
-                      ></Avatar>
-                    )}
-
-                    <Stack gap={1} sx={{ overflow: 'visible' }}>
-                      {each?.step?.type === 'tool_call' && (
-                        <Chip
-                          size="md"
-                          sx={{ overflow: 'visible' }}
-                          slotProps={{
-                            label: {
-                              sx: {
-                                overflow: 'visible',
-                              },
-                            },
-                          }}
-                        >
-                          <Stack
-                            direction="row"
-                            alignItems={'center'}
-                            gap={0.5}
-                            sx={{ overflow: 'visible' }}
-                          >
-                            <Box
-                              className="animate-[bounce_1s_infinite]"
-                              sx={(t) => ({
-                                width: '9px',
-                                height: '9px',
-                                background: t.palette.neutral[400],
-                                borderRadius: '100%',
-                                opacity: 0.7,
-                              })}
-                            ></Box>
-                            <Box
-                              className="animate-[bounce_1s_infinite_-100ms]"
-                              sx={(t) => ({
-                                width: '9px',
-                                height: '9px',
-                                background: t.palette.neutral[400],
-                                borderRadius: '100%',
-                                opacity: 0.7,
-                              })}
-                            ></Box>
-                            <Box
-                              className="animate-[bounce_1s_infinite_-200ms]"
-                              sx={(t) => ({
-                                width: '9px',
-                                height: '9px',
-                                background: t.palette.neutral[400],
-                                borderRadius: '100%',
-                                opacity: 0.7,
-                              })}
-                            ></Box>
-                          </Stack>
-                        </Chip>
-                      )}
-
-                      {each?.approvals?.length > 0 && (
-                        <Stack gap={1}>
-                          {each?.approvals?.map((approval) => (
-                            <ChatMessageApproval
-                              key={approval.id}
-                              approval={approval}
-                              showApproveButton={!!organizationId}
-                              onSumitSuccess={refreshConversation}
-                            />
-                          ))}
-                        </Stack>
-                      )}
-                      {(each?.message || each?.component) && (
-                        <Stack gap={0.7}>
-                          <ChatMessageCard
-                            className={clsx(
-                              each.from === 'agent'
-                                ? 'message-agent'
-                                : 'message-human'
-                            )}
-                          >
-                            {/* {each?.step?.type === 'tool_call' && (
-
-                        )} */}
-
-                            <Markdown>{each.message}</Markdown>
-
-                            {each?.component}
-
-                            {withSources && (
-                              <Stack
-                                direction="row"
-                                justifyContent={'space-between'}
-                              >
-                                {((hideInternalSources
-                                  ? filterInternalSources(each?.sources!)
-                                  : each?.sources
-                                )?.length || 0) > 0 && (
-                                  <Box
-                                    sx={{
-                                      mt: 2,
-                                      width: '100%',
-                                      maxWidth: '100%',
-                                    }}
-                                  >
-                                    <details>
-                                      <summary className="cursor-pointer">
-                                        Sources
-                                      </summary>
-                                      <Stack
-                                        direction={'column'}
-                                        gap={1}
-                                        sx={{ pt: 1 }}
-                                      >
-                                        {(hideInternalSources
-                                          ? filterInternalSources(
-                                              each?.sources!
-                                            )
-                                          : each?.sources
-                                        )?.map((source) => (
-                                          <SourceComponent
-                                            key={source.chunk_id}
-                                            source={source}
-                                            onClick={handleSourceClick}
-                                          />
-                                        ))}
-                                      </Stack>
-                                    </details>
-                                  </Box>
-                                )}
-                              </Stack>
-                            )}
-                          </ChatMessageCard>
-                          {each?.fromName && (
-                            <Typography
-                              level="body-xs"
-                              sx={{ opacity: '0.8', pl: 1 }}
-                            >
-                              {each?.fromName}
-                            </Typography>
-                          )}
-                        </Stack>
-                      )}
-
-                      {(each?.attachments?.length || 0) > 0 && (
-                        <Stack gap={1}>
-                          {each?.attachments?.map((each) => (
-                            <ChatMessageAttachment
-                              key={each.id}
-                              attachment={each}
-                            />
-                          ))}
-                        </Stack>
-                      )}
-                      {each.from === 'agent' &&
-                        each?.id &&
-                        !each?.disableActions &&
-                        !!each?.message && (
-                          <Stack
-                            direction="row"
-                            marginLeft={'auto'}
-                            // marginBottom={'auto'}
-                          >
-                            <CopyButton text={each?.message} />
-                            <EvalButton
-                              messageId={each?.id!}
-                              handleEvalAnswer={handleEvalAnswer}
-                              eval={each?.eval}
-                            />
-
-                            {handleImprove && (
-                              <Button
-                                size="sm"
-                                variant="plain"
-                                color="neutral"
-                                startDecorator={<SchoolTwoToneIcon />}
-                                onClick={() => handleImprove(each, index)}
-                              >
-                                Improve
-                              </Button>
-                            )}
-                          </Stack>
-                        )}
-                    </Stack>
-                  </Stack>
-                </Stack>
+                      />
+                    )} */}
+                </React.Fragment>
               ))}
+
+            {/* <LeadForm /> */}
+
             {isLoading && (
               <CircularProgress
                 variant="soft"
@@ -658,7 +423,7 @@ function ChatBox({
                 overflowX: 'auto',
                 maxWidth: '100%',
 
-                scrollbarColor: 'rgba(0,0,0,.3) transparent',
+                scrollbarColor: 'rgba(0,0,0,.1) transparent',
                 '&::-webkit-scrollbar': {
                   height: '0.4em',
                 },

@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import React, { useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 // import ReactMarkdown from 'react-markdown';
-import { useRemark } from 'react-remark';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
@@ -20,7 +19,7 @@ function Markdown({ children, className, ...otherProps }: Props) {
       {...otherProps}
       className={clsx(
         'prose-sm prose dark:prose-invert',
-        'prose-p:leading-relaxed prose-pre:p-0 break-words text-sm',
+        'text-sm break-words prose-p:leading-relaxed prose-pre:p-0',
         className
       )}
       components={{

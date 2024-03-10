@@ -98,7 +98,8 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
 
   const isNewConversation = !conversation?.id;
   const history = conversation?.messages || [];
-  const channel = data.channel || ConversationChannel.dashboard;
+  const channel = (data.channel ||
+    ConversationChannel.dashboard) as ConversationChannel;
   const conversationId = conversation?.id || data.conversationId || cuid();
   const isDashboardMessage =
     channel === ConversationChannel.dashboard && !!data.userId;
@@ -137,6 +138,22 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
 
   const filteredTools = (agent?.tools || []).filter((each) => {
     if (each?.type === ToolType.lead_capture) {
+      // Disabled for the following channels
+      if (
+        [
+          ConversationChannel.api,
+          ConversationChannel.crisp,
+          ConversationChannel.website,
+          ConversationChannel.dashboard,
+        ].includes(channel as any)
+      ) {
+        return false;
+      }
+
+      if (conversation?.status === ConversationStatus.HUMAN_REQUESTED) {
+        return false;
+      }
+
       // already captured lead or contact for the conversation
       if (
         !!conversation?.lead ||
@@ -145,12 +162,17 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
         return false;
       }
     } else if (
-      conversation?.status === ConversationStatus.HUMAN_REQUESTED &&
-      (each?.type === ToolType.request_human ||
-        each?.type === ToolType.mark_as_resolved)
+      each?.type === ToolType.request_human ||
+      each?.type === ToolType.mark_as_resolved
     ) {
-      // Human has been requested
-      return false;
+      // Disabled for the following channels
+      if ([ConversationChannel.crisp].includes(channel as any)) {
+        return false;
+      }
+
+      if (conversation?.status === ConversationStatus.HUMAN_REQUESTED) {
+        return false;
+      }
     }
     return true;
   });

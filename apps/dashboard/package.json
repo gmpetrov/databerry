@@ -166,7 +166,6 @@
     "eslint-config-custom": "workspace:*",
     "jest": "^29.6.2",
     "jest-environment-jsdom": "^29.6.2",
-    "medium-zoom": "^1.1.0",
     "parcel": "^2.11.0",
     "postcss": "^8.4.32",
     "property-information": "^6.4.0",

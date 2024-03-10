@@ -4,8 +4,11 @@ import type { Logger } from 'pino';
 import { ReactElement, ReactNode } from 'react';
 
 import { Schema } from '@chaindesk/lib/openai-tools/youtube-summary';
+import { Source } from '@chaindesk/lib/types/document';
 import {
+  ActionApproval,
   Agent,
+  Attachment,
   Conversation,
   LLMTaskOutput,
   Message,
@@ -191,4 +194,26 @@ export type Product = {
   isDatasource?: boolean;
   isComingSoon?: boolean;
   keywords?: string[];
+};
+
+export type MessageEvalUnion = 'good' | 'bad';
+
+export type ChatMessage = {
+  id?: string;
+  eval?: MessageEvalUnion | null;
+  from: 'human' | 'agent';
+  message: string;
+  createdAt?: Date;
+  sources?: Source[];
+  component?: JSX.Element;
+  disableActions?: boolean;
+  step?: {
+    type: 'tool_call';
+    description?: string;
+  };
+  approvals: ActionApproval[];
+  metadata?: Record<string, any>;
+  attachments?: Attachment[];
+  iconUrl?: string;
+  fromName?: string;
 };

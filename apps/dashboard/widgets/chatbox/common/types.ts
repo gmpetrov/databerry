@@ -12,6 +12,7 @@ export type InitWidgetProps = {
   contact?: CustomContact;
   styles?: SxProps;
   context?: string;
+  className?: string;
   onMarkedAsResolved?(): any;
   onAgentLoaded?: (agent: Agent) => any;
 };

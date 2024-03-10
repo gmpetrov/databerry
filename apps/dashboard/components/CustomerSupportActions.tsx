@@ -5,14 +5,14 @@ import React, { useContext } from 'react';
 import { useFrame } from 'react-frame-component';
 import { useTranslation } from 'react-i18next';
 
-import { ChatContext, ChatMessage } from '@app/hooks/useChat';
+import { ChatContext } from '@app/hooks/useChat';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import i18n from '@chaindesk/lib/locales/i18next';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { ConversationStatus } from '@chaindesk/prisma';
 
-import { InjectLeadForm, LEAD_FORM_ID } from './LeadForm';
+// import { InjectLeadForm, LEAD_FORM_ID } from './LeadForm';
 import ResolveButton, { updateConversationStatus } from './ResolveButton';
 
 type Props = { config: AgentInterfaceConfig };
@@ -45,7 +45,7 @@ function CustomerSupportActions({ config }: Props) {
 
   return (
     <>
-      {!config.isLeadCaptureDisabled && <InjectLeadForm />}
+      {/* {!config.isLeadCaptureDisabled && <InjectLeadForm />} */}
 
       <Stack
         direction="row"
@@ -100,8 +100,8 @@ function CustomerSupportActions({ config }: Props) {
                   isHumanRequestLoading: true,
                 });
                 if (!visitorEmail) {
-                  const input = document?.getElementById(LEAD_FORM_ID);
-                  input?.focus();
+                  // const input = document?.getElementById(LEAD_FORM_ID);
+                  // input?.focus();
                 } else {
                   await updateConversationStatus(
                     conversationId,

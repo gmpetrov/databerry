@@ -1,9 +1,9 @@
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import { IconButton, useColorScheme } from '@mui/joy';
+import { IconButton, IconButtonProps, useColorScheme } from '@mui/joy';
 import React from 'react';
 
-export default function ColorSchemeToggle() {
+export default function ColorSchemeToggle(props: IconButtonProps) {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => {
@@ -25,6 +25,7 @@ export default function ColorSchemeToggle() {
           setMode('light');
         }
       }}
+      {...(props as any)}
     >
       {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
     </IconButton>

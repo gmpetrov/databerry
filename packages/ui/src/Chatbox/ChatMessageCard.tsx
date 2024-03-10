@@ -4,7 +4,7 @@ import React from 'react';
 
 type Props = CardProps & {};
 
-function ChatMessage({ sx, children, className, ...otherProps }: Props) {
+function ChatMessageCard({ sx, children, className, ...otherProps }: Props) {
   return (
     <Card
       size="sm"
@@ -56,4 +56,4 @@ function ChatMessage({ sx, children, className, ...otherProps }: Props) {
   );
 }
 
-export default ChatMessage;
+export default ChatMessageCard;

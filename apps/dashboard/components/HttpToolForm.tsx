@@ -25,9 +25,9 @@ import {
   HttpToolSchema,
   ToolSchema,
 } from '@chaindesk/lib/types/dtos';
+import Markdown from '@chaindesk/ui/Markdown';
 
 import HttpToolInput, { type Fields } from './AgentInputs/HttpToolInput';
-import Markdown from './Markdown';
 
 type Props = {
   defaultValues?: Partial<HttpToolSchema>;

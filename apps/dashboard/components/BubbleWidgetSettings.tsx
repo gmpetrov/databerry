@@ -21,8 +21,6 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
-import { theme, themeKeys } from '@app/utils/themes/chat-bubble';
-
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
@@ -31,6 +29,7 @@ import AgentForm from './AgentForm';
 import ChatBubble from './ChatBubble';
 import ConnectForm from './ConnectForm';
 import ReactFrameStyleFix from './ReactFrameStyleFix';
+import WidgetThemeProvider from './WidgetThemeProvider';
 
 if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
@@ -168,41 +167,34 @@ export default function BubbleWidgetSettings(props: Props) {
                                 });
 
                                 return (
-                                  <StyledEngineProvider injectFirst>
-                                    <CacheProvider value={cache}>
-                                      <CssVarsProvider
-                                        theme={theme}
-                                        defaultMode="light"
-                                        {...themeKeys}
-                                      >
-                                        <CssBaseline />
+                                  <WidgetThemeProvider
+                                    emotionCache={cache}
+                                    name="chaindesk-bubble"
+                                  >
+                                    <ReactFrameStyleFix />
 
-                                        <ReactFrameStyleFix />
-
-                                        <Box
-                                          sx={{
-                                            width: '100vw',
-                                            height: '100vh',
-                                            maxHeight: '100%',
-                                            overflow: 'hidden',
-                                            p: 2,
+                                    <Box
+                                      sx={{
+                                        width: '100vw',
+                                        height: '100vh',
+                                        maxHeight: '100%',
+                                        overflow: 'hidden',
+                                        p: 2,
+                                      }}
+                                    >
+                                      <ChatBubble
+                                        agentId={query?.data?.id!}
+                                        initConfig={config}
+                                      />
+                                      {config?.customCSS && (
+                                        <style
+                                          dangerouslySetInnerHTML={{
+                                            __html: config?.customCSS || '',
                                           }}
-                                        >
-                                          <ChatBubble
-                                            agentId={query?.data?.id!}
-                                            initConfig={config}
-                                          />
-                                          {config?.customCSS && (
-                                            <style
-                                              dangerouslySetInnerHTML={{
-                                                __html: config?.customCSS || '',
-                                              }}
-                                            ></style>
-                                          )}
-                                        </Box>
-                                      </CssVarsProvider>
-                                    </CacheProvider>
-                                  </StyledEngineProvider>
+                                        ></style>
+                                      )}
+                                    </Box>
+                                  </WidgetThemeProvider>
                                 );
                               }}
                             </FrameContextConsumer>

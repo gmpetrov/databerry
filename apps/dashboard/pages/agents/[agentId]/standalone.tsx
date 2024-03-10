@@ -3,7 +3,14 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import WebIcon from '@mui/icons-material/Language';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import YoutubeIcon from '@mui/icons-material/YouTube';
-import { Box, CircularProgress, IconButton, Stack, Typography } from '@mui/joy';
+import {
+  Box,
+  Card,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -11,8 +18,11 @@ import React, { ReactElement, useEffect, useMemo } from 'react';
 import superjson from 'superjson';
 import useSWR from 'swr';
 
+import ChatBoxFrame from '@app/components/ChatBoxFrame';
+import NewChatButton from '@app/components/ChatboxNewChatButton';
 import IFrameThemeProvider from '@app/components/IFrameThemeProvider';
 import SEO from '@app/components/SEO';
+import WidgetThemeProvider from '@app/components/WidgetThemeProvider';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
 
@@ -114,13 +124,19 @@ export default function AgentPage() {
           }}
           sx={{
             width: '100vw',
-            height: '100vh',
-            maxHeight: '-webkit-fill-available',
+            height: '100dvh',
+            maxHeight: '100%',
+            // maxHeight: '-webkit-fill-available',
+            zIndex: 1000000000,
           }}
         >
           <Stack
             sx={{
               position: 'relative',
+              // `display: {
+              //   xs: 'none',
+              //   sm: 'flex',
+              // },`
               p: {
                 xs: 2,
                 sm: 4,
@@ -494,16 +510,32 @@ export default function AgentPage() {
             sx={{
               width: '100%',
               height: '100%',
+              overflow: 'hidden',
             }}
           >
-            <iframe
+            <ChatBoxFrame
+              agentId={agent?.id}
+              layout={(props: any) => {
+                return (
+                  <div className="flex px-4 pb-4 w-full h-full">
+                    <div className="absolute top-4 right-4">
+                      <NewChatButton />
+                    </div>
+
+                    {props.children}
+                  </div>
+                );
+              }}
+            />
+
+            {/* <iframe
               style={{
                 width: '100%',
                 height: '100%',
               }}
               src={`${baseUrl}/agents/${agent?.id}/iframe?primaryColor="#ffffff"`}
               frameBorder="0"
-            />
+            /> */}
           </Stack>
         </Stack>
       )}
@@ -512,7 +544,7 @@ export default function AgentPage() {
 }
 
 AgentPage.getLayout = function getLayout(page: ReactElement) {
-  return <IFrameThemeProvider>{page}</IFrameThemeProvider>;
+  return <WidgetThemeProvider name="standalone">{page}</WidgetThemeProvider>;
 };
 
 // export async function getStaticPaths() {

@@ -9,7 +9,7 @@ import JoyLink from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
 import React, { useEffect } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import Input from '@app/components/Input';
 
@@ -50,15 +50,32 @@ function InitMessageInput(props: Props) {
       </FormHelperText>
       <Stack gap={1}>
         {fields.map((field, index) => (
-          <Stack key={field.id} direction="row" gap={1} alignItems={'start'}>
-            <Textarea
-              // control={control}
-              minRows={1}
-              maxRows={8}
-              defaultValue={props.defaultValue}
-              placeholder="👋 Hi, How can I help you?"
-              sx={{ width: '100%' }}
-              {...register(`interfaceConfig.initialMessages.${index}`)}
+          <Stack
+            key={field.id || index}
+            direction="row"
+            gap={1}
+            alignItems={'start'}
+          >
+            <Controller
+              name={`interfaceConfig.initialMessages.${index}`}
+              render={({
+                field: { onChange, onBlur, value, name, ref },
+                fieldState: { invalid, isDirty, error },
+                formState,
+              }) => (
+                <Textarea
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  // {...register(`interfaceConfig.initialMessages.${index}`)}
+                  // control={control as any}
+                  minRows={1}
+                  maxRows={8}
+                  defaultValue={props.defaultValue}
+                  placeholder="👋 Hi, How can I help you?"
+                  sx={{ width: '100%' }}
+                />
+              )}
             />
 
             {fields.length > 1 && (

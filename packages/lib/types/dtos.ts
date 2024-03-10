@@ -987,3 +987,9 @@ export type WhatsAppReceivedMessageMediaSchema = Extract<
   WhatsAppReceivedMessageSchema,
   { type: 'image' | 'audio' | 'video' | 'document' }
 >;
+
+export const LeadFormSchema = z.object({
+  email: z.string().email(),
+  phoneNumber: z.string().min(1),
+});
+export type LeadFormSchema = z.infer<typeof LeadFormSchema>;
