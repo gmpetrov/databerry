@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.261"></a>
+## 0.1.261 (2024-03-11)
+
+### Fixed
+
+- 🐛 init message width [[e2af73f](https://github.com/gmpetrov/databerry/commit/e2af73f6d4bce79082945eafe7805572822a4946)]
+
+
 <a name="0.1.260"></a>
 ## 0.1.260 (2024-03-11)
 
