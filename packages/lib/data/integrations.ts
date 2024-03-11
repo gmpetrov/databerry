@@ -294,6 +294,50 @@ const items: Product[] = [
     },
   },
   {
+    slug: 'shopify',
+    name: 'Shopify',
+    title: 'Add a Custom GPT Chatbot to Shopify in Minutes',
+    description:
+      'Deploy a custom AI Chatbot to your Shopify store in minutes. Train with your company data, install the Shopify plugin, and enjoy AI-driven interactions.',
+    logo: 'https://www.svgrepo.com/show/303503/shopify-logo.svg',
+    cta: {
+      label: 'Create your WhatsApp AI Chatbot',
+      url: 'https://app.chaindesk.ai/agents',
+    },
+    metadata: {
+      title: 'Custom ChatGPT - AI Chatbot for Shopify | Chaindesk',
+      description: ``,
+    },
+    youtubeVideoId: '-NkVS2l66Zs',
+    isComingSoon: false,
+    isDatasource: false,
+    isChannel: true,
+    features: {
+      items: [
+        {
+          name: 'Import your data',
+          description:
+            'Import custom data from various data sources like File, Notion, Google, and more.',
+        },
+        {
+          name: 'Training',
+          description:
+            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
+        },
+        {
+          name: 'Install Shopify plugin',
+          description:
+            'The final step is to install Chaindesk Bot to your Shopify store. \nNow your store is spiced up \nwith some AI magic ✨',
+        },
+        {
+          name: 'Auto Sync',
+          description:
+            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
+        },
+      ],
+    },
+  },
+  {
     slug: 'telegram',
     name: 'Telegram',
     title: 'Add a Custom GPT Chatbot to Telegram in Minutes',
@@ -337,50 +381,7 @@ const items: Product[] = [
       ],
     },
   },
-  {
-    slug: 'shopify',
-    name: 'Shopify',
-    title: 'Add a Custom GPT Chatbot to Shopify in Minutes',
-    description:
-      'Deploy a custom AI Chatbot to your Shopify store in minutes. Train with your company data, install the Shopify plugin, and enjoy AI-driven interactions.',
-    logo: 'https://www.svgrepo.com/show/303503/shopify-logo.svg',
-    cta: {
-      label: 'Create your WhatsApp AI Chatbot',
-      url: 'https://app.chaindesk.ai/agents',
-    },
-    metadata: {
-      title: 'Custom ChatGPT - AI Chatbot for Shopify | Chaindesk',
-      description: ``,
-    },
-    youtubeVideoId: '-NkVS2l66Zs',
-    isComingSoon: true,
-    isDatasource: false,
-    isChannel: true,
-    features: {
-      items: [
-        {
-          name: 'Import your data',
-          description:
-            'Import custom data from various data sources like File, Notion, Google, and more.',
-        },
-        {
-          name: 'Training',
-          description:
-            'After collecting your data, we process it and train your bot. Don’t worry, it’s fast ⚡️',
-        },
-        {
-          name: 'Install Shopify plugin',
-          description:
-            'The final step is to install Chaindesk Bot to your Shopify store. \nNow your store is spiced up \nwith some AI magic ✨',
-        },
-        {
-          name: 'Auto Sync',
-          description:
-            'We keep the bot up to date with your data. \nWe automatically synch your data when possible.\n You can also setup a webhook or manually trigger a synch.',
-        },
-      ],
-    },
-  },
+
   // Datasources
   {
     slug: 'train-ai-with-website',
