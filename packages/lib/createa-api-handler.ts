@@ -27,7 +27,6 @@ export const createLazyAuthHandler = (opts?: options) =>
   })
     .use(withLogger)
     .use(optionalAuth);
-
 export const createAuthApiHandler = (opts?: options) =>
   nc<AppNextApiRequest, NextApiResponse>({
     onError,

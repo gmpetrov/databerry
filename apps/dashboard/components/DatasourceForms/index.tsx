@@ -35,6 +35,14 @@ const YoutubeForm = dynamic(() => import('./YoutubeForm'), {
   ssr: false,
 });
 
+const ShopifyForm = dynamic(() => import('./ShopifyForm'), {
+  ssr: false,
+});
+
+const ShopifyProductForm = dynamic(() => import('./ShopifyProductForm'), {
+  ssr: false,
+});
+
 const DatasourceFormsMap = {
   [DatasourceType.web_page]: WebPageForm,
   [DatasourceType.text]: TextForm,
@@ -47,6 +55,8 @@ const DatasourceFormsMap = {
   [DatasourceType.notion_page]: NotionForm,
   [DatasourceType.youtube_video]: YoutubeForm,
   [DatasourceType.youtube_bulk]: YoutubeForm,
+  [DatasourceType.shopify]: ShopifyForm,
+  [DatasourceType.shopify_product]: ShopifyProductForm,
 } as Record<DatasourceType, any>;
 
 type Props = {

@@ -1,33 +1,34 @@
-// copilot
-// https://app.chaindesk.ai => chaindesk.ai
-export const getRootDomain = (url: string) => {
-  // const domain = url.split('/')[2];
-  // const parts = domain.split('.');
-  // return parts.slice(parts.length - 2).join('.');
-  let domain;
-  // Remove any protocol (http, https, ftp, etc.)
-  if (url.indexOf('://') > -1) {
-    domain = url.split('/')[2];
+// https://app.chaindesk.ai => chaindesk.ai || https://quickstart-d70620f6.myshopify.com/ -> quickstart-d70620f6.myshopify
+export function getRootDomain(url: string) {
+  let hostname;
+
+  // Extract the hostname from the URL
+  if (url.indexOf('//') > -1) {
+    hostname = url.split('/')[2];
   } else {
-    domain = url.split('/')[0];
+    hostname = url.split('/')[0];
   }
 
-  // Remove port number if it exists
-  domain = domain.split(':')[0];
+  // Remove port number and query string if present
+  hostname = hostname.split(':')[0];
+  hostname = hostname.split('?')[0];
 
-  // Split the domain into its parts (subdomains, domain, and TLD)
-  let domainParts = domain.split('.');
+  // Split the hostname into parts
+  let parts = hostname.split('.');
 
-  // If there are more than 2 parts, slice the array to get the last two parts
-  if (domainParts.length > 2) {
-    domainParts = domainParts.slice(-2);
+  // Check if the first part (subdomain) contains a dash
+  if (parts.length > 2 && parts[0].includes('-')) {
+    return hostname;
   }
 
-  // Join the domain parts back together
-  let rootDomain = domainParts.join('.');
+  // If no dash in the subdomain, remove subdomains
+  while (parts.length > 2) {
+    parts.shift();
+  }
 
-  return rootDomain;
-};
+  // Join the remaining parts to get the root domain
+  return parts.join('.');
+}
 
 export function getRootDomainFromHostname(hostname: string) {
   // Remove www. prefix if present

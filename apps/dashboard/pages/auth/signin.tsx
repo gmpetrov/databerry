@@ -1,5 +1,6 @@
 import { Transition } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { RouterRounded } from '@mui/icons-material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import GoogleIcon from '@mui/icons-material/Google';
 import { Box, Button, Divider, Typography, useColorScheme } from '@mui/joy';
@@ -52,14 +53,16 @@ export default function SignInPage() {
       capture?.({ event: 'login' });
 
       const redirect = router.query.redirect as string | undefined;
-
+      const callbackUrl = router.query.callbackUrl as string | undefined;
       if (redirect) {
         // https://github.com/gmpetrov/databerry/issues/204
         // router.push(redirect);
-        window.location.href = redirect;
+        // window.location.href = redirect;
+      } else if (callbackUrl) {
+        window.location.href = callbackUrl;
       } else {
         // router.push(RouteNames.HOME);
-        window.location.href = RouteNames.HOME;
+        // window.location.href = RouteNames.HOME;
       }
     }
   }, [status, router]);

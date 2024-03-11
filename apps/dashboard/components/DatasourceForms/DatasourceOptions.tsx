@@ -38,6 +38,15 @@ const options: DatsourceOption[] = [
     icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Google_Drive_icon_%282020%29.svg/1024px-Google_Drive_icon_%282020%29.svg.png?20221103153031',
   },
   {
+    type: 'shopify',
+    label: 'Shopify',
+    description:
+      'Connect your shopify stores, use your collections and products as source of knowledge.',
+    disabled: false,
+    icon: '/shopify-logo.png',
+    isPremium: true,
+  },
+  {
     type: 'youtube_video',
     label: 'Youtube',
     description:
