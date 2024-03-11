@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.262"></a>
+## 0.1.262 (2024-03-11)
+
+### Fixed
+
+- 🐛 hide lead form when contact provided to widget [[bc60fe0](https://github.com/gmpetrov/databerry/commit/bc60fe0323f061b4e125fbc438b9f485125e8398)]
+
+
 <a name="0.1.261"></a>
 ## 0.1.261 (2024-03-11)
 
