@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.259"></a>
+## 0.1.259 (2024-03-11)
+
+### Fixed
+
+- 🐛 chatbubble layout [[d1c350d](https://github.com/gmpetrov/databerry/commit/d1c350d9743847747eaac6967157910c49a6f399)]
+
+### Miscellaneous
+
+-  bump [[adf9eb2](https://github.com/gmpetrov/databerry/commit/adf9eb284330b2baf7ca455b0cd1a6d790d6fdd0)]
+-  bump [[765e18c](https://github.com/gmpetrov/databerry/commit/765e18c52c2a923e310b9472212edac02a3cae91)]
+
+
 <a name="0.1.258"></a>
 ## 0.1.258 (2024-03-10)
 
