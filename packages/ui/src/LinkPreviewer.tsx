@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Box, IconButton, Link, Typography } from '@mui/joy';
 import { useState } from 'react';
 
-import usePageMetadata from '@app/hooks/usePageMetadata';
+import usePageMetadata from '@chaindesk/ui/hooks/usePageMetadata';
 
 function LinkPreviewer({ href }: { href: string }) {
   const meta = usePageMetadata(href);
@@ -17,7 +17,7 @@ function LinkPreviewer({ href }: { href: string }) {
 
   return (
     <div
-      className="relative flex"
+      className="flex relative"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
@@ -53,7 +53,12 @@ function LinkPreviewer({ href }: { href: string }) {
               flexDirection: 'column',
             }}
           >
-            <Typography level="title-lg">{meta.ogTitle}</Typography>
+            <Typography
+              level="title-lg"
+              sx={{ fontFamily: 'Bricolage Grotesque' }}
+            >
+              {meta.ogTitle}
+            </Typography>
             <Typography level="body-sm">{meta.ogDescription}</Typography>
           </Box>
           <Box>
@@ -77,7 +82,7 @@ function LinkPreviewer({ href }: { href: string }) {
           hover ? 'visible' : 'invisible'
         }`}
       >
-        <CloseIcon fontSize="sm" />
+        <CloseIcon sx={{ fontSize: 'sm' }} />
       </IconButton>
     </div>
   );
