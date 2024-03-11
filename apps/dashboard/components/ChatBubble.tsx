@@ -160,8 +160,8 @@ function App(props: BubbleProps) {
   //   // channel: ConversationChannel.website // not working with bundler parcel,
   //   agentId: props?.agentId,
   //   localStorageConversationIdKey: `chatBubbleConversationId-${props.agentId}`,
-  //   contact: props?.contact,
-  //   context: props?.context,
+  // contact: props?.contact,
+  // context: props?.context,
   // });
 
   // const {
@@ -766,6 +766,8 @@ function App(props: BubbleProps) {
                 <ChatBoxFrame
                   agentId={props.agentId}
                   initConfig={state.config}
+                  contact={props.contact}
+                  context={props.context}
                   layout={Layout}
                 />
               </Stack>

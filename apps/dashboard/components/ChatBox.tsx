@@ -306,15 +306,11 @@ function ChatBox({
           }
         >
           <Stack gap={2}>
-            {messages?.length <= 2 ? (
+            {messages?.length < 2 ? (
               <AnimateMessagesOneByOne messages={firstMsgs} />
             ) : (
               firstMsgs?.map((each, index) => (
-                <Message
-                  key={index}
-                  message={each}
-                  withTextAnimation={messages?.length <= 2}
-                />
+                <Message key={index} message={each} />
               ))
             )}
 

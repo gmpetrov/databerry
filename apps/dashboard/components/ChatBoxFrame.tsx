@@ -145,7 +145,11 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
     refreshConversation,
     contact,
   } = methods;
-  const hasCapturedLead = !!visitorEmail || !!hasSubmittedForm || !!contact;
+  const hasCapturedLead =
+    !!visitorEmail ||
+    !!hasSubmittedForm ||
+    !!props.contact?.email ||
+    !!props.contact?.phoneNumber;
 
   const leadToolConfig = ((agent as any)?.tools as Tool[])?.find(
     (one) => one?.type === 'lead_capture'
@@ -233,6 +237,7 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
           // Show lead form after first AI answer when not required
           ...(!!leadToolConfig &&
           !leadToolConfig?.isRequired &&
+          !hasCapturedLead &&
           history?.length >= 2 &&
           index === 1 &&
           !(history?.length === 2 && isStreaming)
@@ -245,7 +250,7 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
         // ...(!!leadToolConfig?.isRequired && !hasCapturedLead ? [form] : []),
       ] as ChatMessage[]
     );
-  }, [isStreaming, history, leadToolConfig, leadForm]);
+  }, [isStreaming, history, leadToolConfig, leadForm, hasCapturedLead]);
 
   if (!agent) {
     return (

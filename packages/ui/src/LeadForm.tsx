@@ -126,7 +126,7 @@ export default function LeadForm(
           type="email"
           placeholder={t('chatbubble:lead.email')}
           startDecorator={<EmailRoundedIcon />}
-          autoFocus={false}
+          autoFocus={!!props.isRequired}
           defaultValue={props.visitorEmail}
           // endDecorator={
           //   !state.visitorEmail && (
