@@ -27,7 +27,7 @@ const ChatBoxLayout = (props: {
       className={cn(props.className)}
       sx={{
         position: 'relative',
-        px: 4,
+        px: 2,
         pt: 8,
         pb: 2,
         width: '100%',
@@ -42,7 +42,7 @@ const ChatBoxLayout = (props: {
           left: 0,
           right: 0,
           zIndex: 1,
-          px: 1,
+          px: 2,
         }}
       >
         <Stack
