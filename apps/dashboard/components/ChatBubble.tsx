@@ -23,6 +23,7 @@ import { InitWidgetProps } from '@app/widgets/chatbox/common/types';
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { Agent, Contact } from '@chaindesk/prisma';
+import AnimateMessagesOneByOne from '@chaindesk/ui/Chatbox/AnimateMessagesOneByOne';
 import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
 import Markdown from '@chaindesk/ui/Markdown';
 
@@ -360,8 +361,55 @@ function App(props: BubbleProps) {
                   }
                 : {}),
             }}
+            gap={2}
           >
-            <motion.div
+            <IconButton
+              sx={{
+                position: 'absolute',
+                zIndex: 2,
+                top: -2,
+
+                transform: 'translate(0px, -125%)',
+                p: 0.2,
+                backgroundColor: 'white',
+                minWidth: '10px',
+                minHeight: '10px',
+                borderRadius: '100%',
+                // opacity: 0.6,
+
+                ...(state.config.position === 'left'
+                  ? {
+                      right: 0,
+                    }
+                  : {}),
+                ...(state.config.position === 'right'
+                  ? {
+                      right: 0,
+                    }
+                  : {}),
+              }}
+              variant="outlined"
+              color="neutral"
+              size="md"
+              onClick={() =>
+                setState({
+                  showInitialMessage: false,
+                })
+              }
+            >
+              <CloseIcon fontSize="sm" />
+            </IconButton>
+
+            <AnimateMessagesOneByOne
+              messages={initMessages.map((each) => ({
+                iconUrl: state.agent?.iconUrl! || defaultAgentIconUrl,
+                from: 'agent',
+                message: each,
+                approvals: [],
+              }))}
+            />
+
+            {/* <motion.div
               initial="hidden"
               animate="visible"
               variants={{
@@ -492,7 +540,7 @@ function App(props: BubbleProps) {
                   </motion.div>
                 </motion.div>
               </Stack>
-            </motion.div>
+            </motion.div> */}
           </Stack>
         )}
 

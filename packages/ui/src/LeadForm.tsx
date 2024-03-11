@@ -20,6 +20,7 @@ import PhoneNumberInput from './PhoneNumberInput';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Input from './Input';
+import { motion } from 'framer-motion';
 
 export const LEAD_FORM_ID = 'lead-form';
 
@@ -98,7 +99,7 @@ export default function LeadForm(
         e.stopPropagation();
         methods.handleSubmit(handleSubmitCaptureForm)(e);
       }}
-      component={'form'}
+      component={motion.form}
       direction="column"
       gap={1}
       sx={{
@@ -107,6 +108,8 @@ export default function LeadForm(
         pt: 1,
         pb: 2,
       }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
     >
       <Typography
         startDecorator={<ErrorIcon sx={{ fontSize: 'sm' }} />}

@@ -137,17 +137,6 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
     }
   }, [props.initConfig]);
 
-  const initialMessages = useMemo(() => {
-    let msgs = [] as string[];
-    if (!!props?.initConfig?.initialMessages?.length) {
-      msgs = props?.initConfig.initialMessages;
-    } else {
-      msgs = config?.initialMessages || [];
-    }
-
-    return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
-  }, [props?.initConfig?.initialMessages, config?.initialMessages]);
-
   const {
     isStreaming,
     visitorId,
@@ -162,23 +151,76 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
     (one) => one?.type === 'lead_capture'
   )?.config as LeadCaptureToolchema['config'];
 
+  const injectLeadFormInInitMessags =
+    !!leadToolConfig?.isRequired && !hasCapturedLead;
+
+  const leadForm = useMemo(() => {
+    return (
+      <LeadForm
+        agentId={agentId!}
+        visitorId={visitorId}
+        conversationId={conversationId}
+        visitorEmail={visitorEmail}
+        onSubmitSucess={async (values) => {
+          refreshConversation();
+          setHasSubmittedForm(true);
+        }}
+        {...leadToolConfig}
+      />
+    );
+  }, [
+    agentId,
+    visitorId,
+    conversationId,
+    visitorEmail,
+    refreshConversation,
+    leadToolConfig,
+  ]);
+
+  const initialMessages = useMemo(() => {
+    let msgs = [] as string[];
+    if (!!props?.initConfig?.initialMessages?.length) {
+      msgs = props?.initConfig.initialMessages;
+    } else {
+      msgs = config?.initialMessages || [];
+    }
+
+    const m = msgs
+      .map((each) => each?.trim?.())
+      .filter((each) => !!each)
+      .map(
+        (each) =>
+          ({
+            from: 'agent',
+            message: each.trim(),
+            approvals: [],
+          } as ChatMessage)
+      );
+
+    if (injectLeadFormInInitMessags) {
+      m.push({
+        id: 'lead-form',
+        from: 'agent',
+        component: leadForm,
+        disableActions: true,
+      } as ChatMessage);
+    }
+    return m;
+  }, [
+    props?.initConfig?.initialMessages,
+    config?.initialMessages,
+    injectLeadFormInInitMessags,
+
+    leadForm,
+  ]);
+
+  // const initMessages = useMemo(() => {}, [props.initConfig?.initialMessages]);
+
   const messages = useMemo(() => {
     const form = {
       id: 'lead-form',
       from: 'agent',
-      component: (
-        <LeadForm
-          agentId={agentId!}
-          visitorId={visitorId}
-          conversationId={conversationId}
-          visitorEmail={visitorEmail}
-          onSubmitSucess={async (values) => {
-            refreshConversation();
-            setHasSubmittedForm(true);
-          }}
-          {...leadToolConfig}
-        />
-      ),
+      component: leadForm,
       disableActions: true,
     } as ChatMessage;
 
@@ -200,20 +242,10 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
       },
       [
         // Show lead form after first AI answer when required
-        ...(!!leadToolConfig?.isRequired && !hasCapturedLead ? [form] : []),
+        // ...(!!leadToolConfig?.isRequired && !hasCapturedLead ? [form] : []),
       ] as ChatMessage[]
     );
-  }, [
-    isStreaming,
-    history,
-    agentId,
-    visitorId,
-    conversationId,
-    visitorEmail,
-    refreshConversation,
-    leadToolConfig,
-    hasCapturedLead,
-  ]);
+  }, [isStreaming, history, leadToolConfig, leadForm]);
 
   if (!agent) {
     return (

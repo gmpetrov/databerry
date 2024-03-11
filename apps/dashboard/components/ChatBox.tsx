@@ -45,6 +45,7 @@ import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
 import { ChatMessage, MessageEvalUnion } from '@chaindesk/lib/types';
 import type { Source } from '@chaindesk/lib/types/document';
 import { LeadCaptureToolchema } from '@chaindesk/lib/types/dtos';
+import AnimateMessagesOneByOne from '@chaindesk/ui/Chatbox/AnimateMessagesOneByOne';
 import Message from '@chaindesk/ui/Chatbox/ChatMessage';
 import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
 import LeadForm from '@chaindesk/ui/LeadForm';
@@ -64,7 +65,7 @@ export type ChatBoxProps = {
   onSubmit: (message: string, attachments?: File[]) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
-  initialMessages?: (string | undefined)[];
+  initialMessages?: ChatMessage[];
   readOnly?: boolean;
   disableWatermark?: boolean;
   renderAfterMessages?: JSX.Element | null;
@@ -186,17 +187,16 @@ function ChatBox({
 
   React.useEffect(() => {
     const t = setTimeout(() => {
-      const msgs = (initialMessages || [])
-        .filter((each) => !!each?.trim?.())
-        .map(
-          (each) =>
-            ({
-              from: 'agent',
-              message: each?.trim?.(),
-              iconUrl: agentIconUrl,
-              approvals: [],
-            } as ChatMessage)
-        );
+      const msgs = (initialMessages || []).map(
+        (each) =>
+          ({
+            from: 'agent',
+            message: each?.message?.trim?.(),
+            iconUrl: agentIconUrl,
+            component: each?.component,
+            approvals: [],
+          } as ChatMessage)
+      );
 
       setFirstMsgs(msgs);
     }, 0);
@@ -306,9 +306,17 @@ function ChatBox({
           }
         >
           <Stack gap={2}>
-            {firstMsgs?.map((each, index) => (
-              <Message key={index} message={each} />
-            ))}
+            {messages?.length <= 2 ? (
+              <AnimateMessagesOneByOne messages={firstMsgs} />
+            ) : (
+              firstMsgs?.map((each, index) => (
+                <Message
+                  key={index}
+                  message={each}
+                  withTextAnimation={messages?.length <= 2}
+                />
+              ))
+            )}
 
             {isLoadingConversation && messages?.length <= 0 && (
               <Stack gap={2}>
@@ -331,7 +339,7 @@ function ChatBox({
 
             {(!isLoadingConversation || messages?.length > 0) &&
               messages.map((each, index) => (
-                <React.Fragment key={each?.id || index}>
+                <React.Fragment key={index}>
                   <Message
                     index={index}
                     message={{

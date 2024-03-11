@@ -17,6 +17,7 @@ import { cn } from '../utils/cn';
 import EvalButton from './EvalButton';
 import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
+import { motion } from 'framer-motion';
 
 type Props = {
   index?: number;
@@ -28,6 +29,8 @@ type Props = {
   handleSourceClick?: any;
   refreshConversation?: any;
   organizationId?: string;
+  withTextAnimation?: boolean;
+  onTextAnimationComplete?: any;
 };
 
 function ChatMessageComponent({
@@ -35,16 +38,21 @@ function ChatMessageComponent({
   message,
   withSources,
   hideInternalSources,
+  withTextAnimation,
+  onTextAnimationComplete,
   ...props
 }: Props) {
   return (
     <Stack
+      component={motion.div}
       sx={{
         width: '100%',
         maxWidth: '100%',
         mr: message?.from === 'agent' ? 'auto' : 'none',
         ml: message?.from === 'human' ? 'auto' : 'none',
       }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
     >
       <Stack
         sx={{
@@ -137,7 +145,12 @@ function ChatMessageComponent({
 
           )} */}
 
-                <Markdown>{message?.message}</Markdown>
+                <Markdown
+                  animated={withTextAnimation}
+                  onAnimateComplete={onTextAnimationComplete}
+                >
+                  {message?.message}
+                </Markdown>
 
                 {message?.component}
 
