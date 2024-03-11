@@ -61,6 +61,7 @@ const ChatBoxLayout = (props: {
         px: 2,
         pt: 6,
         pb: 1,
+        flex: 1,
         width: '100%',
         height: '100%',
         maxHeight: '100%',

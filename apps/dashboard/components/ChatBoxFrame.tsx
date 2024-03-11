@@ -256,6 +256,7 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
             // px: 2,
             // pb: 2,
             display: 'flex',
+            flex: 1,
             flexDirection: 'column',
             position: 'relative',
             width: '100%',
