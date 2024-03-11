@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.263"></a>
+## 0.1.263 (2024-03-11)
+
+### Fixed
+
+- 🐛 add wordpress service provider type [[de0be6f](https://github.com/gmpetrov/databerry/commit/de0be6f957da355e4e932f235b1c71181fd02beb)]
+
+
 <a name="0.1.262"></a>
 ## 0.1.262 (2024-03-11)
 
