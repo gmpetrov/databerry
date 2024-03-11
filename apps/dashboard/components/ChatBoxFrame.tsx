@@ -21,6 +21,8 @@ import { Agent, ConversationChannel, Tool } from '@chaindesk/prisma';
 import LeadForm from '@chaindesk/ui/LeadForm';
 import { cn } from '@chaindesk/ui/utils/cn';
 
+const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
+
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
   theme: 'light',
@@ -287,7 +289,7 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
             messageTemplates={config.messageTemplates}
             initialMessage={config.initialMessage}
             initialMessages={initialMessages}
-            agentIconUrl={agent?.iconUrl!}
+            agentIconUrl={agent?.iconUrl! || defaultAgentIconUrl}
             agentIconStyle={props?.initConfig?.iconStyle}
             isLoadingConversation={isLoadingConversation}
             hasMoreMessages={hasMoreMessages}
