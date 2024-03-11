@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.260"></a>
+## 0.1.260 (2024-03-11)
+
+### Fixed
+
+- 🐛 default agent icon [[3121ad8](https://github.com/gmpetrov/databerry/commit/3121ad8a300c77d7f6acfee62c34e423323f2672)]
+- 🐛 standard widget px [[f821a56](https://github.com/gmpetrov/databerry/commit/f821a56a4250a6d5a1a9f2b8483c082bdb7d08cc)]
+
+### Miscellaneous
+
+-  bump [[fb63a82](https://github.com/gmpetrov/databerry/commit/fb63a82fc49f8d5ffd2f891329f0b692a491366c)]
+- 🎸 some animations [[c280241](https://github.com/gmpetrov/databerry/commit/c280241a8c1b09884f1c4bc5bc17b04771594ab8)]
+
+
 <a name="0.1.259"></a>
 ## 0.1.259 (2024-03-11)
 
