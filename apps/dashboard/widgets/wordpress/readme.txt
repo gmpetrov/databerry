@@ -1,4 +1,4 @@
-=== ChatbotGPT ===
+=== Chaindesk ===
 Contributors: chaindesk.ai
 Donate link: https://chaindesk.ai
 Tags: chatgpt, livechat, chat, live chat, free-live-chat, live-chat, live support, chat-plugin
@@ -29,6 +29,9 @@ Chaindesk is a no-code platform for building ChatGPT Chat Bots trained on custom
 2. Bubble widget
 
 == Changelog ==
+
+= 0.0.2 =
+* Fix typo
 
 = 0.0.1 =
 * Chaindesk first release

@@ -6,6 +6,8 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import { ImageZoom } from '@chaindesk/ui/ImageZoom';
+
 if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
 }
@@ -39,12 +41,7 @@ export default function ShopifySettings(props: Props) {
         <Typography level="body-lg">
           1- On your shop dashboard, go to theme code edition{' '}
         </Typography>
-        <Image
-          src="/shopify/theme.png"
-          width={900}
-          height={900}
-          alt="shopify theme navigation guide."
-        />
+        <ImageZoom src="/shopify/theme.png"></ImageZoom>
       </Stack>
       <Stack>
         <Typography level="body-lg">2- Copy the code Below </Typography>
@@ -73,12 +70,7 @@ export default function ShopifySettings(props: Props) {
           3- Paste the code just above <code>{'</head>'} </code>in the
           theme.liquid code.{' '}
         </Typography>
-        <Image
-          src="/shopify/code.png"
-          width={900}
-          height={900}
-          alt="shopify theme navigation guide."
-        />
+        <ImageZoom src="/shopify/code.png"></ImageZoom>
       </Stack>
       <Stack>
         <Typography>4- Save your changes 🎉 </Typography>

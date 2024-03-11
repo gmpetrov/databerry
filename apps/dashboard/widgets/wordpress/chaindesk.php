@@ -1,8 +1,8 @@
 <?php
 /**
- * @package ChatbotGPT
+ * @package Chaindesk
  * @version 1.0
- * Plugin Name: ChatbotGPT
+ * Plugin Name: Chaindesk
  * Plugin URI: http://wordpress.org/plugins/databerry/
  * Description: Build ChatGPT Chat Bots trained on custom data
  * Author: Chaindesk
