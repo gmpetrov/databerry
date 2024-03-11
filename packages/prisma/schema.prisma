@@ -892,9 +892,10 @@ enum DatasourceType {
 }
 
 enum ServiceProviderType {
+  website
+  wordpress
   google_drive
   notion
-  website
   crisp
   slack
   zendesk
