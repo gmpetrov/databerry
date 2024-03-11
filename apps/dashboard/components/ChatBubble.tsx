@@ -343,7 +343,12 @@ function App(props: BubbleProps) {
             sx={{
               position: 'fixed',
               bottom: 100,
-              maxWidth: 'calc(100% - 75px)',
+              // maxWidth: 'calc(100% - 75px)',
+
+              maxWidth: {
+                xs: '90%',
+                sm: '500px',
+              },
 
               zIndex: 9999999998,
               // opacity: 0,
