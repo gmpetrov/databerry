@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.264"></a>
+## 0.1.264 (2024-03-11)
+
+### Fixed
+
+- 🐛 delete out of sync [[41f0b1f](https://github.com/gmpetrov/databerry/commit/41f0b1f22cd493169654c36b7452f9312be166fd)]
+- 🐛 faulty grammar reply on correct input [[2901658](https://github.com/gmpetrov/databerry/commit/29016580bb3ac9349430d418bd44f70af5c6b6b3)]
+
+### Miscellaneous
+
+- 🤖 set shopify as released [[fe30fc3](https://github.com/gmpetrov/databerry/commit/fe30fc37a4ad9d31ce125b99d3575f1649ddfeaa)]
+- 🎸 temp shopify impl ([#355](https://github.com/gmpetrov/databerry/issues/355)) [[c08a895](https://github.com/gmpetrov/databerry/commit/c08a8957ca92fe7dd676bb87fb04182b12e9f5a6)]
+
+
 <a name="0.1.263"></a>
 ## 0.1.263 (2024-03-11)
 
