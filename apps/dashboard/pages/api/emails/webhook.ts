@@ -71,6 +71,7 @@ export async function inboundWebhook(
     .promise();
 
   const mail = await mailparser.simpleParser(obj.Body?.toString('utf-8')!);
+  console.log('Parsed headers----------_>', JSON.stringify(mail.headers));
   const messageId = mail?.messageId as string;
 
   if (!messageId) {
@@ -98,10 +99,20 @@ export async function inboundWebhook(
   console.log('attachements', mail.attachments);
   console.log('replyto ----------->', mail.inReplyTo);
 
+  let forwardTo = mail.headers.get('x-forwarded-to');
+  console.log('forwardTo---------->', forwardTo);
+  forwardTo = ((!!forwardTo && typeof forwardTo === 'string'
+    ? [forwardTo]
+    : forwardTo) || []) as string[];
+
+  console.log('forwardTo----------->', forwardTo);
+
   const filter = `@${process.env.INBOUND_EMAIL_DOMAIN}`;
-  const aliases = toEmails
-    .filter((one) => one?.endsWith(filter))
-    ?.map((each) => each?.replace(filter, '')) as string[];
+  const aliases = [
+    ...toEmails.filter((one) => one?.endsWith(filter)),
+    ...forwardTo?.filter?.((each: string) => each?.endsWith?.(filter)),
+  ]?.map((each) => each?.replace(filter, '')) as string[];
+
   const customDomains = toEmails.filter(
     (one) => !one?.endsWith(filter)
   ) as string[];

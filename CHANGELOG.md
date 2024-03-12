@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.266"></a>
+## 0.1.266 (2024-03-12)
+
+### Fixed
+
+- 🐛 typo [[99e7748](https://github.com/gmpetrov/databerry/commit/99e77485df1c2c87bcf286515a350ae98b71fae7)]
+
+### Miscellaneous
+
+-  debug email webhook [[45d2f89](https://github.com/gmpetrov/databerry/commit/45d2f8995fb028bfc8180f0349fd7aa8ac8a0174)]
+
+
 <a name="0.1.265"></a>
 ## 0.1.265 (2024-03-12)
 
