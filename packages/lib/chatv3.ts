@@ -454,24 +454,23 @@ const chat = async ({
       //               return retrievalData.context;
       //             }
 
-                retrievalData = await datastoreToolHandler({
-                  maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
-                  query: retrievalQuery || query,
-                  tools: tools,
-                  filters: filters,
-                  topK: topK,
-                  similarityThreshold: 0.7,
-                });
-                return retrievalData.context;
-              },
-            },
-          } as ChatCompletionTool,
-        ]
-      : []),
-  ] as ChatCompletionTool[];
+      //             retrievalData = await datastoreToolHandler({
+      //               maxTokens: ModelConfig?.[modelName!]?.maxTokens * 0.2,
+      //               query: retrievalQuery || query,
+      //               tools: tools,
+      //               filters: filters,
+      //               topK: topK,
+      //               similarityThreshold: 0.7,
+      //             });
+      //             return retrievalData.context;
+      //           },
+      //         },
+      //       } as ChatCompletionTool,
+      //     ]
+      //   : []),
+    ] as ChatCompletionTool[];
 
-  try {
-    const output = await model.call({
+    const callParams = {
       handleStream: stream,
       model: ModelConfig[modelName]?.name,
       messages,

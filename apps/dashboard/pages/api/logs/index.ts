@@ -131,6 +131,8 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
       form: true,
       agent: true,
       lead: true,
+      participantsVisitors: true,
+      participantsContacts: true,
       mailInbox: {
         select: {
           id: true,

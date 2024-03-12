@@ -1,5 +1,16 @@
 import { NextApiRequest } from 'next';
 
+const mock = {
+  'cf-ipcity': 'Paris',
+  'cf-ipcountry': 'FR',
+  'x-vercel-ip-country': 'FR',
+  'cf-region': 'Ãle-de-France',
+  'cf-region-code': 'IDF',
+  'cf-postal-code': '75019',
+  'cf-timezone': 'Europe/Paris',
+  'cf-ipcontinent': 'EU',
+} as const;
+
 const locationHeaders = [
   'cf-ipcity',
   'cf-region',
@@ -28,7 +39,10 @@ const getRequestLocation = (req: NextApiRequest) => {
   const location = {} as Record<locationKeys, any>;
 
   for (const header of locationHeaders) {
-    location[headerToKey[header]] ||= req.headers[header];
+    location[headerToKey[header]] ||=
+      process.env.NODE_ENV === 'development'
+        ? mock[header]
+        : req.headers[header];
   }
 
   return location;

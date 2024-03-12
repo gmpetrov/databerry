@@ -84,6 +84,10 @@ function InboxConversationSettings({
     query?.data?.mailInboxId,
   ]);
 
+  const location =
+    query?.data?.participantsContacts?.[0]?.metadata ||
+    query?.data?.participantsVisitors?.[0]?.metadata;
+
   return (
     <InboxConversationFormProvider id={conversationId}>
       {({ methods }) => {
@@ -133,70 +137,6 @@ function InboxConversationSettings({
                 </>
               )}
             ></Controller>
-
-            <Divider />
-
-            {query.data?.metadata && (
-              <Stack gap={1}>
-                <Typography level="title-md">Visitor Location</Typography>
-                {(query.data?.metadata as any)?.country && (
-                  <Stack direction="row">
-                    <Tooltip
-                      title="Visitor's City and Country"
-                      variant="soft"
-                      placement="top-start"
-                    >
-                      <Typography
-                        alignItems="center"
-                        justifyItems="center"
-                        startDecorator={<LocationOnIcon fontSize="lg" />}
-                      >
-                        {(query.data?.metadata as any)?.city &&
-                          `${(query.data?.metadata as any)?.city}, `}
-
-                        {convertToCountryName(
-                          (query.data?.metadata as any)?.country
-                        ) ?? (query.data?.metadata as any)?.country}
-                      </Typography>
-                    </Tooltip>
-                  </Stack>
-                )}
-
-                {(query.data?.metadata as any)?.timezone && (
-                  <>
-                    <Tooltip
-                      title="Visitor's timezone"
-                      variant="soft"
-                      placement="top-start"
-                    >
-                      <Typography
-                        alignItems="center"
-                        justifyItems="center"
-                        startDecorator={<PublicIcon fontSize="lg" />}
-                      >
-                        {(query.data?.metadata as any)?.timezone}
-                      </Typography>
-                    </Tooltip>
-
-                    <Tooltip
-                      title="Visitor's time"
-                      variant="soft"
-                      placement="top-start"
-                    >
-                      <Typography
-                        alignItems="center"
-                        justifyItems="center"
-                        startDecorator={<AccessTimeIcon fontSize="lg" />}
-                      >
-                        {getCurrentTimeInTimezone(
-                          (query.data?.metadata as any)?.timezone
-                        )}
-                      </Typography>
-                    </Tooltip>
-                  </>
-                )}
-              </Stack>
-            )}
 
             {!isHumanHandoffButtonHidden && <Divider />}
 
@@ -366,38 +306,108 @@ function InboxConversationSettings({
             </FormControl>
             <Divider />
 
-            <FormControl>
-              <FormLabel>Contact</FormLabel>
+            {location && (
+              <>
+                <Stack gap={1}>
+                  <FormLabel>Location</FormLabel>
+                  {(location as any)?.country && (
+                    <Stack direction="row">
+                      <Tooltip
+                        title="Visitor's City and Country"
+                        variant="soft"
+                        placement="top-start"
+                      >
+                        <Typography
+                          alignItems="center"
+                          justifyItems="center"
+                          level="body-sm"
+                          startDecorator={<LocationOnIcon fontSize="lg" />}
+                        >
+                          {(location as any)?.city &&
+                            `${(location as any)?.city}, `}
 
-              {query?.data?.participantsContacts?.map((each) => (
-                <Stack key={each.id} gap={1}>
-                  {each.email && (
-                    <JoyInput
-                      endDecorator={<CopyButton text={each.email!} />}
-                      variant="outlined"
-                      value={each.email!}
-                    ></JoyInput>
+                          {convertToCountryName((location as any)?.country) ??
+                            (location as any)?.country}
+                        </Typography>
+                      </Tooltip>
+                    </Stack>
                   )}
-                  {each?.phoneNumber && (
-                    <JoyInput
-                      endDecorator={
-                        <CopyButton
-                          text={formatPhoneNumber({
-                            phoneNumber: each?.phoneNumber,
-                          })}
-                        />
-                      }
-                      variant="outlined"
-                      value={formatPhoneNumber({
-                        phoneNumber: each?.phoneNumber,
-                      })}
-                    ></JoyInput>
+
+                  {(location as any)?.timezone && (
+                    <>
+                      <Tooltip
+                        title="Visitor's timezone"
+                        variant="soft"
+                        placement="top-start"
+                      >
+                        <Typography
+                          alignItems="center"
+                          justifyItems="center"
+                          level="body-sm"
+                          startDecorator={<PublicIcon fontSize="lg" />}
+                        >
+                          {(location as any)?.timezone}
+                        </Typography>
+                      </Tooltip>
+
+                      <Tooltip
+                        title="Visitor's time"
+                        variant="soft"
+                        placement="top-start"
+                      >
+                        <Typography
+                          alignItems="center"
+                          justifyItems="center"
+                          level="body-sm"
+                          startDecorator={<AccessTimeIcon fontSize="lg" />}
+                        >
+                          {getCurrentTimeInTimezone(
+                            (location as any)?.timezone
+                          )}
+                        </Typography>
+                      </Tooltip>
+                    </>
                   )}
                 </Stack>
-              ))}
-            </FormControl>
+                <Divider />
+              </>
+            )}
 
-            <Divider />
+            {!!query?.data?.participantsContacts?.length && (
+              <>
+                <FormControl>
+                  <FormLabel>Contact</FormLabel>
+
+                  {query?.data?.participantsContacts?.map((each) => (
+                    <Stack key={each.id} gap={1}>
+                      {each.email && (
+                        <JoyInput
+                          endDecorator={<CopyButton text={each.email!} />}
+                          variant="outlined"
+                          value={each.email!}
+                        ></JoyInput>
+                      )}
+                      {each?.phoneNumber && (
+                        <JoyInput
+                          endDecorator={
+                            <CopyButton
+                              text={formatPhoneNumber({
+                                phoneNumber: each?.phoneNumber,
+                              })}
+                            />
+                          }
+                          variant="outlined"
+                          value={formatPhoneNumber({
+                            phoneNumber: each?.phoneNumber,
+                          })}
+                        ></JoyInput>
+                      )}
+                    </Stack>
+                  ))}
+                </FormControl>
+                <Divider />
+              </>
+            )}
 
             <Button
               color="danger"

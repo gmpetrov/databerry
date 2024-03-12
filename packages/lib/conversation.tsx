@@ -255,6 +255,7 @@ export default class ConversationManager {
                 create: {
                   id: visitorId,
                   organizationId: this.organizationId!,
+                  metadata: this.location,
                 },
               },
             },

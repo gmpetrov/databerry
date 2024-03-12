@@ -986,6 +986,21 @@ export default function LogsPage() {
                               className="font-semibold truncate"
                             >
                               {(() => {
+                                if (each?.participantsContacts?.length) {
+                                  return (
+                                    each?.participantsContacts?.[0]
+                                      ?.firstName ||
+                                    each?.participantsContacts?.[0]?.email ||
+                                    each?.participantsContacts?.[0]?.phoneNumber
+                                  );
+                                }
+
+                                if (each?.participantsVisitors?.[0]?.id) {
+                                  return `Visitor${each?.participantsVisitors?.[0]?.id
+                                    ?.slice(-2)
+                                    .toUpperCase()}`;
+                                }
+
                                 if (
                                   each?.channel === ConversationChannel.mail &&
                                   each?.title
@@ -1003,17 +1018,26 @@ export default function LogsPage() {
                               })()}
                             </Typography>
 
-                            <Stack direction="row" gap={0.5}>
-                              <Typography
-                                level="body-xs"
-                                className="text-nowrap"
-                              >
-                                {relativeDate(each?.updatedAt)}
-                              </Typography>
-
-                              {(each.metadata as any)?.country && (
-                                <>
-                                  <Typography level="body-xs">-</Typography>
+                            {(each.metadata as any)?.country && (
+                              <>
+                                <Box
+                                  sx={{
+                                    minWidth: 16,
+                                    minHeight: 16,
+                                    width: 16,
+                                    height: 16,
+                                    borderRadius: '100px',
+                                    borderColor: 'divider',
+                                    borderStyle: 'solid',
+                                    borderWidth: 1,
+                                    overflow: 'hidden',
+                                    p: 0,
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 'auto',
+                                  }}
+                                >
                                   <ReactCountryFlag
                                     style={{
                                       fontSize: '16px',
@@ -1021,8 +1045,17 @@ export default function LogsPage() {
                                     countryCode={(each.metadata as any).country}
                                     svg
                                   />
-                                </>
-                              )}
+                                </Box>
+                              </>
+                            )}
+
+                            <Stack direction="row" gap={0.5}>
+                              <Typography
+                                level="body-xs"
+                                className="text-nowrap"
+                              >
+                                {relativeDate(each?.updatedAt)}
+                              </Typography>
                             </Stack>
                           </Stack>
                           <Stack
