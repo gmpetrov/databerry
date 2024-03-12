@@ -1,7 +1,7 @@
 # Changelog
 
-<a name="0.1.266"></a>
-## 0.1.266 (2024-03-12)
+<a name="0.1.267"></a>
+## 0.1.267 (2024-03-12)
 
 ### Fixed
 
@@ -9,6 +9,7 @@
 
 ### Miscellaneous
 
+-  Release 0.1.266 [[1e55b7b](https://github.com/gmpetrov/databerry/commit/1e55b7b34aac0c04d82467c3d1f6abc92474d95e)]
 -  debug email webhook [[45d2f89](https://github.com/gmpetrov/databerry/commit/45d2f8995fb028bfc8180f0349fd7aa8ac8a0174)]
 
 
