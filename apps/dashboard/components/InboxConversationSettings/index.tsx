@@ -378,32 +378,34 @@ function InboxConversationSettings({
                 <FormControl>
                   <FormLabel>Contact</FormLabel>
 
-                  {query?.data?.participantsContacts?.map((each) => (
-                    <Stack key={each.id} gap={1}>
-                      {each.email && (
-                        <JoyInput
-                          endDecorator={<CopyButton text={each.email!} />}
-                          variant="outlined"
-                          value={each.email!}
-                        ></JoyInput>
-                      )}
-                      {each?.phoneNumber && (
-                        <JoyInput
-                          endDecorator={
-                            <CopyButton
-                              text={formatPhoneNumber({
-                                phoneNumber: each?.phoneNumber,
-                              })}
-                            />
-                          }
-                          variant="outlined"
-                          value={formatPhoneNumber({
-                            phoneNumber: each?.phoneNumber,
-                          })}
-                        ></JoyInput>
-                      )}
-                    </Stack>
-                  ))}
+                  <Stack gap={1}>
+                    {query?.data?.participantsContacts?.map((each) => (
+                      <Stack key={each.id} gap={1}>
+                        {each.email && (
+                          <JoyInput
+                            endDecorator={<CopyButton text={each.email!} />}
+                            variant="outlined"
+                            value={each.email!}
+                          ></JoyInput>
+                        )}
+                        {each?.phoneNumber && (
+                          <JoyInput
+                            endDecorator={
+                              <CopyButton
+                                text={formatPhoneNumber({
+                                  phoneNumber: each?.phoneNumber,
+                                })}
+                              />
+                            }
+                            variant="outlined"
+                            value={formatPhoneNumber({
+                              phoneNumber: each?.phoneNumber,
+                            })}
+                          ></JoyInput>
+                        )}
+                      </Stack>
+                    ))}
+                  </Stack>
                 </FormControl>
                 <Divider />
               </>
