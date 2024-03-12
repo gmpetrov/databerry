@@ -106,6 +106,9 @@ export async function inboundWebhook(
     (one) => !one?.endsWith(filter)
   ) as string[];
 
+  console.log('aliases------->', aliases);
+  console.log('customDomains---------->', customDomains);
+
   if (aliases?.length <= 0 && customDomains?.length <= 0) {
     // Custom domain not implmented yet
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
@@ -176,6 +179,7 @@ export async function inboundWebhook(
     .flat();
 
   if (inboxes.length <= 0) {
+    console.log('No inbox found---------->');
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
