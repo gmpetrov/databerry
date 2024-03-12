@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.268"></a>
+## 0.1.268 (2024-03-12)
+
+### Fixed
+
+- 🐛 spacing [[5d465a4](https://github.com/gmpetrov/databerry/commit/5d465a4ef44fb74ae8d442fd5e817af40d20b009)]
+
+
 <a name="0.1.267"></a>
 ## 0.1.267 (2024-03-12)
 
