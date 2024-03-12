@@ -125,7 +125,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
       <FeatureV1
         label="Why Chaindesk?"
-        title="Chaindesk VS the Competition"
+        title={`Chaindesk VS ${name}`}
         description="Chaindesk is an AI-powered ecosystem that helps you automate support and more. Here’s why you should make the switch to Chaindesk:"
         features={[
           {
