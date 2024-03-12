@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.265"></a>
+## 0.1.265 (2024-03-12)
+
+### Miscellaneous
+
+- 🎸 conversation location ([#344](https://github.com/gmpetrov/databerry/issues/344)) [[eca4c6f](https://github.com/gmpetrov/databerry/commit/eca4c6fb43dbd6b681dbca6cd7694cd05dd63317)]
+
+
 <a name="0.1.264"></a>
 ## 0.1.264 (2024-03-11)
 
