@@ -812,6 +812,8 @@ model Contact {
 
   visitors Visitor[]
 
+  metadata Json?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -826,6 +828,8 @@ model Visitor {
 
   contact   Contact?  @relation(fields: [contactId], references: [id])
   contactId String? @map("contact_id")
+
+   metadata Json?
 
   organizationId String?       @map("organization_id")
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)

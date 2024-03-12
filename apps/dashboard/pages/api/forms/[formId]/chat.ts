@@ -9,7 +9,7 @@ import ConversationManager from '@chaindesk/lib/conversation';
 import { createApiHandler } from '@chaindesk/lib/createa-api-handler';
 import { fetchEventSource } from '@chaindesk/lib/fetch-event-source';
 import { handleFormValid } from '@chaindesk/lib/forms';
-import getRequestCountry from '@chaindesk/lib/get-request-country';
+import getRequestLocation from '@chaindesk/lib/get-request-location';
 import partiallyIncludes from '@chaindesk/lib/partially-includes';
 import runMiddleware from '@chaindesk/lib/run-middleware';
 import streamData from '@chaindesk/lib/stream-data';
@@ -128,7 +128,7 @@ export const formChat = async (
     useDraftConfig ? form?.draftConfig : form?.publishedConfig
   ) as FormConfigSchema;
 
-  const locale = getRequestCountry(req) || 'en';
+  const locale = getRequestLocation(req).country ?? 'en';
 
   const prompt = `You role is to help fill a form that follows a JSON Schema that will be given to you, you should only ask about the field specified in the properties of the schema.
   You will ask questions in natural language, one at a time, to the user and fill the form. Use a friendly and energetic tone. 

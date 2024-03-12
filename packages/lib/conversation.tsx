@@ -15,6 +15,8 @@ import { prisma } from '@chaindesk/prisma/client';
 
 import { Source } from './types/document';
 import { ChatResponse, CreateAttachmentSchema } from './types/dtos';
+import getRequestLocation from './get-request-location';
+import { Prettify } from './type-utilites';
 
 type ToolExtended = Tool & {
   datastore: Datastore | null;
@@ -35,7 +37,7 @@ type MessageExtended = Pick<Message, 'from' | 'text'> & {
   usage?: ChatResponse['usage'];
   approvals?: ChatResponse['approvals'];
   inputId?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<PropertyKey, any>;
   attachments?: CreateAttachmentSchema[];
   externalId?: string;
   externalVisitorId?: string;
@@ -50,6 +52,7 @@ export default class ConversationManager {
   channelExternalId?: string;
   channelCredentialsId?: string;
   formId?: string;
+  location?: Prettify<ReturnType<typeof getRequestLocation>>;
 
   constructor({
     organizationId,
@@ -59,6 +62,7 @@ export default class ConversationManager {
     channelExternalId,
     channelCredentialsId,
     formId,
+    location,
   }: {
     organizationId?: string;
     formId?: string;
@@ -67,6 +71,7 @@ export default class ConversationManager {
     metadata?: Record<PropertyKey, any>;
     channelExternalId?: string;
     channelCredentialsId?: string;
+    location?: ReturnType<typeof getRequestLocation>;
   }) {
     this.conversationId = conversationId || cuid();
     this.channel = channel;
@@ -75,6 +80,7 @@ export default class ConversationManager {
     this.channelExternalId = channelExternalId;
     this.channelCredentialsId = channelCredentialsId;
     this.formId = formId;
+    this.location = location;
   }
 
   async createMessage(message: MessageExtended) {
@@ -135,6 +141,7 @@ export default class ConversationManager {
                 create: {
                   id: visitorId,
                   organizationId: this.organizationId!,
+                  metadata: this.location,
                 },
               },
             },
@@ -153,6 +160,7 @@ export default class ConversationManager {
                 create: {
                   organizationId: this.organizationId!,
                   externalId: externalVisitorId!,
+                  metadata: this.location,
                 },
               },
             },
@@ -194,7 +202,7 @@ export default class ConversationManager {
             },
           }
         : {}),
-    } as Prisma.MessageCreateInput;
+    } satisfies Prisma.MessageCreateInput;
 
     const ConversationPayload = {
       messages: {
@@ -247,6 +255,7 @@ export default class ConversationManager {
                 create: {
                   id: visitorId,
                   organizationId: this.organizationId!,
+                  metadata: this.location,
                 },
               },
             },
@@ -281,7 +290,7 @@ export default class ConversationManager {
             },
           }
         : {}),
-    } as Prisma.ConversationUpdateInput;
+    } satisfies Prisma.ConversationUpdateInput;
 
     return prisma.conversation.upsert({
       where: {

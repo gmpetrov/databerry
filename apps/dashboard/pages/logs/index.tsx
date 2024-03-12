@@ -24,7 +24,7 @@ import {
   Select,
   SelectProps,
   TabList,
-  Tabs,
+  Tabs as JoyTabs,
   Tooltip,
 } from '@mui/joy';
 import Alert from '@mui/joy/Alert';
@@ -45,6 +45,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 import React from 'react';
+import ReactCountryFlag from 'react-country-flag';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroller';
 import useSWR from 'swr';
@@ -94,14 +95,14 @@ import { markAllRead } from '../api/messages/mark-all-read';
 
 const LIMIT = 20;
 
-interface SelectQueryParamFilterProps<T> {
+interface SelectQueryParamFilterProps {
   filterName: string;
 }
 
 function SelectQueryParamFilter<T extends {}>({
   filterName,
   ...otherProps
-}: SelectQueryParamFilterProps<T> & SelectProps<T, false>) {
+}: SelectQueryParamFilterProps & SelectProps<T, false>) {
   const router = useRouter();
   const currentValue = router.query[filterName] as unknown as T;
 
@@ -153,7 +154,7 @@ function SelectQueryParamFilter<T extends {}>({
   );
 }
 
-enum TabEnum {
+enum Tabs {
   all = 'all',
   unresolved = 'unresolved',
   unread = 'unread',
@@ -162,23 +163,23 @@ enum TabEnum {
 
 const tabToParams = (tab: string): Record<string, unknown> => {
   switch (tab) {
-    case TabEnum.human_requested:
+    case Tabs.human_requested:
       return {
         status: ConversationStatus.HUMAN_REQUESTED,
         unread: '',
       };
-    case TabEnum.unresolved:
+    case Tabs.unresolved:
       return {
         status: ConversationStatus.UNRESOLVED,
         unread: '',
       };
 
-    case TabEnum.all:
+    case Tabs.all:
       return {
         status: '',
         unread: '',
       };
-    case TabEnum.unread:
+    case Tabs.unread:
       return {
         status: '',
         unread: true,
@@ -197,7 +198,7 @@ export default function LogsPage() {
   const hasFilterApplied =
     router.query.eval ||
     router.query.agentId ||
-    router.query.tab !== TabEnum.all ||
+    router.query.tab !== Tabs.all ||
     router.query.channel ||
     router.query.priority ||
     router.query.assigneeId;
@@ -324,7 +325,7 @@ export default function LogsPage() {
     await getConversationQuery.mutate();
   };
   const handleChangeTab = useCallback(
-    (tab: TabEnum) => {
+    (tab: Tabs) => {
       router.query.tab = tab;
       router.replace(router, undefined, {
         shallow: true,
@@ -400,7 +401,7 @@ export default function LogsPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && router.isReady && !router.query.tab) {
-      handleChangeTab(TabEnum.unresolved);
+      handleChangeTab(Tabs.unresolved);
     }
     setState({ currentConversationIndex: 0 });
   }, [router.query.tab, router.isReady, handleChangeTab]);
@@ -562,9 +563,9 @@ export default function LogsPage() {
         answers.
       </Alert> */}
 
-      <Tabs
+      <JoyTabs
         aria-label="tabs"
-        value={(router.query.tab as string) || TabEnum.all}
+        value={(router.query.tab as string) || Tabs.all}
         size="lg"
         sx={{ bgcolor: 'transparent' }}
         defaultValue={1}
@@ -592,23 +593,23 @@ export default function LogsPage() {
             },
           }}
         >
-          <Tab indicatorInset value={TabEnum.unresolved}>
+          <Tab indicatorInset value={Tabs.unresolved}>
             Unresolved
           </Tab>
 
-          <Tab indicatorInset value={TabEnum.unread}>
+          <Tab indicatorInset value={Tabs.unread}>
             Unread
           </Tab>
 
-          <Tab indicatorInset value={TabEnum.human_requested}>
+          <Tab indicatorInset value={Tabs.human_requested}>
             Human Requested
           </Tab>
 
-          <Tab indicatorInset value={TabEnum.all}>
+          <Tab indicatorInset value={Tabs.all}>
             All
           </Tab>
         </TabList>
-      </Tabs>
+      </JoyTabs>
       {/* <Divider  /> */}
       <Stack
         width="100%"
@@ -664,7 +665,7 @@ export default function LogsPage() {
               >
                 <ListItemDecorator>
                   <TaskAltRoundedIcon />
-                </ListItemDecorator>{' '}
+                </ListItemDecorator>
                 Mark all messages as read
               </MenuItem>
               <MenuItem
@@ -967,10 +968,7 @@ export default function LogsPage() {
                               />
                             )}
                             {each?.status === ConversationStatus.UNRESOLVED && (
-                              <ArrowCircleRightRoundedIcon
-                                color="danger"
-                                fontSize="xl2"
-                              />
+                              <ArrowCircleRightRoundedIcon fontSize="xl2" />
                             )}
                           </>
                         )
@@ -988,6 +986,21 @@ export default function LogsPage() {
                               className="font-semibold truncate"
                             >
                               {(() => {
+                                if (each?.participantsContacts?.length) {
+                                  return (
+                                    each?.participantsContacts?.[0]
+                                      ?.firstName ||
+                                    each?.participantsContacts?.[0]?.email ||
+                                    each?.participantsContacts?.[0]?.phoneNumber
+                                  );
+                                }
+
+                                if (each?.participantsVisitors?.[0]?.id) {
+                                  return `Visitor${each?.participantsVisitors?.[0]?.id
+                                    ?.slice(-2)
+                                    .toUpperCase()}`;
+                                }
+
                                 if (
                                   each?.channel === ConversationChannel.mail &&
                                   each?.title
@@ -1005,9 +1018,45 @@ export default function LogsPage() {
                               })()}
                             </Typography>
 
-                            <Typography level="body-xs" className="text-nowrap">
-                              {relativeDate(each?.updatedAt)}
-                            </Typography>
+                            {(each.metadata as any)?.country && (
+                              <>
+                                <Box
+                                  sx={{
+                                    minWidth: 16,
+                                    minHeight: 16,
+                                    width: 16,
+                                    height: 16,
+                                    borderRadius: '100px',
+                                    borderColor: 'divider',
+                                    borderStyle: 'solid',
+                                    borderWidth: 1,
+                                    overflow: 'hidden',
+                                    p: 0,
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 'auto',
+                                  }}
+                                >
+                                  <ReactCountryFlag
+                                    style={{
+                                      fontSize: '16px',
+                                    }}
+                                    countryCode={(each.metadata as any).country}
+                                    svg
+                                  />
+                                </Box>
+                              </>
+                            )}
+
+                            <Stack direction="row" gap={0.5}>
+                              <Typography
+                                level="body-xs"
+                                className="text-nowrap"
+                              >
+                                {relativeDate(each?.updatedAt)}
+                              </Typography>
+                            </Stack>
                           </Stack>
                           <Stack
                             direction="row"

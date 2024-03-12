@@ -24,6 +24,7 @@ import slackAgent from '@chaindesk/lib/slack-agent';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import { ServiceProviderType, SubscriptionPlan } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
+import getRequestLocation from '@chaindesk/lib/get-request-location';
 
 const handler = createApiHandler();
 
@@ -191,7 +192,13 @@ const handleMention = async (payload: MentionEvent) => {
   }
 };
 
-const handleAsk = async (payload: CommandEvent) => {
+const handleAsk = async ({
+  payload,
+  location,
+}: {
+  payload: CommandEvent;
+  location: ReturnType<typeof getRequestLocation>;
+}) => {
   if (!payload.text) {
     return;
   }
@@ -211,10 +218,10 @@ const handleAsk = async (payload: CommandEvent) => {
     agent: agent!,
     conversation: conversation!,
     query: payload.text!,
-
     channelExternalId: payload.channel_id,
     channelCredentialsId: integration?.id,
     externalMessageId: payload.trigger_id,
+    location,
   });
 
   if (conversation?.isAiEnabled) {
@@ -252,7 +259,7 @@ export const slack = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
     return {};
   } else if (req.body?.command === '/ask') {
-    return handleAsk(req.body);
+    return handleAsk({ payload: req.body, location: getRequestLocation(req) });
   }
 
   return {};

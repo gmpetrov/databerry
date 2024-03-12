@@ -24,6 +24,7 @@ import { AnalyticsEvents, capture } from './analytics-server';
 import { formatOrganizationSession, sessionOrganizationInclude } from './auth';
 import { ModelConfig } from './config';
 import ConversationManager from './conversation';
+import getRequestLocation from './get-request-location';
 import mailer from './mailer';
 import { CUSTOMER_SUPPORT_BASE } from './prompt-templates';
 
@@ -79,7 +80,7 @@ export type ChatAgentArgs = PrismaType.AgentGetPayload<typeof ChatAgentArgs>;
 
 type Props = Omit<ChatRequest, 'isDraft' | 'streaming'> & {
   logger?: Logger;
-  country?: string; // Request country origin
+  location?: ReturnType<typeof getRequestLocation>;
   userId?: string;
   agent: ChatAgentArgs;
   conversation?: ChatConversationArgs;
@@ -188,13 +189,14 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     conversationId,
     channelExternalId: data?.channelExternalId,
     channelCredentialsId: data?.channelCredentialsId,
-    ...(!data.userId && !!isNewConversation && data.country
+    ...(!data.userId && !!isNewConversation && data?.location?.country
       ? {
           metadata: {
-            country: data.country,
+            country: data.location.country,
           },
         }
       : {}),
+    location: data.location,
   });
 
   const inputMessageId = cuid();

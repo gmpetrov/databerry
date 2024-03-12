@@ -1,7 +1,17 @@
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
+import PublicIcon from '@mui/icons-material/Public';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { ColorPaletteProp, Divider, FormControl, FormLabel } from '@mui/joy';
+import {
+  ColorPaletteProp,
+  Divider,
+  FormControl,
+  FormLabel,
+  Tooltip,
+  Typography,
+} from '@mui/joy';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
@@ -16,22 +26,19 @@ import useSWR from 'swr';
 
 import CopyButton from '@app/components/CopyButton';
 import useInboxConversation from '@app/hooks/useInboxConversation';
-import { getConversation } from '@app/pages/api/logs/[id]';
 import { getMemberships } from '@app/pages/api/memberships';
 
+import getCurrentTimeInTimezone from '@chaindesk/lib/currentTimeInTimezone';
 import formatPhoneNumber from '@chaindesk/lib/format-phone-number';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import {
-  Attachment,
   ConversationChannel,
   ConversationStatus,
-  MessageEval,
-  MessageFrom,
   Prisma,
 } from '@chaindesk/prisma';
 
+import { convertToCountryName } from '../charts/GeoChart';
 import InboxConversationFormProvider from '../InboxConversationFormProvider';
-import Input from '../Input';
 
 type Props = {
   conversationId: string;
@@ -76,6 +83,10 @@ function InboxConversationSettings({
     query?.data?.channelExternalId,
     query?.data?.mailInboxId,
   ]);
+
+  const location =
+    query?.data?.participantsContacts?.[0]?.metadata ||
+    query?.data?.participantsVisitors?.[0]?.metadata;
 
   return (
     <InboxConversationFormProvider id={conversationId}>
@@ -293,38 +304,110 @@ function InboxConversationSettings({
                 )}
               ></Controller>
             </FormControl>
-            <FormControl>
-              <FormLabel>Contact</FormLabel>
+            <Divider />
 
-              {query?.data?.participantsContacts?.map((each) => (
-                <Stack key={each.id} gap={1}>
-                  {each.email && (
-                    <JoyInput
-                      endDecorator={<CopyButton text={each.email!} />}
-                      variant="outlined"
-                      value={each.email!}
-                    ></JoyInput>
+            {location && (
+              <>
+                <Stack gap={1}>
+                  <FormLabel>Location</FormLabel>
+                  {(location as any)?.country && (
+                    <Stack direction="row">
+                      <Tooltip
+                        title="Visitor's City and Country"
+                        variant="soft"
+                        placement="top-start"
+                      >
+                        <Typography
+                          alignItems="center"
+                          justifyItems="center"
+                          level="body-sm"
+                          startDecorator={<LocationOnIcon fontSize="lg" />}
+                        >
+                          {(location as any)?.city &&
+                            `${(location as any)?.city}, `}
+
+                          {convertToCountryName((location as any)?.country) ??
+                            (location as any)?.country}
+                        </Typography>
+                      </Tooltip>
+                    </Stack>
                   )}
-                  {each?.phoneNumber && (
-                    <JoyInput
-                      endDecorator={
-                        <CopyButton
-                          text={formatPhoneNumber({
-                            phoneNumber: each?.phoneNumber,
-                          })}
-                        />
-                      }
-                      variant="outlined"
-                      value={formatPhoneNumber({
-                        phoneNumber: each?.phoneNumber,
-                      })}
-                    ></JoyInput>
+
+                  {(location as any)?.timezone && (
+                    <>
+                      <Tooltip
+                        title="Visitor's timezone"
+                        variant="soft"
+                        placement="top-start"
+                      >
+                        <Typography
+                          alignItems="center"
+                          justifyItems="center"
+                          level="body-sm"
+                          startDecorator={<PublicIcon fontSize="lg" />}
+                        >
+                          {(location as any)?.timezone}
+                        </Typography>
+                      </Tooltip>
+
+                      <Tooltip
+                        title="Visitor's time"
+                        variant="soft"
+                        placement="top-start"
+                      >
+                        <Typography
+                          alignItems="center"
+                          justifyItems="center"
+                          level="body-sm"
+                          startDecorator={<AccessTimeIcon fontSize="lg" />}
+                        >
+                          {getCurrentTimeInTimezone(
+                            (location as any)?.timezone
+                          )}
+                        </Typography>
+                      </Tooltip>
+                    </>
                   )}
                 </Stack>
-              ))}
-            </FormControl>
+                <Divider />
+              </>
+            )}
 
-            <Divider />
+            {!!query?.data?.participantsContacts?.length && (
+              <>
+                <FormControl>
+                  <FormLabel>Contact</FormLabel>
+
+                  {query?.data?.participantsContacts?.map((each) => (
+                    <Stack key={each.id} gap={1}>
+                      {each.email && (
+                        <JoyInput
+                          endDecorator={<CopyButton text={each.email!} />}
+                          variant="outlined"
+                          value={each.email!}
+                        ></JoyInput>
+                      )}
+                      {each?.phoneNumber && (
+                        <JoyInput
+                          endDecorator={
+                            <CopyButton
+                              text={formatPhoneNumber({
+                                phoneNumber: each?.phoneNumber,
+                              })}
+                            />
+                          }
+                          variant="outlined"
+                          value={formatPhoneNumber({
+                            phoneNumber: each?.phoneNumber,
+                          })}
+                        ></JoyInput>
+                      )}
+                    </Stack>
+                  ))}
+                </FormControl>
+                <Divider />
+              </>
+            )}
 
             <Button
               color="danger"

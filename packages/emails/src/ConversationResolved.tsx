@@ -41,7 +41,7 @@ export const ConversationResolved = ({
     },
     {
       id: '2',
-      text: 'How can I help you? flkdsj skldjf lksdfj lksdjf lskdfjsdlfk jdlksdj lfdskjf ',
+      text: 'How can I help you?',
       from: 'agent',
     },
   ],
@@ -61,7 +61,7 @@ export const ConversationResolved = ({
                 width="50"
                 height="auto"
                 alt="Vercel"
-                className="mx-auto my-0 "
+                className="mx-auto my-0"
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">

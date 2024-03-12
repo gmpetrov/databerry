@@ -7,7 +7,7 @@ import {
   createLazyAuthHandler,
   respond,
 } from '@chaindesk/lib/createa-api-handler';
-import getRequestCountry from '@chaindesk/lib/get-request-country';
+import getRequestLocation from '@chaindesk/lib/get-request-location';
 import handleChatMessage, {
   ChatAgentArgs,
   ChatConversationArgs,
@@ -178,6 +178,7 @@ export const chatAgentRequest = async (
               id: agent?.organization?.id!,
             },
           },
+          metadata: getRequestLocation(req),
         },
       });
     } catch (error) {
@@ -198,7 +199,7 @@ export const chatAgentRequest = async (
     conversation: agent?.organization?.conversations?.[0],
     handleStream,
     abortController: ctrl,
-    country: getRequestCountry(req),
+    location: getRequestLocation(req),
     userId: session?.user?.id,
     visitorId,
     contactId: existingContact?.id || data?.contactId,

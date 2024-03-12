@@ -1,6 +1,7 @@
 import AllInboxRoundedIcon from '@mui/icons-material/AllInboxRounded';
 import ApiRoundedIcon from '@mui/icons-material/ApiRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import AssistantRoundedIcon from '@mui/icons-material/AssistantRounded';
 import ChatRoundedIcon from '@mui/icons-material/ChatRounded';
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -290,7 +291,7 @@ export default function Navigation() {
               route: RouteNames.ANALYTICS,
               icon: <ShowChartIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.ANALYTICS),
-              isNew: true,
+              isNew: false,
             },
             {
               label: 'Email Inboxes',
@@ -298,14 +299,14 @@ export default function Navigation() {
               icon: <AllInboxRoundedIcon fontSize="small" />,
               active: router.route.startsWith(RouteNames.EMAIL_INBOXES),
               // isExperimental: true,
-              isNew: true,
+              isNew: false,
             },
             {
               label: 'Contacts',
               route: RouteNames.CONTACTS,
               icon: <RecentActorsIcon fontSize="md" />,
               active: router.route.startsWith(RouteNames.CONTACTS),
-              isNew: true,
+              isNew: false,
             },
           ]
         : []),
@@ -346,7 +347,7 @@ export default function Navigation() {
               route: RouteNames.CHAT,
               icon: <ChatRoundedIcon fontSize="md" />,
               active: router.route === RouteNames.CHAT,
-              isExperimental: true,
+              isExperimental: false,
               isNew: false,
             },
             {
@@ -528,7 +529,7 @@ export default function Navigation() {
                 target={(each as any).target}
               />
             ))}
-            {/* {(['chaindesk', 'cs', 'chat'] as ProductType[]).includes(
+            {(['chaindesk', 'cs', 'chat'] as ProductType[]).includes(
               product
             ) && (
               <>
@@ -551,8 +552,10 @@ export default function Navigation() {
                     >
                       <Button
                         sx={{ width: '100%' }}
+                        className="font-title"
                         color="neutral"
                         variant="soft"
+                        startDecorator={<ChatRoundedIcon fontSize="sm" />}
                         // endDecorator={
                         //   <Chip
                         //     className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
@@ -575,7 +578,7 @@ export default function Navigation() {
                     href={
                       process.env.NODE_ENV === 'production'
                         ? `${appUrl}/agents`
-                        : 'http://app.localhost:3000/agents'
+                        : 'http://localhost:3000/agents'
                     }
                   >
                     <Button
@@ -598,8 +601,10 @@ export default function Navigation() {
                     </Button>
                   </Link>
                 )}
+
+                <Divider sx={{ my: 2 }} />
               </>
-            )} */}
+            )}
           </List>
         </ListItem>
         {/* <ListItem nested sx={{ mt: 2 }}>

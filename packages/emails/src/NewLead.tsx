@@ -49,7 +49,7 @@ export const NewLead = ({
     },
     {
       id: '2',
-      text: 'How can I help you? flkdsj skldjf lksdfj lksdjf lskdfjsdlfk jdlksdj lfdskjf ',
+      text: 'How can I help you?',
       from: 'agent',
       createdAt: new Date(),
       updatedAt: new Date(),

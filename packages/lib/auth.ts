@@ -25,7 +25,7 @@ import {
 import { prisma } from '@chaindesk/prisma/client';
 
 import { AnalyticsEvents, capture, profile } from './analytics-server';
-import getRequestCountry from './get-request-country';
+import getRequestLocation from './get-request-location';
 import getRootDomain from './get-root-domain';
 import sendVerificationRequest from './verification-sender';
 
@@ -431,7 +431,7 @@ export const withLogger: Middleware<
     requestId: req.requestId,
     requestPath: req.url,
     requestIP: requestIp.getClientIp(req),
-    requestCountry: getRequestCountry(req),
+    requestCountry: getRequestLocation(req).country ?? 'en',
   });
 
   req.logger.info(req.method);
