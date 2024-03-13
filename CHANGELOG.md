@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.269"></a>
+## 0.1.269 (2024-03-13)
+
+### Fixed
+
+- 🐛 crisp issues [[6472942](https://github.com/gmpetrov/databerry/commit/64729427c5b39d1aee495a20baed3dcb06ca4fcc)]
+
+
 <a name="0.1.268"></a>
 ## 0.1.268 (2024-03-12)
 
