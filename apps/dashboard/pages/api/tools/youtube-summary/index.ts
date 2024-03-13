@@ -193,7 +193,7 @@ export const createYoutubeSummary = async (
           content: `Generate a json array of useful questions and answers, focused on the underlying subject for a given essai.
           <output-example>
             {
-              "questions": [{ "q": "What is nuclear fusion?", "a": "Nuclear fusion..." }]
+              "questions": [{ "q": "What is nuclear fusion?", "a": "Nuclear fusion is the process by which two light atomic nuclei combine to form a single heavier one while releasing massive amounts of energy" }]
             }
           <output-example>
           `,
