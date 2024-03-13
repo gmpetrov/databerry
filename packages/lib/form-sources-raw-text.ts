@@ -1,11 +1,15 @@
 import { Source } from './types/document';
 
 const formatSourceRawText = (sources?: Source[]) => {
-  if (!sources || sources?.length <= 0) return '';
-  return `Sources\n${sources
+  const filtered = (sources || [])
     .map((source) => `${source.source_url}`)
-    .filter((source) => !!source)
-    .join('\n')}`;
+    .filter((source) => !!source);
+
+  if (filtered.length <= 0) {
+    return '';
+  }
+
+  return `Sources\n${filtered.join('\n')}`;
 };
 
 export default formatSourceRawText;
