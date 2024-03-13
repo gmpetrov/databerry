@@ -133,6 +133,7 @@ function ChatBox({
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInKeyboadComposition, setIsInKeyboadComposition] = useState(false);
   const [firstMsgs, setFirstMsgs] = useState<ChatMessage[]>([]);
   // const [ini, setFirstMsg] = useState<ChatMessage>();
   // const [firstMsg, setFirstMsg] = useState<ChatMessage>();
@@ -151,8 +152,12 @@ function ChatBox({
     defaultValues: {},
   });
 
+  const toogleKeyboardComposition = useCallback(() => {
+    setIsInKeyboadComposition((prev) => !prev);
+  }, [setIsInKeyboadComposition]);
+
   const submit = async ({ query }: z.infer<typeof Schema>) => {
-    if (isLoading) {
+    if (isLoading || isInKeyboadComposition) {
       return;
     }
 
@@ -406,6 +411,8 @@ function ChatBox({
             // paddingLeft: 'inherit',
             // paddingRight: 'inherit',
           }}
+          onCompositionStart={toogleKeyboardComposition}
+          onCompositionEnd={toogleKeyboardComposition}
           onSubmit={(e) => {
             e.stopPropagation();
 
