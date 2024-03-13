@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.271"></a>
+## 0.1.271 (2024-03-13)
+
+### Fixed
+
+- 🐛 chatbot submit with macos &#x27;candidate window&#x27; enabled [[989acca](https://github.com/gmpetrov/databerry/commit/989acca87cb1e286823bf2ea0d93ac652255bc38)]
+- 🐛 seo broken when using useSearchParams [[bf19e62](https://github.com/gmpetrov/databerry/commit/bf19e622cfe1bfbe80feec36a536f33437899d25)]
+
+### Miscellaneous
+
+- 🤖 improve tracking traffic from yt tool [[3f30114](https://github.com/gmpetrov/databerry/commit/3f301143d75374ede6e02fa6a848357b1dbd8100)]
+
+
 <a name="0.1.270"></a>
 ## 0.1.270 (2024-03-13)
 
