@@ -148,7 +148,7 @@ export default function CrispConfig(props: { agent: Agent }) {
       {/* <Header /> */}
       <Box className="flex flex-col items-center justify-center w-screen h-screen p-4 overflow-y-auto bg-black">
         <Stack className="w-full max-w-sm mx-auto" gap={2}>
-          {submitError && <Alert color="danger">{submitError}</Alert>}
+          {submitError && <Alert color="danger">Ooops! Invalid Api Key</Alert>}
 
           {showSuccessAlert && (
             <Alert color="success">

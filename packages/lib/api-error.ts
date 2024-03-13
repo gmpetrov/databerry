@@ -57,3 +57,5 @@ export class ApiError extends Error {
     Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
+
+export const isApiError = (e: unknown): e is ApiError => e instanceof ApiError;
