@@ -25,6 +25,7 @@
     "stripe:dev": "stripe listen --forward-to localhost:3000/api/stripe/webhook",
     "sendDailyLeads": "npm run dotenv -- tsx cron/daily-leads.tsx",
     "sendWeeklyAdminStats": "npm run dotenv -- tsx cron/admin-weekly-report.tsx",
+    "aiNewsLoad": "npm run dotenv -- tsx cron/ai-news-load.ts",
     "sendAccountCleaningWarning": "npm run dotenv -- tsx cron/account-cleaning-warning.tsx",
     "syncDatasources": "npm run dotenv -- tsx cron/sync-datasources.tsx",
     "test:emails:trigger:receive": "npm run dotenv -- tsx tests/email-inbox/receive-email.ts"
@@ -74,6 +75,7 @@
     "axios": "^1.3.4",
     "bullmq": "^3.13.3",
     "canvas-confetti": "^1.7.0",
+    "cheerio": "1.0.0-rc.12",
     "clsx": "^2.1.0",
     "cors": "^2.8.5",
     "crisp-api": "^7.4.1",

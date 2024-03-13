@@ -39,6 +39,10 @@
     "sendAccountCleaningWarning": {
       "dependsOn": ["@chaindesk/prisma#prisma:generate"],
       "cache": false
+    },
+    "aiNewsLoad": {
+      "dependsOn": ["@chaindesk/prisma#prisma:generate"],
+      "cache": false
     }
   }
 }

@@ -207,6 +207,14 @@ export default function Footer() {
                     Free YouTube Video Summarizer
                   </a>
                 </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900"
+                    href="/ai-news"
+                  >
+                    AI News
+                  </a>
+                </li>
               </ul>
             </div>
 

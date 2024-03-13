@@ -153,6 +153,22 @@ export type SummaryPageProps = LLMTaskOutput & {
   };
 };
 
+export type WebPageSummaryMetadata = {
+  title: string;
+  description: string;
+  ogImage: string;
+  host: string;
+  url: string;
+};
+
+export type WebPageSummary = LLMTaskOutput & {
+  output: {
+    ['en']: SummaryPageProps['output']['en'] & {};
+  } & {
+    metadata: WebPageSummaryMetadata;
+  };
+};
+
 export type Product = {
   slug: string;
   name: string;

@@ -860,6 +860,7 @@ model VerificationCode {
 
 enum LLMTaskOutputType {
   youtube_summary
+  web_page_summary
 }
 
 enum DatastoreVisibility {

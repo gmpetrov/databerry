@@ -50,7 +50,7 @@ export const createYoutubeSummary = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
-  const { url } = YoutubeSummarySchema.parse(req.body);
+  const { url, date } = YoutubeSummarySchema.parse(req.body);
 
   const Youtube = new YoutubeApi();
   const videoId = YoutubeApi.extractVideoId(url);
@@ -216,6 +216,7 @@ export const createYoutubeSummary = async (
 
     const payload = {
       id,
+      createdAt: date ? new Date(date) : undefined,
       externalId: videoId,
       type: 'youtube_summary',
       output: {

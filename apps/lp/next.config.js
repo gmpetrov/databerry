@@ -100,6 +100,10 @@ const nextConfig = {
           source: '/api/sitemaps/:slug(.*).xml',
           destination: '/api/sitemaps/:slug',
         },
+        {
+          source: '/ai-news/:path*',
+          destination: '/tools/web-page-summarizer/:path*',
+        },
 
         // {
         //   source: '/api/tools/youtube-summary/sitemap/:index(\\d+).xml',

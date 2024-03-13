@@ -54,6 +54,7 @@
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^13.3.1",
     "request-ip": "^3.3.0",
+    "rss-parser": "^3.13.0",
     "rxjs": "^7.8.1",
     "stripe": "^11.17.0",
     "swr": "^2.1.1",

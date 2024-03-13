@@ -526,6 +526,12 @@ export const YoutubeSummarySchema = z.object({
       message: 'Invalid YouTube video URL',
     }
   ),
+  date: z.string().optional(),
+});
+
+export const WebPageSummarySchema = z.object({
+  url: z.string().url(),
+  date: z.string().optional(),
 });
 
 export const ChatResponse = z.object({
