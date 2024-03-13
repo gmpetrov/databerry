@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.273"></a>
+## 0.1.273 (2024-03-13)
+
+### Fixed
+
+- 🐛 yt faq ellipsis [[f09da0c](https://github.com/gmpetrov/databerry/commit/f09da0c449c575ed9f4a4bc7ffd78bde94591fa0)]
+
+
 <a name="0.1.272"></a>
 ## 0.1.272 (2024-03-13)
 
