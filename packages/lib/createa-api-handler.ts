@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import nc, { ErrorHandler } from 'next-connect';
 
-import { ApiError } from './api-error';
+import { ApiError, isApiError } from './api-error';
 import auth, { optionalAuth, withLogger } from './auth';
 import { AppNextApiRequest } from './types';
 import { Handle, options } from './validate';
@@ -13,7 +13,8 @@ export const onError: ErrorHandler<NextApiRequest, NextApiResponse> = (
   next
 ) => {
   console.log('err', err);
-  res.status(500).end(err.toString());
+
+  res.status(err.status).end(isApiError(err) ? err.message : err.toString());
 };
 
 export const createApiHandler = (opts?: options) =>

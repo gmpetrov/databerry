@@ -37,9 +37,14 @@ export default function AgentGeneralSettingsTab(props: Props) {
         'Are you sure you want to delete this agent? This action is irreversible.'
       )
     ) {
-      await axios.delete(`/api/agents/${props.agentId}`);
-
-      router.push(RouteNames.AGENTS);
+      try {
+        await axios.delete(`/api/agents/${props.agentId}`);
+        router.push(RouteNames.AGENTS);
+      } catch (e) {
+        toast.error('You can not perform deletion ', {
+          duration: 3000,
+        });
+      }
     }
   };
 
