@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.274"></a>
+## 0.1.274 (2024-03-13)
+
+### Miscellaneous
+
+- 🎸 ai news aggregator [[099246c](https://github.com/gmpetrov/databerry/commit/099246cb57ac2ddbbda6780c32af7e924b2fb46e)]
+
+
 <a name="0.1.273"></a>
 ## 0.1.273 (2024-03-13)
 
