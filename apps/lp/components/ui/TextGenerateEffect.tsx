@@ -1,3 +1,4 @@
+'use client';
 import { motion, stagger, useAnimate, Variants } from 'framer-motion';
 import React from 'react';
 

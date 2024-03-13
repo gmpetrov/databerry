@@ -22,6 +22,7 @@ const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
   variable: '--font-bricolage-grotesque',
   display: 'swap',
+  adjustFontFallback: false,
 });
 
 const sourceCodePro = Source_Code_Pro({

@@ -2,13 +2,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import useUTMqueryParmsForCurrentPath from '@chaindesk/ui/hooks/useUTMqueryParmsForCurrentPath';
+import LinkWithUTMFromPath from '@chaindesk/ui/LinkWithUTMFromPath';
 
 import Logo from '@/public/images/logo.png';
 import config from '@/utils/config';
 
 export default function Features02() {
-  const { params } = useUTMqueryParmsForCurrentPath();
   return (
     <section>
       <div className="py-12 md:py-20">
@@ -45,12 +44,12 @@ export default function Features02() {
             </p>
             <div className="mx-auto space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
               <div>
-                <a
+                <LinkWithUTMFromPath
                   className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
-                  href={`https://app.chaindesk.ai/agents${params}`}
+                  href={`https://app.chaindesk.ai/agents`}
                 >
                   Start For Free
-                </a>
+                </LinkWithUTMFromPath>
               </div>
               <div>
                 <a

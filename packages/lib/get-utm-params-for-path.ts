@@ -3,7 +3,7 @@ const getUTMparamsForPath = ({
 }: {
   pathname: string;
 }): Record<string, string> => {
-  if (pathname.startsWith('/tools/youtube-summarizer/')) {
+  if (pathname.startsWith('/tools/youtube-summarizer')) {
     return {
       utm_source: 'landing_page',
       utm_medium: 'tool',
