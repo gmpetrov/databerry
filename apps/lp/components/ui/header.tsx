@@ -1,11 +1,17 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import React from 'react';
+
+import useUTMqueryParmsForCurrentPath from '@chaindesk/ui/hooks/useUTMqueryParmsForCurrentPath';
 
 import Menu from './products-menu';
 
 import Logo from '@/public/images/logo.png';
 
 export default function Header() {
+  const { params } = useUTMqueryParmsForCurrentPath();
+
   return (
     <header className="absolute top-2 z-30 w-full md:top-6">
       <div className="px-4 sm:px-6">
@@ -14,7 +20,7 @@ export default function Header() {
             {/* Site branding */}
             <Link
               className="inline-flex items-center mr-4 space-x-2 shrink-0"
-              href="/"
+              href={`/${params}`}
             >
               {/* Logo */}
               <div className="flex justify-center items-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20">
@@ -63,7 +69,7 @@ export default function Header() {
                 <li>
                   <Link
                     className="hidden items-center px-3 py-2 text-sm font-medium transition md:flex text-zinc-500 hover:text-zinc-900 lg:px-5"
-                    href="https://app.chaindesk.ai/signin"
+                    href={`https://app.chaindesk.ai/signin${params}`}
                   >
                     Log in
                   </Link>
@@ -72,7 +78,7 @@ export default function Header() {
                 <li className="ml-1">
                   <Link
                     className="hidden w-full shadow sm:flex btn-sm text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
-                    href="https://app.chaindesk.ai/signin"
+                    href={`https://app.chaindesk.ai/signin${params}`}
                   >
                     Sign up for free
                   </Link>

@@ -1,10 +1,14 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import useUTMqueryParmsForCurrentPath from '@chaindesk/ui/hooks/useUTMqueryParmsForCurrentPath';
 
 import Logo from '@/public/images/logo.png';
 import config from '@/utils/config';
 
 export default function Features02() {
+  const { params } = useUTMqueryParmsForCurrentPath();
   return (
     <section>
       <div className="py-12 md:py-20">
@@ -43,7 +47,7 @@ export default function Features02() {
               <div>
                 <a
                   className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"
-                  href="https://app.chaindesk.ai/agents"
+                  href={`https://app.chaindesk.ai/agents${params}`}
                 >
                   Start For Free
                 </a>
