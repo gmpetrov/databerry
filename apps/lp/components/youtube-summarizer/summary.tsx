@@ -2,15 +2,23 @@
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import PinterestIcon from '@mui/icons-material/Pinterest';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import RedditIcon from '@mui/icons-material/Reddit';
+import XIcon from '@mui/icons-material/X';
 import {
   AspectRatio,
   Box,
+  Breadcrumbs,
   Button,
+  Card,
   Chip,
   Divider,
   IconButton,
   Stack,
+  styled,
   Typography,
 } from '@mui/joy';
 import clsx from 'clsx';
@@ -27,6 +35,7 @@ import writeClipboard from '@chaindesk/lib/write-clipboard';
 import prisma from '@chaindesk/prisma/client';
 import useConfetti from '@chaindesk/ui/hooks/useConfetti';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
+import LinkWithUTMFromPath from '@chaindesk/ui/LinkWithUTMFromPath';
 
 import PromoAlert from '@/components/promo-alert';
 
@@ -50,10 +59,11 @@ function decodeHTMLEntities(text: string): string {
 }
 
 type Props = {
+  id: string;
   summary: SummaryPageProps;
 };
 
-export default function YoutubeSummary({ summary }: Props) {
+export default function YoutubeSummary({ id, summary }: Props) {
   // const router = useRouter();
   // const { data: session } = useSession();
   const router = useRouter();
@@ -81,6 +91,7 @@ export default function YoutubeSummary({ summary }: Props) {
   const output = summary?.output;
   const content = output[lang];
   const title = decodeHTMLEntities(output?.metadata?.title);
+  const pageUrl = `${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/tools/youtube-summarizer/${id}`;
   console.log(
     'content.chapters[state.currentChapter]',
     content.chapters[state.currentChapter]
@@ -98,28 +109,82 @@ export default function YoutubeSummary({ summary }: Props) {
       >
         <PromoAlert />
 
-        <Stack
-          direction="row"
-          sx={{ justifyContent: 'flex-start', alignItems: 'center' }}
-          gap={2}
-        >
-          <Link href="/tools/youtube-summarizer">
-            <IconButton
-              variant="outlined"
-              sx={{ borderRadius: '20px' }}
-              // onClick={router.back}
-              size="sm"
+        <Typography level="h1" sx={{ textAlign: 'center' }}>
+          {title}
+        </Typography>
+
+        <Stack>
+          <Breadcrumbs aria-label="breadcrumbs">
+            {[
+              { label: 'Home', path: '/' },
+              {
+                label: 'Youtube Video Summarizer',
+                path: '/tools/youtube-summarizer',
+              },
+            ].map((item) => (
+              <LinkWithUTMFromPath
+                key={item.path}
+                href={item.path}
+                className="hover:underline"
+              >
+                <Typography color="neutral">{item.label}</Typography>
+              </LinkWithUTMFromPath>
+            ))}
+            <Typography className="text-pink-600">{title}</Typography>
+          </Breadcrumbs>
+
+          <Stack direction="row" mb={1}>
+            <a
+              href={`https://www.facebook.com/sharer.php?u=${pageUrl}`}
+              className="text-gray-400 share-item"
             >
-              <ChevronLeftRoundedIcon />
-            </IconButton>
-          </Link>
-          <Typography level="h1" sx={{ mr: 'auto' }}>
-            {title}
-          </Typography>
-          <Stack direction="row" gap={1}>
+              <span className="sr-only">facebook</span>
+              <IconButton variant="plain">
+                <FacebookIcon />
+              </IconButton>
+            </a>
+
+            <a
+              href={`https://twitter.com/intent/tweet?url=${pageUrl}`}
+              className="text-gray-400 share-item"
+            >
+              <span className="sr-only">twitter</span>
+              <IconButton variant="plain">
+                <XIcon />
+              </IconButton>
+            </a>
+
+            <a
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`}
+              className="text-gray-400 share-item"
+            >
+              <span className="sr-only">linkedin</span>
+              <IconButton variant="plain">
+                <LinkedInIcon />
+              </IconButton>
+            </a>
+
+            <a
+              href={`https://pinterest.com/pin/create/button/?url=${pageUrl}`}
+              className="text-gray-400 share-item"
+            >
+              <span className="sr-only">pinterest</span>
+              <IconButton variant="plain">
+                <PinterestIcon />
+              </IconButton>
+            </a>
+
+            <a
+              href={`https://reddit.com/submit?url=${pageUrl}`}
+              className="text-gray-400 share-item"
+            >
+              <span className="sr-only">reddit</span>
+              <IconButton variant="plain">
+                <RedditIcon />
+              </IconButton>
+            </a>
+
             <IconButton
-              variant="outlined"
-              sx={{ borderRadius: '20px' }}
               onClick={() => {
                 if (navigator.share) {
                   navigator.share({
@@ -135,61 +200,48 @@ export default function YoutubeSummary({ summary }: Props) {
               }}
             >
               <ContentCopyRoundedIcon />
-              {/* {!!navigator?.share ? (
-                <IosShareRoundedIcon />
-                ) : (
-                )} */}
             </IconButton>
-
-            {/* {session?.roles?.includes?.('SUPERADMIN') && (
-                <IconButton
-                  color="danger"
-                  variant="outlined"
-                  sx={{ borderRadius: '20px' }}
-                  disabled={summaryMutation.isMutating}
-                  onClick={() =>
-                    summaryMutation.trigger({
-                      url: `https://www.youtube.com/watch?v=${router.query.id}`,
-                    })
-                  }
-                >
-                  <RefreshIcon />
-                </IconButton>
-              )} */}
           </Stack>
-        </Stack>
-        <AspectRatio
-          objectFit="cover"
-          sx={{
-            // height: '200px',
-            overflow: 'hidden',
-            borderRadius: 'xl',
-          }}
-        >
-          {/* <img src={output?.metadata?.thumbnails?.high?.url} /> */}
-          <iframe
-            src={`https://www.youtube.com/embed/${summary?.externalId}?controls=1`}
-            allowFullScreen
-            className="w-full h-auto"
-          />
-        </AspectRatio>
-        <Box>
-          {output?.metadata?.publishedAt && (
-            <Typography level="body-sm">
-              Published{' '}
-              {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
-              Youtube
-            </Typography>
-          )}
 
-          {/* <Box mt={1}>
+          <AspectRatio
+            objectFit="cover"
+            sx={{
+              // height: '200px',
+              overflow: 'hidden',
+              borderRadius: 'xl',
+            }}
+          >
+            {/* <img src={output?.metadata?.thumbnails?.high?.url} /> */}
+            <iframe
+              src={`https://www.youtube.com/embed/${summary?.externalId}?controls=1`}
+              allowFullScreen
+              className="w-full h-auto"
+            />
+          </AspectRatio>
+
+          <Stack gap={1} sx={{ mt: 2 }}>
+            {output?.metadata?.author_name && (
+              <Typography level="body-sm" fontWeight={'bold'}>
+                {output?.metadata?.author_name}
+              </Typography>
+            )}
+            {output?.metadata?.publishedAt && (
+              <Typography level="body-sm">
+                Published{' '}
+                {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
+                Youtube
+              </Typography>
+            )}
+
+            {/* <Box mt={1}>
             {content.thematics.map((tag, i) => (
               <Chip key={i} size="sm" color="neutral" className="mx-1">
                 {tag}
               </Chip>
             ))}
           </Box> */}
-        </Box>
+          </Stack>
+        </Stack>
 
         <Divider />
 
@@ -253,7 +305,9 @@ export default function YoutubeSummary({ summary }: Props) {
                 </Box>
 
                 <Box className="spac-y-4">
-                  <Typography level="title-lg">{title}</Typography>
+                  <Typography level="title-lg" className="!font-title">
+                    {title}
+                  </Typography>
                   <ReactMarkdown
                     className="min-w-full text-zinc-500 prose"
                     remarkPlugins={[remarkGfm]}
@@ -263,6 +317,41 @@ export default function YoutubeSummary({ summary }: Props) {
                 </Box>
               </Stack>
             ))}
+
+            {!!content?.faq?.length && (
+              <>
+                <Divider sx={{ my: 4 }} />
+                <Stack gap={1}>
+                  <Typography
+                    level="title-md"
+                    fontWeight={'bold'}
+                    className="!font-title"
+                  >
+                    FAQ
+                  </Typography>
+                  <Stack gap={2}>
+                    {content.faq.map(({ q, a }, index) => (
+                      <Stack key={index} spacing={0.5}>
+                        <Typography level="body-md">
+                          <Box
+                            component="span"
+                            sx={{ fontWeight: 'bold' }}
+                          >{`Q: `}</Box>
+                          {q}
+                        </Typography>
+                        <Typography level="body-md">
+                          <Box
+                            component="span"
+                            sx={{ fontWeight: 'bold' }}
+                          >{`A: `}</Box>
+                          {a}
+                        </Typography>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Stack>
+              </>
+            )}
           </Stack>
         </Stack>
 
@@ -319,7 +408,7 @@ export default function YoutubeSummary({ summary }: Props) {
                 className="min-h-[400px] sm:min-h-[200px] sm:h-full w-full md:w-[500px]  md:rounded-xl"
               />
             </Box>
-            <Box className="flex flex-col justify-start self-center space-y-3 w-full text-red-500">
+            <Box className="flex flex-col justify-start self-center space-y-3 w-full">
               <Typography level="h3" className="!text-zinc-100">
                 {content.chapters[state.currentChapter].title}
               </Typography>

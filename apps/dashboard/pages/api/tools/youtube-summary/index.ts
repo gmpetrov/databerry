@@ -170,17 +170,47 @@ export const createYoutubeSummary = async (
       messages: [
         {
           role: 'system',
-          content: `Generate a short summary of a given youtube video transcript. Provide your response in raw markdown format`,
+          content: `Generate a short summary of a given video transcript. Format your response in markdown format to display the content in a nice and aerated way (but witout section titles)`,
         },
         {
           role: 'user',
-          content: `Video: ### ${chaptersText} ### Short summary that highlights most important informations for a TLDR section. Use bullet points: `,
+          content: `Transcript: ### ${chaptersText} ### Generate a short but useful summary that highlights most important informations (1-5 sentences).`,
         },
       ],
     });
 
     const videoSummary =
       summaryCall?.completion?.choices?.[0]?.message?.content;
+
+    const faqCall = await model.call({
+      response_format: {
+        type: 'json_object',
+      },
+      model: ModelConfig[modelName].name,
+      messages: [
+        {
+          role: 'system',
+          content: `Generate a json array of useful questions and answers, focused on the underlying subject for a given essai.
+          <output-example>
+            {
+              "questions": [{ "q": "What is nuclear fusion?", "a": "Nuclear fusion..." }]
+            }
+          <output-example>
+          `,
+        },
+        {
+          role: 'user',
+          content: `Essai: ### ${chaptersText} ### Generate a list of questions and answers focused on the underlying subject: `,
+        },
+      ],
+    });
+
+    const faqSTR = faqCall?.completion?.choices?.[0]?.message?.content;
+    let faq = [];
+
+    try {
+      faq = JSON.parse(faqSTR || '{}')?.questions || [];
+    } catch {}
 
     const id = found?.id || cuid();
 
@@ -190,6 +220,8 @@ export const createYoutubeSummary = async (
       type: 'youtube_summary',
       output: {
         metadata: {
+          author_name: metadata.author_name,
+          author_url: metadata.author_url,
           category,
           keywords,
           title: metadata.title,
@@ -204,6 +236,7 @@ export const createYoutubeSummary = async (
         en: {
           ...data,
           videoSummary,
+          faq,
         },
       },
       // usage: result?.usage as any,

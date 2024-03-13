@@ -138,12 +138,15 @@ export interface Metadata {
   liveBroadcastContent: string;
   category?: string;
   keywords?: string[];
+  author_name?: string;
+  author_url?: string;
 }
 
 export type SummaryPageProps = LLMTaskOutput & {
   output: {
     ['en']: Schema & {
       videoSummary?: string;
+      faq?: { q: string; a: string }[];
     };
   } & {
     metadata: Metadata;
