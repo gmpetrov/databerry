@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.270"></a>
+## 0.1.270 (2024-03-13)
+
+### Fixed
+
+- 🐛 formatSourceRawText should not show &#x27;Sources&#x27; if empty [[9971557](https://github.com/gmpetrov/databerry/commit/99715576bf9641e3f69fa3f5178608eea92626f1)]
+
+
 <a name="0.1.269"></a>
 ## 0.1.269 (2024-03-13)
 
