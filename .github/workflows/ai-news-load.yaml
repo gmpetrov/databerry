@@ -1,4 +1,4 @@
-name: Send admin stats
+name: AI News Load
 
 on:
   workflow_dispatch:
