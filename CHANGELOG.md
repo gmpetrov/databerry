@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.272"></a>
+## 0.1.272 (2024-03-13)
+
+### Miscellaneous
+
+- 🎸 yt summarizer faq [[083666d](https://github.com/gmpetrov/databerry/commit/083666dc872d6be0e21049a2b6f800f8ccf6d590)]
+
+
 <a name="0.1.271"></a>
 ## 0.1.271 (2024-03-13)
 
