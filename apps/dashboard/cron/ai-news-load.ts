@@ -59,7 +59,7 @@ const load = async ({
           {
             retries: 1,
           }
-        ).catch(console.log);
+        ).catch((err) => console.log(url, err));
       },
       {
         concurrency: 1,
@@ -77,7 +77,7 @@ const load = async ({
           return handleFeed(url);
         },
         { retries: 1 }
-      ),
+      ).catch((err) => console.log(url, err)),
     { concurrency: 1 }
   );
 
