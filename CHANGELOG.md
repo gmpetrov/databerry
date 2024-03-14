@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.275"></a>
+## 0.1.275 (2024-03-14)
+
+### Fixed
+
+- 🐛 job name [[b033198](https://github.com/gmpetrov/databerry/commit/b033198ba3af1f5de28dc6026f1f36693eb26f6e)]
+
+### Miscellaneous
+
+- 🎸 yt rss loader [[7d12b54](https://github.com/gmpetrov/databerry/commit/7d12b54885fe16f84bb7763939c78a57b9e8e301)]
+
+
 <a name="0.1.274"></a>
 ## 0.1.274 (2024-03-13)
 
