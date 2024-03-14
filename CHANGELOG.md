@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.279"></a>
+## 0.1.279 (2024-03-14)
+
+### Fixed
+
+- 🐛 Agent Form Performances [[4ee0953](https://github.com/gmpetrov/databerry/commit/4ee0953d6cbebc57930f18e20ea5d8189fde49c7)]
+
+
 <a name="0.1.278"></a>
 ## 0.1.278 (2024-03-14)
 
