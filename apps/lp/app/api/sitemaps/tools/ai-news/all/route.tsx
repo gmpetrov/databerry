@@ -19,7 +19,7 @@ export async function GET(req: Request) {
 
   const paths = new Array(nbPages)
     .fill(42)
-    .map((_, index) => `${baseUrl}/tools/ai-news/all/${index}`);
+    .map((_, index) => `${baseUrl}/ai-news/all/${index}`);
 
   // generate sitemap here
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
