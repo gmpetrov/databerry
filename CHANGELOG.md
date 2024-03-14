@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.278"></a>
+## 0.1.278 (2024-03-14)
+
+### Fixed
+
+- 🐛 try to fix gpt-3.5 not answering in same language when kb empty [[bd58b4e](https://github.com/gmpetrov/databerry/commit/bd58b4e9dfc997b6b99b162fb2373e870d6cd30e)]
+- 🐛 redirect to seo friendly url [[6ddfa61](https://github.com/gmpetrov/databerry/commit/6ddfa6120d4eceaecbf06c88a38adaf8e611221d)]
+
+
 <a name="0.1.277"></a>
 ## 0.1.277 (2024-03-14)
 
