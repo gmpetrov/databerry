@@ -326,8 +326,12 @@ const chat = async ({
         ? `**Knowledge Base**
     Use the following knowledge base chunks delimited by <knowledge-base> xml tags to answer the user's question.
     <knowledge-base>${retrievalData?.context}</knowledge-base>
-    Limit your knowledge this knowledge base, if you don't find an answer in the knowledge base, politely say that you don't know.
-    Remember do not answer any query that is outside of the provided context, this is paramount.`
+    ${
+      restrictKnowledge
+        ? `Limit your knowledge to the knowledge base, if you don't find an answer in the knowledge base, politely say that you don't know. Remember do not answer any query that is outside of the provided context, this is paramount.`
+        : ``
+    }
+    `
         : ``
     }
     
@@ -380,12 +384,7 @@ const chat = async ({
     }
     ${
       useLanguageDetection || useMarkdown || useLanguageDetection
-        ? `**Format**`
-        : ``
-    }
-    ${
-      useLanguageDetection
-        ? `Anser in the same language that was used to frame the question. You can speak any language.`
+        ? `**Output Format and Language**`
         : ``
     }
     ${
@@ -394,6 +393,12 @@ const chat = async ({
         : ``
     }
     ${
+      useLanguageDetection
+        ? `Anser in the same language that was used to frame the question, for example if the question is asked in english anser in english, if the question is asked in french answer in french and so on. You can speak any language.`
+        : ``
+    }
+    ${
+      // use useLanguageDetection for this too until we add a checkbox in the ui
       useLanguageDetection
         ? `Never make up URLs, email addresses, or any other information that have not been provided during the conversation. Only use information provided by the user to fill forms.`
         : ``

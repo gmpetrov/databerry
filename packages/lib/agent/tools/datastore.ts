@@ -82,10 +82,7 @@ export const handler = async (props: Props) => {
       });
   }
 
-  const context =
-    results?.length <= 0
-      ? `No data found in the knowledge base`
-      : createPromptContext(results);
+  const context = results?.length <= 0 ? `EMPTY` : createPromptContext(results);
 
   return {
     context,
