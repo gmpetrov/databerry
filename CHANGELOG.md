@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.277"></a>
+## 0.1.277 (2024-03-14)
+
+### Miscellaneous
+
+- 🤖 debug rss loader error [[88527ed](https://github.com/gmpetrov/databerry/commit/88527ed648b94c3197bb5c9f386452987b79e070)]
+
+
 <a name="0.1.276"></a>
 ## 0.1.276 (2024-03-14)
 
