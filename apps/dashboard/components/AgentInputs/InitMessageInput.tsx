@@ -25,13 +25,13 @@ function InitMessageInput(props: Props) {
     name: 'interfaceConfig.initialMessages',
   });
 
-  const val = watch('interfaceConfig.initialMessages') || [];
+  // const val = watch('interfaceConfig.initialMessages') || [];
 
-  useEffect(() => {
-    if (val.length <= 0) {
-      append('');
-    }
-  }, [val.length]);
+  // useEffect(() => {
+  //   if (val.length <= 0) {
+  //     append('');
+  //   }
+  // }, [val.length]);
 
   return (
     <Stack>

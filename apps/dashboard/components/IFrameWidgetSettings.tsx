@@ -18,6 +18,7 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
 import { theme, themeKeys } from '@app/utils/themes/iframe-widget';
 
 import { appUrl } from '@chaindesk/lib/config';
@@ -41,6 +42,7 @@ type Props = {
 };
 
 function RenderWidget({ agentId, config }: { agentId: string; config: any }) {
+  const memoizedConfig = useDeepCompareMemoize(config);
   const Memoized = React.useMemo(() => {
     return (
       <Frame
@@ -78,15 +80,15 @@ function RenderWidget({ agentId, config }: { agentId: string; config: any }) {
                 >
                   <ChatBoxFrame
                     agentId={agentId}
-                    initConfig={config!}
+                    initConfig={memoizedConfig!}
                     layout={ChatboxNavBarLayout}
                   />
                 </Box>
 
-                {config?.customCSS && (
+                {memoizedConfig?.customCSS && (
                   <style
                     dangerouslySetInnerHTML={{
-                      __html: config?.customCSS || '',
+                      __html: memoizedConfig?.customCSS || '',
                     }}
                   ></style>
                 )}
@@ -96,7 +98,7 @@ function RenderWidget({ agentId, config }: { agentId: string; config: any }) {
         </FrameContextConsumer>
       </Frame>
     );
-  }, [agentId, config]);
+  }, [agentId, memoizedConfig]);
   return Memoized;
 }
 

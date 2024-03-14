@@ -21,6 +21,8 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
+
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
@@ -40,6 +42,7 @@ type Props = {
 };
 
 function RenderWidget({ agentId, config }: any) {
+  const memoizedConfig = useDeepCompareMemoize(config);
   const MemoizedChatBubble = React.useMemo(() => {
     return (
       <Frame
@@ -72,15 +75,12 @@ function RenderWidget({ agentId, config }: any) {
                     p: 2,
                   }}
                 >
-                  <ChatBubble agentId={agentId} initConfig={config} />
-                  {/* <ChatBubble
-                                        agentId={query?.data?.id!}
-                                        initConfig={config}
-                                      /> */}
-                  {config?.customCSS && (
+                  <ChatBubble agentId={agentId} initConfig={memoizedConfig} />
+
+                  {memoizedConfig?.customCSS && (
                     <style
                       dangerouslySetInnerHTML={{
-                        __html: config?.customCSS || '',
+                        __html: memoizedConfig?.customCSS || '',
                       }}
                     ></style>
                   )}
@@ -91,7 +91,7 @@ function RenderWidget({ agentId, config }: any) {
         </FrameContextConsumer>
       </Frame>
     );
-  }, [agentId, config]);
+  }, [agentId, memoizedConfig]);
 
   return MemoizedChatBubble;
 }
