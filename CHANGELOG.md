@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.280"></a>
+## 0.1.280 (2024-03-14)
+
+### Fixed
+
+- 🐛 widget settings update real-time [[a704086](https://github.com/gmpetrov/databerry/commit/a704086d56f8d23bf7347f5227de7fda47a4823c)]
+- 🐛 validation issue [[fb20d7a](https://github.com/gmpetrov/databerry/commit/fb20d7a8ad7d86267f5d40f19d16f561607c8a49)]
+
+
 <a name="0.1.279"></a>
 ## 0.1.279 (2024-03-14)
 
