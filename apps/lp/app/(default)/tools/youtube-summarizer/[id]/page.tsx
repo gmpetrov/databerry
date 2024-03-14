@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import React from 'react';
 
+import slugify from '@chaindesk/lib/slugify';
 import { SummaryPageProps } from '@chaindesk/lib/types';
 import prisma from '@chaindesk/prisma/client';
 
@@ -78,6 +79,12 @@ export default async function YoutubeVideoSummary({
 
   if (!summary) {
     redirect('/tools/youtube-summarizer');
+  } else if (!!summary && params.id.length === 11) {
+    redirect(
+      `/tools/youtube-summarizer/${slugify(
+        summary.output.metadata.title
+      )}-${videoId}`
+    );
   }
 
   return (
