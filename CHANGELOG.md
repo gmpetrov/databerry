@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.281"></a>
+## 0.1.281 (2024-03-14)
+
+### Fixed
+
+- 🐛 better resolution logo [[89f7764](https://github.com/gmpetrov/databerry/commit/89f7764bafa84ff2bf4ad927601351013e4985e4)]
+
+
 <a name="0.1.280"></a>
 ## 0.1.280 (2024-03-14)
 
