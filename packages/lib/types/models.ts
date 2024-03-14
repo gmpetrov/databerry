@@ -242,7 +242,7 @@ export const AgentInterfaceConfig = z.object({
     })
     .optional(),
   initialMessage: z.string().trim().optional(),
-  initialMessages: z.array(z.string()).optional(),
+  initialMessages: z.array(z.string().optional()).optional(),
   isInitMessagePopupDisabled: z.boolean().optional(),
   isHumanRequestedDisabled: z.boolean().optional(),
   isMarkAsResolvedDisabled: z.boolean().optional(),

@@ -41,7 +41,18 @@ function AgentForm(props: Props) {
   const { query, mutation } = useAgent({ id: agentId });
 
   const methods = useForm<CreateAgentSchema>({
-    resolver: zodResolver(CreateAgentSchema),
+    // resolver: zodResolver(CreateAgentSchema),
+    resolver: async (data, context, options) => {
+      // you can debug your validation schema here
+      // console.log('formData', data);
+      const validation = await zodResolver(CreateAgentSchema)(
+        data,
+        context,
+        options
+      );
+      console.log('validation result', validation);
+      return validation;
+    },
     defaultValues: {
       promptType: PromptType.raw,
       // prompt: CUSTOMER_SUPPORT,

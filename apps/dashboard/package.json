@@ -120,7 +120,7 @@
     "react-dom": "18.2.0",
     "react-frame-component": "^5.2.6",
     "react-google-charts": "^4.0.1",
-    "react-hook-form": "^7.49.2",
+    "react-hook-form": "^7.51.0",
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^13.3.1",
     "react-infinite-scroller": "^1.2.6",

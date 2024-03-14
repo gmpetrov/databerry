@@ -40,6 +40,66 @@ type Props = {
   agentId: string;
 };
 
+function RenderWidget({ agentId, config }: { agentId: string; config: any }) {
+  const Memoized = React.useMemo(() => {
+    return (
+      <Frame
+        style={{
+          width: '100%',
+          height: 600,
+          border: '1px solid rgba(0, 0, 0, 0.2)',
+          borderRadius: 20,
+        }}
+      >
+        <FrameContextConsumer>
+          {({ document }) => {
+            const cache = createCache({
+              key: 'iframe',
+              container: document?.head,
+              prepend: true,
+              speedy: true,
+            });
+
+            return (
+              <WidgetThemeProvider emotionCache={cache} name="chaindesk-iframe">
+                <ReactFrameStyleFix />
+
+                <Box
+                  style={{
+                    width: '100vw',
+                    height: '100vh',
+                  }}
+                  sx={{
+                    body: {
+                      padding: 0,
+                      margin: 0,
+                    },
+                  }}
+                >
+                  <ChatBoxFrame
+                    agentId={agentId}
+                    initConfig={config!}
+                    layout={ChatboxNavBarLayout}
+                  />
+                </Box>
+
+                {config?.customCSS && (
+                  <style
+                    dangerouslySetInnerHTML={{
+                      __html: config?.customCSS || '',
+                    }}
+                  ></style>
+                )}
+              </WidgetThemeProvider>
+            );
+          }}
+        </FrameContextConsumer>
+      </Frame>
+    );
+  }, [agentId, config]);
+  return Memoized;
+}
+
 export default function BubbleWidgetSettings(props: Props) {
   const installScript = `<script type="module">
   import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
@@ -129,60 +189,10 @@ export default function BubbleWidgetSettings(props: Props) {
                         spacing={2}
                       >
                         {query?.data?.id && (
-                          <Frame
-                            style={{
-                              width: '100%',
-                              height: 600,
-                              border: '1px solid rgba(0, 0, 0, 0.2)',
-                              borderRadius: 20,
-                            }}
-                          >
-                            <FrameContextConsumer>
-                              {({ document }) => {
-                                const cache = createCache({
-                                  key: 'iframe',
-                                  container: document?.head,
-                                  prepend: true,
-                                  speedy: true,
-                                });
-
-                                return (
-                                  <WidgetThemeProvider
-                                    emotionCache={cache}
-                                    name="chaindesk-iframe"
-                                  >
-                                    <ReactFrameStyleFix />
-
-                                    <Box
-                                      style={{
-                                        width: '100vw',
-                                        height: '100vh',
-                                      }}
-                                      sx={{
-                                        body: {
-                                          padding: 0,
-                                          margin: 0,
-                                        },
-                                      }}
-                                    >
-                                      <ChatBoxFrame
-                                        initConfig={config!}
-                                        layout={ChatboxNavBarLayout}
-                                      />
-                                    </Box>
-
-                                    {config?.customCSS && (
-                                      <style
-                                        dangerouslySetInnerHTML={{
-                                          __html: config?.customCSS || '',
-                                        }}
-                                      ></style>
-                                    )}
-                                  </WidgetThemeProvider>
-                                );
-                              }}
-                            </FrameContextConsumer>
-                          </Frame>
+                          <RenderWidget
+                            agentId={query?.data?.id}
+                            config={config}
+                          />
                         )}
 
                         <CustomCSSInput />
