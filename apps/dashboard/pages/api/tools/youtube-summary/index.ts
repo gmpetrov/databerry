@@ -51,6 +51,8 @@ export const createYoutubeSummary = async (
   res: NextApiResponse
 ) => {
   const { url, date } = YoutubeSummarySchema.parse(req.body);
+  const isAuthenticated =
+    req.headers['api-key'] === process.env.NEXTAUTH_SECRET;
 
   const Youtube = new YoutubeApi();
   const videoId = YoutubeApi.extractVideoId(url);
@@ -111,15 +113,17 @@ export const createYoutubeSummary = async (
       chunkSize: ModelConfig[modelName].maxTokens * 0.5,
     });
 
-    await rateLimit({
-      duration: 60,
-      limit: 2,
-    })(req, res);
-
-    if (!refresh) {
-      // Trick to bypass cloudflare 100s timeout limit
-      res.json({ processing: true });
+    if (!isAuthenticated) {
+      await rateLimit({
+        duration: 60,
+        limit: 2,
+      })(req, res);
     }
+
+    // if (!refresh) {
+    //   // Trick to bypass cloudflare 100s timeout limit
+    //   res.json({ processing: true });
+    // }
 
     const model = new ChatModel();
 

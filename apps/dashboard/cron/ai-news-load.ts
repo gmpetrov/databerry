@@ -1,7 +1,8 @@
 import pMap from 'p-map';
 import pRetry from 'p-retry';
 
-import feeds from '@chaindesk/lib/data/ai-news-rss';
+import aiNewsFeeds from '@chaindesk/lib/data/ai-news-rss';
+import ytFeeds from '@chaindesk/lib/data/youtube-channels-rss';
 import { Parser } from '@chaindesk/lib/rss';
 
 const isISODateLessThat2DaysOld = (isoDate: string) => {
@@ -12,7 +13,13 @@ const isISODateLessThat2DaysOld = (isoDate: string) => {
   return diffInDays < 2;
 };
 
-(async () => {
+const load = async ({
+  endpoint,
+  feeds,
+}: {
+  endpoint: string;
+  feeds: string[];
+}) => {
   const parser = new Parser();
 
   const handleFeed = async (feedUrl: string) => {
@@ -37,20 +44,17 @@ const isISODateLessThat2DaysOld = (isoDate: string) => {
       async ({ url, date }) => {
         await pRetry(
           async () => {
-            await fetch(
-              `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/tools/web-page-summary`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Api-Key': process.env.NEXTAUTH_SECRET || '',
-                },
-                body: JSON.stringify({
-                  url,
-                  date,
-                }),
-              }
-            );
+            await fetch(endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Api-Key': process.env.NEXTAUTH_SECRET || '',
+              },
+              body: JSON.stringify({
+                url,
+                date,
+              }),
+            });
           },
           {
             retries: 1,
@@ -78,4 +82,15 @@ const isISODateLessThat2DaysOld = (isoDate: string) => {
   );
 
   console.log(`✅ Finished`);
+};
+
+(async () => {
+  await load({
+    endpoint: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/tools/web-page-summary`,
+    feeds: aiNewsFeeds,
+  });
+  await load({
+    endpoint: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/tools/youtube-summary`,
+    feeds: ytFeeds,
+  });
 })();

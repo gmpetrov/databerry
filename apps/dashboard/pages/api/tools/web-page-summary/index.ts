@@ -4,6 +4,7 @@ import { NextApiResponse } from 'next';
 import pMap from 'p-map';
 import { z, ZodSchema } from 'zod';
 
+import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import ChatModel from '@chaindesk/lib/chat-model';
 import { ModelConfig } from '@chaindesk/lib/config';
 import countTokens from '@chaindesk/lib/count-tokens';
@@ -48,6 +49,13 @@ export const createWebPageSummary = async (
   req: AppNextApiRequest,
   res: NextApiResponse
 ) => {
+  const isAuthenticated =
+    req.headers['api-key'] === process.env.NEXTAUTH_SECRET;
+
+  if (!isAuthenticated) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
+
   const refresh =
     req.query.refresh === 'true' &&
     req?.session?.roles?.includes?.('SUPERADMIN');
@@ -69,15 +77,17 @@ export const createWebPageSummary = async (
   if (found) {
     return found;
   } else {
-    await rateLimit({
-      duration: 60,
-      limit: 2,
-    })(req, res);
+    // if (isAuthenticated) {
+    //   await rateLimit({
+    //     duration: 60,
+    //     limit: 2,
+    //   })(req, res);
+    // }
 
-    if (process.env.NODE_ENV === 'production' && !refresh) {
-      // Trick to bypass cloudflare 100s timeout limit
-      res.json({ processing: true });
-    }
+    // if (process.env.NODE_ENV === 'production' && !refresh) {
+    //   // Trick to bypass cloudflare 100s timeout limit
+    //   res.json({ processing: true });
+    // }
 
     const content = await loadPageContent(url);
 
