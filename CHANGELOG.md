@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.276"></a>
+## 0.1.276 (2024-03-14)
+
+### Fixed
+
+- 🐛 sitemap [[3a07296](https://github.com/gmpetrov/databerry/commit/3a072966f5bfc66293017f44b6b187096b73e8cb)]
+
+### Miscellaneous
+
+- 🤖 add rss feeds [[b33054d](https://github.com/gmpetrov/databerry/commit/b33054dedb85177c64c4913c35fceae06fe94169)]
+
+
 <a name="0.1.275"></a>
 ## 0.1.275 (2024-03-14)
 
