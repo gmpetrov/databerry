@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.282"></a>
+## 0.1.282 (2024-03-15)
+
+### Miscellaneous
+
+- 🤖 add more yt rss feeds [[53427df](https://github.com/gmpetrov/databerry/commit/53427dfd6bdca80fffb32da68983e11b1f1b68ef)]
+
+
 <a name="0.1.281"></a>
 ## 0.1.281 (2024-03-14)
 
