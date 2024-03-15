@@ -203,7 +203,8 @@ function ToolsInput({}: Props) {
           color="warning"
           variant="soft"
         >
-          Agent does not have access to custom data
+          Train your Agent with custom data by connecting it to a Datastore
+          below.
         </Alert>
       )}
 

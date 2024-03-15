@@ -11,6 +11,12 @@ const feeds = [
   'https://www.youtube.com/feeds/videos.xml?channel_id=UC_RovKmk0OCbuZjA8f08opw', // @futurepedia_io
   'https://www.youtube.com/feeds/videos.xml?channel_id=UChpleBmo18P08aKCIgti38g', // @mreflow
   'https://www.youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg', // @TwoMinutePapers
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UCbY9xX3_jW5c2fjlZVBI4cg', // @TheAIGRID
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UCwSozl89jl2zUDzQ4jGJD3g', // @SkillLeapAI
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UCDq7SjbgRKty5TgGafW8Clg', // @engineerprompt
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UCQ-rZd0NpjXYTpB3y5BNxPw', // @JWestdigital
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UCui4jxDaMb53Gdh-AZUTPAg', // @LiamOttley
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UCHhYXsLBEVVnbvsq57n1MTQ', // @aiadvantage
 ] as string[];
 
 export default feeds;
