@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.283"></a>
+## 0.1.283 (2024-03-15)
+
+### Miscellaneous
+
+- 🤖 add rss feeds [[0b42c82](https://github.com/gmpetrov/databerry/commit/0b42c82ba68db3c2a89d2e3dded1d930ec107975)]
+
+
 <a name="0.1.282"></a>
 ## 0.1.282 (2024-03-15)
 
