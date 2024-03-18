@@ -394,7 +394,7 @@ const chat = async ({
     }
     ${
       useLanguageDetection
-        ? `Anser in the same language that was used to frame the question, for example if the question is asked in english anser in english, if the question is asked in french answer in french and so on. You can speak any language.`
+        ? `Answer the users question in the same language as the user question. You can speak any language.`
         : ``
     }
     ${
