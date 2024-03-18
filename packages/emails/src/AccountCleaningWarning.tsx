@@ -85,7 +85,7 @@ export const AccountCleaningWarning = ({ ctaLink }: { ctaLink?: string }) => {
                 width="200"
                 height="auto"
                 alt="Vercel"
-                className="mx-auto my-0 w-12"
+                className="mx-auto my-0 w-10"
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
@@ -128,9 +128,7 @@ export const AccountCleaningWarning = ({ ctaLink }: { ctaLink?: string }) => {
 
               <Section className="text-center mt-[32px] mb-[32px]">
                 <Button
-                  pX={20}
-                  pY={12}
-                  className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
+                  className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-4 py-3"
                   href={ctaLink}
                 >
                   Renew Subscription

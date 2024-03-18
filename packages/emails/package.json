@@ -11,12 +11,12 @@
   "dependencies": {
     "@chaindesk/prisma": "workspace:*",
     "@chaindesk/tsconfig": "workspace:*",
-    "@react-email/button": "0.0.10",
-    "@react-email/components": "^0.0.7",
-    "@react-email/html": "0.0.4",
+    "@react-email/button": "0.0.14",
+    "@react-email/components": "^0.0.15",
+    "@react-email/html": "0.0.7",
     "clsx": "^2.1.0",
     "eslint-config-custom": "workspace:*",
-    "react-email": "1.9.5"
+    "react-email": "2.1.0"
   },
   "devDependencies": {
     "@types/node": "18.15.10",

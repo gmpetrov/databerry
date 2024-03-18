@@ -81,7 +81,7 @@ export const NewLead = ({
                 width="50"
                 height="auto"
                 alt="Vercel"
-                className="mx-auto my-0 w-12"
+                className="mx-auto my-0 w-10"
               />
             </Section>
             <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
@@ -120,9 +120,7 @@ export const NewLead = ({
             </Container>
             {/* <Section className="text-center mt-[32px] mb-[32px]">
               <Button
-                pX={20}
-                pY={12}
-                className="bg-[#000] rounded text-white text-[12px] font-semibold no-underline text-center"
+                className="bg-[#000] rounded text-white text-[12px] font-semibold no-underline text-center px-4 py-3"
                 href={`mailto:${visitorEmail}`}
               >
                 Reply
@@ -162,9 +160,7 @@ export const NewLead = ({
                 <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
                 <Section className="text-center mt-[32px] mb-[32px]">
                   <Button
-                    pX={20}
-                    pY={12}
-                    className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center"
+                    className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-4 py-3"
                     href={ctaLink}
                   >
                     View Conversation
