@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.285"></a>
+## 0.1.285 (2024-03-18)
+
+### Fixed
+
+- 🐛 instruciton typo [[5186366](https://github.com/gmpetrov/databerry/commit/51863669dd9675d9aa08bc2c5a9db32d951cd675)]
+
+
 <a name="0.1.284"></a>
 ## 0.1.284 (2024-03-18)
 
