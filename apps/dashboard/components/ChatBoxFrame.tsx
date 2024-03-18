@@ -284,6 +284,7 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
           ? {
               className: cn(mode, props.className),
               agentId: agentId,
+              config,
             }
           : {})}
       >

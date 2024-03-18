@@ -167,6 +167,8 @@ const useChat = ({
     }
   );
 
+  const { mutate } = getConversationQuery;
+
   const handleLoadMoreMessages = useCallback(() => {
     if (getConversationQuery.isLoading || getConversationQuery.isValidating)
       return;
@@ -636,8 +638,8 @@ const useChat = ({
   }, [localStorageConversationIdKey]);
 
   const refreshConversation = useCallback(() => {
-    return getConversationQuery.mutate();
-  }, [getConversationQuery]);
+    return mutate();
+  }, [mutate]);
 
   return {
     agentId: otherProps.agentId,

@@ -50,9 +50,9 @@ export type BubbleProps = InitWidgetProps & {
 
 const ChatBoxLayout = (props: {
   children?: any;
-  name?: string;
   imageUrl?: string;
   handleClose?: any;
+  config?: AgentInterfaceConfig;
 }) => {
   return (
     <Stack
@@ -106,7 +106,7 @@ const ChatBoxLayout = (props: {
               fontWeight: t.fontWeight.lg,
             })}
           >
-            {props?.name}
+            {props.config?.displayName}
           </Typography>
           {/* )} */}
 
@@ -138,11 +138,11 @@ const ChatBoxLayout = (props: {
 };
 
 function App(props: BubbleProps) {
+  const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
+
   // const { setMode } = useColorScheme();
   const initMessageRef = useRef(null);
   const chatBoxRef = useRef(null);
-
-  const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
 
   const [state, setState] = useStateReducer({
     isOpen: false,
@@ -306,14 +306,14 @@ function App(props: BubbleProps) {
   }, [state.agent?.iconUrl, props?.initConfig?.bubbleIconStyle]);
 
   const Layout = React.useMemo(() => {
-    return (props: any) =>
-      React.createElement(ChatBoxLayout, {
-        ...props,
-        handleClose,
-        name: state.config?.displayName,
-        imageUrl: state.agent?.iconUrl! || defaultAgentIconUrl,
-      });
-  }, [handleClose, state.config?.displayName, state.agent?.iconUrl]);
+    return (props: any) => (
+      <ChatBoxLayout
+        {...props}
+        handleClose={handleClose}
+        imageUrl={state?.agent?.iconUrl! || defaultAgentIconUrl}
+      />
+    );
+  }, []);
 
   if (!state.agent) {
     return null;

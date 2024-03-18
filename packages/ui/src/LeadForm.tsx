@@ -94,6 +94,10 @@ export default function LeadForm(
   return (
     <Stack
       ref={ref}
+      onChange={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -126,7 +130,7 @@ export default function LeadForm(
           type="email"
           placeholder={t('chatbubble:lead.email')}
           startDecorator={<EmailRoundedIcon />}
-          autoFocus={!!props.isRequired}
+          // autoFocus={!!props.isRequired}
           defaultValue={props.visitorEmail}
           // endDecorator={
           //   !state.visitorEmail && (

@@ -19,6 +19,7 @@ const ChatBoxLayout = (props: {
   imageUrl?: string;
   handleClose?: any;
   agentId?: string;
+  config?: AgentInterfaceConfig;
 }) => {
   const { query } = useAgent({ id: props.agentId });
   return (
@@ -75,8 +76,9 @@ const ChatBoxLayout = (props: {
               fontWeight: t.fontWeight.lg,
             })}
           >
-            {(query?.data?.interfaceConfig as AgentInterfaceConfig)
-              ?.displayName || query?.data?.name}
+            {props?.config?.displayName || query?.data?.name}
+            {/* {(query?.data?.interfaceConfig as AgentInterfaceConfig)
+              ?.displayName || query?.data?.name} */}
           </Typography>
           {/* )} */}
 

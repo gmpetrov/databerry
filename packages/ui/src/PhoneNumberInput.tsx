@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
 } from '@mui/joy';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import React, { forwardRef, useMemo, useRef } from 'react';
 import {
   CountryIso2,
@@ -25,11 +26,18 @@ export type Props = InputProps & {
   selectProps?: SelectProps<string, false>;
 };
 
+const countryCodeToFlag = (isoCode: string) => {
+  return isoCode
+    .toUpperCase()
+    .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397));
+};
+
 const PhoneNumberInput = forwardRef(
   (
     { value, name, onChange, handleChange, selectProps, ...restProps }: Props,
     ref
   ) => {
+    const selectRef = useRef<HTMLSelectElement>(null);
     const defaultCountry = useMemo(() => {
       if (typeof window !== 'undefined') {
         return navigator.language?.split?.('-')[1]?.toLowerCase?.() || 'fr';
@@ -64,43 +72,52 @@ const PhoneNumberInput = forwardRef(
         value={inputValue}
         onChange={handlePhoneValueChange}
         startDecorator={
-          <Select
-            size="sm"
-            variant="plain"
-            {...selectProps}
-            slotProps={{
-              ...selectProps?.slotProps,
-              listbox: {
-                variant: 'outlined',
-                sx: {
-                  zIndex: 100000000000,
-                },
-                ...selectProps?.slotProps?.listbox,
-              },
-            }}
-            defaultValue={defaultCountry}
-            onChange={(_, val) => setCountry(val as CountryIso2)}
-            renderValue={(selection) => (
-              <Box sx={{ width: 18 }}>
-                <FlagImage iso2={selection?.value as CountryIso2} />
+          <Typography component={'label'} sx={{ position: 'relative' }}>
+            <Stack
+              direction="row"
+              gap={0.5}
+              sx={(t) => ({
+                cursor: 'pointer',
+                alignItems: 'center',
+                color: t.palette.text.secondary,
+              })}
+            >
+              <Box sx={{ width: 20 }}>
+                <FlagImage iso2={country.iso2} />
               </Box>
-            )}
-          >
-            {defaultCountries.map((c, index) => {
-              const country = parseCountry(c);
-              return (
-                <Option key={index} value={country.iso2}>
-                  <Stack direction="row" sx={{ alignItems: 'center' }} gap={1}>
-                    <Box sx={{ width: 24 }}>
-                      <FlagImage iso2={country.iso2} />
-                    </Box>
-                    <span>{country.name}</span>
-                    <Typography color="neutral">+{country.dialCode}</Typography>
-                  </Stack>
-                </Option>
-              );
-            })}
-          </Select>
+              <ExpandMoreRoundedIcon
+                // sx={(t) => ({ fontSize: 'sm', color: t.palette.secondary })}
+                sx={{ fontSize: 'sm' }}
+              />
+            </Stack>
+            <Box
+              component="select"
+              ref={selectRef}
+              onChange={(e) => {
+                setCountry(e.target.value as CountryIso2);
+              }}
+              sx={{
+                position: 'absolute',
+                cursor: 'pointer',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0,
+                zIndex: 1,
+              }}
+            >
+              {defaultCountries.map((each) => {
+                const country = parseCountry(each);
+                return (
+                  <option key={country.iso2} value={country.iso2}>
+                    {/* Country name first otherwise not searchable with keyboard */}
+                    {country.name} {countryCodeToFlag(country.iso2)}
+                  </option>
+                );
+              })}
+            </Box>
+          </Typography>
         }
       />
     );

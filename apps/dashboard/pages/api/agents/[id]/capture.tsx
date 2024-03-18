@@ -61,21 +61,25 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
           },
         },
       },
-      conversations: {
-        where: {
-          id: data.conversationId!,
-          agentId: agentId,
-        },
-        take: 1,
-        include: {
-          messages: {
-            take: -20,
-            orderBy: {
-              createdAt: 'asc',
+      ...(data.conversationId
+        ? {
+            conversations: {
+              where: {
+                id: data.conversationId!,
+                agentId: agentId,
+              },
+              take: 1,
+              include: {
+                messages: {
+                  take: -20,
+                  orderBy: {
+                    createdAt: 'asc',
+                  },
+                },
+              },
             },
-          },
-        },
-      },
+          }
+        : {}),
     },
   });
 
@@ -260,11 +264,11 @@ export const capture = async (req: AppNextApiRequest, res: NextApiResponse) => {
         <NewLead
           visitorEmail={data.visitorEmail}
           agentName={agent.name}
-          messages={agent?.conversations?.[0]?.messages}
+          messages={(conversation as any)?.messages || []}
           ctaLink={`${
             process.env.NEXT_PUBLIC_DASHBOARD_URL
           }/logs?tab=all&targetConversationId=${encodeURIComponent(
-            conversation?.id
+            conversation?.id || ''
           )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
         />
       ),
