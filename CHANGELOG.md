@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.284"></a>
+## 0.1.284 (2024-03-18)
+
+### Fixed
+
+- 🐛 phone imput bugs + perf [[3c7b3b1](https://github.com/gmpetrov/databerry/commit/3c7b3b14ff77ef0d756235d52c4a373a0a4d6e70)]
+
+
 <a name="0.1.283"></a>
 ## 0.1.283 (2024-03-15)
 
