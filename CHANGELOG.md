@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.286"></a>
+## 0.1.286 (2024-03-19)
+
+### Fixed
+
+- 🐛 adjust rag + instructions for better performances [[e1e13fd](https://github.com/gmpetrov/databerry/commit/e1e13fdb9ae4893fcd8dd1311abe85cde4564514)]
+
+### Miscellaneous
+
+- 🤖 add more rss links [[c49c2c4](https://github.com/gmpetrov/databerry/commit/c49c2c419b5e84e2f7b265a3d528047294fecd5e)]
+- 🤖 next-auth setup for lp [[5d14610](https://github.com/gmpetrov/databerry/commit/5d1461003c849bb685537536cd2ef6a67ff775d1)]
+- 🤖 upgrade next-email [[aec9b48](https://github.com/gmpetrov/databerry/commit/aec9b481d0a4eb26d9173cd0cf2968813133d7f7)]
+
+
 <a name="0.1.285"></a>
 ## 0.1.285 (2024-03-18)
 
