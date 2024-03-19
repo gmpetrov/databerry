@@ -9,11 +9,17 @@ import {
   GenerateManyUploadLinksSchema,
 } from '@chaindesk/lib/types/dtos';
 
-type FileToUpload = {
-  case: 'chatUpload' | 'agentIcon' | 'organizationIcon' | 'userIcon';
+export type FileToUpload = {
+  case:
+    | 'chatUpload'
+    | 'agentIcon'
+    | 'organizationIcon'
+    | 'userIcon'
+    | 'formUpload';
   file: File;
   fileName?: string;
   agentId?: string;
+  formId?: string;
   conversationId?: string;
 };
 
@@ -43,6 +49,7 @@ function useFileUpload() {
               fileName: each?.fileName || each.file.name,
               mimeType: each.file.type as any,
               agentId: each.agentId as any,
+              formId: each.formId as any,
               conversationId: each.conversationId as any,
             }))
           )) || [];

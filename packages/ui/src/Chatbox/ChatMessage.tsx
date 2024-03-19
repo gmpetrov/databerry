@@ -2,10 +2,9 @@ import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Chip from '@mui/joy/Chip';
 import Stack from '@mui/joy/Stack';
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
-
 import ChatMessageApproval from './ChatMessageApproval';
 import ChatMessageAttachment from './ChatMessageAttachment';
 import CopyButton from '@chaindesk/ui/CopyButton';
@@ -134,65 +133,74 @@ function ChatMessageComponent({
               ))}
             </Stack>
           )}
-          {(message?.message || message?.component) && (
-            <Stack gap={0.7}>
-              <ChatMessageCard
-                className={cn(
-                  message?.from === 'agent' ? 'message-agent' : 'message-human'
-                )}
-              >
-                {/* {message?.step?.type === 'tool_call' && (
+
+          {(message.metadata as any)?.shouldDisplayForm ? (
+            <div className="bg-blue-500">Form component</div>
+          ) : (
+            (message?.message || message?.component) && (
+              <Stack gap={0.7}>
+                <ChatMessageCard
+                  className={cn(
+                    message?.from === 'agent'
+                      ? 'message-agent'
+                      : 'message-human'
+                  )}
+                >
+                  {/* {message?.step?.type === 'tool_call' && (
 
           )} */}
 
-                <Markdown
-                  animated={withTextAnimation}
-                  onAnimateComplete={onTextAnimationComplete}
-                >
-                  {message?.message}
-                </Markdown>
+                  <Markdown
+                    animated={withTextAnimation}
+                    onAnimateComplete={onTextAnimationComplete}
+                  >
+                    {message?.message}
+                  </Markdown>
 
-                {message?.component}
+                  {message?.component}
 
-                {withSources && (
-                  <Stack direction="row" justifyContent={'space-between'}>
-                    {((hideInternalSources
-                      ? filterInternalSources(message?.sources!)
-                      : message?.sources
-                    )?.length || 0) > 0 && (
-                      <Box
-                        sx={{
-                          mt: 2,
-                          width: '100%',
-                          maxWidth: '100%',
-                        }}
-                      >
-                        <details>
-                          <summary className="cursor-pointer">Sources</summary>
-                          <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
-                            {(hideInternalSources
-                              ? filterInternalSources(message?.sources!)
-                              : message?.sources
-                            )?.map((source) => (
-                              <SourceComponent
-                                key={source.chunk_id}
-                                source={source}
-                                onClick={props.handleSourceClick}
-                              />
-                            ))}
-                          </Stack>
-                        </details>
-                      </Box>
-                    )}
-                  </Stack>
+                  {withSources && (
+                    <Stack direction="row" justifyContent={'space-between'}>
+                      {((hideInternalSources
+                        ? filterInternalSources(message?.sources!)
+                        : message?.sources
+                      )?.length || 0) > 0 && (
+                        <Box
+                          sx={{
+                            mt: 2,
+                            width: '100%',
+                            maxWidth: '100%',
+                          }}
+                        >
+                          <details>
+                            <summary className="cursor-pointer">
+                              Sources
+                            </summary>
+                            <Stack direction={'column'} gap={1} sx={{ pt: 1 }}>
+                              {(hideInternalSources
+                                ? filterInternalSources(message?.sources!)
+                                : message?.sources
+                              )?.map((source) => (
+                                <SourceComponent
+                                  key={source.chunk_id}
+                                  source={source}
+                                  onClick={props.handleSourceClick}
+                                />
+                              ))}
+                            </Stack>
+                          </details>
+                        </Box>
+                      )}
+                    </Stack>
+                  )}
+                </ChatMessageCard>
+                {message?.fromName && (
+                  <Typography level="body-xs" sx={{ opacity: '0.8', pl: 1 }}>
+                    {message?.fromName}
+                  </Typography>
                 )}
-              </ChatMessageCard>
-              {message?.fromName && (
-                <Typography level="body-xs" sx={{ opacity: '0.8', pl: 1 }}>
-                  {message?.fromName}
-                </Typography>
-              )}
-            </Stack>
+              </Stack>
+            )
           )}
 
           {(message?.attachments?.length || 0) > 0 && (

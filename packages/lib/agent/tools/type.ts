@@ -4,7 +4,11 @@ import {
   ToolResponseSchema,
   ToolSchema,
 } from '@chaindesk/lib/types/dtos';
-import { AgentModelName, ToolType } from '@chaindesk/prisma';
+import {
+  AgentModelName,
+  ConversationChannel,
+  ToolType,
+} from '@chaindesk/prisma';
 
 import { FormToolPayload } from './form';
 import { HttpToolPayload } from './http';
@@ -39,7 +43,8 @@ export type ToolPayload<T> = T extends { type: 'http' }
 
 export type CreateToolHandler<T extends { type: ToolType }> = (
   tool: Prettify<ToolSchema & T>,
-  config: CreateToolHandlerConfig<T>
+  config: CreateToolHandlerConfig<T>,
+  channel?: ConversationChannel
 ) => (
   payload: ToolPayload<T>
 ) => Promise<

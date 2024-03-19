@@ -51,9 +51,11 @@ import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
 import LeadForm from '@chaindesk/ui/LeadForm';
 import Markdown from '@chaindesk/ui/Markdown';
 
+import FileUploader from './FileUploader';
+import TraditionalForm from './TraditionalForm';
 import VisuallyHiddenInput from './VisuallyHiddenInput';
 
-const acceptedMimeTypesStr = [
+export const acceptedMimeTypesStr = [
   ...AcceptedImageMimeTypes,
   ...AcceptedVideoMimeTypes,
   ...AcceptedAudioMimeTypes,
@@ -341,43 +343,32 @@ function ChatBox({
             {(!isLoadingConversation || messages?.length > 0) &&
               messages.map((each, index) => (
                 <React.Fragment key={index}>
-                  <Message
-                    index={index}
-                    message={{
-                      ...each,
-                      iconUrl:
-                        each.from === 'agent'
-                          ? agentIconUrl
-                          : userImgUrl || each.iconUrl,
-                    }}
-                    withSources={withSources}
-                    hideInternalSources={hideInternalSources}
-                    handleEvalAnswer={handleEvalAnswer}
-                    handleImprove={handleImprove}
-                    handleSourceClick={handleSourceClick}
-                    refreshConversation={refreshConversation}
-                    organizationId={organizationId!}
-                  />
-                  {/* 
-                  {messages?.length >= 2 &&
-                    index === 1 &&
-                    !(messages?.length === 2 && isLoading) && (
-                      <Message
-                        key={'lead-form'}
-                        message={{
-                          id: 'lead-form',
-                          from: 'agent',
-                          message: '',
-                          component: <LeadForm />,
-                          disableActions: true,
-                          approvals: [],
-                        }}
-                      />
-                    )} */}
+                  {each.metadata?.shouldDisplayForm ? (
+                    <TraditionalForm
+                      formId={each.metadata.formId}
+                      conversationId={each.metadata.conversationId}
+                    />
+                  ) : (
+                    <Message
+                      index={index}
+                      message={{
+                        ...each,
+                        iconUrl:
+                          each.from === 'agent'
+                            ? agentIconUrl
+                            : userImgUrl || each.iconUrl,
+                      }}
+                      withSources={withSources}
+                      hideInternalSources={hideInternalSources}
+                      handleEvalAnswer={handleEvalAnswer}
+                      handleImprove={handleImprove}
+                      handleSourceClick={handleSourceClick}
+                      refreshConversation={refreshConversation}
+                      organizationId={organizationId!}
+                    />
+                  )}
                 </React.Fragment>
               ))}
-
-            {/* <LeadForm /> */}
 
             {isLoading && (
               <CircularProgress
@@ -577,34 +568,7 @@ function ChatBox({
                     })}
 
                   {withFileUpload && (
-                    <IconButton
-                      variant="plain"
-                      sx={{ maxHeight: '100%' }}
-                      size="sm"
-                      component="label"
-                      disabled={isLoading}
-                    >
-                      <AttachFileRoundedIcon />
-                      <VisuallyHiddenInput
-                        accept={acceptedMimeTypesStr}
-                        type="file"
-                        multiple
-                        onChange={async (e) => {
-                          const f = Array.from(e.target.files!);
-
-                          const maxFileSize = 5000000; // 5MB
-
-                          const found = f.find((one) => one.size > maxFileSize);
-
-                          if (found) {
-                            e.target.value = '';
-                            return alert('File size is limited to 5MB');
-                          }
-
-                          setFiles(f);
-                        }}
-                      />
-                    </IconButton>
+                    <FileUploader changeCallback={(f) => setFiles(f)} />
                   )}
 
                   <Stack direction="row" sx={{ ml: 'auto' }}>

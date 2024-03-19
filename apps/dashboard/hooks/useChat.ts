@@ -28,6 +28,7 @@ import type {
   ConversationChannel,
   ConversationStatus,
   Prisma,
+  Tool,
 } from '@chaindesk/prisma';
 
 import useFileUpload from './useFileUpload';

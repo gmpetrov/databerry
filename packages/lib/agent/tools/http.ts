@@ -57,9 +57,6 @@ export const createHandler =
     toolHandlerConfig?: CreateToolHandlerConfig<{ type: 'http' }>
   ) =>
   async (payload: HttpToolPayload): Promise<HttpToolResponseSchema> => {
-    console.log('HTTP Tool Config', httpTool?.config);
-    console.log('HTTP Tool Payload', payload);
-
     const config = httpTool?.config;
 
     if (config?.withApproval) {

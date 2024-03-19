@@ -1,87 +1,47 @@
-import { zodResolver } from '@hookform/resolvers/zod';
+import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
+import SendIcon from '@mui/icons-material/Send';
 import {
-  AddAPhoto,
-  AutoAwesomeMosaicOutlined,
-  RocketLaunch,
-} from '@mui/icons-material';
-import AddIcon from '@mui/icons-material/Add';
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import {
-  Alert,
-  Box,
   Button,
   Card,
-  Checkbox,
+  CardContent,
   CircularProgress,
   Divider,
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  IconButton,
   Input,
   Option,
   Select,
   Stack,
   styled,
-  Tab,
-  tabClasses,
-  TabList,
-  TabPanel,
-  Tabs,
   Textarea,
   Typography,
 } from '@mui/joy';
-import Chip from '@mui/joy/Chip';
-import cuid from 'cuid';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
-import debounce from 'p-debounce';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Controller,
-  FormProvider,
-  useFieldArray,
-  useForm,
-} from 'react-hook-form';
-import toast from 'react-hot-toast';
-import useSWR from 'swr';
-import useSWRMutation from 'swr/mutation';
-import z from 'zod';
+import React, { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 
-import FormSubmissionsTab from '@app/components/FormSubmissionsTab';
-import Layout from '@app/components/Layout';
 import useChat from '@app/hooks/useChat';
 import useConfetti from '@app/hooks/useConfetti';
-import { getProductFromHostname } from '@app/hooks/useProduct';
 import useStateReducer from '@app/hooks/useStateReducer';
-import { getForm } from '@app/pages/api/forms/[formId]';
-import { updateForm } from '@app/pages/api/forms/[formId]/admin';
-import { publishForm } from '@app/pages/api/forms/[formId]/publish';
 
 import slugify from '@chaindesk/lib/slugify';
 import {
-  fetcher,
-  generateActionFetcher,
-  HTTP_METHOD,
-} from '@chaindesk/lib/swr-fetcher';
-import {
-  CreateFormSchema,
   FormConfigSchema,
   FormFieldSchema,
+  TextField,
 } from '@chaindesk/lib/types/dtos';
-import { withAuth } from '@chaindesk/lib/withAuth';
-import { ConversationChannel, Prisma } from '@chaindesk/prisma';
+import { ConversationChannel } from '@chaindesk/prisma';
+import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
 
+import { formType } from './BlablaFormEditor/FieldsInput';
+import { acceptedMimeTypesStr } from './ChatBox';
 import Motion from './Motion';
-import MotionBottom from './MotionBottom';
+import TraditionalForm from './TraditionalForm';
+import VisuallyHiddenInput from './VisuallyHiddenInput';
 
 type Props = {
   formId: string;
+  conversationId?: string;
   config?: FormConfigSchema;
+  type: 'conversational' | 'traditional';
 };
 
 const FormButton = styled(Button)(({ theme }) => ({
@@ -104,7 +64,7 @@ const FormText = styled(Typography)(({ theme }) => ({
 
 export const LOCAL_STORAGE_CONVERSATION_KEY = 'formConversationId';
 
-function BlablaFormViewer({ formId, config }: Props) {
+function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
   const triggerConfetti = useConfetti();
 
   const [state, setState] = useStateReducer({
@@ -127,19 +87,20 @@ function BlablaFormViewer({ formId, config }: Props) {
 
   const currentField = useMemo(() => {
     return config?.fields?.find(
-      (field) => slugify(field.name) === currentFieldName
+      (field) => slugify(field?.name ?? '') === currentFieldName
     );
   }, [currentFieldName, config?.fields]);
 
   const initiateForm = () => {
     localStorage.setItem('conversationId', '');
     setState({ isConversationStarted: true });
-    answerQuestion('👋');
+    if (type === formType.conversational) {
+      answerQuestion('👋');
+    }
   };
 
   const lastMessage = chatData?.history[chatData.history.length - 1];
   const isFormValid = lastMessage?.metadata?.isValid;
-
   const lastMessageText = useMemo(() => {
     return lastMessage?.message?.replace?.(/__BLABLA.*/, '') || '';
   }, [lastMessage?.message]);
@@ -165,7 +126,7 @@ function BlablaFormViewer({ formId, config }: Props) {
       justifyContent="center"
       textAlign={'center'}
       // component={motion.div}
-
+      className="overflow-y-scroll"
       sx={{
         p: 4,
         '*': {
@@ -251,7 +212,8 @@ function BlablaFormViewer({ formId, config }: Props) {
 
           {!chatData.isStreaming &&
             !isFormValid &&
-            state.isConversationStarted && (
+            state.isConversationStarted &&
+            type === formType.conversational && (
               <Stack sx={{ width: '100%' }}>
                 {currentField?.type !== 'multiple_choice' && (
                   <Input
@@ -320,6 +282,10 @@ function BlablaFormViewer({ formId, config }: Props) {
               </Stack>
             )}
 
+          {type === formType.traditional && (
+            <TraditionalForm formId={formId} conversationId={conversationId} />
+          )}
+
           {isFormValid && config?.endScreen?.cta?.label && (
             <Motion
               initial="hidden"
@@ -350,7 +316,7 @@ function BlablaFormViewer({ formId, config }: Props) {
             </Motion>
           )}
 
-          {!state.isConversationStarted && (
+          {!state.isConversationStarted && type === 'conversational' && (
             <Stack
               gap={3}
               maxWidth="100%"

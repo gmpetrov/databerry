@@ -1,12 +1,13 @@
+import slugify from '@sindresorhus/slugify';
 import {
   ChatCompletionMessageParam,
   ChatCompletionTool,
 } from 'openai/resources';
-import { z } from 'zod';
 
 import {
   Agent,
   AgentModelName,
+  ConversationChannel,
   Message,
   Tool,
   ToolType,
@@ -14,8 +15,7 @@ import {
 
 import { handler as datastoreToolHandler } from './agent/tools/datastore';
 import {
-  createHandler as createFormToolHandler,
-  createParser as createParserFormTool,
+  createHandlerV2 as createFormToolHandlerV2,
   toJsonSchema as formToolToJsonSchema,
 } from './agent/tools/form';
 import {
@@ -68,6 +68,9 @@ import {
 import truncateChatMessages from './truncateChatMessages';
 
 export type ChatProps = ChatModelConfigSchema & {
+  organizationId: string;
+  agentId: string;
+  channel?: ConversationChannel;
   systemPrompt?: string;
   userPrompt?: string;
   query: string;
@@ -83,8 +86,6 @@ export type ChatProps = ChatModelConfigSchema & {
   topK?: number;
   toolsConfig?: ChatRequest['toolsConfig'];
   conversationId?: ChatRequest['conversationId'];
-  organizationId: string;
-  agentId: string;
 
   // Behaviors
   useMarkdown?: boolean;
@@ -113,6 +114,7 @@ const chat = async ({
   useMarkdown,
   useLanguageDetection,
   restrictKnowledge,
+  channel,
   ...otherProps
 }: ChatProps) => {
   // Tools
@@ -164,9 +166,13 @@ const chat = async ({
 
   const createHandler =
     <T extends { type: ToolType }>(handler: CreateToolHandler<T>) =>
-    (tool: ToolSchema & T, config: CreateToolHandlerConfig<T>) =>
+    (
+      tool: ToolSchema & T,
+      config: CreateToolHandlerConfig<T>,
+      channel?: ConversationChannel
+    ) =>
     async (args: ToolPayload<T>) => {
-      const res = await handler(tool, config)(args);
+      const res = await handler(tool, config, channel)(args);
 
       if (res?.approvalRequired) {
         return handleToolWithApproval({
@@ -194,10 +200,7 @@ const chat = async ({
       function: {
         ...httpToolToJsonSchema(each),
         parse: createParserHttpTool(each, config),
-        function: createHandler<{ type: 'http' }>(createHttpToolHandler)(
-          each,
-          config
-        ),
+        function: createHandler(createHttpToolHandler)(each, config),
       },
       // } as RunnableToolFunction<HttpToolPayload>)
     } as ChatCompletionTool;
@@ -210,9 +213,9 @@ const chat = async ({
     return {
       type: 'function',
       function: {
-        ...formToolToJsonSchema(each, config),
-        parse: createParserFormTool(each, config),
-        function: createHandler(createFormToolHandler)(each, config),
+        ...formToolToJsonSchema(each),
+        parse: JSON.parse,
+        function: createHandler(createFormToolHandlerV2)(each, config, channel),
       },
     } as ChatCompletionTool;
   });
@@ -439,6 +442,13 @@ const chat = async ({
       //   : []),
     ] as ChatCompletionTool[];
 
+    const numberOfMessages =
+      Number(history?.filter((msg) => msg.from === 'human').length) + 1;
+
+    const formToolToCall = formTools.find(
+      (formTool) => formTool.config?.messageCountTrigger === numberOfMessages
+    );
+
     const callParams = {
       handleStream: stream,
       model: ModelConfig[modelName]?.name,
@@ -452,20 +462,28 @@ const chat = async ({
       tools: ModelConfig[modelName].isToolCallingSupported ? openAiTools : [],
       ...(openAiTools?.length > 0
         ? {
-            tool_choice: 'auto',
+            tool_choice: formToolToCall!!
+              ? {
+                  type: 'function',
+                  function: {
+                    ...formToolToJsonSchema(formToolToCall),
+                    parse: JSON.parse,
+                    function: createHandler(createFormToolHandlerV2)(
+                      formToolToCall,
+                      {
+                        ...baseConfig,
+                        toolConfig: formToolToCall.id
+                          ? toolsConfig?.[formToolToCall.id]
+                          : undefined,
+                      },
+                      channel
+                    ),
+                  },
+                }
+              : 'auto',
           }
         : {}),
     } as Parameters<typeof model.call>[0];
-
-    console.log('CHAT V3 PAYLOAD', JSON.stringify(callParams, null, 2));
-    // console.log(
-    //   'CHUNKS----------->',
-    //   JSON.stringify(
-    //     retrievalData?.rawResults.map((each) => ({ ...each })),
-    //     null,
-    //     2
-    //   )
-    // );
 
     const output = await model.call(callParams);
 
@@ -480,6 +498,16 @@ const chat = async ({
         usage: output?.usage!,
       }),
     };
+
+    if (metadata && 'shouldDisplayForm' in metadata) {
+      return {
+        answer: '',
+        usage: {},
+        approvals,
+        sources: [] as Source[],
+        metadata,
+      };
+    }
 
     return {
       answer,

@@ -9,7 +9,7 @@ import prisma from '@chaindesk/prisma/client';
 type AppEventHandler<T extends AppEventSchema> = (event: T) => Promise<void>;
 
 const handler: AppEventHandler<
-  Extract<AppEventSchema, { type: 'blablaform-submission' }>
+  Extract<AppEventSchema, { type: 'form-submission' }>
 > = async function (event) {
   const submissionId = event?.submissionId || cuid();
 
@@ -18,7 +18,9 @@ const handler: AppEventHandler<
       id: submissionId,
     },
     create: {
-      conversationId: event.conversationId,
+      ...(event?.conversationId
+        ? { conversationId: event.conversationId }
+        : {}),
       formId: event.formId,
       data: event.formValues as any,
       status: FormStatus.COMPLETED,
@@ -51,7 +53,8 @@ const handler: AppEventHandler<
     },
   });
 
-  const config = form?.publishedConfig as FormConfigSchema;
+  const config = (form?.publishedConfig ??
+    form?.draftConfig) as FormConfigSchema;
 
   const ownerEmail = form?.organization?.memberships?.[0].user?.email;
 

@@ -1,23 +1,27 @@
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
+  Checkbox,
   FormLabel,
   IconButton,
+  Input as JoyInput,
   Option,
   Select,
   Stack,
+  Typography,
 } from '@mui/joy';
 import cuid from 'cuid';
-import debounce from 'p-debounce';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React from 'react';
 import {
   ArrayPath,
   Controller,
-  FormProvider,
   useFieldArray,
-  useForm,
   useFormContext,
 } from 'react-hook-form';
 
@@ -25,9 +29,30 @@ import Input from '@app/components/Input';
 
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 
+import { SortableList } from '../dnd/SortableList';
+import { FieldType } from '../TraditionalForm';
+
 import { forceSubmit } from './utils';
 
-type Props = {};
+export enum formType {
+  traditional = 'traditional',
+  conversational = 'conversational',
+}
+
+const fieldTypes = [
+  'email',
+  'phoneNumber',
+  'text',
+  'textArea',
+  'select',
+  'file',
+] as const;
+
+type fieldTypes = (typeof fieldTypes)[number];
+
+type Props = {
+  type?: 'conversational' | 'traditional';
+};
 
 export const Choices = <T extends Record<string, unknown>>({
   name,
@@ -40,24 +65,20 @@ export const Choices = <T extends Record<string, unknown>>({
   label?: string;
   init?: boolean;
 }) => {
-  const { control, handleSubmit, register, trigger } = useFormContext<T>();
-  const { fields, append, remove } = useFieldArray({
+  const { control, register, watch } = useFormContext<T>();
+  const { append, remove } = useFieldArray({
     control,
-    name: name,
+    name,
   });
 
-  useEffect(() => {
-    if (fields.length === 0 && init) {
-      append('' as ArrayPath<T>);
-    }
-  }, [append, fields.length]);
+  const fields = watch(name) || [];
 
   return (
-    <Stack gap={1} direction="row">
+    <Stack gap={1} direction="column">
       <Stack gap={1} width={'100%'}>
         <FormLabel>{label}</FormLabel>
-        {fields?.map((field, i) => (
-          <Stack key={field.id} width={'100%'} direction="row" gap={1}>
+        {fields?.map((_, i) => (
+          <Stack key={i} width={'100%'} direction="row" gap={1}>
             <Input
               size="sm"
               control={control}
@@ -77,14 +98,15 @@ export const Choices = <T extends Record<string, unknown>>({
           </Stack>
         ))}
       </Stack>
-      <div className="flex flex-col justify-end  h-full">
+      <div className="flex flex-col  justify-start  h-full">
         <Button
           size="sm"
           onClick={() => append('' as ArrayPath<T>)}
           variant="plain"
           sx={{
-            ml: 'auto',
-            minWidth: '200px',
+            minWidth: '50px',
+            maxWidth: '70%',
+            fontSize: 'sm',
           }}
           startDecorator={<AddCircleRoundedIcon fontSize="sm" />}
         >
@@ -94,11 +116,9 @@ export const Choices = <T extends Record<string, unknown>>({
     </Stack>
   );
 };
-
-function FieldsInput({}: Props) {
+function FieldsInput({ type = 'conversational' }: Props) {
   const methods = useFormContext<CreateFormSchema>();
-
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, swap } = useFieldArray({
     control: methods.control,
     name: 'draftConfig.fields',
   });
@@ -107,9 +127,170 @@ function FieldsInput({}: Props) {
 
   return (
     <Stack gap={2}>
-      {fields?.map((field, index) => (
-        <Box key={field.id} display="flex" alignItems="center">
-          <Stack direction={'column'} gap={1} sx={{ width: '100%' }}>
+      {type === formType.traditional && (
+        <SortableList
+          items={fields}
+          onChange={(from, to) => {
+            swap(from, to);
+            forceSubmit();
+          }}
+          renderItem={(field, index) => (
+            <SortableList.Item id={field.id}>
+              <SortableList.DragHandle
+                style={{ maxHeight: 0, marginTop: '0.75rem' }}
+              />
+              <Box
+                key={field.id}
+                display="flex"
+                alignItems="center"
+                width="100%"
+              >
+                <Stack direction={'column'} gap={1} sx={{ width: '100%' }}>
+                  <Stack direction="column">
+                    <Accordion sx={{ position: 'relative' }}>
+                      <Stack direction="row-reverse">
+                        <IconButton
+                          size="sm"
+                          sx={{
+                            position: 'absolute',
+                            right: -20,
+                            top: 10,
+                            zIndex: 99,
+                          }}
+                          onClick={() => {
+                            remove(index);
+                            forceSubmit();
+                          }}
+                        >
+                          <DeleteIcon fontSize="md" color="danger" />
+                        </IconButton>
+                      </Stack>
+                      <AccordionSummary>
+                        <Typography className="truncate w-[100px]">
+                          {methods?.getValues(
+                            `draftConfig.fields.${index}.name`
+                          ) || 'New Field'}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Stack spacing={2}>
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Typography>Label</Typography>
+                            <JoyInput
+                              {...methods.register(
+                                `draftConfig.fields.${index}.name`
+                              )}
+                            />
+                          </Stack>
+
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Typography>Type</Typography>
+                            <Select
+                              sx={{ width: '100%' }}
+                              defaultValue={field.type}
+                              {...methods.register(
+                                `draftConfig.fields.${index}.type`
+                              )}
+                              onChange={(_, value) => {
+                                methods.setValue(
+                                  `draftConfig.fields.${index}.type`,
+                                  value as fieldTypes,
+                                  {
+                                    shouldDirty: true,
+                                    shouldValidate: true,
+                                  }
+                                );
+                                if (value === FieldType.Email) {
+                                  methods.setValue(
+                                    `draftConfig.fields.${index}.name`,
+                                    'email',
+                                    {
+                                      shouldDirty: true,
+                                      shouldValidate: true,
+                                    }
+                                  );
+                                } else if (value === FieldType.PhoneNumber) {
+                                  methods.setValue(
+                                    `draftConfig.fields.${index}.name`,
+                                    'phone',
+                                    {
+                                      shouldDirty: true,
+                                      shouldValidate: true,
+                                    }
+                                  );
+                                }
+
+                                forceSubmit();
+                              }}
+                            >
+                              {fieldTypes.map((each) => (
+                                <Option key={each} value={each}>
+                                  {each}
+                                </Option>
+                              ))}
+                            </Select>
+                          </Stack>
+                          {fieldsValues?.[index]?.type === FieldType.Select && (
+                            <Stack direction="column">
+                              <Typography>Options</Typography>
+                              <Choices<CreateFormSchema>
+                                actionLabel="Add Option"
+                                name={`draftConfig.fields.${index}.options`}
+                              />
+                            </Stack>
+                          )}
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Typography>Stub</Typography>
+                            <JoyInput
+                              {...methods.register(
+                                `draftConfig.fields.${index}.placeholder`
+                              )}
+                            />
+                          </Stack>
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            alignItems="center"
+                          >
+                            <Typography>Required</Typography>
+                            <Checkbox
+                              defaultChecked={field.required}
+                              onChange={(e) => {
+                                methods.setValue(
+                                  `draftConfig.fields.${index}.required`,
+                                  e.target.checked
+                                );
+                              }}
+                            />
+                          </Stack>
+                        </Stack>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Stack>
+                </Stack>
+              </Box>
+            </SortableList.Item>
+          )}
+        />
+      )}
+      {type == formType.conversational &&
+        fieldsValues?.map((field, index) => (
+          <div key={index}>
             <Stack
               sx={{ width: '100%' }}
               direction="row"
@@ -168,9 +349,9 @@ function FieldsInput({}: Props) {
                 />
               </Stack>
             )}
-          </Stack>
-        </Box>
-      ))}
+          </div>
+        ))}
+
       <Button
         size="sm"
         startDecorator={<AddCircleRoundedIcon fontSize="sm" />}

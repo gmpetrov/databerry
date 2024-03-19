@@ -15,6 +15,7 @@ export default function FormPage(props: { agent: Agent }) {
   const router = useRouter();
   const formId = router.query.formId as string;
 
+  const conversationId = router.query.conversationId as string | undefined;
   return (
     <>
       <SEO
@@ -40,7 +41,7 @@ export default function FormPage(props: { agent: Agent }) {
           <ColorSchemeToggle />
         </Stack>
 
-        <BlablaFormLoader formId={formId} />
+        <BlablaFormLoader formId={formId} conversationId={conversationId} />
 
         <Stack
           sx={{

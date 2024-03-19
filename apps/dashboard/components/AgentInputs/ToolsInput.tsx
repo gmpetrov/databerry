@@ -490,7 +490,15 @@ function ToolsInput({}: Props) {
         }}
       >
         <FormToolInput
-          onChange={(form: Form) => {
+          saveFormTool={({
+            form,
+            trigger,
+            messageCountTrigger,
+          }: {
+            form: Form;
+            trigger?: string;
+            messageCountTrigger?: number;
+          }) => {
             setValue(
               'tools',
               [
@@ -499,6 +507,7 @@ function ToolsInput({}: Props) {
                   type: ToolType.form,
                   formId: form.id,
                   form: form,
+                  config: { trigger, messageCountTrigger },
                 }),
               ],
               {
@@ -506,7 +515,6 @@ function ToolsInput({}: Props) {
                 shouldValidate: true,
               }
             );
-
             newFormToolModal.close();
           }}
         />

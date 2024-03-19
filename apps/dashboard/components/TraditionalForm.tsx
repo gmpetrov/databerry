@@ -1,0 +1,493 @@
+import { CheckIcon } from '@heroicons/react/20/solid';
+import { zodResolver } from '@hookform/resolvers/zod';
+import ReplayIcon from '@mui/icons-material/Replay';
+import SendIcon from '@mui/icons-material/Send';
+import {
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Input,
+  Option,
+  Select,
+  Snackbar,
+  Stack,
+  Textarea,
+  Typography,
+} from '@mui/joy';
+import axios from 'axios';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+import { memo, useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
+import { z } from 'zod';
+
+import useFileUpload, { FileToUpload } from '@app/hooks/useFileUpload';
+import useStateReducer from '@app/hooks/useStateReducer';
+import {
+  getConversation,
+  updateConversation,
+} from '@app/pages/api/conversations/[conversationId]';
+import { getForm } from '@app/pages/api/forms/[formId]';
+
+import {
+  fetcher,
+  generateActionFetcher,
+  HTTP_METHOD,
+} from '@chaindesk/lib/swr-fetcher';
+import { FormConfigSchema } from '@chaindesk/lib/types/dtos';
+import { Prisma } from '@chaindesk/prisma';
+
+import FileUploader from './FileUploader';
+
+export enum FieldType {
+  Email = 'email',
+  PhoneNumber = 'phoneNumber',
+  Text = 'text',
+  TextArea = 'textArea',
+  Select = 'select',
+  File = 'file',
+}
+
+type dynamicSchema<T extends string[]> = {
+  [k in T[number]]: string;
+};
+
+type fieldUnion =
+  | 'email'
+  | 'phoneNumber'
+  | 'text'
+  | 'textArea'
+  | 'select'
+  | 'file'
+  | 'multiple_choice';
+
+const shapeTozod = (
+  arr: { name: string; required: boolean; type: fieldUnion }[]
+) => {
+  const obj: Record<string, any> = {};
+  arr?.map(({ name, required, type }) => {
+    let zodType;
+    switch (type) {
+      case FieldType.Email:
+        zodType = z.string().email();
+        break;
+      case FieldType.TextArea:
+        zodType = z.string().min(50);
+        break;
+      case FieldType.PhoneNumber:
+        const phoneRegex = new RegExp(
+          /^(?:\+?(\d{1,3}))?[-. (]*(?:\d{1,4})[-. )]*(\d{1,3})[-. ]*(\d{2,4})[-. ]*(\d{2,4})$/
+        );
+        zodType = z.string().regex(phoneRegex, 'Invalid Number!');
+        break;
+
+      default:
+        zodType = z.string();
+    }
+    obj[name] = required ? zodType : zodType.optional();
+  });
+  return obj;
+};
+
+const dynamicSchema = (
+  arr: { name: string; required: boolean; type: fieldUnion }[]
+) =>
+  z.object({
+    ...shapeTozod(arr),
+  });
+
+const fieldTypesMap = {
+  email: ({ methods, placeholder }: { methods: any; placeholder: string }) => (
+    <Stack>
+      <Input
+        {...methods?.register('email')}
+        sx={{ width: '100%' }}
+        placeholder={placeholder}
+      />
+      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
+        {methods?.formState?.errors?.email?.message}
+      </Typography>
+    </Stack>
+  ),
+  phoneNumber: ({
+    name,
+    methods,
+    placeholder,
+  }: {
+    name: string;
+    methods: any;
+    placeholder: string;
+  }) => (
+    <Stack>
+      <Input
+        {...methods?.register(name)}
+        placeholder={placeholder}
+        sx={{ width: '100%' }}
+      />
+      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
+        {methods?.formState?.errors?.[name]?.message}
+      </Typography>
+    </Stack>
+  ),
+  text: ({
+    name,
+    methods,
+    placeholder,
+  }: {
+    name: string;
+    methods: any;
+    placeholder: string;
+  }) => (
+    <Stack>
+      <Input
+        sx={{ width: '100%' }}
+        {...methods?.register(name || 'text')}
+        placeholder={placeholder || ''}
+      />
+      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
+        {methods?.formState?.errors?.[name || 'text']?.message}
+      </Typography>
+    </Stack>
+  ),
+  textArea: ({
+    name,
+    methods,
+    placeholder,
+  }: {
+    name: string;
+    methods: any;
+    placeholder?: string;
+  }) => (
+    <Stack>
+      <Textarea
+        sx={{ width: '100%' }}
+        {...methods?.register(name)}
+        minRows={4}
+        placeholder={placeholder || ''}
+      />
+      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
+        {methods?.formState?.errors?.[name]?.message}
+      </Typography>
+    </Stack>
+  ),
+  select: ({
+    name,
+    options,
+    changeHandler,
+    placeholder,
+  }: {
+    name: string;
+    options: string[];
+    changeHandler(name: string, value: string): void;
+    placeholder: string;
+  }) => (
+    <Select
+      sx={{
+        width: '100%',
+      }}
+      placeholder={placeholder || 'select an option'}
+      onChange={(_, value) => {
+        if (value) {
+          changeHandler(name, value as string);
+        }
+      }}
+    >
+      {options?.map((option, i) => (
+        <Option key={i} value={option}>
+          {option}
+        </Option>
+      ))}
+    </Select>
+  ),
+  file: ({
+    name,
+    s3Upload,
+    placeholder,
+    changeHandler,
+    formId,
+    conversationId,
+  }: {
+    name: string;
+    s3Upload(items: FileToUpload[]): Promise<string[]>;
+    placeholder?: string;
+    formId: string;
+    conversationId?: string;
+    changeHandler(name: string, value: string): void;
+  }) => (
+    <FileUploader
+      variant="outlined"
+      placeholder={placeholder || 'Upload Files'}
+      changeCallback={async (f) => {
+        const filesUrls = await s3Upload(
+          f.map((each) => ({
+            case: 'formUpload',
+            fileName: each.name,
+            mimeType: each.type,
+            file: each,
+            formId,
+            conversationId,
+          }))
+        );
+        changeHandler(name, JSON.stringify(filesUrls));
+      }}
+    />
+  ),
+};
+
+function TraditionalForm({
+  formId,
+  conversationId,
+}: {
+  formId: string;
+  conversationId?: string;
+}) {
+  const {
+    query: { tab },
+  } = useRouter();
+
+  const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
+    formId ? `/api/forms/${formId}` : null,
+    fetcher,
+    tab === 'editor' ? { refreshInterval: 2000 } : undefined
+  );
+
+  const getConversationQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getConversation>
+  >(conversationId ? `/api/conversations/${conversationId}` : null, fetcher);
+
+  const [state, setState] = useStateReducer({
+    loading: false,
+    files: [] as File[],
+    isFormSubmitted: false,
+    hasErrored: false,
+  });
+
+  useEffect(() => {
+    setState({
+      isFormSubmitted: (getConversationQuery.data?.metadata as any)
+        ?.isFormSubmitted,
+    });
+  }, [getConversationQuery.data?.metadata]);
+
+  const config = useMemo(() => {
+    return (
+      tab === 'editor'
+        ? getFormQuery?.data?.draftConfig
+        : getFormQuery?.data?.publishedConfig
+    ) as FormConfigSchema;
+  }, [getFormQuery?.data?.draftConfig, getFormQuery?.data?.publishedConfig]);
+
+  const { upload: s3Upload } = useFileUpload();
+
+  const shape = config?.fields?.map((field) => ({
+    name: field.name,
+    required: field.required,
+    type: field.type,
+  }));
+  const keys = config?.fields?.map((field) => field.name);
+
+  const methods = useForm<dynamicSchema<typeof keys>>({
+    resolver: zodResolver(dynamicSchema(shape)),
+    mode: 'all',
+  });
+
+  const conversationMutation = useSWRMutation<
+    Prisma.PromiseReturnType<typeof updateConversation>
+  >(
+    conversationId ? `/api/conversations/${conversationId}` : null,
+    generateActionFetcher(HTTP_METHOD.PATCH)
+  );
+
+  const submitForm = async () => {
+    try {
+      setState({ loading: true, hasErrored: false });
+      const values = methods.getValues();
+      const response = await axios.post('/api/events', {
+        event: {
+          type: 'form-submission',
+          formId,
+          conversationId,
+          formValues: values,
+        },
+        // TODO: make valid form specific token.
+        token: '123456',
+      });
+
+      // Do not move to /api/events, a form is not necessary linked to conversation.
+      if (conversationId) {
+        await conversationMutation.trigger({
+          metadata: { isFormSubmitted: true },
+        } as any);
+      }
+
+      if (response.status === 200) {
+        setState({ isFormSubmitted: true });
+      }
+    } catch (e) {
+      setState({ hasErrored: true });
+      console.log('traditional form submit err:', e);
+    } finally {
+      setState({ loading: false });
+    }
+  };
+
+  return (
+    <Card
+      variant="outlined"
+      color="neutral"
+      sx={{
+        position: 'relative',
+        overflowY: 'visible',
+      }}
+    >
+      {state.isFormSubmitted && !conversationId && (
+        <Stack sx={{ position: 'absolute', top: -40, right: 0 }}>
+          <Button
+            variant="outlined"
+            color="success"
+            size="sm"
+            onClick={() => setState({ isFormSubmitted: false })}
+            endDecorator={<ReplayIcon />}
+          >
+            Retry
+          </Button>
+        </Stack>
+      )}
+      <CardContent
+        sx={{
+          textAlign: 'center',
+          alignItems: 'center',
+          position: 'relative',
+          minWidth: '300px',
+          overflowY: 'scroll',
+        }}
+      >
+        <AnimatePresence>
+          {state.isFormSubmitted && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              key="component"
+              className="h-full"
+            >
+              <Stack
+                spacing={2}
+                height="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CheckIcon className="w-12 font-bold text-green-600 border-2 border-green-600 rounded-full" />
+                <Typography level="title-md">
+                  {config?.endScreen?.successMessage ||
+                    'The Form Was Submitted Succcessfully!'}
+                </Typography>
+                {config?.endScreen?.cta?.label && (
+                  <a
+                    href={config?.endScreen?.cta?.url || '#'}
+                    target={config?.endScreen?.cta?.target || '_blank'}
+                  >
+                    <Button variant="solid" size="lg" color="success">
+                      {config?.endScreen?.cta?.label}
+                    </Button>
+                  </a>
+                )}
+              </Stack>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {!state.isFormSubmitted && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              key="component"
+              className="w-full"
+            >
+              <Typography level="title-md">
+                {config?.startScreen?.title}
+              </Typography>
+              <Typography level="body-md">
+                {config?.startScreen?.description}
+              </Typography>
+              <Divider sx={{ mb: 1 }} />
+
+              <Stack
+                width="100%"
+                spacing={2}
+                onChange={(e) => {
+                  // do not bubble up, not to trigger auto-save.
+                  e.stopPropagation();
+                }}
+              >
+                {config?.fields?.map((field) => (
+                  <Stack
+                    key={field.id}
+                    spacing={1}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <Stack direction="row">
+                      <Typography level="title-md">{field.name}</Typography>
+                      {field.required && (
+                        <div className="text-red-500 ml-0.5">*</div>
+                      )}
+                    </Stack>
+
+                    {fieldTypesMap[field.type as keyof typeof fieldTypesMap]({
+                      formId,
+                      conversationId,
+                      methods,
+                      name: field.name,
+                      placeholder: (field as any)?.placeholder,
+                      changeHandler: {
+                        _: (name: string, value: string) => {
+                          methods.setValue(name, value);
+                          methods.trigger();
+                        },
+                      }['_'],
+                      options: (field as any)?.options as string[],
+                      s3Upload,
+                    })}
+                  </Stack>
+                ))}
+              </Stack>
+              <Stack direction="row-reverse" width="100%" mt={2}>
+                <Button
+                  disabled={
+                    config?.fields.length == 0 || !methods.formState.isValid
+                  }
+                  loading={state.loading || methods.formState.isValidating}
+                  onClick={submitForm}
+                  size="md"
+                  color="primary"
+                  endDecorator={<SendIcon fontSize="sm" />}
+                >
+                  Send
+                </Button>
+                <Snackbar
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  open={state.hasErrored}
+                  onClose={() => setState({ hasErrored: false })}
+                  color={'danger'}
+                >
+                  Submission Failed, try again later.
+                </Snackbar>
+              </Stack>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default memo(TraditionalForm);

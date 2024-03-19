@@ -10,7 +10,8 @@ import {
   FormToolSchema,
   ToolResponseSchema,
 } from '@chaindesk/lib/types/dtos';
-import { Form } from '@chaindesk/prisma';
+import { ConversationChannel, Form } from '@chaindesk/prisma';
+import prisma from '@chaindesk/prisma/client';
 
 import {
   CreateToolHandler,
@@ -20,20 +21,15 @@ import {
 
 export type FormToolPayload = Record<string, unknown>;
 
-export const toJsonSchema = ((tool: FormToolSchema, config) => {
+export const toJsonSchema = ((tool: FormToolSchema) => {
   const form = tool.form as Form;
-  const useDraftConfig = !!config?.toolConfig?.useDraftConfig;
-  const formConfig = (
-    useDraftConfig ? form?.draftConfig : form?.publishedConfig
-  ) as FormConfigSchema;
-
   return {
-    name: `isFormValid_${slugify(form.name)}`,
-    description:
-      'Trigger only when all the required field have been answered by the user. Each field is provided by the user not by the AI. Never fill a field if not provided by the user.',
-    parameters: (formConfig as any)?.schema,
+    name: `share-form-${slugify(form.name)}`,
+    description: `Generally, This is a tool that prompt the user with a form. ** Importantly **: ${
+      (tool.config as any)?.trigger
+    }`,
   };
-}) as ToolToJsonSchema;
+}) as any;
 
 export const createHandler =
   (tool: FormToolSchema, config: CreateToolHandlerConfig<{ type: 'form' }>) =>
@@ -46,7 +42,7 @@ export const createHandler =
     ) as FormConfigSchema;
 
     await EventDispatcher.dispatch({
-      type: 'blablaform-submission',
+      type: 'form-submission',
       conversationId,
       formId: tool.formId,
       formValues: payload,
@@ -55,6 +51,61 @@ export const createHandler =
     return {
       data: 'Form submitted successfully',
     };
+  };
+
+export const createHandlerV2 =
+  (
+    tool: FormToolSchema,
+    config: CreateToolHandlerConfig<{ type: 'form' }>,
+    channel?: ConversationChannel
+  ) =>
+  async (): Promise<ToolResponseSchema> => {
+    const { metadata } = await prisma.conversation.findUniqueOrThrow({
+      where: {
+        id: config.conversationId!,
+      },
+      select: {
+        metadata: true,
+      },
+    });
+
+    if ((metadata as any)?.isFormSubmitted === true) {
+      return {
+        data: 'The user has already filled the form.',
+      };
+    } else if ((metadata as any)?.isFormSubmitted === false) {
+      return {
+        data: 'The user has already been prompted with a form, ask him to use the previously provided one.',
+      };
+    }
+
+    const form = tool.form as Form;
+    await prisma.conversation.update({
+      where: {
+        id: config.conversationId!,
+      },
+      data: {
+        metadata: {
+          ...(metadata ? (metadata as object) : {}),
+          isFormSubmitted: false,
+        },
+      },
+    });
+
+    if (['website', 'dashboard'].includes(channel || '')) {
+      return {
+        data: `should display form`,
+        metadata: {
+          shouldDisplayForm: true,
+          formId: form.id,
+          conversationId: config?.conversationId,
+        },
+      };
+    } else {
+      return {
+        data: `send the user this form url: ${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${form.id}?conversationId=${config?.conversationId}`,
+      };
+    }
   };
 
 export const createParser =

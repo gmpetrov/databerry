@@ -25,42 +25,35 @@ export const validateEndpoint = async (
   try {
     const requestBody = bodySchema.parse(req.body);
 
+    const url = requestBody.url;
+    const requestPayload = {
+      headers: { ...requestBody.headers } as unknown as AxiosHeaders,
+      body: requestBody,
+    };
+
     switch (requestBody.method) {
       case 'GET': {
-        const response = await axios.get(requestBody.url, {
-          headers: { ...requestBody.headers } as unknown as AxiosHeaders,
-        });
+        const response = await axios.get(url, requestPayload);
         testResult = { status: response.statusText, data: response.data };
         break;
       }
       case 'DELETE': {
-        const response = await axios.delete(requestBody.url, {
-          headers: { ...requestBody.headers } as unknown as AxiosHeaders,
-        });
+        const response = await axios.delete(url, requestPayload);
         testResult = { status: response.statusText, data: response.data };
         break;
       }
       case 'PATCH': {
-        const response = await axios.patch(requestBody.url, {
-          headers: { ...requestBody.headers } as unknown as AxiosHeaders,
-          body: requestBody,
-        });
+        const response = await axios.patch(url, requestPayload);
         testResult = { status: response.statusText, data: response.data };
         break;
       }
       case 'POST': {
-        const response = await axios.post(requestBody.url, {
-          headers: { ...requestBody.headers } as unknown as AxiosHeaders,
-          body: requestBody,
-        });
+        const response = await axios.post(url, requestPayload);
         testResult = { status: response.statusText, data: response.data };
         break;
       }
       case 'PUT': {
-        const response = await axios.put(requestBody.url, {
-          headers: { ...requestBody.headers } as unknown as AxiosHeaders,
-          body: requestBody,
-        });
+        const response = await axios.put(url, requestPayload);
         testResult = { status: response.statusText, data: response.data };
         break;
       }

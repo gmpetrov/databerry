@@ -61,9 +61,9 @@ export function formatFunctionDefinitions(functions: FunctionDef[]) {
     if (f.description) {
       lines.push(`// ${f.description}`);
     }
-    if (Object.keys(f.parameters.properties ?? {}).length > 0) {
+    if (Object.keys(f?.parameters?.properties ?? {}).length > 0) {
       lines.push(`type ${f.name} = (_: {`);
-      lines.push(formatObjectProperties(f.parameters, 0));
+      lines.push(formatObjectProperties(f?.parameters, 0));
       lines.push('}) => any;');
     } else {
       lines.push(`type ${f.name} = () => any;`);

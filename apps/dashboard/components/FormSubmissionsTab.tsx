@@ -28,6 +28,7 @@ import pagination from '@chaindesk/lib/pagination';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
+import ChatMessageAttachment from '@chaindesk/ui/Chatbox/ChatMessageAttachment';
 
 type Props = {
   formId: string;
@@ -48,28 +49,6 @@ function FormSubmissionsTab({ formId }: Props) {
     fetcher
   );
 
-  // const getSubmissionsQuery = useSWRInfinite<
-  //   Prisma.PromiseReturnType<typeof getSubmissions>
-  // >((pageIndex, previousPageData) => {
-  //   // reached the end
-  //   if (previousPageData && previousPageData?.length === 0) {
-  //     setState({
-  //       hasMore: false,
-  //     });
-  //     return null;
-  //   }
-
-  //   const cursor = previousPageData?.[previousPageData?.length - 1]
-  //     ?.id as string;
-
-  //   const params = new URLSearchParams({
-  //     cursor: cursor || '',
-  //     offset: `${offset}`,
-  //     limit: `${limit}`,
-  //   });
-
-  //   return `/api/forms/${formId}/submissions?${params.toString()}}`;
-  // }, fetcher);
   const getSubmissionsQuery = useSWR<
     Prisma.PromiseReturnType<typeof getSubmissions>
   >(() => {
@@ -84,10 +63,6 @@ function FormSubmissionsTab({ formId }: Props) {
   const total = getSubmissionsQuery?.data?.total || 0;
   const submissions = getSubmissionsQuery?.data?.submissions || [];
   const nbPages = Math.ceil(total / limit) || 1;
-
-  // const submissions = useMemo(() => {
-  //   return getSubmissionsQuery?.data?.flat?.() || [];
-  // }, [getSubmissionsQuery?.data?.length]);
 
   const offsetIndexes =
     React.useMemo(() => {
@@ -170,13 +145,95 @@ function FormSubmissionsTab({ formId }: Props) {
                   <tr key={each.id}>
                     {(cols || []).map((col: any) => {
                       let val = '';
+                      let documents: string[] = [];
                       if (col === 'createdAt') {
                         val = each?.createdAt?.toString();
                       } else {
                         val = (each?.data as any)?.[col] as string;
+                        try {
+                          documents = JSON.parse(val);
+                        } catch {}
                       }
 
-                      return <td key={col}>{val}</td>;
+                      return (
+                        <td key={col}>
+                          <div
+                            className={`relative flex items-center space-x-2 overflow-x-scroll ${
+                              documents.length > 0 ? 'min-h-[200px]' : ''
+                            }`}
+                          >
+                            {documents.length > 1 && (
+                              <Chip
+                                className="absolute right-0 top-0"
+                                size="sm"
+                              >
+                                {documents.length - 1} more {'->'}
+                              </Chip>
+                            )}
+
+                            {documents.length > 0
+                              ? documents.map((doc, i) => {
+                                  const isVideo = /\.(mp4|mov|avi|mkv)$/i.test(
+                                    doc
+                                  );
+                                  const isImage = /\.(png|jpg|jpeg|gif)$/i.test(
+                                    doc
+                                  );
+                                  const isAudio = /\.(mp3|wav|ogg)$/i.test(doc);
+                                  if (isImage) {
+                                    return (
+                                      <ChatMessageAttachment
+                                        key={i}
+                                        attachment={{
+                                          name: '',
+                                          mimeType: 'image/',
+                                          url: doc,
+                                          size: 1,
+                                        }}
+                                      />
+                                    );
+                                  } else if (isAudio) {
+                                    return (
+                                      <ChatMessageAttachment
+                                        key={i}
+                                        attachment={{
+                                          name: '',
+                                          mimeType: 'audio/',
+                                          url: doc,
+                                          size: 1,
+                                        }}
+                                      />
+                                    );
+                                  } else if (isVideo) {
+                                    return (
+                                      <ChatMessageAttachment
+                                        key={i}
+                                        attachment={{
+                                          name: '',
+                                          mimeType: 'video/',
+                                          url: doc,
+                                          size: 1,
+                                        }}
+                                      />
+                                    );
+                                  } else {
+                                    return (
+                                      <ChatMessageAttachment
+                                        key={i}
+                                        attachment={{
+                                          name: 'file',
+                                          mimeType: '',
+                                          url: doc,
+                                          size: 10000,
+                                        }}
+                                      />
+                                    );
+                                  }
+                                })
+                              : val}
+                          </div>
+                        </td>
+                      );
                     })}
                   </tr>
                 ))}
