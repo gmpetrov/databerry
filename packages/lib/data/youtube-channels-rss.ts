@@ -21,6 +21,9 @@ const feeds = [
   'https://www.youtube.com/feeds/videos.xml?channel_id=UCfqk63CbhCZy2c2bX4A7NPA', // @KellyNobleMirabella
   'https://www.youtube.com/feeds/videos.xml?channel_id=UCn2RJFAA1ndipnVJsYAwWOw', // @chatimize
   'https://www.youtube.com/feeds/videos.xml?playlist_id=PLOspHqNVtKAAsiohuZj1Bt4XpA3_bkS3c', // @IBM Technology LLM & Chatbot Playlist
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UC6z07Hh9Muy6urJgA0F0azg', // @ShinefyAi
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UClQqsf6M9iVWjsF3PNXeMkA', // @OfficialChatbotBuilder
+  'https://www.youtube.com/feeds/videos.xml?channel_id=UC2WmuBuFq6gL08QYG-JjXKw', // @intheworldofai
 ] as string[];
 
 export default feeds;

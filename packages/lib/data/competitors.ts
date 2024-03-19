@@ -8,4 +8,7 @@ export default [
   'Chatbot.com',
   'Drift',
   'Verloop',
+  'Botpress',
+  'DocsBot',
+  'MyAskAi',
 ];

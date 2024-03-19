@@ -498,6 +498,7 @@ function ChatBox({
             )}
 
             <Textarea
+              // placeholder="Press Shift + Enter to move to the next line"
               autoFocus={!!autoFocus}
               slotProps={{
                 textarea: {
