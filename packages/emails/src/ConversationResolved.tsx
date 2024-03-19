@@ -77,9 +77,9 @@ export const ConversationResolved = ({
             </Text>
 
             <Container>
-              {(messages || []).map((message) => (
+              {(messages || []).map((message, index) => (
                 <Section
-                  key={message.id}
+                  key={message.id || index}
                   className={clsx(
                     'px-4 py-2 mb-2 border border-solid border-[#eaeaea] rounded-lg',
                     {

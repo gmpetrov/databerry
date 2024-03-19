@@ -278,7 +278,7 @@ const chat = async ({
     tools: tools,
     filters: filters,
     topK: topK,
-    similarityThreshold: 0.7,
+    similarityThreshold: 0.78,
   });
   // }
 
@@ -316,58 +316,25 @@ const chat = async ({
         : []),
     ].join(' and ');
 
-    const _systemPrompt = `${systemPrompt}${
-      !!leadCaptureTool
-        ? `Start the conversation by greeting the user and asking for his ${infos} in order to contact them if necessary.`
-        : ``
-    }
-    ${
+    const requestHumanInstructions = `If the user is not satisfied with the assistant answers, offer to request a human operator, then if the user accepts call \`request_human\` to request a human to take over the conversation.`;
+    const markAsResolvedInstructions = `If the user is happy with your answer, call \`mark_as_resolved\` to mark the conversation as resolved.`;
+
+    const knowledgeInstructions = `${
       !!datastoreTools?.length
-        ? `**Knowledge Base**
-    Use the following knowledge base chunks delimited by <knowledge-base> xml tags to answer the user's question.
-    <knowledge-base>${retrievalData?.context}</knowledge-base>
+        ? `Use the following portion of a long document to see if any of the text is relevant to answer the question. <knowledge-base>${
+            retrievalData?.context
+          }</knowledge-base>
     ${
-      restrictKnowledge
+      !!restrictKnowledge
         ? `Limit your knowledge to the knowledge base, if you don't find an answer in the knowledge base, politely say that you don't know. Remember do not answer any query that is outside of the provided context, this is paramount.`
         : ``
     }
     `
         : ``
-    }
-    
-    ${
-      !!markAsResolvedTool || !!requestHumanTool || !!leadCaptureTool
-        ? `**Tasks Instructions**
-    If the conversation falls in one of the following cases, please follow its instructions.`
-        : ``
-    }
-    ${
-      !!markAsResolvedTool
-        ? `**Mark the conversation as resolved**
-    1. If the user is happy with your answers and has no further questions, mark the conversation as resolved. Please ask the user if there is anything else you can help with before marking the conversation as resolved.
-    2. Make sure the user is satisfied with the resolution before marking the conversation as resolved with a question like "Is there anything else I can help you with today?"
-    3. Then mark the conversation as resolved (call the mark_as_resolved tool)
+    }`.trim();
 
-    <example>
-    - You: "You're welcome! Is there anything else I can help you with today?"
-    - User: "No, thank you. You've been very helpful."
-    - Action: Mark the conversation as resolved
-    - You: "If you have any more questions, feel free to ask."
-    </example>`
-        : ``
-    }${
-      !!requestHumanTool
-        ? `**Request Human**
-    1. If the user is not happy with your answers, politely ask the user if he would like to speak to a human operator.
-    2. Then if the user accept to speak to a human, transfer the conversation to a human agent.
-    <example>
-    - User: "I'm not satisfied with your answer."
-    - You: "Would you like to speak to a human agent?"
-    - User: "Yes, please."
-    - Action: Transfer the conversation to a human agent.
-    </example>`
-        : ``
-    }${
+    const _systemPrompt = `${systemPrompt}
+    ${
       !!leadCaptureTool
         ? `**Lead Capture**
     1. Start the conversation by greeting the user and asking for his ${infos} in order to contact them if necessary.
@@ -383,18 +350,13 @@ const chat = async ({
         : ``
     }
     ${
-      useLanguageDetection || useMarkdown || useLanguageDetection
-        ? `**Output Format and Language**`
-        : ``
-    }
-    ${
       useMarkdown
-        ? `Answer using markdown or to display the content in a nice and aerated way.`
+        ? `Answer using markdown to display the content in a nice and aerated way.`
         : ``
     }
     ${
       useLanguageDetection
-        ? `Answer the users question in the same language as the user question. You can speak any language.`
+        ? `Answer the users question in the same language as the user question. You are able to speak any language.`
         : ``
     }
     ${
@@ -403,16 +365,10 @@ const chat = async ({
         ? `Never make up URLs, email addresses, or any other information that have not been provided during the conversation. Only use information provided by the user to fill forms.`
         : ``
     }
-    `;
-
-    // _systemPrompt += `\nStart the conversation by collecting the user informations specified by the lead capture v2 tool.`;
-
-    // _systemPrompt += `\n Finish your answer with a recommendation for a relevant html input element to show the user based on your answer. example:
-
-    // User: Hello,
-    // You: Can you provide your email adress in case we need to contact you later? UI: email
-
-    // Possible values are email, phone, file_upload, none`;
+    ${!!markAsResolvedTool ? markAsResolvedInstructions : ``}
+    ${!!requestHumanTool ? requestHumanInstructions : ``}
+    ${knowledgeInstructions}
+    `.trim();
 
     const messages: ChatCompletionMessageParam[] = [
       ...(_systemPrompt

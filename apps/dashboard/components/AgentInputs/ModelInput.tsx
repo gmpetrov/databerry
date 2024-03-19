@@ -363,6 +363,9 @@ export default function ModelInput({}: Props) {
 
       <FormControl>
         <FormLabel>User Prompt</FormLabel>
+        <Alert color="warning" sx={{ mb: 1 }}>
+          It is not recommended to override the User Prompt
+        </Alert>
         <Textarea minRows={2} {...register('userPrompt')}></Textarea>
         <FormHelperText>{`{query} and {context} variables are respectively replaced by the user query and data retrieved from a datastore at runtime`}</FormHelperText>
       </FormControl>

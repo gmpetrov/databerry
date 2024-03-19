@@ -31,12 +31,12 @@ const handler: AppEventHandler<
     subject: `✅ Conversation resolved automatically by ${agent?.name || ''}`,
     html: render(
       <ConversationResolved
-        agentName={agent.name}
+        agentName={agent?.name}
         messages={messages}
         ctaLink={`${
           process.env.NEXT_PUBLIC_DASHBOARD_URL
         }/logs?tab=all&targetConversationId=${encodeURIComponent(
-          conversation?.id
+          conversation?.id || ''
         )}&targetOrgId=${encodeURIComponent(agent.organizationId!)}`}
       />
     ),

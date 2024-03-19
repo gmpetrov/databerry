@@ -17,6 +17,7 @@ const handler: AppEventHandler<
   const agent = event.agent as Agent & {
     serviceProviders: ServiceProvider[];
   };
+
   const conversation = event.conversation as Conversation;
   const messages = event.messages as Message[];
 
@@ -29,13 +30,13 @@ const handler: AppEventHandler<
     subject: `❓ Assistance requested from Agent ${agent?.name || ''}`,
     html: render(
       <HelpRequest
-        visitorEmail={event.customerEmail}
-        agentName={agent.name}
+        visitorEmail={event?.customerEmail}
+        agentName={agent?.name}
         messages={messages}
         ctaLink={`${
           process.env.NEXT_PUBLIC_DASHBOARD_URL
         }/logs?tab=human_requested&targetConversationId=${encodeURIComponent(
-          conversation?.id
+          conversation?.id || ''
         )}&targetOrgId=${encodeURIComponent(agent?.organizationId!)}`}
       />
     ),

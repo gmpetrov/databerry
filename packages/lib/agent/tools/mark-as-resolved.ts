@@ -3,7 +3,7 @@ import {
   MarkAsResolvedToolSchema,
   ToolResponseSchema,
 } from '@chaindesk/lib/types/dtos';
-import { ConversationStatus } from '@chaindesk/prisma';
+import { Agent, ConversationStatus } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
 import { CreateToolHandlerConfig, ToolToJsonSchema } from './type';
@@ -13,7 +13,8 @@ export type MarkAsResolvedToolPayload = Record<string, unknown>;
 export const toJsonSchema = ((tool: MarkAsResolvedToolSchema, config) => {
   return {
     name: `mark_as_resolved`,
-    description: 'Useful for marking the conversation as resolved.',
+    description:
+      'Mark conversation as resolved. Use this when the user issue is resolved and your are closing the conversation.',
     parameters: {},
   };
 }) as ToolToJsonSchema;
@@ -67,9 +68,23 @@ export const createHandler =
       },
     });
 
+    let agent = updated?.participantsAgents[0] as Agent;
+
+    if (!agent) {
+      agent = (await prisma.agent.findUnique({
+        where: {
+          id: config?.agentId as string,
+          organizationId: config?.organizationId as string,
+        },
+        include: {
+          serviceProviders: true,
+        },
+      })) as Agent;
+    }
+
     await EventDispatcher.dispatch({
       type: 'conversation-resolved',
-      agent: updated?.participantsAgents[0],
+      agent,
       conversation: updated,
       messages: updated?.messages,
       adminEmail: updated?.organization?.memberships?.[0]?.user?.email!,
