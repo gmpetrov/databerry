@@ -72,6 +72,7 @@ import {
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Prisma } from '@chaindesk/prisma';
 
+import { formType } from './BlablaFormEditor/FieldsInput';
 import BlablaFormViewer from './BlablaFormViewer';
 
 type Props = {
@@ -93,7 +94,13 @@ function BlablaFormLoader(props: Props) {
     ) as FormConfigSchema;
   }, [props.useDraftConfig, getFormQuery.data]);
 
-  return <BlablaFormViewer config={config} formId={props.formId} />;
+  return (
+    <BlablaFormViewer
+      config={config}
+      formId={props.formId}
+      type={formType.conversational}
+    />
+  );
 }
 
 export default BlablaFormLoader;

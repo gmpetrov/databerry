@@ -2,6 +2,7 @@ import { RocketLaunch } from '@mui/icons-material';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
 import Looks4RoundedIcon from '@mui/icons-material/Looks4Rounded';
+import Looks5RoundedIcon from '@mui/icons-material/Looks5Rounded';
 import LooksOneRoundedIcon from '@mui/icons-material/LooksOneRounded';
 import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
 import {
@@ -29,6 +30,7 @@ import clsx from 'clsx';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 
 import BlablaFormProvider from '@app/components/BlablaFormProvider';
@@ -37,24 +39,32 @@ import CopyButton from '@app/components/CopyButton';
 import Input from '@app/components/Input';
 import useBlablaForm from '@app/hooks/useBlablaForm';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { getForm } from '@app/pages/api/forms/[formId]';
 import { publishForm } from '@app/pages/api/forms/[formId]/publish';
 
-import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
+import {
+  fetcher,
+  generateActionFetcher,
+  HTTP_METHOD,
+} from '@chaindesk/lib/swr-fetcher';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import { Prisma } from '@chaindesk/prisma';
 
 import Loader from '../Loader';
 
-import FieldsInput from './FieldsInput';
+import FieldsInput, { formType } from './FieldsInput';
 import { forceSubmit } from './utils';
 
-type Props = { formId: string };
+type Props = {
+  formId: string;
+};
 
 function Form({ formId }: Props) {
   const { mode } = useColorScheme();
   const methods = useFormContext<CreateFormSchema>();
   const { query, mutation } = useBlablaForm({ id: formId });
 
+  console.log('fcb ---', methods.formState.isSubmitting);
   const [state, setState] = useStateReducer({
     currentAnswer: '',
     isConversationStarted: false,
@@ -63,11 +73,16 @@ function Form({ formId }: Props) {
     currentAccordionIndex: 0 as number | null,
   });
 
+  const getFormData = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
+    `/api/forms/${formId}`,
+    fetcher
+  );
+
   const publishFormMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof publishForm>
   >(`/api/forms/${formId}/publish`, generateActionFetcher(HTTP_METHOD.POST));
 
-  const draftConfig = methods.watch('draftConfig');
+  const [draftConfig, type] = methods.watch(['draftConfig', 'type']);
 
   const handlePublish = async () => {
     await toast.promise(
@@ -149,14 +164,61 @@ function Form({ formId }: Props) {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <FormControl>
-                  <FormLabel>Overview</FormLabel>
-                  <Textarea
-                    minRows={4}
-                    // maxRows={4}
-                    {...methods.register('draftConfig.overview')}
-                  />
-                </FormControl>
+                <Stack spacing={1}>
+                  <FormControl>
+                    <FormLabel>Form Type</FormLabel>
+                    <Select
+                      defaultValue={getFormData.data?.type}
+                      {...methods.register('type')}
+                      onChange={(_, value) => {
+                        if (value) {
+                          methods.setValue('type', value as any);
+                          // Retrocompatibility
+                          const fields: CreateFormSchema['draftConfig']['fields'] =
+                            draftConfig?.fields.map((field) => {
+                              if (
+                                field.type === 'multiple_choice' &&
+                                value == 'traditional'
+                              ) {
+                                return {
+                                  ...field,
+                                  type: 'select',
+                                  options: field.choices,
+                                };
+                              } else if (
+                                field.type === 'select' &&
+                                value == 'conversational'
+                              ) {
+                                return {
+                                  ...field,
+                                  type: 'multiple_choice',
+                                  choices: field.options,
+                                };
+                              }
+                              return { ...field, type: 'text' };
+                            });
+
+                          if (fields?.length > 0) {
+                            methods.setValue('draftConfig.fields', fields);
+                          }
+
+                          forceSubmit();
+                        }
+                      }}
+                    >
+                      <Option value="conversational">Conversational</Option>
+                      <Option value="traditional">Traditional</Option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Overview</FormLabel>
+                    <Textarea
+                      minRows={4}
+                      // maxRows={4}
+                      {...methods.register('draftConfig.overview')}
+                    />
+                  </FormControl>
+                </Stack>
               </AccordionDetails>
             </Accordion>
 
@@ -170,12 +232,11 @@ function Form({ formId }: Props) {
             >
               <AccordionSummary>
                 <Typography startDecorator={<LooksTwoRoundedIcon />}>
-                  Start/End Screen
+                  {type === 'conversational' ? 'Start Screen' : 'Form Details'}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Stack gap={2}>
-                  <Typography level="body-md">Start Screen</Typography>
                   <FormControl>
                     <FormLabel>Title</FormLabel>
                     <Input
@@ -193,16 +254,47 @@ function Form({ formId }: Props) {
                       )}
                     />
                   </FormControl>
+
+                  {type === 'conversational' && (
+                    <FormControl>
+                      <FormLabel>Call to action</FormLabel>
+                      <Input
+                        control={methods.control}
+                        {...methods.register(
+                          'draftConfig.startScreen.cta.label'
+                        )}
+                      />
+                    </FormControl>
+                  )}
+                </Stack>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion
+              expanded={state.currentAccordionIndex === 2}
+              onChange={(event, expanded) => {
+                setState({
+                  currentAccordionIndex: expanded ? 2 : null,
+                });
+              }}
+            >
+              <AccordionSummary>
+                <Typography startDecorator={<Looks3RoundedIcon />}>
+                  End Screen
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Stack gap={2}>
                   <FormControl>
-                    <FormLabel>Call to action</FormLabel>
+                    <FormLabel>End Message</FormLabel>
                     <Input
                       control={methods.control}
-                      {...methods.register('draftConfig.startScreen.cta.label')}
+                      {...methods.register(
+                        'draftConfig.endScreen.successMessage'
+                      )}
                     />
                   </FormControl>
 
-                  <Divider />
-                  <Typography level="body-md">End Screen</Typography>
                   <FormControl>
                     <FormLabel>Call to action</FormLabel>
                     <Input
@@ -213,7 +305,7 @@ function Form({ formId }: Props) {
                   <FormControl>
                     <FormLabel>Call to action URL</FormLabel>
                     <Stack
-                      direction="row"
+                      direction="column"
                       gap={1.5}
                       sx={(t) => ({
                         border: '1px solid',
@@ -232,7 +324,8 @@ function Form({ formId }: Props) {
                         // endDecorator={}
                         {...methods.register('draftConfig.endScreen.cta.url')}
                       />
-
+                    </Stack>
+                    <Stack direction="row-reverse" mt={1}>
                       <Controller
                         name="draftConfig.endScreen.cta.target"
                         render={({ field }) => (
@@ -259,28 +352,6 @@ function Form({ formId }: Props) {
             </Accordion>
 
             <Accordion
-              expanded={state.currentAccordionIndex === 2}
-              onChange={(event, expanded) => {
-                setState({
-                  currentAccordionIndex: expanded ? 2 : null,
-                });
-              }}
-            >
-              <AccordionSummary>
-                <Typography startDecorator={<Looks3RoundedIcon />}>
-                  Form Fields
-                </Typography>
-              </AccordionSummary>
-              {/* <Alert startDecorator={<InfoRoundedIcon />}>
-               {`Field names have an impact on context understanding for
-           the AI`}
-             </Alert> */}
-              <AccordionDetails>
-                <FieldsInput />
-              </AccordionDetails>
-            </Accordion>
-
-            <Accordion
               expanded={state.currentAccordionIndex === 3}
               onChange={(event, expanded) => {
                 setState({
@@ -290,6 +361,28 @@ function Form({ formId }: Props) {
             >
               <AccordionSummary>
                 <Typography startDecorator={<Looks4RoundedIcon />}>
+                  Form Fields
+                </Typography>
+              </AccordionSummary>
+              {/* <Alert startDecorator={<InfoRoundedIcon />}>
+               {`Field names have an impact on context understanding for
+           the AI`}
+             </Alert> */}
+              <AccordionDetails>
+                <FieldsInput type={type} />
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion
+              expanded={state.currentAccordionIndex === 4}
+              onChange={(event, expanded) => {
+                setState({
+                  currentAccordionIndex: expanded ? 4 : null,
+                });
+              }}
+            >
+              <AccordionSummary>
+                <Typography startDecorator={<Looks5RoundedIcon />}>
                   Webhook
                 </Typography>
               </AccordionSummary>
@@ -324,9 +417,13 @@ function Form({ formId }: Props) {
             startDecorator={<RocketLaunch fontSize="sm" />}
             onClick={handlePublish}
             loading={publishFormMutation.isMutating || mutation.isMutating}
-            disabled={mutation.isMutating || !methods.formState.isValid}
+            disabled={
+              mutation.isMutating ||
+              methods.formState.isSubmitting ||
+              !methods.formState.isValid
+            }
           >
-            {mutation.isMutating ? 'Saving...' : 'Publish Updates'}
+            {mutation.isMutating ? 'Saving...' : `Publish Updates`}
           </Button>
         </Stack>
 
@@ -342,51 +439,54 @@ function Form({ formId }: Props) {
               overflow: 'hidden',
             })}
           >
-            {!!query?.data?.publishedConfig && (
-              <Stack
-                sx={{
-                  width: '100%',
-                  position: 'absolute',
-                  top: 2,
-                  left: 2,
-                  pt: 2,
-                  pr: 2,
-                }}
-              >
-                <Alert
-                  variant="outlined"
-                  size="sm"
-                  startDecorator={
-                    <LockRoundedIcon fontSize="sm" sx={{ opacity: 0.5 }} />
-                  }
+            {!!query?.data?.publishedConfig &&
+              type === formType.conversational && (
+                <Stack
                   sx={{
-                    borderRadius: 'lg',
                     width: '100%',
-                    py: 0.5,
-                    px: 1,
+                    position: 'absolute',
+                    top: 2,
+                    left: 2,
+                    pt: 2,
+                    pr: 2,
                   }}
-                  className="backdrop-blur-lg"
                 >
-                  <Typography
-                    level="body-sm"
-                    endDecorator={<CopyButton text={formPublicUrl} />}
+                  <Alert
+                    variant="outlined"
+                    size="sm"
+                    startDecorator={
+                      <LockRoundedIcon fontSize="sm" sx={{ opacity: 0.5 }} />
+                    }
+                    sx={{
+                      borderRadius: 'lg',
+                      width: '100%',
+                      py: 0.5,
+                      px: 1,
+                    }}
+                    className="backdrop-blur-lg"
                   >
-                    <a
-                      href={formPublicUrl}
-                      className="hover:underline"
-                      target="_blank"
+                    <Typography
+                      level="body-sm"
+                      endDecorator={<CopyButton text={formPublicUrl} />}
                     >
-                      {formPublicUrl}
-                    </a>
-                  </Typography>
-                </Alert>
-              </Stack>
-            )}
+                      <a
+                        href={formPublicUrl}
+                        className="hover:underline"
+                        target="_blank"
+                      >
+                        {formPublicUrl}
+                      </a>
+                    </Typography>
+                  </Alert>
+                </Stack>
+              )}
             <BlablaFormViewer
               formId={formId}
+              type={type || 'conversational'}
               config={{
                 fields: draftConfig?.fields,
                 startScreen: draftConfig?.startScreen,
+                endScreen: draftConfig?.endScreen,
                 webhook: draftConfig?.webhook,
                 schema: (query.data?.draftConfig as any)?.schema,
               }}
