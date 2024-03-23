@@ -928,15 +928,6 @@ export default function LogsPage() {
                           borderRadius: 0,
                         },
 
-                        // backgroundColor: {
-                        //   [ConversationStatus.RESOLVED]:
-                        //     theme.palette.success.softActiveBg,
-                        //   [ConversationStatus.UNRESOLVED]:
-                        //     theme.palette.danger.softActiveBg,
-                        //   [ConversationStatus.HUMAN_REQUESTED]:
-                        //     theme.palette.warning.softActiveBg,
-                        // }[each?.status] as ColorPaletteProp,
-
                         ...(state.currentConversationId === each.id && {
                           backgroundColor: theme.palette.action.hover,
                         }),
@@ -1068,7 +1059,13 @@ export default function LogsPage() {
                               level="body-sm"
                               className="pr-4 line-clamp-2"
                             >
-                              {each?.messages?.[0]?.text}
+                              {/* last human message */}
+                              {each?.messages?.[each?.messages.length - 1]
+                                ?.from === 'human'
+                                ? each?.messages?.[each?.messages.length - 1]
+                                    ?.text
+                                : each?.messages?.[each?.messages.length - 2]
+                                    ?.text}
                             </Typography>
                           </Stack>
                           <Stack
@@ -1166,25 +1163,6 @@ export default function LogsPage() {
                   startDecorator={<Notifications />}
                   endDecorator={
                     <Stack direction="row" spacing={1}>
-                      {/* {!isHumanHandoffButtonHidden && (
-                        <Button
-                          variant="solid"
-                          color={state.isAiEnabled ? 'primary' : 'warning'}
-                          size="md"
-                          loading={conversationUpdater.isMutating}
-                          endDecorator={
-                            state.isAiEnabled ? (
-                              <CommentRoundedIcon fontSize="sm" />
-                            ) : (
-                              <SmartToyIcon fontSize="sm" />
-                            )
-                          }
-                          onClick={toggleAi}
-                        >
-                          {state.isAiEnabled ? 'Reply' : 'Re-Enable AI'}
-                        </Button>
-                      )} */}
-
                       <BannerActions
                         status={getConversationQuery?.data?.status}
                         email={getConversationQuery?.data?.lead?.email!}

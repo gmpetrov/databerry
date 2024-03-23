@@ -125,7 +125,7 @@ export const updateConversation = async (
   try {
     const session = req.session;
     const conversationId = req.query.conversationId as string;
-    const updates = ConversationUpdateSchema.parse(req.body);
+    const payload = ConversationUpdateSchema.parse(req.body);
 
     const conversation = await prisma.conversation.findUnique({
       where: {
@@ -156,7 +156,7 @@ export const updateConversation = async (
         id: conversationId,
       },
       data: {
-        ...updates,
+        ...payload,
       },
       include: {
         lead: true,
@@ -195,7 +195,7 @@ export const updateConversation = async (
       const leadEmail = updated?.lead?.email!;
       const agent = updated?.agent!;
 
-      if (updates.status === ConversationStatus.RESOLVED) {
+      if (payload.status === ConversationStatus.RESOLVED) {
         await EventDispatcher.dispatch({
           type: 'conversation-resolved',
           agent: agent,
@@ -203,7 +203,7 @@ export const updateConversation = async (
           messages: updated?.messages,
           adminEmail: onwerEmail,
         });
-      } else if (updates.status === ConversationStatus.HUMAN_REQUESTED) {
+      } else if (payload.status === ConversationStatus.HUMAN_REQUESTED) {
         await EventDispatcher.dispatch({
           type: 'human-requested',
           agent: agent,
