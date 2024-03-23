@@ -123,6 +123,7 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
   useEffect(() => {
     if (query.data) {
       setAgent(query.data);
+      props?.onAgentLoaded?.(query.data);
       setConfig({
         ...defaultChatBubbleConfig,
         ...(query?.data?.interfaceConfig as AgentInterfaceConfig),
