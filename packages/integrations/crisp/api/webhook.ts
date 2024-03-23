@@ -27,6 +27,7 @@ import {
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 import getRequestLocation from '@chaindesk/lib/get-request-location';
+import axios from 'axios';
 
 const isCrispAction = (type: string): type is Action =>
   (Object.values(Action) as string[]).includes(type);
@@ -160,36 +161,6 @@ const getIntegration = async (websiteId: string, channelExternalId: string) => {
   return { ...integration, crispActions };
 };
 
-// const handleSendInput = async ({
-//   websiteId,
-//   sessionId,
-//   value,
-//   agentName,
-// }: {
-//   websiteId: string;
-//   sessionId: string;
-//   value?: string;
-//   agentName?: string;
-// }) => {
-//   await CrispClient.website.sendMessageInConversation(websiteId, sessionId, {
-//     type: 'field',
-//     from: 'operator',
-//     origin: 'chat',
-//     user: {
-//       type: 'participant',
-//       nickname: agentName || 'Chaindesk',
-//       avatar: 'https://chaindesk.ai/logo.png',
-//     },
-
-//     content: {
-//       id: `chaindesk-query-${cuid()}`,
-//       text: `✨ Ask ${agentName || `Chaindesk`}`,
-//       explain: 'Query',
-//       value,
-//     },
-//   });
-// };
-
 const handleQuery = async ({
   websiteId,
   sessionId,
@@ -294,7 +265,10 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     // }
 
     if (req.headers['x-delivery-attempt-count'] !== '1') {
-      console.log('x-delivery-attempt-count abort');
+      console.log(
+        'x-delivery-attempt-count abort',
+        req.headers['x-delivery-attempt-count']
+      );
       return "Not the first attempt, don't handle.";
     }
 
@@ -310,13 +284,9 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     const t = await i18nClone.changeLanguage(visitorLanguage); // fall back on english if not supported
 
     const metadata = metas?.data as ConversationMetadata;
-    // const newChoice = body?.data?.content?.choices?.find(
-    //   (one: any) => one.selected
-    // );
 
     switch (body.event) {
       case 'message:send':
-        console.log('bodyx', body.data, metadata);
         if (
           body.data.origin === 'chat' &&
           body.data.from === 'user' &&
@@ -374,9 +344,19 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         const choices = body.data.content
           ?.choices as HookBodyMessageUpdated['data']['content']['choices'];
         const selected = choices?.find((one) => one.selected);
-
+        const integration = await getIntegration(
+          body.website_id,
+          body.data.session_id
+        );
         switch (selected?.value) {
-          case Action.request_human:
+          case Action.request_human: {
+            const requestHumanInternalCall = axios.patch(
+              `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/conversations/${integration?.conversations?.[0]?.id}`,
+              {
+                status: ConversationStatus.HUMAN_REQUESTED,
+              }
+            );
+
             const availibility =
               await CrispClient.website.getWebsiteAvailabilityStatus(
                 body.data.website_id
@@ -393,101 +373,106 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
                 body.data.website_id
               );
 
-              // const highly_active_operator = active_operators.filter(
-              //   (op) =>
-              //     op.timestamp ==
-              //     Math.min(...active_operators.map((o) => o.timestamp))
-              // )[0];
+              const crispCalls = [
+                CrispClient.website.updateConversationMetas(
+                  body.website_id,
+                  body.data.session_id,
+                  {
+                    data: {
+                      ...metadata,
+                      aiStatus: AIStatus.disabled,
+                      aiDisabledDate: new Date(),
+                    } as ConversationMetadata,
+                  }
+                ),
+                CrispClient.website.sendMessageInConversation(
+                  body.website_id,
+                  body.data.session_id,
+                  {
+                    type: 'picker',
+                    from: 'operator',
+                    origin: 'chat',
+                    content: {
+                      id: 'chaindesk-enable',
+                      text: t('crisp:instructions.callback'),
+                      choices: [
+                        {
+                          value: Action.enable_ai,
+                          icon: '▶️',
+                          label: t('crisp:choices.enableAi'),
+                          selected: false,
+                        },
+                      ],
+                    },
+                    // mentions: [highly_active_operator.user_id],
+                    mentions: active_operators.map((each) => each.user_id),
+                    user: {
+                      type: 'website',
+                      nickname: 'chaindesk',
+                    },
+                  }
+                ),
+              ];
 
-              await CrispClient.website.updateConversationMetas(
-                body.website_id,
-                body.data.session_id,
-                {
-                  data: {
-                    ...metadata,
-                    aiStatus: AIStatus.disabled,
-                    aiDisabledDate: new Date(),
-                  } as ConversationMetadata,
-                }
-              );
-
-              await CrispClient.website.sendMessageInConversation(
-                body.website_id,
-                body.data.session_id,
-                {
-                  type: 'picker',
-                  from: 'operator',
-                  origin: 'chat',
-                  content: {
-                    id: 'chaindesk-enable',
-                    text: t('crisp:instructions.callback'),
-                    choices: [
-                      {
-                        value: Action.enable_ai,
-                        icon: '▶️',
-                        label: t('crisp:choices.enableAi'),
-                        selected: false,
-                      },
-                    ],
-                  },
-                  // mentions: [highly_active_operator.user_id],
-                  mentions: active_operators.map((each) => each.user_id),
-                  user: {
-                    type: 'website',
-                    nickname: 'chaindesk',
-                  },
-                }
-              );
+              await Promise.all([requestHumanInternalCall, ...crispCalls]);
             } else {
               // website offline
-              await CrispClient.website.updateConversationMetas(
-                body.website_id,
-                body.data.session_id,
-                {
-                  data: {
-                    ...metadata,
-                    aiStatus: AIStatus.disabled,
-                  } as ConversationMetadata,
-                }
-              );
+              const crispCalls = [
+                CrispClient.website.updateConversationMetas(
+                  body.website_id,
+                  body.data.session_id,
+                  {
+                    data: {
+                      ...metadata,
+                      aiStatus: AIStatus.disabled,
+                    } as ConversationMetadata,
+                  }
+                ),
+                CrispClient.website.sendMessageInConversation(
+                  body.website_id,
+                  body.data.session_id,
+                  {
+                    type: 'picker',
+                    from: 'operator',
+                    origin: 'chat',
 
-              await CrispClient.website.sendMessageInConversation(
-                body.website_id,
-                body.data.session_id,
-                {
-                  type: 'picker',
-                  from: 'operator',
-                  origin: 'chat',
+                    content: {
+                      id: 'chaindesk-answer',
+                      text: t('crisp:instructions.unavailable'),
+                      choices: [
+                        {
+                          value: Action.enable_ai,
+                          icon: '▶️',
+                          label: t('crisp:choices.enableAi'),
+                          selected: false,
+                        },
+                      ],
+                    },
+                  }
+                ),
+              ];
 
-                  content: {
-                    id: 'chaindesk-answer',
-                    text: t('crisp:instructions.unavailable'),
-                    choices: [
-                      {
-                        value: Action.enable_ai,
-                        icon: '▶️',
-                        label: t('crisp:choices.enableAi'),
-                        selected: false,
-                      },
-                    ],
-                  },
-                  // user: {
-                  //   type: 'participant',
-                  //   nickname: agent?.name || 'Chaindesk',
-                  //   avatar: agent.iconUrl || 'https://chaindesk.ai/logo.png',
-                  // },
-                }
-              );
+              await Promise.all([requestHumanInternalCall, ...crispCalls]);
             }
             break;
-          case Action.mark_as_resolved:
-            await CrispClient.website.changeConversationState(
+          }
+          case Action.mark_as_resolved: {
+            const intrernalCall = axios.patch(
+              `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/conversations/${integration?.conversations?.[0]?.id}`,
+              {
+                status: ConversationStatus.RESOLVED,
+              }
+            );
+            const crispCall = CrispClient.website.changeConversationState(
               body.website_id,
               body.data.session_id,
               'resolved'
             );
+
+            await Promise.all([intrernalCall, crispCall]);
             break;
-          case Action.enable_ai:
+          }
+          case Action.enable_ai: {
             await CrispClient.website.updateConversationMetas(
               body.website_id,
               body.data.session_id,
@@ -499,6 +484,7 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
               }
             );
             break;
+          }
           default:
             break;
         }
@@ -523,13 +509,6 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   }
 };
 
-handler.post(
-  hook
-  // validate({
-  // body: SearchManyRequestSchema,
-  // handler: respond(hook),
-  // handler: hook,
-  // })
-);
+handler.post(hook);
 
 export default handler;

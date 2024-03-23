@@ -149,9 +149,9 @@ export const getLogs = async (req: AppNextApiRequest, res: NextApiResponse) => {
         },
       },
       messages: {
-        take: 1,
+        take: 2,
         orderBy: {
-          createdAt: 'asc',
+          createdAt: 'desc',
         },
       },
     },

@@ -42,7 +42,6 @@ export const sendMessage = async (
   const conversationId = req.query.conversationId as string;
   const payload = chatBodySchema.parse(req.body);
   const session = req.session;
-  let externalMessageId: string | undefined;
 
   const {
     id,
@@ -93,35 +92,73 @@ export const sendMessage = async (
           select: {
             name: true,
             picture: true,
+            customPicture: true,
+            image: true,
           },
         });
-        await CrispClient.website.sendMessageInConversation(
-          channelCredentials?.externalId, // websiteId
-          channelExternalId, // sessionId
-          {
-            type: 'text',
-            from: 'operator',
-            origin: 'chat',
-            content: payload.message,
-            user: {
-              type: 'website',
-              nickname: user?.name || 'Operator',
-              avatar: user?.picture || 'https://chaindesk.ai/logo.png',
-            },
-          }
-        );
 
-        // disable AI
-        await CrispClient.website.updateConversationMetas(
-          channelCredentials?.externalId, // websiteId
-          channelExternalId, // sessionId
-          {
-            data: {
-              aiStatus: AIStatus.disabled,
-              aiDisabledDate: new Date(),
-            },
-          }
-        );
+        const attachementCalls =
+          payload?.attachments?.map((attachement) => {
+            return CrispClient.website.sendMessageInConversation(
+              channelCredentials?.externalId, // websiteId
+              channelExternalId, // sessionId
+              {
+                type: 'file',
+                from: 'operator',
+                origin: 'chat',
+                content: {
+                  url: attachement.url,
+                  name: attachement.name,
+                  type: attachement.mimeType,
+                },
+                user: {
+                  type: 'website',
+                  nickname: user?.name || 'Operator',
+                  avatar:
+                    user?.picture ||
+                    user?.customPicture ||
+                    user?.image ||
+                    'https://chaindesk.ai/logo.png',
+                },
+              }
+            );
+          }) || [];
+
+        await Promise.all([
+          // send text content
+          CrispClient.website.sendMessageInConversation(
+            channelCredentials?.externalId, // websiteId
+            channelExternalId, // sessionId
+            {
+              type: 'text',
+              from: 'operator',
+              origin: 'chat',
+              content: payload.message,
+              user: {
+                type: 'website',
+                nickname: user?.name || 'Operator',
+                avatar:
+                  user?.picture ||
+                  user?.customPicture ||
+                  user?.image ||
+                  'https://chaindesk.ai/logo.png',
+              },
+            }
+          ),
+          // send attachements
+          ...attachementCalls,
+          // disable AI
+          CrispClient.website.updateConversationMetas(
+            channelCredentials?.externalId, // websiteId
+            channelExternalId, // sessionId
+            {
+              data: {
+                aiStatus: AIStatus.disabled,
+                aiDisabledDate: new Date(),
+              },
+            }
+          ),
+        ]);
       } catch (e) {
         console.error(e);
         throw Error(
