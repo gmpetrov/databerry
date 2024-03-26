@@ -51,9 +51,10 @@ import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
 import LeadForm from '@chaindesk/ui/LeadForm';
 import Markdown from '@chaindesk/ui/Markdown';
 
+import FileUploader from './FileUploader';
 import VisuallyHiddenInput from './VisuallyHiddenInput';
 
-const acceptedMimeTypesStr = [
+export const acceptedMimeTypesStr = [
   ...AcceptedImageMimeTypes,
   ...AcceptedVideoMimeTypes,
   ...AcceptedAudioMimeTypes,
@@ -577,34 +578,7 @@ function ChatBox({
                     })}
 
                   {withFileUpload && (
-                    <IconButton
-                      variant="plain"
-                      sx={{ maxHeight: '100%' }}
-                      size="sm"
-                      component="label"
-                      disabled={isLoading}
-                    >
-                      <AttachFileRoundedIcon />
-                      <VisuallyHiddenInput
-                        accept={acceptedMimeTypesStr}
-                        type="file"
-                        multiple
-                        onChange={async (e) => {
-                          const f = Array.from(e.target.files!);
-
-                          const maxFileSize = 5000000; // 5MB
-
-                          const found = f.find((one) => one.size > maxFileSize);
-
-                          if (found) {
-                            e.target.value = '';
-                            return alert('File size is limited to 5MB');
-                          }
-
-                          setFiles(f);
-                        }}
-                      />
-                    </IconButton>
+                    <FileUploader changeCallback={(f) => setFiles(f)} />
                   )}
 
                   <Stack direction="row" sx={{ ml: 'auto' }}>

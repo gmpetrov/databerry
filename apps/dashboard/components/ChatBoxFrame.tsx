@@ -7,19 +7,30 @@ import { useColorScheme } from '@mui/joy/styles';
 import { SxProps } from '@mui/joy/styles/types';
 import Typography from '@mui/joy/Typography';
 import React, { ReactPropTypes, useEffect, useMemo } from 'react';
+import useSWR from 'swr';
 
 import ChatBox from '@app/components/ChatBox';
 import useAgent from '@app/hooks/useAgent';
 import useChat, { ChatContext, CustomContact } from '@app/hooks/useChat';
+import { getConversation } from '@app/pages/api/conversations/[conversationId]';
 import { InitWidgetProps } from '@app/widgets/chatbox/common/types';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { ChatMessage } from '@chaindesk/lib/types';
 import { LeadCaptureToolchema } from '@chaindesk/lib/types/dtos';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
-import { Agent, ConversationChannel, Tool } from '@chaindesk/prisma';
+import {
+  Agent,
+  ConversationChannel,
+  Form,
+  Prisma,
+  Tool,
+} from '@chaindesk/prisma';
 import LeadForm from '@chaindesk/ui/LeadForm';
 import { cn } from '@chaindesk/ui/utils/cn';
+
+import TraditionalForm from './TraditionalForm';
 
 const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
 
@@ -55,7 +66,6 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
 
   const methods = useChat({
     endpoint: `${API_URL}/api/agents/${agentId}/query`,
-    // TODO: replace with ConversationChannel.channel when parcel resolver fixed.
     channel: 'website',
     agentId,
     localStorageConversationIdKey: `iFrameConversationId-${agentId}`,
@@ -146,6 +156,11 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
     refreshConversation,
     contact,
   } = methods;
+
+  const getConversationQuery = useSWR<
+    Prisma.PromiseReturnType<typeof getConversation>
+  >(conversationId ? `/api/conversations/${conversationId}` : null, fetcher);
+
   const hasCapturedLead =
     !!visitorEmail ||
     !!hasSubmittedForm ||
@@ -155,6 +170,20 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
   const leadToolConfig = ((agent as any)?.tools as Tool[])?.find(
     (one) => one?.type === 'lead_capture'
   )?.config as LeadCaptureToolchema['config'];
+
+  const traditionalFormTool = ((agent as any)?.tools as Tool[])?.find(
+    (one) => one?.type === 'form' && (one as any)?.form?.type === 'traditional'
+  );
+
+  const traditionalForm = useMemo(() => {
+    return (
+      <TraditionalForm
+        formId={traditionalFormTool?.formId || ''}
+        config={((traditionalFormTool as any)?.form as any)?.publishedConfig}
+        conversationId={conversationId}
+      />
+    );
+  }, [traditionalFormTool]);
 
   const injectLeadFormInInitMessags =
     !!leadToolConfig?.isRequired && !hasCapturedLead;
@@ -219,39 +248,48 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
     leadForm,
   ]);
 
-  // const initMessages = useMemo(() => {}, [props.initConfig?.initialMessages]);
-
   const messages = useMemo(() => {
     const form = {
       id: 'lead-form',
       from: 'agent',
       component: leadForm,
       disableActions: true,
-    } as ChatMessage;
+    };
 
-    return history.reduce(
-      (acc, current, index) => {
-        return [
-          ...acc,
-          current,
+    return history.reduce((acc, current, index) => {
+      const shouldRendereAfterAiReply =
+        history?.length >= 2 &&
+        index === 1 &&
+        !(history?.length === 2 && isStreaming);
 
-          // Show lead form after first AI answer when not required
-          ...(!!leadToolConfig &&
-          !leadToolConfig?.isRequired &&
-          !hasCapturedLead &&
-          history?.length >= 2 &&
-          index === 1 &&
-          !(history?.length === 2 && isStreaming)
-            ? [form]
-            : []),
-        ];
-      },
-      [
-        // Show lead form after first AI answer when required
-        // ...(!!leadToolConfig?.isRequired && !hasCapturedLead ? [form] : []),
-      ] as ChatMessage[]
-    );
-  }, [isStreaming, history, leadToolConfig, leadForm, hasCapturedLead]);
+      return [
+        ...acc,
+        current,
+
+        // Show lead form after first AI answer when not required
+        ...(!!leadToolConfig &&
+        !leadToolConfig?.isRequired &&
+        !hasCapturedLead &&
+        shouldRendereAfterAiReply
+          ? [form]
+          : []),
+        // render traditionalForm
+        ...(!!traditionalFormTool &&
+        shouldRendereAfterAiReply &&
+        !(getConversationQuery.data?.metadata as any)?.isTraditionalFormFilled
+          ? [{ from: 'agent', component: traditionalForm }]
+          : []),
+      ] as ChatMessage[];
+    }, [] as ChatMessage[]);
+  }, [
+    leadForm,
+    history,
+    leadToolConfig,
+    hasCapturedLead,
+    isStreaming,
+    traditionalFormTool,
+    traditionalForm,
+  ]);
 
   if (!agent) {
     return (
@@ -354,7 +392,13 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
             //     />
             //   ) : null
             // }
-            readOnly={leadToolConfig?.isRequired && !hasCapturedLead}
+            readOnly={
+              (!!traditionalFormTool &&
+                !(getConversationQuery.data?.metadata as any)
+                  ?.isTraditionalFormFilled &&
+                messages.length > 0) ||
+              (leadToolConfig?.isRequired && !hasCapturedLead)
+            }
           />
         </Box>
       </Layout>

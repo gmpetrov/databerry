@@ -46,7 +46,7 @@ export const createHandler =
     ) as FormConfigSchema;
 
     await EventDispatcher.dispatch({
-      type: 'blablaform-submission',
+      type: 'form-submission',
       conversationId,
       formId: tool.formId,
       formValues: payload,

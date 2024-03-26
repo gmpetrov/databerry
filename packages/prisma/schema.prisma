@@ -654,8 +654,10 @@ model Lead {
 }
 model Form {
   id          String  @id @default(cuid())
-
+  
   name        String
+
+  type        FormType    @default(conversational)
 
   draftConfig Json?
   publishedConfig Json?
@@ -980,6 +982,11 @@ enum ConversationChannel {
   form
   mail
   whatsapp
+}
+
+enum FormType {
+  conversational
+  traditional
 }
 
 enum AgentModelName {

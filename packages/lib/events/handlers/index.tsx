@@ -5,8 +5,8 @@ import leadCaptured from '../handlers/lead-captured';
 import toolApprovalRequired from '../handlers/tool-approval-requested';
 import { AppEventHandler } from '../type';
 
-import formSubmissionHandler from './blablaform-submission';
 import conversationResolved from './conversation-resolved';
+import formSubmissionHandler from './form-submission';
 
 type AppEventHandlers = {
   [K in AppEventSchema['type']]: (
@@ -15,7 +15,7 @@ type AppEventHandlers = {
 };
 
 export default {
-  'blablaform-submission': formSubmissionHandler,
+  'form-submission': formSubmissionHandler,
   'tool-approval-requested': toolApprovalRequired,
   'conversation-resolved': conversationResolved,
   'human-requested': humanRequested,
