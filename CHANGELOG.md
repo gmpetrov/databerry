@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.287"></a>
+## 0.1.287 (2024-03-26)
+
+### Fixed
+
+- 🐛 crisp human out of sync [[88a0745](https://github.com/gmpetrov/databerry/commit/88a074551f46b51cf40b18e6bc83e7697e872a28)]
+- 🐛 lower similarity score treshold [[ef3dea7](https://github.com/gmpetrov/databerry/commit/ef3dea7ef00faf4fadc69c00832e4e33071499f9)]
+- 🐛 custom css not applying on standard web compononent [[18e003b](https://github.com/gmpetrov/databerry/commit/18e003bc27c23025e318e34c6b30104b2096b37e)]
+
+### Miscellaneous
+
+-  bump [[5e42be6](https://github.com/gmpetrov/databerry/commit/5e42be6c1d2211ab3572b76996e360c95c731c49)]
+
+
 <a name="0.1.286"></a>
 ## 0.1.286 (2024-03-19)
 
