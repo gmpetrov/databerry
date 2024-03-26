@@ -87,8 +87,8 @@ const config: {
 
     price: {
       usd: {
-        monthly: 25,
-        annually: 250,
+        monthly: 49,
+        annually: 490,
         symbol: '$',
       },
     },
