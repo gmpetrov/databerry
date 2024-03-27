@@ -4,15 +4,33 @@ import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import React, { memo, useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-// import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
-import { cn } from '@chaindesk/ui/utils/cn';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+
+import 'katex/dist/katex.min.css';
 
 type Props = any & {
   animated?: boolean;
   onAnimateComplete?: (props?: any) => any;
+};
+
+// https://github.com/remarkjs/react-markdown/issues/785#issuecomment-1966495891
+export const preprocessLaTeX = (content: string) => {
+  // Replace block-level LaTeX delimiters \[ \] with $$ $$
+
+  const blockProcessedContent = content.replace(
+    /\\\[(.*?)\\\]/gs,
+    (_, equation) => `$$${equation}$$`
+  );
+  // Replace inline LaTeX delimiters \( \) with $ $
+  const inlineProcessedContent = blockProcessedContent.replace(
+    /\\\((.*?)\\\)/gs,
+    (_, equation) => `$${equation}$`
+  );
+  return inlineProcessedContent;
 };
 
 function Markdown({
@@ -23,6 +41,7 @@ function Markdown({
   ...otherProps
 }: Props) {
   const Render = useMemo(() => {
+    const _children = preprocessLaTeX(children);
     return (
       <ReactMarkdown
         {...otherProps}
@@ -99,10 +118,10 @@ function Markdown({
               }
             : {}),
         }}
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
+        remarkPlugins={[remarkGfm, remarkMath]}
+        rehypePlugins={[rehypeRaw, rehypeKatex]}
       >
-        {children}
+        {_children}
       </ReactMarkdown>
     );
   }, [children, className, animated]);
