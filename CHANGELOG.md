@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.289"></a>
+## 0.1.289 (2024-03-27)
+
+### Miscellaneous
+
+- 🎸 openrouter support [[a2bb07b](https://github.com/gmpetrov/databerry/commit/a2bb07b20bfcc84eb5761c4bae629b1a29957093)]
+
+
 <a name="0.1.288"></a>
 ## 0.1.288 (2024-03-27)
 
