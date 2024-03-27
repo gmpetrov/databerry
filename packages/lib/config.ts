@@ -1,4 +1,4 @@
-import { AgentModelName } from '@chaindesk/prisma';
+import { AgentModelName, ConversationChannel } from '@chaindesk/prisma';
 
 const config = {
   defaultDatasourceChunkSize: 1024,
@@ -69,5 +69,40 @@ export const youtubeSummaryTool = {
   sitemapPageSize: 1000,
   paginationLimit: 100,
 };
+
+export const channelConfig = {
+  [ConversationChannel.api]: {
+    isMarkdownCompatible: true,
+  },
+  [ConversationChannel.crisp]: {
+    isMarkdownCompatible: false,
+  },
+  [ConversationChannel.dashboard]: {
+    isMarkdownCompatible: true,
+  },
+  [ConversationChannel.form]: {
+    isMarkdownCompatible: true,
+  },
+  [ConversationChannel.mail]: {
+    isMarkdownCompatible: false,
+  },
+  [ConversationChannel.slack]: {
+    isMarkdownCompatible: false,
+  },
+  [ConversationChannel.website]: {
+    isMarkdownCompatible: true,
+  },
+  [ConversationChannel.whatsapp]: {
+    isMarkdownCompatible: false,
+  },
+  [ConversationChannel.zapier]: {
+    isMarkdownCompatible: true,
+  },
+} as Record<
+  ConversationChannel,
+  {
+    isMarkdownCompatible: boolean;
+  }
+>;
 
 export default config;
