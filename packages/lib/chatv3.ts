@@ -278,7 +278,7 @@ const chat = async ({
     tools: tools,
     filters: filters,
     topK: topK,
-    similarityThreshold: 0.76,
+    similarityThreshold: 0.75,
   });
   // }
 
@@ -450,10 +450,10 @@ const chat = async ({
     } as Parameters<typeof model.call>[0];
 
     console.log('CHAT V3 PAYLOAD', JSON.stringify(callParams, null, 2));
-    console.log(
-      'RETRIVAIL DATA----------->',
-      JSON.stringify(retrievalData, null, 2)
-    );
+    // console.log(
+    //   'RETRIVAIL DATA----------->',
+    //   JSON.stringify(retrievalData, null, 2)
+    // );
 
     const output = await model.call(callParams);
 
