@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.288"></a>
+## 0.1.288 (2024-03-27)
+
+### Fixed
+
+- 🐛 Force disable markdown output for unsupported channels [[1edac27](https://github.com/gmpetrov/databerry/commit/1edac27c89c31ebb25960a5ad0ba322e22c77dd5)]
+- 🐛 lower similarity score threshold [[483cc7d](https://github.com/gmpetrov/databerry/commit/483cc7d9ced595c1b43f0d2f9be26df0884b5564)]
+
+### Miscellaneous
+
+- 🤖 update pricing [[a63f661](https://github.com/gmpetrov/databerry/commit/a63f661a2e90a5dc3f72613e528e99b791301465)]
+
+
 <a name="0.1.287"></a>
 ## 0.1.287 (2024-03-26)
 
