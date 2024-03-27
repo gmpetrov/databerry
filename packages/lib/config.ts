@@ -13,22 +13,34 @@ export const XPBNPLabels = {
   summary: "Résumé d'un document",
 };
 
-export const ModelConfig = {
+export const ModelConfig: Record<
+  AgentModelName,
+  {
+    name: string;
+    maxTokens: number;
+    cost: number;
+    providerPriceByInputToken: number;
+    providerPricePriceByOutputToken: number;
+    baseUrl?: string;
+    isVisionSupported?: boolean;
+    isToolCallingSupported?: boolean;
+  }
+> = {
   [AgentModelName.gpt_3_5_turbo]: {
-    // name: 'gpt-3.5-turbo-1106',
     name: 'gpt-3.5-turbo-0125',
     maxTokens: 16385,
     cost: 1,
     providerPriceByInputToken: 0.0000005,
     providerPricePriceByOutputToken: 0.0000015,
+    isToolCallingSupported: true,
   },
   [AgentModelName.gpt_3_5_turbo_16k]: {
-    // name: 'gpt-3.5-turbo-1106',
     name: 'gpt-3.5-turbo-0125',
     maxTokens: 16385,
     cost: 1,
     providerPriceByInputToken: 0.0000005,
     providerPricePriceByOutputToken: 0.0000015,
+    isToolCallingSupported: true,
   },
   [AgentModelName.gpt_4]: {
     name: 'gpt-4',
@@ -36,6 +48,7 @@ export const ModelConfig = {
     cost: 30,
     providerPriceByInputToken: 0.00003,
     providerPricePriceByOutputToken: 0.00006,
+    isToolCallingSupported: true,
   },
   [AgentModelName.gpt_4_32k]: {
     name: 'gpt-4-32k',
@@ -43,6 +56,7 @@ export const ModelConfig = {
     cost: 60,
     providerPriceByInputToken: 0.00006,
     providerPricePriceByOutputToken: 0.00012,
+    isToolCallingSupported: true,
   },
   [AgentModelName.gpt_4_turbo]: {
     name: 'gpt-4-0125-preview',
@@ -50,6 +64,7 @@ export const ModelConfig = {
     cost: 13,
     providerPriceByInputToken: 0.00001,
     providerPricePriceByOutputToken: 0.00003,
+    isToolCallingSupported: true,
   },
   [AgentModelName.gpt_4_turbo_vision]: {
     name: 'gpt-4-vision-preview',
@@ -57,6 +72,34 @@ export const ModelConfig = {
     cost: 13,
     providerPriceByInputToken: 0.00001,
     providerPricePriceByOutputToken: 0.00003,
+    isToolCallingSupported: true,
+  },
+  [AgentModelName.claude_3_haiku]: {
+    name: 'anthropic/claude-3-haiku',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    maxTokens: 200000,
+    cost: 1,
+    providerPriceByInputToken: 0.00000025,
+    providerPricePriceByOutputToken: 0.00000125,
+    isToolCallingSupported: false,
+  },
+  [AgentModelName.mixtral_8x7b]: {
+    name: 'mistralai/mixtral-8x7b',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    maxTokens: 32768,
+    cost: 2,
+    providerPriceByInputToken: 0.00000054,
+    providerPricePriceByOutputToken: 0.00000054,
+    isToolCallingSupported: false,
+  },
+  [AgentModelName.dolphin_mixtral_8x7b]: {
+    name: 'cognitivecomputations/dolphin-mixtral-8x7b',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    maxTokens: 32000,
+    cost: 2,
+    providerPriceByInputToken: 0.00000027,
+    providerPricePriceByOutputToken: 0.00000027,
+    isToolCallingSupported: false,
   },
 };
 

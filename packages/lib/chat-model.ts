@@ -8,30 +8,6 @@ import failedAttemptHandler from './lc-failed-attempt-hanlder';
 import { promptTokensEstimate } from './tokens-estimate';
 import { SSE_EVENT } from './types';
 
-const list = () => ['mistery'];
-
-const tools = [
-  {
-    type: 'function',
-    function: {
-      name: 'list',
-      description:
-        'list queries books by genre, and returns a list of names of books',
-      parameters: {
-        type: 'object',
-        properties: {
-          genre: {
-            type: 'string',
-            enum: ['mystery', 'nonfiction', 'memoir', 'romance', 'historical'],
-          },
-        },
-      },
-      function: list,
-      parse: JSON.parse,
-    },
-  } as RunnableToolFunction<{ genre: string }>,
-];
-
 export default class ChatModel {
   public openai: OpenAI;
 
@@ -66,6 +42,7 @@ export default class ChatModel {
         };
 
         if (tools?.length > 0) {
+          // let fallbackContent = '';
           const runner = await this.openai.beta.chat.completions
             .runTools({
               ...otherProps,
@@ -91,10 +68,22 @@ export default class ChatModel {
               console.log('functionCallResult', functionCallResult)
             )
             .on('content', (chunk) => {
+              // fallbackContent += chunk;
               handleStream?.(chunk);
             });
 
           const completion = await runner.finalChatCompletion();
+          // .catch(async (err) => {
+          //   if (
+          //     fallbackContent?.includes('function') &&
+          //     fallbackContent?.includes('parameters')
+          //   ) {
+          //     return handleToolFallFallback({ output: fallbackContent });
+          //   }
+
+          //   // Fallback to original error
+          //   throw err;
+          // });
 
           usage.total_tokens = usage.prompt_tokens + usage.completion_tokens;
 
@@ -156,3 +145,59 @@ export default class ChatModel {
     );
   }
 }
+
+// const handleToolFallFallback = async (props: { output: string }) => {
+//   // Model without native tool support
+//   // Fallback to manual tool execution if possible otherwise throw original error
+//   try {
+//     const payload = JSON.parse(props.output) as {
+//       function: string;
+//       parameters: any;
+//     };
+
+//     console.log('[TOOL_CALLING_FALLBACK]: Payload', payload);
+
+//     const tool = tools.find(
+//       (tool) => tool.function.name === payload.function
+//     );
+
+//     if (tool) {
+//       const params = (tool.function as any).parse?.(
+//         JSON.stringify(payload.parameters)
+//       );
+
+//       console.log('[TOOL_CALLING_FALLBACK]: Validated Parameters', params);
+
+//       // Notify UI about tool execution
+//       handleStream?.(
+//         JSON.stringify({
+//           type: 'function',
+//           name: payload?.function,
+//           arguments: payload?.parameters,
+//         }),
+//         SSE_EVENT.tool_call
+//       );
+
+//       const toolResult = await (tool.function as any).function(params);
+
+//       const response = await this.openai.chat.completions.create({
+//         ...otherProps,
+//         messages: [
+//           ...otherProps.messages,
+//           {
+//             role: 'function',
+//             name: payload.function,
+//             content: JSON.stringify(toolResult),
+//           },
+//         ],
+//         stream: false,
+//       });
+
+//       handleStream?.(
+//         response?.choices?.[0]?.message?.content?.trim?.() || ''
+//       );
+
+//       return response;
+//     }
+//   } catch {}
+// };

@@ -20,6 +20,8 @@ const handler = (error: any) => {
     error.message.startsWith('Cancel') ||
     error.message.startsWith('AbortError') ||
     error.message.startsWith('ToolApprovalRequired') ||
+    error.message.startsWith('missing finish_reason for choice') ||
+    error.message.includes('requires moderation') ||
     error.name === 'AbortError'
   ) {
     throw error;

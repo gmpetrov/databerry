@@ -290,7 +290,15 @@ const chat = async ({
     })
   ).reverse();
 
-  const model = new ChatModel();
+  const isViaOpenRouter =
+    !!ModelConfig[modelName]?.baseUrl?.includes?.('openrouter');
+
+  const model = new ChatModel({
+    baseURL: ModelConfig[modelName]?.baseUrl,
+    apiKey: isViaOpenRouter
+      ? process.env.OPENROUTER_API_KEY
+      : process.env.OPENAI_API_KEY,
+  });
 
   try {
     // if (!!markAsResolvedTool) {
@@ -441,7 +449,7 @@ const chat = async ({
       presence_penalty: otherProps.presencePenalty,
       max_tokens: otherProps.maxTokens,
       signal: abortController?.signal,
-      tools: openAiTools,
+      tools: ModelConfig[modelName].isToolCallingSupported ? openAiTools : [],
       ...(openAiTools?.length > 0
         ? {
             tool_choice: 'auto',
@@ -450,10 +458,6 @@ const chat = async ({
     } as Parameters<typeof model.call>[0];
 
     console.log('CHAT V3 PAYLOAD', JSON.stringify(callParams, null, 2));
-    // console.log(
-    //   'RETRIVAIL DATA----------->',
-    //   JSON.stringify(retrievalData, null, 2)
-    // );
 
     const output = await model.call(callParams);
 

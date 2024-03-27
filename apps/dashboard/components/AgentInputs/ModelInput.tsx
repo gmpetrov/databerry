@@ -176,7 +176,7 @@ export default function ModelInput({}: Props) {
           }}
         >
           <Option value={AgentModelName.gpt_3_5_turbo}>
-            gpt-3.5-turbo - 16K -{' '}
+            GPT-3.5 Turbo - 16K -{' '}
             {ModelConfig[AgentModelName.gpt_3_5_turbo].cost} credit/query
           </Option>
           {/* <Option
@@ -186,13 +186,38 @@ export default function ModelInput({}: Props) {
             gpt-4 - 8K - {ModelConfig[AgentModelName.gpt_4].cost} credits/query
             (premium)
           </Option> */}
+
           <Option
             value={AgentModelName.gpt_4_turbo}
             disabled={!session?.data?.organization?.isPremium}
           >
-            gpt-4-turbo - 128k - {ModelConfig[AgentModelName.gpt_4_turbo].cost}{' '}
+            GPT-4 Turbo - 128k - {ModelConfig[AgentModelName.gpt_4_turbo].cost}{' '}
             credits/query (premium)
           </Option>
+
+          {/* <Option
+            value={AgentModelName.claude_3_haiku}
+            disabled={!session?.data?.organization?.isPremium}
+          >
+            Claude 3 Haiku - 200k -{' '}
+            {ModelConfig[AgentModelName.claude_3_haiku].cost} credits/query
+            (premium)
+          </Option> */}
+          {/* <Option
+            value={AgentModelName.mixtral_8x7b}
+            disabled={!session?.data?.organization?.isPremium}
+          >
+            Mixtral 8x7b - 32k - {ModelConfig[AgentModelName.mixtral_8x7b].cost}{' '}
+            credits/query (premium)
+          </Option> */}
+          {/* <Option
+            value={AgentModelName.dolphin_mixtral_8x7b}
+            disabled={!session?.data?.organization?.isPremium}
+          >
+            Dolphin 2.6 Mixtral 8x7B (⚠️ uncensored) - 32k -{' '}
+            {ModelConfig[AgentModelName.dolphin_mixtral_8x7b].cost}{' '}
+            credits/query (premium)
+          </Option> */}
         </Select>
       </FormControl>
 
