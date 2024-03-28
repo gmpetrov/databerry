@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.290"></a>
+## 0.1.290 (2024-03-28)
+
+### Fixed
+
+- 🐛 browser api down [[af79c20](https://github.com/gmpetrov/databerry/commit/af79c20b2767d1fe21633eb117819e7695e834b5)]
+
+
 <a name="0.1.289"></a>
 ## 0.1.289 (2024-03-27)
 
