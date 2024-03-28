@@ -76,6 +76,11 @@ const nextConfig = {
         destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/@:path`,
         permanent: false,
       },
+      {
+        source: '/api/browser',
+        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/browser`,
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
