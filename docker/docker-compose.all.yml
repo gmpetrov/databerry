@@ -9,15 +9,6 @@ services:
     ports:
       - '1080:1080'
       - '${MAILDEV_PORT}:1025'
-  base-api:
-    extends:
-      file: docker-compose.app.yml
-      service: base-api
-    depends_on:
-      - qdrant
-      - pgdb
-      - redis
-      - minio
 
   qdrant:
     image: qdrant/qdrant:v1.6.1
