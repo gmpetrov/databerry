@@ -1,22 +1,23 @@
-import chromium from '@sparticuz/chromium';
+import chromium from '@sparticuz/chromium-min';
 import { NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer-core';
 
-import { createApiHandler, respond } from '@chaindesk/lib/createa-api-handler';
 import { getTextFromHTML } from '@chaindesk/lib/loaders/web-page';
-import { AppNextApiRequest } from '@chaindesk/lib/types';
 
-const handler = createApiHandler();
-
-export const browser = async (req: AppNextApiRequest, res: NextApiResponse) => {
-  const url = req.query.url as string;
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const url = searchParams.get('url') as string;
 
   const customUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36';
 
   const browser = await puppeteer.launch({
     executablePath:
-      process.env.CHROMIUM_PATH || (await chromium.executablePath()),
+      process.env.CHROMIUM_PATH ||
+      (await chromium.executablePath(
+        'https://github.com/Sparticuz/chromium/releases/download/v123.0.0/chromium-v123.0.0-pack.tar'
+      )),
     args: process.env.CHROMIUM_PATH ? undefined : chromium.args,
     headless: true,
   });
@@ -36,11 +37,7 @@ export const browser = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
   await browser.close();
 
-  return {
+  return NextResponse.json({
     result: text,
-  };
-};
-
-handler.get(respond(browser));
-
-export default handler;
+  });
+}

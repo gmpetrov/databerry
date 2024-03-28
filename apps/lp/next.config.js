@@ -22,6 +22,10 @@ const nextConfig = {
   ],
   experimental: {
     outputFileTracingRoot: path.join(__dirname, '../../'),
+    serverComponentsExternalPackages: [
+      'puppeteer-core',
+      '@sparticuz/chromium-min',
+    ],
   },
   images: {
     remotePatterns: [
@@ -75,11 +79,6 @@ const nextConfig = {
         // destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/agents/@:path/standalone`,
         destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/@:path`,
         permanent: false,
-      },
-      {
-        source: '/api/browser',
-        destination: `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/browser`,
-        permanent: true,
       },
     ];
   },
