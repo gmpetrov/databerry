@@ -278,7 +278,7 @@ const chat = async ({
     tools: tools,
     filters: filters,
     topK: topK,
-    similarityThreshold: 0.75,
+    similarityThreshold: 0.72,
   });
   // }
 

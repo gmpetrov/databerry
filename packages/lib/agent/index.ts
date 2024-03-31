@@ -85,6 +85,7 @@ export default class AgentManager {
       userPrompt,
       systemPrompt,
       agentId: this.agent.id,
+      topK: this.topK,
 
       // Behaviors
       useLanguageDetection: !!this.agent.useLanguageDetection,
