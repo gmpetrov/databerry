@@ -1,5 +1,15 @@
 # Changelog
 
+<a name="0.1.291"></a>
+## 0.1.291 (2024-03-31)
+
+### Fixed
+
+- 🐛 improve rag based completion performance [[84cb8e5](https://github.com/gmpetrov/databerry/commit/84cb8e5951a51aaf24852cd96b14be029649189b)]
+- 🐛 topK [[126a9e9](https://github.com/gmpetrov/databerry/commit/126a9e960b3f95ed6a4d44fcd595da8409748fac)]
+- 🐛 migrate api/browser to lp to run on lambda [[054e7ed](https://github.com/gmpetrov/databerry/commit/054e7ed1424db9ef239edaad55c29ea8dc61ac0d)]
+
+
 <a name="0.1.290"></a>
 ## 0.1.290 (2024-03-28)
 
