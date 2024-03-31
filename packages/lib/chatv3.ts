@@ -329,9 +329,7 @@ const chat = async ({
 
     const knowledgeInstructions = `${
       !!datastoreTools?.length
-        ? `Use the following portion of a long document to see if any of the text is relevant to answer the question. <knowledge-base>${
-            retrievalData?.context
-          }</knowledge-base>
+        ? `Use the following portion of a long document to see if any of the text is relevant to answer the question. 
     ${
       !!restrictKnowledge
         ? `Limit your knowledge to the knowledge base, if you don't find an answer in the knowledge base, politely say that you don't know. Remember do not answer any query that is outside of the provided context, this is paramount.`
@@ -388,6 +386,21 @@ const chat = async ({
           ]
         : []),
       ...truncatedHistory,
+      {
+        role: 'user',
+        content:
+          userPrompt && userPrompt?.trim?.() !== '{query}'
+            ? promptInject({
+                template: userPrompt || '{query}',
+                query: query,
+                context: retrievalData?.context,
+              })
+            : `<knowledge-base>${retrievalData?.context}</knowledge-base>
+
+Question: ${query}
+        
+Answer:`,
+      },
       {
         role: 'user',
         content: promptInject({
@@ -458,6 +471,7 @@ const chat = async ({
     } as Parameters<typeof model.call>[0];
 
     console.log('CHAT V3 PAYLOAD', JSON.stringify(callParams, null, 2));
+    console.log('CONTEXT', JSON.stringify(retrievalData.rawResults, null, 2));
 
     const output = await model.call(callParams);
 
