@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.295"></a>
+## 0.1.295 (2024-03-31)
+
+### Fixed
+
+- 🐛 remove rag logic if no datastore tool [[c4f7600](https://github.com/gmpetrov/databerry/commit/c4f760068f19946446cc10e03d7975ce832db3d6)]
+
+
 <a name="0.1.294"></a>
 ## 0.1.294 (2024-03-31)
 
