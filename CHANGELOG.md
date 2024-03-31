@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.292"></a>
+## 0.1.292 (2024-03-31)
+
+### Fixed
+
+- 🐛 rollback [[dc7f213](https://github.com/gmpetrov/databerry/commit/dc7f2135eaaacf4d61b2483840c12e011a64ea37)]
+
+### Miscellaneous
+
+-  clean [[a5c210c](https://github.com/gmpetrov/databerry/commit/a5c210c27d71452472238a41e976194f0b0ea7bb)]
+
+
 <a name="0.1.291"></a>
 ## 0.1.291 (2024-03-31)
 
