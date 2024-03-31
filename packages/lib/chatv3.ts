@@ -324,22 +324,8 @@ const chat = async ({
         : []),
     ].join(' and ');
 
-    const requestHumanInstructions = `If the user is not satisfied with the assistant answers, offer to request a human operator, then if the user accepts call \`request_human\` to request a human to take over the conversation.`;
-    const markAsResolvedInstructions = `If the user is happy with your answer, call \`mark_as_resolved\` to mark the conversation as resolved.`;
-
-    const knowledgeInstructions = `${
-      !!datastoreTools?.length
-        ? `Use the following portion of a long document to see if any of the text is relevant to answer the question. <knowledge-base>${
-            retrievalData?.context
-          }</knowledge-base>
-    ${
-      !!restrictKnowledge
-        ? `Limit your knowledge to the knowledge base, if informations to answer the user question is not part of the knowledge base, politely say that you don't know.`
-        : ``
-    }
-    `
-        : ``
-    }`.trim();
+    const requestHumanInstructions = `If the user is not satisfied with the assistant answers, offer to request a human operator, then if the user accepts use tool \`request_human\` to request a human to take over the conversation.`;
+    const markAsResolvedInstructions = `If the user is happy with your answer, use tool \`mark_as_resolved\` to mark the conversation as resolved.`;
 
     const _systemPrompt = `${systemPrompt}
     ${
@@ -364,7 +350,7 @@ const chat = async ({
     }
     ${
       useLanguageDetection
-        ? `Answer the users question in the same language as the user question. You are able to speak any language.`
+        ? `Answer the users question in the same language as the user question. You can speak all languages.`
         : ``
     }
     ${
@@ -375,7 +361,6 @@ const chat = async ({
     }
     ${!!markAsResolvedTool ? markAsResolvedInstructions : ``}
     ${!!requestHumanTool ? requestHumanInstructions : ``}
-    ${knowledgeInstructions}
     `.trim();
 
     const messages: ChatCompletionMessageParam[] = [
@@ -387,18 +372,28 @@ const chat = async ({
             } as ChatCompletionMessageParam,
           ]
         : []),
+      ...(restrictKnowledge
+        ? ([
+            {
+              role: 'user',
+              content: `Only use the previous message and the following Knowledge Base extract to answer my questions. If the knowledge base does not contains informations related to the my questions politely say that you do not know. I do not want to see misleading answers. Context: ${retrievalData?.context}`,
+            },
+            {
+              role: 'assistant',
+              content: `Ok I will follow your instructions carefully. I will only use the knowledge base you provided to answer your questions. If the context does not contains informations related to your questions I will politely say that I do not know. I will not provide misleading answers.`,
+            },
+          ] as ChatCompletionMessageParam[])
+        : ([
+            {
+              role: 'user',
+              content: `Use the following Knowledge Base extract to answer my questions. Context: ${retrievalData?.context}`,
+            },
+            {
+              role: 'assistant',
+              content: `Ok I will use the knowledge base you provided to answer your questions.`,
+            },
+          ] as ChatCompletionMessageParam[])),
       ...truncatedHistory,
-      // {
-      //   role: 'user',
-      //   content:
-      //     userPrompt && userPrompt?.trim?.() !== '{query}'
-      //       ? promptInject({
-      //           template: userPrompt || '{query}',
-      //           query: query,
-      //           context: retrievalData?.context,
-      //         })
-      //       : `If the provided knowledge base is not relevant or complete enough to confidently answer the user’s question, your best response is to politely say that you do not know: Question: ${query} Context: ${retrievalData?.context} Answer: `,
-      // },
       {
         role: 'user',
         content: promptInject({

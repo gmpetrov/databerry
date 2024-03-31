@@ -14,7 +14,7 @@ export const toJsonSchema = ((tool: MarkAsResolvedToolSchema, config) => {
   return {
     name: `mark_as_resolved`,
     description:
-      'Mark conversation as resolved. Use this when the user issue is resolved and your are closing the conversation.',
+      'Mark conversation as resolved. Use this tool when the user is happy with your answers.',
     parameters: {},
   };
 }) as ToolToJsonSchema;
