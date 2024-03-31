@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.293"></a>
+## 0.1.293 (2024-03-31)
+
+### Fixed
+
+- 🐛 knowledge restriction trick [[f64b459](https://github.com/gmpetrov/databerry/commit/f64b459b174b131ff4ed7b482f0925995e5391bc)]
+
+### Miscellaneous
+
+-  pricing [[3cbd834](https://github.com/gmpetrov/databerry/commit/3cbd834c5168fde9be53f857f9ac70225f6d2b87)]
+
+
 <a name="0.1.292"></a>
 ## 0.1.292 (2024-03-31)
 
