@@ -471,7 +471,6 @@ Answer:`,
     } as Parameters<typeof model.call>[0];
 
     console.log('CHAT V3 PAYLOAD', JSON.stringify(callParams, null, 2));
-    console.log('CONTEXT', JSON.stringify(retrievalData.rawResults, null, 2));
 
     const output = await model.call(callParams);
 
