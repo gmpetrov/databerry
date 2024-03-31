@@ -329,10 +329,12 @@ const chat = async ({
 
     const knowledgeInstructions = `${
       !!datastoreTools?.length
-        ? `Use the following portion of a long document to see if any of the text is relevant to answer the question. 
+        ? `Use the following portion of a long document to see if any of the text is relevant to answer the question. <knowledge-base>${
+            retrievalData?.context
+          }</knowledge-base>
     ${
       !!restrictKnowledge
-        ? `Limit your knowledge to the knowledge base, if you don't find an answer in the knowledge base, politely say that you don't know. Remember do not answer any query that is outside of the provided context, this is paramount.`
+        ? `Limit your knowledge to the knowledge base, if informations to answer the user question is not part of the knowledge base, politely say that you don't know.`
         : ``
     }
     `
@@ -386,21 +388,17 @@ const chat = async ({
           ]
         : []),
       ...truncatedHistory,
-      {
-        role: 'user',
-        content:
-          userPrompt && userPrompt?.trim?.() !== '{query}'
-            ? promptInject({
-                template: userPrompt || '{query}',
-                query: query,
-                context: retrievalData?.context,
-              })
-            : `<knowledge-base>${retrievalData?.context}</knowledge-base>
-
-Question: ${query}
-        
-Answer:`,
-      },
+      // {
+      //   role: 'user',
+      //   content:
+      //     userPrompt && userPrompt?.trim?.() !== '{query}'
+      //       ? promptInject({
+      //           template: userPrompt || '{query}',
+      //           query: query,
+      //           context: retrievalData?.context,
+      //         })
+      //       : `If the provided knowledge base is not relevant or complete enough to confidently answer the user’s question, your best response is to politely say that you do not know: Question: ${query} Context: ${retrievalData?.context} Answer: `,
+      // },
       {
         role: 'user',
         content: promptInject({
