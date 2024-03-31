@@ -376,11 +376,11 @@ const chat = async ({
         ? ([
             {
               role: 'user',
-              content: `Only use the previous message and the following Knowledge Base extract to answer my questions. If the knowledge base does not contains informations related to the my questions politely say that you do not know. I do not want to see misleading answers. Context: ${retrievalData?.context}`,
+              content: `Only use the previous message and the following Knowledge Base extract to answer my questions. If information from the knowledge is not complete enough to answer accurately, politely say that you do not know. I do not want to see misleading answers. Don't try to make up an answer. Context: ${retrievalData?.context}`,
             },
             {
               role: 'assistant',
-              content: `Ok I will follow your instructions carefully. I will only use the knowledge base you provided to answer your questions. If the context does not contains informations related to your questions I will politely say that I do not know. I will not provide misleading answers.`,
+              content: `Ok I will follow your instructions carefully. I will only use the knowledge base you provided to answer your questions. If informations to answer your questions can't be found in the knowledge base or if informations are not complete enough I will politely say that I do not know. I will not generate misleading answers. I will not try to make up an answer.`,
             },
           ] as ChatCompletionMessageParam[])
         : ([
