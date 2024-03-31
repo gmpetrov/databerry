@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.294"></a>
+## 0.1.294 (2024-03-31)
+
+### Miscellaneous
+
+- 🤖 update prompt [[f5fa61e](https://github.com/gmpetrov/databerry/commit/f5fa61eb014eb018b9b3e18ffc32538dcacc0e3b)]
+
+
 <a name="0.1.293"></a>
 ## 0.1.293 (2024-03-31)
 
