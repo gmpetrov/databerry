@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.297"></a>
+## 0.1.297 (2024-04-01)
+
+### Miscellaneous
+
+- 🤖 enable experimental models [[c7498bb](https://github.com/gmpetrov/databerry/commit/c7498bbc172d4ed6060419d1c281f0d69b41189f)]
+
+
 <a name="0.1.296"></a>
 ## 0.1.296 (2024-04-01)
 
