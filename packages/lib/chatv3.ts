@@ -273,7 +273,7 @@ const chat = async ({
 
   // if (userPrompt?.includes('{context}')) {
   retrievalData = await datastoreToolHandler({
-    maxTokens: Math.min(ModelConfig?.[modelName!]?.maxTokens * 0.2, 3000), // limit RAG to max 3K tokens
+    maxTokens: Math.min(ModelConfig?.[modelName!]?.maxTokens * 0.2, 2000), // limit RAG to max 2K tokens
     query: retrievalQuery || query,
     tools: tools,
     filters: filters,
@@ -361,6 +361,7 @@ const chat = async ({
     }
     ${!!markAsResolvedTool ? markAsResolvedInstructions : ``}
     ${!!requestHumanTool ? requestHumanInstructions : ``}
+    ${nbDatastoreTools > 0 ? `Knowledge Base: ${retrievalData?.context}` : ``}
     `.trim();
 
     const messages: ChatCompletionMessageParam[] = [
@@ -377,23 +378,14 @@ const chat = async ({
           ? ([
               {
                 role: 'user',
-                content: `Only use the previous message and the following Knowledge Base extract to answer my questions. If information from the knowledge is not complete enough to answer accurately, politely say that you do not know. I do not want to see misleading answers. Don't try to make up an answer. Context: ${retrievalData?.context}`,
+                content: `Only use previous message to answer my questions. If information to answer my question is not relevant, politely say that you do not know. I do not want to see misleading answers. Don't try to make up an answer.`,
               },
               {
                 role: 'assistant',
                 content: `Ok I will follow your instructions carefully. I will only use the knowledge base you provided to answer your questions. If informations to answer your questions can't be found in the knowledge base or if informations are not complete enough I will politely say that I do not know. I will not generate misleading answers. I will not try to make up an answer.`,
               },
             ] as ChatCompletionMessageParam[])
-          : ([
-              {
-                role: 'user',
-                content: `Use the following Knowledge Base extract to answer my questions. Context: ${retrievalData?.context}`,
-              },
-              {
-                role: 'assistant',
-                content: `Ok I will use the knowledge base you provided to answer your questions.`,
-              },
-            ] as ChatCompletionMessageParam[])
+          : ([] as ChatCompletionMessageParam[])
         : []),
       ...truncatedHistory,
       {
@@ -466,6 +458,14 @@ const chat = async ({
     } as Parameters<typeof model.call>[0];
 
     console.log('CHAT V3 PAYLOAD', JSON.stringify(callParams, null, 2));
+    // console.log(
+    //   'CHUNKS----------->',
+    //   JSON.stringify(
+    //     retrievalData?.rawResults.map((each) => ({ ...each })),
+    //     null,
+    //     2
+    //   )
+    // );
 
     const output = await model.call(callParams);
 
