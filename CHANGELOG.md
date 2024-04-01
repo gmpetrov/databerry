@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.296"></a>
+## 0.1.296 (2024-04-01)
+
+### Fixed
+
+- 🐛 finetune rag [[56d2d5b](https://github.com/gmpetrov/databerry/commit/56d2d5b26def8baca0e6337d3b6d18c05369c9c8)]
+
+
 <a name="0.1.295"></a>
 ## 0.1.295 (2024-03-31)
 
