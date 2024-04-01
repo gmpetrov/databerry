@@ -195,14 +195,14 @@ export default function ModelInput({}: Props) {
             credits/query (premium)
           </Option>
 
-          {/* <Option
+          <Option
             value={AgentModelName.claude_3_haiku}
             disabled={!session?.data?.organization?.isPremium}
           >
             Claude 3 Haiku - 200k -{' '}
             {ModelConfig[AgentModelName.claude_3_haiku].cost} credits/query
             (premium)
-          </Option> */}
+          </Option>
           {/* <Option
             value={AgentModelName.mixtral_8x7b}
             disabled={!session?.data?.organization?.isPremium}
@@ -210,14 +210,14 @@ export default function ModelInput({}: Props) {
             Mixtral 8x7b - 32k - {ModelConfig[AgentModelName.mixtral_8x7b].cost}{' '}
             credits/query (premium)
           </Option> */}
-          {/* <Option
+          <Option
             value={AgentModelName.dolphin_mixtral_8x7b}
             disabled={!session?.data?.organization?.isPremium}
           >
-            Dolphin 2.6 Mixtral 8x7B (⚠️ uncensored) - 32k -{' '}
-            {ModelConfig[AgentModelName.dolphin_mixtral_8x7b].cost}{' '}
+            Dolphin 2.6 Mixtral 8x7B (⚠️ Uncensored / Can produce NSFW content)
+            - 32k - {ModelConfig[AgentModelName.dolphin_mixtral_8x7b].cost}{' '}
             credits/query (premium)
-          </Option> */}
+          </Option>
         </Select>
       </FormControl>
 
