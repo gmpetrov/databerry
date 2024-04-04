@@ -15,9 +15,9 @@ export const handleEvent = async (
 ) => {
   const { token, event } = AppeEventHandlerSchema.parse(req.body);
 
-  // if (token !== process.env.JWT_SECRET) {
-  //   throw new ApiError(ApiErrorType.UNAUTHORIZED);
-  // }
+  if (token !== process.env.JWT_SECRET) {
+    throw new ApiError(ApiErrorType.UNAUTHORIZED);
+  }
 
   return appEventHandlers[event.type](event as any);
 };

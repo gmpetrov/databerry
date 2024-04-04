@@ -1,3 +1,4 @@
+import axios from 'axios';
 import type { Schema as JSONSchema } from 'jsonschema';
 
 import createToolParser from '@chaindesk/lib/create-tool-parser';
@@ -41,12 +42,14 @@ export const createHandler =
       useDraftConfig ? form?.draftConfig : form?.publishedConfig
     ) as FormConfigSchema;
 
-    await EventDispatcher.dispatch({
-      type: 'form-submission',
-      conversationId,
-      formId: tool.formId,
-      formValues: payload,
-    });
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${tool.formId}`,
+      {
+        conversationId,
+        formId: tool.formId,
+        formValues: payload,
+      }
+    );
 
     return {
       data: 'Form submitted successfully',
@@ -92,20 +95,14 @@ export const createHandlerV2 =
       },
     });
 
-    if (['website', 'dashboard'].includes(channel || '')) {
-      return {
-        data: `should display form`,
-        metadata: {
-          shouldDisplayForm: true,
-          formId: form.id,
-          conversationId: config?.conversationId,
-        },
-      };
-    } else {
-      return {
-        data: `send the user this form url: ${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${form.id}?conversationId=${config?.conversationId}`,
-      };
-    }
+    return {
+      data: `send the user this form url: ${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${form.id}?conversationId=${config?.conversationId}`,
+      metadata: {
+        shouldDisplayForm: true,
+        formId: form.id,
+        conversationId: config?.conversationId,
+      },
+    };
   };
 
 export const createParser =

@@ -1,11 +1,14 @@
-import { CheckIcon } from '@heroicons/react/20/solid';
 import { zodResolver } from '@hookform/resolvers/zod';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SendIcon from '@mui/icons-material/Send';
 import {
   Button,
   Card,
   CardContent,
+  Chip,
+  ChipDelete,
   Divider,
   Input,
   Option,
@@ -18,7 +21,7 @@ import {
 import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
@@ -37,8 +40,10 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
-import { FormConfigSchema } from '@chaindesk/lib/types/dtos';
+import { FormConfigSchema, FormSubmitSchema } from '@chaindesk/lib/types/dtos';
 import { Prisma } from '@chaindesk/prisma';
+import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
+import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 import FileUploader from './FileUploader';
 
@@ -75,7 +80,7 @@ const shapeTozod = (
         zodType = z.string().email();
         break;
       case FieldType.TextArea:
-        zodType = z.string().min(50);
+        zodType = z.string().min(25);
         break;
       case FieldType.PhoneNumber:
         const phoneRegex = new RegExp(
@@ -122,14 +127,35 @@ const fieldTypesMap = {
     placeholder: string;
   }) => (
     <Stack>
-      <Input
+      <PhoneNumberInput
+        control={methods.control as any}
+        {...(methods.register(name) as any)}
+        // placeholder={t('chatbubble:lead.phoneNumber')}
+        placeholder={placeholder}
+        handleChange={(value) => {
+          methods.setValue(name, value as never, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        }}
+        // selectProps={{
+        //   slotProps: {
+        //     listbox: {
+        //       // Fix the styling issue with shadow root usage. Similar issue: https://stackoverflow.com/questions/69828392/mui-select-drop-down-options-not-styled-when-using-entry-point-to-insert-scoped
+        //       container: chatboxRoot,
+        //     },
+        //   },
+        // }}
+      />
+
+      {/* <Input
         {...methods?.register(name)}
         placeholder={placeholder}
         sx={{ width: '100%' }}
       />
       <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
         {methods?.formState?.errors?.[name]?.message}
-      </Typography>
+      </Typography> */}
     </Stack>
   ),
   text: ({
@@ -216,25 +242,56 @@ const fieldTypesMap = {
     formId: string;
     conversationId?: string;
     changeHandler(name: string, value: string): void;
-  }) => (
-    <FileUploader
-      variant="outlined"
-      placeholder={placeholder || 'Upload Files'}
-      changeCallback={async (f) => {
-        const filesUrls = await s3Upload(
-          f.map((each) => ({
-            case: 'formUpload',
-            fileName: each.name,
-            mimeType: each.type,
-            file: each,
-            formId,
-            conversationId,
-          }))
-        );
-        changeHandler(name, JSON.stringify(filesUrls));
-      }}
-    />
-  ),
+  }) => {
+    // const [files, setFiles] = useState<File[]>([] as File[]);
+    // const [fileUrls, setFileUrls] = useState<string[]>([] as string[]);
+
+    return (
+      <Stack>
+        {/* {files.map((each, index) => (
+          <Chip
+            size="lg"
+            key={each.name}
+            variant="soft"
+            color="primary"
+            endDecorator={
+              <ChipDelete
+                // disabled={isLoading}
+                onDelete={() => {
+                  const filtered = files.filter((_, i) => i !== index);
+                  const filteredFileUrls = fileUrls.filter(
+                    (_, i) => i !== index
+                  );
+                  setFiles(filtered);
+                  changeHandler(name, JSON.stringify(filteredFileUrls));
+                }}
+              />
+            }
+          >
+            {each.name}
+          </Chip>
+        ))} */}
+        <FileUploader
+          variant="outlined"
+          placeholder={placeholder || 'Upload'}
+          changeCallback={async (f) => {
+            const filesUrls = await s3Upload(
+              f.map((each) => ({
+                case: 'formUpload',
+                fileName: each.name,
+                mimeType: each.type,
+                file: each,
+                formId,
+                conversationId,
+              }))
+            );
+            // setFiles(f);
+            changeHandler(name, JSON.stringify(filesUrls));
+          }}
+        />
+      </Stack>
+    );
+  },
 };
 
 function TraditionalForm({
@@ -297,7 +354,9 @@ function TraditionalForm({
   const conversationMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof updateConversation>
   >(
-    conversationId ? `/api/conversations/${conversationId}` : null,
+    conversationId
+      ? `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/conversations/${conversationId}`
+      : null,
     generateActionFetcher(HTTP_METHOD.PATCH)
   );
 
@@ -305,16 +364,14 @@ function TraditionalForm({
     try {
       setState({ loading: true, hasErrored: false });
       const values = methods.getValues();
-      const response = await axios.post('/api/events', {
-        event: {
-          type: 'form-submission',
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${formId}`,
+        {
           formId,
           conversationId,
           formValues: values,
-        },
-        // TODO: make valid form specific token.
-        token: '123456',
-      });
+        } as FormSubmitSchema
+      );
 
       // Do not move to /api/events, a form is not necessary linked to conversation.
       if (conversationId) {
@@ -340,7 +397,9 @@ function TraditionalForm({
       color="neutral"
       sx={{
         position: 'relative',
-        overflowY: 'visible',
+        overflowY: 'auto',
+        width: '100%',
+        flex: 1,
       }}
     >
       {state.isFormSubmitted && !conversationId && (
@@ -357,13 +416,14 @@ function TraditionalForm({
         </Stack>
       )}
       <CardContent
-        sx={{
+        sx={(t) => ({
           textAlign: 'center',
           alignItems: 'center',
           position: 'relative',
-          minWidth: '300px',
-          overflowY: 'scroll',
-        }}
+          overflowY: 'auto',
+          width: '100%',
+          display: 'flex',
+        })}
       >
         <AnimatePresence>
           {state.isFormSubmitted && (
@@ -377,21 +437,22 @@ function TraditionalForm({
             >
               <Stack
                 spacing={2}
+                sx={{ p: 4 }}
                 height="100%"
                 justifyContent="center"
                 alignItems="center"
               >
-                <CheckIcon className="w-12 font-bold text-green-600 border-2 border-green-600 rounded-full" />
-                <Typography level="title-md">
+                <CheckCircleRoundedIcon sx={{ fontSize: 42 }} color="primary" />
+                <Typography level="h4">
                   {config?.endScreen?.successMessage ||
-                    'The Form Was Submitted Succcessfully!'}
+                    'Form Submitted Succcessfully!'}
                 </Typography>
                 {config?.endScreen?.cta?.label && (
                   <a
                     href={config?.endScreen?.cta?.url || '#'}
                     target={config?.endScreen?.cta?.target || '_blank'}
                   >
-                    <Button variant="solid" size="lg" color="success">
+                    <Button variant="solid" size="lg" color="primary">
                       {config?.endScreen?.cta?.label}
                     </Button>
                   </a>
@@ -410,13 +471,22 @@ function TraditionalForm({
               key="component"
               className="w-full"
             >
-              <Typography level="title-md">
-                {config?.startScreen?.title}
-              </Typography>
-              <Typography level="body-md">
-                {config?.startScreen?.description}
-              </Typography>
-              <Divider sx={{ mb: 1 }} />
+              {(config?.startScreen?.title ||
+                config?.startScreen?.description) && (
+                <Stack sx={{ mb: 2 }}>
+                  {config?.startScreen?.title && (
+                    <Typography level="h3">
+                      {config?.startScreen?.title}
+                    </Typography>
+                  )}
+
+                  {config?.startScreen?.description && (
+                    <Typography level="body-md">
+                      {config?.startScreen?.description}
+                    </Typography>
+                  )}
+                </Stack>
+              )}
 
               <Stack
                 width="100%"
@@ -460,8 +530,9 @@ function TraditionalForm({
                   </Stack>
                 ))}
               </Stack>
-              <Stack direction="row-reverse" width="100%" mt={2}>
+              <Stack mt={2}>
                 <Button
+                  type="submit"
                   disabled={
                     config?.fields.length == 0 || !methods.formState.isValid
                   }
@@ -470,8 +541,9 @@ function TraditionalForm({
                   size="md"
                   color="primary"
                   endDecorator={<SendIcon fontSize="sm" />}
+                  sx={{ with: '100%' }}
                 >
-                  Send
+                  Submit
                 </Button>
                 <Snackbar
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -484,6 +556,10 @@ function TraditionalForm({
               </Stack>
             </motion.div>
           )}
+
+          <Stack sx={{ mt: 2 }}>
+            <PoweredBy />
+          </Stack>
         </AnimatePresence>
       </CardContent>
     </Card>

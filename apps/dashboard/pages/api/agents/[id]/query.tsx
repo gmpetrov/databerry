@@ -47,8 +47,9 @@ export const chatAgentRequest = async (
 
   const conversationId = data.conversationId || cuid();
   if (
-    session?.authType == 'apiKey' &&
-    data.channel !== ConversationChannel.form
+    (session?.authType == 'apiKey' &&
+      data.channel !== ConversationChannel.form) ||
+    !data.channel
   ) {
     data.channel = ConversationChannel.api;
   }

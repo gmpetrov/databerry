@@ -1,5 +1,5 @@
 import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
-import { Button } from '@mui/joy';
+import IconButton from '@mui/joy/IconButton';
 import { useState } from 'react';
 
 import { acceptedMimeTypesStr } from './ChatBox';
@@ -17,11 +17,11 @@ export default function FileUploader({
 }) {
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   return (
-    <Button
+    <IconButton
       disabled={loading}
+      size="sm"
       variant={variant}
       sx={{ maxHeight: '100%' }}
-      size="sm"
       component="label"
     >
       {loading === false ? 'files loaded' : placeholder}
@@ -52,6 +52,6 @@ export default function FileUploader({
           setLoading(false);
         }}
       />
-    </Button>
+    </IconButton>
   );
 }

@@ -657,7 +657,7 @@ model Form {
   
   name        String
 
-  type        FormType    @default(conversational)
+  type        FormType    @default(traditional)
 
   draftConfig Json?
   publishedConfig Json?

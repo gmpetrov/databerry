@@ -824,19 +824,21 @@ const AppEventBaseSchema = z.object({
   // organizationId: z.string().cuid(),
 });
 
+export const FormSubmitSchema = AppEventBaseSchema.extend({
+  formId: z.string().cuid(),
+  formValues: z.record(z.string(), z.unknown()),
+  conversationId: z.string().cuid().optional(),
+  submissionId: z.string().cuid().optional().nullable(),
+});
+
+export type FormSubmitSchema = z.infer<typeof FormSubmitSchema>;
+
 export const AppEventSchema = z.discriminatedUnion('type', [
   AppEventBaseSchema.extend({
     type: z.literal('tool-approval-requested'),
     conversationId: z.string().cuid(),
     approvals: ChatResponse.shape.approvals,
     agentName: z.string(),
-  }),
-  AppEventBaseSchema.extend({
-    type: z.literal('form-submission'),
-    formId: z.string().cuid(),
-    formValues: z.record(z.string(), z.unknown()),
-    conversationId: z.string().cuid().optional(),
-    submissionId: z.string().cuid().optional().nullable(),
   }),
   AppEventBaseSchema.extend({
     type: z.literal('conversation-resolved'),

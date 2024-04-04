@@ -158,13 +158,13 @@ function FormSubmissionsTab({ formId }: Props) {
                       return (
                         <td key={col}>
                           <div
-                            className={`relative flex items-center space-x-2 overflow-x-scroll ${
+                            className={`relative flex items-center space-x-2 overflow-x-auto ${
                               documents.length > 0 ? 'min-h-[200px]' : ''
                             }`}
                           >
                             {documents.length > 1 && (
                               <Chip
-                                className="absolute right-0 top-0"
+                                className="absolute top-0 right-0"
                                 size="sm"
                               >
                                 {documents.length - 1} more {'->'}

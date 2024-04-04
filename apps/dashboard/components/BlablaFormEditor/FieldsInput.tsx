@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Checkbox,
+  FormControl,
   FormLabel,
   IconButton,
   Input as JoyInput,
@@ -98,7 +99,7 @@ export const Choices = <T extends Record<string, unknown>>({
           </Stack>
         ))}
       </Stack>
-      <div className="flex flex-col  justify-start  h-full">
+      <div className="flex flex-col justify-start h-full">
         <Button
           size="sm"
           onClick={() => append('' as ArrayPath<T>)}
@@ -174,27 +175,8 @@ function FieldsInput({ type = 'conversational' }: Props) {
                       </AccordionSummary>
                       <AccordionDetails>
                         <Stack spacing={2}>
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            alignItems="center"
-                            justifyContent="space-between"
-                          >
-                            <Typography>Label</Typography>
-                            <JoyInput
-                              {...methods.register(
-                                `draftConfig.fields.${index}.name`
-                              )}
-                            />
-                          </Stack>
-
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            alignItems="center"
-                            justifyContent="space-between"
-                          >
-                            <Typography>Type</Typography>
+                          <FormControl>
+                            <FormLabel>Type</FormLabel>
                             <Select
                               sx={{ width: '100%' }}
                               defaultValue={field.type}
@@ -239,7 +221,17 @@ function FieldsInput({ type = 'conversational' }: Props) {
                                 </Option>
                               ))}
                             </Select>
-                          </Stack>
+                          </FormControl>
+
+                          <FormControl>
+                            <FormLabel>Label</FormLabel>
+                            <JoyInput
+                              {...methods.register(
+                                `draftConfig.fields.${index}.name`
+                              )}
+                            />
+                          </FormControl>
+
                           {fieldsValues?.[index]?.type === FieldType.Select && (
                             <Stack direction="column">
                               <Typography>Options</Typography>
@@ -249,25 +241,16 @@ function FieldsInput({ type = 'conversational' }: Props) {
                               />
                             </Stack>
                           )}
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            alignItems="center"
-                            justifyContent="space-between"
-                          >
-                            <Typography>Stub</Typography>
+                          <FormControl>
+                            <FormLabel>Placeholder</FormLabel>
                             <JoyInput
                               {...methods.register(
                                 `draftConfig.fields.${index}.placeholder`
                               )}
                             />
-                          </Stack>
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            alignItems="center"
-                          >
-                            <Typography>Required</Typography>
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Required</FormLabel>
                             <Checkbox
                               defaultChecked={field.required}
                               onChange={(e) => {
@@ -277,7 +260,7 @@ function FieldsInput({ type = 'conversational' }: Props) {
                                 );
                               }}
                             />
-                          </Stack>
+                          </FormControl>
                         </Stack>
                       </AccordionDetails>
                     </Accordion>

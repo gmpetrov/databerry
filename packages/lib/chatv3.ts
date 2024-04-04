@@ -499,15 +499,15 @@ const chat = async ({
       }),
     };
 
-    if (metadata && 'shouldDisplayForm' in metadata) {
-      return {
-        answer: '',
-        usage: {},
-        approvals,
-        sources: [] as Source[],
-        metadata,
-      };
-    }
+    // if (metadata && 'shouldDisplayForm' in metadata) {
+    //   return {
+    //     answer: '',
+    //     usage: {},
+    //     approvals,
+    //     sources: [] as Source[],
+    //     metadata,
+    //   };
+    // }
 
     return {
       answer,

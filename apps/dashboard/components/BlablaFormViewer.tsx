@@ -30,6 +30,7 @@ import {
 } from '@chaindesk/lib/types/dtos';
 import { ConversationChannel } from '@chaindesk/prisma';
 import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
+import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 import { formType } from './BlablaFormEditor/FieldsInput';
 import { acceptedMimeTypesStr } from './ChatBox';
@@ -140,7 +141,7 @@ function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
           <CircularProgress size="sm" color="neutral" />
         </>
       ) : (
-        <Stack sx={{ maxWidth: 'md' }} gap={5}>
+        <Stack sx={{ width: '100%' }} gap={5}>
           <Stack
             width="100%"
             display="flex"
@@ -283,7 +284,12 @@ function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
             )}
 
           {type === formType.traditional && (
-            <TraditionalForm formId={formId} conversationId={conversationId} />
+            <Stack sx={{ width: '100%', maxWidth: '350px', mx: 'auto' }}>
+              <TraditionalForm
+                formId={formId}
+                conversationId={conversationId}
+              />
+            </Stack>
           )}
 
           {isFormValid && config?.endScreen?.cta?.label && (
@@ -442,6 +448,12 @@ function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
               </Motion>
             </Stack>
           )}
+        </Stack>
+      )}
+
+      {type === formType.conversational && (
+        <Stack sx={{ position: 'fixed', bottom: 15 }}>
+          <PoweredBy />
         </Stack>
       )}
     </Stack>

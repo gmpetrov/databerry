@@ -149,7 +149,7 @@ function Form({ formId }: Props) {
               transition: 'all 0.2s ease',
             }}
           >
-            <Accordion
+            {/* <Accordion
               expanded={state.currentAccordionIndex === 0}
               onChange={(event, expanded) => {
                 setState({
@@ -219,18 +219,18 @@ function Form({ formId }: Props) {
                   </FormControl>
                 </Stack>
               </AccordionDetails>
-            </Accordion>
+            </Accordion> */}
 
             <Accordion
-              expanded={state.currentAccordionIndex === 1}
+              expanded={state.currentAccordionIndex === 0}
               onChange={(event, expanded) => {
                 setState({
-                  currentAccordionIndex: expanded ? 1 : null,
+                  currentAccordionIndex: expanded ? 0 : null,
                 });
               }}
             >
               <AccordionSummary>
-                <Typography startDecorator={<LooksTwoRoundedIcon />}>
+                <Typography startDecorator={<LooksOneRoundedIcon />}>
                   {type === 'conversational' ? 'Start Screen' : 'Form Details'}
                 </Typography>
               </AccordionSummary>
@@ -270,6 +270,28 @@ function Form({ formId }: Props) {
             </Accordion>
 
             <Accordion
+              expanded={state.currentAccordionIndex === 1}
+              onChange={(event, expanded) => {
+                setState({
+                  currentAccordionIndex: expanded ? 1 : null,
+                });
+              }}
+            >
+              <AccordionSummary>
+                <Typography startDecorator={<LooksTwoRoundedIcon />}>
+                  Form Fields
+                </Typography>
+              </AccordionSummary>
+              {/* <Alert startDecorator={<InfoRoundedIcon />}>
+               {`Field names have an impact on context understanding for
+           the AI`}
+             </Alert> */}
+              <AccordionDetails>
+                <FieldsInput type={type} />
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion
               expanded={state.currentAccordionIndex === 2}
               onChange={(event, expanded) => {
                 setState({
@@ -285,7 +307,7 @@ function Form({ formId }: Props) {
               <AccordionDetails>
                 <Stack gap={2}>
                   <FormControl>
-                    <FormLabel>End Message</FormLabel>
+                    <FormLabel>Message</FormLabel>
                     <Input
                       control={methods.control}
                       {...methods.register(
@@ -360,28 +382,6 @@ function Form({ formId }: Props) {
             >
               <AccordionSummary>
                 <Typography startDecorator={<Looks4RoundedIcon />}>
-                  Form Fields
-                </Typography>
-              </AccordionSummary>
-              {/* <Alert startDecorator={<InfoRoundedIcon />}>
-               {`Field names have an impact on context understanding for
-           the AI`}
-             </Alert> */}
-              <AccordionDetails>
-                <FieldsInput type={type} />
-              </AccordionDetails>
-            </Accordion>
-
-            <Accordion
-              expanded={state.currentAccordionIndex === 4}
-              onChange={(event, expanded) => {
-                setState({
-                  currentAccordionIndex: expanded ? 4 : null,
-                });
-              }}
-            >
-              <AccordionSummary>
-                <Typography startDecorator={<Looks5RoundedIcon />}>
                   Webhook
                 </Typography>
               </AccordionSummary>

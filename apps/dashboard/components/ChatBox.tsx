@@ -50,6 +50,7 @@ import Message from '@chaindesk/ui/Chatbox/ChatMessage';
 import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
 import LeadForm from '@chaindesk/ui/LeadForm';
 import Markdown from '@chaindesk/ui/Markdown';
+import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 import FileUploader from './FileUploader';
 import TraditionalForm from './TraditionalForm';
@@ -625,27 +626,7 @@ function ChatBox({
               </Stack>
               {!disableWatermark && (
                 <Stack sx={{ mt: 1 }}>
-                  <a
-                    href="https://chaindesk.ai"
-                    target="_blank"
-                    style={{
-                      textDecoration: 'none',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      // marginBottom: '2px',
-                    }}
-                  >
-                    <Chip variant="outlined" size="sm" color="neutral">
-                      <Box className="truncate" sx={{ whiteSpace: 'nowrap' }}>
-                        <Typography level="body-xs" fontSize={'10px'}>
-                          Powered by{' '}
-                          <Typography color="primary" fontWeight={'bold'}>
-                            ⚡️ Chaindesk
-                          </Typography>
-                        </Typography>
-                      </Box>
-                    </Chip>
-                  </a>
+                  <PoweredBy />
                 </Stack>
               )}
             </Stack>
