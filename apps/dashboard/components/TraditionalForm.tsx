@@ -46,6 +46,7 @@ import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 import FileUploader from './FileUploader';
+import FileUploaderDropZone from './FileUploaderDropZone';
 
 export enum FieldType {
   Email = 'email',
@@ -80,7 +81,10 @@ const shapeTozod = (
         zodType = z.string().email();
         break;
       case FieldType.TextArea:
-        zodType = z.string().min(25);
+        zodType = required ? z.string().min(25) : z.string().optional();
+        break;
+      case FieldType.Select:
+        zodType = required ? z.string().min(1) : z.string().optional();
         break;
       case FieldType.PhoneNumber:
         const phoneRegex = new RegExp(
@@ -88,7 +92,16 @@ const shapeTozod = (
         );
         zodType = z.string().regex(phoneRegex, 'Invalid Number!');
         break;
+      case FieldType.Text:
+        zodType = required ? z.string().min(1) : z.string().optional();
+        break;
+      case FieldType.File:
+        const fileSchema = z.any();
 
+        zodType = required
+          ? z.array(fileSchema).min(1)
+          : z.array(fileSchema).optional();
+        break;
       default:
         zodType = z.string();
     }
@@ -214,7 +227,7 @@ const fieldTypesMap = {
       sx={{
         width: '100%',
       }}
-      placeholder={placeholder || 'select an option'}
+      placeholder={placeholder}
       onChange={(_, value) => {
         if (value) {
           changeHandler(name, value as string);
@@ -241,55 +254,16 @@ const fieldTypesMap = {
     placeholder?: string;
     formId: string;
     conversationId?: string;
-    changeHandler(name: string, value: string): void;
+    changeHandler(name: string, value: File[]): void;
   }) => {
-    // const [files, setFiles] = useState<File[]>([] as File[]);
-    // const [fileUrls, setFileUrls] = useState<string[]>([] as string[]);
-
     return (
-      <Stack>
-        {/* {files.map((each, index) => (
-          <Chip
-            size="lg"
-            key={each.name}
-            variant="soft"
-            color="primary"
-            endDecorator={
-              <ChipDelete
-                // disabled={isLoading}
-                onDelete={() => {
-                  const filtered = files.filter((_, i) => i !== index);
-                  const filteredFileUrls = fileUrls.filter(
-                    (_, i) => i !== index
-                  );
-                  setFiles(filtered);
-                  changeHandler(name, JSON.stringify(filteredFileUrls));
-                }}
-              />
-            }
-          >
-            {each.name}
-          </Chip>
-        ))} */}
-        <FileUploader
-          variant="outlined"
-          placeholder={placeholder || 'Upload'}
-          changeCallback={async (f) => {
-            const filesUrls = await s3Upload(
-              f.map((each) => ({
-                case: 'formUpload',
-                fileName: each.name,
-                mimeType: each.type,
-                file: each,
-                formId,
-                conversationId,
-              }))
-            );
-            // setFiles(f);
-            changeHandler(name, JSON.stringify(filesUrls));
-          }}
-        />
-      </Stack>
+      <FileUploaderDropZone
+        variant="outlined"
+        placeholder={placeholder || 'Browse Files'}
+        changeCallback={async (files) => {
+          changeHandler(name, files);
+        }}
+      />
     );
   },
 };
@@ -348,7 +322,7 @@ function TraditionalForm({
 
   const methods = useForm<dynamicSchema<typeof keys>>({
     resolver: zodResolver(dynamicSchema(shape)),
-    mode: 'all',
+    mode: 'onChange',
   });
 
   const conversationMutation = useSWRMutation<
@@ -360,10 +334,35 @@ function TraditionalForm({
     generateActionFetcher(HTTP_METHOD.PATCH)
   );
 
-  const submitForm = async () => {
+  const submitForm = async (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     try {
       setState({ loading: true, hasErrored: false });
       const values = methods.getValues();
+
+      for (const field of config.fields) {
+        if (field.type === FieldType.File) {
+          const files = ((values as any)?.[field.name] as File[]) || [];
+
+          if (files.length > 0) {
+            const urls = await s3Upload(
+              files.map((each) => ({
+                case: 'formUpload',
+                fileName: each.name,
+                mimeType: each.type,
+                file: each,
+                formId,
+                conversationId,
+              }))
+            );
+
+            values[field.name] = JSON.stringify(urls);
+          }
+        }
+      }
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${formId}`,
         {
@@ -519,7 +518,7 @@ function TraditionalForm({
                       name: field.name,
                       placeholder: (field as any)?.placeholder,
                       changeHandler: {
-                        _: (name: string, value: string) => {
+                        _: (name: string, value: any) => {
                           methods.setValue(name, value);
                           methods.trigger();
                         },
@@ -536,7 +535,7 @@ function TraditionalForm({
                   disabled={
                     config?.fields.length == 0 || !methods.formState.isValid
                   }
-                  loading={state.loading || methods.formState.isValidating}
+                  loading={state.loading}
                   onClick={submitForm}
                   size="md"
                   color="primary"

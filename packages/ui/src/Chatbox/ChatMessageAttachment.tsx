@@ -67,7 +67,6 @@ function ChatMessageAttachment({ attachment }: Props) {
           src={attachment.url}
           sx={{
             maxWidth: '100%',
-            minWidth: '160px',
           }}
         />
       )}

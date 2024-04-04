@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Accordion,
   AccordionDetails,
+  AccordionGroup,
   AccordionSummary,
   Box,
   Button,
@@ -28,6 +29,7 @@ import {
 
 import Input from '@app/components/Input';
 
+import generateFunId from '@chaindesk/lib/generate-fun-id';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 
 import { SortableList } from '../dnd/SortableList';
@@ -148,122 +150,138 @@ function FieldsInput({ type = 'conversational' }: Props) {
               >
                 <Stack direction={'column'} gap={1} sx={{ width: '100%' }}>
                   <Stack direction="column">
-                    <Accordion sx={{ position: 'relative' }}>
-                      <Stack direction="row-reverse">
-                        <IconButton
-                          size="sm"
-                          sx={{
-                            position: 'absolute',
-                            right: -20,
-                            top: 10,
-                            zIndex: 99,
-                          }}
-                          onClick={() => {
-                            remove(index);
-                            forceSubmit();
-                          }}
-                        >
-                          <DeleteIcon fontSize="md" color="danger" />
-                        </IconButton>
-                      </Stack>
-                      <AccordionSummary>
-                        <Typography className="truncate w-[100px]">
-                          {methods?.getValues(
-                            `draftConfig.fields.${index}.name`
-                          ) || 'New Field'}
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Stack spacing={2}>
-                          <FormControl>
-                            <FormLabel>Type</FormLabel>
-                            <Select
-                              sx={{ width: '100%' }}
-                              defaultValue={field.type}
-                              {...methods.register(
-                                `draftConfig.fields.${index}.type`
-                              )}
-                              onChange={(_, value) => {
-                                methods.setValue(
-                                  `draftConfig.fields.${index}.type`,
-                                  value as fieldTypes,
-                                  {
-                                    shouldDirty: true,
-                                    shouldValidate: true,
-                                  }
-                                );
-                                if (value === FieldType.Email) {
-                                  methods.setValue(
-                                    `draftConfig.fields.${index}.name`,
-                                    'email',
-                                    {
-                                      shouldDirty: true,
-                                      shouldValidate: true,
-                                    }
-                                  );
-                                } else if (value === FieldType.PhoneNumber) {
-                                  methods.setValue(
-                                    `draftConfig.fields.${index}.name`,
-                                    'phone',
-                                    {
-                                      shouldDirty: true,
-                                      shouldValidate: true,
-                                    }
-                                  );
-                                }
-
-                                forceSubmit();
-                              }}
-                            >
-                              {fieldTypes.map((each) => (
-                                <Option key={each} value={each}>
-                                  {each}
-                                </Option>
-                              ))}
-                            </Select>
-                          </FormControl>
-
-                          <FormControl>
-                            <FormLabel>Label</FormLabel>
-                            <JoyInput
-                              {...methods.register(
-                                `draftConfig.fields.${index}.name`
-                              )}
-                            />
-                          </FormControl>
-
-                          {fieldsValues?.[index]?.type === FieldType.Select && (
-                            <Stack direction="column">
-                              <Typography>Options</Typography>
-                              <Choices<CreateFormSchema>
-                                actionLabel="Add Option"
-                                name={`draftConfig.fields.${index}.options`}
-                              />
-                            </Stack>
-                          )}
-                          <FormControl>
-                            <FormLabel>Placeholder</FormLabel>
-                            <JoyInput
-                              {...methods.register(
-                                `draftConfig.fields.${index}.placeholder`
-                              )}
-                            />
-                          </FormControl>
-                          <FormControl>
-                            <FormLabel>Required</FormLabel>
-                            <Checkbox
-                              defaultChecked={field.required}
-                              onChange={(e) => {
-                                methods.setValue(
-                                  `draftConfig.fields.${index}.required`,
-                                  e.target.checked
-                                );
-                              }}
-                            />
-                          </FormControl>
+                    <AccordionGroup>
+                      <Accordion sx={{ position: 'relative' }} defaultExpanded>
+                        <Stack direction="row-reverse">
+                          <IconButton
+                            size="sm"
+                            sx={{
+                              position: 'absolute',
+                              right: -20,
+                              top: 10,
+                              zIndex: 99,
+                            }}
+                            onClick={() => {
+                              remove(index);
+                              forceSubmit();
+                            }}
+                          >
+                            <DeleteIcon fontSize="md" color="danger" />
+                          </IconButton>
                         </Stack>
-                      </AccordionDetails>
-                    </Accordion>
+                        <AccordionSummary>
+                          <Typography className="truncate w-[100px]">
+                            {methods?.getValues(
+                              `draftConfig.fields.${index}.name`
+                            ) || 'New Field'}
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Stack spacing={2}>
+                            <FormControl>
+                              <FormLabel>Type</FormLabel>
+                              <Select
+                                sx={{ width: '100%' }}
+                                defaultValue={field.type}
+                                {...methods.register(
+                                  `draftConfig.fields.${index}.type`
+                                )}
+                                onChange={(_, value) => {
+                                  methods.setValue(
+                                    `draftConfig.fields.${index}.type`,
+                                    value as fieldTypes,
+                                    {
+                                      shouldDirty: true,
+                                      shouldValidate: true,
+                                    }
+                                  );
+
+                                  if (value === FieldType.Email) {
+                                    methods.setValue(
+                                      `draftConfig.fields.${index}.name`,
+                                      'email',
+                                      {
+                                        shouldDirty: true,
+                                        shouldValidate: true,
+                                      }
+                                    );
+                                  } else if (value === FieldType.PhoneNumber) {
+                                    methods.setValue(
+                                      `draftConfig.fields.${index}.name`,
+                                      'phone',
+                                      {
+                                        shouldDirty: true,
+                                        shouldValidate: true,
+                                      }
+                                    );
+                                  } else if (value === FieldType.Select) {
+                                    methods.setValue(
+                                      `draftConfig.fields.${index}.options`,
+                                      ['Option 1', 'Option 2'],
+                                      {
+                                        shouldDirty: true,
+                                        shouldValidate: true,
+                                      }
+                                    );
+                                  }
+
+                                  forceSubmit();
+                                }}
+                              >
+                                {fieldTypes.map((each) => (
+                                  <Option key={each} value={each}>
+                                    {each}
+                                  </Option>
+                                ))}
+                              </Select>
+                            </FormControl>
+
+                            <FormControl>
+                              <FormLabel>Label</FormLabel>
+                              <Input
+                                control={methods.control}
+                                {...methods.register(
+                                  `draftConfig.fields.${index}.name`
+                                )}
+                              />
+                            </FormControl>
+
+                            {fieldsValues?.[index]?.type ===
+                              FieldType.Select && (
+                              <Stack direction="column">
+                                <Typography>Options</Typography>
+                                <Choices<CreateFormSchema>
+                                  actionLabel="Add Option"
+                                  name={`draftConfig.fields.${index}.options`}
+                                />
+                              </Stack>
+                            )}
+
+                            <FormControl>
+                              <FormLabel>Placeholder</FormLabel>
+                              <JoyInput
+                                {...methods.register(
+                                  `draftConfig.fields.${index}.placeholder`
+                                )}
+                              />
+                            </FormControl>
+
+                            <FormControl>
+                              <FormLabel>Required</FormLabel>
+                              <Checkbox
+                                defaultChecked={field.required}
+                                onChange={(e) => {
+                                  methods.setValue(
+                                    `draftConfig.fields.${index}.required`,
+                                    e.target.checked
+                                  );
+                                }}
+                              />
+                            </FormControl>
+                          </Stack>
+                        </AccordionDetails>
+                      </Accordion>
+                    </AccordionGroup>
                   </Stack>
                 </Stack>
               </Box>
@@ -342,7 +360,7 @@ function FieldsInput({ type = 'conversational' }: Props) {
         color="primary"
         onClick={() => {
           append({
-            name: '',
+            name: `Field ${fields.length + 1}`,
             id: cuid(),
             required: true,
             type: 'text',
