@@ -1,4 +1,7 @@
+import autoprefixer from 'autoprefixer';
 import * as esbuild from 'esbuild';
+import postCssPlugin from 'esbuild-style-plugin';
+import tailwindcss from 'tailwindcss';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -37,6 +40,14 @@ let ctx = await esbuild.context({
         sourcemap: false,
       }
     : {}),
+
+  plugins: [
+    postCssPlugin({
+      postcss: {
+        plugins: [tailwindcss, autoprefixer],
+      },
+    }),
+  ],
 });
 
 if (isProd) {

@@ -284,7 +284,9 @@ function TraditionalForm({
   isInEditor?: boolean;
 }) {
   const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
-    formId ? `/api/forms/${formId}` : null,
+    formId
+      ? `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${formId}`
+      : null,
     fetcher
     // tab === 'editor' ? { refreshInterval: 2000 } : undefined
   );
@@ -461,7 +463,7 @@ function TraditionalForm({
               // exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               key="component"
-              className="w-full"
+              style={{ width: '100%' }}
             >
               {(config?.startScreen?.title ||
                 config?.startScreen?.description) && (
