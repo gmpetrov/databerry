@@ -20,7 +20,6 @@ import {
 } from '@mui/joy';
 import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from 'next/router';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
@@ -274,6 +273,7 @@ function TraditionalForm({
   conversationId,
   messageId,
   submissionId,
+  isInEditor,
   ...otherProps
 }: {
   formId: string;
@@ -281,11 +281,8 @@ function TraditionalForm({
   messageId?: string;
   submissionId?: string;
   config?: any;
+  isInEditor?: boolean;
 }) {
-  const {
-    query: { tab },
-  } = useRouter();
-
   const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
     formId ? `/api/forms/${formId}` : null,
     fetcher
@@ -311,7 +308,7 @@ function TraditionalForm({
 
   const config = useMemo(() => {
     return (
-      tab === 'editor'
+      !!isInEditor
         ? otherProps.config || getFormQuery?.data?.draftConfig
         : getFormQuery?.data?.publishedConfig
     ) as FormConfigSchema;

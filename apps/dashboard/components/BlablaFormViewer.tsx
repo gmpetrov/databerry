@@ -44,6 +44,7 @@ type Props = {
   messageId?: string;
   config?: FormConfigSchema;
   type: 'conversational' | 'traditional';
+  isInEditor?: boolean;
 };
 
 const FormButton = styled(Button)(({ theme }) => ({
@@ -72,6 +73,7 @@ function BlablaFormViewer({
   messageId,
   config,
   type,
+  isInEditor,
 }: Props) {
   const triggerConfetti = useConfetti();
 
@@ -165,6 +167,7 @@ function BlablaFormViewer({
                 conversationId={conversationId}
                 messageId={messageId}
                 config={config}
+                isInEditor={isInEditor}
               />
             </Stack>
           )}

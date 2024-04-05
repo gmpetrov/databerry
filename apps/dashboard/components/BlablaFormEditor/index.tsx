@@ -466,6 +466,7 @@ function Form({ formId }: Props) {
                 webhook: draftConfig?.webhook,
                 schema: (query.data?.draftConfig as any)?.schema,
               }}
+              isInEditor
             />
           </Stack>
         </Stack>
