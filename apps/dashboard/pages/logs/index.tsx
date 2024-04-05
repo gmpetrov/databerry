@@ -1200,6 +1200,7 @@ export default function LogsPage() {
                     approvals: each.approvals || [],
                     sources: (each.sources as any) || [],
                     attachments: each.attachments || [],
+                    submission: each.submission!,
                     iconUrl: (each?.from === 'human'
                       ? each?.user?.customPicture || each?.user?.picture
                       : each?.agent?.iconUrl) as string,

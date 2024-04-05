@@ -440,7 +440,6 @@ type Props = {
 
 function HttpToolInput({ name }: Props) {
   const methods = useFormContext<HttpToolSchema | CreateAgentSchema>();
-  // Narrow down to prevent inference as string.
   const prefix: `tools.${number}.` | '' = name ? `${name}.` : '';
   const templatesModal = useModal();
   const [withApprovalChecked] = methods.watch([`${prefix}config.withApproval`]);

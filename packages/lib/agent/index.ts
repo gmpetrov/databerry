@@ -48,6 +48,7 @@ type AgentManagerProps = ChatModelConfigSchema &
     | 'toolsConfig'
     | 'conversationId'
   > & {
+    channel?: ChatRequest['channel'];
     input: string;
     stream?: any;
     history?: Message[] | undefined;
@@ -74,10 +75,10 @@ export default class AgentManager {
     //       this.agent.useMarkdown ||
     //       this.agent.useLanguageDetection ||
     //       this.agent.restrictKnowledge;
-
     return chatv3({
       ...props,
       organizationId: this.agent.organizationId!,
+      conversationId: props.conversationId,
       modelName: this.agent.modelName,
       filters: props.filters,
       query: props.input,

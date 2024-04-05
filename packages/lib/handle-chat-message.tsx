@@ -278,11 +278,11 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
 
     throw err;
   }
-
   const [chatRes] = await Promise.all([
     manager.query({
       ...data,
       conversationId,
+      channel,
       input: data.query,
       stream: data.streaming ? data.handleStream : undefined,
       history: history,
@@ -303,7 +303,7 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     }),
   ]);
 
-  const answerMsgId = cuid();
+  const answerMsgId = chatRes.messageId || cuid();
 
   if (!data.isDraft) {
     await conversationManager.createMessage({

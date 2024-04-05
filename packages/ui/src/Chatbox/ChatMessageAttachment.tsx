@@ -5,12 +5,13 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import React from 'react';
 
+import { Prettify } from '@chaindesk/lib/type-utilites';
 import type { Attachment } from '@chaindesk/prisma';
 
 import { ImageZoom } from '@chaindesk/ui/ImageZoom';
 
 type Props = {
-  attachment: Attachment;
+  attachment: Prettify<Omit<Attachment, 'messageId' | 'id'>>;
 };
 
 function download(url: string, filename: string) {

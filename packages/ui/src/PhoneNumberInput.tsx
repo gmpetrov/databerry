@@ -56,7 +56,7 @@ const PhoneNumberInput = forwardRef(
       value,
       countries: defaultCountries,
       onChange: (data) => {
-        handleChange(data?.phone);
+        handleChange?.(data?.phone);
       },
     });
 
@@ -64,7 +64,7 @@ const PhoneNumberInput = forwardRef(
       <Input
         ref={ref}
         control={restProps.control}
-        // {...(restProps as any)}
+        sx={{ minWidth: '100%' }}
         name={name}
         type="tel"
         size="sm"

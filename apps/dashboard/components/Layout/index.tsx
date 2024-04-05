@@ -318,6 +318,7 @@ export default function Layout(props: Props) {
           sx={{
             height: '100%',
             maxheight: '100%',
+            minWidth: '100%',
             overflowY: 'auto',
             backgroundColor: 'background.popup',
             ...props.mainSxProps,
@@ -336,7 +337,7 @@ export default function Layout(props: Props) {
         >
           <Box
             component={'iframe'}
-            src={'https://www.chaindesk.ai/forms/clqz46y9u003e8ipv0lvfcnsg'}
+            src={'https://app.chaindesk.ai/forms/clqz46y9u003e8ipv0lvfcnsg'}
             frameBorder="0"
             sx={{
               width: '100%',

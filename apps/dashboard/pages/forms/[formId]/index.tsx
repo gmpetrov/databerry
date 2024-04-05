@@ -10,17 +10,20 @@ import ColorSchemeToggle from '@app/components/Layout/ColorSchemeToggle';
 import SEO from '@app/components/SEO';
 
 import { Agent } from '@chaindesk/prisma';
+import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 export default function FormPage(props: { agent: Agent }) {
   const router = useRouter();
   const formId = router.query.formId as string;
 
+  const conversationId = router.query.conversationId as string | undefined;
+  const messageId = router.query.messageId as string | undefined;
   return (
     <>
       <SEO
-        title={`Blablaform - AI powered conversational forms`}
-        description={`Blablaform - AI powered conversational forms`}
-        url={`https://chaindesk.ai/forms/${formId}`}
+        title={`AI powered conversational forms | Chaindesk.ai`}
+        description={`Build ChatGPT-powered conversational forms with Chaindesk.ai`}
+        url={`https://app.chaindesk.ai/forms/${formId}`}
       />
       {/*
 
@@ -40,40 +43,11 @@ export default function FormPage(props: { agent: Agent }) {
           <ColorSchemeToggle />
         </Stack>
 
-        <BlablaFormLoader formId={formId} />
-
-        <Stack
-          sx={{
-            position: 'fixed',
-
-            // bottom: 20, left: 20
-            bottom: 20,
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-        >
-          <a
-            href="https://chaindesk.ai"
-            target="_blank"
-            style={{
-              textDecoration: 'none',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              // marginBottom: '2px',
-            }}
-          >
-            <Chip variant="outlined" size="sm" color="neutral">
-              <Box className="truncate" sx={{ whiteSpace: 'nowrap' }}>
-                <Typography level="body-xs" fontSize={'10px'}>
-                  Powered by{' '}
-                  <Typography color="primary" fontWeight={'bold'}>
-                    ⚡️ Blablaform
-                  </Typography>
-                </Typography>
-              </Box>
-            </Chip>
-          </a>
-        </Stack>
+        <BlablaFormLoader
+          formId={formId}
+          conversationId={conversationId}
+          messageId={messageId}
+        />
       </Stack>
     </>
   );

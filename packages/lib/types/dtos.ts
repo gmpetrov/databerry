@@ -7,6 +7,7 @@ import {
   ConversationChannel,
   ConversationPriority,
   ConversationStatus,
+  FormType,
   Message,
   MessageEval,
   PromptType,
@@ -358,6 +359,7 @@ export const ToolSchema = z.discriminatedUnion('type', [
   ToolBaseSchema.extend({
     type: z.literal(ToolType.form),
     formId: z.string().cuid(),
+    config: z.any({}).optional(),
   }),
   ToolBaseSchema.extend({
     type: z.literal(ToolType.mark_as_resolved),
@@ -512,9 +514,11 @@ export const CrispUpdateMetadataSchema = CrispSchema.extend({
   aiStatus: z.nativeEnum(AIStatus),
 });
 
+// TODO: move to -> createConversationSchema.partial()
 export const ConversationUpdateSchema = z.object({
   status: z.nativeEnum(ConversationStatus).optional(),
   isAiEnabled: z.boolean().optional(),
+  metadata: z.object({ isFormSubmitted: z.boolean() }).optional(),
 });
 
 export const YoutubeSummarySchema = z.object({
@@ -539,7 +543,7 @@ export const ChatResponse = z.object({
   sources: z.array(Source).optional(),
   conversationId: z.string().cuid(),
   visitorId: z.string().optional(),
-  messageId: z.string().cuid(),
+  messageId: z.string().cuid().optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
   usage: z
     .object({
@@ -581,6 +585,7 @@ export const FormFieldBaseSchema = z.object({
 export const FormFieldSchema = z.discriminatedUnion('type', [
   FormFieldBaseSchema.extend({
     type: z.literal('text'),
+    placeholder: z.string().optional(),
   }),
   FormFieldBaseSchema.extend({
     type: z.literal('multiple_choice'),
@@ -589,9 +594,36 @@ export const FormFieldSchema = z.discriminatedUnion('type', [
   FormFieldBaseSchema.extend({
     type: z.literal('file'),
     fileUrl: z.string().optional(),
+    placeholder: z.string().optional(),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('email'),
+    placeholder: z.string().optional(),
+    shouldCreateContact: z.boolean().default(true).optional(),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('phoneNumber'),
+    placeholder: z.string().optional(),
+    shouldCreateContact: z.boolean().default(true).optional(),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('textArea'),
+    placeholder: z.string().optional(),
+  }),
+  FormFieldBaseSchema.extend({
+    type: z.literal('select'),
+    options: z.array(z.string().min(1)).min(1),
+    placeholder: z.string().optional(),
   }),
 ]);
+
 export type FormFieldSchema = z.infer<typeof FormFieldSchema>;
+
+// keep sync with FormFieldSchema.
+export type TextField = Exclude<
+  FormFieldSchema,
+  { type: 'multiple_choice' } | { type: 'file' } | { type: 'select' }
+>;
 
 export const FormConfigSchema = z.object({
   overview: z.string().max(750).optional().nullable(),
@@ -624,6 +656,7 @@ export const FormConfigSchema = z.object({
         url: z.union([z.string().url().nullish(), z.literal('')]),
         target: z.string().optional(),
       }),
+      successMessage: z.string().optional(),
     })
     .optional(),
   webhook: z
@@ -637,6 +670,7 @@ export type FormConfigSchema = z.infer<typeof FormConfigSchema>;
 
 export const CreateFormSchema = z.object({
   id: z.string().optional(),
+  type: z.nativeEnum(FormType).optional(),
   name: z.string().optional(),
   datastoreId: z.string().optional().nullable(),
   draftConfig: FormConfigSchema,
@@ -649,6 +683,7 @@ export type UpdateFormSchema = z.infer<typeof UpdateFormSchema>;
 
 export const ToolResponseSchema = z.object({
   data: z.any(),
+  messageId: z.string().cuid().optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
   approvalRequired: z.boolean().optional(),
   error: z.string().optional(),
@@ -697,6 +732,15 @@ export const GenerateUploadLinkRequestSchema = z.discriminatedUnion('case', [
     case: z.literal('chatUpload'),
     conversationId: z.string().cuid(),
     agentId: z.string().cuid().optional(),
+    fileName: z.string(),
+    mimeType: AcceptedDocumentMimeTypesSchema.or(AcceptedAudioMimeTypesSchema)
+      .or(AcceptedVideoMimeTypesSchema)
+      .or(AcceptedImageMimeTypesSchema),
+  }),
+  z.object({
+    case: z.literal('formUpload'),
+    formId: z.string().cuid(),
+    conversationId: z.string().cuid().optional(),
     fileName: z.string(),
     mimeType: AcceptedDocumentMimeTypesSchema.or(AcceptedAudioMimeTypesSchema)
       .or(AcceptedVideoMimeTypesSchema)
@@ -783,19 +827,22 @@ const AppEventBaseSchema = z.object({
   // organizationId: z.string().cuid(),
 });
 
+export const FormSubmitSchema = AppEventBaseSchema.extend({
+  formId: z.string().cuid(),
+  formValues: z.record(z.string(), z.unknown()),
+  conversationId: z.string().cuid().optional(),
+  messageId: z.string().cuid().optional(),
+  submissionId: z.string().cuid().optional().nullable(),
+});
+
+export type FormSubmitSchema = z.infer<typeof FormSubmitSchema>;
+
 export const AppEventSchema = z.discriminatedUnion('type', [
   AppEventBaseSchema.extend({
     type: z.literal('tool-approval-requested'),
     conversationId: z.string().cuid(),
     approvals: ChatResponse.shape.approvals,
     agentName: z.string(),
-  }),
-  AppEventBaseSchema.extend({
-    type: z.literal('blablaform-submission'),
-    formId: z.string().cuid(),
-    formValues: z.record(z.string(), z.unknown()),
-    conversationId: z.string().cuid(),
-    submissionId: z.string().cuid().optional().nullable(),
   }),
   AppEventBaseSchema.extend({
     type: z.literal('conversation-resolved'),

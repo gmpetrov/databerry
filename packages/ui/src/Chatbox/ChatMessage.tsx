@@ -2,10 +2,9 @@ import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Chip from '@mui/joy/Chip';
 import Stack from '@mui/joy/Stack';
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
 import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
-
 import ChatMessageApproval from './ChatMessageApproval';
 import ChatMessageAttachment from './ChatMessageAttachment';
 import CopyButton from '@chaindesk/ui/CopyButton';
@@ -134,6 +133,7 @@ function ChatMessageComponent({
               ))}
             </Stack>
           )}
+
           {(message?.message || message?.component) && (
             <Stack gap={0.7}>
               <ChatMessageCard

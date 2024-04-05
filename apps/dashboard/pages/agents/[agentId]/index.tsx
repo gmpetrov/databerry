@@ -77,6 +77,7 @@ export default function AgentPage() {
     handleAbort,
     refreshConversation,
   } = useChat({
+    channel: 'dashboard',
     endpoint: router.query?.agentId
       ? `/api/agents/${router.query?.agentId}/query`
       : undefined,

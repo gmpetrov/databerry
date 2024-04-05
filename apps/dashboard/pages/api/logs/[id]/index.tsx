@@ -89,6 +89,7 @@ export const getConversation = async (
               },
             },
           },
+          submission: true,
         },
       },
     },

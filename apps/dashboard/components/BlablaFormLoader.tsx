@@ -72,10 +72,13 @@ import {
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Prisma } from '@chaindesk/prisma';
 
+import { formType } from './BlablaFormEditor/FieldsInput';
 import BlablaFormViewer from './BlablaFormViewer';
 
 type Props = {
   formId: string;
+  conversationId?: string;
+  messageId?: string;
   useDraftConfig?: boolean;
 };
 
@@ -93,7 +96,15 @@ function BlablaFormLoader(props: Props) {
     ) as FormConfigSchema;
   }, [props.useDraftConfig, getFormQuery.data]);
 
-  return <BlablaFormViewer config={config} formId={props.formId} />;
+  return (
+    <BlablaFormViewer
+      config={config}
+      formId={props.formId}
+      conversationId={props.conversationId}
+      messageId={props.messageId}
+      type={getFormQuery?.data?.type ?? 'conversational'}
+    />
+  );
 }
 
 export default BlablaFormLoader;

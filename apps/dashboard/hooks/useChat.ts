@@ -28,6 +28,7 @@ import type {
   ConversationChannel,
   ConversationStatus,
   Prisma,
+  Tool,
 } from '@chaindesk/prisma';
 
 import useFileUpload from './useFileUpload';
@@ -575,6 +576,7 @@ const useChat = ({
           ?.reverse()
           ?.map((message) => ({
             id: message?.id!,
+            conversationId: message?.conversationId,
             eval: message?.eval,
             from: message?.from!,
             message: message?.text!,
@@ -583,6 +585,7 @@ const useChat = ({
             approvals: message?.approvals || [],
             metadata: message?.metadata || ({} as any),
             attachments: message?.attachments || ([] as Attachment[]),
+            submission: message?.submission,
             iconUrl:
               message?.from === 'agent'
                 ? undefined

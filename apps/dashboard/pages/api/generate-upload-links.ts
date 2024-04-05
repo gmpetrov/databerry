@@ -87,6 +87,11 @@ export const generateUploadLinks = async (
           conversationId: item.conversationId,
         });
         break;
+      case 'formUpload':
+        prefix = `forms/${item?.formId}/${
+          item?.conversationId ? `conversations/${item.conversationId}/` : ''
+        }uploads`;
+        break;
       default:
         throw new ApiError(ApiErrorType.INVALID_REQUEST);
     }

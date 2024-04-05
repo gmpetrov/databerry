@@ -73,6 +73,7 @@ export default function ChatPage() {
     handleAbort,
     refreshConversation,
   } = useChat({
+    channel: 'dashboard',
     endpoint: `/api/chains/run`,
     queryBody: {
       filters: state.chatFilters,
