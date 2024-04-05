@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cuid from 'cuid';
 import type { Schema as JSONSchema } from 'jsonschema';
 
 import createToolParser from '@chaindesk/lib/create-tool-parser';
@@ -11,7 +12,7 @@ import {
   FormToolSchema,
   ToolResponseSchema,
 } from '@chaindesk/lib/types/dtos';
-import { ConversationChannel, Form } from '@chaindesk/prisma';
+import { ConversationChannel, Form, Prisma } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
 
 import {
@@ -63,44 +64,17 @@ export const createHandlerV2 =
     channel?: ConversationChannel
   ) =>
   async (): Promise<ToolResponseSchema> => {
-    const { metadata } = await prisma.conversation.findUniqueOrThrow({
-      where: {
-        id: config.conversationId!,
-      },
-      select: {
-        metadata: true,
-      },
-    });
-
-    if ((metadata as any)?.isFormSubmitted === true) {
-      return {
-        data: 'The user has already filled the form.',
-      };
-    } else if ((metadata as any)?.isFormSubmitted === false) {
-      return {
-        data: 'The user has already been prompted with a form, ask him to use the previously provided one.',
-      };
-    }
+    const messageId = cuid();
 
     const form = tool.form as Form;
-    await prisma.conversation.update({
-      where: {
-        id: config.conversationId!,
-      },
-      data: {
-        metadata: {
-          ...(metadata ? (metadata as object) : {}),
-          isFormSubmitted: false,
-        },
-      },
-    });
 
     return {
-      data: `send the user this form url: ${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${form.id}?conversationId=${config?.conversationId}`,
+      data: `Form URL: ${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${form.id}?conversationId=${config?.conversationId}&messageId=${messageId}`,
+      messageId,
       metadata: {
+        isFormSubmitted: false,
         shouldDisplayForm: true,
         formId: form.id,
-        conversationId: config?.conversationId,
       },
     };
   };

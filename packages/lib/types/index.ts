@@ -10,6 +10,7 @@ import {
   Agent,
   Attachment,
   Conversation,
+  FormSubmission,
   LLMTaskOutput,
   Message,
   ServiceProvider,
@@ -219,6 +220,7 @@ export type MessageEvalUnion = 'good' | 'bad';
 
 export type ChatMessage = {
   id?: string;
+  conversationId?: string;
   eval?: MessageEvalUnion | null;
   from: 'human' | 'agent';
   message: string;
@@ -233,6 +235,7 @@ export type ChatMessage = {
   approvals: ActionApproval[];
   metadata?: Record<string, any>;
   attachments?: Attachment[];
+  submission?: FormSubmission;
   iconUrl?: string;
   fromName?: string;
 };

@@ -345,10 +345,14 @@ function ChatBox({
               messages.map((each, index) => (
                 <React.Fragment key={index}>
                   {each.metadata?.shouldDisplayForm ? (
-                    <TraditionalForm
-                      formId={each.metadata.formId}
-                      conversationId={each.metadata.conversationId}
-                    />
+                    <Stack sx={{ zIndex: 0 }}>
+                      <TraditionalForm
+                        formId={each.metadata.formId}
+                        conversationId={each.conversationId}
+                        messageId={each.id}
+                        submissionId={each?.submission?.id}
+                      />
+                    </Stack>
                   ) : (
                     <Message
                       index={index}

@@ -430,6 +430,8 @@ model Message {
 
   attachments Attachment[]
 
+  submission FormSubmission?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -695,6 +697,9 @@ model FormSubmission {
 
   conversationId String?  @map("conversation_id")
   conversation Conversation? @relation(fields: [conversationId], references: [id])
+
+  messageId String?  @map("message_id") @unique
+  message Message? @relation(fields: [messageId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   @@map("form_submissions")

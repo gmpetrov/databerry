@@ -87,10 +87,11 @@ const shapeTozod = (
         zodType = required ? z.string().min(1) : z.string().optional();
         break;
       case FieldType.PhoneNumber:
-        const phoneRegex = new RegExp(
-          /^(?:\+?(\d{1,3}))?[-. (]*(?:\d{1,4})[-. )]*(\d{1,3})[-. ]*(\d{2,4})[-. ]*(\d{2,4})$/
-        );
-        zodType = z.string().regex(phoneRegex, 'Invalid Number!');
+        // const phoneRegex = new RegExp(
+        //   /^(?:\+?(\d{1,3}))?[-. (]*(?:\d{1,4})[-. )]*(\d{1,3})[-. ]*(\d{2,4})[-. ]*(\d{2,4})$/
+        // );
+        // zodType = z.string().regex(phoneRegex, 'Invalid Number!');
+        zodType = required ? z.string().min(3) : z.string().optional();
         break;
       case FieldType.Text:
         zodType = required ? z.string().min(1) : z.string().optional();
@@ -271,9 +272,15 @@ const fieldTypesMap = {
 function TraditionalForm({
   formId,
   conversationId,
+  messageId,
+  submissionId,
+  ...otherProps
 }: {
   formId: string;
   conversationId?: string;
+  messageId?: string;
+  submissionId?: string;
+  config?: any;
 }) {
   const {
     query: { tab },
@@ -281,13 +288,13 @@ function TraditionalForm({
 
   const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
     formId ? `/api/forms/${formId}` : null,
-    fetcher,
-    tab === 'editor' ? { refreshInterval: 2000 } : undefined
+    fetcher
+    // tab === 'editor' ? { refreshInterval: 2000 } : undefined
   );
 
-  const getConversationQuery = useSWR<
-    Prisma.PromiseReturnType<typeof getConversation>
-  >(conversationId ? `/api/conversations/${conversationId}` : null, fetcher);
+  // const getConversationQuery = useSWR<
+  //   Prisma.PromiseReturnType<typeof getConversation>
+  // >(conversationId ? `/api/conversations/${conversationId}` : null, fetcher);
 
   const [state, setState] = useStateReducer({
     loading: false,
@@ -298,18 +305,21 @@ function TraditionalForm({
 
   useEffect(() => {
     setState({
-      isFormSubmitted: (getConversationQuery.data?.metadata as any)
-        ?.isFormSubmitted,
+      isFormSubmitted: !!submissionId,
     });
-  }, [getConversationQuery.data?.metadata]);
+  }, [submissionId]);
 
   const config = useMemo(() => {
     return (
       tab === 'editor'
-        ? getFormQuery?.data?.draftConfig
+        ? otherProps.config || getFormQuery?.data?.draftConfig
         : getFormQuery?.data?.publishedConfig
     ) as FormConfigSchema;
-  }, [getFormQuery?.data?.draftConfig, getFormQuery?.data?.publishedConfig]);
+  }, [
+    getFormQuery?.data?.draftConfig,
+    getFormQuery?.data?.publishedConfig,
+    otherProps.config,
+  ]);
 
   const { upload: s3Upload } = useFileUpload();
 
@@ -324,15 +334,6 @@ function TraditionalForm({
     resolver: zodResolver(dynamicSchema(shape)),
     mode: 'onChange',
   });
-
-  const conversationMutation = useSWRMutation<
-    Prisma.PromiseReturnType<typeof updateConversation>
-  >(
-    conversationId
-      ? `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/conversations/${conversationId}`
-      : null,
-    generateActionFetcher(HTTP_METHOD.PATCH)
-  );
 
   const submitForm = async (e: any) => {
     e.preventDefault();
@@ -369,15 +370,9 @@ function TraditionalForm({
           formId,
           conversationId,
           formValues: values,
+          messageId,
         } as FormSubmitSchema
       );
-
-      // Do not move to /api/events, a form is not necessary linked to conversation.
-      if (conversationId) {
-        await conversationMutation.trigger({
-          metadata: { isFormSubmitted: true },
-        } as any);
-      }
 
       if (response.status === 200) {
         setState({ isFormSubmitted: true });
@@ -398,10 +393,11 @@ function TraditionalForm({
         position: 'relative',
         overflowY: 'auto',
         width: '100%',
+        maxHeight: '100%',
         flex: 1,
       }}
     >
-      {state.isFormSubmitted && !conversationId && (
+      {/* {state.isFormSubmitted && !conversationId && (
         <Stack sx={{ position: 'absolute', top: -40, right: 0 }}>
           <Button
             variant="outlined"
@@ -413,13 +409,13 @@ function TraditionalForm({
             Retry
           </Button>
         </Stack>
-      )}
+      )} */}
       <CardContent
+        component="div"
         sx={(t) => ({
           textAlign: 'center',
           alignItems: 'center',
           position: 'relative',
-          overflowY: 'auto',
           width: '100%',
           display: 'flex',
         })}
@@ -427,8 +423,8 @@ function TraditionalForm({
         <AnimatePresence>
           {state.isFormSubmitted && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               key="component"
@@ -463,9 +459,9 @@ function TraditionalForm({
         <AnimatePresence>
           {!state.isFormSubmitted && (
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
+              // exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               key="component"
               className="w-full"
@@ -511,7 +507,7 @@ function TraditionalForm({
                       )}
                     </Stack>
 
-                    {fieldTypesMap[field.type as keyof typeof fieldTypesMap]({
+                    {fieldTypesMap[field.type as keyof typeof fieldTypesMap]?.({
                       formId,
                       conversationId,
                       methods,

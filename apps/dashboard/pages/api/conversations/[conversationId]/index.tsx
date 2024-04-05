@@ -80,6 +80,7 @@ export const getConversation = async (
               },
             },
           },
+          submission: true,
         },
         orderBy: {
           createdAt: 'desc',

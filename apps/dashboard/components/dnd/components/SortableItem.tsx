@@ -5,7 +5,7 @@ import type {
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { IconButton } from '@mui/joy';
+import { IconButton, IconButtonProps } from '@mui/joy';
 import type { CSSProperties, PropsWithChildren } from 'react';
 import React, { createContext, useContext, useMemo } from 'react';
 interface Props {
@@ -57,17 +57,11 @@ export function SortableItem({ children, id }: PropsWithChildren<Props>) {
   );
 }
 
-export function DragHandle({ style = {} }: { style?: Record<string, any> }) {
+export function DragHandle(props: IconButtonProps) {
   const { attributes, listeners, ref } = useContext(SortableItemContext);
 
   return (
-    <IconButton
-      size="sm"
-      {...attributes}
-      {...listeners}
-      ref={ref}
-      style={style}
-    >
+    <IconButton {...props} size="sm" {...attributes} {...listeners} ref={ref}>
       <DragIndicatorIcon fontSize="sm" shapeRendering="circle" />
     </IconButton>
   );

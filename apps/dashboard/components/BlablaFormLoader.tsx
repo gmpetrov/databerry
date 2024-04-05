@@ -78,6 +78,7 @@ import BlablaFormViewer from './BlablaFormViewer';
 type Props = {
   formId: string;
   conversationId?: string;
+  messageId?: string;
   useDraftConfig?: boolean;
 };
 
@@ -100,6 +101,7 @@ function BlablaFormLoader(props: Props) {
       config={config}
       formId={props.formId}
       conversationId={props.conversationId}
+      messageId={props.messageId}
       type={getFormQuery?.data?.type ?? 'conversational'}
     />
   );

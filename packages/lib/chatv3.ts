@@ -155,6 +155,7 @@ const chat = async ({
     throw 'ToolApprovalRequired';
   };
 
+  let messageId = undefined;
   let metadata: object | undefined = undefined;
 
   const baseConfig = {
@@ -186,6 +187,10 @@ const chat = async ({
           ...metadata,
           ...res?.metadata,
         };
+      }
+
+      if (res.messageId) {
+        messageId = res.messageId as string;
       }
 
       return res?.data;
@@ -515,6 +520,7 @@ const chat = async ({
       sources: retrievalData?.sources || [],
       approvals,
       metadata,
+      messageId,
     } as ChatResponse;
   } catch (err: any) {
     if (err?.message?.includes('ToolApprovalRequired')) {
@@ -524,6 +530,7 @@ const chat = async ({
         approvals,
         sources: [] as Source[],
         metadata,
+        messageId,
       } as ChatResponse;
     } else {
       throw err;

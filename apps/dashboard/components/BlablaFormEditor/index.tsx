@@ -8,10 +8,8 @@ import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
 import {
   Accordion,
   AccordionDetails,
-  accordionDetailsClasses,
   AccordionGroup,
   AccordionSummary,
-  accordionSummaryClasses,
   Alert,
   Button,
   Card,
@@ -69,7 +67,7 @@ function Form({ formId }: Props) {
     isConversationStarted: false,
     isFormCompleted: false,
     isPublishable: false,
-    currentAccordionIndex: 0 as number | null,
+    currentAccordionIndex: 1 as number | null,
   });
 
   const getFormData = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
@@ -98,10 +96,7 @@ function Form({ formId }: Props) {
     query.mutate();
   };
 
-  const formPublicUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL?.replace(
-    'app.',
-    ''
-  )}/forms/${query?.data?.id}`;
+  const formPublicUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${query?.data?.id}`;
 
   if (!query.data && query.isLoading) {
     return <Loader />;
@@ -136,16 +131,16 @@ function Form({ formId }: Props) {
               maxHeight: '100%',
               overflowY: 'auto',
               borderRadius: 'lg',
-              [`& .${accordionSummaryClasses.button}:hover`]: {
-                bgcolor: 'transparent',
-              },
-              [`& .${accordionDetailsClasses.content}`]: {
-                boxShadow: (theme) =>
-                  `inset 0 1px ${theme.vars.palette.divider}`,
-                [`&.${accordionDetailsClasses.expanded}`]: {
-                  paddingBlock: '0.75rem',
-                },
-              },
+              // [`& .${accordionSummaryClasses.button}:hover`]: {
+              //   bgcolor: 'transparent',
+              // },
+              // [`& .${accordionDetailsClasses.content}`]: {
+              //   boxShadow: (theme) =>
+              //     `inset 0 1px ${theme.vars.palette.divider}`,
+              //   [`&.${accordionDetailsClasses.expanded}`]: {
+              //     paddingBlock: '0.75rem',
+              //   },
+              // },
               transition: 'all 0.2s ease',
             }}
           >
@@ -325,27 +320,12 @@ function Form({ formId }: Props) {
                   </FormControl>
                   <FormControl>
                     <FormLabel>Call to action URL</FormLabel>
-                    <Stack
-                      direction="column"
-                      gap={1.5}
-                      sx={(t) => ({
-                        border: '1px solid',
-                        borderColor: t.palette.divider,
-                        borderRadius: t.radius.md,
-                        boxShadow: t.shadow.xs,
-                        p: 0.25,
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      })}
-                    >
-                      <Input
-                        variant="plain"
-                        sx={{ py: 0 }}
-                        control={methods.control}
-                        // endDecorator={}
-                        {...methods.register('draftConfig.endScreen.cta.url')}
-                      />
-                    </Stack>
+                    <Input
+                      control={methods.control}
+                      // endDecorator={}
+                      {...methods.register('draftConfig.endScreen.cta.url')}
+                    />
+
                     <Stack direction="row-reverse" mt={1}>
                       <Controller
                         name="draftConfig.endScreen.cta.target"

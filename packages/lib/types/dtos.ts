@@ -543,7 +543,7 @@ export const ChatResponse = z.object({
   sources: z.array(Source).optional(),
   conversationId: z.string().cuid(),
   visitorId: z.string().optional(),
-  messageId: z.string().cuid(),
+  messageId: z.string().cuid().optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
   usage: z
     .object({
@@ -599,10 +599,12 @@ export const FormFieldSchema = z.discriminatedUnion('type', [
   FormFieldBaseSchema.extend({
     type: z.literal('email'),
     placeholder: z.string().optional(),
+    shouldCreateContact: z.boolean().default(true).optional(),
   }),
   FormFieldBaseSchema.extend({
     type: z.literal('phoneNumber'),
     placeholder: z.string().optional(),
+    shouldCreateContact: z.boolean().default(true).optional(),
   }),
   FormFieldBaseSchema.extend({
     type: z.literal('textArea'),
@@ -681,6 +683,7 @@ export type UpdateFormSchema = z.infer<typeof UpdateFormSchema>;
 
 export const ToolResponseSchema = z.object({
   data: z.any(),
+  messageId: z.string().cuid().optional(),
   metadata: z.record(z.string(), z.unknown()).optional(),
   approvalRequired: z.boolean().optional(),
   error: z.string().optional(),
@@ -828,6 +831,7 @@ export const FormSubmitSchema = AppEventBaseSchema.extend({
   formId: z.string().cuid(),
   formValues: z.record(z.string(), z.unknown()),
   conversationId: z.string().cuid().optional(),
+  messageId: z.string().cuid().optional(),
   submissionId: z.string().cuid().optional().nullable(),
 });
 

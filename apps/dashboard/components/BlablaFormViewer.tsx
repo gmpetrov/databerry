@@ -41,6 +41,7 @@ import VisuallyHiddenInput from './VisuallyHiddenInput';
 type Props = {
   formId: string;
   conversationId?: string;
+  messageId?: string;
   config?: FormConfigSchema;
   type: 'conversational' | 'traditional';
 };
@@ -65,7 +66,13 @@ const FormText = styled(Typography)(({ theme }) => ({
 
 export const LOCAL_STORAGE_CONVERSATION_KEY = 'formConversationId';
 
-function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
+function BlablaFormViewer({
+  formId,
+  conversationId,
+  messageId,
+  config,
+  type,
+}: Props) {
   const triggerConfetti = useConfetti();
 
   const [state, setState] = useStateReducer({
@@ -120,15 +127,15 @@ function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
 
   return (
     <Stack
-      height="100%"
-      width="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      textAlign={'center'}
       // component={motion.div}
-      className="overflow-y-scroll"
       sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        overflow: 'hidden',
+        width: '100%',
+        height: '100%',
         p: 4,
         '*': {
           // fontFamily: 'Bricolage Grotesque',
@@ -141,251 +148,264 @@ function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
           <CircularProgress size="sm" color="neutral" />
         </>
       ) : (
-        <Stack sx={{ width: '100%' }} gap={5}>
-          <Stack
-            width="100%"
-            display="flex"
-            alignItems={'start'}
-            direction="row"
-            gap={2}
-          >
-            {chatData.isStreaming && (
-              // <CircularProgress
-              //   sx={{
-              //     '--_root-size': '9px',
-              //     mb: 2,
-              //   }}
-              //   color="neutral"
-              //   size="sm"
-              // />
-              <span className="relative flex w-8 h-8 mt-[0px]">
-                <span className="inline-flex absolute w-full h-full bg-gray-400 rounded-full opacity-75 animate-ping"></span>
-                <span className="inline-flex relative w-8 h-8 bg-gray-500 rounded-full"></span>
-              </span>
-            )}
-
-            <Motion
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-              }}
-            >
-              {({ ref }) =>
-                chatData.history.length > 0 &&
-                lastMessage.from === 'agent' && (
-                  <span ref={ref}>
-                    <FormText
-                      level="h1"
-                      sx={{
-                        fontSize: '1.8rem',
-                        opacity: chatData.isStreaming ? 1 : 0.7,
-                      }}
-                    >
-                      {lastMessageText}
-
-                      {chatData.isStreaming && (
-                        <span
-                          className="bg-current animate-typewriterCursor"
-                          style={{
-                            //   height: '100%',
-                            width: 3,
-                            display: 'inline-block',
-                            // backgroundColor: style?.color || 'black',
-                            marginLeft: 4,
-                            marginTop: -4,
-                            verticalAlign: 'middle',
-                            // opacity: Number(animatedText.cursorShown),
-                            // ...cursorStyle,
-                          }}
-                        >
-                          {/* trick to fix cursor height */}
-                          <span style={{ visibility: 'hidden' }}>l</span>
-                        </span>
-                      )}
-                    </FormText>
-                  </span>
-                )
-              }
-            </Motion>
-          </Stack>
-
-          {!chatData.isStreaming &&
-            !isFormValid &&
-            state.isConversationStarted &&
-            type === formType.conversational && (
-              <Stack sx={{ width: '100%' }}>
-                {currentField?.type !== 'multiple_choice' && (
-                  <Input
-                    autoFocus
-                    className="p-0 w-full text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
-                    placeholder="Type your answer"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        answerQuestion(state.currentAnswer);
-                      }
-                    }}
-                    onChange={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      setState({
-                        currentAnswer: e.target.value,
-                      });
-                    }}
-                  />
-                )}
-
-                {currentField?.type === 'multiple_choice' && (
-                  <Stack
-                    gap={2}
-                    sx={{ flexWrap: 'wrap', justifyContent: 'flex-start' }}
-                    direction="row"
-                    component={motion.div}
-                    variants={{
-                      hidden: { opacity: 0 },
-                      show: {
-                        opacity: 1,
-                        transition: {
-                          staggerChildren: 0.35,
-                        },
-                      },
-                    }}
-                    initial="hidden"
-                    animate="show"
-                  >
-                    {currentField?.choices?.map((choice, i) => (
-                      <Motion
-                        key={choice}
-                        variants={{
-                          hidden: { opacity: 0, y: 20 },
-                          show: { opacity: 1, y: 0 },
-                        }}
-                      >
-                        {({ ref }) => (
-                          <span ref={ref}>
-                            <FormButton
-                              variant="solid"
-                              onClick={() => {
-                                answerQuestion(choice);
-                              }}
-                              size="lg"
-                            >
-                              {choice}
-                            </FormButton>
-                          </span>
-                        )}
-                      </Motion>
-                    ))}
-                  </Stack>
-                )}
-              </Stack>
-            )}
-
+        <Stack
+          sx={{
+            width: '100%',
+            height: '100%',
+            overflowY: 'auto',
+          }}
+          gap={5}
+        >
           {type === formType.traditional && (
-            <Stack sx={{ width: '100%', maxWidth: '350px', mx: 'auto' }}>
+            <Stack
+              sx={{ width: '100%', maxWidth: '350px', mx: 'auto', my: 'auto' }}
+            >
               <TraditionalForm
                 formId={formId}
                 conversationId={conversationId}
+                messageId={messageId}
+                config={config}
               />
             </Stack>
           )}
 
-          {isFormValid && config?.endScreen?.cta?.label && (
-            <Motion
-              initial="hidden"
-              animate="visible"
-              variants={{
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                },
-                hidden: {
-                  opacity: 0,
-                  y: 20,
-                },
-              }}
-            >
-              {({ ref }) => (
-                <span ref={ref}>
-                  <a
-                    href={config?.endScreen?.cta?.url || '#'}
-                    target={config?.endScreen?.cta?.target || '_blank'}
-                  >
-                    <FormButton variant="solid" size="lg">
-                      {config?.endScreen?.cta?.label}
-                    </FormButton>
-                  </a>
-                </span>
-              )}
-            </Motion>
-          )}
+          {type === formType.conversational && (
+            <>
+              <Stack
+                width="100%"
+                display="flex"
+                alignItems={'start'}
+                direction="row"
+                gap={2}
+              >
+                {chatData.isStreaming && (
+                  // <CircularProgress
+                  //   sx={{
+                  //     '--_root-size': '9px',
+                  //     mb: 2,
+                  //   }}
+                  //   color="neutral"
+                  //   size="sm"
+                  // />
+                  <span className="relative flex w-8 h-8 mt-[0px]">
+                    <span className="absolute inline-flex w-full h-full bg-gray-400 rounded-full opacity-75 animate-ping"></span>
+                    <span className="relative inline-flex w-8 h-8 bg-gray-500 rounded-full"></span>
+                  </span>
+                )}
 
-          {!state.isConversationStarted && type === 'conversational' && (
-            <Stack
-              gap={3}
-              maxWidth="100%"
-              sx={{
-                textAlign: 'center',
-                alignItems: 'center',
-              }}
-            >
-              {config?.startScreen?.title && (
                 <Motion
                   initial={{
                     opacity: 0,
-                    y: 20,
                   }}
                   animate={{
                     opacity: 1,
-                    y: 0,
+                  }}
+                >
+                  {({ ref }) =>
+                    chatData.history.length > 0 &&
+                    lastMessage.from === 'agent' && (
+                      <span ref={ref}>
+                        <FormText
+                          level="h1"
+                          sx={{
+                            fontSize: '1.8rem',
+                            opacity: chatData.isStreaming ? 1 : 0.7,
+                          }}
+                        >
+                          {lastMessageText}
+
+                          {chatData.isStreaming && (
+                            <span
+                              className="bg-current animate-typewriterCursor"
+                              style={{
+                                //   height: '100%',
+                                width: 3,
+                                display: 'inline-block',
+                                // backgroundColor: style?.color || 'black',
+                                marginLeft: 4,
+                                marginTop: -4,
+                                verticalAlign: 'middle',
+                                // opacity: Number(animatedText.cursorShown),
+                                // ...cursorStyle,
+                              }}
+                            >
+                              {/* trick to fix cursor height */}
+                              <span style={{ visibility: 'hidden' }}>l</span>
+                            </span>
+                          )}
+                        </FormText>
+                      </span>
+                    )
+                  }
+                </Motion>
+              </Stack>
+
+              {!chatData.isStreaming &&
+                !isFormValid &&
+                state.isConversationStarted &&
+                type === formType.conversational && (
+                  <Stack sx={{ width: '100%' }}>
+                    {currentField?.type !== 'multiple_choice' && (
+                      <Input
+                        autoFocus
+                        className="w-full p-0 text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
+                        placeholder="Type your answer"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            answerQuestion(state.currentAnswer);
+                          }
+                        }}
+                        onChange={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+
+                          setState({
+                            currentAnswer: e.target.value,
+                          });
+                        }}
+                      />
+                    )}
+
+                    {currentField?.type === 'multiple_choice' && (
+                      <Stack
+                        gap={2}
+                        sx={{ flexWrap: 'wrap', justifyContent: 'flex-start' }}
+                        direction="row"
+                        component={motion.div}
+                        variants={{
+                          hidden: { opacity: 0 },
+                          show: {
+                            opacity: 1,
+                            transition: {
+                              staggerChildren: 0.35,
+                            },
+                          },
+                        }}
+                        initial="hidden"
+                        animate="show"
+                      >
+                        {currentField?.choices?.map((choice, i) => (
+                          <Motion
+                            key={choice}
+                            variants={{
+                              hidden: { opacity: 0, y: 20 },
+                              show: { opacity: 1, y: 0 },
+                            }}
+                          >
+                            {({ ref }) => (
+                              <span ref={ref}>
+                                <FormButton
+                                  variant="solid"
+                                  onClick={() => {
+                                    answerQuestion(choice);
+                                  }}
+                                  size="lg"
+                                >
+                                  {choice}
+                                </FormButton>
+                              </span>
+                            )}
+                          </Motion>
+                        ))}
+                      </Stack>
+                    )}
+                  </Stack>
+                )}
+
+              {isFormValid && config?.endScreen?.cta?.label && (
+                <Motion
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                    },
+                    hidden: {
+                      opacity: 0,
+                      y: 20,
+                    },
                   }}
                 >
                   {({ ref }) => (
                     <span ref={ref}>
-                      <FormText // maxWidth="600px"
-                        level="h1"
-                        sx={{
-                          textAlign: 'center',
-                          fontWeight: 900,
-                          fontSize: '4rem',
-                        }}
+                      <a
+                        href={config?.endScreen?.cta?.url || '#'}
+                        target={config?.endScreen?.cta?.target || '_blank'}
                       >
-                        {config?.startScreen?.title}
-                      </FormText>
-                    </span>
-                  )}
-                </Motion>
-              )}
-              {config?.startScreen?.description && (
-                <Motion
-                  initial={{
-                    opacity: 0,
-                    y: 20,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                >
-                  {({ ref }) => (
-                    <span ref={ref}>
-                      <FormText // maxWidth="600px"
-                        level="h1"
-                        sx={{
-                          textAlign: 'center',
-                          fontWeight: 400,
-                        }}
-                      >
-                        {config?.startScreen?.description}
-                      </FormText>
+                        <FormButton variant="solid" size="lg">
+                          {config?.endScreen?.cta?.label}
+                        </FormButton>
+                      </a>
                     </span>
                   )}
                 </Motion>
               )}
 
-              {/* <motion.div
+              {!state.isConversationStarted && type === 'conversational' && (
+                <Stack
+                  gap={3}
+                  maxWidth="100%"
+                  sx={{
+                    textAlign: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  {config?.startScreen?.title && (
+                    <Motion
+                      initial={{
+                        opacity: 0,
+                        y: 20,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                    >
+                      {({ ref }) => (
+                        <span ref={ref}>
+                          <FormText // maxWidth="600px"
+                            level="h1"
+                            sx={{
+                              textAlign: 'center',
+                              fontWeight: 900,
+                              fontSize: '4rem',
+                            }}
+                          >
+                            {config?.startScreen?.title}
+                          </FormText>
+                        </span>
+                      )}
+                    </Motion>
+                  )}
+                  {config?.startScreen?.description && (
+                    <Motion
+                      initial={{
+                        opacity: 0,
+                        y: 20,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                    >
+                      {({ ref }) => (
+                        <span ref={ref}>
+                          <FormText // maxWidth="600px"
+                            level="h1"
+                            sx={{
+                              textAlign: 'center',
+                              fontWeight: 400,
+                            }}
+                          >
+                            {config?.startScreen?.description}
+                          </FormText>
+                        </span>
+                      )}
+                    </Motion>
+                  )}
+
+                  {/* <motion.div
                 initial="hidden"
                 animate="visible"
                 variants={{
@@ -404,49 +424,51 @@ function BlablaFormViewer({ formId, conversationId, config, type }: Props) {
                 </FormButton>
               </motion.div> */}
 
-              <Motion
-                initial="hidden"
-                animate="visible"
-                transition={{
-                  delay: 0.2,
-                  // type: 'spring',
-                  // bounce: 1,
-                  // stiffness: 50,
-                  // damping: 300,
-                }}
-                variants={{
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    // scale: 1,
-                    // transition: {
-                    //   when: 'beforeChildren',
-                    //   staggerChildren: 0.2,
-                    // },
-                  },
-                  hidden: {
-                    opacity: 0,
-                    y: 20,
-                    // scale: 0.5,
-                    // transition: {
-                    //   when: 'afterChildren',
-                    // },
-                  },
-                }}
-              >
-                {({ ref }) => (
-                  <span ref={ref}>
-                    <FormButton
-                      variant="solid"
-                      onClick={initiateForm}
-                      size="lg"
-                    >
-                      {config?.startScreen?.cta?.label}
-                    </FormButton>
-                  </span>
-                )}
-              </Motion>
-            </Stack>
+                  <Motion
+                    initial="hidden"
+                    animate="visible"
+                    transition={{
+                      delay: 0.2,
+                      // type: 'spring',
+                      // bounce: 1,
+                      // stiffness: 50,
+                      // damping: 300,
+                    }}
+                    variants={{
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        // scale: 1,
+                        // transition: {
+                        //   when: 'beforeChildren',
+                        //   staggerChildren: 0.2,
+                        // },
+                      },
+                      hidden: {
+                        opacity: 0,
+                        y: 20,
+                        // scale: 0.5,
+                        // transition: {
+                        //   when: 'afterChildren',
+                        // },
+                      },
+                    }}
+                  >
+                    {({ ref }) => (
+                      <span ref={ref}>
+                        <FormButton
+                          variant="solid"
+                          onClick={initiateForm}
+                          size="lg"
+                        >
+                          {config?.startScreen?.cta?.label}
+                        </FormButton>
+                      </span>
+                    )}
+                  </Motion>
+                </Stack>
+              )}
+            </>
           )}
         </Stack>
       )}

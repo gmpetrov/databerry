@@ -303,7 +303,7 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     }),
   ]);
 
-  const answerMsgId = cuid();
+  const answerMsgId = chatRes.messageId || cuid();
 
   if (!data.isDraft) {
     await conversationManager.createMessage({

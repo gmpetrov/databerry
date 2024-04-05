@@ -43,12 +43,23 @@ export const postForm = async (
   const id = req.query.formId as string;
   const submissionId = data?.submissionId || cuid();
 
+  const form = await prisma.form.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!form) {
+    throw new ApiError(ApiErrorType.NOT_FOUND);
+  }
+
   const submission = await prisma.formSubmission.upsert({
     where: {
       id: submissionId,
     },
     create: {
       ...(data?.conversationId ? { conversationId: data.conversationId } : {}),
+      ...(data?.messageId ? { messageId: data.messageId } : {}),
       formId: data.formId,
       data: data.formValues as any,
       status: FormStatus.COMPLETED,
@@ -81,8 +92,63 @@ export const postForm = async (
     },
   });
 
-  const config = (submission?.form?.publishedConfig ??
-    submission?.form?.draftConfig) as FormConfigSchema;
+  const orgId = form.organizationId as string;
+
+  const config = (form?.publishedConfig ??
+    form?.draftConfig) as FormConfigSchema;
+
+  const emailFields = config.fields.filter(
+    (field) => field.type === 'email' && !!field.shouldCreateContact
+  );
+  const emails = emailFields
+    .map((field) => data.formValues[field.name])
+    .filter((each) => !!each) as string[];
+  const phoneFields = config.fields.filter(
+    (field) => field.type === 'phoneNumber' && !!field.shouldCreateContact
+  );
+  const phoneNumbers = phoneFields
+    .map((field) => data.formValues[field.name])
+    .filter((each) => !!each) as string[];
+
+  if (emails.length > 0 || phoneNumbers.length > 0) {
+    // https://github.com/prisma/prisma/issues/4134 switch to upserMany when ready
+    await Promise.all([
+      ...emails.map((email) =>
+        prisma.contact.upsert({
+          where: {
+            unique_email_for_org: {
+              email,
+              organizationId: orgId,
+            },
+          },
+          create: {
+            email,
+            organizationId: orgId,
+          },
+          update: {
+            email,
+          },
+        })
+      ),
+      ...phoneNumbers.map((phoneNumber) =>
+        prisma.contact.upsert({
+          where: {
+            unique_phone_number_for_org: {
+              phoneNumber,
+              organizationId: orgId,
+            },
+          },
+          create: {
+            phoneNumber,
+            organizationId: orgId,
+          },
+          update: {
+            phoneNumber,
+          },
+        })
+      ),
+    ]);
+  }
 
   const ownerEmail =
     submission?.form?.organization?.memberships?.[0].user?.email;

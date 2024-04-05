@@ -17,12 +17,13 @@ export default function FormPage(props: { agent: Agent }) {
   const formId = router.query.formId as string;
 
   const conversationId = router.query.conversationId as string | undefined;
+  const messageId = router.query.messageId as string | undefined;
   return (
     <>
       <SEO
-        title={`Blablaform - AI powered conversational forms`}
-        description={`Blablaform - AI powered conversational forms`}
-        url={`https://chaindesk.ai/forms/${formId}`}
+        title={`AI powered conversational forms | Chaindesk.ai`}
+        description={`Build ChatGPT-powered conversational forms with Chaindesk.ai`}
+        url={`https://app.chaindesk.ai/forms/${formId}`}
       />
       {/*
 
@@ -42,7 +43,11 @@ export default function FormPage(props: { agent: Agent }) {
           <ColorSchemeToggle />
         </Stack>
 
-        <BlablaFormLoader formId={formId} conversationId={conversationId} />
+        <BlablaFormLoader
+          formId={formId}
+          conversationId={conversationId}
+          messageId={messageId}
+        />
       </Stack>
     </>
   );

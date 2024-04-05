@@ -1,6 +1,6 @@
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {
   Accordion,
   AccordionDetails,
@@ -10,6 +10,7 @@ import {
   Button,
   Checkbox,
   FormControl,
+  FormHelperText,
   FormLabel,
   IconButton,
   Input as JoyInput,
@@ -27,10 +28,8 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import Input from '@app/components/Input';
-
-import generateFunId from '@chaindesk/lib/generate-fun-id';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
+import Input from '@chaindesk/ui/Input';
 
 import { SortableList } from '../dnd/SortableList';
 import { FieldType } from '../TraditionalForm';
@@ -77,17 +76,16 @@ export const Choices = <T extends Record<string, unknown>>({
   const fields = watch(name) || [];
 
   return (
-    <Stack gap={1} direction="column">
+    <Stack gap={1} direction="column" sx={{ width: '100%', maxWidth: '100%' }}>
       <Stack gap={1} width={'100%'}>
-        <FormLabel>{label}</FormLabel>
+        {label && <FormLabel>{label}</FormLabel>}
         {fields?.map((_, i) => (
-          <Stack key={i} width={'100%'} direction="row" gap={1}>
+          <Stack key={i} direction="row" gap={1}>
             <Input
-              size="sm"
-              control={control}
-              variant="soft"
               endDecorator={
                 <IconButton
+                  size="sm"
+                  color="danger"
                   onClick={() => {
                     remove(i);
                     forceSubmit();
@@ -96,6 +94,15 @@ export const Choices = <T extends Record<string, unknown>>({
                   <CloseIcon fontSize="sm" />
                 </IconButton>
               }
+              formControlProps={{
+                sx: {
+                  overflow: 'hidden',
+                  maxWidth: '100%',
+                },
+              }}
+              size="sm"
+              control={control}
+              variant="soft"
               {...register(`${name}.${i}`)}
             />
           </Stack>
@@ -119,7 +126,7 @@ export const Choices = <T extends Record<string, unknown>>({
     </Stack>
   );
 };
-function FieldsInput({ type = 'conversational' }: Props) {
+function FieldsInput({ type = 'traditional' }: Props) {
   const methods = useFormContext<CreateFormSchema>();
   const { fields, append, remove, swap } = useFieldArray({
     control: methods.control,
@@ -139,9 +146,7 @@ function FieldsInput({ type = 'conversational' }: Props) {
           }}
           renderItem={(field, index) => (
             <SortableList.Item id={field.id}>
-              <SortableList.DragHandle
-                style={{ maxHeight: 0, marginTop: '0.75rem' }}
-              />
+              <SortableList.DragHandle style={{ maxHeight: 0 }} size="sm" />
               <Box
                 key={field.id}
                 display="flex"
@@ -149,26 +154,12 @@ function FieldsInput({ type = 'conversational' }: Props) {
                 width="100%"
               >
                 <Stack direction={'column'} gap={1} sx={{ width: '100%' }}>
-                  <Stack direction="column">
-                    <AccordionGroup>
+                  <Stack
+                    direction="row"
+                    sx={{ alignItems: 'start', width: '100%' }}
+                  >
+                    <AccordionGroup size="sm">
                       <Accordion sx={{ position: 'relative' }} defaultExpanded>
-                        <Stack direction="row-reverse">
-                          <IconButton
-                            size="sm"
-                            sx={{
-                              position: 'absolute',
-                              right: -20,
-                              top: 10,
-                              zIndex: 99,
-                            }}
-                            onClick={() => {
-                              remove(index);
-                              forceSubmit();
-                            }}
-                          >
-                            <DeleteIcon fontSize="md" color="danger" />
-                          </IconButton>
-                        </Stack>
                         <AccordionSummary>
                           <Typography className="truncate w-[100px]">
                             {methods?.getValues(
@@ -177,7 +168,13 @@ function FieldsInput({ type = 'conversational' }: Props) {
                           </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                          <Stack spacing={2}>
+                          <Stack
+                            spacing={2}
+                            width={{
+                              width: '100%',
+                              maxWidth: '100%',
+                            }}
+                          >
                             <FormControl>
                               <FormLabel>Type</FormLabel>
                               <Select
@@ -248,13 +245,13 @@ function FieldsInput({ type = 'conversational' }: Props) {
 
                             {fieldsValues?.[index]?.type ===
                               FieldType.Select && (
-                              <Stack direction="column">
-                                <Typography>Options</Typography>
+                              <FormControl>
+                                <FormLabel>Options</FormLabel>
                                 <Choices<CreateFormSchema>
                                   actionLabel="Add Option"
                                   name={`draftConfig.fields.${index}.options`}
                                 />
-                              </Stack>
+                              </FormControl>
                             )}
 
                             <FormControl>
@@ -278,10 +275,37 @@ function FieldsInput({ type = 'conversational' }: Props) {
                                 }}
                               />
                             </FormControl>
+                            {[FieldType.Email, FieldType.PhoneNumber].includes(
+                              fieldsValues?.[index]?.type as FieldType
+                            ) && (
+                              <FormControl>
+                                <FormLabel>Create Contact</FormLabel>
+                                <Checkbox
+                                  defaultChecked={
+                                    (field as any).shouldCreateContact
+                                  }
+                                  onChange={(e) => {
+                                    methods.setValue(
+                                      `draftConfig.fields.${index}.shouldCreateContact`,
+                                      e.target.checked
+                                    );
+                                  }}
+                                />
+                              </FormControl>
+                            )}
                           </Stack>
                         </AccordionDetails>
                       </Accordion>
                     </AccordionGroup>
+                    <IconButton
+                      size="sm"
+                      onClick={() => {
+                        remove(index);
+                        forceSubmit();
+                      }}
+                    >
+                      <CloseRoundedIcon fontSize="md" color="danger" />
+                    </IconButton>
                   </Stack>
                 </Stack>
               </Box>
