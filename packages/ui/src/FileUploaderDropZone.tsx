@@ -1,19 +1,15 @@
-import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
-import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
 import ChipDelete from '@mui/joy/ChipDelete';
-import IconButton from '@mui/joy/IconButton';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { useCallback, useRef, useState } from 'react';
 
-import { acceptedMimeTypesStr } from './ChatBox';
-import Loader from './Loader';
+import { acceptedMimeTypesStr } from '@chaindesk/lib/accepted-mime-types';
 import VisuallyHiddenInput from './VisuallyHiddenInput';
 
-export default function FileUploader({
+export default function FileUploaderDropZone({
   changeCallback,
   placeholder,
   variant = 'plain',

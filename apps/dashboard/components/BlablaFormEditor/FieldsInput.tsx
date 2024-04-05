@@ -30,9 +30,9 @@ import {
 
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import Input from '@chaindesk/ui/Input';
+import { FieldType } from '@chaindesk/ui/types/form';
 
 import { SortableList } from '../dnd/SortableList';
-import { FieldType } from '../TraditionalForm';
 
 import { forceSubmit } from './utils';
 
@@ -45,6 +45,7 @@ const fieldTypes = [
   'email',
   'phoneNumber',
   'text',
+  'number',
   'textArea',
   'select',
   'file',
@@ -313,69 +314,6 @@ function FieldsInput({ type = 'traditional' }: Props) {
           )}
         />
       )}
-      {type == formType.conversational &&
-        fieldsValues?.map((field, index) => (
-          <div key={index}>
-            <Stack
-              sx={{ width: '100%' }}
-              direction="row"
-              gap={1}
-              alignItems={'start'}
-            >
-              <Controller
-                name={`draftConfig.fields.${index}.type` as const}
-                render={({
-                  field: { onChange, onBlur, value, name, ref },
-                  fieldState: { invalid, isTouched, isDirty, error },
-                  formState,
-                }) => (
-                  <Select
-                    size="sm"
-                    value={value}
-                    onChange={(_, value) => {
-                      onChange(value);
-                      forceSubmit();
-                    }}
-                    sx={{ minWidth: '80px' }}
-                  >
-                    <Option value="text">text</Option>
-                    <Option value="multiple_choice">mutliple choice</Option>
-                  </Select>
-                )}
-              ></Controller>
-              <Input
-                control={methods.control}
-                sx={{ width: '100%' }}
-                size="sm"
-                key={field.id}
-                defaultValue={field.name}
-                placeholder="e.g. email"
-                {...methods.register(
-                  `draftConfig.fields.${index}.name` as const
-                )}
-                endDecorator={
-                  <IconButton
-                    onClick={() => {
-                      remove(index);
-                      forceSubmit();
-                    }}
-                  >
-                    <CloseIcon fontSize="sm" />
-                  </IconButton>
-                }
-              />
-            </Stack>
-
-            {fieldsValues?.[index]?.type === 'multiple_choice' && (
-              <Stack sx={{ ml: 'auto' }}>
-                <Choices<CreateFormSchema>
-                  actionLabel="Add Choice"
-                  name={`draftConfig.fields.${index}.choices` as any}
-                />
-              </Stack>
-            )}
-          </div>
-        ))}
 
       <Button
         size="sm"

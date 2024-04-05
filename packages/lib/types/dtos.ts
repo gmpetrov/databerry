@@ -588,6 +588,10 @@ export const FormFieldSchema = z.discriminatedUnion('type', [
     placeholder: z.string().optional(),
   }),
   FormFieldBaseSchema.extend({
+    type: z.literal('number'),
+    placeholder: z.string().optional(),
+  }),
+  FormFieldBaseSchema.extend({
     type: z.literal('multiple_choice'),
     choices: z.array(z.string().min(1)).min(1),
   }),
@@ -644,9 +648,6 @@ export const FormConfigSchema = z.object({
     .object({
       title: z.string().max(50),
       description: z.string().max(250),
-      cta: z.object({
-        label: z.string(),
-      }),
     })
     .optional(),
   endScreen: z

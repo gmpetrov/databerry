@@ -58,3 +58,10 @@ export const AcceptedDocumentMimeTypes = [
   'application/gzip',
   'application/zip',
 ] as const;
+
+export const acceptedMimeTypesStr = [
+  ...AcceptedImageMimeTypes,
+  ...AcceptedVideoMimeTypes,
+  ...AcceptedAudioMimeTypes,
+  ...AcceptedDocumentMimeTypes,
+].join(',');

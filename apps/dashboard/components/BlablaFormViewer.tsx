@@ -17,34 +17,34 @@ import {
 import { motion } from 'framer-motion';
 import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
 
 import useChat from '@app/hooks/useChat';
 import useConfetti from '@app/hooks/useConfetti';
 import useStateReducer from '@app/hooks/useStateReducer';
+import { getForm } from '@app/pages/api/forms/[formId]';
 
 import slugify from '@chaindesk/lib/slugify';
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import {
   FormConfigSchema,
   FormFieldSchema,
   TextField,
 } from '@chaindesk/lib/types/dtos';
-import { ConversationChannel } from '@chaindesk/prisma';
+import { ConversationChannel, Prisma } from '@chaindesk/prisma';
 import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
+import TraditionalForm from '@chaindesk/ui/TraditionalForm';
+import VisuallyHiddenInput from '@chaindesk/ui/VisuallyHiddenInput';
 
 import { formType } from './BlablaFormEditor/FieldsInput';
-import { acceptedMimeTypesStr } from './ChatBox';
 import Motion from './Motion';
-import TraditionalForm from './TraditionalForm';
-import VisuallyHiddenInput from './VisuallyHiddenInput';
-
 type Props = {
   formId: string;
   conversationId?: string;
   messageId?: string;
   config?: FormConfigSchema;
   type: 'conversational' | 'traditional';
-  isInEditor?: boolean;
 };
 
 const FormButton = styled(Button)(({ theme }) => ({
@@ -73,7 +73,6 @@ function BlablaFormViewer({
   messageId,
   config,
   type,
-  isInEditor,
 }: Props) {
   const triggerConfetti = useConfetti();
 
@@ -167,7 +166,6 @@ function BlablaFormViewer({
                 conversationId={conversationId}
                 messageId={messageId}
                 config={config}
-                isInEditor={isInEditor}
               />
             </Stack>
           )}
@@ -248,70 +246,24 @@ function BlablaFormViewer({
                 state.isConversationStarted &&
                 type === formType.conversational && (
                   <Stack sx={{ width: '100%' }}>
-                    {currentField?.type !== 'multiple_choice' && (
-                      <Input
-                        autoFocus
-                        className="w-full p-0 text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
-                        placeholder="Type your answer"
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            answerQuestion(state.currentAnswer);
-                          }
-                        }}
-                        onChange={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
+                    <Input
+                      autoFocus
+                      className="w-full p-0 text-4xl font-semibold text-left bg-transparent border-none shadow-none outline-none before:shadow-none"
+                      placeholder="Type your answer"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          answerQuestion(state.currentAnswer);
+                        }
+                      }}
+                      onChange={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
 
-                          setState({
-                            currentAnswer: e.target.value,
-                          });
-                        }}
-                      />
-                    )}
-
-                    {currentField?.type === 'multiple_choice' && (
-                      <Stack
-                        gap={2}
-                        sx={{ flexWrap: 'wrap', justifyContent: 'flex-start' }}
-                        direction="row"
-                        component={motion.div}
-                        variants={{
-                          hidden: { opacity: 0 },
-                          show: {
-                            opacity: 1,
-                            transition: {
-                              staggerChildren: 0.35,
-                            },
-                          },
-                        }}
-                        initial="hidden"
-                        animate="show"
-                      >
-                        {currentField?.choices?.map((choice, i) => (
-                          <Motion
-                            key={choice}
-                            variants={{
-                              hidden: { opacity: 0, y: 20 },
-                              show: { opacity: 1, y: 0 },
-                            }}
-                          >
-                            {({ ref }) => (
-                              <span ref={ref}>
-                                <FormButton
-                                  variant="solid"
-                                  onClick={() => {
-                                    answerQuestion(choice);
-                                  }}
-                                  size="lg"
-                                >
-                                  {choice}
-                                </FormButton>
-                              </span>
-                            )}
-                          </Motion>
-                        ))}
-                      </Stack>
-                    )}
+                        setState({
+                          currentAnswer: e.target.value,
+                        });
+                      }}
+                    />
                   </Stack>
                 )}
 
@@ -407,68 +359,6 @@ function BlablaFormViewer({
                       )}
                     </Motion>
                   )}
-
-                  {/* <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                  },
-                  hidden: {
-                    opacity: 0,
-                    y: 100,
-                  },
-                }}
-              >
-                <FormButton variant="solid" onClick={initiateForm} size="lg">
-                  {config?.startScreen?.cta?.label}
-                </FormButton>
-              </motion.div> */}
-
-                  <Motion
-                    initial="hidden"
-                    animate="visible"
-                    transition={{
-                      delay: 0.2,
-                      // type: 'spring',
-                      // bounce: 1,
-                      // stiffness: 50,
-                      // damping: 300,
-                    }}
-                    variants={{
-                      visible: {
-                        opacity: 1,
-                        y: 0,
-                        // scale: 1,
-                        // transition: {
-                        //   when: 'beforeChildren',
-                        //   staggerChildren: 0.2,
-                        // },
-                      },
-                      hidden: {
-                        opacity: 0,
-                        y: 20,
-                        // scale: 0.5,
-                        // transition: {
-                        //   when: 'afterChildren',
-                        // },
-                      },
-                    }}
-                  >
-                    {({ ref }) => (
-                      <span ref={ref}>
-                        <FormButton
-                          variant="solid"
-                          onClick={initiateForm}
-                          size="lg"
-                        >
-                          {config?.startScreen?.cta?.label}
-                        </FormButton>
-                      </span>
-                    )}
-                  </Motion>
                 </Stack>
               )}
             </>

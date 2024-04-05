@@ -51,17 +51,10 @@ import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
 import LeadForm from '@chaindesk/ui/LeadForm';
 import Markdown from '@chaindesk/ui/Markdown';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
+import TraditionalForm from '@chaindesk/ui/TraditionalForm';
 
 import FileUploader from './FileUploader';
-import TraditionalForm from './TraditionalForm';
-import VisuallyHiddenInput from './VisuallyHiddenInput';
-
-export const acceptedMimeTypesStr = [
-  ...AcceptedImageMimeTypes,
-  ...AcceptedVideoMimeTypes,
-  ...AcceptedAudioMimeTypes,
-  ...AcceptedDocumentMimeTypes,
-].join(',');
+import TraditionalFormWrapper from './TraditionalFormWrapper';
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
@@ -346,11 +339,11 @@ function ChatBox({
                 <React.Fragment key={index}>
                   {each.metadata?.shouldDisplayForm ? (
                     <Stack sx={{ zIndex: 0 }}>
-                      <TraditionalForm
+                      <TraditionalFormWrapper
                         formId={each.metadata.formId}
-                        conversationId={each.conversationId}
-                        messageId={each.id}
-                        submissionId={each?.submission?.id}
+                        conversationId={each.conversationId!}
+                        messageId={each.id!}
+                        isFormSubmitted={!!each?.submission?.id}
                       />
                     </Stack>
                   ) : (

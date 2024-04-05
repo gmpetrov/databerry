@@ -144,78 +144,6 @@ function Form({ formId }: Props) {
               transition: 'all 0.2s ease',
             }}
           >
-            {/* <Accordion
-              expanded={state.currentAccordionIndex === 0}
-              onChange={(event, expanded) => {
-                setState({
-                  currentAccordionIndex: expanded ? 0 : null,
-                });
-              }}
-            >
-              <AccordionSummary>
-                <Typography startDecorator={<LooksOneRoundedIcon />}>
-                  Overview
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack spacing={1}>
-                  <FormControl>
-                    <FormLabel>Form Type</FormLabel>
-                    <Select
-                      defaultValue={getFormData.data?.type}
-                      {...methods.register('type')}
-                      onChange={(_, value) => {
-                        if (value) {
-                          methods.setValue('type', value as any);
-                          // Retrocompatibility
-                          const fields: CreateFormSchema['draftConfig']['fields'] =
-                            draftConfig?.fields.map((field) => {
-                              if (
-                                field.type === 'multiple_choice' &&
-                                value == 'traditional'
-                              ) {
-                                return {
-                                  ...field,
-                                  type: 'select',
-                                  options: field.choices,
-                                };
-                              } else if (
-                                field.type === 'select' &&
-                                value == 'conversational'
-                              ) {
-                                return {
-                                  ...field,
-                                  type: 'multiple_choice',
-                                  choices: field.options,
-                                };
-                              }
-                              return { ...field, type: 'text' };
-                            });
-
-                          if (fields?.length > 0) {
-                            methods.setValue('draftConfig.fields', fields);
-                          }
-
-                          forceSubmit();
-                        }
-                      }}
-                    >
-                      <Option value="conversational">Conversational</Option>
-                      <Option value="traditional">Traditional</Option>
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Overview</FormLabel>
-                    <Textarea
-                      minRows={4}
-                      // maxRows={4}
-                      {...methods.register('draftConfig.overview')}
-                    />
-                  </FormControl>
-                </Stack>
-              </AccordionDetails>
-            </Accordion> */}
-
             <Accordion
               expanded={state.currentAccordionIndex === 0}
               onChange={(event, expanded) => {
@@ -248,18 +176,6 @@ function Form({ formId }: Props) {
                       )}
                     />
                   </FormControl>
-
-                  {type === 'conversational' && (
-                    <FormControl>
-                      <FormLabel>Call to action</FormLabel>
-                      <Input
-                        control={methods.control}
-                        {...methods.register(
-                          'draftConfig.startScreen.cta.label'
-                        )}
-                      />
-                    </FormControl>
-                  )}
                 </Stack>
               </AccordionDetails>
             </Accordion>
@@ -466,7 +382,6 @@ function Form({ formId }: Props) {
                 webhook: draftConfig?.webhook,
                 schema: (query.data?.draftConfig as any)?.schema,
               }}
-              isInEditor
             />
           </Stack>
         </Stack>
