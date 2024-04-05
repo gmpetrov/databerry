@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.300"></a>
+## 0.1.300 (2024-04-05)
+
+### Fixed
+
+- 🐛 tailwind styles missing on form widget [[7bcddaf](https://github.com/gmpetrov/databerry/commit/7bcddafa7cde50ee7295f97a5d2c872d86cc8c0f)]
+
+
 <a name="0.1.299"></a>
 ## 0.1.299 (2024-04-05)
 
