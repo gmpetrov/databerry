@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.301"></a>
+## 0.1.301 (2024-04-05)
+
+### Fixed
+
+- 🐛 metadata streaming [[aace82f](https://github.com/gmpetrov/databerry/commit/aace82fbea403c437f862d856f8a32b78c08c45b)]
+
+
 <a name="0.1.300"></a>
 ## 0.1.300 (2024-04-05)
 
