@@ -80,7 +80,7 @@ const shapeTozod = (
         zodType = z.string().email();
         break;
       case FieldType.TextArea:
-        zodType = required ? z.string().min(25) : z.string().optional();
+        zodType = required ? z.string().min(25) : z.string().min(25).optional();
         break;
       case FieldType.Select:
         zodType = required ? z.string().min(1) : z.string().optional();
@@ -439,7 +439,7 @@ function TraditionalForm({
                 <CheckCircleRoundedIcon sx={{ fontSize: 42 }} color="primary" />
                 <Typography level="h4">
                   {config?.endScreen?.successMessage ||
-                    'Form Submitted Succcessfully!'}
+                    'Form Submitted Successfully!'}
                 </Typography>
                 {config?.endScreen?.cta?.label && (
                   <a
