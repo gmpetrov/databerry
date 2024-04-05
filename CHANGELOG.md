@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.299"></a>
+## 0.1.299 (2024-04-05)
+
+### Fixed
+
+- 🐛 widget should not use next deps [[b7a2230](https://github.com/gmpetrov/databerry/commit/b7a22306b97463209a3c5fa6659fe712686d2757)]
+
+
 <a name="0.1.298"></a>
 ## 0.1.298 (2024-04-05)
 
