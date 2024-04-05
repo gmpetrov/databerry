@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.298"></a>
+## 0.1.298 (2024-04-05)
+
+### Miscellaneous
+
+-  new form builder ([#362](https://github.com/gmpetrov/databerry/issues/362)) [[94d31ce](https://github.com/gmpetrov/databerry/commit/94d31ce93be952ca388d5f4718876eb69274b988)]
+
+
 <a name="0.1.297"></a>
 ## 0.1.297 (2024-04-01)
 
