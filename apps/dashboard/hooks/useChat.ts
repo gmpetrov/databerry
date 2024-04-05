@@ -341,16 +341,22 @@ const useChat = ({
                   visitorId,
                   messageId,
                   isValid,
+                  ..._otherProps
                 } = JSON.parse(bufferEndpointResponse) as ChatResponse & {
                   isValid: boolean;
                 };
 
                 const h = [...history];
 
-                let metadata = {};
+                let metadata = {
+                  ..._otherProps.metadata,
+                };
 
                 try {
-                  metadata = JSON.parse(bufferMetadata || '{}');
+                  metadata = {
+                    ...metadata,
+                    ...JSON.parse(bufferMetadata || '{}'),
+                  };
                 } catch {}
 
                 if (h?.[nextIndex]) {
