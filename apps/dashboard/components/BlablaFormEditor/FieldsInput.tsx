@@ -159,7 +159,7 @@ function FieldsInput({ type = 'traditional' }: Props) {
                     sx={{ alignItems: 'start', width: '100%' }}
                   >
                     <AccordionGroup size="sm">
-                      <Accordion sx={{ position: 'relative' }} defaultExpanded>
+                      <Accordion sx={{ position: 'relative' }}>
                         <AccordionSummary>
                           <Typography className="truncate w-[100px]">
                             {methods?.getValues(

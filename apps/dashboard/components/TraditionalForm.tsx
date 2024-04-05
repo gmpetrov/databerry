@@ -81,10 +81,10 @@ const shapeTozod = (
         zodType = z.string().email();
         break;
       case FieldType.TextArea:
-        zodType = required ? z.string().min(25) : z.string().optional();
+        zodType = required ? z.string().min(25) : z.string().min(25).optional();
         break;
       case FieldType.Select:
-        zodType = required ? z.string().min(1) : z.string().optional();
+        zodType = required ? z.string().min(1) : z.string().min(1).optional();
         break;
       case FieldType.PhoneNumber:
         // const phoneRegex = new RegExp(
@@ -94,7 +94,7 @@ const shapeTozod = (
         zodType = required ? z.string().min(3) : z.string().optional();
         break;
       case FieldType.Text:
-        zodType = required ? z.string().min(1) : z.string().optional();
+        zodType = required ? z.string().min(1) : z.string().min(1).optional();
         break;
       case FieldType.File:
         const fileSchema = z.any();
@@ -440,7 +440,7 @@ function TraditionalForm({
                 <CheckCircleRoundedIcon sx={{ fontSize: 42 }} color="primary" />
                 <Typography level="h4">
                   {config?.endScreen?.successMessage ||
-                    'Form Submitted Succcessfully!'}
+                    'Form Submitted Successfully!'}
                 </Typography>
                 {config?.endScreen?.cta?.label && (
                   <a

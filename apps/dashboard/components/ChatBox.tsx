@@ -214,6 +214,10 @@ function ChatBox({
     };
   }, [initialMessages, agentIconUrl]);
 
+  React.useEffect(() => {
+    refreshConversation?.();
+  }, [messages, refreshConversation]);
+
   const handleOnDraftReply = useCallback(
     (query: string) => {
       methods.setValue('query', query, {

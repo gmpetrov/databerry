@@ -258,10 +258,6 @@ function ChatBoxFrame(props: ChatBoxStandardProps) {
     }, [] as ChatMessage[]);
   }, [leadForm, history, leadToolConfig, hasCapturedLead, isStreaming]);
 
-  useEffect(() => {
-    refreshConversation();
-  }, [isStreaming]);
-
   if (!agent) {
     return (
       <Box
