@@ -69,7 +69,7 @@ export const createHandlerV2 =
     const form = tool.form as Form;
 
     return {
-      data: `Form URL: ${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${form.id}?conversationId=${config?.conversationId}&messageId=${messageId}`,
+      data: `Please fill the following form in order to continue. (Reply in the same language as the user): ${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${form.id}?conversationId=${config?.conversationId}&messageId=${messageId}`,
       messageId,
       metadata: {
         isFormSubmitted: false,

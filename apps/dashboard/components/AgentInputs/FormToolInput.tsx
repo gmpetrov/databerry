@@ -70,23 +70,23 @@ function FormToolInput({ saveFormTool }: Props) {
       <Stack gap={1}>
         <Stack>
           <Typography level="body-sm">
-            Trigger form after a specified number of messages:
+            Describe when should the user be prompted with the form:
+          </Typography>
+          <Textarea
+            placeholder="Use when the user wants to report a bug"
+            minRows={3}
+            onChange={(e) => setState({ trigger: e.target.value })}
+          />
+        </Stack>
+        <Stack>
+          <Typography level="body-sm">
+            Alternatively, Trigger form after a specified number of messages:
           </Typography>
           <Input
             type="number"
             onChange={(e) =>
               setState({ messageCountTrigger: parseInt(e.target.value, 10) })
             }
-          />
-        </Stack>
-        <Stack>
-          <Typography level="body-sm">
-            Alternatively, Describe when should the user be prompted with the
-            form :
-          </Typography>
-          <Textarea
-            minRows={3}
-            onChange={(e) => setState({ trigger: e.target.value })}
           />
         </Stack>
       </Stack>

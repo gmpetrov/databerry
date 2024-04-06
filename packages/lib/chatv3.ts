@@ -454,6 +454,16 @@ const chat = async ({
       (formTool) => formTool.config?.messageCountTrigger === numberOfMessages
     );
 
+    if (formToolToCall) {
+      // Force the model to use this tool
+      messages.push({
+        role: `user`,
+        content: `Call function \`share-form-${slugify(
+          formToolToCall?.form?.name || ''
+        )}\``,
+      });
+    }
+
     const callParams = {
       handleStream: stream,
       model: ModelConfig[modelName]?.name,
@@ -465,29 +475,7 @@ const chat = async ({
       max_tokens: otherProps.maxTokens,
       signal: abortController?.signal,
       tools: ModelConfig[modelName].isToolCallingSupported ? openAiTools : [],
-      ...(openAiTools?.length > 0
-        ? {
-            tool_choice: formToolToCall!!
-              ? {
-                  type: 'function',
-                  function: {
-                    ...formToolToJsonSchema(formToolToCall),
-                    parse: JSON.parse,
-                    function: createHandler(createFormToolHandlerV2)(
-                      formToolToCall,
-                      {
-                        ...baseConfig,
-                        toolConfig: formToolToCall.id
-                          ? toolsConfig?.[formToolToCall.id]
-                          : undefined,
-                      },
-                      channel
-                    ),
-                  },
-                }
-              : 'auto',
-          }
-        : {}),
+      tool_choice: 'auto',
     } as Parameters<typeof model.call>[0];
 
     const output = await model.call(callParams);
