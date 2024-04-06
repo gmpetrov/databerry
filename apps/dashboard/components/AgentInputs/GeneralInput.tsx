@@ -16,7 +16,6 @@ import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 import useAgent from '@app/hooks/useAgent';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import { RouteNames } from '@chaindesk/lib/types';
@@ -24,6 +23,7 @@ import {
   CreateAgentSchema,
   GenerateUploadLinkRequest,
 } from '@chaindesk/lib/types/dtos';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Input from '@chaindesk/ui/Input';
 
 type Props = {};

@@ -32,12 +32,12 @@ import useSWR from 'swr';
 import { z } from 'zod';
 
 import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { prisma } from '@chaindesk/prisma/client';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 const SlackBotModal = dynamic(
   () => import('@app/components/SlackSettingsModal'),

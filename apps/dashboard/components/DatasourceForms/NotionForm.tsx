@@ -26,7 +26,6 @@ import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getServiceProviders } from '@app/pages/api/service-providers';
 
 import { getNotebooks } from '@chaindesk/integrations/notion/api/notebooks';
@@ -35,6 +34,7 @@ import {
   DatasourceNotion,
   DatasourceSchema,
 } from '@chaindesk/lib/types/models';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import Base from './Base';
 import { DatasourceFormProps } from './types';

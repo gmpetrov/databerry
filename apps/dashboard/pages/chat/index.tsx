@@ -20,13 +20,13 @@ import ChatSection from '@app/components/ChatSection';
 import DatasourceViewer from '@app/components/DatasourceViewer';
 import EmptyMainChatCard from '@app/components/EmptyMainChatCard';
 import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { ChainType } from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import { AppDatasource, DatasourceType, Prisma } from '@chaindesk/prisma';
 import useChat from '@chaindesk/ui/hooks/useChat';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import { getChunk } from '../api/datasources/[id]/chunks/[chunkId]';
 import { searchRessources } from '../api/ressources';

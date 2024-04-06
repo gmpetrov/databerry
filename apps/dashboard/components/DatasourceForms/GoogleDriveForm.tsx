@@ -20,7 +20,6 @@ import { useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import useStateReducer from '@app/hooks/useStateReducer';
 import type { getServiceProviders } from '@app/pages/api/accounts/service-providers';
 
 import getDrives from '@chaindesk/integrations/google-drive/api/drives';
@@ -31,6 +30,7 @@ import {
   DatasourceSchema,
 } from '@chaindesk/lib/types/models';
 import { DatasourceType, Prisma, ServiceProviderType } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';

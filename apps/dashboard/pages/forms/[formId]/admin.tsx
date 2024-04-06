@@ -28,9 +28,9 @@ import FormSettingsTab from '@app/components/FormSettingsTab';
 import FormSubmissionsTab from '@app/components/FormSubmissionsTab';
 import Layout from '@app/components/Layout';
 import useBlablaForm from '@app/hooks/useBlablaForm';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { RouteNames } from '@chaindesk/lib/types';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 interface FormDashboardProps {}
 

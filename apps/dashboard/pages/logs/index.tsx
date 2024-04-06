@@ -59,7 +59,6 @@ import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import InboxConversationSettings from '@app/components/InboxConversationSettings';
 import Layout from '@app/components/Layout';
 import { updateConversationStatus } from '@app/components/ResolveButton';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 // import { client as crispClient } from '@chaindesk/lib/crisp';
 import relativeDate from '@chaindesk/lib/relative-date';
@@ -85,6 +84,7 @@ import {
 import ChatBox from '@chaindesk/ui/Chatbox';
 import { handleEvalAnswer } from '@chaindesk/ui/hooks/useChat';
 import useFileUpload from '@chaindesk/ui/hooks/useFileUpload';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import { getAgents } from '../api/agents';
 import { updateStatus } from '../api/conversations/update-status';

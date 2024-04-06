@@ -11,12 +11,12 @@ import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
 import useConfetti from '@app/hooks/useConfetti';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import slugify from '@chaindesk/lib/slugify';
 import { FormConfigSchema } from '@chaindesk/lib/types/dtos';
 import { ConversationChannel } from '@chaindesk/prisma';
 import useChat from '@chaindesk/ui/hooks/useChat';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Motion from '@chaindesk/ui/Motion';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
 import TraditionalForm from '@chaindesk/ui/TraditionalForm';

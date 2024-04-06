@@ -16,11 +16,11 @@ import OrganizationForm from '@app/components/OrganizationForm';
 import SettingsLayout from '@app/components/SettingsLayout';
 import IconInput from '@app/components/ui/IconInput';
 import SettingCard from '@app/components/ui/SettingCard';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { UpdateUserProfileSchema } from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import useFileUpload from '@chaindesk/ui/hooks/useFileUpload';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Input from '@chaindesk/ui/Input';
 
 export default function ProfileSettingsPage() {

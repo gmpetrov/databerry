@@ -22,7 +22,6 @@ import useSWRMutation from 'swr/mutation';
 import EmailInboxesTable from '@app/components/EmailInboxesTable';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import {
   fetcher,
@@ -32,6 +31,7 @@ import {
 import { RouteNames } from '@chaindesk/lib/types';
 import { CreateMailInboxSchema } from '@chaindesk/lib/types/dtos';
 import { Form, Prisma } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Loader from '@chaindesk/ui/Loader';
 
 import { createEmailInbox, getEmailInboxes } from '../api/mail-inboxes';

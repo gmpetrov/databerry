@@ -24,13 +24,12 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import { isValid } from 'zod';
 
-import useStateReducer from '@app/hooks/useStateReducer';
-
 import {
   CreateAgentSchema,
   UpdateAgentSchema,
 } from '@chaindesk/lib/types/dtos';
 import writeClipboard from '@chaindesk/lib/write-clipboard';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
 import AgentForm from './AgentForm';

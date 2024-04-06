@@ -20,7 +20,6 @@ import React, { useMemo } from 'react';
 import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getForm } from '@app/pages/api/forms/[formId]';
 import { getSubmissions } from '@app/pages/api/forms/[formId]/submissions';
 
@@ -29,6 +28,7 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
 import ChatMessageAttachment from '@chaindesk/ui/Chatbox/ChatMessageAttachment';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 type Props = {
   formId: string;

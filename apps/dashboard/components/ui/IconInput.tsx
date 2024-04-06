@@ -3,7 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Avatar, AvatarGroup, Button, Stack, Typography } from '@mui/joy';
 import React, { useRef } from 'react';
 
-import useStateReducer from '@app/hooks/useStateReducer';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 type Props = {
   value?: string;

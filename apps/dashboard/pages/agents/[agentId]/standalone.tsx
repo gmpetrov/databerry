@@ -19,7 +19,6 @@ import superjson from 'superjson';
 import useSWR from 'swr';
 
 import ChatBoxLoader from '@app/components/ChatBoxLoader';
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgent } from '@app/pages/api/agents/[id]';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
@@ -28,6 +27,7 @@ import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 import NewChatButton from '@chaindesk/ui/Chatbox/NewChatButton';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 export default function AgentPage() {

@@ -10,11 +10,10 @@ import React, { useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
-import useStateReducer from '@app/hooks/useStateReducer';
-
 import accountConfig from '@chaindesk/lib/account-config';
 import { DatasourceSchema } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import UsageLimitModal from '../UsageLimitModal';
 

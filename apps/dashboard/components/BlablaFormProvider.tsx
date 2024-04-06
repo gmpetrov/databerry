@@ -23,7 +23,6 @@ import useBlablaForm, {
   UseBlablaFormMutation,
   UseBlablaFormQuery,
 } from '@app/hooks/useBlablaForm';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import {
   CUSTOMER_SUPPORT,
@@ -31,6 +30,7 @@ import {
 } from '@chaindesk/lib/prompt-templates';
 import { CreateFormSchema, FormConfigSchema } from '@chaindesk/lib/types/dtos';
 import { Form, Prisma, PromptType } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 // interface ConnectFormProps<TFieldValues extends FieldValues> {
 //   children(children: UseFormReturn<TFieldValues>): ReactElement;

@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import { SWRResponse } from 'swr';
 
 import useAgent, { UseAgentMutation, UseAgentQuery } from '@app/hooks/useAgent';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import {
   CUSTOMER_SUPPORT,
@@ -14,6 +13,7 @@ import {
 } from '@chaindesk/lib/prompt-templates';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import { Agent, AgentModelName, Prisma, PromptType } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 // interface ConnectFormProps<TFieldValues extends FieldValues> {
 //   children(children: UseFormReturn<TFieldValues>): ReactElement;

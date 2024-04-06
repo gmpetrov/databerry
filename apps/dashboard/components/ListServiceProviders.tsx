@@ -10,9 +10,9 @@ import axios from 'axios';
 import React, { useCallback } from 'react';
 
 import useServiceProviders from '@app/hooks/useServiceProviders';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { ServiceProvider } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Loader from '@chaindesk/ui/Loader';
 
 import Empty from './Empty';

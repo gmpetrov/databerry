@@ -20,13 +20,13 @@ import * as React from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getDatasource } from '@app/pages/api/datasources/[id]';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Prisma } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 const DatasourceForm = dynamic(
   () => import('@app/components/DatasourceForms'),

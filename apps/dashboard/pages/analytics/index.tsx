@@ -26,12 +26,12 @@ import AnalyticsCard from '@app/components/AnalyticsCard';
 import AreaChart from '@app/components/charts/AreaChart';
 import GeoChart from '@app/components/charts/GeoChart';
 import Layout from '@app/components/Layout';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Agent, Prisma } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import { getAgents } from '../api/agents';
 

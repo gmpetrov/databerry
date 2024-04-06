@@ -22,13 +22,13 @@ import useSWR from 'swr';
 
 import SettingsLayout from '@app/components/SettingsLayout';
 import SettingCard from '@app/components/ui/SettingCard';
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getApiKeys } from '@app/pages/api/accounts/api-keys';
 
 import accountConfig from '@chaindesk/lib/account-config';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Prisma, SubscriptionPlan } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 export default function ApiKeysPage() {
   const router = useRouter();
