@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.310"></a>
+## 0.1.310 (2024-04-06)
+
+### Miscellaneous
+
+- 🎸 programmatically open/close chatbubble widget [[c07c881](https://github.com/gmpetrov/databerry/commit/c07c8811b5de7002fa42915e2573b75bebdb4e5f)]
+
+
 <a name="0.1.309"></a>
 ## 0.1.309 (2024-04-06)
 
