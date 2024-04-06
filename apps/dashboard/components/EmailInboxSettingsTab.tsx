@@ -7,10 +7,10 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import { RouteNames } from '@chaindesk/lib/types';
+import Input from '@chaindesk/ui/Input';
+import Loader from '@chaindesk/ui/Loader';
 
 import SettingCard from './ui/SettingCard';
-import Input from './Input';
-import Loader from './Loader';
 import MailInboxFormProvider from './MailInboxFormProvider';
 import MailInboxMessagePreview from './MailInboxMessagePreview';
 

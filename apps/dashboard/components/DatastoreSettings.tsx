@@ -28,7 +28,6 @@ import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
 import { DatastoreFormsMap } from '@app/components/DatastoreForms';
-import Input from '@app/components/Input';
 import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { createDatastore } from '@app/pages/api/datastores';
@@ -41,6 +40,7 @@ import { RouteNames } from '@chaindesk/lib/types';
 import { GenerateUploadLinkRequest } from '@chaindesk/lib/types/dtos';
 import { QdrantSchema as Schema } from '@chaindesk/lib/types/models';
 import { Datastore, DatastoreVisibility, Prisma } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import UsageLimitCard from './UsageLimitCard';
 import UserFree from './UserFree';

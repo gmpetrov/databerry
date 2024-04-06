@@ -8,14 +8,13 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import { Control, useFieldArray, useFormContext } from 'react-hook-form';
 
-import Input from '@app/components/Input';
-
 import accountConfig from '@chaindesk/lib/account-config';
 import {
   DatasourceSchema,
   DatasourceWebSite,
 } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';

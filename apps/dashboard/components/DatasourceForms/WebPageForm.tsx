@@ -2,13 +2,12 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
-import Input from '@app/components/Input';
-
 import {
   DatasourceSchema,
   DatasourceWebPage,
 } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';

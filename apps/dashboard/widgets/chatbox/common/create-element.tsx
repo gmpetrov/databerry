@@ -5,8 +5,8 @@ import { CssVarsProvider } from '@mui/joy/styles';
 import React, { FunctionComponent, StrictMode } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 
-import { CustomContact } from '@app/hooks/useChat';
-import { theme, themeKeys } from '@app/utils/themes/chat-bubble';
+import { CustomContact } from '@chaindesk/lib/types';
+import { createTheme, createThemeKeys } from '@chaindesk/ui/themes/base';
 
 import { InitWidgetProps } from './types';
 
@@ -17,6 +17,9 @@ const contactAttributes = {
   'last-name': 'lastName',
   email: 'email',
 };
+
+const themePrefix = 'chaindesk-embeds';
+const themeKeys = createThemeKeys(themePrefix);
 
 const assetsBaseUrl = process.env.NEXT_PUBLIC_ASSETS_BASE_URL || '';
 
@@ -99,7 +102,10 @@ const createElement = ({ name, widget }: Props) =>
         <StrictMode>
           <CacheProvider value={this.cache}>
             <CssVarsProvider
-              theme={theme}
+              theme={createTheme({
+                container: this.shadowRootElement,
+                prefix: themePrefix,
+              })}
               defaultMode="light"
               colorSchemeNode={this.shadowRootElement}
               {...themeKeys}

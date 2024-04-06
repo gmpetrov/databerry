@@ -34,7 +34,6 @@ import useSWRMutation from 'swr/mutation';
 import BlablaFormProvider from '@app/components/BlablaFormProvider';
 import BlablaFormViewer from '@app/components/BlablaFormViewer';
 import CopyButton from '@app/components/CopyButton';
-import Input from '@app/components/Input';
 import useBlablaForm from '@app/hooks/useBlablaForm';
 import useStateReducer from '@app/hooks/useStateReducer';
 import { getForm } from '@app/pages/api/forms/[formId]';
@@ -47,8 +46,8 @@ import {
 } from '@chaindesk/lib/swr-fetcher';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import { Prisma } from '@chaindesk/prisma';
-
-import Loader from '../Loader';
+import Input from '@chaindesk/ui/Input';
+import Loader from '@chaindesk/ui/Loader';
 
 import FieldsInput, { formType } from './FieldsInput';
 import { forceSubmit } from './utils';

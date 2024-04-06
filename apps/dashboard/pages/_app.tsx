@@ -15,7 +15,6 @@ import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import Analytics from '@app/components/Analytics';
-import DashboardThemeProvider from '@app/components/DashboardThemeProvider';
 import DefaultSEOTags from '@app/components/DefaultSEOTags';
 import SynchTailwindColorMode from '@app/components/SynchTailwindColorMode';
 import {
@@ -26,6 +25,8 @@ import {
 import useUTMTracking from '@app/hooks/useUTMTracking';
 
 import { NextPageWithLayout, RouteNames } from '@chaindesk/lib/types';
+import theme from '@chaindesk/ui/themes/dashboard';
+import ThemeProvider from '@chaindesk/ui/themes/provider';
 
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
@@ -75,7 +76,7 @@ export default function App({
 
   return (
     <ProductContext.Provider value={product}>
-      <DashboardThemeProvider {...otherProps}>
+      <ThemeProvider {...otherProps} theme={theme}>
         <TopProgressBar />
         <SessionProvider>
           <Analytics>
@@ -85,7 +86,7 @@ export default function App({
             {getLayout(<Component {...pageProps} />)}
           </Analytics>
         </SessionProvider>
-      </DashboardThemeProvider>
+      </ThemeProvider>
     </ProductContext.Provider>
   );
 }

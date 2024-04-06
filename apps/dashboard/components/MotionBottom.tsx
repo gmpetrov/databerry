@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import Motion, { Props as CustomMotionProps } from './Motion';
+import Motion, { Props as CustomMotionProps } from '@chaindesk/ui/Motion';
 
 type Props = CustomMotionProps & {};
 

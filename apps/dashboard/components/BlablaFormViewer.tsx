@@ -1,42 +1,27 @@
-import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
-import SendIcon from '@mui/icons-material/Send';
 import {
   Button,
-  Card,
-  CardContent,
   CircularProgress,
-  Divider,
   Input,
-  Option,
-  Select,
   Stack,
   styled,
-  Textarea,
   Typography,
 } from '@mui/joy';
 import { motion } from 'framer-motion';
 import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 
-import useChat from '@app/hooks/useChat';
 import useConfetti from '@app/hooks/useConfetti';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import slugify from '@chaindesk/lib/slugify';
-import {
-  FormConfigSchema,
-  FormFieldSchema,
-  TextField,
-} from '@chaindesk/lib/types/dtos';
+import { FormConfigSchema } from '@chaindesk/lib/types/dtos';
 import { ConversationChannel } from '@chaindesk/prisma';
-import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
+import useChat from '@chaindesk/ui/hooks/useChat';
+import Motion from '@chaindesk/ui/Motion';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
+import TraditionalForm from '@chaindesk/ui/TraditionalForm';
 
 import { formType } from './BlablaFormEditor/FieldsInput';
-import { acceptedMimeTypesStr } from './ChatBox';
-import Motion from './Motion';
-import TraditionalForm from './TraditionalForm';
-import VisuallyHiddenInput from './VisuallyHiddenInput';
 
 type Props = {
   formId: string;

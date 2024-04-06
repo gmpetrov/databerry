@@ -18,21 +18,19 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import ChatBoxLoader from '@app/components/ChatBoxLoader';
 import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
-import { theme, themeKeys } from '@app/utils/themes/iframe-widget';
 
 import { appUrl } from '@chaindesk/lib/config';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
+import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
 import CustomCSSInput from './AgentInputs/CustomCSSInput';
 import AgentForm from './AgentForm';
-import ChatBoxFrame from './ChatBoxFrame';
 import ChatboxNavBarLayout from './ChatboxNavBarLayout';
 import ConnectForm from './ConnectForm';
 import ReactFrameStyleFix from './ReactFrameStyleFix';
-import WidgetThemeProvider from './WidgetThemeProvider';
-
 if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
 }
@@ -63,7 +61,10 @@ function RenderWidget({ agentId, config }: { agentId: string; config: any }) {
             });
 
             return (
-              <WidgetThemeProvider emotionCache={cache} name="chaindesk-iframe">
+              <WidgetThemeProvider
+                emotionCache={cache}
+                prefix="chaindesk-iframe"
+              >
                 <ReactFrameStyleFix />
 
                 <Box
@@ -78,7 +79,7 @@ function RenderWidget({ agentId, config }: { agentId: string; config: any }) {
                     },
                   }}
                 >
-                  <ChatBoxFrame
+                  <ChatBoxLoader
                     agentId={agentId}
                     initConfig={memoizedConfig!}
                     layout={ChatboxNavBarLayout}

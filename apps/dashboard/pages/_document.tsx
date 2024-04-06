@@ -8,7 +8,7 @@ import Document, {
 } from 'next/document';
 import Script from 'next/script';
 
-import { themeKeys } from '@app/utils/themes/dashboard';
+import { themeKeys } from '@chaindesk/ui/themes/dashboard';
 
 class CustomDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {

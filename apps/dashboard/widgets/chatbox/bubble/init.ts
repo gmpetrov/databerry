@@ -1,4 +1,4 @@
-import type { BubbleProps } from '@app/components/ChatBubble';
+import type { BubbleProps } from '@chaindesk/ui/embeds/chat-bubble';
 
 import setupAttributes from '../common/setup-attributes';
 import { hookFunctionsToWindow, toDashedCase } from '../utils';

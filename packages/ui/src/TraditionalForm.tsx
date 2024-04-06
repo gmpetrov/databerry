@@ -1,15 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import ReplayIcon from '@mui/icons-material/Replay';
 import SendIcon from '@mui/icons-material/Send';
 import {
   Button,
   Card,
   CardContent,
-  Chip,
-  ChipDelete,
-  Divider,
   Input,
   Option,
   Select,
@@ -20,32 +15,20 @@ import {
 } from '@mui/joy';
 import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
-import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
-import useFileUpload, { FileToUpload } from '@app/hooks/useFileUpload';
-import useStateReducer from '@app/hooks/useStateReducer';
-import {
-  getConversation,
-  updateConversation,
-} from '@app/pages/api/conversations/[conversationId]';
-import { getForm } from '@app/pages/api/forms/[formId]';
-
-import {
-  fetcher,
-  generateActionFetcher,
-  HTTP_METHOD,
-} from '@chaindesk/lib/swr-fetcher';
+// import { getForm } from '@app/pages/api/forms/[formId]';
+import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { FormConfigSchema, FormSubmitSchema } from '@chaindesk/lib/types/dtos';
-import { Prisma } from '@chaindesk/prisma';
+import type { Form, Prisma } from '@chaindesk/prisma';
+import FileUploaderDropZone from '@chaindesk/ui/FileUploaderDropZone';
+import useFileUpload, { FileToUpload } from '@chaindesk/ui/hooks/useFileUpload';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
-
-import FileUploader from './FileUploader';
-import FileUploaderDropZone from './FileUploaderDropZone';
 
 export enum FieldType {
   Email = 'email',
@@ -151,24 +134,7 @@ const fieldTypesMap = {
             shouldDirty: true,
           });
         }}
-        // selectProps={{
-        //   slotProps: {
-        //     listbox: {
-        //       // Fix the styling issue with shadow root usage. Similar issue: https://stackoverflow.com/questions/69828392/mui-select-drop-down-options-not-styled-when-using-entry-point-to-insert-scoped
-        //       container: chatboxRoot,
-        //     },
-        //   },
-        // }}
       />
-
-      {/* <Input
-        {...methods?.register(name)}
-        placeholder={placeholder}
-        sx={{ width: '100%' }}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.[name]?.message}
-      </Typography> */}
     </Stack>
   ),
   text: ({
@@ -227,6 +193,14 @@ const fieldTypesMap = {
       sx={{
         width: '100%',
       }}
+      slotProps={{
+        listbox: {
+          disablePortal: true,
+          sx: {
+            zIndex: 9999,
+          },
+        },
+      }}
       placeholder={placeholder}
       onChange={(_, value) => {
         if (value) {
@@ -283,7 +257,8 @@ function TraditionalForm({
   config?: any;
   isInEditor?: boolean;
 }) {
-  const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
+  // const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
+  const getFormQuery = useSWR<Form>(
     formId
       ? `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${formId}`
       : null,
@@ -534,7 +509,7 @@ function TraditionalForm({
                   onClick={submitForm}
                   size="md"
                   color="primary"
-                  endDecorator={<SendIcon fontSize="sm" />}
+                  endDecorator={<SendIcon sx={{ fontSize: 'sm' }} />}
                   sx={{ with: '100%' }}
                 >
                   Submit

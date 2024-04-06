@@ -18,7 +18,6 @@ import useSWR from 'swr';
 
 import ContactsTable from '@app/components/ContactsTable';
 import Layout from '@app/components/Layout';
-import Loader from '@app/components/Loader';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 import {
@@ -29,6 +28,7 @@ import {
 import { RouteNames } from '@chaindesk/lib/types';
 import { CreateMailInboxSchema } from '@chaindesk/lib/types/dtos';
 import { Form, Prisma } from '@chaindesk/prisma';
+import Loader from '@chaindesk/ui/Loader';
 
 import { getContacts } from '../api/contacts';
 

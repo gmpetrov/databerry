@@ -3,7 +3,7 @@ import SvgIcon from '@mui/joy/SvgIcon';
 import Tooltip from '@mui/joy/Tooltip';
 import React, { ComponentProps, useContext } from 'react';
 
-import { ChatContext } from '@app/hooks/useChat';
+import { ChatContext } from '@chaindesk/ui/hooks/useChat';
 
 type Props = ComponentProps<typeof IconButton> & {};
 

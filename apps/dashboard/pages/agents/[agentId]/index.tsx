@@ -32,16 +32,13 @@ import AgentDeployTab from '@app/components/AgentDeployTab';
 import AgentForm from '@app/components/AgentForm';
 import HttpToolInput from '@app/components/AgentInputs/HttpToolInput';
 import AgentSettingsTab from '@app/components/AgentSettingsTab';
-import ChatBox from '@app/components/ChatBox';
 import ChatSection from '@app/components/ChatSection';
 import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
 import LeadCaptureToolForm from '@app/components/LeadCaptureToolForm';
 import LeadCaptureToolFormInput from '@app/components/LeadCaptureToolForm/LeadCaptureToolFormInput';
-import Loader from '@app/components/Loader';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useAgent from '@app/hooks/useAgent';
-import useChat from '@app/hooks/useChat';
 import useModal from '@app/hooks/useModal';
 import useStateReducer from '@app/hooks/useStateReducer';
 
@@ -51,6 +48,8 @@ import agentToolFormat, {
 import { ModelConfig } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
+import useChat from '@chaindesk/ui/hooks/useChat';
+import Loader from '@chaindesk/ui/Loader';
 
 export default function AgentPage() {
   const router = useRouter();

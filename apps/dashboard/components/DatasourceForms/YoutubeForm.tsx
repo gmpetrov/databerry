@@ -2,14 +2,13 @@ import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
-import Input from '@app/components/Input';
-
 import {
   DatasourceSchema,
   DatasourceYoutube,
 } from '@chaindesk/lib/types/models';
 import YoutubeApi from '@chaindesk/lib/youtube-api';
 import { DatasourceType } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';

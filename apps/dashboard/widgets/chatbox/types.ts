@@ -1,4 +1,4 @@
-import { CustomContact } from '@app/hooks/useChat';
+import { CustomContact } from '@chaindesk/lib/types';
 
 export interface ChaindeskFactory {
   initBubble: (props: {

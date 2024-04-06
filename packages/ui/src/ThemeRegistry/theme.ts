@@ -79,18 +79,6 @@ const theme = extendTheme({
     display: bricolage.style.fontFamily,
     code: sourceCodePro.style.fontFamily,
   },
-
-  // components: {
-  //   JoyButton: {
-  //     styleOverrides: {
-  //       root: ({ ownerState }) => ({
-  //         ...(ownerState.color === 'primary' && {
-  //           backgroundColor: '#4338ca',
-  //         }),
-  //       }),
-  //     },
-  //   },
-  // },
 });
 
 export default theme;

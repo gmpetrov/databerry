@@ -14,8 +14,7 @@ import { getForms } from '@app/pages/api/forms';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { Form, Prisma } from '@chaindesk/prisma';
-
-import Loader from '../Loader';
+import Loader from '@chaindesk/ui/Loader';
 type Props = {
   saveFormTool: ({
     form,
@@ -49,7 +48,7 @@ function FormToolInput({ saveFormTool }: Props) {
       <Stack>
         <Typography level="body-md">
           Connect a form or{' '}
-          <Link className="underline text-purple-300" href={RouteNames.FORMS}>
+          <Link className="text-purple-300 underline" href={RouteNames.FORMS}>
             create a new one
           </Link>
         </Typography>

@@ -21,17 +21,18 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
+import ChatBoxLoader from '@app/components/ChatBoxLoader';
 import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
 
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
+import ChatBubble from '@chaindesk/ui/embeds/chat-bubble';
+import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
 import CustomCSSInput from './AgentInputs/CustomCSSInput';
 import AgentForm from './AgentForm';
-import ChatBubble from './ChatBubble';
 import ConnectForm from './ConnectForm';
 import ReactFrameStyleFix from './ReactFrameStyleFix';
-import WidgetThemeProvider from './WidgetThemeProvider';
 
 if (typeof window !== 'undefined') {
   SyntaxHighlighter.registerLanguage('htmlbars', html);
@@ -63,7 +64,10 @@ function RenderWidget({ agentId, config }: any) {
             });
 
             return (
-              <WidgetThemeProvider emotionCache={cache} name="chaindesk-bubble">
+              <WidgetThemeProvider
+                emotionCache={cache}
+                prefix="chaindesk-bubble"
+              >
                 <ReactFrameStyleFix />
 
                 <Box
@@ -75,7 +79,12 @@ function RenderWidget({ agentId, config }: any) {
                     p: 2,
                   }}
                 >
-                  <ChatBubble agentId={agentId} initConfig={memoizedConfig} />
+                  <ChatBoxLoader
+                    // eslint-disable-next-line
+                    children={ChatBubble}
+                    agentId={agentId}
+                    initConfig={memoizedConfig}
+                  />
 
                   {memoizedConfig?.customCSS && (
                     <style

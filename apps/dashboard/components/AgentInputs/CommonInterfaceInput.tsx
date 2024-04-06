@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import Input from '@app/components/Input';
+import Input from '@chaindesk/ui/Input';
 
 import InitMessageInput from './InitMessageInput';
 import InterfaceConfigCheckbox from './InterfaceConfigCheckbox';

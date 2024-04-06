@@ -52,7 +52,6 @@ import useSWR from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
-import ChatBox from '@app/components/ChatBox';
 import { ConversationExport } from '@app/components/ConversationExport';
 import CopyButton from '@app/components/CopyButton';
 import DraftReplyInput from '@app/components/DarftReplyInput';
@@ -60,8 +59,6 @@ import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import InboxConversationSettings from '@app/components/InboxConversationSettings';
 import Layout from '@app/components/Layout';
 import { updateConversationStatus } from '@app/components/ResolveButton';
-import { handleEvalAnswer } from '@app/hooks/useChat';
-import useFileUpload from '@app/hooks/useFileUpload';
 import useStateReducer from '@app/hooks/useStateReducer';
 
 // import { client as crispClient } from '@chaindesk/lib/crisp';
@@ -85,6 +82,9 @@ import {
   MessageFrom,
   Prisma,
 } from '@chaindesk/prisma';
+import ChatBox from '@chaindesk/ui/Chatbox';
+import { handleEvalAnswer } from '@chaindesk/ui/hooks/useChat';
+import useFileUpload from '@chaindesk/ui/hooks/useFileUpload';
 
 import { getAgents } from '../api/agents';
 import { updateStatus } from '../api/conversations/update-status';

@@ -13,12 +13,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { AnalyticsContext } from '@app/components/Analytics';
-import Input from '@app/components/Input';
 import Logo from '@app/components/Logo';
 import SEO from '@app/components/SEO';
 
 import { appUrl } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
+import Input from '@chaindesk/ui/Input';
 
 type Props = {
   // subscription: Subscription | null;

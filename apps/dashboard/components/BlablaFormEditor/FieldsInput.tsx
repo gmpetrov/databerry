@@ -30,9 +30,9 @@ import {
 
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import Input from '@chaindesk/ui/Input';
+import { FieldType } from '@chaindesk/ui/TraditionalForm';
 
 import { SortableList } from '../dnd/SortableList';
-import { FieldType } from '../TraditionalForm';
 
 import { forceSubmit } from './utils';
 
