@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.306"></a>
+## 0.1.306 (2024-04-06)
+
+### Fixed
+
+- 🐛 form width in editor [[9daf3f2](https://github.com/gmpetrov/databerry/commit/9daf3f2715fc27561785431e5d38c98c21b59f87)]
+
+
 <a name="0.1.305"></a>
 ## 0.1.305 (2024-04-06)
 
