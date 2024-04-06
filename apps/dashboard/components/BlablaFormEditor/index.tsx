@@ -461,6 +461,7 @@ function Form({ formId }: Props) {
             {draftConfig && (
               <Stack
                 sx={{
+                  width: '100%',
                   maxWidth: '350px',
                   mx: 0,
                   my: 0,
