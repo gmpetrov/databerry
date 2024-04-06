@@ -126,6 +126,7 @@ function ChatBubble({ ...props }: BubbleProps) {
   const config =
     (props.interfaceConfig as AgentInterfaceConfig) || defaultChatBubbleConfig;
   const agentIconUrl =
+    props?.interfaceConfig?.iconUrl ||
     props?.agentIconUrl ||
     `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
 
@@ -215,26 +216,17 @@ function ChatBubble({ ...props }: BubbleProps) {
   }, []);
 
   const bubbleIcon = useMemo(() => {
-    if (agentIconUrl) {
-      return (
-        <Avatar
-          src={agentIconUrl}
-          sx={{
-            width: '100%',
-            height: '100%',
-            background: 'transparent',
-            ...config?.bubbleIconStyle,
-          }}
-        />
-      );
-    } else {
-      return (
-        <Avatar
-          src={`${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`}
-          sx={{ width: '100%', height: '100%' }}
-        />
-      );
-    }
+    return (
+      <Avatar
+        src={agentIconUrl}
+        sx={{
+          width: '100%',
+          height: '100%',
+          background: 'transparent',
+          ...config?.bubbleIconStyle,
+        }}
+      />
+    );
   }, [agentIconUrl, config?.bubbleIconStyle]);
 
   const Layout = React.useMemo(() => {
@@ -246,6 +238,10 @@ function ChatBubble({ ...props }: BubbleProps) {
       />
     );
   }, []);
+
+  if (props?.isLoadingAgent) {
+    return null;
+  }
 
   return (
     <>
