@@ -1,11 +1,17 @@
 # Changelog
 
-<a name="0.1.307"></a>
-## 0.1.307 (2024-04-06)
+<a name="0.1.308"></a>
+## 0.1.308 (2024-04-06)
 
 ### Fixed
 
 - 🐛 wrong template field type [[5d546f6](https://github.com/gmpetrov/databerry/commit/5d546f62ba82f62c58ebda07bc1e6878e170363f)]
+
+### Miscellaneous
+
+- 🤖 comment dashboard bubble context [[f7d4d03](https://github.com/gmpetrov/databerry/commit/f7d4d0330c7921f425480f4c2cc65499cb24ea0b)]
+- 🎸 add skeleton [[bb1dcd3](https://github.com/gmpetrov/databerry/commit/bb1dcd3fa685dbcff6ddaeded236074a0f38f1a9)]
+-  Release 0.1.307 [[77668d1](https://github.com/gmpetrov/databerry/commit/77668d1bba69bcf6641d24757f8b3343fc884c5f)]
 
 
 <a name="0.1.306"></a>
