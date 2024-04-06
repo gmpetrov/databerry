@@ -9,6 +9,7 @@ const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/cha
 
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import NewChatButton from '@chaindesk/ui/Chatbox/NewChatButton';
+import DarkModeToggle from '@chaindesk/ui/DarkModeToggle';
 import { cn } from '@chaindesk/ui/utils/cn';
 
 const ChatBoxLayout = (props: {
@@ -90,7 +91,7 @@ const ChatBoxLayout = (props: {
           >
             <NewChatButton variant="plain" />
           </Stack>
-          {/* <DarkModeToggle variant="plain" color="neutral" /> */}
+          <DarkModeToggle variant="plain" color="neutral" />
         </Stack>
       </Box>
       {props.children}

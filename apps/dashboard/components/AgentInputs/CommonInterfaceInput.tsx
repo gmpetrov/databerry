@@ -43,8 +43,11 @@ export default function CommonInterfaceInput(props: Props) {
       /> */}
       <InterfaceConfigCheckbox
         field="isBrandingDisabled"
-        label="Remove Chaindesk Branding (premium account required)"
-        disabled={!session?.organization?.isPremium}
+        label="Remove Chaindesk Branding (Pro plan required)"
+        disabled={
+          !session?.organization?.isPremium ||
+          session?.organization?.subscriptions?.[0]?.plan === 'level_1'
+        }
       />
       <SuggestionsInput />
       <Input

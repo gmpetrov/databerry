@@ -7,7 +7,7 @@ import useAgent from '@app/hooks/useAgent';
 import { ChatMessage } from '@chaindesk/lib/types';
 import { LeadCaptureToolchema } from '@chaindesk/lib/types/dtos';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
-import { Agent, Tool } from '@chaindesk/prisma';
+import { Agent, Subscription, SubscriptionPlan, Tool } from '@chaindesk/prisma';
 import Base, { ChatBaseProps } from '@chaindesk/ui/embeds/chat-base';
 import { InitWidgetProps } from '@chaindesk/ui/embeds/types';
 import useChat, { ChatContext } from '@chaindesk/ui/hooks/useChat';
@@ -70,7 +70,15 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
     }
   }, [props.initConfig]);
 
-  const isPremium = !!(agent as any)?.organization?.subscriptions?.[0]?.id;
+  const subscription = (agent as any)?.organization
+    ?.subscriptions?.[0] as Subscription;
+  const isPremium = !!subscription;
+  const hideBranding =
+    isPremium &&
+    [SubscriptionPlan.level_2, SubscriptionPlan.level_3].includes(
+      subscription?.plan as any
+    ) &&
+    !!config?.isBrandingDisabled;
 
   useEffect(() => {
     if (typeof window === 'undefined' || !!agentId) {
@@ -247,7 +255,7 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
           handleAbort: handleAbort,
           withSources: !!agent?.includeSources,
           isAiEnabled: methods.isAiEnabled,
-          disableWatermark: isPremium && !!config?.isBrandingDisabled,
+          disableWatermark: hideBranding,
 
           readOnly: leadToolConfig?.isRequired && !hasCapturedLead,
           hideInternalSources: true,

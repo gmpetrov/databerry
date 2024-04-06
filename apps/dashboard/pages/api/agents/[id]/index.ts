@@ -26,6 +26,7 @@ export const agentInclude: Prisma.AgentInclude = {
       subscriptions: {
         select: {
           id: true,
+          plan: true,
         },
         where: {
           status: {

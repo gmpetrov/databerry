@@ -6,9 +6,8 @@ import React, { FunctionComponent, StrictMode } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 
 import { CustomContact } from '@chaindesk/lib/types';
+import { InitWidgetProps } from '@chaindesk/ui/embeds/types';
 import { createTheme, createThemeKeys } from '@chaindesk/ui/themes/base';
-
-import { InitWidgetProps } from './types';
 
 const contactAttributes = {
   'phone-number': 'phoneNumber',
