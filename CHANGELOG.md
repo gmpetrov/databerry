@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.307"></a>
+## 0.1.307 (2024-04-06)
+
+### Fixed
+
+- 🐛 wrong template field type [[5d546f6](https://github.com/gmpetrov/databerry/commit/5d546f62ba82f62c58ebda07bc1e6878e170363f)]
+
+
 <a name="0.1.306"></a>
 ## 0.1.306 (2024-04-06)
 

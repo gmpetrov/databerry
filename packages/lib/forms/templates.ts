@@ -238,7 +238,7 @@ export const CONTACT_SALES: FormTemplate = {
       },
       {
         id: cuid(),
-        type: 'text',
+        type: 'email',
         name: 'email',
         required: true,
       },
