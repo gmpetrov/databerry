@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.303"></a>
+## 0.1.303 (2024-04-06)
+
+### Miscellaneous
+
+- 🤖 fix bubble icon [[98f8e78](https://github.com/gmpetrov/databerry/commit/98f8e78af3ab59dcc4464d21ffa893e269e1b5f7)]
+
+
 <a name="0.1.302"></a>
 ## 0.1.302 (2024-04-06)
 
