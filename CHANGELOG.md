@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.304"></a>
+## 0.1.304 (2024-04-06)
+
+### Fixed
+
+- 🐛 form crash input without control [[7ea2275](https://github.com/gmpetrov/databerry/commit/7ea22759872da2c804eb0ba5a493d81dfda2f68b)]
+
+
 <a name="0.1.303"></a>
 ## 0.1.303 (2024-04-06)
 
