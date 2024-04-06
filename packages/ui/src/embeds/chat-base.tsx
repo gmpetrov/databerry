@@ -86,10 +86,10 @@ function Standard({
 
           '& .message-agent': {},
           '& .message-human': {
-            // backgroundColor: primaryColor,
+            backgroundColor: primaryColor,
           },
           '& .message-human *': {
-            // color: textColor,
+            color: textColor,
           },
 
           ...((containerSxProps ? containerSxProps : {}) as any),

@@ -11,8 +11,6 @@ import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import NewChatButton from '@chaindesk/ui/Chatbox/NewChatButton';
 import { cn } from '@chaindesk/ui/utils/cn';
 
-import ColorSchemeToggle from './Layout/ColorSchemeToggle';
-
 const ChatBoxLayout = (props: {
   className?: string;
   children?: any;
@@ -92,7 +90,7 @@ const ChatBoxLayout = (props: {
           >
             <NewChatButton variant="plain" />
           </Stack>
-          {/* <ColorSchemeToggle variant="plain" color="neutral" /> */}
+          {/* <DarkModeToggle variant="plain" color="neutral" /> */}
         </Stack>
       </Box>
       {props.children}
