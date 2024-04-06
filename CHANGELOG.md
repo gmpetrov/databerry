@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.302"></a>
+## 0.1.302 (2024-04-06)
+
+### Fixed
+
+- 🐛 typos [[63c627d](https://github.com/gmpetrov/databerry/commit/63c627d291a6a17fb6a2b71dfffc9b75b66182fa)]
+
+### Miscellaneous
+
+- 🎸 form templates + improve number input validation [[56ec038](https://github.com/gmpetrov/databerry/commit/56ec038574454c20f0de7c21a7208178a8a40a1b)]
+- 🎸 theming fix + improve structure ([#370](https://github.com/gmpetrov/databerry/issues/370)) [[6e66ddf](https://github.com/gmpetrov/databerry/commit/6e66ddf08a87970ba30ae4f2857d279d58a8665b)]
+
+
 <a name="0.1.301"></a>
 ## 0.1.301 (2024-04-05)
 
