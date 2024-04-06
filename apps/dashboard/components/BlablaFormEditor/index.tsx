@@ -2,7 +2,6 @@ import { RocketLaunch } from '@mui/icons-material';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
 import Looks4RoundedIcon from '@mui/icons-material/Looks4Rounded';
-import Looks5RoundedIcon from '@mui/icons-material/Looks5Rounded';
 import LooksOneRoundedIcon from '@mui/icons-material/LooksOneRounded';
 import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
 import {
@@ -48,6 +47,7 @@ import { Prisma } from '@chaindesk/prisma';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Input from '@chaindesk/ui/Input';
 import Loader from '@chaindesk/ui/Loader';
+import TraditionalForm from '@chaindesk/ui/TraditionalForm';
 
 import FieldsInput, { formType } from './FieldsInput';
 import { forceSubmit } from './utils';
@@ -405,7 +405,7 @@ function Form({ formId }: Props) {
           </Button>
         </Stack>
 
-        <Stack sx={{ width: '100%' }} gap={1}>
+        <Stack sx={{ width: '100%', height: '100%' }} gap={1}>
           <Stack
             sx={(t) => ({
               // border: '1px solid',
@@ -415,6 +415,8 @@ function Form({ formId }: Props) {
               height: '100%',
               position: 'relative',
               overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
             })}
           >
             <Stack
@@ -425,6 +427,7 @@ function Form({ formId }: Props) {
                 left: 2,
                 pt: 2,
                 pr: 2,
+                zIndex: 1,
               }}
             >
               <Alert
@@ -455,18 +458,32 @@ function Form({ formId }: Props) {
                 </Typography>
               </Alert>
             </Stack>
-            <BlablaFormViewer
-              formId={formId}
-              type={type || 'conversational'}
-              config={{
-                fields: draftConfig?.fields,
-                startScreen: draftConfig?.startScreen,
-                endScreen: draftConfig?.endScreen,
-                webhook: draftConfig?.webhook,
-                schema: (query.data?.draftConfig as any)?.schema,
-              }}
-              isInEditor
-            />
+            {draftConfig && (
+              <Stack
+                sx={{
+                  maxWidth: '350px',
+                  mx: 0,
+                  my: 0,
+                  zIndex: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  mt: 4,
+                }}
+              >
+                <TraditionalForm
+                  formId={formId}
+                  config={{
+                    fields: draftConfig?.fields,
+                    startScreen: draftConfig?.startScreen,
+                    endScreen: draftConfig?.endScreen,
+                    webhook: draftConfig?.webhook,
+                    schema: (draftConfig as any)?.schema,
+                  }}
+                  isFormSubmitted={state.currentAccordionIndex === 2}
+                  isInEditor
+                />
+              </Stack>
+            )}
           </Stack>
         </Stack>
       </Stack>

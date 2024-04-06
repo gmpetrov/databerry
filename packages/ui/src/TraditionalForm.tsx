@@ -248,6 +248,7 @@ function TraditionalForm({
   messageId,
   submissionId,
   isInEditor,
+  isFormSubmitted,
   ...otherProps
 }: {
   formId: string;
@@ -256,6 +257,7 @@ function TraditionalForm({
   submissionId?: string;
   config?: any;
   isInEditor?: boolean;
+  isFormSubmitted?: boolean;
 }) {
   // const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
   const getFormQuery = useSWR<Form>(
@@ -273,7 +275,7 @@ function TraditionalForm({
   const [state, setState] = useStateReducer({
     loading: false,
     files: [] as File[],
-    isFormSubmitted: false,
+    isFormSubmitted: !!isFormSubmitted,
     hasErrored: false,
   });
 
@@ -282,6 +284,12 @@ function TraditionalForm({
       isFormSubmitted: !!submissionId,
     });
   }, [submissionId]);
+
+  useEffect(() => {
+    setState({
+      isFormSubmitted: !!isFormSubmitted,
+    });
+  }, [isFormSubmitted]);
 
   const config = useMemo(() => {
     return (
@@ -312,6 +320,10 @@ function TraditionalForm({
   const submitForm = async (e: any) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (isInEditor) {
+      return setState({ isFormSubmitted: true });
+    }
 
     try {
       setState({ loading: true, hasErrored: false });
@@ -399,7 +411,7 @@ function TraditionalForm({
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
+              // exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               key="component"
               className="h-full"
