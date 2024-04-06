@@ -13,7 +13,7 @@
     <script type="module">
       import Chatbox from './dist/chatbox/index.js';
 
-      Chatbox.initBubble({
+      const widget = await Chatbox.initBubble({
         agentId: 'clrz0tn6h000108kxfyomdzxg',
         // contact: {
         //   firstName: 'Georges',
@@ -38,6 +38,10 @@
           // },
         },
       });
+
+      setTimeout(() => {
+        // widget.open();
+      }, 2000);
 
       Chatbox.initStandard({
         id: '4242',

@@ -32,7 +32,10 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
 
 export const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
-export type BubbleProps = InitWidgetProps & ChatBaseProps & {};
+export type BubbleProps = InitWidgetProps &
+  ChatBaseProps & {
+    isOpen?: boolean;
+  };
 
 const ChatBoxLayout = (props: {
   children?: any;
@@ -133,12 +136,16 @@ function ChatBubble({ ...props }: BubbleProps) {
   const initMessageRef = useRef(null);
 
   const [state, setState] = useStateReducer({
-    isOpen: false,
+    isOpen: !!props.isOpen,
     hasOpenOnce: false,
     showInitialMessage: false,
     visitorEmail: '',
     showLeadFormAfterMessageId: '',
   });
+
+  useEffect(() => {
+    setState({ isOpen: !!props.isOpen });
+  }, [props.isOpen]);
 
   // const textColor = useMemo(() => {
   //   return pickColorBasedOnBgColor(

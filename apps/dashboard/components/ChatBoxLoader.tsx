@@ -31,6 +31,7 @@ export type ChatBoxStandardProps = InitWidgetProps & {
   instanceId?: string;
   layout?: any;
   children?: any;
+  isOpen?: boolean;
 };
 
 function ChatBoxLoader(props: ChatBoxStandardProps) {
@@ -233,6 +234,7 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
       }}
     >
       {React.createElement(props.children || Base, {
+        isOpen: props.isOpen,
         isLoadingAgent: !agent,
         agentId: agentId,
         agentIconUrl: agent?.iconUrl,

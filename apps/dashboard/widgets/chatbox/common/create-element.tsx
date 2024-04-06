@@ -2,7 +2,7 @@ import createCache, { EmotionCache } from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import ScopedCssBaseline from '@mui/joy/ScopedCssBaseline';
 import { CssVarsProvider } from '@mui/joy/styles';
-import React, { FunctionComponent, StrictMode } from 'react';
+import React, { FunctionComponent, StrictMode, useState } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 
 import { CustomContact } from '@chaindesk/lib/types';
@@ -34,6 +34,8 @@ const createElement = ({ name, widget }: Props) =>
     cache: EmotionCache;
     shadowRootElement: HTMLDivElement;
     instanceId?: string;
+    setIsOpen?: (isOpen: boolean) => void;
+    isOpen?: boolean;
 
     destroy() {
       this.innerHTML = '';
@@ -76,7 +78,22 @@ const createElement = ({ name, widget }: Props) =>
       this.root = createRoot(this.shadowRootElement);
     }
 
-    connectedCallback() {
+    open() {
+      this.setIsOpen?.(true);
+    }
+    close() {
+      this.setIsOpen?.(false);
+    }
+
+    toggle() {
+      this.setIsOpen?.(!this.isOpen);
+    }
+
+    Component = (props: any) => {
+      const [isOpen, setIsOpen] = useState(false);
+      this.setIsOpen = setIsOpen;
+      this.isOpen = isOpen;
+
       const contact = Object.entries(contactAttributes).reduce(
         (obj, [attr, propName]) => {
           const value = this.getAttribute(attr);
@@ -97,7 +114,7 @@ const createElement = ({ name, widget }: Props) =>
         ) as InitWidgetProps['initConfig'];
       } catch {}
 
-      this.root.render(
+      return (
         <StrictMode>
           <CacheProvider value={this.cache}>
             <CssVarsProvider
@@ -111,6 +128,8 @@ const createElement = ({ name, widget }: Props) =>
             >
               <ScopedCssBaseline>
                 {React.createElement(widget, {
+                  ...props,
+                  isOpen,
                   initConfig,
                   context,
                   agentId: this.getAttribute('agent-id') || '',
@@ -135,6 +154,10 @@ const createElement = ({ name, widget }: Props) =>
           </CacheProvider>
         </StrictMode>
       );
+    };
+
+    connectedCallback() {
+      this.root.render(<this.Component isOpen={this.isOpen} />);
     }
   };
 

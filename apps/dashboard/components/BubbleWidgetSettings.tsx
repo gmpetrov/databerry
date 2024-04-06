@@ -109,7 +109,7 @@ export default function BubbleWidgetSettings(props: Props) {
   const installScript = `<script type="module">
   import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
 
-  Chatbox.initBubble({
+  const widget = await Chatbox.initBubble({
     agentId: '${props.agentId}',
     
     // optional 
@@ -131,6 +131,15 @@ export default function BubbleWidgetSettings(props: Props) {
     // Provided context will be appended to the Agent system prompt
     context: "The user you are talking to is John. Start by Greeting him by his name.",
   });
+
+  // open the chat bubble
+  widget.open();
+
+  // close the chat bubble
+  widget.close()
+
+  // or 
+  widget.toggle()
 </script>`;
 
   return (
