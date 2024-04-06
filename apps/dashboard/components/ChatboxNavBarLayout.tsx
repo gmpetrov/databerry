@@ -91,7 +91,7 @@ const ChatBoxLayout = (props: {
           >
             <NewChatButton variant="plain" />
           </Stack>
-          <DarkModeToggle variant="plain" color="neutral" />
+          {/* <DarkModeToggle variant="plain" color="neutral" /> */}
         </Stack>
       </Box>
       {props.children}

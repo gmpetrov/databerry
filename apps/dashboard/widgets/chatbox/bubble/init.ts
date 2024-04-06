@@ -32,7 +32,7 @@ const initBubble = async (props: BubbleProps) => {
 
     document?.body?.prepend(element);
   }
-  (window as any)?.ChatboxBubble as HTMLElement;
+  return (window as any)?.ChatboxBubble as HTMLElement;
 };
 
 export default initBubble;
