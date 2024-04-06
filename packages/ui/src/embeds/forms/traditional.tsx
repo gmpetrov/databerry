@@ -2,9 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import SendIcon from '@mui/icons-material/Send';
 import {
+  AspectRatio,
   Button,
   Card,
   CardContent,
+  Skeleton,
   Snackbar,
   Stack,
   Textarea,
@@ -172,165 +174,176 @@ function TraditionalForm({
         flex: 1,
       }}
     >
-      {/* {state.isFormSubmitted && !conversationId && (
-        <Stack sx={{ position: 'absolute', top: -40, right: 0 }}>
-          <Button
-            variant="outlined"
-            color="success"
-            size="sm"
-            onClick={() => setState({ isFormSubmitted: false })}
-            endDecorator={<ReplayIcon />}
-          >
-            Retry
-          </Button>
+      {!getFormQuery?.data && getFormQuery?.isLoading ? (
+        <Stack gap={1} sx={{ textAlign: 'left' }}>
+          <AspectRatio ratio="21/9">
+            <Skeleton loading={true} variant="overlay">
+              <img alt="" src="" />
+            </Skeleton>
+          </AspectRatio>
+          <Typography>
+            <Skeleton loading={true}>
+              Lorem ipsum is placeholder text commonly used in the graphic,
+              print, and publishing industries.
+            </Skeleton>
+          </Typography>
+          <Typography>
+            <Skeleton variant="text" level="h1" sx={{ width: '100%' }} />
+          </Typography>
         </Stack>
-      )} */}
-      <CardContent
-        component="div"
-        sx={(t) => ({
-          textAlign: 'center',
-          alignItems: 'center',
-          position: 'relative',
-          width: '100%',
-          display: 'flex',
-        })}
-      >
-        <AnimatePresence>
-          {state.isFormSubmitted && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              // exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              key="component"
-              className="h-full"
-            >
-              <Stack
-                spacing={2}
-                sx={{ p: 4 }}
-                height="100%"
-                justifyContent="center"
-                alignItems="center"
+      ) : (
+        <CardContent
+          component="div"
+          sx={(t) => ({
+            textAlign: 'center',
+            alignItems: 'center',
+            position: 'relative',
+            width: '100%',
+            display: 'flex',
+          })}
+        >
+          <AnimatePresence>
+            {state.isFormSubmitted && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                // exit={{ opacity: 0 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                key="component"
+                className="h-full"
               >
-                <CheckCircleRoundedIcon sx={{ fontSize: 42 }} color="primary" />
-                <Typography level="h4">
-                  {config?.endScreen?.successMessage ||
-                    'Form Submitted Successfully!'}
-                </Typography>
-                {config?.endScreen?.cta?.label && (
-                  <a
-                    href={config?.endScreen?.cta?.url || '#'}
-                    target={config?.endScreen?.cta?.target || '_blank'}
-                  >
-                    <Button variant="solid" size="lg" color="primary">
-                      {config?.endScreen?.cta?.label}
-                    </Button>
-                  </a>
-                )}
-              </Stack>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {!state.isFormSubmitted && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              // exit={{ opacity: 0, y: -50 }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              key="component"
-              style={{ width: '100%' }}
-            >
-              {(config?.startScreen?.title ||
-                config?.startScreen?.description) && (
-                <Stack sx={{ mb: 2 }}>
-                  {config?.startScreen?.title && (
-                    <Typography level="h3">
-                      {config?.startScreen?.title}
-                    </Typography>
-                  )}
-
-                  {config?.startScreen?.description && (
-                    <Typography level="body-md">
-                      {config?.startScreen?.description}
-                    </Typography>
+                <Stack
+                  spacing={2}
+                  sx={{ p: 4 }}
+                  height="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <CheckCircleRoundedIcon
+                    sx={{ fontSize: 42 }}
+                    color="primary"
+                  />
+                  <Typography level="h4">
+                    {config?.endScreen?.successMessage ||
+                      'Form Submitted Successfully!'}
+                  </Typography>
+                  {config?.endScreen?.cta?.label && (
+                    <a
+                      href={config?.endScreen?.cta?.url || '#'}
+                      target={config?.endScreen?.cta?.target || '_blank'}
+                    >
+                      <Button variant="solid" size="lg" color="primary">
+                        {config?.endScreen?.cta?.label}
+                      </Button>
+                    </a>
                   )}
                 </Stack>
-              )}
-
-              <Stack
-                width="100%"
-                spacing={2}
-                onChange={(e) => {
-                  // do not bubble up, not to trigger auto-save.
-                  e.stopPropagation();
-                }}
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <AnimatePresence>
+            {!state.isFormSubmitted && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                // exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                key="component"
+                style={{ width: '100%' }}
               >
-                {config?.fields?.map((field) => (
-                  <Stack
-                    key={field.id}
-                    spacing={1}
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Stack direction="row">
-                      <Typography level="title-md">{field.name}</Typography>
-                      {field.required && (
-                        <div className="text-red-500 ml-0.5">*</div>
-                      )}
-                    </Stack>
-                    {fieldTypesMap[field.type as keyof typeof fieldTypesMap]?.({
-                      formId,
-                      conversationId,
-                      methods,
-                      ...field,
+                {(config?.startScreen?.title ||
+                  config?.startScreen?.description) && (
+                  <Stack sx={{ mb: 2 }}>
+                    {config?.startScreen?.title && (
+                      <Typography level="h3">
+                        {config?.startScreen?.title}
+                      </Typography>
+                    )}
 
-                      changeHandler: {
-                        _: (name: string, value: any) => {
-                          methods.setValue(name, value, {
-                            shouldValidate: true,
-                            shouldDirty: true,
-                          });
-                        },
-                      }['_'],
-                    } as any)}
+                    {config?.startScreen?.description && (
+                      <Typography level="body-md">
+                        {config?.startScreen?.description}
+                      </Typography>
+                    )}
                   </Stack>
-                ))}
-              </Stack>
-              <Stack mt={2}>
-                <Button
-                  type="submit"
-                  disabled={
-                    config?.fields?.length == 0 || !methods.formState.isValid
-                  }
-                  loading={state.loading}
-                  onClick={submitForm}
-                  size="md"
-                  color="primary"
-                  endDecorator={<SendIcon sx={{ fontSize: 'sm' }} />}
-                  sx={{ with: '100%' }}
-                >
-                  Submit
-                </Button>
-                <Snackbar
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  open={state.hasErrored}
-                  onClose={() => setState({ hasErrored: false })}
-                  color={'danger'}
-                >
-                  Submission Failed, try again later.
-                </Snackbar>
-              </Stack>
-            </motion.div>
-          )}
+                )}
 
-          <Stack sx={{ mt: 2 }}>
-            <PoweredBy />
-          </Stack>
-        </AnimatePresence>
-      </CardContent>
+                <Stack
+                  width="100%"
+                  spacing={2}
+                  onChange={(e) => {
+                    // do not bubble up, not to trigger auto-save.
+                    e.stopPropagation();
+                  }}
+                >
+                  {config?.fields?.map((field) => (
+                    <Stack
+                      key={field.id}
+                      spacing={1}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
+                    >
+                      <Stack direction="row">
+                        <Typography level="title-md">{field.name}</Typography>
+                        {field.required && (
+                          <div className="text-red-500 ml-0.5">*</div>
+                        )}
+                      </Stack>
+                      {fieldTypesMap[
+                        field.type as keyof typeof fieldTypesMap
+                      ]?.({
+                        formId,
+                        conversationId,
+                        methods,
+                        ...field,
+
+                        changeHandler: {
+                          _: (name: string, value: any) => {
+                            methods.setValue(name, value, {
+                              shouldValidate: true,
+                              shouldDirty: true,
+                            });
+                          },
+                        }['_'],
+                      } as any)}
+                    </Stack>
+                  ))}
+                </Stack>
+                <Stack mt={2}>
+                  <Button
+                    type="submit"
+                    disabled={
+                      config?.fields?.length == 0 || !methods.formState.isValid
+                    }
+                    loading={state.loading}
+                    onClick={submitForm}
+                    size="md"
+                    color="primary"
+                    endDecorator={<SendIcon sx={{ fontSize: 'sm' }} />}
+                    sx={{ with: '100%' }}
+                  >
+                    Submit
+                  </Button>
+                  <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    open={state.hasErrored}
+                    onClose={() => setState({ hasErrored: false })}
+                    color={'danger'}
+                  >
+                    Submission Failed, try again later.
+                  </Snackbar>
+                </Stack>
+              </motion.div>
+            )}
+
+            <Stack sx={{ mt: 2 }}>
+              <PoweredBy />
+            </Stack>
+          </AnimatePresence>
+        </CardContent>
+      )}
     </Card>
   );
 }
