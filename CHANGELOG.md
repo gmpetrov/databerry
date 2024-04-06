@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.309"></a>
+## 0.1.309 (2024-04-06)
+
+### Fixed
+
+- 🐛 disable dark mode toggle standard widget [[0a2754f](https://github.com/gmpetrov/databerry/commit/0a2754f914f0525e7967b879216e8d82010b1d50)]
+
+
 <a name="0.1.308"></a>
 ## 0.1.308 (2024-04-06)
 
