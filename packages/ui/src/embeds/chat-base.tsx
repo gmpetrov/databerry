@@ -28,6 +28,7 @@ function Standard({
   containerSxProps,
   chatBoxProps,
   isLoadingAgent,
+  agentIconUrl,
 }: ChatBaseProps) {
   const { mode } = useColorScheme();
 
@@ -95,7 +96,10 @@ function Standard({
           ...((containerSxProps ? containerSxProps : {}) as any),
         })}
       >
-        <ChatBox {...chatBoxProps} />
+        <ChatBox
+          {...chatBoxProps}
+          {...(agentIconUrl ? { agentIconUrl } : {})}
+        />
       </Box>
     </Layout>
   );

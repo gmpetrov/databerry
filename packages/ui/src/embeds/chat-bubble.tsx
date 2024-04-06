@@ -427,7 +427,7 @@ function ChatBubble({ ...props }: BubbleProps) {
                   overflowY: 'hidden',
                 })}
               >
-                <Base {...props} layout={Layout} />
+                <Base {...props} agentIconUrl={agentIconUrl} layout={Layout} />
                 {/* <ChatBoxLoader
                   agentId={props.agentId}
                   initConfig={config?}
