@@ -424,14 +424,14 @@ export default function Navigation() {
                         firstName: '${session?.user?.name || ''}',
                         email: '${session?.user?.email}',
                       },
-                      context: '${JSON.stringify(`Task Bug Reporting: Use the following step-by-step to collect information about the bug and report it to the development team.
-                      1- Please describe the bug in detail.
-                      2- Please provide the steps to reproduce the bug.
-                      3- Please provide the expected behavior.
-                      4- Please provide your ressource ID (Agent ID or Datastore ID or Form ID)
-                      5- Please share a screenshot or a video if possible.
-                      6- Tell the user that the bug has been reported and that the development team will take care of it.
-                      `)}',
+                      // context: '${JSON.stringify(`Task Bug Reporting: Use the following step-by-step to collect information about the bug and report it to the development team.
+                      // 1- Please describe the bug in detail.
+                      // 2- Please provide the steps to reproduce the bug.
+                      // 3- Please provide the expected behavior.
+                      // 4- Please provide your ressource ID (Agent ID or Datastore ID or Form ID)
+                      // 5- Please share a screenshot or a video if possible.
+                      // 6- Tell the user that the bug has been reported and that the development team will take care of it.
+                      // `)}',
                       interface: {
                         // iconUrl: 'https://www.chaindesk.ai/logo.png',
                         iconUrl: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Love%20Letter.png',
