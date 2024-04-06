@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.305"></a>
+## 0.1.305 (2024-04-06)
+
+### Fixed
+
+- 🐛 better error message [[202884c](https://github.com/gmpetrov/databerry/commit/202884c604429f10fd25178b24b69c88c46a7608)]
+- 🐛 agent icon url [[9712ec2](https://github.com/gmpetrov/databerry/commit/9712ec21c95008eb1bb748745f66d6634cedf582)]
+
+
 <a name="0.1.304"></a>
 ## 0.1.304 (2024-04-06)
 
