@@ -18,7 +18,7 @@ export const FROM_SCRATCH: FormTemplate = {
     fields: [
       {
         id: cuid(),
-        type: 'text',
+        type: 'email',
         name: 'email',
         required: true,
       },
@@ -189,7 +189,7 @@ export const INBOUND_LEAD: FormTemplate = {
       },
       {
         id: cuid(),
-        type: 'text',
+        type: 'email',
         name: 'email',
         required: true,
       },
