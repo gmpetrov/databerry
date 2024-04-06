@@ -26,9 +26,145 @@ export const FROM_SCRATCH: FormTemplate = {
     startScreen: {
       title: 'Title',
       description: 'Description',
-      cta: {
-        label: 'Start',
+    },
+  },
+};
+
+export const LEAD_FORM: FormTemplate = {
+  name: 'Lead Form',
+  description: 'A form to capture lead information including email and phone.',
+  schema: {
+    overview: `This form is designed to capture essential lead information, including email and phone, to facilitate further communication.`,
+    fields: [
+      {
+        id: cuid(),
+        type: 'email',
+        name: 'email',
+        required: true,
+        placeholder: 'Enter your email',
       },
+      {
+        id: cuid(),
+        type: 'phoneNumber',
+        name: 'phone',
+        required: true,
+        placeholder: 'Enter your phone number',
+      },
+      {
+        id: cuid(),
+        type: 'textArea',
+        name: 'comment',
+        required: false,
+        placeholder: 'Enter any additional comments',
+      },
+    ],
+    startScreen: {
+      title: 'Get in Touch',
+      description: "We're here to help! Please fill out the form below.",
+    },
+  },
+};
+
+export const PRODUCT_FEEDBACK_FORM: FormTemplate = {
+  name: 'Product Feedback Form',
+  description: 'A form to gather feedback on our products.',
+  schema: {
+    overview: `This form is designed to collect feedback on our products. Your input is valuable to us and helps us improve our offerings.`,
+    fields: [
+      {
+        id: cuid(),
+        type: 'email',
+        name: 'email',
+        required: true,
+        placeholder: 'Enter your email',
+      },
+      {
+        id: cuid(),
+        type: 'select',
+        name: 'type',
+        required: true,
+        options: ['Feature Request', 'Bug Report', 'Other'],
+        placeholder: 'Select feedback type',
+      },
+      {
+        id: cuid(),
+        type: 'textArea',
+        name: 'comment',
+        required: true,
+        placeholder: 'Enter your feedback here',
+      },
+      {
+        id: cuid(),
+        type: 'file',
+        name: 'files',
+        required: false,
+        placeholder: 'Attach files (optional)',
+      },
+    ],
+    startScreen: {
+      title: 'Your Feedback Matters',
+      description:
+        "We're here to listen! Please share your thoughts on our products.",
+    },
+  },
+};
+
+export const ONBOARDING_FORM: FormTemplate = {
+  name: 'Onboarding Form',
+  description: 'A form to gather initial information about new users.',
+  schema: {
+    overview: `This form is designed to collect initial information about new users to help us tailor our services to their needs.`,
+    fields: [
+      {
+        id: cuid(),
+        type: 'email',
+        name: 'email',
+        required: true,
+        placeholder: 'Enter your email',
+      },
+      {
+        id: cuid(),
+        type: 'select',
+        name: 'industry',
+        required: true,
+        options: [
+          'Technology',
+          'E-commerce',
+          'Healthcare',
+          'Finance',
+          'Retail',
+          'Manufacturing',
+          'Other',
+        ],
+        placeholder: 'Select your industry',
+      },
+      {
+        id: cuid(),
+        type: 'select',
+        name: 'company size',
+        required: true,
+        options: ['1-10', '10-100', '100+'],
+        placeholder: 'Select your company size',
+      },
+      {
+        id: cuid(),
+        type: 'select',
+        name: 'Where did you hear about us ?',
+        required: true,
+        options: [
+          'Google',
+          'Social Media',
+          'Newsletter',
+          'Word of Mouth',
+          'Trade Show',
+          'Other',
+        ],
+        placeholder: 'Where did you hear about us?',
+      },
+    ],
+    startScreen: {
+      title: 'Welcome to Our Platform',
+      description: "We're excited to have you here! Let's get started.",
     },
   },
 };
@@ -59,9 +195,9 @@ export const INBOUND_LEAD: FormTemplate = {
       },
       {
         id: cuid(),
-        type: 'multiple_choice',
+        type: 'select',
         name: 'Intested in',
-        choices: [
+        options: [
           'Website Dev',
           'Content Marketing',
           'Social Media',
@@ -73,9 +209,6 @@ export const INBOUND_LEAD: FormTemplate = {
     startScreen: {
       title: 'Awesome Company',
       description: "Welcome on board! Let's get to know each other!",
-      cta: {
-        label: '🎉 Start',
-      },
     },
   },
 };
@@ -111,9 +244,9 @@ export const CONTACT_SALES: FormTemplate = {
       },
       {
         id: cuid(),
-        type: 'multiple_choice',
+        type: 'select',
         name: 'Interested in',
-        choices: [
+        options: [
           'Website Dev',
           'Content Marketing',
           'Social Media',
@@ -125,9 +258,6 @@ export const CONTACT_SALES: FormTemplate = {
     startScreen: {
       title: 'Contact sales',
       description: 'Learn about our Enterprise Plan',
-      cta: {
-        label: 'Talk to sales',
-      },
     },
   },
 };
@@ -163,7 +293,7 @@ export const FEEDBACK: FormTemplate = {
       },
       {
         id: cuid(),
-        type: 'text',
+        type: 'number',
         name: 'Overall satisfaction (1-5)',
         required: true,
       },
@@ -171,9 +301,6 @@ export const FEEDBACK: FormTemplate = {
     startScreen: {
       title: 'Sneaker.com',
       description: 'Let us know how we can improve our product',
-      cta: {
-        label: '💬 Share Feedback',
-      },
     },
   },
 };

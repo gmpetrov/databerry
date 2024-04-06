@@ -29,8 +29,8 @@ import {
 } from 'react-hook-form';
 
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
+import { FieldType } from '@chaindesk/ui/embeds/forms/types';
 import Input from '@chaindesk/ui/Input';
-import { FieldType } from '@chaindesk/ui/TraditionalForm';
 
 import { SortableList } from '../dnd/SortableList';
 
@@ -48,6 +48,7 @@ const fieldTypes = [
   'textArea',
   'select',
   'file',
+  'number',
 ] as const;
 
 type fieldTypes = (typeof fieldTypes)[number];
@@ -275,6 +276,32 @@ function FieldsInput({ type = 'traditional' }: Props) {
                                 }}
                               />
                             </FormControl>
+                            {fieldsValues?.[index]?.type ===
+                              FieldType.Number && (
+                              <FormControl>
+                                <FormLabel>Min</FormLabel>
+                                <Input
+                                  control={methods.control}
+                                  type="number"
+                                  {...methods.register(
+                                    `draftConfig.fields.${index}.min`
+                                  )}
+                                />
+                              </FormControl>
+                            )}
+                            {fieldsValues?.[index]?.type ===
+                              FieldType.Number && (
+                              <FormControl>
+                                <FormLabel>Max</FormLabel>
+                                <Input
+                                  control={methods.control}
+                                  type="number"
+                                  {...methods.register(
+                                    `draftConfig.fields.${index}.max`
+                                  )}
+                                />
+                              </FormControl>
+                            )}
                             {[FieldType.Email, FieldType.PhoneNumber].includes(
                               fieldsValues?.[index]?.type as FieldType
                             ) && (

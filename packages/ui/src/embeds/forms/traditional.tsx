@@ -20,7 +20,6 @@ import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-// import { getForm } from '@app/pages/api/forms/[formId]';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { FormConfigSchema, FormSubmitSchema } from '@chaindesk/lib/types/dtos';
 import type { Form, Prisma } from '@chaindesk/prisma';
@@ -29,218 +28,13 @@ import useFileUpload, { FileToUpload } from '@chaindesk/ui/hooks/useFileUpload';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
+import fieldTypesMap, { FieldProps, fieldsToZodSchema } from './fields-map';
+import { type fieldUnion, type dynamicSchema, FieldType } from './types';
 
-export enum FieldType {
-  Email = 'email',
-  PhoneNumber = 'phoneNumber',
-  Text = 'text',
-  TextArea = 'textArea',
-  Select = 'select',
-  File = 'file',
-}
-
-type dynamicSchema<T extends string[]> = {
-  [k in T[number]]: string;
-};
-
-type fieldUnion =
-  | 'email'
-  | 'phoneNumber'
-  | 'text'
-  | 'textArea'
-  | 'select'
-  | 'file'
-  | 'multiple_choice';
-
-const shapeTozod = (
-  arr: { name: string; required: boolean; type: fieldUnion }[]
-) => {
-  const obj: Record<string, any> = {};
-  arr?.map(({ name, required, type }) => {
-    let zodType;
-    switch (type) {
-      case FieldType.Email:
-        zodType = z.string().email();
-        break;
-      case FieldType.TextArea:
-        zodType = required ? z.string().min(25) : z.string().min(25).optional();
-        break;
-      case FieldType.Select:
-        zodType = required ? z.string().min(1) : z.string().optional();
-        break;
-      case FieldType.PhoneNumber:
-        // const phoneRegex = new RegExp(
-        //   /^(?:\+?(\d{1,3}))?[-. (]*(?:\d{1,4})[-. )]*(\d{1,3})[-. ]*(\d{2,4})[-. ]*(\d{2,4})$/
-        // );
-        // zodType = z.string().regex(phoneRegex, 'Invalid Number!');
-        zodType = required ? z.string().min(3) : z.string().optional();
-        break;
-      case FieldType.Text:
-        zodType = required ? z.string().min(1) : z.string().optional();
-        break;
-      case FieldType.File:
-        const fileSchema = z.any();
-
-        zodType = required
-          ? z.array(fileSchema).min(1)
-          : z.array(fileSchema).optional();
-        break;
-      default:
-        zodType = z.string();
-    }
-    obj[name] = required ? zodType : zodType.optional();
-  });
-  return obj;
-};
-
-const dynamicSchema = (
-  arr: { name: string; required: boolean; type: fieldUnion }[]
-) =>
+const dynamicSchema = (fields: FieldProps[]) =>
   z.object({
-    ...shapeTozod(arr),
+    ...fieldsToZodSchema(fields),
   });
-
-const fieldTypesMap = {
-  email: ({ methods, placeholder }: { methods: any; placeholder: string }) => (
-    <Stack>
-      <Input
-        {...methods?.register('email')}
-        sx={{ width: '100%' }}
-        placeholder={placeholder}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.email?.message}
-      </Typography>
-    </Stack>
-  ),
-  phoneNumber: ({
-    name,
-    methods,
-    placeholder,
-  }: {
-    name: string;
-    methods: any;
-    placeholder: string;
-  }) => (
-    <Stack>
-      <PhoneNumberInput
-        control={methods.control as any}
-        {...(methods.register(name) as any)}
-        // placeholder={t('chatbubble:lead.phoneNumber')}
-        placeholder={placeholder}
-        handleChange={(value) => {
-          methods.setValue(name, value as never, {
-            shouldValidate: true,
-            shouldDirty: true,
-          });
-        }}
-      />
-    </Stack>
-  ),
-  text: ({
-    name,
-    methods,
-    placeholder,
-  }: {
-    name: string;
-    methods: any;
-    placeholder: string;
-  }) => (
-    <Stack>
-      <Input
-        sx={{ width: '100%' }}
-        {...methods?.register(name || 'text')}
-        placeholder={placeholder || ''}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.[name || 'text']?.message}
-      </Typography>
-    </Stack>
-  ),
-  textArea: ({
-    name,
-    methods,
-    placeholder,
-  }: {
-    name: string;
-    methods: any;
-    placeholder?: string;
-  }) => (
-    <Stack>
-      <Textarea
-        sx={{ width: '100%' }}
-        {...methods?.register(name)}
-        minRows={4}
-        placeholder={placeholder || ''}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.[name]?.message}
-      </Typography>
-    </Stack>
-  ),
-  select: ({
-    name,
-    options,
-    changeHandler,
-    placeholder,
-  }: {
-    name: string;
-    options: string[];
-    changeHandler(name: string, value: string): void;
-    placeholder: string;
-  }) => (
-    <Select
-      sx={{
-        width: '100%',
-      }}
-      slotProps={{
-        listbox: {
-          disablePortal: true,
-          sx: {
-            zIndex: 9999,
-          },
-        },
-      }}
-      placeholder={placeholder}
-      onChange={(_, value) => {
-        if (value) {
-          changeHandler(name, value as string);
-        }
-      }}
-    >
-      {options?.map((option, i) => (
-        <Option key={i} value={option}>
-          {option}
-        </Option>
-      ))}
-    </Select>
-  ),
-  file: ({
-    name,
-    s3Upload,
-    placeholder,
-    changeHandler,
-    formId,
-    conversationId,
-  }: {
-    name: string;
-    s3Upload(items: FileToUpload[]): Promise<string[]>;
-    placeholder?: string;
-    formId: string;
-    conversationId?: string;
-    changeHandler(name: string, value: File[]): void;
-  }) => {
-    return (
-      <FileUploaderDropZone
-        variant="outlined"
-        placeholder={placeholder || 'Browse Files'}
-        changeCallback={async (files) => {
-          changeHandler(name, files);
-        }}
-      />
-    );
-  },
-};
 
 function TraditionalForm({
   formId,
@@ -306,14 +100,12 @@ function TraditionalForm({
   const { upload: s3Upload } = useFileUpload();
 
   const shape = config?.fields?.map((field) => ({
-    name: field.name,
-    required: field.required,
-    type: field.type,
+    ...field,
   }));
   const keys = config?.fields?.map((field) => field.name);
 
   const methods = useForm<dynamicSchema<typeof keys>>({
-    resolver: zodResolver(dynamicSchema(shape)),
+    resolver: zodResolver(dynamicSchema(shape as FieldProps[])),
     mode: 'onChange',
   });
 
@@ -492,22 +284,21 @@ function TraditionalForm({
                         <div className="text-red-500 ml-0.5">*</div>
                       )}
                     </Stack>
-
                     {fieldTypesMap[field.type as keyof typeof fieldTypesMap]?.({
                       formId,
                       conversationId,
                       methods,
-                      name: field.name,
-                      placeholder: (field as any)?.placeholder,
+                      ...field,
+
                       changeHandler: {
                         _: (name: string, value: any) => {
-                          methods.setValue(name, value);
-                          methods.trigger();
+                          methods.setValue(name, value, {
+                            shouldValidate: true,
+                            shouldDirty: true,
+                          });
                         },
                       }['_'],
-                      options: (field as any)?.options as string[],
-                      s3Upload,
-                    })}
+                    } as any)}
                   </Stack>
                 ))}
               </Stack>
@@ -515,7 +306,7 @@ function TraditionalForm({
                 <Button
                   type="submit"
                   disabled={
-                    config?.fields.length == 0 || !methods.formState.isValid
+                    config?.fields?.length == 0 || !methods.formState.isValid
                   }
                   loading={state.loading}
                   onClick={submitForm}

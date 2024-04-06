@@ -42,6 +42,9 @@ import {
   FEEDBACK,
   FROM_SCRATCH,
   INBOUND_LEAD,
+  LEAD_FORM,
+  ONBOARDING_FORM,
+  PRODUCT_FEEDBACK_FORM,
 } from '@chaindesk/lib/forms/templates';
 import {
   fetcher,
@@ -218,7 +221,15 @@ export default function FormsPage() {
         }}
       >
         <Stack gap={2}>
-          {[FROM_SCRATCH, INBOUND_LEAD, CONTACT_SALES, FEEDBACK].map((each) => (
+          {[
+            FROM_SCRATCH,
+            LEAD_FORM,
+            ONBOARDING_FORM,
+            PRODUCT_FEEDBACK_FORM,
+            INBOUND_LEAD,
+            CONTACT_SALES,
+            FEEDBACK,
+          ].map((each) => (
             <Card
               size="sm"
               key={each.name}

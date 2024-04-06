@@ -40,7 +40,7 @@ import Message from '@chaindesk/ui/Chatbox/ChatMessage';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 import FileUploader from '@chaindesk/ui/FileUploader';
-import TraditionalForm from '@chaindesk/ui/TraditionalForm';
+import TraditionalForm from '@chaindesk/ui/embeds/forms/traditional';
 
 export const acceptedMimeTypesStr = [
   ...AcceptedImageMimeTypes,

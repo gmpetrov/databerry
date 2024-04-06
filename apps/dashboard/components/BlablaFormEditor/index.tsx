@@ -44,10 +44,10 @@ import {
 } from '@chaindesk/lib/swr-fetcher';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import { Prisma } from '@chaindesk/prisma';
+import TraditionalForm from '@chaindesk/ui/embeds/forms/traditional';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Input from '@chaindesk/ui/Input';
 import Loader from '@chaindesk/ui/Loader';
-import TraditionalForm from '@chaindesk/ui/TraditionalForm';
 
 import FieldsInput, { formType } from './FieldsInput';
 import { forceSubmit } from './utils';
