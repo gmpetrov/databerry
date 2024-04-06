@@ -1,4 +1,10 @@
-import { Stack, Typography, Textarea, Select, Option } from '@mui/joy';
+import {
+  Textarea,
+  Select,
+  Option,
+  FormControl,
+  FormHelperText,
+} from '@mui/joy';
 import { FieldType, fieldUnion } from './types';
 import { z } from 'zod';
 
@@ -77,71 +83,50 @@ export type FieldProps = FormFieldSchema & {
 
 const fieldTypesMap = {
   email: ({ methods, placeholder }: Extract<FieldProps, { type: 'email' }>) => (
-    <Stack>
-      <Input
-        control={methods.control}
-        {...methods?.register('email')}
-        sx={{ width: '100%' }}
-        placeholder={placeholder}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.email?.message}
-      </Typography>
-    </Stack>
+    <Input
+      control={methods.control}
+      {...methods?.register('email')}
+      sx={{ width: '100%' }}
+      placeholder={placeholder}
+    />
   ),
   phoneNumber: ({
     name,
     methods,
     placeholder,
   }: Extract<FieldProps, { type: 'phoneNumber' }>) => (
-    <Stack>
-      <PhoneNumberInput
-        control={methods.control as any}
-        {...(methods.register(name) as any)}
-        // placeholder={t('chatbubble:lead.phoneNumber')}
-        placeholder={placeholder}
-        handleChange={(value) => {
-          methods.setValue(name, value as never, {
-            shouldValidate: true,
-            shouldDirty: true,
-          });
-        }}
-        // selectProps={{
-        //   slotProps: {
-        //     listbox: {
-        //       // Fix the styling issue with shadow root usage. Similar issue: https://stackoverflow.com/questions/69828392/mui-select-drop-down-options-not-styled-when-using-entry-point-to-insert-scoped
-        //       container: chatboxRoot,
-        //     },
-        //   },
-        // }}
-      />
-
-      {/* <Input
-        {...methods?.register(name)}
-        placeholder={placeholder}
-        sx={{ width: '100%' }}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.[name]?.message}
-      </Typography> */}
-    </Stack>
+    <PhoneNumberInput
+      control={methods.control as any}
+      {...(methods.register(name) as any)}
+      // placeholder={t('chatbubble:lead.phoneNumber')}
+      placeholder={placeholder}
+      handleChange={(value) => {
+        methods.setValue(name, value as never, {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+      }}
+      // selectProps={{
+      //   slotProps: {
+      //     listbox: {
+      //       // Fix the styling issue with shadow root usage. Similar issue: https://stackoverflow.com/questions/69828392/mui-select-drop-down-options-not-styled-when-using-entry-point-to-insert-scoped
+      //       container: chatboxRoot,
+      //     },
+      //   },
+      // }}
+    />
   ),
   text: ({
     name,
     methods,
     placeholder,
   }: Extract<FieldProps, { type: 'text' }>) => (
-    <Stack>
-      <Input
-        control={methods.control}
-        sx={{ width: '100%' }}
-        {...methods?.register(name || 'text')}
-        placeholder={placeholder || ''}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.[name || 'text']?.message}
-      </Typography>
-    </Stack>
+    <Input
+      control={methods.control}
+      sx={{ width: '100%' }}
+      {...methods?.register(name || 'text')}
+      placeholder={placeholder || ''}
+    />
   ),
   number: ({
     name,
@@ -151,77 +136,90 @@ const fieldTypesMap = {
     max,
     ...ohterProps
   }: Extract<FieldProps, { type: 'number' }>) => (
-    <>
-      <Input
-        control={methods.control}
-        type="number"
-        sx={{ width: '100%' }}
-        placeholder={placeholder || ''}
-        min={min}
-        max={max}
-        // slotProps={{
-        //   input: {
-        //     component: NumericFormatAdapter,
-        //   },
-        // }}
-        {...methods?.register(name)}
-      />
-    </>
+    <Input
+      control={methods.control}
+      type="number"
+      sx={{ width: '100%' }}
+      placeholder={placeholder || ''}
+      min={min}
+      max={max}
+      // slotProps={{
+      //   input: {
+      //     component: NumericFormatAdapter,
+      //   },
+      // }}
+      {...methods?.register(name)}
+    />
   ),
   textArea: ({
     name,
     methods,
     placeholder,
-  }: Extract<FieldProps, { type: 'textArea' }>) => (
-    <Stack>
-      <Textarea
-        sx={{ width: '100%' }}
-        {...methods?.register(name)}
-        minRows={4}
-        placeholder={placeholder || ''}
-      />
-      <Typography level="body-xs" color="danger" sx={{ textAlign: 'left' }}>
-        {methods?.formState?.errors?.[name]?.message}
-      </Typography>
-    </Stack>
-  ),
+  }: Extract<FieldProps, { type: 'textArea' }>) => {
+    const error = methods?.formState?.errors?.[name]?.message;
+    return (
+      <FormControl error={!!error}>
+        <Textarea
+          sx={{ width: '100%' }}
+          {...methods?.register(name)}
+          minRows={4}
+          placeholder={placeholder || ''}
+        />
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    );
+  },
   select: ({
     name,
     options,
     changeHandler,
     placeholder,
-  }: Extract<FieldProps, { type: 'select' }>) => (
-    <Select
-      sx={{
-        width: '100%',
-      }}
-      placeholder={placeholder}
-      onChange={(_, value) => {
-        if (value) {
-          changeHandler(name, value as string);
-        }
-      }}
-    >
-      {options?.map((option, i) => (
-        <Option key={i} value={option}>
-          {option}
-        </Option>
-      ))}
-    </Select>
-  ),
+    methods,
+  }: Extract<FieldProps, { type: 'select' }>) => {
+    const error = methods?.formState?.errors?.[name]?.message;
+
+    return (
+      <FormControl error={!!error}>
+        <Select
+          sx={{
+            width: '100%',
+          }}
+          placeholder={placeholder}
+          onChange={(_, value) => {
+            if (value) {
+              changeHandler(name, value as string);
+            }
+          }}
+        >
+          {options?.map((option, i) => (
+            <Option key={i} value={option}>
+              {option}
+            </Option>
+          ))}
+        </Select>
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    );
+  },
   file: ({
     name,
     placeholder,
     changeHandler,
+    methods,
   }: Extract<FieldProps, { type: 'file' }>) => {
+    const error = methods?.formState?.errors?.[name]?.message;
+
     return (
-      <FileUploaderDropZone
-        variant="outlined"
-        placeholder={placeholder || 'Browse Files'}
-        changeCallback={async (files) => {
-          changeHandler(name, files);
-        }}
-      />
+      <FormControl error={!!error}>
+        <FileUploaderDropZone
+          variant="outlined"
+          placeholder={placeholder || 'Browse Files'}
+          changeCallback={async (files) => {
+            changeHandler(name, files);
+          }}
+        />
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
     );
   },
 };
