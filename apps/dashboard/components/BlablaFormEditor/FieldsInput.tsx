@@ -13,7 +13,6 @@ import {
   FormHelperText,
   FormLabel,
   IconButton,
-  Input as JoyInput,
   Option,
   Select,
   Stack,
@@ -83,6 +82,7 @@ export const Choices = <T extends Record<string, unknown>>({
         {fields?.map((_, i) => (
           <Stack key={i} direction="row" gap={1}>
             <Input
+              control={control}
               endDecorator={
                 <IconButton
                   size="sm"
@@ -102,7 +102,6 @@ export const Choices = <T extends Record<string, unknown>>({
                 },
               }}
               size="sm"
-              control={control}
               variant="soft"
               {...register(`${name}.${i}`)}
             />
@@ -257,7 +256,8 @@ function FieldsInput({ type = 'traditional' }: Props) {
 
                             <FormControl>
                               <FormLabel>Placeholder</FormLabel>
-                              <JoyInput
+                              <Input
+                                control={methods.control}
                                 {...methods.register(
                                   `draftConfig.fields.${index}.placeholder`
                                 )}

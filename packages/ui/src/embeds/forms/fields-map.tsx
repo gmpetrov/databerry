@@ -79,6 +79,7 @@ const fieldTypesMap = {
   email: ({ methods, placeholder }: Extract<FieldProps, { type: 'email' }>) => (
     <Stack>
       <Input
+        control={methods.control}
         {...methods?.register('email')}
         sx={{ width: '100%' }}
         placeholder={placeholder}
@@ -132,6 +133,7 @@ const fieldTypesMap = {
   }: Extract<FieldProps, { type: 'text' }>) => (
     <Stack>
       <Input
+        control={methods.control}
         sx={{ width: '100%' }}
         {...methods?.register(name || 'text')}
         placeholder={placeholder || ''}
