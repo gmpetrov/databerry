@@ -5,12 +5,11 @@ import React, { useContext } from 'react';
 import { useFrame } from 'react-frame-component';
 import { useTranslation } from 'react-i18next';
 
-import { ChatContext } from '@app/hooks/useChat';
-import useStateReducer from '@app/hooks/useStateReducer';
-
 import i18n from '@chaindesk/lib/locales/i18next';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import type { ConversationStatus } from '@chaindesk/prisma';
+import { ChatContext } from '@chaindesk/ui/hooks/useChat';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 // import { InjectLeadForm, LEAD_FORM_ID } from './LeadForm';
 import ResolveButton, { updateConversationStatus } from './ResolveButton';

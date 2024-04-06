@@ -26,12 +26,12 @@ import { useForm } from 'react-hook-form';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgents } from '@app/pages/api/agents';
 import { getServiceProviders } from '@app/pages/api/service-providers';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { Prisma } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 type Props = {
   isOpen: boolean;

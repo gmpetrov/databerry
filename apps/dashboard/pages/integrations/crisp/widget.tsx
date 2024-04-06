@@ -22,14 +22,13 @@ import toast from 'react-hot-toast';
 import useSWR from 'swr';
 import z from 'zod';
 
-import useStateReducer from '@app/hooks/useStateReducer';
-
 import { getConversationMetadata } from '@chaindesk/integrations/crisp/api/widget';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
 import { CrispUpdateMetadataSchema } from '@chaindesk/lib/types/dtos';
 import { Prisma, ServiceProviderType } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 export default function CrispConfig(props: { isPremium?: boolean }) {
   const [state, setState] = useStateReducer({

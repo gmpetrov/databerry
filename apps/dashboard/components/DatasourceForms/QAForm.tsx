@@ -10,8 +10,6 @@ import React, { useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
-import Input from '@app/components/Input';
-
 import config from '@chaindesk/lib/config';
 import {
   DatasourceBaseSchema,
@@ -19,6 +17,7 @@ import {
 } from '@chaindesk/lib/types/models';
 import { QAConfig } from '@chaindesk/lib/types/models';
 import { DatasourceType } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import Base from './Base';
 import type { DatasourceFormProps } from './types';

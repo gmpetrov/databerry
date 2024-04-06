@@ -12,12 +12,12 @@ import toast from 'react-hot-toast';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
-import Input from '@app/components/Input';
 import { createDatastore } from '@app/pages/api/datastores';
 
 import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
 import { QdrantSchema as Schema } from '@chaindesk/lib/types/models';
 import { DatastoreType, Prisma } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import { DatastoreFormProps } from './types';
 

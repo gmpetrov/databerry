@@ -1,7 +1,6 @@
-import { ChatBoxStandardProps } from '@app/components/ChatBoxFrame';
+import { ChatBoxStandardProps } from '@app/components/ChatBoxLoader';
 
 import setupAttributes from '../common/setup-attributes';
-import { InitWidgetProps } from '../common/types';
 import { hookFunctionsToWindow } from '../utils';
 
 import ChatboxStandard, { name } from './standard';

@@ -27,7 +27,6 @@ import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
-import Input from '@app/components/Input';
 import { Footer } from '@app/components/landing-page/Footer';
 import PoweredByCard from '@app/components/PoweredByCard';
 import SEO from '@app/components/SEO';
@@ -45,6 +44,7 @@ import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
 import { LLMTaskOutput, Prisma } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
+import Input from '@chaindesk/ui/Input';
 
 type FormType = z.infer<typeof YoutubeSummarySchema>;
 

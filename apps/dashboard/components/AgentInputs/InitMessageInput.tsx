@@ -11,9 +11,8 @@ import Textarea from '@mui/joy/Textarea';
 import React, { useEffect } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import Input from '@app/components/Input';
-
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
+import Input from '@chaindesk/ui/Input';
 type Props = {
   defaultValue?: string;
 };

@@ -33,7 +33,6 @@ import Layout from '@app/components/Layout';
 import SettingCard from '@app/components/ui/SettingCard';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import { getProductFromHostname } from '@app/hooks/useProduct';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import accountConfig from '@chaindesk/lib/account-config';
 import { CUSTOMER_SUPPORT_V3 } from '@chaindesk/lib/prompt-templates';
@@ -41,6 +40,7 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Agent, AgentModelName, Prisma } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import { getAgents } from '../api/agents';
 import { getDatastores } from '../api/datastores';

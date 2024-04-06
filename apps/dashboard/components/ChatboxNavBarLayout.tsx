@@ -8,9 +8,9 @@ import useAgent from '@app/hooks/useAgent';
 const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
 
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
+import NewChatButton from '@chaindesk/ui/Chatbox/NewChatButton';
+import DarkModeToggle from '@chaindesk/ui/DarkModeToggle';
 import { cn } from '@chaindesk/ui/utils/cn';
-
-import NewChatButton from './ChatboxNewChatButton';
 
 const ChatBoxLayout = (props: {
   className?: string;
@@ -24,7 +24,7 @@ const ChatBoxLayout = (props: {
   const { query } = useAgent({ id: props.agentId });
   return (
     <Box
-      // className="relative px-4 pt-16 pb-2 w-full h-full"
+      // className="relative w-full h-full px-4 pt-16 pb-2"
       className={cn(props.className)}
       sx={{
         position: 'relative',
@@ -91,7 +91,7 @@ const ChatBoxLayout = (props: {
           >
             <NewChatButton variant="plain" />
           </Stack>
-          {/* <ColorSchemeToggle variant="plain" color="neutral" /> */}
+          <DarkModeToggle variant="plain" color="neutral" />
         </Stack>
       </Box>
       {props.children}

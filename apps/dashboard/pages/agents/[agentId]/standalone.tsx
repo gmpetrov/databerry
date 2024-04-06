@@ -18,12 +18,7 @@ import React, { ReactElement, useEffect, useMemo } from 'react';
 import superjson from 'superjson';
 import useSWR from 'swr';
 
-import ChatBoxFrame from '@app/components/ChatBoxFrame';
-import NewChatButton from '@app/components/ChatboxNewChatButton';
-import IFrameThemeProvider from '@app/components/IFrameThemeProvider';
-import SEO from '@app/components/SEO';
-import WidgetThemeProvider from '@app/components/WidgetThemeProvider';
-import useStateReducer from '@app/hooks/useStateReducer';
+import ChatBoxLoader from '@app/components/ChatBoxLoader';
 import { getAgent } from '@app/pages/api/agents/[id]';
 
 import pickColorBasedOnBgColor from '@chaindesk/lib/pick-color-based-on-bgcolor';
@@ -31,6 +26,9 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
+import NewChatButton from '@chaindesk/ui/Chatbox/NewChatButton';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
+import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 export default function AgentPage() {
   const router = useRouter();
@@ -513,11 +511,11 @@ export default function AgentPage() {
               overflow: 'hidden',
             }}
           >
-            <ChatBoxFrame
+            <ChatBoxLoader
               agentId={agent?.id}
               layout={(props: any) => {
                 return (
-                  <div className="flex px-4 pb-4 w-full h-full">
+                  <div className="flex w-full h-full px-4 pb-4">
                     <div className="absolute top-4 right-4">
                       <NewChatButton />
                     </div>
@@ -544,7 +542,7 @@ export default function AgentPage() {
 }
 
 AgentPage.getLayout = function getLayout(page: ReactElement) {
-  return <WidgetThemeProvider name="standalone">{page}</WidgetThemeProvider>;
+  return <WidgetThemeProvider prefix="standalone">{page}</WidgetThemeProvider>;
 };
 
 // export async function getStaticPaths() {

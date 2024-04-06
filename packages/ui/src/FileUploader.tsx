@@ -2,9 +2,9 @@ import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import IconButton from '@mui/joy/IconButton';
 import { useState } from 'react';
 
-import { acceptedMimeTypesStr } from './ChatBox';
-import Loader from './Loader';
-import VisuallyHiddenInput from './VisuallyHiddenInput';
+import { acceptedMimeTypesStr } from './Chatbox';
+import Loader from '@chaindesk/ui/Loader';
+import VisuallyHiddenInput from '@chaindesk/ui/VisuallyHiddenInput';
 
 export default function FileUploader({
   changeCallback,

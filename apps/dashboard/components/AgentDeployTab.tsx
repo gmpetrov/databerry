@@ -14,9 +14,9 @@ import React from 'react';
 
 import useAgent from '@app/hooks/useAgent';
 import useModal from '@app/hooks/useModal';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { AgentVisibility, DatastoreVisibility } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import SettingCard from './ui/SettingCard';
 import UsageLimitModal from './UsageLimitModal';

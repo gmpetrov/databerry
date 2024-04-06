@@ -2,7 +2,6 @@ import { RocketLaunch } from '@mui/icons-material';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import Looks3RoundedIcon from '@mui/icons-material/Looks3Rounded';
 import Looks4RoundedIcon from '@mui/icons-material/Looks4Rounded';
-import Looks5RoundedIcon from '@mui/icons-material/Looks5Rounded';
 import LooksOneRoundedIcon from '@mui/icons-material/LooksOneRounded';
 import LooksTwoRoundedIcon from '@mui/icons-material/LooksTwoRounded';
 import {
@@ -34,9 +33,7 @@ import useSWRMutation from 'swr/mutation';
 import BlablaFormProvider from '@app/components/BlablaFormProvider';
 import BlablaFormViewer from '@app/components/BlablaFormViewer';
 import CopyButton from '@app/components/CopyButton';
-import Input from '@app/components/Input';
 import useBlablaForm from '@app/hooks/useBlablaForm';
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getForm } from '@app/pages/api/forms/[formId]';
 import { publishForm } from '@app/pages/api/forms/[formId]/publish';
 
@@ -47,8 +44,10 @@ import {
 } from '@chaindesk/lib/swr-fetcher';
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import { Prisma } from '@chaindesk/prisma';
-
-import Loader from '../Loader';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
+import Input from '@chaindesk/ui/Input';
+import Loader from '@chaindesk/ui/Loader';
+import TraditionalForm from '@chaindesk/ui/TraditionalForm';
 
 import FieldsInput, { formType } from './FieldsInput';
 import { forceSubmit } from './utils';
@@ -406,7 +405,7 @@ function Form({ formId }: Props) {
           </Button>
         </Stack>
 
-        <Stack sx={{ width: '100%' }} gap={1}>
+        <Stack sx={{ width: '100%', height: '100%' }} gap={1}>
           <Stack
             sx={(t) => ({
               // border: '1px solid',
@@ -416,6 +415,8 @@ function Form({ formId }: Props) {
               height: '100%',
               position: 'relative',
               overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
             })}
           >
             <Stack
@@ -426,6 +427,7 @@ function Form({ formId }: Props) {
                 left: 2,
                 pt: 2,
                 pr: 2,
+                zIndex: 1,
               }}
             >
               <Alert
@@ -456,18 +458,32 @@ function Form({ formId }: Props) {
                 </Typography>
               </Alert>
             </Stack>
-            <BlablaFormViewer
-              formId={formId}
-              type={type || 'conversational'}
-              config={{
-                fields: draftConfig?.fields,
-                startScreen: draftConfig?.startScreen,
-                endScreen: draftConfig?.endScreen,
-                webhook: draftConfig?.webhook,
-                schema: (query.data?.draftConfig as any)?.schema,
-              }}
-              isInEditor
-            />
+            {draftConfig && (
+              <Stack
+                sx={{
+                  maxWidth: '350px',
+                  mx: 0,
+                  my: 0,
+                  zIndex: 0,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  mt: 4,
+                }}
+              >
+                <TraditionalForm
+                  formId={formId}
+                  config={{
+                    fields: draftConfig?.fields,
+                    startScreen: draftConfig?.startScreen,
+                    endScreen: draftConfig?.endScreen,
+                    webhook: draftConfig?.webhook,
+                    schema: (draftConfig as any)?.schema,
+                  }}
+                  isFormSubmitted={state.currentAccordionIndex === 2}
+                  isInEditor
+                />
+              </Stack>
+            )}
           </Stack>
         </Stack>
       </Stack>

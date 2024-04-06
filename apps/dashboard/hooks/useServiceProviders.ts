@@ -9,11 +9,11 @@ import axios from 'axios';
 import React, { useCallback } from 'react';
 import useSWR from 'swr';
 
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getServiceProviders } from '@app/pages/api/service-providers';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { ServiceProvider } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 type Props = {
   type?: ServiceProviderType;

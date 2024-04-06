@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import Input from '@app/components/Input';
+import Input from '@chaindesk/ui/Input';
 
 import InitMessageInput from './InitMessageInput';
 import InterfaceConfigCheckbox from './InterfaceConfigCheckbox';
@@ -43,8 +43,11 @@ export default function CommonInterfaceInput(props: Props) {
       /> */}
       <InterfaceConfigCheckbox
         field="isBrandingDisabled"
-        label="Remove Chaindesk Branding (premium account required)"
-        disabled={!session?.organization?.isPremium}
+        label="Remove Chaindesk Branding (Pro plan required)"
+        disabled={
+          !session?.organization?.isPremium ||
+          session?.organization?.subscriptions?.[0]?.plan === 'level_1'
+        }
       />
       <SuggestionsInput />
       <Input

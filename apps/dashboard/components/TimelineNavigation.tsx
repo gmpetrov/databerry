@@ -4,7 +4,8 @@ import { IconButton, Stack, Typography } from '@mui/joy';
 import { useMemo } from 'react';
 
 import useDeepCompareEffect from '@app/hooks/useDeepCompareEffect';
-import useStateReducer from '@app/hooks/useStateReducer';
+
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 type Props = {
   values: number[];

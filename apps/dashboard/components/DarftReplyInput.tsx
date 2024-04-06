@@ -18,16 +18,15 @@ import MenuItem from '@mui/joy/MenuItem';
 import React, { RefObject, useEffect } from 'react';
 import useSWR from 'swr';
 
-import useChat from '@app/hooks/useChat';
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getAgents } from '@app/pages/api/agents';
 
 import { fetchEventSource } from '@chaindesk/lib/fetch-event-source';
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { SSE_EVENT } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
-
-import Loader from './Loader';
+import useChat from '@chaindesk/ui/hooks/useChat';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
+import Loader from '@chaindesk/ui/Loader';
 
 interface MenuItem {
   name: string;

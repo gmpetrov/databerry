@@ -29,12 +29,12 @@ import PoweredByCard from '@app/components/PoweredByCard';
 import SEO from '@app/components/SEO';
 import TopBar from '@app/components/TopBar';
 import useConfetti from '@app/hooks/useConfetti';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
 import { SummaryPageProps } from '@chaindesk/lib/types';
 import writeClipboard from '@chaindesk/lib/write-clipboard';
 import prisma from '@chaindesk/prisma/client';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 var entities = {
   amp: '&',

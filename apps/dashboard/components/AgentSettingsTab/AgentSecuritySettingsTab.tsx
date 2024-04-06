@@ -7,14 +7,13 @@ import Typography from '@mui/joy/Typography';
 import router from 'next/router';
 import React from 'react';
 
-import Input from '@app/components/Input';
-
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import {
   Agent,
   AgentVisibility,
   AppDatasource as Datasource,
 } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import AgentForm from '../AgentForm';
 import ConnectForm from '../ConnectForm';

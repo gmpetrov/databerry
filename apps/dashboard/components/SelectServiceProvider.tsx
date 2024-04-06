@@ -4,7 +4,6 @@ import FormLabel, { FormLabelProps } from '@mui/joy/FormLabel';
 import Option from '@mui/joy/Option';
 import Select, { SelectProps } from '@mui/joy/Select';
 import { ServiceProviderType } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import React from 'react';
 import useSWR from 'swr';
 
@@ -12,8 +11,7 @@ import { getServiceProviders } from '@app/pages/api/service-providers';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { ServiceProvider } from '@chaindesk/prisma';
-
-import Loader from './Loader';
+import Loader from '@chaindesk/ui/Loader';
 type Props = SelectProps<string, false> & {
   label?: string;
   type?: ServiceProviderType;

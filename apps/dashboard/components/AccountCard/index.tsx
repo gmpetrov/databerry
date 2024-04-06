@@ -39,8 +39,6 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { RouteNames } from '@chaindesk/lib/types';
 import { Prisma, SubscriptionPlan } from '@chaindesk/prisma';
 
-import ColorSchemeToggle from '../Layout/ColorSchemeToggle';
-
 import SelectOrganizationInput from './SelectOrganizationInput';
 
 dayjs.extend(relativeTime);

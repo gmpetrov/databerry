@@ -21,11 +21,11 @@ import React from 'react';
 import useModal from '@app/hooks/useModal';
 
 import { appUrl } from '@chaindesk/lib/config';
+import DarkModeToggle from '@chaindesk/ui/DarkModeToggle';
 
 import Logo from '../Logo';
 import SEO from '../SEO';
 
-import ColorSchemeToggle from './ColorSchemeToggle';
 import Header from './Header';
 import Main from './Main';
 import Navigation from './Navigation';
@@ -267,7 +267,7 @@ export default function Layout(props: Props) {
                 },
               ]}
             /> */}
-            {/* <ColorSchemeToggle /> */}
+            {/* <DarkModeToggle /> */}
 
             {/* <Box
               onClick={openUserMenu as any}
@@ -307,7 +307,7 @@ export default function Layout(props: Props) {
               👋 Share feedback
             </Button>
 
-            <ColorSchemeToggle />
+            <DarkModeToggle />
           </Box>
         </Header>
         <SideNav>

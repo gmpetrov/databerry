@@ -27,12 +27,12 @@ import * as React from 'react';
 import Layout from '@app/components/Layout';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useGetDatastoreQuery from '@app/hooks/useGetDatastoreQuery';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import guardDataProcessingUsage from '@chaindesk/lib/guard-data-processing-usage';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { prisma } from '@chaindesk/prisma/client';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 const CreateDatasourceModal = dynamic(
   () => import('@app/components/CreateDatasourceModal'),

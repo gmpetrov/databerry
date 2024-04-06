@@ -16,7 +16,6 @@ import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
-import Input from '@app/components/Input';
 import { upsertDatasource } from '@app/pages/api/datasources';
 
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
@@ -32,6 +31,7 @@ import {
   DatasourceType,
   Prisma,
 } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import DatasourceTagsInput from '../DatasourceTagsInput';
 

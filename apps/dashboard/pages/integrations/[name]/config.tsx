@@ -23,7 +23,6 @@ import { useEffect, useState } from 'react';
 import superjson from 'superjson';
 
 import Logo from '@app/components/Logo';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import createIntegrationId from '@chaindesk/lib/create-integration-id';
 import { getConnectedWebsites } from '@chaindesk/lib/crisp';
@@ -35,6 +34,7 @@ import {
   Subscription,
 } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 export default function CrispConfig(props: { agent: Agent }) {
   const session = useSession();

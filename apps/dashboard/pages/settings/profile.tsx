@@ -12,16 +12,16 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import Input from '@app/components/Input';
 import OrganizationForm from '@app/components/OrganizationForm';
 import SettingsLayout from '@app/components/SettingsLayout';
 import IconInput from '@app/components/ui/IconInput';
 import SettingCard from '@app/components/ui/SettingCard';
-import useFileUpload from '@app/hooks/useFileUpload';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { UpdateUserProfileSchema } from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
+import useFileUpload from '@chaindesk/ui/hooks/useFileUpload';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
+import Input from '@chaindesk/ui/Input';
 
 export default function ProfileSettingsPage() {
   const { data: session, status, update } = useSession();

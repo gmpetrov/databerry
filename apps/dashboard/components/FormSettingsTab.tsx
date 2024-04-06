@@ -6,13 +6,12 @@ import Stack from '@mui/joy/Stack';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import Input from '@app/components/Input';
-
 import { RouteNames } from '@chaindesk/lib/types';
+import Input from '@chaindesk/ui/Input';
+import Loader from '@chaindesk/ui/Loader';
 
 import SettingCard from './ui/SettingCard';
 import BlablaFormProvider from './BlablaFormProvider';
-import Loader from './Loader';
 
 type Props = {
   formId: string;

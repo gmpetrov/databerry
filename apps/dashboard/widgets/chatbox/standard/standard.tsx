@@ -1,4 +1,4 @@
-import ChatBoxFrame from '@app/components/ChatBoxFrame';
+import ChatBoxLoader from '@app/components/ChatBoxLoader';
 import ChatboxNavBarLayout from '@app/components/ChatboxNavBarLayout';
 
 import { cn } from '@chaindesk/ui/utils/cn';
@@ -9,7 +9,7 @@ export const name = 'chaindesk-chatbox-standard';
 
 const element = createElement({
   widget: (props: any) => (
-    <ChatBoxFrame
+    <ChatBoxLoader
       layout={ChatboxNavBarLayout}
       {...props}
       className={cn('chaindesk-widget', props.className)}

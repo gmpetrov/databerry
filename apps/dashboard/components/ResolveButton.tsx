@@ -9,8 +9,7 @@ import useConfetti from '@app/hooks/useConfetti';
 
 import i18n from '@chaindesk/lib/locales/i18next';
 import type { ConversationStatus } from '@chaindesk/prisma';
-
-import { API_URL } from './ChatBubble';
+import { API_URL } from '@chaindesk/ui/embeds/chat-bubble';
 
 export const updateConversationStatus = async (
   conversationId: string,

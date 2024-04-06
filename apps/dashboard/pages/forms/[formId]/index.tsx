@@ -6,10 +6,10 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import BlablaFormLoader from '@app/components/BlablaFormLoader';
-import ColorSchemeToggle from '@app/components/Layout/ColorSchemeToggle';
 import SEO from '@app/components/SEO';
 
 import { Agent } from '@chaindesk/prisma';
+import DarkModeToggle from '@chaindesk/ui/DarkModeToggle';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 export default function FormPage(props: { agent: Agent }) {
@@ -40,7 +40,7 @@ export default function FormPage(props: { agent: Agent }) {
 */}
       <Stack component="main" sx={{ width: '100dvw', height: '100dvh' }}>
         <Stack sx={{ position: 'fixed', top: 20, right: 20 }}>
-          <ColorSchemeToggle />
+          <DarkModeToggle />
         </Stack>
 
         <BlablaFormLoader

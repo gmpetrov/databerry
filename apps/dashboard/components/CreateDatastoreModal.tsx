@@ -17,8 +17,6 @@ import Stepper from '@mui/material/Stepper';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
-import useStateReducer from '@app/hooks/useStateReducer';
-
 import { CreateDatastoreRequestSchema } from '@chaindesk/lib/types/dtos';
 import {
   AppDatasource as Datasource,
@@ -26,6 +24,7 @@ import {
   Datastore,
   DatastoreType,
 } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import DatasourceOptions from './DatasourceForms/DatasourceOptions';
 import { DatastoreFormProps } from './DatastoreForms/types';

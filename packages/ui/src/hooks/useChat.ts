@@ -13,8 +13,12 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
-import { NonNull } from '@chaindesk/lib/type-utilites';
-import { ChatMessage, MessageEvalUnion, SSE_EVENT } from '@chaindesk/lib/types';
+import {
+  ChatMessage,
+  CustomContact,
+  MessageEvalUnion,
+  SSE_EVENT,
+} from '@chaindesk/lib/types';
 import { Source } from '@chaindesk/lib/types/document';
 import type {
   ChatResponse,
@@ -30,10 +34,9 @@ import type {
   Prisma,
   Tool,
 } from '@chaindesk/prisma';
-
-import useFileUpload from './useFileUpload';
-import useRateLimit from './useRateLimit';
-import useStateReducer from './useStateReducer';
+import useFileUpload from '@chaindesk/ui/hooks/useFileUpload';
+import useRateLimit from '@chaindesk/ui/hooks/useRateLimit';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 type Props = {
@@ -47,11 +50,6 @@ type Props = {
   contact?: CustomContact;
   context?: string;
 };
-
-export type CustomContact = Omit<
-  NonNull<Partial<Contact>>,
-  'updatedAt' | 'createdAt' | 'agentId' | 'organizationId'
->;
 
 export const ChatContext = createContext<ReturnType<typeof useChat>>({} as any);
 

@@ -1,7 +1,6 @@
 import { SxProps } from '@mui/joy/styles/types';
 
-import { CustomContact } from '@app/hooks/useChat';
-
+import { CustomContact } from '@chaindesk/lib/types';
 import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent } from '@chaindesk/prisma';
 

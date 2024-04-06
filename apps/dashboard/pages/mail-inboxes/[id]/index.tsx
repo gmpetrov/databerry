@@ -28,9 +28,9 @@ import MailInboxEditorTab from '@app/components/MailInboxEditorTab';
 import MailInboxInstallTab from '@app/components/MailInboxInstallTab';
 import useBlablaForm from '@app/hooks/useBlablaForm';
 import useMailInbox from '@app/hooks/useMailInbox';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import { RouteNames } from '@chaindesk/lib/types';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 interface FormDashboardProps {}
 

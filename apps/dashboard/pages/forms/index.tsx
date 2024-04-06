@@ -33,11 +33,9 @@ import ModelInput from '@app/components/AgentInputs/ModelInput';
 import ToolsInput from '@app/components/AgentInputs/ToolsInput';
 import FormsTable from '@app/components/FormsTable';
 import Layout from '@app/components/Layout';
-import Loader from '@app/components/Loader';
 import SettingCard from '@app/components/ui/SettingCard';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useModal from '@app/hooks/useModal';
-import useStateReducer from '@app/hooks/useStateReducer';
 
 import {
   CONTACT_SALES,
@@ -54,6 +52,8 @@ import { RouteNames } from '@chaindesk/lib/types';
 import { CreateFormSchema, FormConfigSchema } from '@chaindesk/lib/types/dtos';
 import { withAuth } from '@chaindesk/lib/withAuth';
 import { Form, Prisma } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
+import Loader from '@chaindesk/ui/Loader';
 
 import { getAgents } from '../api/agents';
 import { createForm, getForms } from '../api/forms';

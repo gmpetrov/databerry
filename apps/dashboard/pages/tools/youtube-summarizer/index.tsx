@@ -27,7 +27,6 @@ import useSWR from 'swr';
 import useSWRMutation from 'swr/mutation';
 import { z } from 'zod';
 
-import Input from '@app/components/Input';
 import { Footer } from '@app/components/landing-page/Footer';
 import PoweredByCard from '@app/components/PoweredByCard';
 import SEO from '@app/components/SEO';
@@ -43,6 +42,7 @@ import { SummaryPageProps } from '@chaindesk/lib/types';
 import { YoutubeSummarySchema } from '@chaindesk/lib/types/dtos';
 import { YOUTUBE_VIDEO_URL_RE } from '@chaindesk/lib/youtube-api/lib';
 import { Prisma } from '@chaindesk/prisma';
+import Input from '@chaindesk/ui/Input';
 
 import { getLatestVideos } from '../../api/tools/youtube-summary';
 

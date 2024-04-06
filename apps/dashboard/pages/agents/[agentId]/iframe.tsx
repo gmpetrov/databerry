@@ -2,9 +2,10 @@ import Stack from '@mui/joy/Stack';
 import { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
 
-import ChatBoxFrame from '@app/components/ChatBoxFrame';
+import ChatBoxLoader from '@app/components/ChatBoxLoader';
 import ChatBoxLayout from '@app/components/ChatboxNavBarLayout';
-import WidgetThemeProvider from '@app/components/WidgetThemeProvider';
+
+import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 function App() {
   const router = useRouter();
@@ -19,13 +20,13 @@ function App() {
 
   return (
     <Stack sx={{ width: '100dvw', height: '100dvh', maxWidth: '100%' }}>
-      <ChatBoxFrame agentId={agentId} layout={Layout} />
+      <ChatBoxLoader agentId={agentId} layout={Layout} />
     </Stack>
   );
 }
 
 App.getLayout = function getLayout(page: ReactElement) {
-  return <WidgetThemeProvider>{page}</WidgetThemeProvider>;
+  return <WidgetThemeProvider prefix="iframe">{page}</WidgetThemeProvider>;
 };
 
 export default App;

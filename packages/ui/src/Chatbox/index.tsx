@@ -1,35 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
-import MoreVert from '@mui/icons-material/MoreVert';
-import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
-import SchoolTwoToneIcon from '@mui/icons-material/SchoolTwoTone';
+
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
-import ThumbDownAltRoundedIcon from '@mui/icons-material/ThumbDownAltRounded';
-import ThumbUpAltRoundedIcon from '@mui/icons-material/ThumbUpAltRounded';
+
 import UnfoldLessOutlinedIcon from '@mui/icons-material/UnfoldLessOutlined';
 import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined';
 import Alert from '@mui/joy/Alert';
-import Avatar from '@mui/joy/Avatar';
-import Box from '@mui/joy/Box';
+
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
 import ChipDelete from '@mui/joy/ChipDelete';
 import CircularProgress from '@mui/joy/CircularProgress';
-import Dropdown from '@mui/joy/Dropdown';
 import IconButton from '@mui/joy/IconButton';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import Menu from '@mui/joy/Menu';
-import MenuButton from '@mui/joy/MenuButton';
-import MenuItem from '@mui/joy/MenuItem';
+
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
-import Typography from '@mui/joy/Typography';
-import clsx from 'clsx';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -41,20 +30,17 @@ import {
   AcceptedImageMimeTypes,
   AcceptedVideoMimeTypes,
 } from '@chaindesk/lib/accepted-mime-types';
-import filterInternalSources from '@chaindesk/lib/filter-internal-sources';
+
 import { ChatMessage, MessageEvalUnion } from '@chaindesk/lib/types';
 import type { Source } from '@chaindesk/lib/types/document';
-import { LeadCaptureToolchema } from '@chaindesk/lib/types/dtos';
+
 import AnimateMessagesOneByOne from '@chaindesk/ui/Chatbox/AnimateMessagesOneByOne';
 import Message from '@chaindesk/ui/Chatbox/ChatMessage';
-import ChatMessageCard from '@chaindesk/ui/Chatbox/ChatMessageCard';
-import LeadForm from '@chaindesk/ui/LeadForm';
-import Markdown from '@chaindesk/ui/Markdown';
+
 import PoweredBy from '@chaindesk/ui/PoweredBy';
 
-import FileUploader from './FileUploader';
-import TraditionalForm from './TraditionalForm';
-import VisuallyHiddenInput from './VisuallyHiddenInput';
+import FileUploader from '@chaindesk/ui/FileUploader';
+import TraditionalForm from '@chaindesk/ui/TraditionalForm';
 
 export const acceptedMimeTypesStr = [
   ...AcceptedImageMimeTypes,
@@ -345,7 +331,7 @@ function ChatBox({
               messages.map((each, index) => (
                 <React.Fragment key={index}>
                   {each.metadata?.shouldDisplayForm ? (
-                    <Stack sx={{ zIndex: 0 }}>
+                    <Stack sx={{ zIndex: 0, px: 5 }}>
                       <TraditionalForm
                         formId={each.metadata.formId}
                         conversationId={each.conversationId}

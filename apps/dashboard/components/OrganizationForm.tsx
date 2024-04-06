@@ -19,7 +19,6 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import useSWR, { mutate } from 'swr';
 
-import useStateReducer from '@app/hooks/useStateReducer';
 import { getMemberships } from '@app/pages/api/memberships';
 import { getOrg } from '@app/pages/api/organizations/[id]';
 
@@ -34,6 +33,7 @@ import {
   UpdateOrgSchema,
 } from '@chaindesk/lib/types/dtos';
 import { MembershipRole, Prisma } from '@chaindesk/prisma';
+import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import IconInput from './ui/IconInput';
 import SettingCard from './ui/SettingCard';
