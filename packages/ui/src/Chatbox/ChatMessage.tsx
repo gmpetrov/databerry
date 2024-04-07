@@ -69,7 +69,7 @@ function ChatMessageComponent({
         ></Avatar>
         {/* )} */}
 
-        <Stack gap={1} sx={{ overflow: 'visible' }}>
+        <Stack gap={1} sx={{ maxWidth: '100%', overflow: 'hidden' }}>
           {message?.step?.type === 'tool_call' && (
             <Chip
               size="md"

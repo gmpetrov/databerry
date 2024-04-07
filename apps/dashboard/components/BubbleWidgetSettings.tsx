@@ -26,6 +26,7 @@ import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
 
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import ChatBubble from '@chaindesk/ui/embeds/chat-bubble';
+import Markdown from '@chaindesk/ui/Markdown';
 import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
@@ -250,15 +251,7 @@ export default function BubbleWidgetSettings(props: Props) {
                           });
                         }}
                       >
-                        <SyntaxHighlighter
-                          language="htmlbars"
-                          style={docco}
-                          customStyle={{
-                            borderRadius: 10,
-                          }}
-                        >
-                          {installScript}
-                        </SyntaxHighlighter>
+                        <Markdown>{`~~~html\n${installScript}\n`}</Markdown>
                       </Box>
                     </Stack>
                   </Stack>
