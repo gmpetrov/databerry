@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.314"></a>
+## 0.1.314 (2024-04-07)
+
+### Miscellaneous
+
+- 🎸 Form web component + install tab [[5774ee1](https://github.com/gmpetrov/databerry/commit/5774ee1f96d3f5f5b04cd44b456159bf9ce25a68)]
+
+
 <a name="0.1.313"></a>
 ## 0.1.313 (2024-04-07)
 
