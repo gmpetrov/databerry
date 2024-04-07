@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.312"></a>
+## 0.1.312 (2024-04-07)
+
+### Fixed
+
+- 🐛 agent without tool error [[d5a10fa](https://github.com/gmpetrov/databerry/commit/d5a10fa5cb88abc786636bf49fcf076ad274aa56)]
+
+### Miscellaneous
+
+- 🎸 better form inbox integration [[4be753e](https://github.com/gmpetrov/databerry/commit/4be753e29332a6675a1518137c8fbc319b961388)]
+
+
 <a name="0.1.311"></a>
 ## 0.1.311 (2024-04-06)
 
