@@ -6,7 +6,7 @@ import {
   FormHelperText,
   Stack,
 } from '@mui/joy';
-import { lookup } from 'mime-types';
+import mime from 'mime';
 import { FieldType, fieldUnion } from './types';
 import { z } from 'zod';
 
@@ -248,14 +248,14 @@ const fieldTypesMap = {
           />
         )}
         {disabled && (
-          <Stack>
+          <Stack gap={1}>
             {urls?.map?.((url: string, i: number) => (
               <ChatMessageAttachment
                 key={i}
                 attachment={{
                   url,
                   name: url,
-                  mimeType: lookup(url) as string,
+                  mimeType: mime.getType(url) as string,
                   size: 42,
                 }}
               />

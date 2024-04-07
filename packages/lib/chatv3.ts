@@ -474,8 +474,10 @@ const chat = async ({
       presence_penalty: otherProps.presencePenalty,
       max_tokens: otherProps.maxTokens,
       signal: abortController?.signal,
-      tools: ModelConfig[modelName].isToolCallingSupported ? openAiTools : [],
-      tool_choice: 'auto',
+      ...(ModelConfig[modelName].isToolCallingSupported &&
+      openAiTools.length > 0
+        ? { tool_choice: 'auto', tools: openAiTools }
+        : { tools: [] }),
     } as Parameters<typeof model.call>[0];
 
     const output = await model.call(callParams);
