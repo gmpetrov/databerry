@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.313"></a>
+## 0.1.313 (2024-04-07)
+
+### Miscellaneous
+
+- 🎸 display chat message creation date [[1820d06](https://github.com/gmpetrov/databerry/commit/1820d06e4c2f6e68131e1c7a9603967a6053c1a6)]
+
+
 <a name="0.1.312"></a>
 ## 0.1.312 (2024-04-07)
 
