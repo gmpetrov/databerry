@@ -25,6 +25,7 @@ const assetsBaseUrl = process.env.NEXT_PUBLIC_ASSETS_BASE_URL || '';
 type Props = {
   name: string;
   widget: FunctionComponent<InitWidgetProps>;
+  onEnd?: (data: any) => void;
 };
 
 const createElement = ({ name, widget }: Props) =>
@@ -36,6 +37,7 @@ const createElement = ({ name, widget }: Props) =>
     instanceId?: string;
     setIsOpen?: (isOpen: boolean) => void;
     isOpen?: boolean;
+    onEnd?: (data: any) => void;
 
     destroy() {
       this.innerHTML = '';
@@ -44,9 +46,10 @@ const createElement = ({ name, widget }: Props) =>
       }
     }
 
-    constructor(props: { instanceId?: string }) {
+    constructor(props: { instanceId?: string; onEnd?: any }) {
       super();
       this.instanceId = props?.instanceId;
+      this.onEnd = props?.onEnd;
       const shadowContainer = this.attachShadow({ mode: 'open' });
 
       const remoteFonts = document.createElement('link');
@@ -130,6 +133,7 @@ const createElement = ({ name, widget }: Props) =>
                 {React.createElement(widget, {
                   ...props,
                   isOpen,
+                  onEnd: this.onEnd,
                   initConfig,
                   context,
                   agentId: this.getAttribute('agent-id') || '',
@@ -158,7 +162,9 @@ const createElement = ({ name, widget }: Props) =>
     };
 
     connectedCallback() {
-      this.root.render(<this.Component isOpen={this.isOpen} />);
+      this.root.render(
+        <this.Component isOpen={this.isOpen} onEnd={this.onEnd} />
+      );
     }
   };
 

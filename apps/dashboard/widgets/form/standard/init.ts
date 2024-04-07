@@ -13,7 +13,11 @@ const initStandard = (props: ChatBoxStandardProps) => {
   hookFunctionsToWindow(props);
 
   const id = `FormStandard_` + (props.id || '');
-  const element = new FormStandard({ instanceId: id });
+
+  const element = new FormStandard({
+    instanceId: id,
+    onEnd: props.onEnd,
+  });
 
   const standardElement = props.id
     ? (document.querySelector(`${name}[id="${props.id}"]`) as HTMLElement)

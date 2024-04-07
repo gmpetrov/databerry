@@ -32,6 +32,7 @@ export type ChatBoxStandardProps = InitWidgetProps & {
   layout?: any;
   children?: any;
   isOpen?: boolean;
+  onEnd?: (data: any) => void;
 };
 
 function ChatBoxLoader(props: ChatBoxStandardProps) {
