@@ -4,6 +4,7 @@ import AutoGraphRoundedIcon from '@mui/icons-material/AutoGraphRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
+import ReplyAllRoundedIcon from '@mui/icons-material/ReplyAllRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TocRoundedIcon from '@mui/icons-material/TocRounded';
 import {
@@ -24,6 +25,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import BlablaFormEditor from '@app/components/BlablaFormEditor';
+import FormInstallTab from '@app/components/FormInstallTab';
 import FormSettingsTab from '@app/components/FormSettingsTab';
 import FormSubmissionsTab from '@app/components/FormSubmissionsTab';
 import Layout from '@app/components/Layout';
@@ -222,6 +224,12 @@ function FormDashboard(props: FormDashboardProps) {
               </ListItemDecorator>
               Submissions
             </Tab>
+            <Tab indicatorInset value={'install'}>
+              <ListItemDecorator>
+                <ReplyAllRoundedIcon sx={{ transform: 'scale(-1, 1)' }} />
+              </ListItemDecorator>
+              Install
+            </Tab>
           </TabList>
 
           <TabPanel value={'preview'}>Preview</TabPanel>
@@ -241,6 +249,10 @@ function FormDashboard(props: FormDashboardProps) {
 
           <TabPanel value="settings">
             {formId && <FormSettingsTab formId={formId} />}
+          </TabPanel>
+
+          <TabPanel value="install">
+            {formId && <FormInstallTab formId={formId} />}
           </TabPanel>
         </Tabs>
       </Stack>

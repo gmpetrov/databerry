@@ -12,6 +12,7 @@
     ></script> -->
     <script type="module">
       import Chatbox from './dist/chatbox/index.js';
+      import Form from './dist/form/index.js';
 
       const widget = await Chatbox.initBubble({
         agentId: 'clrz0tn6h000108kxfyomdzxg',
@@ -67,6 +68,10 @@
         // context: `The user you are talking to is Georges. Start by Greeting him by his name.`,
       });
 
+      Form.initStandard({
+        id: 'clupr4or2000108l41a4b75jw',
+      });
+
       // Chatbox.initStandard({
       //   id: '4444',
       //   agentId: 'clrz0tn6h000108kxfyomdzxg',
@@ -98,6 +103,11 @@
       id="4242"
       style="width: 100%; height: 650px"
     ></chaindesk-chatbox-standard>
+
+    <chaindesk-form-standard
+      id="clupr4or2000108l41a4b75jw"
+      style="width: 500px; margin: 25px auto"
+    ></chaindesk-form-standard>
 
     <!-- <chaindesk-chatbox-standard
       id="4444"

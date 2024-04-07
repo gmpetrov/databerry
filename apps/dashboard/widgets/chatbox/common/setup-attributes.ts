@@ -9,7 +9,12 @@ const setupAttributes = (
       interface?: InitWidgetProps['initConfig'];
     }
 ) => {
-  props.element.setAttribute('agent-id', props.agentId || '');
+  if (props.agentId) {
+    props.element.setAttribute('agent-id', props.agentId || '');
+  }
+  if (props.formId) {
+    props.element.setAttribute('form-id', props.formId || '');
+  }
 
   if (props.contact) {
     for (const key of Object.keys(props.contact)) {

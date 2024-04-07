@@ -14,15 +14,13 @@ import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import React, { useEffect, useState } from 'react';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import toast from 'react-hot-toast';
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
-import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
 import ChatBoxLoader from '@app/components/ChatBoxLoader';
 import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
 
 import { appUrl } from '@chaindesk/lib/config';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
+import Markdown from '@chaindesk/ui/Markdown';
 import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 import CommonInterfaceInput from './AgentInputs/CommonInterfaceInput';
@@ -31,9 +29,6 @@ import AgentForm from './AgentForm';
 import ChatboxNavBarLayout from './ChatboxNavBarLayout';
 import ConnectForm from './ConnectForm';
 import ReactFrameStyleFix from './ReactFrameStyleFix';
-if (typeof window !== 'undefined') {
-  SyntaxHighlighter.registerLanguage('htmlbars', html);
-}
 
 type Props = {
   agentId: string;
@@ -223,15 +218,11 @@ export default function BubbleWidgetSettings(props: Props) {
                         });
                       }}
                     >
-                      <SyntaxHighlighter
-                        language="htmlbars"
-                        style={docco}
-                        customStyle={{
-                          borderRadius: 10,
-                        }}
-                      >
-                        {installScript}
-                      </SyntaxHighlighter>
+                      <Markdown>
+                        {`~~~html
+${installScript}
+~~~`}
+                      </Markdown>
                     </Box>
                   </Stack>
                 </>

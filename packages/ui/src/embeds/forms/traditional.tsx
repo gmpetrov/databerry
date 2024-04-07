@@ -29,11 +29,24 @@ import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
 import PoweredBy from '@chaindesk/ui/PoweredBy';
 import fieldTypesMap, { FieldProps, fieldsToZodSchema } from './fields-map';
 import { type fieldUnion, type dynamicSchema, FieldType } from './types';
+import { InitWidgetProps } from '../types';
 
 const dynamicSchema = (fields: FieldProps[]) =>
   z.object({
     ...fieldsToZodSchema(fields),
   });
+
+export type FormStandardProps = InitWidgetProps & {
+  formId: string;
+  conversationId?: string;
+  messageId?: string;
+  submissionId?: string;
+  config?: any;
+  isInEditor?: boolean;
+  isFormSubmitted?: boolean;
+  values?: any;
+  readOnly?: boolean;
+};
 
 function TraditionalForm({
   formId,
@@ -44,18 +57,9 @@ function TraditionalForm({
   isFormSubmitted,
   values,
   readOnly,
+  styles,
   ...otherProps
-}: {
-  formId: string;
-  conversationId?: string;
-  messageId?: string;
-  submissionId?: string;
-  config?: any;
-  isInEditor?: boolean;
-  isFormSubmitted?: boolean;
-  values?: any;
-  readOnly?: boolean;
-}) {
+}: FormStandardProps) {
   const getFormQuery = useSWR<Form>(
     formId
       ? `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${formId}`
@@ -181,6 +185,7 @@ function TraditionalForm({
         width: '100%',
         maxHeight: '100%',
         flex: 1,
+        ...(styles as any),
       }}
     >
       {!getFormQuery?.data && getFormQuery?.isLoading ? (

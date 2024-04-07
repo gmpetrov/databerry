@@ -141,6 +141,9 @@ function ChatMessageComponent({
                 className={cn(
                   message?.from === 'agent' ? 'message-agent' : 'message-human'
                 )}
+                sx={{
+                  mr: 'auto',
+                }}
               >
                 {/* {message?.step?.type === 'tool_call' && (
 
@@ -188,20 +191,22 @@ function ChatMessageComponent({
                   </Stack>
                 )}
               </ChatMessageCard>
-              <Stack gap={1} direction="row">
-                {message?.fromName && (
-                  <Typography level="body-xs" sx={{ opacity: '0.8', pl: 1 }}>
-                    {message?.fromName}
-                  </Typography>
-                )}
-                {message?.createdAt && (
-                  <Typography
-                    level="body-xs"
-                    sx={{ opacity: '0.8', fontStyle: 'italic' }}
-                  >
-                    {`${dayjs((message as any)?.createdAt).fromNow()}`}
-                  </Typography>
-                )}
+              <Stack>
+                <Stack gap={1} direction="row">
+                  {message?.fromName && (
+                    <Typography level="body-xs" sx={{ opacity: '0.8', pl: 1 }}>
+                      {message?.fromName}
+                    </Typography>
+                  )}
+                  {message?.createdAt && (
+                    <Typography
+                      level="body-xs"
+                      sx={{ opacity: '0.8', fontStyle: 'italic' }}
+                    >
+                      {`${dayjs((message as any)?.createdAt).fromNow()}`}
+                    </Typography>
+                  )}
+                </Stack>
               </Stack>
             </Stack>
           )}

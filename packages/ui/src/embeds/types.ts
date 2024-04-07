@@ -8,6 +8,7 @@ export type InitWidgetProps = {
   id?: string;
   initConfig?: AgentInterfaceConfig;
   agentId?: string;
+  formId?: string;
   contact?: Omit<CustomContact, 'metadata'>;
   styles?: SxProps;
   context?: string;

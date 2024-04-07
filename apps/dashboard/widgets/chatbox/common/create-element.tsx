@@ -133,6 +133,7 @@ const createElement = ({ name, widget }: Props) =>
                   initConfig,
                   context,
                   agentId: this.getAttribute('agent-id') || '',
+                  formId: this.getAttribute('form-id') || '',
                   contact: contact,
                   styles: this.getAttribute('styles')
                     ? JSON.parse(this.getAttribute('styles')!)
