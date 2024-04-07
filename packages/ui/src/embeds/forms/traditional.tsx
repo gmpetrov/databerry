@@ -1,3 +1,4 @@
+'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import SendIcon from '@mui/icons-material/Send';
@@ -46,6 +47,7 @@ export type FormStandardProps = InitWidgetProps & {
   isFormSubmitted?: boolean;
   values?: any;
   readOnly?: boolean;
+  onEnd?: any;
 };
 
 function TraditionalForm({
@@ -58,6 +60,7 @@ function TraditionalForm({
   values,
   readOnly,
   styles,
+  onEnd,
   ...otherProps
 }: FormStandardProps) {
   const getFormQuery = useSWR<Form>(
@@ -161,6 +164,8 @@ function TraditionalForm({
       if (response.status === 200) {
         setState({ isFormSubmitted: true });
       }
+
+      onEnd?.(response?.data?.data);
     } catch (e) {
       setState({ hasErrored: true });
       console.log('traditional form submit err:', e);
