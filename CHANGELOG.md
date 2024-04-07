@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.316"></a>
+## 0.1.316 (2024-04-07)
+
+### Fixed
+
+- 🐛 patch yt summary tool transcriptBodyRenderer error [[24a7b8f](https://github.com/gmpetrov/databerry/commit/24a7b8f69c196a4c9358143ea18b11e5c0dfd8f2)]
+
+
 <a name="0.1.315"></a>
 ## 0.1.315 (2024-04-07)
 
