@@ -1,19 +1,23 @@
-import { ChatBoxStandardProps } from '@app/components/ChatBoxLoader';
+import { ChatBoxStandardProps } from '@chaindesk/ui/ChatBoxLoader';
 
-import setupAttributes from '../common/setup-attributes';
-import { hookFunctionsToWindow } from '../utils';
+import setupAttributes from '@chaindesk/ui/embeds/common/setup-attributes';
+import { hookFunctionsToWindow } from '@chaindesk/ui/embeds/common/utils';
 
-import ChatboxStandard, { name } from './standard';
+import FormStandard, { name } from './index';
 
 const initStandard = (props: ChatBoxStandardProps) => {
   if (!customElements.get(name)) {
-    customElements.define(name, ChatboxStandard);
+    customElements.define(name, FormStandard);
   }
 
   hookFunctionsToWindow(props);
 
-  const id = `ChatBoxStandard_` + (props.id || '');
-  const element = new ChatboxStandard({ instanceId: id });
+  const id = `FormStandard_` + (props.id || '');
+
+  const element = new FormStandard({
+    instanceId: id,
+    onEnd: props.onEnd,
+  });
 
   const standardElement = props.id
     ? (document.querySelector(`${name}[id="${props.id}"]`) as HTMLElement)
@@ -38,6 +42,7 @@ const initStandard = (props: ChatBoxStandardProps) => {
     setupAttributes({
       element,
       ...props,
+      formId: props.id,
       styles: mergedStyles,
     });
 

@@ -1,6 +1,6 @@
 import TraditionalForm from '@chaindesk/ui/embeds/forms/traditional';
 
-import createElement from '../../chatbox/common/create-element';
+import createElement from '@chaindesk/ui/embeds/common/create-element';
 
 export const name = 'chaindesk-form-standard';
 

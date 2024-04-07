@@ -36,6 +36,8 @@
     "p-map": "^5.5.0",
     "property-information": "^6.4.0",
     "radash": "^10.7.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "react-hook-form": "^7.51.0",
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^13.3.1",
@@ -61,7 +63,6 @@
     "@types/react-syntax-highlighter": "^15.5.6",
     "@types/react-transition-group": "^4.4.6",
     "eslint-config-custom": "workspace:*",
-    "react": "18.2.0",
     "tsup": "^5.10.1",
     "typescript": "5.0.2"
   },

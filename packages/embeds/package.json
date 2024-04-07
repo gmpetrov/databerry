@@ -3,7 +3,11 @@
   "version": "1.0.174",
   "description": "Chaindesk Embeds",
   "main": "dist/chatbox/index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "rm -rf dist && mkdir -p dist && concurrently \"node esbuild.config.mjs\"",
+    "build": "rm -rf dist && mkdir -p dist && concurrently \"NODE_ENV=production node esbuild.config.mjs\"",
+    "publish": "pnpm embeds:build && npm version patch && npm publish --access public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gmpetrov/databerry.git"
@@ -13,5 +17,20 @@
   "bugs": {
     "url": "https://github.com/gmpetrov/databerry/issues"
   },
-  "homepage": "https://github.com/gmpetrov/databerry#readme"
+  "homepage": "https://github.com/gmpetrov/databerry#readme",
+  "dependencies": {
+    "@chaindesk/config-tailwind": "workspace:*",
+    "@chaindesk/lib": "workspace:*",
+    "@chaindesk/ui": "workspace:*",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.1",
+    "esbuild": "^0.20.0",
+    "esbuild-style-plugin": "^1.6.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "^3.3.6"
+  },
+  "devDependencies": {
+    "@chaindesk/tsconfig": "workspace:*"
+  }
 }

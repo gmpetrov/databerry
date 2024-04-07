@@ -21,10 +21,10 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
 import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/vs2015';
 
-import ChatBoxLoader from '@app/components/ChatBoxLoader';
 import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
 
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
+import ChatBoxLoader from '@chaindesk/ui/ChatBoxLoader';
 import ChatBubble from '@chaindesk/ui/embeds/chat-bubble';
 import Markdown from '@chaindesk/ui/Markdown';
 import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';

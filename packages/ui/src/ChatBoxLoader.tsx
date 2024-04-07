@@ -1,8 +1,4 @@
-import Box from '@mui/joy/Box';
-import CircularProgress from '@mui/joy/CircularProgress';
 import React, { useEffect, useMemo } from 'react';
-
-import useAgent from '@app/hooks/useAgent';
 
 import { ChatMessage } from '@chaindesk/lib/types';
 import { LeadCaptureToolchema } from '@chaindesk/lib/types/dtos';
@@ -10,6 +6,7 @@ import { AgentInterfaceConfig } from '@chaindesk/lib/types/models';
 import { Agent, Subscription, SubscriptionPlan, Tool } from '@chaindesk/prisma';
 import Base, { ChatBaseProps } from '@chaindesk/ui/embeds/chat-base';
 import { InitWidgetProps } from '@chaindesk/ui/embeds/types';
+import useAgent from '@chaindesk/ui/hooks/useAgent';
 import useChat, { ChatContext } from '@chaindesk/ui/hooks/useChat';
 import LeadForm from '@chaindesk/ui/LeadForm';
 

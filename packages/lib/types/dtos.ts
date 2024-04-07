@@ -10,6 +10,7 @@ import {
   FormType,
   Message,
   MessageEval,
+  Prisma,
   PromptType,
   ServiceProviderType,
   ToolType,
@@ -31,6 +32,51 @@ import {
 } from './document';
 import { AgentInterfaceConfig, DatastoreSchema } from './models';
 import { ChainType } from '.';
+
+export const agentInclude: Prisma.AgentInclude = {
+  organization: {
+    select: {
+      id: true,
+      subscriptions: {
+        select: {
+          id: true,
+          plan: true,
+        },
+        where: {
+          status: {
+            in: ['active'],
+          },
+        },
+      },
+    },
+  },
+  tools: {
+    include: {
+      datastore: {
+        include: {
+          _count: {
+            select: {
+              datasources: {
+                where: {
+                  status: {
+                    in: ['running', 'pending'],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      form: true,
+    },
+  },
+};
+
+export type agentInclude = typeof agentInclude;
+
+export type GetAgentResponse = Prisma.AgentGetPayload<{
+  include: agentInclude;
+}>;
 
 export const CreateDatastoreRequestSchema = DatastoreSchema.extend({
   id: z.string().trim().cuid().optional(),

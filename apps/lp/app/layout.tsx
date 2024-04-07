@@ -1,4 +1,3 @@
-// import './css/globals.css';
 import './css/style.css';
 
 import { GoogleAnalytics } from '@next/third-parties/google';

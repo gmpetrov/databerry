@@ -4,16 +4,17 @@ import postCssPlugin from 'esbuild-style-plugin';
 import tailwindcss from 'tailwindcss';
 
 const isProd = process.env.NODE_ENV === 'production';
+const outDir = isProd ? './dist' : './tests/dist';
 
 let ctx = await esbuild.context({
   entryPoints: [
-    'widgets/chatbox/index.ts',
-    'widgets/chatbox/styles.ts',
-    'widgets/chatbox/legacy.js',
-    'widgets/form/index.ts',
+    'js/chatbox/index.ts',
+    'js/chatbox/styles.ts',
+    'js/chatbox/legacy.js',
+    'js/form/index.ts',
   ],
   bundle: true,
-  outdir: 'tests/embeds/dist',
+  outdir: outDir,
   external: ['fs', 'stream', 'zlib', 'process'],
   allowOverwrite: true,
   format: 'esm',
@@ -63,7 +64,7 @@ if (isProd) {
   console.log('✅ Build complete!');
 } else {
   let { host, port } = await ctx.serve({
-    servedir: 'tests/embeds',
+    servedir: 'tests/',
   });
   console.log(
     `🚀 Server running at http://${

@@ -3,7 +3,7 @@ import Box from '@mui/joy/Box';
 import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 
-import useAgent from '@app/hooks/useAgent';
+import useAgent from '@chaindesk/ui/hooks/useAgent';
 
 const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
 

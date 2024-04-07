@@ -1,9 +1,8 @@
-import ChatBoxLoader from '@app/components/ChatBoxLoader';
-import ChatboxNavBarLayout from '@app/components/ChatboxNavBarLayout';
-
+import ChatBoxLoader from '@chaindesk/ui/ChatBoxLoader';
+import ChatboxNavBarLayout from '@chaindesk/ui/ChatboxNavBarLayout';
 import { cn } from '@chaindesk/ui/utils/cn';
 
-import createElement from '../common/create-element';
+import createElement from '@chaindesk/ui/embeds/common/create-element';
 
 export const name = 'chaindesk-chatbox-standard';
 
