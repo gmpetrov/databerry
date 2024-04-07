@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.315"></a>
+## 0.1.315 (2024-04-07)
+
+### Fixed
+
+- 🐛 chat message overflow [[aef0422](https://github.com/gmpetrov/databerry/commit/aef0422a9328f50fee65a47fd6efcf6b0847053d)]
+
+### Miscellaneous
+
+-  bump version [[3036f81](https://github.com/gmpetrov/databerry/commit/3036f81d0534982b0f17161499bb03fec8974565)]
+
+
 <a name="0.1.314"></a>
 ## 0.1.314 (2024-04-07)
 
