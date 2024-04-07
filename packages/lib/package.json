@@ -43,6 +43,7 @@
     "msgpackr": "^1.9.3",
     "nanoid": "^4.0.2",
     "next-connect": "^0.13.0",
+    "node-html-parser": "^6.1.13",
     "nodemailer": "^6.9.1",
     "p-map": "^5.5.0",
     "p-retry": "^5.1.2",

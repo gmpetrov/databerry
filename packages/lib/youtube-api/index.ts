@@ -1,9 +1,13 @@
 import axios from 'axios';
 import { load } from 'cheerio';
 import { google } from 'googleapis';
-import { TranscriptResponse, YoutubeTranscript } from 'youtube-transcript';
+import { TranscriptResponse } from 'youtube-transcript';
 
 import { YOUTUBE_VIDEO_URL_RE } from './lib';
+import {
+  // TranscriptResponse,
+  YoutubeTranscript,
+} from './youtube-transcript-fix';
 
 export type YoutubeTranscriptType = {
   text: string;

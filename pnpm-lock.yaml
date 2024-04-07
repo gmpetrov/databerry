@@ -1007,6 +1007,9 @@ importers:
       next-connect:
         specifier: ^0.13.0
         version: 0.13.0
+      node-html-parser:
+        specifier: ^6.1.13
+        version: 6.1.13
       nodemailer:
         specifier: ^6.9.1
         version: 6.9.1
@@ -17822,6 +17825,13 @@ packages:
       tar: 4.4.19
       which: 1.3.1
     dev: true
+
+  /node-html-parser@6.1.13:
+    resolution: {integrity: sha512-qIsTMOY4C/dAa5Q5vsobRpOOvPfC4pB61UVW2uSwZNUp0QU/jCekTal1vMmbO0DgdHeLUJpv/ARmDqErVxA3Sg==}
+    dependencies:
+      css-select: 5.1.0
+      he: 1.2.0
+    dev: false
 
   /node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
