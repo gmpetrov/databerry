@@ -14,7 +14,7 @@ import roles from '@chaindesk/lib/middlewares/roles';
 import { FormConfigSchema, FormSubmitSchema } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import { FormStatus, MembershipRole } from '@chaindesk/prisma';
+import { FormStatus, MembershipRole, Prisma } from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
 
 const handler = createLazyAuthHandler();
@@ -110,45 +110,79 @@ export const postForm = async (
     .map((field) => data.formValues[field.name])
     .filter((each) => !!each) as string[];
 
-  if (emails.length > 0 || phoneNumbers.length > 0) {
-    // https://github.com/prisma/prisma/issues/4134 switch to upserMany when ready
-    await Promise.all([
-      ...emails.map((email) =>
-        prisma.contact.upsert({
-          where: {
-            unique_email_for_org: {
-              email,
-              organizationId: orgId,
-            },
-          },
-          create: {
+  const conversationId = data?.conversationId || cuid();
+
+  const participantsContacts = {
+    connectOrCreate: [
+      ...emails.map((email) => ({
+        where: {
+          unique_email_for_org: {
             email,
             organizationId: orgId,
           },
-          update: {
-            email,
-          },
-        })
-      ),
-      ...phoneNumbers.map((phoneNumber) =>
-        prisma.contact.upsert({
-          where: {
-            unique_phone_number_for_org: {
-              phoneNumber,
-              organizationId: orgId,
-            },
-          },
-          create: {
+        },
+        create: {
+          email,
+          organizationId: orgId,
+        },
+      })),
+      ...phoneNumbers.map((phoneNumber) => ({
+        where: {
+          unique_phone_number_for_org: {
             phoneNumber,
             organizationId: orgId,
           },
-          update: {
-            phoneNumber,
+        },
+        create: {
+          phoneNumber,
+          organizationId: orgId,
+        },
+      })),
+    ],
+  } as Prisma.ConversationUpsertArgs['create']['participantsContacts'];
+
+  await prisma.conversation.upsert({
+    where: {
+      id: conversationId,
+    },
+    create: {
+      isAiEnabled: false,
+      channel: 'form',
+      organizationId: orgId,
+      formId: form.id,
+
+      messages: {
+        create: {
+          from: 'agent',
+          text: `Form submission: ${submissionId}`,
+          metadata: {
+            isFormSubmitted: true,
+            shouldDisplayForm: true,
+            formId: form.id,
           },
-        })
-      ),
-    ]);
-  }
+          submission: {
+            connect: {
+              id: submission?.id,
+            },
+          },
+        },
+      },
+      participantsContacts,
+    },
+    update: {
+      ...(emails.length > 0 || phoneNumbers.length > 0
+        ? {
+            participantsContacts,
+          }
+        : {}),
+
+      formSubmissions: {
+        connect: {
+          id: submission?.id,
+        },
+      },
+    },
+  });
 
   const ownerEmail =
     submission?.form?.organization?.memberships?.[0].user?.email;

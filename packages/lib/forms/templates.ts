@@ -19,6 +19,7 @@ export const FROM_SCRATCH: FormTemplate = {
       {
         id: cuid(),
         type: 'email',
+        shouldCreateContact: true,
         name: 'email',
         required: true,
       },
@@ -39,6 +40,7 @@ export const LEAD_FORM: FormTemplate = {
       {
         id: cuid(),
         type: 'email',
+        shouldCreateContact: true,
         name: 'email',
         required: true,
         placeholder: 'Enter your email',
@@ -74,6 +76,7 @@ export const PRODUCT_FEEDBACK_FORM: FormTemplate = {
       {
         id: cuid(),
         type: 'email',
+        shouldCreateContact: true,
         name: 'email',
         required: true,
         placeholder: 'Enter your email',
@@ -118,6 +121,7 @@ export const ONBOARDING_FORM: FormTemplate = {
       {
         id: cuid(),
         type: 'email',
+        shouldCreateContact: true,
         name: 'email',
         required: true,
         placeholder: 'Enter your email',
@@ -190,6 +194,7 @@ export const INBOUND_LEAD: FormTemplate = {
       {
         id: cuid(),
         type: 'email',
+        shouldCreateContact: true,
         name: 'email',
         required: true,
       },
@@ -239,6 +244,7 @@ export const CONTACT_SALES: FormTemplate = {
       {
         id: cuid(),
         type: 'email',
+        shouldCreateContact: true,
         name: 'email',
         required: true,
       },

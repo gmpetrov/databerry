@@ -1246,6 +1246,7 @@ export default function LogsPage() {
                     }}
                   />
                 }
+                fromInbox
               />
 
               <Divider orientation="vertical" />

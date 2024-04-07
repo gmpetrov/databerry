@@ -42,6 +42,8 @@ function TraditionalForm({
   submissionId,
   isInEditor,
   isFormSubmitted,
+  values,
+  readOnly,
   ...otherProps
 }: {
   formId: string;
@@ -51,8 +53,9 @@ function TraditionalForm({
   config?: any;
   isInEditor?: boolean;
   isFormSubmitted?: boolean;
+  values?: any;
+  readOnly?: boolean;
 }) {
-  // const getFormQuery = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
   const getFormQuery = useSWR<Form>(
     formId
       ? `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/forms/${formId}`
@@ -78,12 +81,6 @@ function TraditionalForm({
     });
   }, [submissionId]);
 
-  useEffect(() => {
-    setState({
-      isFormSubmitted: !!isFormSubmitted,
-    });
-  }, [isFormSubmitted]);
-
   const config = useMemo(() => {
     return (
       !!isInEditor
@@ -108,17 +105,23 @@ function TraditionalForm({
     mode: 'onChange',
   });
 
-  const submitForm = async (e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
+  useEffect(() => {
+    try {
+      if (values) {
+        methods.reset({
+          ...values,
+        });
+      }
+    } catch (err) {}
+  }, [values]);
 
+  const submitForm = async (values: dynamicSchema<string[]>) => {
     if (isInEditor) {
       return setState({ isFormSubmitted: true });
     }
 
     try {
       setState({ loading: true, hasErrored: false });
-      const values = methods.getValues();
 
       for (const field of config.fields) {
         if (field.type === FieldType.File) {
@@ -164,6 +167,12 @@ function TraditionalForm({
 
   return (
     <Card
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        methods.handleSubmit(submitForm)(e);
+      }}
+      component={'form'}
       variant="outlined"
       color="neutral"
       sx={{
@@ -203,7 +212,7 @@ function TraditionalForm({
           })}
         >
           <AnimatePresence>
-            {state.isFormSubmitted && (
+            {state.isFormSubmitted && !readOnly && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -242,7 +251,7 @@ function TraditionalForm({
             )}
           </AnimatePresence>
           <AnimatePresence>
-            {!state.isFormSubmitted && (
+            {(!state.isFormSubmitted || readOnly) && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -297,6 +306,7 @@ function TraditionalForm({
                         formId,
                         conversationId,
                         methods,
+                        disabled: !!readOnly,
                         ...field,
 
                         changeHandler: {
@@ -311,36 +321,40 @@ function TraditionalForm({
                     </Stack>
                   ))}
                 </Stack>
-                <Stack mt={2}>
-                  <Button
-                    type="submit"
-                    disabled={
-                      config?.fields?.length == 0 || !methods.formState.isValid
-                    }
-                    loading={state.loading}
-                    onClick={submitForm}
-                    size="md"
-                    color="primary"
-                    endDecorator={<SendIcon sx={{ fontSize: 'sm' }} />}
-                    sx={{ with: '100%' }}
-                  >
-                    Submit
-                  </Button>
-                  <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    open={state.hasErrored}
-                    onClose={() => setState({ hasErrored: false })}
-                    color={'danger'}
-                  >
-                    Submission Failed, try again later.
-                  </Snackbar>
-                </Stack>
+                {!isFormSubmitted && !readOnly && (
+                  <Stack mt={2}>
+                    <Button
+                      type="submit"
+                      disabled={
+                        config?.fields?.length == 0 ||
+                        !methods.formState.isValid
+                      }
+                      loading={state.loading}
+                      size="md"
+                      color="primary"
+                      endDecorator={<SendIcon sx={{ fontSize: 'sm' }} />}
+                      sx={{ with: '100%' }}
+                    >
+                      Submit
+                    </Button>
+                    <Snackbar
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                      open={state.hasErrored}
+                      onClose={() => setState({ hasErrored: false })}
+                      color={'danger'}
+                    >
+                      Submission Failed, try again later.
+                    </Snackbar>
+                  </Stack>
+                )}
               </motion.div>
             )}
 
-            <Stack sx={{ mt: 2 }}>
-              <PoweredBy />
-            </Stack>
+            {!readOnly && (
+              <Stack sx={{ mt: 2 }}>
+                <PoweredBy />
+              </Stack>
+            )}
           </AnimatePresence>
         </CardContent>
       )}

@@ -4,7 +4,9 @@ import {
   Option,
   FormControl,
   FormHelperText,
+  Stack,
 } from '@mui/joy';
+import { lookup } from 'mime-types';
 import { FieldType, fieldUnion } from './types';
 import { z } from 'zod';
 
@@ -13,6 +15,7 @@ import PhoneNumberInput from '@chaindesk/ui/PhoneNumberInput';
 import FileUploaderDropZone from '@chaindesk/ui/FileUploaderDropZone';
 import React from 'react';
 import { FormFieldSchema } from '@chaindesk/lib/types/dtos';
+import ChatMessageAttachment from '@chaindesk/ui/Chatbox/ChatMessageAttachment';
 
 export const fieldsToZodSchema = (fields: FieldProps[]) => {
   const obj: Record<string, any> = {};
@@ -79,11 +82,17 @@ export const fieldsToZodSchema = (fields: FieldProps[]) => {
 export type FieldProps = FormFieldSchema & {
   changeHandler?: any;
   methods?: any;
+  disabled?: boolean;
 };
 
 const fieldTypesMap = {
-  email: ({ methods, placeholder }: Extract<FieldProps, { type: 'email' }>) => (
+  email: ({
+    methods,
+    placeholder,
+    disabled,
+  }: Extract<FieldProps, { type: 'email' }>) => (
     <Input
+      disabled={disabled}
       control={methods.control}
       {...methods?.register('email')}
       sx={{ width: '100%' }}
@@ -94,8 +103,10 @@ const fieldTypesMap = {
     name,
     methods,
     placeholder,
+    disabled,
   }: Extract<FieldProps, { type: 'phoneNumber' }>) => (
     <PhoneNumberInput
+      disabled={disabled}
       control={methods.control as any}
       {...(methods.register(name) as any)}
       // placeholder={t('chatbubble:lead.phoneNumber')}
@@ -120,9 +131,11 @@ const fieldTypesMap = {
     name,
     methods,
     placeholder,
+    disabled,
   }: Extract<FieldProps, { type: 'text' }>) => (
     <Input
       control={methods.control}
+      disabled={disabled}
       sx={{ width: '100%' }}
       {...methods?.register(name || 'text')}
       placeholder={placeholder || ''}
@@ -134,10 +147,12 @@ const fieldTypesMap = {
     placeholder,
     min,
     max,
+    disabled,
     ...ohterProps
   }: Extract<FieldProps, { type: 'number' }>) => (
     <Input
       control={methods.control}
+      disabled={disabled}
       type="number"
       sx={{ width: '100%' }}
       placeholder={placeholder || ''}
@@ -155,11 +170,13 @@ const fieldTypesMap = {
     name,
     methods,
     placeholder,
+    disabled,
   }: Extract<FieldProps, { type: 'textArea' }>) => {
     const error = methods?.formState?.errors?.[name]?.message;
     return (
       <FormControl error={!!error}>
         <Textarea
+          disabled={disabled}
           sx={{ width: '100%' }}
           {...methods?.register(name)}
           minRows={4}
@@ -175,12 +192,14 @@ const fieldTypesMap = {
     changeHandler,
     placeholder,
     methods,
+    disabled,
   }: Extract<FieldProps, { type: 'select' }>) => {
     const error = methods?.formState?.errors?.[name]?.message;
 
     return (
       <FormControl error={!!error}>
         <Select
+          disabled={disabled}
           sx={{
             width: '100%',
           }}
@@ -206,18 +225,43 @@ const fieldTypesMap = {
     placeholder,
     changeHandler,
     methods,
+    disabled,
   }: Extract<FieldProps, { type: 'file' }>) => {
     const error = methods?.formState?.errors?.[name]?.message;
 
+    // Get values for read-only mode
+    const uploadedFiles = disabled ? methods.watch(name) : [];
+    let urls = [] as string[];
+    try {
+      urls = JSON.parse(uploadedFiles);
+    } catch {}
+
     return (
       <FormControl error={!!error}>
-        <FileUploaderDropZone
-          variant="outlined"
-          placeholder={placeholder || 'Browse Files'}
-          changeCallback={async (files) => {
-            changeHandler(name, files);
-          }}
-        />
+        {!disabled && (
+          <FileUploaderDropZone
+            variant="outlined"
+            placeholder={placeholder || 'Browse Files'}
+            changeCallback={async (files) => {
+              changeHandler(name, files);
+            }}
+          />
+        )}
+        {disabled && (
+          <Stack>
+            {urls?.map?.((url: string, i: number) => (
+              <ChatMessageAttachment
+                key={i}
+                attachment={{
+                  url,
+                  name: url,
+                  mimeType: lookup(url) as string,
+                  size: 42,
+                }}
+              />
+            ))}
+          </Stack>
+        )}
         {error && <FormHelperText>{error}</FormHelperText>}
       </FormControl>
     );

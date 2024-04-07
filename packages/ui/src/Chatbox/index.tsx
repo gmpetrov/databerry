@@ -83,6 +83,7 @@ export type ChatBoxProps = {
   isAiEnabled?: boolean;
   autoFocus?: boolean;
   agentIconStyle?: React.CSSProperties;
+  fromInbox?: boolean;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -118,6 +119,7 @@ function ChatBox({
   isAiEnabled,
   autoFocus,
   agentIconStyle,
+  fromInbox,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -337,6 +339,8 @@ function ChatBox({
                         conversationId={each.conversationId}
                         messageId={each.id}
                         submissionId={each?.submission?.id}
+                        values={each?.submission?.data}
+                        readOnly={fromInbox}
                       />
                     </Stack>
                   ) : (

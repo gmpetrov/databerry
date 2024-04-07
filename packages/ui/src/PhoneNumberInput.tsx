@@ -34,7 +34,15 @@ const countryCodeToFlag = (isoCode: string) => {
 
 const PhoneNumberInput = forwardRef(
   (
-    { value, name, onChange, handleChange, selectProps, ...restProps }: Props,
+    {
+      value,
+      name,
+      onChange,
+      handleChange,
+      selectProps,
+      disabled,
+      ...restProps
+    }: Props,
     ref
   ) => {
     const selectRef = useRef<HTMLSelectElement>(null);
@@ -63,6 +71,7 @@ const PhoneNumberInput = forwardRef(
     return (
       <Input
         ref={ref}
+        disabled={disabled}
         control={restProps.control}
         sx={{ minWidth: '100%' }}
         name={name}

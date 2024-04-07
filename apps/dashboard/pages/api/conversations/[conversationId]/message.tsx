@@ -190,6 +190,7 @@ export const sendMessage = async (
       }
       break;
     case 'website':
+    case 'form':
     case 'mail':
       if (payload.channel === 'mail' && !mailInbox) {
         throw new ApiError(ApiErrorType.NOT_FOUND);
