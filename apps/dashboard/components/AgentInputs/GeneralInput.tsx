@@ -15,14 +15,13 @@ import React, { useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-import useAgent from '@app/hooks/useAgent';
-
 import getS3RootDomain from '@chaindesk/lib/get-s3-root-domain';
 import { RouteNames } from '@chaindesk/lib/types';
 import {
   CreateAgentSchema,
   GenerateUploadLinkRequest,
 } from '@chaindesk/lib/types/dtos';
+import useAgent from '@chaindesk/ui/hooks/useAgent';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Input from '@chaindesk/ui/Input';
 

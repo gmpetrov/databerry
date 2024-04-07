@@ -2,9 +2,8 @@ import Stack from '@mui/joy/Stack';
 import { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
 
-import ChatBoxLoader from '@app/components/ChatBoxLoader';
-import ChatBoxLayout from '@app/components/ChatboxNavBarLayout';
-
+import ChatBoxLoader from '@chaindesk/ui/ChatBoxLoader';
+import ChatBoxLayout from '@chaindesk/ui/ChatboxNavBarLayout';
 import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 
 function App() {

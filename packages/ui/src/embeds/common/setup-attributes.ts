@@ -1,6 +1,6 @@
 import { InitWidgetProps } from '@chaindesk/ui/embeds/types';
 
-import { hookFunctionsToWindow, toDashedCase } from '../utils';
+import { hookFunctionsToWindow, toDashedCase } from './utils';
 
 const setupAttributes = (
   props: {

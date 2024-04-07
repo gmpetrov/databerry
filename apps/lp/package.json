@@ -12,6 +12,7 @@
     "tunnel": "npm run dotenv -- pnpx localtunnel -- --port 3002 --subdomain $USER-chaindesk-lp"
   },
   "dependencies": {
+    "@chaindesk/config-tailwind": "workspace:*",
     "@chaindesk/lib": "workspace:*",
     "@chaindesk/prisma": "workspace:*",
     "@chaindesk/ui": "workspace:*",

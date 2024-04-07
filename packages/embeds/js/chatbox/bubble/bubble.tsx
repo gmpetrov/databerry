@@ -1,9 +1,8 @@
-import ChatBoxLoader from '@app/components/ChatBoxLoader';
-
+import ChatBoxLoader from '@chaindesk/ui/ChatBoxLoader';
 import ChatBubble from '@chaindesk/ui/embeds/chat-bubble';
 import { cn } from '@chaindesk/ui/utils/cn';
 
-import createElement from '../common/create-element';
+import createElement from '@chaindesk/ui/embeds/common/create-element';
 
 const name = 'chaindesk-chatbox-bubble';
 

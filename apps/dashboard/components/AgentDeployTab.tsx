@@ -12,10 +12,10 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 
-import useAgent from '@app/hooks/useAgent';
 import useModal from '@app/hooks/useModal';
 
 import { AgentVisibility, DatastoreVisibility } from '@chaindesk/prisma';
+import useAgent from '@chaindesk/ui/hooks/useAgent';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import SettingCard from './ui/SettingCard';

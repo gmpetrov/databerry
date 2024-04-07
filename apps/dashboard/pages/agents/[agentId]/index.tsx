@@ -38,7 +38,6 @@ import Layout from '@app/components/Layout';
 import LeadCaptureToolForm from '@app/components/LeadCaptureToolForm';
 import LeadCaptureToolFormInput from '@app/components/LeadCaptureToolForm/LeadCaptureToolFormInput';
 import UsageLimitModal from '@app/components/UsageLimitModal';
-import useAgent from '@app/hooks/useAgent';
 import useModal from '@app/hooks/useModal';
 
 import agentToolFormat, {
@@ -47,6 +46,7 @@ import agentToolFormat, {
 import { ModelConfig } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
 import { withAuth } from '@chaindesk/lib/withAuth';
+import useAgent from '@chaindesk/ui/hooks/useAgent';
 import useChat from '@chaindesk/ui/hooks/useChat';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Loader from '@chaindesk/ui/Loader';

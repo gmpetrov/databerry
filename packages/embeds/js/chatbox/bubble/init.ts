@@ -1,7 +1,7 @@
 import type { BubbleProps } from '@chaindesk/ui/embeds/chat-bubble';
 
-import setupAttributes from '../common/setup-attributes';
-import { hookFunctionsToWindow, toDashedCase } from '../utils';
+import setupAttributes from '@chaindesk/ui/embeds/common/setup-attributes';
+import { hookFunctionsToWindow } from '@chaindesk/ui/embeds/common/utils';
 
 import ChatboxBubble from './bubble';
 const initBubble = async (props: BubbleProps) => {

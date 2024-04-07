@@ -6,28 +6,26 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
-import { ToolSchema } from '@chaindesk/lib/types/dtos';
-import { Agent, Datastore, Prisma, Tool, ToolType } from '@chaindesk/prisma';
+import { GetAgentResponse, ToolSchema } from '@chaindesk/lib/types/dtos';
+import { Datastore, Prisma, Tool, ToolType } from '@chaindesk/prisma';
 
 type Props = {
   id?: string;
 };
 
-type GetAgentResponse = Agent & {
+type GetAgentResponseExtended = GetAgentResponse & {
   tools: (Tool &
     ToolSchema & {
       datastore: Datastore | null;
     })[];
 };
 
-// export type UseAgentQuery = SWRResponse<GetAgentResponse>;
-// export type UseAgentMutation = SWRMutationResponse<
-//   Prisma.PromiseReturnType<typeof updateAgent>
-// >;
+export type UseAgentQuery = SWRResponse<GetAgentResponseExtended>;
+export type UseAgentMutation = SWRMutationResponse<GetAgentResponseExtended>;
 const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
 function useAgent({ id }: Props) {
-  const query = useSWR<GetAgentResponse>(
+  const query = useSWR<GetAgentResponseExtended>(
     id ? `${API_URL}/api/agents/${id}` : null,
     fetcher
     // (args: any) =>
@@ -39,7 +37,7 @@ function useAgent({ id }: Props) {
     //   })
   );
 
-  const mutation = useSWRMutation<GetAgentResponse>(
+  const mutation = useSWRMutation<GetAgentResponseExtended>(
     id ? `${API_URL}/api/agents/${id}` : `${API_URL}/api/agents`,
     generateActionFetcher(id ? HTTP_METHOD.PATCH : HTTP_METHOD.POST),
     {

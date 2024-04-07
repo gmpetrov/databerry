@@ -5,14 +5,16 @@ import { FormProvider, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { SWRResponse } from 'swr';
 
-import useAgent, { UseAgentMutation, UseAgentQuery } from '@app/hooks/useAgent';
-
 import {
   CUSTOMER_SUPPORT,
   CUSTOMER_SUPPORT_V3,
 } from '@chaindesk/lib/prompt-templates';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import { Agent, AgentModelName, Prisma, PromptType } from '@chaindesk/prisma';
+import useAgent, {
+  UseAgentMutation,
+  UseAgentQuery,
+} from '@chaindesk/ui/hooks/useAgent';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 // interface ConnectFormProps<TFieldValues extends FieldValues> {
