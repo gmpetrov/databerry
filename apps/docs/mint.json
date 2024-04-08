@@ -27,7 +27,27 @@
   },
   "anchors": [
     {
-      "name": "chaindesk API",
+      "name": "Agent",
+      "icon": "hat-wizard",
+      "url": "agent"
+    },
+    {
+      "name": "Datastore",
+      "icon": "brain",
+      "url": "datastore"
+    },
+    {
+      "name": "Form",
+      "icon": "table-list",
+      "url": "form"
+    },
+    {
+      "name": "Widgets",
+      "icon": "html5",
+      "url": "widgets"
+    },
+    {
+      "name": "API",
       "icon": "rectangle-terminal",
       "url": "api-reference"
     },
@@ -43,8 +63,44 @@
       "pages": ["introduction", "platform"]
     },
     {
+      "group": "Agent",
+      "pages": ["agent/get-started"]
+    },
+    {
+      "group": "Datastore",
+      "pages": ["datastore/get-started"]
+    },
+    {
+      "group": "Form",
+      "pages": ["form/get-started"]
+    },
+    {
       "group": "chaindesk API",
       "pages": ["api-reference/authentication"]
+    },
+
+    {
+      "group": "Widgets",
+      "pages": [
+        {
+          "group": "Chatbot",
+          "pages": [
+            "widgets/chatbot/bubble",
+            "widgets/chatbot/standard",
+            "widgets/chatbot/reference"
+          ]
+        },
+        {
+          "group": "Form",
+          "pages": [
+            "widgets/form/hosted-form",
+            "widgets/form/standard",
+            "widgets/form/usage-with-chatbot",
+            "widgets/form/fields",
+            "widgets/form/reference"
+          ]
+        }
+      ]
     },
     {
       "group": "Endpoints",

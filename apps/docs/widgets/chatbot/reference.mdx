@@ -1,0 +1,134 @@
+---
+description: 'Reference'
+---
+
+import ToDoDoc from '/snippets/to-do-doc.mdx';
+
+The Chatbot is available through our CDN as a single JavaScript file or through NPM as a React component package.
+
+<Tabs>
+  <Tab title="HTML" >
+    ```html
+    <script type="module">
+    import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+    Chatbox.initBubble({
+    agentId: 'YOUR_AGENT_ID',
+    });
+
+    </script>
+
+`````
+  </Tab>
+  <Tab title="React" >
+    <ToDoDoc />
+  </Tab>
+</Tabs>
+
+## Attributes / Props
+
+<Tabs>
+  <Tab title="HTML" >
+    ```html
+    <script type="module">
+  import Chatbox from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/chatbox/index.js';
+
+Chatbox.initBubble({
+agentId: 'YOUR_AGENT_ID',
+
+    // If provided will create a contact for the user and link it to the conversation
+    contact: {
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'customer@email.com',
+    phoneNumber: '+33612345644',
+    userId: '42424242',
+    },
+    // Override initial messages
+    initialMessages: [
+    'Hello Georges how are you doing today?',
+    'How can I help you ?',
+    ],
+    // Provided context will be appended to the Agent system prompt
+    context: "The user you are talking to is John. Start by Greeting him by his name.",
+
+});
+
+</script>
+    ```
+  </Tab>
+  <Tab title="React" >
+    <ToDoDoc />
+  </Tab>
+</Tabs>
+
+<ParamField path="agentId" type="string" required>
+  ID of the Agent
+</ParamField>
+<ParamField path="contact" type="string">
+  <Expandable title="properties">
+    <ResponseField name="firstName" type="string">
+    First name
+    </ResponseField>
+
+    <ResponseField name="lastName" type="string">
+      Last name
+    </ResponseField>
+    <ResponseField name="email" type="string">
+      Email
+    </ResponseField>
+    <ResponseField name="phoneNumber" type="string">
+      Phone number
+    </ResponseField>
+    <ResponseField name="userId" type="string">
+      Custom user ID
+    </ResponseField>
+
+  </Expandable>
+</ParamField>
+
+<ParamField path="initialMessages" type="string array">
+  Initial Agent messages
+</ParamField>
+
+<ParamField path="context" type="string">
+  Extra context that will be appended to the Agent system prompt
+</ParamField>
+
+## Methods
+
+<ParamField path="open" type="bubble widget only">
+Open Bubble Chatbox
+```js
+const widget = await Chatbox.initBubble({
+  agentId: 'YOUR_AGENT_ID',
+})
+
+widget.open()
+
+````
+</ParamField>
+
+<ParamField path="close"   type="bubble widget only">
+  Close Bubble Chatbox
+  ```js
+  const widget = await Chatbox.initBubble({
+    agentId: 'YOUR_AGENT_ID',
+  })
+
+  widget.close()
+```
+
+</ParamField>
+
+<ParamField path="toggle"  type="bubble widget only">
+
+```js Toggle Bubble Chatbox
+const widget = await Chatbox.initBubble({
+  agentId: 'YOUR_AGENT_ID',
+})
+
+widget.toggle()
+```
+</ParamField>
+`````

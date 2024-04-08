@@ -11,7 +11,7 @@ import Logo from '@/public/images/logo.png';
 export default function Footer() {
   return (
     <footer>
-      <div className="px-4 mx-auto max-w-6xl sm:px-6">
+      <div className="max-w-6xl px-4 mx-auto sm:px-6">
         {/* Top area: Blocks */}
         <div className="grid gap-8 py-8 border-t sm:grid-cols-12 md:py-12 border-zinc-200">
           {/* 1st block */}
@@ -19,7 +19,7 @@ export default function Footer() {
             <div className="mb-4">
               {/* Logo */}
               <Link
-                className="flex justify-center items-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20"
+                className="flex items-center justify-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20"
                 href="/"
               >
                 <Image src={Logo} width={24} height={24} alt="Logo" />
@@ -32,7 +32,7 @@ export default function Footer() {
             <ul className="flex mt-4 mb-1 space-x-4">
               <li>
                 <a
-                  className="flex justify-center items-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
                   href="https://twitter.com/@chaindesk_ai"
                   aria-label="Twitter"
                   target="_blank"
@@ -49,7 +49,7 @@ export default function Footer() {
               </li>
               {/* <li>
                 <a
-                  className="flex justify-center items-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
                   href="#0"
                   aria-label="Medium"
                 >
@@ -65,7 +65,7 @@ export default function Footer() {
               </li> */}
               <li>
                 <a
-                  className="flex justify-center items-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
                   href="https://www.linkedin.com/company/chaindesk"
                   aria-label="Linkedin"
                   target="_blank"
@@ -82,7 +82,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  className="flex justify-center items-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
                   href="https://discord.gg/FSWKj49ckX"
                   aria-label="Discord"
                   target="_blank"
@@ -227,19 +227,19 @@ export default function Footer() {
                 <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900"
-                    href="https://chaindesk.ai/help"
+                    href="https://docs.chaindesk.ai/"
                     target="_blank"
                   >
-                    Help Center
+                    Documentation
                   </a>
                 </li>
                 <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900"
-                    href="https://docs.chaindesk.ai/"
+                    href="https://chaindesk.ai/help"
                     target="_blank"
                   >
-                    API Documentation
+                    Help Center
                   </a>
                 </li>
                 <li>

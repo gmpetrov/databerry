@@ -24,6 +24,7 @@
     },
     "lint": {},
     "typecheck": {},
+    "check": {},
     "sendDailyLeads": {
       "dependsOn": ["@chaindesk/prisma#prisma:generate"],
       "cache": false
