@@ -1,0 +1,100 @@
+---
+title: 'Datasource - Create'
+openapi: 'POST /datasources'
+---
+
+#### File upload supported mime types
+
+- text/csv'
+- text/plain'
+- text/markdown'
+- application/pdf'
+- application/json'
+- application/vnd.openxmlformats-officedocument.presentationml.presentation
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document
+- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+### Example JS Code to create a Datasource of type 'file'
+
+```js
+const apiUrl = 'https://app.chaindesk.ai/api';
+const apiKey = 'XXX';
+const datastoreId = 'XXX';
+
+const fileName = 'test.pdf';
+const buffer = fs.readFileSync(fileName);
+
+const formData = new FormData();
+
+formData.append(
+  'file',
+  new Blob([buffer], {
+    type: 'application/pdf',
+  }),
+  fileName
+);
+
+formData.append('type', 'file');
+formData.append('datastoreId', datastoreId);
+formData.append('fileName', fileName);
+
+const res = await fetch(`${apiUrl}/datasources`, {
+  method: 'POST',
+  body: formData,
+  headers: {
+    Authorization: `Bearer ${apiKey}`,
+  },
+});
+```
+
+### Example JS Code to create a Datasource of type 'web_page'
+
+```js
+const apiUrl = 'https:/app.chaindesk.ai/api';
+const apiKey = 'XXX';
+const datastoreId = 'XXX';
+
+const res = await fetch(`${apiUrl}/datasources`, {
+  method: 'POST',
+  body: JSON.stringify({
+    datastoreId,
+    type: 'web_page',
+    name: 'Nuclear Fusion - Wikipedia',
+    config: {
+      source_url: 'https://en.wikipedia.org/wiki/Nuclear_fusion',
+    },
+  }),
+  headers: {
+    ContentType: 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  },
+});
+```
+
+### Example JS Code to create a Datasource of type 'web_site' with a sitemap
+
+```js
+const apiUrl = 'https://app.chaindesk.ai';
+const apiKey = 'XXX';
+const datastoreId = 'XXX';
+
+const res = await fetch(`${apiUrl}/datasources`, {
+  method: 'POST',
+  body: JSON.stringify({
+    datastoreId,
+    type: 'web_site',
+    name: 'Chaindesk Docs',
+    config: {
+      // Sitemap
+      sitemap: 'https://docs.chaindesk.ai/sitemap.xml',
+
+      // Or Auto Discovery
+      source_url: 'https://docs.databerry.ai',
+    },
+  }),
+  headers: {
+    ContentType: 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  },
+});
+```

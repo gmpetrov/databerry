@@ -1,0 +1,80 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "chaindesk.ai - Connect custom data to large language models",
+  "logo": {
+    "dark": "/logo/dark.png",
+    "light": "/logo/light.png"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#6132A9",
+    "light": "#C69EFF",
+    "dark": "#6132A9"
+  },
+  "topbarLinks": [
+    {
+      "name": "Github",
+      "url": "https://github.com/gmpetrov/databerry"
+    },
+    {
+      "name": "Discord",
+      "url": "https://discord.gg/FSWKj49ckX"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://chaindesk.ai/"
+  },
+  "anchors": [
+    {
+      "name": "chaindesk API",
+      "icon": "rectangle-terminal",
+      "url": "api-reference"
+    },
+    {
+      "name": "support@chaindesk.ai",
+      "icon": "comment-question",
+      "url": "mailto:support@chaindesk.ai"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Overview",
+      "pages": ["introduction", "platform"]
+    },
+    {
+      "group": "chaindesk API",
+      "pages": ["api-reference/authentication"]
+    },
+    {
+      "group": "Endpoints",
+      "pages": [
+        "api-reference/endpoint/agents/query",
+        "api-reference/endpoint/agents/create",
+        "api-reference/endpoint/agents/get",
+        "api-reference/endpoint/agents/update",
+        "api-reference/endpoint/agents/delete",
+        "api-reference/endpoint/datasources/create",
+        "api-reference/endpoint/datasources/get",
+        "api-reference/endpoint/datasources/delete",
+        "api-reference/endpoint/datastores/query",
+        "api-reference/endpoint/datastores/create",
+        "api-reference/endpoint/datastores/get",
+        "api-reference/endpoint/datastores/update",
+        "api-reference/endpoint/datastores/delete",
+        "api-reference/endpoint/datastores/upsert",
+        "api-reference/endpoint/datasources/update",
+        "api-reference/endpoint/datastores/file-upload"
+      ]
+    },
+    {
+      "group": "External Integrations",
+      "pages": ["integrations/langchain"]
+    }
+  ],
+  "footerSocials": {
+    "twitter": "https://twitter.com/georges_petrov",
+    "discord": "https://discord.gg/FSWKj49ckX",
+    "github": "https://github.com/gmpetrov/databerry"
+  }
+}

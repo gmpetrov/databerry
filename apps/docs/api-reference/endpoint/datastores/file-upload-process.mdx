@@ -1,0 +1,47 @@
+---
+title: 'Datasource - File Upload - Process'
+api: 'POST https://app.chaindesk.ai/api/datastores/file-upload/{datastoreId}'
+description: 'This endpoint allows to finalize file upload process.'
+authMethod: 'bearer'
+---
+
+### Path
+
+<ParamField path="datastoreId" type="string" required>
+  The id of the datastore where you want to upload a file.
+</ParamField>
+
+### Body
+
+<ParamField body="id" type="string" required>
+  ID of the upload link generated with /datastores/file-upload/generate-link/`<datastoreId>`
+</ParamField>
+
+### Response
+
+<ResponseField name="id" type="string">
+  Id of the upload link.
+</ResponseField>
+
+<RequestExample>
+
+```bash Example Request
+curl --location --request POST 'https://app.chaindesk.ai/api/datastores/file-upload/<datastoreId>' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <API_KEY>' \
+--data-raw '{
+    "id": "clgur3oas000008l6emz0bbal"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response
+{
+  "id": "clgur3oas000008l6emz0bbal"
+}
+```
+
+</ResponseExample>

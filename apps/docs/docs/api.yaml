@@ -1,0 +1,707 @@
+openapi: 3.0.1
+info:
+  title: Chaindesk.ai - API OpenAPI specifications
+  description: |-
+
+  termsOfService: http://chaindesk.ai/terms
+  contact:
+    email: support@chaindesk.ai
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://app.chaindesk.ai
+tags:
+  - name: agents
+  - name: datastores
+  - name: datasources
+paths:
+  /datasources:
+    post:
+      tags:
+        - datasources
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                fileName:
+                  type: string
+                type:
+                  enum:
+                    - file
+                datastoreId:
+                  type: string
+                custom_id:
+                  type: string
+                  description: Useful for multi-tenant setups
+
+              required:
+                - type
+                - datastoreId
+                - file
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  enum: ['web_page', 'web_site']
+                datastoreId:
+                  type: string
+                custom_id:
+                  type: string
+                  description: Useful for multi-tenant setups
+                config:
+                  type: object
+                  properties:
+                    source_url:
+                      type: string
+                      format: url
+                      description: web_page, web_site
+                    sitemap:
+                      type: string
+                      format: url
+                      description: web_site
+
+              # oneOf:
+              #   - $ref: '#/components/schemas/DatasourceWebPage'
+              #   - $ref: '#/components/schemas/DatasourceWebSite'
+              # discriminator:
+              #   propertyName: type
+              #   mappping:
+              #     "web_page": '#/components/schemas/y'
+              #     "web_site": '#/components/schemas/DatasourceWebSite'
+
+              required:
+                - type
+                - datastoreId
+                - config
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Datasource'
+        '400':
+          description: Invalid body
+        '403':
+          description: Unauthorized
+  /datasources/{id}:
+    get:
+      tags:
+        - datasources
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the datasource
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Datasource'
+        '403':
+          description: Unauthorized
+    delete:
+      tags:
+        - datasources
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the datasource
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Datasource'
+        '403':
+          description: Unauthorized
+  /agents/{id}/query:
+    post:
+      tags:
+        - agents
+      summary: This let you query your agent for a specific query.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the agent
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: This is the query you want to ask your agent.
+                conversationId:
+                  type: string
+                  description: ID of the conversation (If not provided a new conversation is created)
+                visitorId:
+                  type: string
+                  description: ID of the participant that's sending the query (If not provided a new ID is created)
+                temperature:
+                  type: number
+                  description: Temperature of the model (min 0.0, max 1.0)
+                streaming:
+                  type: boolean
+                  description: Enable streaming
+                modelName:
+                  description: Override agent model
+                  enum:
+                    - gpt_3_5_turbo
+                    - gpt_3_5_turbo_16k
+                    - gpt_4
+                maxTokens:
+                  type: number
+                  description: The maximum number of tokens to generate in the chat completion.
+                presencePenalty:
+                  type: number
+                  description: Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
+                frequencyPenalty:
+                  type: number
+                  description: Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
+                topP:
+                  type: number
+                  description: An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both.
+                filters:
+                  type: object
+                  properties:
+                    custom_ids:
+                      type: array
+                      description: Filter by Custom IDs
+                      items:
+                        type: string
+                    datasource_ids:
+                      type: array
+                      description: Filter by Datasource IDs
+                      items:
+                        type: string
+                systemPrompt:
+                  description: Agent system prompt
+                  type: string
+
+                userPrompt:
+                  description: Agent user prompt
+                  type: string
+                promptType:
+                  deprecated: true
+                  description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt type for this query
+                  enum:
+                    - raw
+                    - customer_support
+                promptTemplate:
+                  deprecated: true
+                  type: string
+                  description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt template for this query
+              required:
+                - query
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  answer:
+                    type: string
+                    description: The answer of the agent.
+                  conversationId:
+                    type: string
+                    description: ID of the conversation
+                  visitorId:
+                    type: string
+                    description: ID of the participant that's sending the query
+                  sources:
+                    type: array
+                    items:
+                      type: object
+                      description: Datasource chunks that were used to generate the answer
+        '400':
+          description: Invalid body
+        '403':
+          description: Unauthorized
+  /agents:
+    post:
+      tags:
+        - agents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                modelName:
+                  enum:
+                    - gpt_3_5_turbo
+                    - gpt_3_5_turbo_16k
+                    - gpt_4
+                    - gpt_4_32k
+                temperature:
+                  type: number
+                  description: Temperature of the model (min 0.0, max 1.0)
+                systemPrompt:
+                  description: Agent system prompt
+                  type: string
+
+                userPrompt:
+                  description: Agent user prompt
+                  type: string
+
+                promptType:
+                  description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt type for this query
+                  enum:
+                    - raw
+                    - customer_support
+                promptTemplate:
+                  type: string
+                  description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt template for this query
+                visibility:
+                  enum:
+                    - public
+                    - private
+              required:
+                - description
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '400':
+          description: Invalid body
+        '403':
+          description: Unauthorized
+  /agents/{id}:
+    get:
+      tags:
+        - agents
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the Agent
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '403':
+          description: Unauthorized
+    patch:
+      tags:
+        - agents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                modelName:
+                  enum:
+                    - gpt_3_5_turbo
+                    - gpt_3_5_turbo_16k
+                    - gpt_4
+                    - gpt_4_32k
+                temperature:
+                  type: number
+                  description: Temperature of the model (min 0.0, max 1.0)
+
+                systemPrompt:
+                  description: Agent system prompt
+                  type: string
+
+                userPrompt:
+                  description: Agent user prompt
+                  type: string
+
+                promptType:
+                  description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt type for this query
+                  enum:
+                    - raw
+                    - customer_support
+                promptTemplate:
+                  type: string
+                  description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt template for this query
+                visibility:
+                  enum:
+                    - public
+                    - private
+              required:
+                - description
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '400':
+          description: Invalid body
+        '403':
+          description: Unauthorized
+    delete:
+      tags:
+        - agents
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the Agent
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+        '403':
+          description: Unauthorized
+  /datastores:
+    post:
+      tags:
+        - datastores
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                type:
+                  enum:
+                    - qdrant
+                # visibility:
+                #   enum:
+                #     - public
+                #     - private
+              required:
+                - description
+                - type
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Datastore'
+        '400':
+          description: Invalid body
+        '403':
+          description: Unauthorized
+  /datastores/{id}:
+    get:
+      tags:
+        - datastores
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the Agent
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Datastore'
+        '403':
+          description: Unauthorized
+    patch:
+      tags:
+        - datastores
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                type:
+                  enum:
+                    - qdrant
+                # visibility:
+                #   enum:
+                #     - public
+                #     - private
+              required:
+                - description
+                - type
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Datastore'
+        '400':
+          description: Invalid body
+        '403':
+          description: Unauthorized
+    delete:
+      tags:
+        - datastores
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the Agent
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Datastore'
+        '403':
+          description: Unauthorized
+  /datastores/{id}/query:
+    post:
+      tags:
+        - datastores
+      summary: This endpoint gets the most similar document fragments for a given query.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            description: ID of the datastore
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: Query to ask your agent.
+                topK:
+                  type: number
+                  description: The maximum number of results to retrieve.
+                filters:
+                  type: object
+                  properties:
+                    custom_ids:
+                      type: array
+                      description: Filter by Custom IDs
+                      items:
+                        type: string
+                    datasource_ids:
+                      type: array
+                      description: Filter by Datasource IDs
+                      items:
+                        type: string
+
+              required:
+                - query
+
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: Text of the document fragment.
+                    score:
+                      type: number
+                      description: Similarity score of the document fragment.
+                    source:
+                      type: string
+                      description: Source url of the document fragment.
+                    datasource_id:
+                      type: string
+                      description: ID of the datasource the document fragment belongs to.
+                    datasource_name:
+                      type: string
+                      description: Name of the datasource the document fragment belongs to.
+        '400':
+          description: Invalid body
+        '403':
+          description: Unauthorized
+components:
+  schemas:
+    Datasource:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        status:
+          enum:
+            [unsynched, pending, running, synched, error, usage_limit_reached]
+        groupId:
+          type: string
+        updatedAt:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date
+        lastSynch:
+          type: string
+          format: date
+        config:
+          type: object
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        modelName:
+          enum:
+            - gpt_3_5_turbo
+            - gpt_3_5_turbo_16k
+            - gpt_4
+            - gpt_4_32k
+        temperature:
+          type: number
+          description: Temperature of the model (min 0.0, max 1.0)
+        visibility:
+          enum:
+            - public
+            - private
+        systemPrompt:
+          description: Agent system prompt
+          type: string
+
+        userPrompt:
+          description: Agent user prompt
+          type: string
+
+        promptType:
+          deprecated: true
+          description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt type for this query
+          enum:
+            - raw
+            - customer_support
+        promptTemplate:
+          deprecated: true
+          type: string
+          description: (DEPRECATED in favor of systemPrompt and userPrompt) Set the prompt template for this query
+
+    Datastore:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          enum:
+            - qdrant
+        visibility:
+          enum:
+            - public
+            - private
+    DatasourceConfigWebPage:
+      type: object
+      properties:
+        source_url:
+          type: string
+          format: url
+    DatasourceConfigWebSite:
+      type: object
+      properties:
+        source_url:
+          type: string
+          format: url
+        sitemap:
+          type: string
+          format: url
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+
+security:
+  - bearerAuth: []

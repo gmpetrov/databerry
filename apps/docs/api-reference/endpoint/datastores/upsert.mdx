@@ -1,0 +1,73 @@
+---
+title: 'Datasource - Upsert (⚠️ deprecated)'
+api: 'POST https://app.chaindesk.ai/api/datastores/upsert/{datastoreId}'
+description: 'This endpoint allows you to add a new Datasource in a Datastore'
+authMethod: 'bearer'
+---
+
+### Path
+
+<ParamField path="datastoreId" type="string" required>
+  The id of the datastore you want to access.
+</ParamField>
+
+### Body
+
+<ParamField path="documents" type="array" required>
+  
+<Expandable title="Toggle object" defaultOpen>
+
+The documents you want to upsert.
+
+<ParamField body="text" type="string" required>
+  This is the name of the Datasource.
+</ParamField>
+
+<ParamField body="name" type="string">
+  This is the name of the Datasource.
+</ParamField>
+
+<ParamField body="metadata" type="JSON or null">
+  This is the metadata object of the Datasource.
+</ParamField>
+
+</Expandable>
+
+</ParamField>
+
+### Response
+
+<ResponseField name="ids" type="array of string">
+  The IDs of the documents that were created.
+</ResponseField>
+
+<RequestExample>
+
+```bash Example Request
+curl --location --request POST 'https://app.chaindesk.ai/api/datastores/upsert/<datastoreId>' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <API_KEY>' \
+--data-raw '{
+    "documents": [
+      "text": "Lorem Ipsum...",
+      "name": "My Document",
+      "metadata": {
+        "source" : "https://en.wikipedia.org/wiki/Lorem_ipsum",
+        "author": "John Doe",
+        "date": "2021-01-01",
+      }
+    ]
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response
+{
+  "ids": ["60f9b9f0-0b1a-11ec-9a03-0242ac130003"]
+}
+```
+
+</ResponseExample>
