@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.322"></a>
+## 0.1.322 (2024-04-08)
+
+### Fixed
+
+- 🐛 embeds css issue [[c9cfb35](https://github.com/gmpetrov/databerry/commit/c9cfb351a6688851ac6e3ef9a79f75696923859e)]
+
+
 <a name="0.1.321"></a>
 ## 0.1.321 (2024-04-08)
 
