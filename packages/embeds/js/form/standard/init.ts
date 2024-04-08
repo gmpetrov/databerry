@@ -1,4 +1,4 @@
-import { ChatBoxStandardProps } from '@chaindesk/ui/ChatBoxLoader';
+import type { ChatBoxStandardProps } from '@chaindesk/ui/ChatBoxLoader';
 
 import setupAttributes from '@chaindesk/ui/embeds/common/setup-attributes';
 import { hookFunctionsToWindow } from '@chaindesk/ui/embeds/common/utils';
@@ -6,7 +6,6 @@ import { hookFunctionsToWindow } from '@chaindesk/ui/embeds/common/utils';
 import FormStandard, { name } from './index';
 
 const initStandard = (props: ChatBoxStandardProps) => {
-  console.log('props----------->', props);
   if (!customElements.get(name)) {
     customElements.define(name, FormStandard);
   }
