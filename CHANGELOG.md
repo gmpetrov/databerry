@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.317"></a>
+## 0.1.317 (2024-04-08)
+
+### Fixed
+
+- ✏️ improve documentation [[dc38590](https://github.com/gmpetrov/databerry/commit/dc3859013af902f29565852326c4e595ef764161)]
+
+### Miscellaneous
+
+- 🤖 move docs to monorepo [[132c7bb](https://github.com/gmpetrov/databerry/commit/132c7bb40fe2974de27a06abc675e81ddb59ae5e)]
+- 🤖 refacto widget folder + tailwind config package [[775165a](https://github.com/gmpetrov/databerry/commit/775165a0dd25a0d021fee5e1fd3e6377aef05dfc)]
+- 🎸 Form lifecycle events [[cba69fe](https://github.com/gmpetrov/databerry/commit/cba69fe7728d4d25556e5227a69e6627f14f17b4)]
+
+
 <a name="0.1.316"></a>
 ## 0.1.316 (2024-04-07)
 
