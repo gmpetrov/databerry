@@ -9,4 +9,5 @@ module.exports = {
     './../../packages/ui/src/**/*.{js,ts,jsx,tsx}',
   ],
   presets: [sharedConfig],
+  // important: '#__next',
 };

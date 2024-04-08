@@ -10,4 +10,13 @@
 @import 'additional-styles/theme.css';
 
 @import 'tailwindcss/utilities';
-@import './preflight.css';
+@import '@chaindesk/ui/src/styles/preflight.css';
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button; /* 1 */
+  background-color: transparent; /* 2 */
+  background-image: none; /* 2 */
+}
