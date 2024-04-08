@@ -7,6 +7,7 @@ import createElement from '@chaindesk/ui/embeds/common/create-element';
 export const name = 'chaindesk-chatbox-standard';
 
 const element = createElement({
+  type: 'chatbox',
   widget: (props: any) => (
     <ChatBoxLoader
       layout={ChatboxNavBarLayout}

@@ -7,6 +7,7 @@ import createElement from '@chaindesk/ui/embeds/common/create-element';
 const name = 'chaindesk-chatbox-bubble';
 
 const element = createElement({
+  type: 'chatbox',
   widget: (props: any) => (
     <ChatBoxLoader
       {...props}

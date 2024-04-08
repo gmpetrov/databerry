@@ -1,6 +1,6 @@
 {
   "name": "@chaindesk/embeds",
-  "version": "1.0.189",
+  "version": "1.0.201",
   "description": "Chaindesk Embeds",
   "main": "dist/chatbox/index.js",
   "scripts": {
@@ -18,8 +18,7 @@
     "url": "https://github.com/gmpetrov/databerry/issues"
   },
   "files": [
-    "js/**/*",
-    "react/**/*"
+    "dist/**/*"
   ],
   "homepage": "https://github.com/gmpetrov/databerry#readme",
   "dependencies": {

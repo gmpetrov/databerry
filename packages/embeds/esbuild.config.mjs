@@ -9,7 +9,6 @@ const outDir = isProd ? './dist' : './tests/dist';
 let ctx = await esbuild.context({
   entryPoints: [
     'js/chatbox/index.ts',
-    'js/chatbox/styles.ts',
     'js/chatbox/legacy.js',
     'js/form/index.ts',
   ],

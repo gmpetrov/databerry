@@ -9,6 +9,9 @@ import { CustomContact } from '@chaindesk/lib/types';
 import { InitWidgetProps } from '@chaindesk/ui/embeds/types';
 import { createTheme, createThemeKeys } from '@chaindesk/ui/themes/base';
 
+import '@chaindesk/ui/styles/globals.css';
+import '@chaindesk/ui/styles/preflight.css';
+
 const contactAttributes = {
   'phone-number': 'phoneNumber',
   'user-id': 'userId',
@@ -23,14 +26,15 @@ const themeKeys = createThemeKeys(themePrefix);
 const assetsBaseUrl = process.env.NEXT_PUBLIC_ASSETS_BASE_URL || '';
 
 type Props = {
+  type: 'chatbox' | 'form';
   name: string;
   widget: FunctionComponent<InitWidgetProps>;
   onEnd?: (data: any) => void;
 };
 
-const createElement = ({ name, widget }: Props) =>
+const createElement = ({ name, widget, type }: Props) =>
   class WebChatBubble extends HTMLElement {
-    cssProvider = assetsBaseUrl + '/dist/chatbox/styles.css';
+    cssProvider = assetsBaseUrl + `/dist/${type}/index.css`;
     root: Root;
     cache: EmotionCache;
     shadowRootElement: HTMLDivElement;
