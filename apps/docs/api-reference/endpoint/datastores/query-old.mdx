@@ -1,0 +1,100 @@
+---
+title: 'Datastore - Query'
+api: 'POST https://app.chaindesk.ai/api/datastores/query/{datastore_id}/old'
+description: 'This endpoint gets the most similar document fragments for a given query.'
+authMethod: 'bearer'
+---
+
+### Path
+
+<ParamField path="datastore_id" type="string" required>
+  The id of the datastore you want to query.
+</ParamField>
+
+### Body
+
+<ParamField body="query" type="string" required>
+  This is the query you want to search for.
+</ParamField>
+
+<ParamField body="topK" type="number" default={3}>
+  This is the maximum number of results you want to return.
+</ParamField>
+
+<ParamField body="filters" type="object">
+  <ParamField body="custom_id" type="string">
+    Filter by Custom ID
+  </ParamField>
+
+  <ParamField body="datasource_id" type="string">
+    Filter by Datasource ID
+  </ParamField>
+</ParamField>
+
+### Response
+
+<ResponseField name="results" type="array">
+  Array containing query results
+
+<Expandable title="Toggle object" defaultOpen> 
+<ResponseField name="text" type="string">
+  The text of the document fragment.
+</ResponseField>
+
+<ResponseField name="score" type="number">
+  The similarity score of the document fragment.
+</ResponseField>
+
+<ResponseField name="source" type="string or null">
+  The source url of the document fragment.
+</ResponseField>
+
+<ResponseField name="datasource_name" type="string">
+  The name of the datasource the document fragment belongs to.
+</ResponseField>
+
+<ResponseField name="datasource_id" type="string">
+  The name of the datasource the document fragment belongs to.
+</ResponseField>
+</Expandable>
+
+</ResponseField>
+
+<RequestExample>
+
+```bash Example Request
+curl --location --request POST 'https://app.chaindesk.ai/api/datastores/<datastore_id>/query' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <API_KEY>' \
+--data-raw '{
+    "query": "Lorem Ipsum...",
+    "topK": 5,
+    "filters": {
+        "custom_id": "hello_world",
+        "datasource_id": "<datastore_id>",
+    }
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response
+{
+  "results": [
+    {
+      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "score": 0.89,
+      "source": "https://en.wikipedia.org/wiki/Lorem_ipsum"
+    },
+    {
+      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "score": 0.42,
+      "source": "https://en.wikipedia.org/wiki/Lorem_ipsum"
+    }
+  ]
+}
+```
+
+</ResponseExample>

@@ -1,0 +1,22 @@
+{
+  "name": "docs",
+  "version": "1.0.174",
+  "description": "Chaindesk Documentation",
+  "scripts": {
+    "dev": "mintlify dev --port 3333",
+    "check": "mintlify broken-links"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmpetrov/databerry.git"
+  },
+  "author": "Georges Petrov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gmpetrov/databerry/issues"
+  },
+  "homepage": "https://github.com/gmpetrov/databerry#readme",
+  "dependencies": {
+    "mintlify": "^4.0.139"
+  }
+}

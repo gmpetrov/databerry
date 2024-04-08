@@ -1,0 +1,117 @@
+---
+title: 'Datasource - File Upload - Genearte Link'
+api: 'POST https://app.chaindesk.ai/api/datastores/file-upload/generate-link/{datastoreId}'
+description: 'This endpoint allows to generate an upload link to upload a file to a datastore.'
+authMethod: 'bearer'
+---
+
+### Path
+
+<ParamField path="datastoreId" type="string" required>
+  The id of the datastore where you want to upload a file.
+</ParamField>
+
+### Body
+
+<ParamField body="type" type="string" required>
+  Mime type of the file you want to upload.
+</ParamField>
+
+<ParamField body="fileName" type="string">
+  Visible file name in the datastore.
+</ParamField>
+
+##### Supported mime types
+
+- text/csv'
+- text/plain'
+- text/markdown'
+- application/pdf'
+- application/vnd.openxmlformats-officedocument.presentationml.presentation
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document
+- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+### Response
+
+<ResponseField name="id" type="string">
+  Id of the upload link.
+</ResponseField>
+<ResponseField name="link" type="string">
+  Generated link to upload a file.
+</ResponseField>
+
+### Example JS Code
+
+```js
+const apiUrl = 'https://app.chaindesk.ai/api';
+const apiKey = 'XXX';
+const datastoreId = 'XXX';
+
+const text = 'Hello World!';
+const type = 'text/plain';
+
+// Request upload link
+const data = await fetch(
+  `${apiUrl}/datastores/file-upload/generate-link/${datastoreId}`,
+  {
+    method: 'POST',
+    body: JSON.stringify({
+      // type: 'application/pdf',
+      type,
+      fileName: 'Hello World.txt',
+    }),
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+  }
+);
+
+const { id, link } = await data.json();
+
+// Upload file
+await fetch(link, {
+  method: 'PUT',
+  body: text,
+  headers: {
+    'Content-Type': type,
+  },
+});
+
+// Process file
+const res = await fetch(`${apiUrl}/datastores/file-upload/${datastoreId}`, {
+  method: 'POST',
+  body: JSON.stringify({
+    id,
+  }),
+  headers: {
+    Authorization: `Bearer ${apiKey}`,
+    'Content-Type': 'application/json',
+  },
+});
+```
+
+<RequestExample>
+
+```bash Example Request
+curl --location --request POST 'https://app.chaindesk.ai/api/datastores/file-upload/generate-link/<datastoreId>' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <API_KEY>' \
+--data-raw '{
+    "type": "application/pdf",
+    "fileName": "Hello World.pdf"
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response
+{
+  "id": "60f9b9f0-0b1a-11ec-9a03-0242ac130003",
+  "link": "https://example.com"
+}
+```
+
+</ResponseExample>

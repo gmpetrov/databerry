@@ -1,0 +1,140 @@
+---
+title: 'Agent - Query'
+api: 'POST https://app.chaindesk.ai/api/agents/{agentId}/query'
+description: 'This let you query your agent for a specific query.'
+authMethod: 'bearer'
+---
+
+### Path
+
+<ParamField path="agentId" type="string" required>
+  The id of the agent you want to query.
+</ParamField>
+
+### Body
+
+<ParamField body="query" type="string" required>
+  This is the query you want to ask your agent.
+</ParamField>
+
+<ParamField body="temperature" type="number" min="0.0" max="1.0">
+  Temperature of the model (min 0.0, max 1.0)
+</ParamField>
+
+<ParamField body="conversationId" type="string">
+  ID of the conversation
+</ParamField>
+
+<ParamField body="visitorId" type="string">
+  ID of the participant that's sending the query
+</ParamField>
+
+<ParamField body="streaming" type="boolean">
+  Enable streaming
+</ParamField>
+
+<ParamField body="filters" type="Filters Object">
+  <Expandable title="properties">
+
+<ParamField body="custom_ids" type="string array">
+  Filter by Custom IDs
+</ParamField>
+
+<ParamField body="datasource_ids" type="string array">
+  Filter by Datasource IDs
+</ParamField>
+
+  </Expandable>
+</ParamField>
+
+### Response
+
+<ResponseField name="answer" type="string">
+  The answer of the agent.
+</ResponseField>
+<ResponseField name="conversationId" type="string">
+  ID of the conversation
+</ResponseField>
+<ResponseField name="visitorId" type="string">
+  ID of the participant that's sending the query
+</ResponseField>
+<ResponseField name="sources" type="string">
+  Datasource chunks that were used to generate the answer
+</ResponseField>
+
+### Streaming
+
+##### When streaming is enabled, the endpoint will emit events "answer" (answer of the model) and "endpoint_response" (full response of the endpoint)
+
+```js
+import {
+  EventStreamContentType,
+  fetchEventSource,
+} from '@microsoft/fetch-event-source';
+
+let buffer = '';
+let bufferEndpointResponse = '';
+const ctrl = new AbortController();
+
+await fetchEventSource(queryAgentURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: ctrl.signal,
+        body: JSON.stringify({
+          streaming: true,
+          query,
+          conversationId,
+          visitorId,
+        }),
+
+        async onopen(response) {
+          if (response.status === 402) {
+            throw new ApiError(ApiErrorType.USAGE_LIMIT);
+          }
+        },
+        onmessage: (event) => {
+          if (event.data === '[DONE]') {
+            // End of stream
+            ctrl.abort();
+
+            try {
+              const { sources, conversationId, visitorId } = JSON.parse(
+                bufferEndpointResponse
+              ) as ChatResponse;
+            } catch {}
+          } else if (event.data?.startsWith('[ERROR]')) {
+            // ...
+          } else if (event.event === "endpoint_response") {
+            bufferEndpointResponse += event.data;
+          } else if (event.event === "answer") {
+            buffer += event.data;
+            // ...
+          }
+       },
+  });
+```
+
+<RequestExample>
+
+```bash Example Request
+curl --location --request POST 'https://app.chaindesk.ai/api/agents/<agentId>/query' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <API_KEY>' \
+--data-raw '{
+    "query": "Lorem Ipsum..."
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response
+{
+  "answer": "Lorem upsum..."
+}
+```
+
+</ResponseExample>

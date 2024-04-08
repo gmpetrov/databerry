@@ -1,0 +1,91 @@
+---
+title: 'Datasource - File Upload (⚠️ deprecated)'
+api: 'POST http://localhost:3000/api/external/datastores/file-upload/{datastoreId}'
+description: 'This endpoint allows to upload a new file to a datastore.'
+authMethod: 'bearer'
+---
+
+### Path
+
+<ParamField path="datastoreId" type="string" required>
+  The id of the datastore where you want to upload a file.
+</ParamField>
+
+<ParamField
+  header="content-type"
+  type="string"
+  required
+  default="multipart/form-data"
+>
+  Content Type must be set to multipart/form-data
+</ParamField>
+
+### Body
+
+<ParamField body="file" type="file" required>
+  File to upload
+</ParamField>
+
+<ParamField body="fileName" type="string">
+  File Name
+</ParamField>
+
+<ParamField body="custom_id" type="string">
+  Custom ID: If you want to set a custom ID for the file, you can do it here.
+</ParamField>
+
+##### Supported mime types
+
+- text/csv'
+- text/plain'
+- text/markdown'
+- application/pdf'
+- application/json'
+- application/vnd.openxmlformats-officedocument.presentationml.presentation
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document
+- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+### Example JS Code
+
+```js
+const apiUrl = 'https://app.chaindesk.ai/api';
+const apiKey = 'XXX';
+const datastoreId = 'XXX';
+
+const fileName = 'test.pdf';
+const buffer = fs.readFileSync(fileName);
+
+const formData = new FormData();
+
+formData.append(
+  'file',
+  new Blob([buffer], {
+    type: 'application/pdf',
+  }),
+  fileName
+);
+
+formData.append('fileName', fileName);
+
+// Request upload link
+const res = await fetch(
+  `${apiUrl}/api/external/datastores/file-upload/${datastoreId}`,
+  {
+    method: 'POST',
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  }
+);
+```
+
+<RequestExample>
+
+```bash Example Request
+curl --location --request POST 'https://app.chaindesk.ai/api/external/datastores/file-upload/<datastoreId>' \
+--header 'Authorization: Bearer <API_KEY>' \
+--form 'file=@"/Users/path/test.pdf"'
+```
+
+</RequestExample>

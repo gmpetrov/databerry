@@ -1,0 +1,64 @@
+---
+title: 'Datasource - Update (⚠️ deprecated)'
+api: 'POST https://app.chaindesk.ai/api/datastores/update/{datastoreId}'
+description: 'This endpoint allows you to update a Datasource in your Datastore.'
+authMethod: 'bearer'
+---
+
+### Path
+
+<ParamField path="datastoreId" type="string" required>
+  The id of the datastore you want to access.
+</ParamField>
+
+### Body
+
+<ParamField body="id" type="string" required>
+  This is the ID of the Datasource you want to update.
+</ParamField>
+
+<ParamField body="text" type="string" required>
+  This is the name of the Datasource.
+</ParamField>
+
+<ParamField body="name" type="string">
+  This is the name of the Datasource.
+</ParamField>
+
+<ParamField body="metadata" type="JSON or null">
+  This is the metadata object of the Datasource.
+</ParamField>
+
+### Response
+
+<ResponseField name="id" type="string"></ResponseField>
+
+<RequestExample>
+
+```bash Example Request
+curl --location --request POST 'https://app.chaindesk.ai/api/datastores/update/<datastoreId>' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <API_KEY>' \
+--data-raw '{
+    "id": "<datasourceID>",
+    "text": "Lorem Ipsum...",
+    "name": "My Document",
+    "metadata": {
+      "source" : "https://en.wikipedia.org/wiki/Lorem_ipsum",
+      "author": "John Doe",
+      "date": "2021-01-01",
+    }
+}'
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json Response
+{
+  "id": "60f9b9f0-0b1a-11ec-9a03-0242ac130003"
+}
+```
+
+</ResponseExample>
