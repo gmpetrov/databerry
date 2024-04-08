@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.320"></a>
+## 0.1.320 (2024-04-08)
+
+### Fixed
+
+- 🐛 transparent background for widgets [[a1a7c09](https://github.com/gmpetrov/databerry/commit/a1a7c0955a0a4142323fcce4fde3f16436d42247)]
+- ✏️ init reference section [[943b4a2](https://github.com/gmpetrov/databerry/commit/943b4a22c2fa5ed1cfb821e86a4381608c341982)]
+
+
 <a name="0.1.319"></a>
 ## 0.1.319 (2024-04-08)
 
