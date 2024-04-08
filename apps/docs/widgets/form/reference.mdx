@@ -4,4 +4,68 @@ description: 'Reference'
 
 import ToDoDoc from '/snippets/to-do-doc.mdx';
 
-<ToDoDoc />
+The Form widget is available through our CDN as a single JavaScript file or through NPM as a React component package.
+
+<Tabs>
+  <Tab title="HTML" >
+    ```html
+    <script type="module">
+  import Form from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/form/index.js';
+
+Form.initStandard({
+formId: 'YOUR_FORM_ID',
+});
+
+</script>
+
+`````
+  </Tab>
+  <Tab title="React" >
+    <ToDoDoc />
+  </Tab>
+</Tabs>
+
+## Attributes / Props
+
+<Tabs>
+  <Tab title="HTML" >
+    ```html
+    <script type="module">
+  import Form from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/form/index.js';
+
+Form.initStandard({
+  formId: 'YOUR_AGENT_ID',
+
+  onEnd: function (values) {
+    console.log('Form submitted with values:', values);
+  },
+})
+
+
+</script>
+    ```
+  </Tab>
+  <Tab title="React" >
+    <ToDoDoc />
+  </Tab>
+</Tabs>
+
+<ParamField path="formId" type="string" required>
+  ID of the Agent
+</ParamField>
+
+
+<ParamField path="onEnd" type="function">
+  Callback function that is called when the form is submitted. The function receives the form values as an object.
+```js
+const form = await Form.initBubble({
+  agentId: 'YOUR_AGENT_ID',
+  onEnd: function (values) {
+    console.log('Form submitted with values:', values);
+  },
+})
+````
+</ParamField>
+
+{/* ### Methods */}
+`````
