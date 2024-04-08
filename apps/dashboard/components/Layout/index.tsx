@@ -318,7 +318,8 @@ export default function Layout(props: Props) {
           sx={{
             height: '100%',
             maxheight: '100%',
-            minWidth: '100%',
+            width: '100%',
+            maxWidth: '100%',
             overflowY: 'auto',
             backgroundColor: 'background.popup',
             ...props.mainSxProps,
