@@ -129,7 +129,7 @@ const createElement = ({ name, widget }: Props) =>
               colorSchemeNode={this.shadowRootElement}
               {...themeKeys}
             >
-              <ScopedCssBaseline>
+              <ScopedCssBaseline sx={{ background: 'transparent' }}>
                 {React.createElement(widget, {
                   ...props,
                   isOpen,

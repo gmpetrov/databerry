@@ -51,7 +51,7 @@ export const agentToolConfig = {
   },
   [ToolType.lead_capture]: {
     icon: '🎯',
-    title: '🎯 Lead Capture',
+    title: '🎯 Lead Capture (⚠️ Deprecated: Use Form tool instead)',
     description: `Agent can collect user email or phone number`,
   },
 };
