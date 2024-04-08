@@ -29,7 +29,7 @@ export default function Hero() {
 
         <Container className="relative z-10 pt-8 pb-16 mb-12 text-center lg:pt-10">
           {/* <img
-        className="object-contain absolute left-0 bg-top opacity-60 -translate-y-1/4"
+        className="absolute left-0 object-contain bg-top opacity-60 -translate-y-1/4"
         src="https://nextsiders.vercel.app/_next/static/media/Hero.Gradient.0bce135c.svg"
         alt=""
       /> */}
@@ -68,20 +68,20 @@ export default function Hero() {
                 </svg> */}
 
                 <div className="mb-12 font-bold inline-flex flex-wrap items-center gap-2 rounded-md border border-neutral-800/50 bg-neutral-900/60 py-[5px] pr-5 pl-2 text-xs leading-[0] text-neutral-300 backdrop-blur transition-all duration-300 hover:bg-neutral-900/80 sm:rounded-full mx-auto sm:mx-0 sm:mr-auto">
-                  <span className="flex justify-center items-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
+                  <span className="flex items-center justify-center px-2 py-3 font-extrabold uppercase bg-indigo-500 rounded-full">
                     <span>New</span>
                   </span>
                   <span className="inline-flex items-center">
                     <img
                       src="/integrations/whatsapp/icon.svg"
                       alt=""
-                      className="mr-1 w-4 h-auto"
+                      className="w-4 h-auto mr-1"
                     />
                     WhatsApp plugin
                   </span>
 
                   <Link
-                    href="https://www.chaindesk.ai/help/whatsapp"
+                    href="https://docs.chaindesk.ai/integrations/whatsapp"
                     style={{ background: 'none' }}
                     className="text-[10px]underline-offset-4 text-indigo-300 text-main-hover flex items-center gap-2 font-medium transition-all hover:underline"
                     target="_blank"
@@ -121,57 +121,57 @@ export default function Hero() {
                   {`\nFor Your Startup`} */}
                 </h1>
 
-                <div className="hidden flex-col mt-4 space-y-4 sm:flex">
+                <div className="flex-col hidden mt-4 space-y-4 sm:flex">
                   <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
 
                     {/* <TextGenerateEffect
                       words="Custom ChatGPT chatbot trained on your data"
-                      className="mx-auto max-w-md font-medium tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg"
+                      className="max-w-md mx-auto font-medium tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg"
                     ></TextGenerateEffect> */}
-                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                    <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                       Custom ChatGPT chatbot trained on your data
                     </p>
                   </div>
                   {/* <div className="inline-flex items-center space-x-2">
                 <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                 Proactive - Identify and resolve customer issues before they
                 contact you
                 </p>
               </div> */}
                   <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                    <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                       Seamless human handoff
                     </p>
 
                     {/* <TextGenerateEffect
                       words="Seamless human handoff"
-                      className="mx-auto max-w-md font-medium tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg"
+                      className="max-w-md mx-auto font-medium tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg"
                     ></TextGenerateEffect> */}
                   </div>
                   <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                    <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                       Shared Inbox for your team
                     </p>
                   </div>
                   {/* <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                    <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                       No hallucinations or misleading answers
                     </p>
                   </div> */}
 
                   <div className="inline-flex items-center space-x-2">
                     <CheckBadgeIcon className="w-5 h-5 text-green-400" />
-                    <p className="mx-auto max-w-md tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
+                    <p className="max-w-md mx-auto tracking-tight text-gray-200 text-md sm:text-xl sm:mx-0 sm:max-w-lg">
                       Plug and play in minutes
                     </p>
                   </div>
                 </div>
-                {/* <p className="mx-auto mt-6 max-w-md text-lg tracking-tight text-gray-200 sm:mx-0 sm:max-w-lg">
+                {/* <p className="max-w-md mx-auto mt-6 text-lg tracking-tight text-gray-200 sm:mx-0 sm:max-w-lg">
               With our{' '}
               <strong className="text-violet-300">no-code platform</strong>, you
               can create a{' '}
@@ -263,7 +263,7 @@ export default function Hero() {
                 </Stack>
               </Stack>
 
-              <div className="flex flex-col justify-center items-center w-full sm:w-2/3">
+              <div className="flex flex-col items-center justify-center w-full sm:w-2/3">
                 {/* <Image
                   src="/landing-page/inputs.png"
                   width="500"
@@ -271,7 +271,7 @@ export default function Hero() {
                   className="w-full"
                   alt="Datasources"
                 /> */}
-                <div className="flex overflow-visible justify-center items-center w-full bg-transparent rounded-3xl">
+                <div className="flex items-center justify-center w-full overflow-visible bg-transparent rounded-3xl">
                   <CardContainer className="relative h-full inter-var">
                     <BackgroundGradient className="p-0">
                       <CardBody className="h-full bg-gray-50 relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] max-w-[400px] rounded-3xl px-6 py-2 border">
@@ -284,7 +284,7 @@ export default function Hero() {
                             alt="Datasources"
                           />
                         </CardItem> */}
-                        <CardItem translateZ="50" className="mt-2 w-full">
+                        <CardItem translateZ="50" className="w-full mt-2">
                           <Image
                             src="/images/messages/1.png"
                             width="1000"
@@ -293,7 +293,7 @@ export default function Hero() {
                             alt="Datasources"
                           />
                         </CardItem>
-                        <CardItem translateZ="100" className="mt-2 w-full">
+                        <CardItem translateZ="100" className="w-full mt-2">
                           <Image
                             src="/images/messages/2.png"
                             width="1000"
@@ -302,7 +302,7 @@ export default function Hero() {
                             alt="Datasources"
                           />
                         </CardItem>
-                        <CardItem translateZ="50" className="mt-2 w-full">
+                        <CardItem translateZ="50" className="w-full mt-2">
                           <Image
                             src="/images/messages/3.png"
                             width="1000"
@@ -311,7 +311,7 @@ export default function Hero() {
                             alt="Datasources"
                           />
                         </CardItem>
-                        <CardItem translateZ="100" className="mt-2 w-full">
+                        <CardItem translateZ="100" className="w-full mt-2">
                           <Image
                             src="/images/messages/4.png"
                             width="1000"
@@ -320,7 +320,7 @@ export default function Hero() {
                             alt="Datasources"
                           />
                         </CardItem>
-                        <CardItem translateZ="100" className="mt-2 w-full">
+                        <CardItem translateZ="100" className="w-full mt-2">
                           <Image
                             src="/images/messages/5.png"
                             width="1000"
@@ -329,7 +329,7 @@ export default function Hero() {
                             alt="Datasources"
                           />
                         </CardItem>
-                        <CardItem translateZ="100" className="mt-2 w-full">
+                        <CardItem translateZ="100" className="w-full mt-2">
                           <Image
                             src="/images/messages/6.png"
                             width="1000"
@@ -347,7 +347,7 @@ export default function Hero() {
                         {/* <CardItem
                           as="p"
                           translateZ="60"
-                          className="mt-2 max-w-sm text-sm text-neutral-500 dark:text-neutral-300"
+                          className="max-w-sm mt-2 text-sm text-neutral-500 dark:text-neutral-300"
                         >
                           Hover over this card to unleash the power of CSS
                           perspective
@@ -362,7 +362,7 @@ export default function Hero() {
                           />
                         </CardItem> */}
 
-                        <div className="flex justify-center items-center mt-4 mb-4">
+                        <div className="flex items-center justify-center mt-4 mb-4">
                           <a href={`${appUrl}/signin`} target="_blank">
                             <CardItem
                               translateZ={20}

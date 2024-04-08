@@ -233,7 +233,7 @@ export default function Footer() {
                     Documentation
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900"
                     href="https://chaindesk.ai/help"
@@ -241,11 +241,11 @@ export default function Footer() {
                   >
                     Help Center
                   </a>
-                </li>
+                </li> */}
                 <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900"
-                    href="https://www.chaindesk.ai/help/gdpr"
+                    href="https://docs.chaindesk.ai/privacy/gdpr"
                     target="_blank"
                   >
                     GDPR
@@ -254,7 +254,7 @@ export default function Footer() {
                 <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900"
-                    href="https://www.chaindesk.ai/help/privacy-policy"
+                    href="https://docs.chaindesk.ai/privacy/privacy-policy"
                     target="_blank"
                   >
                     Privacy
@@ -263,7 +263,7 @@ export default function Footer() {
                 <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900"
-                    href="https://www.chaindesk.ai/help/terms-conditions"
+                    href="https://docs.chaindesk.ai/privacy/terms"
                     target="_blank"
                   >
                     Terms

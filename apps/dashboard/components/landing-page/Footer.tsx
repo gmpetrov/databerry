@@ -29,29 +29,29 @@ const navigation = {
     },
   ],
   support: [
+    // {
+    //   name: 'Help Center',
+    //   href: 'https://chaindesk.ai/help',
+    //   target: '_blank',
+    // },
     {
-      name: 'Help Center',
-      href: 'https://chaindesk.ai/help',
-      target: '_blank',
-    },
-    {
-      name: 'API Documentation',
+      name: 'Documentation',
       href: 'https://docs.chaindesk.ai',
       target: '_blank',
     },
     {
       name: 'GDPR',
-      href: 'https://www.chaindesk.ai/help/gdpr',
+      href: 'https://docs.chaindesk.ai/privacy/gdpr',
       target: '_blank',
     },
     {
       name: 'Privacy',
-      href: 'https://www.chaindesk.ai/help/privacy-policy',
+      href: 'https://docs.chaindesk.ai/privacy/privacy-policy',
       target: '_blank',
     },
     {
       name: 'Terms',
-      href: 'https://www.chaindesk.ai/help/terms-conditions',
+      href: 'https://docs.chaindesk.ai/privacy/terms',
       target: '_blank',
     },
     // { name: 'Guides', href: '#' },
@@ -167,7 +167,7 @@ export function Footer({
       <div className="px-6 pt-16 pb-8 mx-auto max-w-7xl sm:pt-24 lg:px-8 lg:pt-32">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-4">
-            <Logo className="mx-auto w-auto h-8" />
+            <Logo className="w-auto h-8 mx-auto" />
 
             <div className="flex space-x-6">
               {navigation.social.map((item) => (

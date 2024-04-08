@@ -391,14 +391,14 @@ export default function Navigation() {
         isExperimental: false,
         isNew: false,
       },
-      {
-        label: 'Help Center',
-        route: 'https://chaindesk.ai/help',
-        icon: <HelpRoundedIcon fontSize="small" />,
-        target: 'blank',
-        isExperimental: false,
-        isNew: false,
-      },
+      // {
+      //   label: 'Help Center',
+      //   route: 'https://chaindesk.ai/help',
+      //   icon: <HelpRoundedIcon fontSize="small" />,
+      //   target: 'blank',
+      //   isExperimental: false,
+      //   isNew: false,
+      // },
     ];
   }, [router.route]);
 

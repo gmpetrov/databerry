@@ -42,6 +42,16 @@
       "url": "form"
     },
     {
+      "name": "Email Inbox",
+      "icon": "at",
+      "url": "email-inbox"
+    },
+    {
+      "name": "Integrations",
+      "icon": "puzzle-piece",
+      "url": "integrations"
+    },
+    {
       "name": "Widgets",
       "icon": "html5",
       "url": "widgets"
@@ -50,6 +60,11 @@
       "name": "API",
       "icon": "rectangle-terminal",
       "url": "api-reference"
+    },
+    {
+      "name": "Privacy",
+      "icon": "shield-halved",
+      "url": "privacy"
     },
     {
       "name": "support@chaindesk.ai",
@@ -64,7 +79,28 @@
     },
     {
       "group": "Agent",
-      "pages": ["agent/get-started"]
+      "pages": [
+        "agent/get-started",
+        {
+          "group": "Tools",
+          "pages": [
+            "agent/tools/quick-start",
+            "agent/tools/datastore-tool",
+            "agent/tools/http-tool",
+            "agent/tools/form-tool",
+            "agent/tools/request-human-tool",
+            "agent/tools/mark-as-resolved-tool",
+            "agent/tools/lead-generation-tool"
+          ]
+        },
+        "agent/human-handoff",
+        "agent/fine-tuning",
+        "agent/answer-sources",
+        "agent/message-suggestions",
+        "agent/optimize-ai-answers",
+        "agent/rate-limit",
+        "agent/debug"
+      ]
     },
     {
       "group": "Datastore",
@@ -73,6 +109,29 @@
     {
       "group": "Form",
       "pages": ["form/get-started"]
+    },
+    {
+      "group": "Email Inbox",
+      "pages": [
+        "email-inbox/get-started",
+        {
+          "group": "Setup",
+          "pages": ["email-inbox/gmail"]
+        }
+      ]
+    },
+    {
+      "group": "Integration",
+      "pages": [
+        {
+          "group": "🧠 Train With",
+          "pages": ["integrations/google-drive"]
+        },
+        {
+          "group": "🚀 Install On",
+          "pages": ["integrations/whatsapp", "integrations/crisp"]
+        }
+      ]
     },
     {
       "group": "chaindesk API",
@@ -126,11 +185,25 @@
     {
       "group": "External Integrations",
       "pages": ["integrations/langchain"]
+    },
+    {
+      "group": "Privacy",
+      "pages": [
+        "privacy/gdpr",
+        "privacy/cookie-policy",
+        "privacy/privacy-policy",
+        "privacy/terms"
+      ]
     }
   ],
   "footerSocials": {
     "twitter": "https://twitter.com/georges_petrov",
     "discord": "https://discord.gg/FSWKj49ckX",
     "github": "https://github.com/gmpetrov/databerry"
+  },
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true,
+    "raiseIssue": true
   }
 }

@@ -1,0 +1,42 @@
+---
+title: HTTP Tool
+---
+
+The HTTP Tool is a highly powerful feature, enabling AI Agents to execute HTTP Requests seamlessly, allowing you to call any API during a conversation. (Under the hood it uses function calling [https://platform.openai.com/docs/guides/function-calling](https://platform.openai.com/docs/guides/function-calling))
+
+![Xnapper-2024-01-12-10.30.52.png](/images/http-tool/Xnapper-2024-01-12-10.30.52.png)
+
+This tool is integrated into the language model, which utilizes both the tool's name and its detailed description, along with predefined parameters, to determine the appropriate moments for activation.
+
+Additionally, the model can be specifically instructed on when to employ the tool through directives included in its system prompt.
+
+For instance, an exemplary description of the HTTP Tool might be:
+**"Useful for retrieving random cat images."**
+
+![Xnapper-2024-01-12-10.30.12.png](/images/http-tool/Xnapper-2024-01-12-10.30.12.png)
+
+### Request Parameters
+
+The HTTP Tool editor facilitates the creation of necessary variables for conducting the HTTP request.
+
+It includes an option labeled “Provided By User,” which signals to the model that it should gather the required data directly from the ongoing conversation.
+
+![Xnapper-2024-01-12-10.36.18.png](/images/http-tool/Xnapper-2024-01-12-10.36.18.png)
+
+### **Streamlined Approval Process**
+
+With the activation of the “Approval Required” feature, the AI Agent will await authorization from an administrator before proceeding with the request.
+
+This function ensures a controlled and secure operation.
+
+![Xnapper-2024-01-12-10.53.40.png](/images/http-tool/Xnapper-2024-01-12-10.53.40.png)
+
+![Xnapper-2024-01-12-11.17.42.png](/images/http-tool/Xnapper-2024-01-12-11.17.42.png)
+
+![Xnapper-2024-01-12-11.18.19.png](/images/http-tool/Xnapper-2024-01-12-11.18.19.png)
+
+![Xnapper-2024-01-12-11.19.14.png](/images/http-tool/Xnapper-2024-01-12-11.19.14.png)
+
+### **Workflows**
+
+Moreover, the model is capable of executing multiple actions simultaneously and can integrate various tools to efficiently manage intricate workflows.
