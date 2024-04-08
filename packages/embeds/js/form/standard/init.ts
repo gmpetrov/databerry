@@ -6,6 +6,7 @@ import { hookFunctionsToWindow } from '@chaindesk/ui/embeds/common/utils';
 import FormStandard, { name } from './index';
 
 const initStandard = (props: ChatBoxStandardProps) => {
+  console.log('props----------->', props);
   if (!customElements.get(name)) {
     customElements.define(name, FormStandard);
   }
@@ -42,7 +43,6 @@ const initStandard = (props: ChatBoxStandardProps) => {
     setupAttributes({
       element,
       ...props,
-      formId: props.id,
       styles: mergedStyles,
     });
 

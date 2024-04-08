@@ -11,7 +11,7 @@
     "typecheck": "FORCE_COLOR=1 turbo typecheck",
     "lint": "FORCE_COLOR=1 turbo run lint --filter=!react-email-client",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,mdx}\"",
-    "check": "pnpm list-mismatches && pnpm format && pnpm typecheck && pnpm lint",
+    "check": "pnpm list-mismatches && turbo run check --filter=docs && pnpm format && pnpm typecheck && pnpm lint",
     "docker:up": "docker compose -f docker/docker-compose.deps.yml --env-file docker/docker.env up -d",
     "docker:down": "docker compose -f docker/docker-compose.deps.yml down",
     "docker:build:up": "docker compose -f docker/docker-compose.build.yml --env-file docker/docker.env up",

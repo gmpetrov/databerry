@@ -1,0 +1,26 @@
+---
+title: Standard Widget
+description: 'Embed a Chaindesk form using the Standard widget'
+---
+
+To install a Form on your website using the Standard widget use the follwing code snippet:
+
+```html
+<script type="module">
+  import Form from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/form/index.js';
+
+  Form.initStandard({
+    formId: 'YOUR_FORM_ID',
+  });
+</script>
+
+<chaindesk-form-standard />
+```
+
+Replace `YOUR_FORM_ID` with the ID of your Form
+
+<Note>
+  You can find the Form ID in the Form settings under the Settings tab.
+</Note>
+
+See all the available attributes in the [Form Reference](reference).

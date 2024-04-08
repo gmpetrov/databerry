@@ -16,11 +16,11 @@ function FormInstallTab({ formId }: Props) {
   import Form from 'https://cdn.jsdelivr.net/npm/@chaindesk/embeds@latest/dist/form/index.js';
 
   Form.initStandard({
-    id: '${formId}',
+    formId: '${formId}',
   });
 </script>
 
-<chaindesk-form-standard id="${formId}" style="width: 100%; height: 650px" />
+<chaindesk-form-standard style="width: 100%; height: 650px" />
 `;
   const installScriptIframe = `<iframe
   src="${process.env.NEXT_PUBLIC_DASHBOARD_URL}/forms/${formId}"

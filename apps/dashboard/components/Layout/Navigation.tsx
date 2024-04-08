@@ -384,17 +384,17 @@ export default function Navigation() {
   const docLinks = React.useMemo(() => {
     return [
       {
-        label: 'Help Center',
-        route: 'https://chaindesk.ai/help',
-        icon: <HelpRoundedIcon fontSize="small" />,
+        label: 'Documentation',
+        route: 'https://docs.chaindesk.ai/',
+        icon: <ApiRoundedIcon fontSize="small" />,
         target: 'blank',
         isExperimental: false,
         isNew: false,
       },
       {
-        label: 'API Documentation',
-        route: 'https://docs.chaindesk.ai/',
-        icon: <ApiRoundedIcon fontSize="small" />,
+        label: 'Help Center',
+        route: 'https://chaindesk.ai/help',
+        icon: <HelpRoundedIcon fontSize="small" />,
         target: 'blank',
         isExperimental: false,
         isNew: false,
