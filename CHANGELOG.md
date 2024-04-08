@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.319"></a>
+## 0.1.319 (2024-04-08)
+
+### Fixed
+
+- 🐛 disable @tailwindcss/forms [[ac4e36d](https://github.com/gmpetrov/databerry/commit/ac4e36d397f911607a3e866424ba4617739c923a)]
+
+### Miscellaneous
+
+-  bump [[296a321](https://github.com/gmpetrov/databerry/commit/296a321e6671173af98113abdc587a1d5f104723)]
+
+
 <a name="0.1.317"></a>
 ## 0.1.317 (2024-04-08)
 
