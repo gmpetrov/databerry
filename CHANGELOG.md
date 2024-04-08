@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.321"></a>
+## 0.1.321 (2024-04-08)
+
+### Fixed
+
+- 🐛 dashboard width on safari [[bb81249](https://github.com/gmpetrov/databerry/commit/bb81249a5829dca4b5922e259058416e989fe546)]
+
+
 <a name="0.1.320"></a>
 ## 0.1.320 (2024-04-08)
 
