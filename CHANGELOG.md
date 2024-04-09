@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.324"></a>
+## 0.1.324 (2024-04-09)
+
+### Miscellaneous
+
+-  typos [[8473c11](https://github.com/gmpetrov/databerry/commit/8473c114ea90579aaea1ce796fe3da253ed2d33a)]
+- 🎸 telegram integration ([#353](https://github.com/gmpetrov/databerry/issues/353)) [[fbe84cc](https://github.com/gmpetrov/databerry/commit/fbe84ccfce1afb4c1bb91357bd1e5241c0ef8315)]
+
+
 <a name="0.1.323"></a>
 ## 0.1.323 (2024-04-08)
 
