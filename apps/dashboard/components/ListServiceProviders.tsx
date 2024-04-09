@@ -64,23 +64,6 @@ function ListServiceProviders({
 
         setState({ isDeleteLoading: true });
 
-        // clean up webhooks
-        if (type === 'telegram') {
-          const providerToRemove = query?.data?.find(
-            (provider) => provider?.id == id
-          );
-
-          const { data } = await axios.post(
-            `https://api.telegram.org/bot${
-              (providerToRemove?.config as any).http_token
-            }/deleteWebhook`
-          );
-
-          if (!data.ok) {
-            throw new Error('Unable to remove webhook');
-          }
-        }
-
         await axios.delete(`/api/service-providers/${id}`);
         query.mutate();
       } catch (err) {

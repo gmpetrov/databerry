@@ -7,6 +7,7 @@ import Button from '@mui/joy/Button';
 import toast from 'react-hot-toast';
 import LinkButton from '@chaindesk/ui/LinkButton';
 import axios from 'axios';
+import Markdown from '@chaindesk/ui/Markdown';
 import { AddServiceProviderTelegramSchema } from '@chaindesk/lib/types/dtos';
 
 import cuid from 'cuid';
@@ -78,14 +79,16 @@ function IntegrationSettings({ onSubmitSuccess, agentId }: Props) {
         },
       }}
     >
-      <div className="text-sm prose-sm prose dark:prose-invert">
-        <p>1 - Make sure you have created a telegram bot with the botFather.</p>
-
-        <p>2- Request your bot http token.</p>
-
-        <p>3- Add your bot to your channels (optional).</p>
-
-        <LinkButton
+      <Stack gap={2}>
+        <Markdown>
+          {`
+### Instructions
+1. [Create a Telegram bot](https://docs.chaindesk.ai/integrations/telegram)
+2. Get yout bot HTTP token
+3. (optional) Add your bot to a Telegram channel
+        `}
+        </Markdown>
+        {/* <LinkButton
           linkProps={{
             // Todo: make similar tuto type as make.
             href: 'https://www.youtube.com/watch?v=ePQQWw-Xo14',
@@ -98,11 +101,11 @@ function IntegrationSettings({ onSubmitSuccess, agentId }: Props) {
           }}
         >
           Quick tutorial
-        </LinkButton>
-      </div>
+        </LinkButton> */}
+      </Stack>
       <Input
         control={methods.control}
-        label="Your Bot http token"
+        label="Telegram Bot HTTP token"
         {...methods.register('config.http_token')}
       />
       <Button

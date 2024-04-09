@@ -232,7 +232,7 @@ function AgentDeployTab(props: Props) {
                   src="/integrations/telegram/icon.svg"
                   width={100}
                   height={100}
-                  alt="Whatsapp Logo"
+                  alt="Telegram Logo"
                 />
               ),
               action: async () => {

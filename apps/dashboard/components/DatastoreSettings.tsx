@@ -438,7 +438,7 @@ function DatastoreSettings() {
 
       <Divider sx={{ my: 4 }} />
 
-      <Box id="chatgpt-plugin">
+      {/* <Box id="chatgpt-plugin">
         {getDatastoreQuery?.data?.id && (
           <FormControl sx={{ gap: 1 }}>
             <FormLabel>ChatGPT Plugin</FormLabel>
@@ -486,7 +486,7 @@ function DatastoreSettings() {
         )}
       </Box>
 
-      <Divider sx={{ my: 4 }} />
+      <Divider sx={{ my: 4 }} /> */}
 
       <FormControl sx={{ gap: 1 }}>
         <FormLabel>Delete Datastore</FormLabel>

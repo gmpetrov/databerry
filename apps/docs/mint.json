@@ -129,7 +129,11 @@
         },
         {
           "group": "🚀 Install On",
-          "pages": ["integrations/whatsapp", "integrations/crisp"]
+          "pages": [
+            "integrations/whatsapp",
+            "integrations/crisp",
+            "integrations/telegram"
+          ]
         }
       ]
     },
