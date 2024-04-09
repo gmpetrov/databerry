@@ -88,6 +88,12 @@ function TraditionalForm({
     });
   }, [submissionId]);
 
+  useEffect(() => {
+    setState({
+      isFormSubmitted: !!isFormSubmitted,
+    });
+  }, [isFormSubmitted]);
+
   const config = useMemo(() => {
     return (
       !!isInEditor
