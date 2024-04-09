@@ -23,7 +23,10 @@ function download(url: string, filename: string) {
       link.download = filename;
       link.click();
     })
-    .catch(console.error);
+    .catch((e) => {
+      console.error(e);
+      window.open(url, '_blank');
+    });
 }
 
 function ChatMessageAttachment({ attachment }: Props) {

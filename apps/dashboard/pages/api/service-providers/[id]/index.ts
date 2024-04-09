@@ -1,4 +1,5 @@
 import { ServiceProviderType } from '@prisma/client';
+import axios from 'axios';
 import { NextApiResponse } from 'next';
 import z from 'zod';
 
@@ -127,6 +128,21 @@ export const deleteIntegration = async (
     integration?.agents?.[0]?.organizationId !== session.organization.id
   ) {
     throw new Error('Unauthorized');
+  }
+
+  // clean up webhooks
+  if (integration?.type === 'telegram') {
+    /* This code snippet is making a POST request to the Telegram Bot API in order to delete a
+          webhook. Here's a breakdown of what's happening: */
+    const { data } = await axios.post(
+      `https://api.telegram.org/bot${
+        (integration?.config as any).http_token
+      }/deleteWebhook`
+    );
+
+    if (!data.ok) {
+      throw new Error('Unable to remove webhook');
+    }
   }
 
   return prisma.serviceProvider.delete({

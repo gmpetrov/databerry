@@ -743,6 +743,13 @@ export default function LogsPage() {
             >
               {ConversationChannel.whatsapp}
             </Option>
+            <Option
+              key={ConversationChannel.telegram}
+              value={ConversationChannel.telegram}
+              sx={{ fontSize: 14 }}
+            >
+              {ConversationChannel.telegram}
+            </Option>
 
             <Option
               key={ConversationChannel.api}
