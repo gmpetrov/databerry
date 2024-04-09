@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.325"></a>
+## 0.1.325 (2024-04-09)
+
+### Fixed
+
+- 🐛 form editor not showing end screen [[135db92](https://github.com/gmpetrov/databerry/commit/135db92c13e7a5d89d50139d6ca10d8670a05692)]
+
+
 <a name="0.1.324"></a>
 ## 0.1.324 (2024-04-09)
 
