@@ -33,7 +33,7 @@ function Markdown({
         {...otherProps}
         className={clsx(
           'prose-sm prose dark:prose-invert',
-          'text-sm break-words prose-p:leading-relaxed prose-pre:p-0',
+          'text-sm break-words prose-p:leading-relaxed prose-pre:p-0 prose-code:before:hidden prose-code:after:hidden',
           'max-w-full',
           className
         )}
@@ -94,7 +94,10 @@ function Markdown({
               </Stack>
             ) : (
               <code
-                className={clsx(className)}
+                className={clsx(
+                  className,
+                  'bg-purple-200 dark:bg-purple-900 py-0.5 px-1 rounded-md font-thin'
+                )}
                 {...props}
                 style={{ width: '100%' }}
               />

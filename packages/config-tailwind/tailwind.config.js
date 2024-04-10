@@ -9,35 +9,6 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
-      typography: (theme) => ({
-        invert: {
-          css: {
-            code: {
-              background: theme('colors.zinc.700'),
-            },
-          },
-        },
-        DEFAULT: {
-          css: {
-            'code::before': {
-              content: '&nbsp;&nbsp;',
-            },
-            'code::after': {
-              content: '&nbsp;&nbsp;',
-            },
-            'pre code': {
-              background: 'transparent !important',
-            },
-            code: {
-              background: theme('colors.pink.100'),
-              wordWrap: 'break-word',
-              boxDecorationBreak: 'clone',
-              padding: '.1rem .3rem .2rem',
-              borderRadius: '.2rem',
-            },
-          },
-        },
-      }),
       fontFamily: {
         sans: ['"Inter"', ...defaultTheme.fontFamily.sans],
         inter: ['var(--font-inter)', 'sans-serif'],
