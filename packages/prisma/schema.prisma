@@ -1004,6 +1004,8 @@ enum AgentModelName {
   gpt_4_turbo
   gpt_4_turbo_vision
   claude_3_haiku
+  claude_3_sonnet
+  claude_3_opus
   mixtral_8x7b
   dolphin_mixtral_8x7b
 }

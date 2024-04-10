@@ -24,6 +24,7 @@ export const ModelConfig: Record<
     baseUrl?: string;
     isVisionSupported?: boolean;
     isToolCallingSupported?: boolean;
+    icon?: string;
   }
 > = {
   [AgentModelName.gpt_3_5_turbo]: {
@@ -33,6 +34,7 @@ export const ModelConfig: Record<
     providerPriceByInputToken: 0.0000005,
     providerPricePriceByOutputToken: 0.0000015,
     isToolCallingSupported: true,
+    icon: '/shared/images/logos/openai.svg',
   },
   [AgentModelName.gpt_3_5_turbo_16k]: {
     name: 'gpt-3.5-turbo-0125',
@@ -41,6 +43,7 @@ export const ModelConfig: Record<
     providerPriceByInputToken: 0.0000005,
     providerPricePriceByOutputToken: 0.0000015,
     isToolCallingSupported: true,
+    icon: '/shared/images/logos/openai.svg',
   },
   [AgentModelName.gpt_4]: {
     name: 'gpt-4',
@@ -49,6 +52,7 @@ export const ModelConfig: Record<
     providerPriceByInputToken: 0.00003,
     providerPricePriceByOutputToken: 0.00006,
     isToolCallingSupported: true,
+    icon: '/shared/images/logos/openai.svg',
   },
   [AgentModelName.gpt_4_32k]: {
     name: 'gpt-4-32k',
@@ -57,31 +61,55 @@ export const ModelConfig: Record<
     providerPriceByInputToken: 0.00006,
     providerPricePriceByOutputToken: 0.00012,
     isToolCallingSupported: true,
+    icon: '/shared/images/logos/openai.svg',
   },
   [AgentModelName.gpt_4_turbo]: {
-    name: 'gpt-4-0125-preview',
+    name: 'gpt-4-turbo',
     maxTokens: 128000,
-    cost: 13,
+    cost: 20,
     providerPriceByInputToken: 0.00001,
     providerPricePriceByOutputToken: 0.00003,
     isToolCallingSupported: true,
+    icon: '/shared/images/logos/openai.svg',
   },
   [AgentModelName.gpt_4_turbo_vision]: {
-    name: 'gpt-4-vision-preview',
+    name: 'gpt-4-turbo',
     maxTokens: 128000,
-    cost: 13,
+    cost: 20,
     providerPriceByInputToken: 0.00001,
     providerPricePriceByOutputToken: 0.00003,
     isToolCallingSupported: true,
+    icon: '/shared/images/logos/openai.svg',
   },
   [AgentModelName.claude_3_haiku]: {
-    name: 'anthropic/claude-3-haiku',
+    name: 'anthropic/claude-3-haiku:beta',
     baseUrl: 'https://openrouter.ai/api/v1',
     maxTokens: 200000,
     cost: 1,
     providerPriceByInputToken: 0.00000025,
     providerPricePriceByOutputToken: 0.00000125,
     isToolCallingSupported: false,
+    icon: '/shared/images/logos/anthropic.svg',
+  },
+  [AgentModelName.claude_3_sonnet]: {
+    name: 'anthropic/claude-3-sonnet:beta',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    maxTokens: 200000,
+    cost: 8,
+    providerPriceByInputToken: 0.000003,
+    providerPricePriceByOutputToken: 0.000015,
+    isToolCallingSupported: false,
+    icon: '/shared/images/logos/anthropic.svg',
+  },
+  [AgentModelName.claude_3_opus]: {
+    name: 'anthropic/claude-3-opus:beta',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    maxTokens: 200000,
+    cost: 40,
+    providerPriceByInputToken: 0.000015,
+    providerPricePriceByOutputToken: 0.000075,
+    isToolCallingSupported: false,
+    icon: '/shared/images/logos/anthropic.svg',
   },
   [AgentModelName.mixtral_8x7b]: {
     name: 'mistralai/mixtral-8x7b',
@@ -91,6 +119,7 @@ export const ModelConfig: Record<
     providerPriceByInputToken: 0.00000054,
     providerPricePriceByOutputToken: 0.00000054,
     isToolCallingSupported: false,
+    icon: '/shared/images/logos/mistral.svg',
   },
   [AgentModelName.dolphin_mixtral_8x7b]: {
     name: 'cognitivecomputations/dolphin-mixtral-8x7b',
@@ -100,6 +129,7 @@ export const ModelConfig: Record<
     providerPriceByInputToken: 0.00000027,
     providerPricePriceByOutputToken: 0.00000027,
     isToolCallingSupported: false,
+    icon: '/shared/images/logos/mistral.svg',
   },
 };
 
