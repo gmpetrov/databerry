@@ -1,10 +1,15 @@
 # Changelog
 
-<a name="0.1.329"></a>
-## 0.1.329 (2024-04-10)
+<a name="0.1.330"></a>
+## 0.1.330 (2024-04-10)
+
+### Fixed
+
+- 🐛 broken build [[4edabf4](https://github.com/gmpetrov/databerry/commit/4edabf4655bbe5b53d0150a602c7f900db0c19bb)]
 
 ### Miscellaneous
 
+-  Release 0.1.329 [[28e7241](https://github.com/gmpetrov/databerry/commit/28e7241323e14d789df7d67e54fa07eac6fee784)]
 - 🎸 improve code support in markdown [[9b1ff90](https://github.com/gmpetrov/databerry/commit/9b1ff9007e8e79289c2c74cca75ee53f5fc74093)]
 
 
