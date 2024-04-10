@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/joy';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import React, { forwardRef, useMemo, useRef } from 'react';
+import React, { forwardRef, useEffect, useMemo, useRef } from 'react';
 import {
   CountryIso2,
   defaultCountries,
@@ -21,6 +21,7 @@ import Input from '@chaindesk/ui/Input';
 export type Props = InputProps & {
   value: string;
   onChange: (phone: string) => void;
+  defaultCountryCode?: string;
   control?: any;
   handleChange: (value: string) => any;
   selectProps?: SelectProps<string, false>;
@@ -37,6 +38,7 @@ const PhoneNumberInput = forwardRef(
     {
       value,
       name,
+      defaultCountryCode,
       onChange,
       handleChange,
       selectProps,
@@ -46,12 +48,16 @@ const PhoneNumberInput = forwardRef(
     ref
   ) => {
     const selectRef = useRef<HTMLSelectElement>(null);
-    const defaultCountry = useMemo(() => {
+    const preferredCountry = useMemo(() => {
       if (typeof window !== 'undefined') {
-        return navigator.language?.split?.('-')[1]?.toLowerCase?.() || 'fr';
+        return (
+          defaultCountryCode ??
+          navigator.language?.split?.('-')[1]?.toLowerCase?.() ??
+          'fr'
+        );
       }
-      return 'fr';
-    }, []);
+      return defaultCountryCode?.toLocaleLowerCase() ?? 'fr';
+    }, [defaultCountryCode]);
 
     const {
       inputValue,
@@ -60,13 +66,17 @@ const PhoneNumberInput = forwardRef(
       country,
       setCountry,
     } = usePhoneInput({
-      defaultCountry,
+      defaultCountry: preferredCountry,
       value,
       countries: defaultCountries,
       onChange: (data) => {
         handleChange?.(data?.phone);
       },
     });
+
+    useEffect(() => {
+      setCountry(preferredCountry);
+    }, [preferredCountry]);
 
     return (
       <Input
