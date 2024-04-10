@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.328"></a>
+## 0.1.328 (2024-04-10)
+
+### Miscellaneous
+
+- 🎸 add openrouter headers for ranking [[76f3141](https://github.com/gmpetrov/databerry/commit/76f314167f5c14e7428c0f27533cbe34d2b5d4df)]
+
+
 <a name="0.1.327"></a>
 ## 0.1.327 (2024-04-10)
 
