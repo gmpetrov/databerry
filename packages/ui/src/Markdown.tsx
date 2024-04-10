@@ -9,10 +9,11 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { atomDark as theme } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 import { cn } from '@chaindesk/ui/utils/cn';
 import CopyButton from './CopyButton';
+import Stack from '@mui/joy/Stack';
 
 type Props = any & {
   animated?: boolean;
@@ -39,57 +40,75 @@ function Markdown({
         components={{
           // https://github.com/remarkjs/react-markdown#use-custom-components-syntax-highlight
           code({ className, ...props }) {
-            const hasLang = /language-(\w+)/.exec(className || '');
-            return hasLang ? (
-              <SyntaxHighlighter
-                style={oneDark}
-                language={hasLang[1]}
-                PreTag="div"
-                className="w-full"
-                showLineNumbers={true}
-                useInlineStyles={true}
+            const lang = className?.replace?.('language-', '');
+
+            const codeChunk = (props?.children as string) || '';
+
+            return !!lang || (props as any)?.fromPre ? (
+              <Stack
+                sx={{
+                  p: 0,
+                }}
               >
-                {String(props.children).replace(/\n$/, '')}
-              </SyntaxHighlighter>
+                <Stack
+                  direction={'row'}
+                  sx={(t) => ({
+                    alignItems: 'center',
+                    background: t.colorSchemes.dark.palette.background.level1,
+                    justifyContent: 'space-evenly',
+                  })}
+                >
+                  <p
+                    className="mx-auto"
+                    style={{ opacity: 0.5, lineHeight: 0 }}
+                  >
+                    {lang || ''}
+                  </p>
+                  <CopyButton text={codeChunk} className="mr-2" />
+                </Stack>
+                <SyntaxHighlighter
+                  style={theme}
+                  language={lang || 'bash'}
+                  PreTag="div"
+                  className="w-full"
+                  showLineNumbers={
+                    (props as any)?.children?.includes('\n') ? true : false
+                  }
+                  useInlineStyles={true}
+                  customStyle={{
+                    lineHeight: '1.5',
+                    fontSize: '1em',
+                    borderTopRightRadius: '0px',
+                    borderTopLeftRadius: '0px',
+                    marginTop: '0px',
+                  }}
+                  codeTagProps={{
+                    style: {
+                      lineHeight: 'inherit',
+                      fontSize: 'inherit',
+                    },
+                  }}
+                >
+                  {String(props.children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              </Stack>
             ) : (
               <code
-                className={className}
+                className={clsx(className)}
                 {...props}
                 style={{ width: '100%' }}
               />
             );
           },
-          pre: (pre) => {
-            const codeChunk = (pre as any).node.children[0].children[0]
-              .value as string;
-
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            // const [copyTip, setCopyTip] = React.useState('Copy code');
-
-            // const language =
-            //   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
-            //   (pre as any).children[0]?.props.className.replace(
-            //     /language-/g,
-            //     ''
-            //   ) as string;
-
+          pre: ({ children, ...pre }) => {
             return (
-              <div className="relative overflow-x-hidden">
-                <CopyButton
-                  text={codeChunk}
-                  className="absolute z-40 top-5 right-2 tooltip tooltip-left"
-                />
-                {/* <span
-                  style={{
-                    bottom: 0,
-                    right: 0,
-                  }}
-                  className="absolute z-40 p-1 mb-5 mr-1 text-xs uppercase rounded-lg bg-base-content/40 text-base-100 backdrop-blur-sm"
-                >
-                  {language}
-                </span> */}
-                <pre {...pre}></pre>
-              </div>
+              <Stack component="div" className="relative overflow-x-hidden">
+                <pre {...pre} style={{ margin: 0 }}>
+                  {React.cloneElement(children as any, {
+                    fromPre: true,
+                  })}
+                </pre>
+              </Stack>
             );
           },
           img: (props) => (
