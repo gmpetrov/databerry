@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.329"></a>
+## 0.1.329 (2024-04-10)
+
+### Miscellaneous
+
+- 🎸 improve code support in markdown [[9b1ff90](https://github.com/gmpetrov/databerry/commit/9b1ff9007e8e79289c2c74cca75ee53f5fc74093)]
+
+
 <a name="0.1.328"></a>
 ## 0.1.328 (2024-04-10)
 

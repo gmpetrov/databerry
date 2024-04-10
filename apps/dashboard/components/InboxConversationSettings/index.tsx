@@ -24,7 +24,6 @@ import React, { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import useSWR from 'swr';
 
-import CopyButton from '@app/components/CopyButton';
 import useInboxConversation from '@app/hooks/useInboxConversation';
 import { getMemberships } from '@app/pages/api/memberships';
 
@@ -36,6 +35,7 @@ import {
   ConversationStatus,
   Prisma,
 } from '@chaindesk/prisma';
+import CopyButton from '@chaindesk/ui/CopyButton';
 
 import { convertToCountryName } from '../charts/GeoChart';
 import InboxConversationFormProvider from '../InboxConversationFormProvider';

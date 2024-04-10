@@ -9,8 +9,9 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import React from 'react';
 
+import CopyButton from '@chaindesk/ui/CopyButton';
+
 import SettingCard from './ui/SettingCard';
-import CopyButton from './CopyButton';
 import MailInboxFormProvider from './MailInboxFormProvider';
 
 type Props = {

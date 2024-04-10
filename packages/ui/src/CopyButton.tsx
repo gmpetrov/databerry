@@ -1,7 +1,6 @@
 import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import { IconButton } from '@mui/joy';
-import clsx from 'clsx';
 import React, { useCallback, useRef, useState } from 'react';
 
 function CopyButton(props: { text: string; className?: string }) {

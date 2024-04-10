@@ -53,7 +53,6 @@ import useSWRInfinite from 'swr/infinite';
 import useSWRMutation from 'swr/mutation';
 
 import { ConversationExport } from '@app/components/ConversationExport';
-import CopyButton from '@app/components/CopyButton';
 import DraftReplyInput from '@app/components/DarftReplyInput';
 import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import InboxConversationSettings from '@app/components/InboxConversationSettings';
