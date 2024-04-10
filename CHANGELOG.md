@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.326"></a>
+## 0.1.326 (2024-04-10)
+
+### Fixed
+
+- 🐛 wrong hex color prevent agent form updates [[a1ad8c8](https://github.com/gmpetrov/databerry/commit/a1ad8c87d94ef4b928472f7c066d709da3c22e0c)]
+
+
 <a name="0.1.325"></a>
 ## 0.1.325 (2024-04-09)
 
