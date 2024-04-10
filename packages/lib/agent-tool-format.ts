@@ -1,20 +1,35 @@
 import cuid from 'cuid';
+import { z } from 'zod';
 
 import { Datastore, Tool, ToolType } from '@chaindesk/prisma';
 
 import { ToolSchema } from './types/dtos';
+import { Prettify } from './type-utilites';
 
-// export type NormalizedTool = {
-//   id?: string;
-//   type: ToolType;
-//   name?: string;
-//   description?: string;
-// };
+const baseFormatSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+});
 
-// interface CreateDatastoreTool extends NormalizedTool {
-//   type: 'datastore';
-//   datastoreId: string;
-// }
+const datastoreFormatSchema = baseFormatSchema.extend({
+  datastoreId: z.string(),
+});
+
+const formFormatSchema = baseFormatSchema.extend({
+  formId: z.string(),
+});
+
+const formatSchema = z.discriminatedUnion('type', [
+  datastoreFormatSchema.extend({ type: z.literal(ToolType.datastore) }),
+  baseFormatSchema.extend({ type: z.literal(ToolType.http) }),
+  baseFormatSchema.extend({ type: z.literal(ToolType.request_human) }),
+  baseFormatSchema.extend({ type: z.literal(ToolType.mark_as_resolved) }),
+  baseFormatSchema.extend({ type: z.literal(ToolType.lead_capture) }),
+  formFormatSchema.extend({ type: z.literal(ToolType.form) }),
+]);
+
+type Format = z.infer<typeof formatSchema>;
 
 export type NormalizedTool = {
   id?: string;
@@ -61,11 +76,13 @@ export const createTool = (payload: ToolSchema) => ({
   id: payload?.id || cuid(),
 });
 
-const agentToolFormat = (tool: ToolSchema) => {
+const agentToolFormat = (
+  tool: Exclude<ToolSchema, { type: 'connector' } | { type: 'agent' }>
+) => {
   let format = {
     name: tool.type,
     description: '',
-  } as any;
+  } as Format;
 
   const icon = (agentToolConfig as any)?.[tool.type]?.icon as string;
 
@@ -73,6 +90,7 @@ const agentToolFormat = (tool: ToolSchema) => {
     format = {
       id: tool.id!,
       datastoreId: tool.datastoreId!,
+      type: tool.type,
       name:
         ((tool as any)?.datastore?.name!
           ? `${icon} ` + (tool as any)?.datastore?.name!
@@ -87,6 +105,7 @@ const agentToolFormat = (tool: ToolSchema) => {
       name:
         (tool?.config?.name ? `${icon} ` + tool?.config?.name : undefined) ||
         agentToolConfig[ToolType.http].title,
+      type: tool.type,
       description:
         tool?.config?.description || agentToolConfig[ToolType.http].description,
     };
@@ -94,6 +113,7 @@ const agentToolFormat = (tool: ToolSchema) => {
     format = {
       id: tool.id!,
       formId: tool?.formId,
+      type: tool.type,
       name:
         (tool?.form?.name ? `${icon} ` + tool?.form?.name : undefined) ||
         agentToolConfig[ToolType.form].title,
@@ -103,6 +123,7 @@ const agentToolFormat = (tool: ToolSchema) => {
   } else {
     format = {
       id: tool.id!,
+      type: tool.type,
       name: (agentToolConfig as any)[tool?.type]?.title || tool.type,
       description: (agentToolConfig as any)[tool?.type]?.description || '',
     };

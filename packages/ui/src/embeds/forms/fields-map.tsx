@@ -103,30 +103,30 @@ const fieldTypesMap = {
     name,
     methods,
     placeholder,
+    defaultCountryCode,
     disabled,
-  }: Extract<FieldProps, { type: 'phoneNumber' }>) => (
-    <PhoneNumberInput
-      disabled={disabled}
-      control={methods.control as any}
-      {...(methods.register(name) as any)}
-      // placeholder={t('chatbubble:lead.phoneNumber')}
-      placeholder={placeholder}
-      handleChange={(value) => {
-        methods.setValue(name, value as never, {
-          shouldValidate: true,
-          shouldDirty: true,
-        });
-      }}
-      // selectProps={{
-      //   slotProps: {
-      //     listbox: {
-      //       // Fix the styling issue with shadow root usage. Similar issue: https://stackoverflow.com/questions/69828392/mui-select-drop-down-options-not-styled-when-using-entry-point-to-insert-scoped
-      //       container: chatboxRoot,
-      //     },
-      //   },
-      // }}
-    />
-  ),
+  }: Extract<FieldProps, { type: 'phoneNumber' }>) => {
+    const error = methods?.formState?.errors?.[name]?.message;
+
+    return (
+      <FormControl>
+        <PhoneNumberInput
+          disabled={disabled}
+          control={methods.control as any}
+          {...(methods.register(name) as any)}
+          defaultCountryCode={defaultCountryCode}
+          placeholder={placeholder}
+          handleChange={(value) => {
+            methods.setValue(name, value as never, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
+          }}
+        />
+        {error && <FormHelperText>{error}</FormHelperText>}
+      </FormControl>
+    );
+  },
   text: ({
     name,
     methods,
@@ -158,11 +158,6 @@ const fieldTypesMap = {
       placeholder={placeholder || ''}
       min={min}
       max={max}
-      // slotProps={{
-      //   input: {
-      //     component: NumericFormatAdapter,
-      //   },
-      // }}
       {...methods?.register(name)}
     />
   ),

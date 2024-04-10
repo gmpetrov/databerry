@@ -133,13 +133,13 @@ function FieldsInput({ type = 'traditional' }: Props) {
     name: 'draftConfig.fields',
   });
 
-  const fieldsValues = methods.watch('draftConfig.fields');
+  const fieldsValues = methods.watch('draftConfig.fields') || [];
 
   return (
     <Stack gap={2}>
       {type === formType.traditional && (
         <SortableList
-          items={fields}
+          items={fieldsValues}
           onChange={(from, to) => {
             swap(from, to);
             forceSubmit();
@@ -250,6 +250,18 @@ function FieldsInput({ type = 'traditional' }: Props) {
                                 <Choices<CreateFormSchema>
                                   actionLabel="Add Option"
                                   name={`draftConfig.fields.${index}.options`}
+                                />
+                              </FormControl>
+                            )}
+
+                            {field.type === 'phoneNumber' && (
+                              <FormControl>
+                                <FormLabel>Country Code</FormLabel>
+                                <Input
+                                  control={methods.control}
+                                  {...methods.register(
+                                    `draftConfig.fields.${index}.defaultCountryCode`
+                                  )}
                                 />
                               </FormControl>
                             )}
