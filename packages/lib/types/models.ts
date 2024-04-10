@@ -235,12 +235,10 @@ export type DatasourceGoogleDrive = Extract<
 
 export const AgentInterfaceConfig = z.object({
   displayName: z.string().trim().optional(),
-  primaryColor: z
-    .string()
-    .refine((val) => /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i.test(val), {
-      message: 'Invalid hex color',
-    })
-    .optional(),
+  primaryColor: z.string().optional(),
+  // .refine((val) => /^#[0-9A-F]{6}[0-9a-f]{0,2}$/i.test(val), {
+  //   message: 'Invalid hex color',
+  // })
   initialMessage: z.string().trim().optional(),
   initialMessages: z
     .array(z.string())
