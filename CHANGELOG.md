@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.327"></a>
+## 0.1.327 (2024-04-10)
+
+### Miscellaneous
+
+- 🎸 add support for anthropic opus + sonnet [[63b27cb](https://github.com/gmpetrov/databerry/commit/63b27cb5d39d13634bd27bd7afadcfdfe2108e8b)]
+
+
 <a name="0.1.326"></a>
 ## 0.1.326 (2024-04-10)
 
