@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.333"></a>
+## 0.1.333 (2024-04-11)
+
+### Fixed
+
+- 🐛 enforce answer in same language [[44c3900](https://github.com/gmpetrov/databerry/commit/44c390037aa9ccd64ee567f94856a1cf78397fa1)]
+
+### Miscellaneous
+
+- 🤖 reorder datasource options [[2e9fab1](https://github.com/gmpetrov/databerry/commit/2e9fab15fcd0374e165bbbf45c525536bdcd6470)]
+
+
 <a name="0.1.332"></a>
 ## 0.1.332 (2024-04-11)
 
