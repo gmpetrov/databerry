@@ -386,11 +386,11 @@ const chat = async ({
           ? ([
               {
                 role: 'user',
-                content: `Only use previous message to answer my questions. If information to answer my question is not relevant, politely say that you do not know. I do not want to see misleading answers. Don't try to make up an answer.`,
+                content: `Only use previous message to answer my questions. If information to answer my question is not relevant, politely say that you do not know using same the question is asked. I do not want to see misleading answers. Don't try to make up an answer.`,
               },
               {
                 role: 'assistant',
-                content: `Ok I will follow your instructions carefully. I will only use the knowledge base you provided to answer your questions. If informations to answer your questions can't be found in the knowledge base or if informations are not complete enough I will politely say that I do not know. I will not generate misleading answers. I will not try to make up an answer.`,
+                content: `Ok I will follow your instructions carefully. I will only use the knowledge base you provided to answer your questions. If informations to answer your questions can't be found in the knowledge base or if informations are not complete enough I will politely say that I do not know using the same language the question is asked. I will not generate misleading answers. I will not try to make up an answer.`,
               },
             ] as ChatCompletionMessageParam[])
           : ([] as ChatCompletionMessageParam[])
