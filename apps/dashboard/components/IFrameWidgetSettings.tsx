@@ -15,12 +15,11 @@ import React, { useEffect, useState } from 'react';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import toast from 'react-hot-toast';
 
-import { useDeepCompareMemoize } from '@app/hooks/useDeepCompareEffect';
-
 import { appUrl } from '@chaindesk/lib/config';
 import { CreateAgentSchema } from '@chaindesk/lib/types/dtos';
 import ChatBoxLoader from '@chaindesk/ui/ChatBoxLoader';
 import ChatboxNavBarLayout from '@chaindesk/ui/ChatboxNavBarLayout';
+import { useDeepCompareMemoize } from '@chaindesk/ui/hooks/useDeepCompareEffect';
 import Markdown from '@chaindesk/ui/Markdown';
 import WidgetThemeProvider from '@chaindesk/ui/themes/embeds-provider';
 

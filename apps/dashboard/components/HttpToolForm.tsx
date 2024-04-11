@@ -16,7 +16,6 @@ import pDebounce from 'p-debounce';
 import React, { memo, useCallback, useRef } from 'react';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
-import useDeepCompareEffect from '@app/hooks/useDeepCompareEffect';
 import useModal from '@app/hooks/useModal';
 
 import {
@@ -24,6 +23,7 @@ import {
   HttpToolSchema,
   ToolSchema,
 } from '@chaindesk/lib/types/dtos';
+import useDeepCompareEffect from '@chaindesk/ui/hooks/useDeepCompareEffect';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Markdown from '@chaindesk/ui/Markdown';
 

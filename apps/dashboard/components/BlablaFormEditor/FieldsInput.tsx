@@ -30,10 +30,13 @@ import {
 import { CreateFormSchema } from '@chaindesk/lib/types/dtos';
 import { FieldType } from '@chaindesk/ui/embeds/forms/types';
 import Input from '@chaindesk/ui/Input';
+import {
+  countryCodeToFlag,
+  defaultCountries,
+  parseCountry,
+} from '@chaindesk/ui/PhoneNumberInput';
 
 import { SortableList } from '../dnd/SortableList';
-
-import { forceSubmit } from './utils';
 
 export enum formType {
   traditional = 'traditional',
@@ -89,7 +92,6 @@ export const Choices = <T extends Record<string, unknown>>({
                   color="danger"
                   onClick={() => {
                     remove(i);
-                    forceSubmit();
                   }}
                 >
                   <CloseIcon fontSize="sm" />
@@ -142,7 +144,6 @@ function FieldsInput({ type = 'traditional' }: Props) {
           items={fieldsValues}
           onChange={(from, to) => {
             swap(from, to);
-            forceSubmit();
           }}
           renderItem={(field, index) => (
             <SortableList.Item id={field.id}>
@@ -221,8 +222,6 @@ function FieldsInput({ type = 'traditional' }: Props) {
                                       }
                                     );
                                   }
-
-                                  forceSubmit();
                                 }}
                               >
                                 {fieldTypes.map((each) => (
@@ -256,11 +255,30 @@ function FieldsInput({ type = 'traditional' }: Props) {
 
                             {field.type === 'phoneNumber' && (
                               <FormControl>
-                                <FormLabel>Country Code</FormLabel>
-                                <Input
+                                <FormLabel>Default Country Code</FormLabel>
+                                <Controller
                                   control={methods.control}
-                                  {...methods.register(
-                                    `draftConfig.fields.${index}.defaultCountryCode`
+                                  name={`draftConfig.fields.${index}.defaultCountryCode`}
+                                  render={({ field }) => (
+                                    <Select
+                                      onChange={(_, value) => {
+                                        field.onChange(value as string);
+                                      }}
+                                    >
+                                      {defaultCountries.map((each) => {
+                                        const country = parseCountry(each);
+                                        return (
+                                          <Option
+                                            key={country.iso2}
+                                            value={country.iso2}
+                                          >
+                                            {`${countryCodeToFlag(
+                                              country.iso2
+                                            )} ${country.name}`}
+                                          </Option>
+                                        );
+                                      })}
+                                    </Select>
                                   )}
                                 />
                               </FormControl>
@@ -340,7 +358,6 @@ function FieldsInput({ type = 'traditional' }: Props) {
                       size="sm"
                       onClick={() => {
                         remove(index);
-                        forceSubmit();
                       }}
                     >
                       <CloseRoundedIcon fontSize="md" color="danger" />
@@ -373,7 +390,6 @@ function FieldsInput({ type = 'traditional' }: Props) {
                     value={value}
                     onChange={(_, value) => {
                       onChange(value);
-                      forceSubmit();
                     }}
                     sx={{ minWidth: '80px' }}
                   >
@@ -396,7 +412,6 @@ function FieldsInput({ type = 'traditional' }: Props) {
                   <IconButton
                     onClick={() => {
                       remove(index);
-                      forceSubmit();
                     }}
                   >
                     <CloseIcon fontSize="sm" />

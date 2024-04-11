@@ -1,7 +1,8 @@
 import AddIcon from '@mui/icons-material/Add';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
+import TuneRoundedIcon from '@mui/icons-material/TuneRounded';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import Alert from '@mui/joy/Alert';
 import Button from '@mui/joy/Button';
@@ -20,7 +21,6 @@ import React, { useCallback, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import useSWR from 'swr';
 
-import useDeepCompareEffect from '@app/hooks/useDeepCompareEffect';
 import useModal from '@app/hooks/useModal';
 import { getDatastores } from '@app/pages/api/datastores';
 
@@ -38,6 +38,7 @@ import {
   Prisma,
   ToolType,
 } from '@chaindesk/prisma';
+import useDeepCompareEffect from '@chaindesk/ui/hooks/useDeepCompareEffect';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 
 import HttpToolForm, { HttpToolTestForm } from '../HttpToolForm';
@@ -120,11 +121,11 @@ const ToolCard = ({
               {editableTools.includes(type) && (
                 <IconButton
                   variant="plain"
-                  color="success"
+                  color="neutral"
                   size="md"
                   onClick={onEdit}
                 >
-                  <EditIcon fontSize="md" color="success" />
+                  <TuneRoundedIcon />
                 </IconButton>
               )}
 
@@ -134,7 +135,7 @@ const ToolCard = ({
                 size="md"
                 onClick={onDelete}
               >
-                <DeleteIcon fontSize="md" color="danger" />
+                <RemoveCircleOutlineRoundedIcon />
               </IconButton>
             </>
           )}
@@ -144,10 +145,10 @@ const ToolCard = ({
               <IconButton
                 variant="plain"
                 color="success"
-                size="sm"
+                size="md"
                 onClick={onCreate}
               >
-                <AddCircleOutlineRoundedIcon fontSize="large" color="success" />
+                <AddCircleOutlineRoundedIcon />
               </IconButton>
             </>
           )}

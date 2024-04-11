@@ -16,6 +16,7 @@ import {
   parseCountry,
   usePhoneInput,
 } from 'react-international-phone';
+
 import Input from '@chaindesk/ui/Input';
 
 export type Props = InputProps & {
@@ -27,11 +28,13 @@ export type Props = InputProps & {
   selectProps?: SelectProps<string, false>;
 };
 
-const countryCodeToFlag = (isoCode: string) => {
+export const countryCodeToFlag = (isoCode: string) => {
   return isoCode
     .toUpperCase()
     .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397));
 };
+
+export { defaultCountries, parseCountry };
 
 const PhoneNumberInput = forwardRef(
   (
