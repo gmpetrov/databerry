@@ -48,7 +48,17 @@ export function NewFormToolInput({ saveFormTool }: Props) {
   }
 
   return (
-    <Stack gap={3}>
+    <Stack
+      gap={3}
+      component="form"
+      onSubmit={() => {
+        saveFormTool({
+          form: state.form!,
+          trigger: state.trigger,
+          messageCountTrigger: state.messageCountTrigger,
+        });
+      }}
+    >
       <Stack>
         <Typography level="body-md">
           Connect a form or{' '}
@@ -95,17 +105,11 @@ export function NewFormToolInput({ saveFormTool }: Props) {
         </Stack>
       </Stack>
       <Button
+        type="submit"
         variant="soft"
         color="primary"
         sx={{ marginLeft: 'auto' }}
         disabled={!state.form || (!state.trigger && !state.messageCountTrigger)}
-        onClick={() =>
-          saveFormTool({
-            form: state.form!,
-            trigger: state.trigger,
-            messageCountTrigger: state.messageCountTrigger,
-          })
-        }
       >
         Add Tool
       </Button>
@@ -129,7 +133,7 @@ export function EditFormToolInput({
   );
 
   return (
-    <Stack gap={1}>
+    <Stack gap={1} component="form" onSubmit={onSubmit}>
       <Stack>
         <Typography level="body-sm">
           Describe when should the user be prompted with the form:
@@ -151,7 +155,7 @@ export function EditFormToolInput({
           {...register(`tools.${currentToolIndex}.config.messageCountTrigger`)}
         />
       </Stack>
-      <Button sx={{ ml: 'auto' }} onClick={onSubmit}>
+      <Button type="submit" sx={{ ml: 'auto' }}>
         Update
       </Button>
     </Stack>

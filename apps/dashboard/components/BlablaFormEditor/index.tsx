@@ -50,7 +50,6 @@ import Input from '@chaindesk/ui/Input';
 import Loader from '@chaindesk/ui/Loader';
 
 import FieldsInput, { formType } from './FieldsInput';
-import { forceSubmit } from './utils';
 
 type Props = {
   formId: string;
@@ -195,7 +194,6 @@ function Form({ formId }: Props) {
                             methods.setValue('draftConfig.fields', fields);
                           }
 
-                          forceSubmit();
                         }
                       }}
                     >
@@ -337,7 +335,6 @@ function Form({ formId }: Props) {
                             {...field}
                             onChange={(_, val) => {
                               field.onChange(val);
-                              forceSubmit();
                             }}
                           >
                             <Option value="_blank">_blank</Option>
