@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.331"></a>
+## 0.1.331 (2024-04-11)
+
+### Fixed
+
+- 🐛 remove forceSubmit() + default country code as &lt;Select/&gt; [[48c31d2](https://github.com/gmpetrov/databerry/commit/48c31d2ec3693fb8a3408aa50787aec4c774b46a)]
+
+### Miscellaneous
+
+- 🎸 form improvements [[266bd26](https://github.com/gmpetrov/databerry/commit/266bd26eb5bde2998fb1c46f9372486255639ba6)]
+
+
 <a name="0.1.330"></a>
 ## 0.1.330 (2024-04-10)
 
