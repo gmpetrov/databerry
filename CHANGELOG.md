@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.332"></a>
+## 0.1.332 (2024-04-11)
+
+### Fixed
+
+- 🐛 RAG missing chunk with highest similarity score [[a477814](https://github.com/gmpetrov/databerry/commit/a477814b4a6692cf61afc6845692e7d8ab917903)]
+
+
 <a name="0.1.331"></a>
 ## 0.1.331 (2024-04-11)
 
