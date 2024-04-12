@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.335"></a>
+## 0.1.335 (2024-04-12)
+
+### Fixed
+
+- 🐛 zIndex button [[eaccbfc](https://github.com/gmpetrov/databerry/commit/eaccbfcffe1a9c94327d1817af20d784aa23d86f)]
+
+
 <a name="0.1.334"></a>
 ## 0.1.334 (2024-04-12)
 
