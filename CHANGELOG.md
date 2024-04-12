@@ -1,5 +1,19 @@
 # Changelog
 
+<a name="0.1.334"></a>
+## 0.1.334 (2024-04-12)
+
+### Fixed
+
+- 🐛 zIndex Select on chat-bubble [[e05968e](https://github.com/gmpetrov/databerry/commit/e05968ea8441119cb45b12eef614f686f1f30eaf)]
+
+### Miscellaneous
+
+-  bump [[9b82e51](https://github.com/gmpetrov/databerry/commit/9b82e51941976dde099195504a1387ec2d3f45b3)]
+- 🤖 upgrade to next@4.2 [[1c17ccb](https://github.com/gmpetrov/databerry/commit/1c17ccb97294f809e64b197a1358e904fb90c907)]
+- 🎸 add model mixtral-8x22b [[f5df18a](https://github.com/gmpetrov/databerry/commit/f5df18a81fee2f7b023629d8fab0d3cae4011f60)]
+
+
 <a name="0.1.333"></a>
 ## 0.1.333 (2024-04-11)
 
