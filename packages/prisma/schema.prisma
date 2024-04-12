@@ -380,6 +380,8 @@ model Conversation {
   // Todo: deprecate in favor of visitorID relation
   visitorId String? @map("visitor_id")
 
+  attachments Attachment[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -794,6 +796,8 @@ model Attachment {
   message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
   messageId String  @map("message_id")
 
+  conversationId String?  @map("conversation_id")
+  conversation Conversation? @relation(fields: [conversationId], references: [id])
   @@map("attachments")
 }
 

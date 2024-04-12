@@ -7,6 +7,7 @@ import StopRoundedIcon from '@mui/icons-material/StopRounded';
 
 import UnfoldLessOutlinedIcon from '@mui/icons-material/UnfoldLessOutlined';
 import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined';
+import ArticleTwoToneIcon from '@mui/icons-material/ArticleTwoTone';
 import Alert from '@mui/joy/Alert';
 
 import Button from '@mui/joy/Button';
@@ -23,6 +24,7 @@ import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { z } from 'zod';
+import { zIndex } from '@chaindesk/ui/embeds/common/utils';
 
 import {
   AcceptedAudioMimeTypes,
@@ -41,6 +43,9 @@ import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 import FileUploader from '@chaindesk/ui/FileUploader';
 import TraditionalForm from '@chaindesk/ui/embeds/forms/traditional';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import type { Attachment } from '@chaindesk/prisma';
 
 export const acceptedMimeTypesStr = [
   ...AcceptedImageMimeTypes,
@@ -51,7 +56,12 @@ export const acceptedMimeTypesStr = [
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
-  onSubmit: (message: string, attachments?: File[]) => Promise<any>;
+  onSubmit: (props: {
+    query: string;
+    files?: File[];
+    isDraft?: boolean;
+    attachmentsForAI?: string[];
+  }) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
   initialMessages?: ChatMessage[];
@@ -84,6 +94,7 @@ export type ChatBoxProps = {
   autoFocus?: boolean;
   agentIconStyle?: React.CSSProperties;
   fromInbox?: boolean;
+  conversationAttachments?: Attachment[];
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -120,6 +131,7 @@ function ChatBox({
   autoFocus,
   agentIconStyle,
   fromInbox,
+  conversationAttachments,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -129,6 +141,9 @@ function ChatBox({
   // const [ini, setFirstMsg] = useState<ChatMessage>();
   // const [firstMsg, setFirstMsg] = useState<ChatMessage>();
   const [files, setFiles] = useState<File[]>([] as File[]);
+  const [attachmentsForAI, setAttachmentsForAI] = useState<string[]>(
+    [] as string[]
+  );
   const [isTextAreaExpanded, setIsTextAreaExpended] = useState(false);
 
   const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
@@ -157,7 +172,11 @@ function ChatBox({
       setHideTemplateMessages(true);
       setIsTextAreaExpended(false);
       methods.reset();
-      await onSubmit(query, files);
+      await onSubmit({
+        query,
+        files,
+        attachmentsForAI,
+      });
       setFiles([]);
     } catch (err) {
     } finally {
@@ -482,6 +501,36 @@ function ChatBox({
                 </Alert>
               </Stack>
             )}
+
+            {isAiEnabled &&
+              conversationAttachments &&
+              conversationAttachments?.length > 0 && (
+                <Select
+                  size="sm"
+                  slotProps={{
+                    listbox: {
+                      sx: {
+                        zIndex: zIndex + 1,
+                      },
+                    },
+                  }}
+                  sx={{ mr: 'auto' }}
+                  startDecorator={<ArticleTwoToneIcon />}
+                  placeholder="Use file"
+                  variant="plain"
+                  className="max-w-full truncate"
+                  multiple
+                  onChange={(_, values) => {
+                    setAttachmentsForAI(values as string[]);
+                  }}
+                >
+                  {conversationAttachments.map((each) => (
+                    <Option key={each.id} value={each.id}>
+                      {each.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
 
             <Textarea
               // placeholder="Press Shift + Enter to move to the next line"

@@ -176,8 +176,18 @@ const useChat = ({
   }, [getConversationQuery]);
 
   const handleChatSubmit = useCallback(
-    async (_message: string, files: File[] = [], isDraft?: Boolean) => {
-      const message = _message?.trim?.();
+    async ({
+      query,
+      isDraft,
+      files = [],
+      attachmentsForAI = [],
+    }: {
+      query: string;
+      files?: File[];
+      isDraft?: Boolean;
+      attachmentsForAI?: string[];
+    }) => {
+      const message = query?.trim?.();
 
       if (!message || !endpoint) {
         return;
@@ -283,6 +293,7 @@ const useChat = ({
             isDraft,
             contact: otherProps.contact,
             context: otherProps.context,
+            attachmentsForAI,
           }),
           signal: ctrl.signal,
 
@@ -664,6 +675,7 @@ const useChat = ({
       getConversationQuery?.data?.[0]?.participantsVisitors?.[0]?.contact,
     isStreaming: state.isStreaming,
     isAiEnabled: state.isAiEnabled,
+    conversationAttachments: getConversationQuery?.data?.[0]?.attachments || [],
     createNewConversation,
     handleChatSubmit,
     handleLoadMoreMessages: handleLoadMoreMessages,

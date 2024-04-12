@@ -74,7 +74,7 @@ function BlablaFormViewer({
   });
 
   const answerQuestion = async (answer: string) => {
-    await chatData.handleChatSubmit(answer);
+    await chatData.handleChatSubmit({ query: answer });
   };
 
   const currentFieldName =

@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import axios from 'axios';
 import cuid from 'cuid';
 import type { Logger } from 'pino';
 import React from 'react';
@@ -18,6 +19,7 @@ import {
 import prisma from '@chaindesk/prisma/client';
 
 import EventDispatcher from './events/dispatcher';
+import { fileBufferToDocs } from './loaders/file';
 import { ChatRequest } from './types/dtos';
 import AgentManager from './agent';
 import { AnalyticsEvents, capture } from './analytics-server';
@@ -41,6 +43,7 @@ export const ChatConversationArgs =
           createdAt: 'asc',
         },
       },
+      attachments: true,
     },
   });
 
@@ -278,12 +281,43 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
 
     throw err;
   }
+
+  // attachmentsForAI
+  const attachhmentsForAI = [
+    ...(data?.attachments || []),
+    ...(conversation?.attachments?.filter((each) =>
+      (data?.attachmentsForAI || [])?.includes(each?.id)
+    ) || []),
+  ];
+
+  const attachmentsToText: string[] = [];
+  for (const attachment of attachhmentsForAI) {
+    const buffer = await axios
+      .get(attachment.url, {
+        responseType: 'arraybuffer',
+      })
+      .then((res) => res.data);
+
+    const doc = await fileBufferToDocs({
+      buffer,
+      mimeType: attachment.mimeType,
+    });
+
+    const text = doc.map((each) => each.pageContent).join(' ');
+
+    attachmentsToText.push(`FILENAME: ${attachment.name} CONTENT: ${text}`);
+  }
+
+  const input = !!attachmentsToText?.length
+    ? `${data.query}\n${attachmentsToText.join('\n###\n')}`
+    : data.query;
+
   const [chatRes] = await Promise.all([
     manager.query({
       ...data,
       conversationId,
       channel,
-      input: data.query,
+      input,
       stream: data.streaming ? data.handleStream : undefined,
       history: history,
       abortController: data.abortController,

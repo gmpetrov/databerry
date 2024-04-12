@@ -45,6 +45,7 @@ export const getConversation = async (
         },
       },
       participantsContacts: true,
+      attachments: true,
       messages: {
         take: 50,
         include: {
