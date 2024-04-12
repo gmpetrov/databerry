@@ -384,6 +384,7 @@ function ChatBubble({ ...props }: BubbleProps) {
                 gap: 0,
 
                 opacity: 1,
+                zIndex: 1,
 
                 ...(config?.position === 'right'
                   ? {
