@@ -261,6 +261,17 @@ export default function ModelInput({}: Props) {
             - 32k - {ModelConfig[AgentModelName.dolphin_mixtral_8x7b].cost}{' '}
             credits/query (premium)
           </Option>
+          <Option
+            value={AgentModelName.mixtral_8x22b}
+            disabled={!session?.data?.organization?.isPremium}
+          >
+            <ProviderLogo
+              src={ModelConfig[AgentModelName.mixtral_8x22b].icon}
+            />
+            Mixtral 8x22B - 64k -{' '}
+            {ModelConfig[AgentModelName.mixtral_8x22b].cost} credits/query
+            (premium)
+          </Option>
         </Select>
       </FormControl>
 

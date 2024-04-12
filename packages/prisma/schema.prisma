@@ -1007,6 +1007,7 @@ enum AgentModelName {
   claude_3_sonnet
   claude_3_opus
   mixtral_8x7b
+  mixtral_8x22b
   dolphin_mixtral_8x7b
 }
 

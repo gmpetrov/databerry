@@ -131,6 +131,16 @@ export const ModelConfig: Record<
     isToolCallingSupported: false,
     icon: '/shared/images/logos/mistral.svg',
   },
+  [AgentModelName.mixtral_8x22b]: {
+    name: 'mistralai/mixtral-8x22b',
+    baseUrl: 'https://openrouter.ai/api/v1',
+    maxTokens: 65536,
+    cost: 2,
+    providerPriceByInputToken: 0.0000009,
+    providerPricePriceByOutputToken: 0.0000009,
+    isToolCallingSupported: false,
+    icon: '/shared/images/logos/mistral.svg',
+  },
 };
 
 export const appUrl = 'https://app.chaindesk.ai';
