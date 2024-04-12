@@ -20,6 +20,8 @@ import { InitWidgetProps } from './types';
 
 import NewChatButton from '@chaindesk/ui/Chatbox/NewChatButton';
 
+import { zIndex } from '@chaindesk/ui/embeds/common/utils';
+
 const defaultChatBubbleConfig: AgentInterfaceConfig = {
   // displayName: 'Agent Smith',
   theme: 'light',
@@ -64,7 +66,6 @@ const ChatBoxLayout = (props: {
           top: 0,
           left: 0,
           right: 0,
-          zIndex: 100000000,
         }}
       >
         <Stack
@@ -268,7 +269,7 @@ function ChatBubble({ ...props }: BubbleProps) {
                 sm: '500px',
               },
 
-              zIndex: 9999999998,
+              zIndex: zIndex - 1,
 
               ...(config?.position === 'left'
                 ? {
@@ -339,7 +340,7 @@ function ChatBubble({ ...props }: BubbleProps) {
           position: 'fixed',
           height: '60px',
           bottom: '20px',
-          zIndex: 9999999999,
+          zIndex,
 
           ...(config?.position === 'left'
             ? {
@@ -373,7 +374,6 @@ function ChatBubble({ ...props }: BubbleProps) {
               variant="outlined"
               sx={(theme) => ({
                 pointerEvents: state.isOpen ? 'all' : 'none',
-                zIndex: 9999,
                 position: 'absolute',
                 bottom: '80px',
                 display: 'flex',

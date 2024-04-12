@@ -24,7 +24,6 @@ export default function FileUploader({
       sx={{ maxHeight: '100%' }}
       component="label"
     >
-      {loading === false ? 'files loaded' : placeholder}
       {loading ? (
         <Loader rootProps={{ style: { width: '40px', marginLeft: 2 } }} />
       ) : (

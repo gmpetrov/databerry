@@ -1,3 +1,5 @@
+export const zIndex = 9999999999;
+
 export function toCamelCase(dashedCase: string): string {
   return dashedCase.replace(/[-:]([a-z])/g, (_, b) => `${b.toUpperCase()}`);
 }

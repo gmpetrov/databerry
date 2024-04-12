@@ -16,6 +16,7 @@ import FileUploaderDropZone from '@chaindesk/ui/FileUploaderDropZone';
 import React from 'react';
 import { FormFieldSchema } from '@chaindesk/lib/types/dtos';
 import ChatMessageAttachment from '@chaindesk/ui/Chatbox/ChatMessageAttachment';
+import { zIndex } from '@chaindesk/ui/embeds/common/utils';
 
 export const fieldsToZodSchema = (fields: FieldProps[]) => {
   const obj: Record<string, any> = {};
@@ -197,6 +198,13 @@ const fieldTypesMap = {
           disabled={disabled}
           sx={{
             width: '100%',
+          }}
+          slotProps={{
+            listbox: {
+              sx: {
+                zIndex: zIndex + 1,
+              },
+            },
           }}
           placeholder={placeholder}
           onChange={(_, value) => {
