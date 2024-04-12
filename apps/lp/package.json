@@ -38,7 +38,7 @@
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.0.8",
-    "next": "14.0.4",
+    "next": "14.2",
     "next-auth": "^4.24.3",
     "puppeteer-core": "^21.5.1",
     "react": "18.2.0",

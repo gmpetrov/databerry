@@ -70,6 +70,6 @@
     "typescript": "5.0.2"
   },
   "peerDependencies": {
-    "next": "14.0.4"
+    "next": "14.2"
   }
 }

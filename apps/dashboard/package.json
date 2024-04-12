@@ -98,7 +98,7 @@
     "mixpanel-browser": "^2.47.0",
     "msgpackr": "^1.9.3",
     "multer": "1.4.5-lts.1",
-    "next": "14.0.4",
+    "next": "14.2",
     "next-auth": "^4.24.3",
     "nodemailer": "^6.9.1",
     "nprogress": "^0.2.0",
