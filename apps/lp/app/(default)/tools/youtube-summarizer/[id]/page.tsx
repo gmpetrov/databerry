@@ -44,9 +44,9 @@ export async function generateMetadata(
 
   const title = summary?.output?.metadata?.title;
   return {
-    title: `${summary?.output?.metadata?.title} - AI YouTube Video Summary | Chaindesk`,
+    title: `${summary?.output?.metadata?.title}`,
     description:
-      summary?.output?.metadata?.description ||
+      summary?.output?.en?.videoSummary ||
       `Generate YouTube video summaries instantly for free with AI`,
     alternates: {
       canonical: `/tools/youtube-summarizer/${id}`,
@@ -63,9 +63,9 @@ export async function generateMetadata(
         ...previousImages,
       ],
     },
-    keywords: `${
-      summary?.output?.metadata?.keywords?.join(', ') || ''
-    } AI chatbot, No-code platform, AI Customer Support, Onboarding, Slack AI chatbot, Automation, Chaindesk, ChatGPT Plugin, Chat PDF, Chat with any document, Custom ChatGPT Bot, Chatbot GPT, Chatbot, ChatGPT Chatbot, WhatsApp ChatGPT Chatbot`,
+    // keywords: `${
+    //   summary?.output?.metadata?.keywords?.join(', ') || ''
+    // } AI chatbot, No-code platform, AI Customer Support, Onboarding, Slack AI chatbot, Automation, Chaindesk, ChatGPT Plugin, Chat PDF, Chat with any document, Custom ChatGPT Bot, Chatbot GPT, Chatbot, ChatGPT Chatbot, WhatsApp ChatGPT Chatbot`,
   };
 }
 

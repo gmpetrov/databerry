@@ -22,7 +22,6 @@ import {
   Typography,
 } from '@mui/joy';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -30,6 +29,7 @@ import React, { useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+import dayjs from '@chaindesk/lib/date';
 import { SummaryPageProps } from '@chaindesk/lib/types';
 import writeClipboard from '@chaindesk/lib/write-clipboard';
 import prisma from '@chaindesk/prisma/client';
@@ -109,9 +109,15 @@ export default function YoutubeSummary({ id, summary }: Props) {
       >
         <PromoAlert />
 
-        <Typography level="h1" sx={{ textAlign: 'center' }}>
-          {title}
-        </Typography>
+        <Stack component={'header'} sx={{ textAlign: 'center' }} gap={1}>
+          <Typography level="h1" sx={{ textAlign: 'center' }}>
+            {title}
+          </Typography>
+
+          <Typography level="body-md" color="neutral">
+            Updated: {dayjs().format('MMMM D, YYYY')}
+          </Typography>
+        </Stack>
 
         <Stack>
           <Breadcrumbs aria-label="breadcrumbs">
@@ -225,13 +231,13 @@ export default function YoutubeSummary({ id, summary }: Props) {
                 {output?.metadata?.author_name}
               </Typography>
             )}
-            {output?.metadata?.publishedAt && (
+            {/* {output?.metadata?.publishedAt && (
               <Typography level="body-sm">
                 Published{' '}
                 {dayjs(output?.metadata?.publishedAt).format('MMMM D YYYY')} on
                 Youtube
               </Typography>
-            )}
+            )} */}
 
             {/* <Box mt={1}>
             {content.thematics.map((tag, i) => (
@@ -252,7 +258,7 @@ export default function YoutubeSummary({ id, summary }: Props) {
                 Summary
               </Typography>
               <ReactMarkdown
-                className="min-w-full text-zinc-600 prose"
+                className="min-w-full prose text-zinc-600"
                 remarkPlugins={[remarkGfm]}
               >
                 {content.videoSummary}
@@ -265,7 +271,7 @@ export default function YoutubeSummary({ id, summary }: Props) {
 
         <Stack direction="row" className="sm:space-x-12">
           <Box className="hidden sm:block">
-            <Box className="sticky top-10 pt-12 space-y-2">
+            <Box className="sticky pt-12 space-y-2 top-10">
               <Typography level="title-md" fontWeight={'bold'}>
                 Chapters
               </Typography>
@@ -282,13 +288,13 @@ export default function YoutubeSummary({ id, summary }: Props) {
               </ol>
             </Box>
           </Box>
-          <Stack className="relative items-start pt-10 w-full">
+          <Stack className="relative items-start w-full pt-10">
             {content.chapters.map(({ title, summary }, index) => (
               <Stack
                 direction="row"
                 key={index}
                 justifyContent="flex-start"
-                className="flex justify-start space-x-6 space-y-6 w-full"
+                className="flex justify-start w-full space-x-6 space-y-6"
               >
                 {/* fix anchor hidden by header */}
                 <div className="relative -top-16" id={title}></div>
@@ -305,11 +311,15 @@ export default function YoutubeSummary({ id, summary }: Props) {
                 </Box>
 
                 <Box className="spac-y-4">
-                  <Typography level="title-lg" className="!font-title">
+                  <Typography
+                    component="h2"
+                    level="title-lg"
+                    className="!font-title"
+                  >
                     {title}
                   </Typography>
                   <ReactMarkdown
-                    className="min-w-full text-zinc-500 prose"
+                    className="min-w-full prose text-zinc-500"
                     remarkPlugins={[remarkGfm]}
                   >
                     {decodeHTMLEntities(summary)}
@@ -392,7 +402,7 @@ export default function YoutubeSummary({ id, summary }: Props) {
               <CloseRoundedIcon />
             </IconButton>
           </Box>
-          <div className="container flex flex-col p-4 mx-auto space-y-4 w-full max-w-5xl md:h-full md:flex-row md:space-x-4">
+          <div className="container flex flex-col w-full max-w-5xl p-4 mx-auto space-y-4 md:h-full md:flex-row md:space-x-4">
             <Box className="w-full">
               {/* Turn timecode to seconds */}
               <iframe
@@ -408,7 +418,7 @@ export default function YoutubeSummary({ id, summary }: Props) {
                 className="min-h-[400px] sm:min-h-[200px] sm:h-full w-full md:w-[500px]  md:rounded-xl"
               />
             </Box>
-            <Box className="flex flex-col justify-start self-center space-y-3 w-full">
+            <Box className="flex flex-col self-center justify-start w-full space-y-3">
               <Typography level="h3" className="!text-zinc-100">
                 {content.chapters[state.currentChapter].title}
               </Typography>
