@@ -2,18 +2,19 @@ import AttachFileRoundedIcon from '@mui/icons-material/AttachFileRounded';
 import IconButton from '@mui/joy/IconButton';
 import { useState } from 'react';
 
-import { acceptedMimeTypesStr } from './Chatbox';
 import Loader from '@chaindesk/ui/Loader';
 import VisuallyHiddenInput from '@chaindesk/ui/VisuallyHiddenInput';
 
 export default function FileUploader({
   changeCallback,
   placeholder,
+  accept,
   variant = 'plain',
 }: {
   changeCallback(files: File[]): any;
   variant?: 'outlined' | 'plain' | 'soft';
   placeholder?: string;
+  accept?: string[];
 }) {
   const [loading, setLoading] = useState<boolean | undefined>(undefined);
   return (
@@ -31,7 +32,7 @@ export default function FileUploader({
       )}
 
       <VisuallyHiddenInput
-        accept={acceptedMimeTypesStr}
+        accept={accept?.join?.(',')}
         type="file"
         multiple
         onChange={async (e) => {

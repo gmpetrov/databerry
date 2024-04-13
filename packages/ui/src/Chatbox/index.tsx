@@ -27,10 +27,8 @@ import { z } from 'zod';
 import { zIndex } from '@chaindesk/ui/embeds/common/utils';
 
 import {
-  AcceptedAudioMimeTypes,
-  AcceptedDocumentMimeTypes,
-  AcceptedImageMimeTypes,
-  AcceptedVideoMimeTypes,
+  AcceptedAIEnabledMimeTypes,
+  AcceptedAIDisabledMimeType,
 } from '@chaindesk/lib/accepted-mime-types';
 
 import { ChatMessage, MessageEvalUnion } from '@chaindesk/lib/types';
@@ -46,13 +44,6 @@ import TraditionalForm from '@chaindesk/ui/embeds/forms/traditional';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import type { Attachment } from '@chaindesk/prisma';
-
-export const acceptedMimeTypesStr = [
-  ...AcceptedImageMimeTypes,
-  ...AcceptedVideoMimeTypes,
-  ...AcceptedAudioMimeTypes,
-  ...AcceptedDocumentMimeTypes,
-].join(',');
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
@@ -517,9 +508,11 @@ function ChatBox({
                   sx={{ mr: 'auto' }}
                   startDecorator={<ArticleTwoToneIcon />}
                   placeholder="Use file"
-                  variant="plain"
+                  // variant="plain"
                   className="max-w-full truncate"
                   multiple
+                  color={attachmentsForAI?.length > 0 ? 'warning' : 'neutral'}
+                  variant={attachmentsForAI?.length > 0 ? 'soft' : 'plain'}
                   onChange={(_, values) => {
                     setAttachmentsForAI(values as string[]);
                   }}
@@ -612,7 +605,14 @@ function ChatBox({
                     })}
 
                   {withFileUpload && (
-                    <FileUploader changeCallback={(f) => setFiles(f)} />
+                    <FileUploader
+                      accept={
+                        isAiEnabled
+                          ? AcceptedAIEnabledMimeTypes
+                          : AcceptedAIDisabledMimeType
+                      }
+                      changeCallback={(f) => setFiles(f)}
+                    />
                   )}
 
                   <Stack direction="row" sx={{ ml: 'auto' }}>

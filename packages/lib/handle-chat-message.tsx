@@ -21,6 +21,7 @@ import prisma from '@chaindesk/prisma/client';
 import EventDispatcher from './events/dispatcher';
 import { fileBufferToDocs } from './loaders/file';
 import { ChatRequest } from './types/dtos';
+import { AcceptedAIEnabledMimeTypes } from './accepted-mime-types';
 import AgentManager from './agent';
 import { AnalyticsEvents, capture } from './analytics-server';
 import { formatOrganizationSession, sessionOrganizationInclude } from './auth';
@@ -43,7 +44,13 @@ export const ChatConversationArgs =
           createdAt: 'asc',
         },
       },
-      attachments: true,
+      attachments: {
+        where: {
+          mimeType: {
+            in: AcceptedAIEnabledMimeTypes,
+          },
+        },
+      },
     },
   });
 
