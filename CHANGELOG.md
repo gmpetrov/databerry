@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.336"></a>
+## 0.1.336 (2024-04-13)
+
+### Miscellaneous
+
+- 🤖 update yt tool [[35acadf](https://github.com/gmpetrov/databerry/commit/35acadfafbcf73059926b74518504e86f2ce1e26)]
+
+
 <a name="0.1.335"></a>
 ## 0.1.335 (2024-04-12)
 
