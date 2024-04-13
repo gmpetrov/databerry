@@ -46,12 +46,17 @@ export async function generateMetadata(
   return {
     title: `${summary?.output?.metadata?.title}`,
     description:
-      summary?.output?.en?.videoSummary ||
+      summary?.output?.en?.videoSummary?.split?.('.')?.[0] ||
       `Generate YouTube video summaries instantly for free with AI`,
     alternates: {
       canonical: `/tools/youtube-summarizer/${id}`,
     },
+    twitter: {
+      site: `/tools/youtube-summarizer/${id}`,
+    },
     openGraph: {
+      type: 'article',
+      url: `/tools/youtube-summarizer/${id}`,
       images: [
         `/api/og/youtube-summary?state=${encodeURIComponent(
           JSON.stringify({
@@ -62,6 +67,10 @@ export async function generateMetadata(
         )}`,
         ...previousImages,
       ],
+    },
+    other: {
+      'article:published_time': summary?.createdAt?.toISOString(),
+      'article:modified_time': new Date().toISOString(),
     },
     // keywords: `${
     //   summary?.output?.metadata?.keywords?.join(', ') || ''
