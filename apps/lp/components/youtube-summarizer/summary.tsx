@@ -273,7 +273,7 @@ export default function YoutubeSummary({ id, summary }: Props) {
           <Box className="hidden sm:block">
             <Box className="sticky pt-12 space-y-2 top-10">
               <Typography level="title-md" fontWeight={'bold'}>
-                Chapters
+                TABLE OF CONTENTS
               </Typography>
               <ol className="ml-5 space-y-2 list-decimal">
                 {content.chapters.map(({ title }, index) => (
