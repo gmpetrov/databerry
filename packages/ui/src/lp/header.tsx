@@ -22,7 +22,7 @@ export default function Header() {
             >
               {/* Logo */}
               <div className="flex items-center justify-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20">
-                <Image
+                <img
                   src={`${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/images/logo.png`}
                   width={24}
                   height={24}
