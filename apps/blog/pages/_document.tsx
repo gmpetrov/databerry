@@ -19,19 +19,23 @@ export default class MyDocument extends Document {
 
             <link rel="manifest" href="/manifest.json" />
 
-            <Script
-              src="https://www.googletagmanager.com/gtag/js?id=G-QTN3QP6PKB"
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
+            {process.env.NEXT_PUBLIC_GA_ID && (
+              <>
+                <Script
+                  src="https://www.googletagmanager.com/gtag/js?id=G-QTN3QP6PKB"
+                  strategy="afterInteractive"
+                />
+                <Script id="google-analytics" strategy="afterInteractive">
+                  {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-QTN3QP6PKB');
-        `}
-            </Script>
+          gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `}
+                </Script>
+              </>
+            )}
           </Head>
 
           <body>
@@ -47,7 +51,7 @@ export default class MyDocument extends Document {
     document.body.classList.add(darkMode ? classNameDark : classNameLight)
     document.body.classList.remove(darkMode ? classNameLight : classNameDark)
   }
-  var preferDarkQuery = '(prefers-color-scheme: dark)'
+  var preferDarkQuery = '(prefers-color-scheme: light)'
   var mql = window.matchMedia(preferDarkQuery)
   var supportsColorSchemeQuery = mql.media === preferDarkQuery
   var localStorageTheme = null

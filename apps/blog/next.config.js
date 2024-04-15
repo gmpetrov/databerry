@@ -12,6 +12,7 @@ module.exports = withBundleAnalyzer({
   transpilePackages: ['@chaindesk/lib', '@chaindesk/ui'],
   images: {
     domains: [
+      'localhost',
       'www.notion.so',
       'notion.so',
       'images.unsplash.com',

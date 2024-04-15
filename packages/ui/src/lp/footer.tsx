@@ -23,7 +23,7 @@ export default function Footer() {
                 href="/"
               >
                 <Image
-                  src={'/images/logo.png'}
+                  src={`${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/images/logo.png`}
                   width={24}
                   height={24}
                   alt="Logo"

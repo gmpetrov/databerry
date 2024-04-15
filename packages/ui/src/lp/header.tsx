@@ -18,12 +18,12 @@ export default function Header() {
             {/* Site branding */}
             <LinkWithUTMFromPath
               className="inline-flex items-center mr-4 space-x-2 shrink-0"
-              href={`/`}
+              href={`${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/`}
             >
               {/* Logo */}
               <div className="flex items-center justify-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20">
                 <Image
-                  src={'/images/logo.png'}
+                  src={`${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/images/logo.png`}
                   width={24}
                   height={24}
                   alt="Logo"

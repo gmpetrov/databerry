@@ -16,7 +16,7 @@ export default function Features02() {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-xl shadow-md mb-8 relative before:absolute before:-top-12 before:w-52 before:h-52 before:bg-zinc-900 before:opacity-[.08] before:rounded-full before:blur-3xl before:-z-10">
               <Link href="/">
                 <Image
-                  src={'/images/logo.png'}
+                  src={`${process.env.NEXT_PUBLIC_LANDING_PAGE_URL}/images/logo.png`}
                   width={60}
                   height={60}
                   alt="Logo"
