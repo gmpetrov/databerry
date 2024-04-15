@@ -6,7 +6,7 @@ import integrations from '@chaindesk/lib/data/integrations';
 import products from '@chaindesk/lib/data/products';
 import slugify from '@chaindesk/lib/slugify';
 
-import Logo from '@/public/images/logo.png';
+// import Logo from '@/public/images/logo.png';
 
 export default function Footer() {
   return (
@@ -18,12 +18,17 @@ export default function Footer() {
           <div className="flex flex-col sm:col-span-6 md:col-span-2 lg:col-span-2 max-sm:order-1">
             <div className="mb-4">
               {/* Logo */}
-              <Link
+              <a
                 className="flex items-center justify-center w-8 h-8 bg-white rounded shadow-sm shadow-zinc-950/20"
                 href="/"
               >
-                <Image src={Logo} width={24} height={24} alt="Logo" />
-              </Link>
+                <Image
+                  src={'/images/logo.png'}
+                  width={24}
+                  height={24}
+                  alt="Logo"
+                />
+              </a>
             </div>
             <div className="text-sm text-zinc-500">
               &copy; Chaindesk All rights reserved.
@@ -32,7 +37,7 @@ export default function Footer() {
             <ul className="flex mt-4 mb-1 space-x-4">
               <li>
                 <a
-                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-400 dark:text-zinc-300 dark:hover:text-zinc-100"
                   href="https://twitter.com/@chaindesk_ai"
                   aria-label="Twitter"
                   target="_blank"
@@ -49,7 +54,7 @@ export default function Footer() {
               </li>
               {/* <li>
                 <a
-                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-400 dark:text-zinc-300 dark:hover:text-zinc-100"
                   href="#0"
                   aria-label="Medium"
                 >
@@ -65,7 +70,7 @@ export default function Footer() {
               </li> */}
               <li>
                 <a
-                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-400 dark:text-zinc-300 dark:hover:text-zinc-100"
                   href="https://www.linkedin.com/company/chaindesk"
                   aria-label="Linkedin"
                   target="_blank"
@@ -82,7 +87,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900"
+                  className="flex items-center justify-center transition text-zinc-700 hover:text-zinc-900 dark:hover:text-zinc-400 dark:text-zinc-300 dark:hover:text-zinc-100"
                   href="https://discord.gg/FSWKj49ckX"
                   aria-label="Discord"
                   target="_blank"
@@ -113,14 +118,14 @@ export default function Footer() {
           <div className="grid gap-8 sm:grid-cols-12 sm:col-span-10 md:col-span-10 lg:col-span-10">
             {/* 2nd block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Products
               </h6>
               <ul className="space-y-2 text-sm">
                 {products.map((product) => (
                   <li key={product?.slug}>
                     <a
-                      className="transition text-zinc-500 hover:text-zinc-900"
+                      className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                       href={`/products/${product?.slug}`}
                     >
                       {product?.name}
@@ -129,7 +134,7 @@ export default function Footer() {
                 ))}
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href={`/integrations`}
                   >
                     Integrations
@@ -137,7 +142,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href={`/pricing`}
                   >
                     Pricing
@@ -146,13 +151,13 @@ export default function Footer() {
               </ul>
             </div>
             {/* <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Use Cases
               </h6>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="#0"
                   >
                     About us
@@ -160,7 +165,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="#0"
                   >
                     Diversity & Inclusion
@@ -168,7 +173,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="#0"
                   >
                     Blog
@@ -176,7 +181,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="#0"
                   >
                     Careers
@@ -184,7 +189,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="#0"
                   >
                     Financial statements
@@ -195,13 +200,13 @@ export default function Footer() {
 
             {/* 3rd block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Free Tools
               </h6>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="/tools/youtube-summarizer"
                   >
                     Free YouTube Video Summarizer
@@ -209,7 +214,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="/ai-news"
                   >
                     AI News
@@ -220,13 +225,13 @@ export default function Footer() {
 
             {/* 4th block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Help & Support
               </h6>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://docs.chaindesk.ai/"
                     target="_blank"
                   >
@@ -235,7 +240,7 @@ export default function Footer() {
                 </li>
                 {/* <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://chaindesk.ai/help"
                     target="_blank"
                   >
@@ -244,7 +249,7 @@ export default function Footer() {
                 </li> */}
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://docs.chaindesk.ai/privacy/gdpr"
                     target="_blank"
                   >
@@ -253,7 +258,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://docs.chaindesk.ai/privacy/privacy-policy"
                     target="_blank"
                   >
@@ -262,7 +267,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://docs.chaindesk.ai/privacy/terms"
                     target="_blank"
                   >
@@ -273,13 +278,13 @@ export default function Footer() {
             </div>
             {/* 5th block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Community
               </h6>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://databerry.getrewardful.com/"
                     target="_blank"
                   >
@@ -288,7 +293,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://github.com/gmpetrov/databerry"
                     target="_blank"
                   >
@@ -297,7 +302,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    className="transition text-zinc-500 hover:text-zinc-900"
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://discord.gg/FSWKj49ckX"
                     target="_blank"
                   >
@@ -308,14 +313,16 @@ export default function Footer() {
             </div>
 
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">Add To</h6>
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                Add To
+              </h6>
               <ul className="space-y-2 text-sm">
                 {integrations
                   .filter((each) => each.isChannel)
                   .map((integration) => (
                     <li key={integration?.slug}>
                       <a
-                        className="transition text-zinc-500 hover:text-zinc-900"
+                        className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                         href={`/integrations/${integration?.slug}`}
                       >
                         Add AI chatbot to {integration?.name}
@@ -325,7 +332,7 @@ export default function Footer() {
               </ul>
             </div>
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Chat with
               </h6>
               <ul className="space-y-2 text-sm">
@@ -334,7 +341,7 @@ export default function Footer() {
                   .map((integration) => (
                     <li key={integration?.slug}>
                       <a
-                        className="transition text-zinc-500 hover:text-zinc-900"
+                        className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                         href={`/integrations/${integration?.slug}`}
                       >
                         Chat with {integration?.name}
@@ -344,14 +351,14 @@ export default function Footer() {
               </ul>
             </div>
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800">
+              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Compare
               </h6>
               <ul className="space-y-2 text-sm">
                 {competitors.map((name) => (
                   <li key={name}>
                     <a
-                      className="transition text-zinc-500 hover:text-zinc-900"
+                      className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                       href={`/compare/${slugify(name)}-alternative`}
                     >
                       {`${name} alternative`}

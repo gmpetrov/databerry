@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 
 import integrations from '@chaindesk/lib/data/integrations';
+import Cta from '@chaindesk/ui/lp/cta';
 
 import Clients from '@/components/clients';
-import Cta from '@/components/cta';
 import HeroProduct from '@/components/hero-product';
 
 type Props = {

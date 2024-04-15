@@ -5,15 +5,9 @@ import Link from 'next/link';
 
 import { cn } from '@chaindesk/ui/utils/cn';
 
-import Particles from './ui/particles';
-import Clients from './clients';
 import TestimonialBadge from './testimonial-badge';
 
-import Stats from '@/components/stats';
 import { TextGenerateEffect } from '@/components/ui/TextGenerateEffect';
-// import HeroImage from '@/public/images/hero-image.png';
-import HeroImage from '@/public/images/dashboard-screenshot.png';
-import config from '@/utils/config';
 import {
   defaultChildVariants,
   defaultContainerVariants,
@@ -69,7 +63,7 @@ export default function Hero(props: {
       >
         {/* Section content */}
         <div className="px-4 sm:px-6">
-          <div className="mx-auto max-w-3xl">
+          <div className="max-w-3xl mx-auto">
             <div className="pb-12 text-center md:pb-16">
               {props?.name && (
                 <motion.div
@@ -109,7 +103,7 @@ export default function Hero(props: {
                   text={props.title}
                 ></TextGenerateEffect>
                 {/* Custom{' '}
-                <em className="inline-flex relative justify-center items-center italic text-zinc-900">
+                <em className="relative inline-flex items-center justify-center italic text-zinc-900">
                   {' '}
                   GPT Agent
                   <svg

@@ -4,23 +4,28 @@ import Link from 'next/link';
 
 import LinkWithUTMFromPath from '@chaindesk/ui/LinkWithUTMFromPath';
 
-import Logo from '@/public/images/logo.png';
-import config from '@/utils/config';
+// import Logo from '@/public/images/logo.png';
+import config from '@chaindesk/lib/config';
 
 export default function Features02() {
   return (
     <section>
       <div className="py-12 md:py-20">
-        <div className="px-4 mx-auto max-w-6xl sm:px-6">
-          <div className="relative pb-12 mx-auto max-w-3xl text-center md:pb-16">
+        <div className="max-w-6xl px-4 mx-auto sm:px-6">
+          <div className="relative max-w-3xl pb-12 mx-auto text-center md:pb-16">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-xl shadow-md mb-8 relative before:absolute before:-top-12 before:w-52 before:h-52 before:bg-zinc-900 before:opacity-[.08] before:rounded-full before:blur-3xl before:-z-10">
               <Link href="/">
-                <Image src={Logo} width={60} height={60} alt="Logo" />
+                <Image
+                  src={'/images/logo.png'}
+                  width={60}
+                  height={60}
+                  alt="Logo"
+                />
               </Link>
             </div>
             <h2 className="mb-4 text-3xl font-bold font-bricolage-grotesque md:text-4xl text-zinc-900">
               Get your own AI Agent{' '}
-              <em className="inline-flex relative justify-center items-end not-italic">
+              <em className="relative inline-flex items-end justify-center not-italic">
                 Today
                 <svg
                   className="absolute fill-zinc-300 w-[calc(100%+1rem)] -z-10"
@@ -42,7 +47,7 @@ export default function Features02() {
               {`Don't get left behind - start building your
               own custom AI chatbot now!`}
             </p>
-            <div className="mx-auto space-y-4 max-w-xs sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
+            <div className="max-w-xs mx-auto space-y-4 sm:max-w-none sm:inline-flex sm:justify-center sm:space-y-0 sm:space-x-4">
               <div>
                 <LinkWithUTMFromPath
                   className="w-full shadow btn text-zinc-100 bg-zinc-900 hover:bg-zinc-800"

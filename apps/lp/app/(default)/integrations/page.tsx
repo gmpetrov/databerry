@@ -6,10 +6,10 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 
 import integrations from '@chaindesk/lib/data/integrations';
+import Cta from '@chaindesk/ui/lp/cta';
 import { Spotlight } from '@chaindesk/ui/Spotlight';
 
 import Clients from '@/components/clients';
-import Cta from '@/components/cta';
 import HeroProduct from '@/components/hero-product';
 // import Integrations from '@/components/integrations';
 import Integrations from '@/components/integrations-v1';
@@ -85,7 +85,7 @@ export default function IntegrationsPage({
         <h1 className="pb-4 text-3xl font-extrabold text-transparent font-bricolage-grotesque md:text-5xl text-zinc-800">
           {`Train your AI with data from anywhere`}
         </h1>
-        <p className="mx-auto mb-8 max-w-lg text-lg text-zinc-500 md:text-xl">
+        <p className="max-w-lg mx-auto mb-8 text-lg text-zinc-500 md:text-xl">
           {`Chaindesk makes it very easy to train your AI Agent with custom data from your existing tools and platforms.`}
         </p>
 
@@ -106,19 +106,19 @@ export default function IntegrationsPage({
                     )}
                   >
                     {integration.isComingSoon && (
-                      <div className="absolute top-1 right-4 text-2xl font-bold text-pink-400 rounded-full font-caveat">
+                      <div className="absolute text-2xl font-bold text-pink-400 rounded-full top-1 right-4 font-caveat">
                         coming soon
                       </div>
                     )}
                     <div
-                      className="flex absolute bottom-0 left-1/2 justify-center items-center h-full -translate-x-1/2 translate-y-1/2 pointer-events-none -z-10 aspect-square"
+                      className="absolute bottom-0 flex items-center justify-center h-full -translate-x-1/2 translate-y-1/2 pointer-events-none left-1/2 -z-10 aspect-square"
                       aria-hidden="true"
                     >
                       <div className="absolute inset-0 translate-z-0 bg-pink-100 rounded-full blur-[120px] opacity-70" />
                     </div>
-                    <div className="flex flex-col justify-start items-start space-x-4 space-y-2 w-full text-left">
-                      <div className="flex items-center space-x-2 w-full max-w-full">
-                        <div className="flex items-center p-2 max-h-10 bg-white rounded-full shadow-sm min-w-10 min-h-10 max-w-10">
+                    <div className="flex flex-col items-start justify-start w-full space-x-4 space-y-2 text-left">
+                      <div className="flex items-center w-full max-w-full space-x-2">
+                        <div className="flex items-center p-2 bg-white rounded-full shadow-sm max-h-10 min-w-10 min-h-10 max-w-10">
                           <img
                             className="w-full h-full"
                             src={integration?.logo}
@@ -147,7 +147,7 @@ export default function IntegrationsPage({
         <h1 className="pb-4 text-3xl font-extrabold text-transparent font-bricolage-grotesque md:text-5xl text-zinc-800">
           {`Deploy your AI Agent anywhere on the web`}
         </h1>
-        <p className="mx-auto mb-8 max-w-lg text-lg text-zinc-500 md:text-xl">
+        <p className="max-w-lg mx-auto mb-8 text-lg text-zinc-500 md:text-xl">
           {`Deploy your AI Agent on your existing platforms in minutes.`}
         </p>
 
@@ -168,19 +168,19 @@ export default function IntegrationsPage({
                     )}
                   >
                     {integration.isComingSoon && (
-                      <div className="absolute top-1 right-4 text-2xl font-bold text-pink-400 rounded-full font-caveat">
+                      <div className="absolute text-2xl font-bold text-pink-400 rounded-full top-1 right-4 font-caveat">
                         coming soon
                       </div>
                     )}
                     <div
-                      className="flex absolute bottom-0 left-1/2 justify-center items-center h-full -translate-x-1/2 translate-y-1/2 pointer-events-none -z-10 aspect-square"
+                      className="absolute bottom-0 flex items-center justify-center h-full -translate-x-1/2 translate-y-1/2 pointer-events-none left-1/2 -z-10 aspect-square"
                       aria-hidden="true"
                     >
                       <div className="absolute inset-0 translate-z-0 bg-pink-100 rounded-full blur-[120px] opacity-70" />
                     </div>
-                    <div className="flex flex-col justify-start items-start space-x-4 space-y-2 w-full text-left">
-                      <div className="flex items-center space-x-2 w-full max-w-full">
-                        <div className="flex items-center p-2 max-h-10 bg-white rounded-full shadow-sm min-w-10 min-h-10 max-w-10">
+                    <div className="flex flex-col items-start justify-start w-full space-x-4 space-y-2 text-left">
+                      <div className="flex items-center w-full max-w-full space-x-2">
+                        <div className="flex items-center p-2 bg-white rounded-full shadow-sm max-h-10 min-w-10 min-h-10 max-w-10">
                           <img
                             className="w-full h-full"
                             src={integration?.logo}
