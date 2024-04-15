@@ -3,8 +3,8 @@ import { cache } from 'react';
 import React from 'react';
 
 import { SummaryPageProps } from '@chaindesk/lib/types';
+import Cta from '@chaindesk/ui/lp/cta';
 
-import Cta from '@/components/cta';
 import HeroProduct from '@/components/hero-product';
 import PromoAlert from '@/components/promo-alert';
 import LatestVideoSummaries from '@/components/youtube-summarizer/latest-summaries';

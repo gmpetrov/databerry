@@ -7,8 +7,8 @@ import slugify from '@chaindesk/lib/slugify';
 import { SummaryPageProps, WebPageSummary } from '@chaindesk/lib/types';
 import { parseId } from '@chaindesk/lib/web-page-summarizer';
 import prisma from '@chaindesk/prisma/client';
+import Cta from '@chaindesk/ui/lp/cta';
 
-import Cta from '@/components/cta';
 import Summary from '@/components/web-page-summarizer/summary';
 
 type Props = {

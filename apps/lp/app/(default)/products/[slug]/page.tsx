@@ -3,10 +3,10 @@ import { redirect } from 'next/navigation';
 import React from 'react';
 
 import products from '@chaindesk/lib/data/products';
+import Cta from '@chaindesk/ui/lp/cta';
 import { cn } from '@chaindesk/ui/utils/cn';
 
 import Clients from '@/components/clients';
-import Cta from '@/components/cta';
 import HeroProduct from '@/components/hero-product';
 
 type Props = {

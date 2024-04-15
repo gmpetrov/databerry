@@ -5,8 +5,8 @@ import React from 'react';
 import { youtubeSummaryTool } from '@chaindesk/lib/config';
 import { Prisma } from '@chaindesk/prisma';
 import prisma from '@chaindesk/prisma/client';
+import Cta from '@chaindesk/ui/lp/cta';
 
-import Cta from '@/components/cta';
 import Section from '@/components/ui/section';
 import AllPagination from '@/components/youtube-summarizer/all-pagination';
 

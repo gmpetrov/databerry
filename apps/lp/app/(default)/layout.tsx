@@ -1,5 +1,5 @@
-import Footer from '@/components/ui/footer';
-import Header from '@/components/ui/header';
+import Footer from '@chaindesk/ui/lp/Footer';
+import Header from '@chaindesk/ui/lp/header';
 
 export default function DefaultLayout({
   children,

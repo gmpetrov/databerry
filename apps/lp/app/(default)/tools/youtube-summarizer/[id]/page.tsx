@@ -6,8 +6,8 @@ import React from 'react';
 import slugify from '@chaindesk/lib/slugify';
 import { SummaryPageProps } from '@chaindesk/lib/types';
 import prisma from '@chaindesk/prisma/client';
+import Cta from '@chaindesk/ui/lp/cta';
 
-import Cta from '@/components/cta';
 import YoutubeSummary from '@/components/youtube-summarizer/summary';
 
 type Props = {

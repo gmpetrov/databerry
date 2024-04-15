@@ -10,9 +10,9 @@ import React from 'react';
 import competitors from '@chaindesk/lib/data/competitors';
 import products from '@chaindesk/lib/data/products';
 import slugify from '@chaindesk/lib/slugify';
+import Cta from '@chaindesk/ui/lp/cta';
 
 import Clients from '@/components/clients';
-import Cta from '@/components/cta';
 import HeroProduct from '@/components/hero-product';
 import FeatureV1 from '@/components/ui/feature-v1';
 import FeatureV2 from '@/components/ui/feature-v2';

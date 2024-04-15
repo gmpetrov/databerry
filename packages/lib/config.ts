@@ -5,6 +5,7 @@ const config = {
   datasourceTable: {
     limit: 20,
   },
+  demoBookingURL: 'https://calendar.app.google/C65KZcdgA9SBYQfBA',
 };
 
 export const XPBNPLabels = {
