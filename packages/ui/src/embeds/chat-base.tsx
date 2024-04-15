@@ -63,7 +63,7 @@ function Standard({
         ? {
             className: cn(mode, layoutClassName),
             agentId: agentId,
-            interfaceConfig,
+            config: interfaceConfig,
           }
         : {})}
     >
