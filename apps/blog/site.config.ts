@@ -9,17 +9,18 @@ export default siteConfig({
   rootNotionSpaceId: null,
 
   // basic site info (required)
-  name: 'Chaindesk.ai - Blog',
+  name: 'Chaindesk | Blog',
   domain: 'www.chaindesk.ai/blog',
   author: 'Georges Petrov',
 
   // open graph metadata (optional)
-  description: 'Blog - Chaindesk.ai - Build your own ChatBPT bot',
+  description: 'AI-Powered support ecosystem',
 
   // social usernames (optional)
   twitter: 'chaindesk_ai',
   // github: 'transitive-bullshit',
   linkedin: 'company/chaindesk',
+  discord: 'https://discord.gg/FSWKj49ckX',
   // mastodon: '#', // optional mastodon profile URL, provides link verification
   // newsletter: '#', // optional newsletter URL
   // youtube: '#', // optional youtube channel name or `channel/UCGbXXXXXXXXXXXXXXXXXXXXXX`

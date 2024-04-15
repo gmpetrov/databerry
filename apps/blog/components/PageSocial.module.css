@@ -86,6 +86,13 @@
   border-color: #2795e9;
 }
 
+.discord .actionBgPane {
+  background: #5762e3;
+}
+.discord:hover {
+  border-color: #5762e3;
+}
+
 .linkedin .actionBgPane {
   background: #0077b5;
 }
@@ -101,10 +108,10 @@
 }
 
 .youtube .actionBgPane {
-  background: #FF0000;
+  background: #ff0000;
 }
 .youtube:hover {
-  border-color: #FF0000;
+  border-color: #ff0000;
 }
 
 .medium .actionBgPane {
