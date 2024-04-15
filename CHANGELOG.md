@@ -1,5 +1,25 @@
 # Changelog
 
+<a name="0.1.337"></a>
+## 0.1.337 (2024-04-15)
+
+### Fixed
+
+- 🐛 rollback useDeepCompareEFfect + fix mapping props [[7e69544](https://github.com/gmpetrov/databerry/commit/7e69544a01eaa022bcff24c0ff29cf8f6dca3bad)]
+- 🐛 logos urls [[09c4f8b](https://github.com/gmpetrov/databerry/commit/09c4f8bc0e4f7d4ce69fddae06536f50cdbe8245)]
+- 🐛 blog links + force light theme [[04fbd9b](https://github.com/gmpetrov/databerry/commit/04fbd9b06ffa7f05feddb3fb5a4cd419df2e8534)]
+- 🐛 imports typpo [[369e4d0](https://github.com/gmpetrov/databerry/commit/369e4d0c944b2a77cdb8f5055e03a2c238481300)]
+- 🐛 blog package name [[82c0915](https://github.com/gmpetrov/databerry/commit/82c09159a0db9105d53c26cd0fe28d84721465bb)]
+
+### Miscellaneous
+
+- 🤖 add discord link to blog [[60c6c75](https://github.com/gmpetrov/databerry/commit/60c6c753ed86381cf37978c49590d40a91dc8bc1)]
+-  add blog link to footer [[6ab3dd7](https://github.com/gmpetrov/databerry/commit/6ab3dd765033e6f26580e883cd3e8988fe6ca1eb)]
+- 🎸 migrate blog in monorepo _ [[f7ce00e](https://github.com/gmpetrov/databerry/commit/f7ce00eab63e023b15d25be134cfbf1f3e160ba8)]
+- 🤖 add missing meta tags [[bc8db3d](https://github.com/gmpetrov/databerry/commit/bc8db3da7636f336df6c68e8b23fd3184e07fa21)]
+- 🤖 wording [[89e703a](https://github.com/gmpetrov/databerry/commit/89e703a37caacf3c24ed546549f6f286d62b862c)]
+
+
 <a name="0.1.336"></a>
 ## 0.1.336 (2024-04-13)
 
