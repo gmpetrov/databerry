@@ -68,11 +68,6 @@ function Form({ formId }: Props) {
     currentAccordionIndex: 1 as number | null,
   });
 
-  const getFormData = useSWR<Prisma.PromiseReturnType<typeof getForm>>(
-    `/api/forms/${formId}`,
-    fetcher
-  );
-
   const publishFormMutation = useSWRMutation<
     Prisma.PromiseReturnType<typeof publishForm>
   >(`/api/forms/${formId}/publish`, generateActionFetcher(HTTP_METHOD.POST));
@@ -416,45 +411,47 @@ function Form({ formId }: Props) {
               alignItems: 'center',
             })}
           >
-            <Stack
-              sx={{
-                width: '100%',
-                position: 'absolute',
-                top: 2,
-                left: 2,
-                pt: 2,
-                pr: 2,
-                zIndex: 1,
-              }}
-            >
-              <Alert
-                variant="outlined"
-                size="sm"
-                startDecorator={
-                  <LockRoundedIcon fontSize="sm" sx={{ opacity: 0.5 }} />
-                }
+            {!!query?.data?.publishedConfig && (
+              <Stack
                 sx={{
-                  borderRadius: 'lg',
                   width: '100%',
-                  py: 0.5,
-                  px: 1,
+                  position: 'absolute',
+                  top: 2,
+                  left: 2,
+                  pt: 2,
+                  pr: 2,
+                  zIndex: 1,
                 }}
-                className="backdrop-blur-lg"
               >
-                <Typography
-                  level="body-sm"
-                  endDecorator={<CopyButton text={formPublicUrl} />}
+                <Alert
+                  variant="outlined"
+                  size="sm"
+                  startDecorator={
+                    <LockRoundedIcon fontSize="sm" sx={{ opacity: 0.5 }} />
+                  }
+                  sx={{
+                    borderRadius: 'lg',
+                    width: '100%',
+                    py: 0.5,
+                    px: 1,
+                  }}
+                  className="backdrop-blur-lg"
                 >
-                  <a
-                    href={formPublicUrl}
-                    className="hover:underline"
-                    target="_blank"
+                  <Typography
+                    level="body-sm"
+                    endDecorator={<CopyButton text={formPublicUrl} />}
                   >
-                    {formPublicUrl}
-                  </a>
-                </Typography>
-              </Alert>
-            </Stack>
+                    <a
+                      href={formPublicUrl}
+                      className="hover:underline"
+                      target="_blank"
+                    >
+                      {formPublicUrl}
+                    </a>
+                  </Typography>
+                </Alert>
+              </Stack>
+            )}
             {draftConfig && (
               <Stack
                 sx={{
