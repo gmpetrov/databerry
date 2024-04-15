@@ -26,7 +26,7 @@ import DarkModeToggle from '@chaindesk/ui/DarkModeToggle';
 import Logo from '../Logo';
 import SEO from '../SEO';
 
-import Header from './Header';
+import Header, { HEADER_HEIGHT } from './Header';
 import Main from './Main';
 import Navigation from './Navigation';
 import Root from './Root';
@@ -97,10 +97,6 @@ export default function Layout(props: Props) {
         >
           <Alert
             size="sm"
-            // direction={'row'}
-            // alignItems={'center'}
-            // gap={1}
-            // sx={(t) => ({ background: t.palette.background })}
             variant="soft"
             color="warning"
             sx={{
@@ -155,200 +151,88 @@ export default function Layout(props: Props) {
           </Alert>
         </Stack>
       )}
+      <Header>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 1.5,
+          }}
+        >
+          <IconButton
+            variant="outlined"
+            size="sm"
+            onClick={() => setDrawerOpen(true)}
+            sx={{ display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <Logo className="w-10" />
+          <Typography component="h1" fontWeight="xl">
+            Chaindesk
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
+          {/* <Button variant="plain" onClick={shareFeedbackModal.open}>
+            👋 Share feedback
+          </Button> */}
+
+          <DarkModeToggle />
+        </Box>
+      </Header>
+
       <Root
         className={mounted ? mode : ''}
         sx={{
           ...(drawerOpen && {
-            height: `calc(100dvh - ${promoBannerHeight}px)`,
+            height: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px)`,
             overflow: 'hidden',
           }),
-          maxHeight: `calc(100dvh - ${promoBannerHeight}px)`,
-          minHeight: `calc(100dvh - ${promoBannerHeight}px)`,
+          maxHeight: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px )`,
+          minHeight: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px)`,
           overflow: 'hidden',
         }}
       >
-        <Header>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 1.5,
-            }}
-          >
-            <IconButton
-              variant="outlined"
-              size="sm"
-              onClick={() => setDrawerOpen(true)}
-              sx={{ display: { sm: 'none' } }}
-            >
-              <MenuIcon />
-            </IconButton>
-            {/* <IconButton
-              size="sm"
-              variant="solid"
-              sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
-            >
-              <MailRoundedIcon />
-            </IconButton> */}
-            <Logo className="w-10" />
-            <Typography component="h1" fontWeight="xl">
-              Chaindesk
-            </Typography>
-          </Box>
-          {/* <Input
-            size="sm"
-            placeholder="Search anything…"
-            startDecorator={<SearchRoundedIcon color="primary" />}
-            endDecorator={
-              <IconButton variant="outlined" size="sm" color="neutral">
-                <Typography
-                  fontWeight="lg"
-                  fontSize="sm"
-                  textColor="text.tertiary"
-                >
-                  /
-                </Typography>
-              </IconButton>
-            }
-            sx={{
-              flexBasis: '500px',
-              display: {
-                xs: 'none',
-                sm: 'flex',
-              },
-            }}
-          /> */}
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
-            {/* <IconButton
-              size="sm"
-              variant="outlined"
-              color="primary"
-              sx={{ display: { xs: 'inline-flex', sm: 'none' } }}
-            >
-              <SearchRoundedIcon />
-            </IconButton> */}
-            {/* <IconButton
-              size="sm"
-              variant="outlined"
-              color="primary"
-              component="a"
-              href="/blog/first-look-at-joy/"
-            >
-              <BookRoundedIcon />
-            </IconButton> */}
-
-            {/* <Menu
-              id="app-selector"
-              control={
-                <IconButton
-                  size="sm"
-                  variant="outlined"
-                  color="primary"
-                  aria-label="Apps"
-                >
-                  <GridViewRoundedIcon />
-                </IconButton>
-              }
-              menus={[
-                {
-                  label: 'Email',
-                  active: true,
-                  href: '/joy-ui/getting-started/templates/email/',
-                  'aria-current': 'page',
-                },
-                {
-                  label: 'Team',
-                  href: '/joy-ui/getting-started/templates/team/',
-                },
-                {
-                  label: 'Files',
-                  href: '/joy-ui/getting-started/templates/files/',
-                },
-              ]}
-            /> */}
-            {/* <DarkModeToggle /> */}
-
-            {/* <Box
-              onClick={openUserMenu as any}
-              id="basic-demo-button"
-              aria-controls={isMenuOpen ? 'basic-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={isMenuOpen ? 'true' : undefined}
-            >
-              <Avatar
-                size="sm"
-                src={session?.user?.image!}
-                sx={{
-                  ':hover': {
-                    cursor: 'pointer',
-                  },
-                }}
-              />
-            </Box> */}
-
-            {/* <Menu
-              id="basic-menu"
-              anchorEl={userMenuElement}
-              open={isMenuOpen}
-              onClose={closeUserMenu}
-              aria-labelledby="basic-demo-button"
-              placement="bottom-start"
-              sx={(theme) => ({
-                zIndex: theme.zIndex.tooltip,
-              })}
-            >
-              <MenuItem>{session?.user?.email}</MenuItem>
-              <Divider />
-              <MenuItem onClick={() => signOut()}>Logout</MenuItem>
-            </Menu> */}
-
-            <Button variant="plain" onClick={shareFeedbackModal.open}>
-              👋 Share feedback
-            </Button>
-
-            <DarkModeToggle />
-          </Box>
-        </Header>
-        <SideNav>
+        <div className="flex">
           <Navigation />
-        </SideNav>
 
-        <Main
-          sx={{
-            height: '100%',
-            maxheight: '100%',
-            width: '100%',
-            maxWidth: '100%',
-            overflowY: 'auto',
-            backgroundColor: 'background.popup',
-            ...props.mainSxProps,
-          }}
-        >
-          {props.children}
-        </Main>
-
-        <shareFeedbackModal.component
-          dialogProps={{
-            sx: {
-              height: '100%',
-              flex: 1,
-            },
-          }}
-        >
-          <Box
-            component={'iframe'}
-            src={'https://app.chaindesk.ai/forms/clqz46y9u003e8ipv0lvfcnsg'}
-            frameBorder="0"
+          <Main
             sx={{
+              maxHeight: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px )`,
+              position: 'relative',
               width: '100%',
               maxWidth: '100%',
-              height: '100%',
-              borderRadius: 'xl',
-              overflow: 'hidden',
+              backgroundColor: '',
+              ...props.mainSxProps,
             }}
-          ></Box>
-        </shareFeedbackModal.component>
+          >
+            {props.children}
+          </Main>
+          <shareFeedbackModal.component
+            dialogProps={{
+              sx: {
+                height: '100%',
+                flex: 1,
+              },
+            }}
+          >
+            <Box
+              component={'iframe'}
+              src={'https://app.chaindesk.ai/forms/clqz46y9u003e8ipv0lvfcnsg'}
+              frameBorder="0"
+              sx={{
+                width: '100%',
+                maxWidth: '100%',
+                height: '100%',
+                borderRadius: 'xl',
+                overflow: 'hidden',
+              }}
+            ></Box>
+          </shareFeedbackModal.component>
+        </div>
       </Root>
     </>
   );

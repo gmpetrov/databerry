@@ -1,5 +1,3 @@
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
@@ -7,7 +5,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import SpokeRoundedIcon from '@mui/icons-material/SpokeRounded';
 import { Alert, CircularProgress, ColorPaletteProp } from '@mui/joy';
 import Box from '@mui/joy/Box';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import Chip from '@mui/joy/Chip';
@@ -17,13 +14,10 @@ import Stack from '@mui/joy/Stack';
 import Tab, { tabClasses } from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
 import Tabs from '@mui/joy/Tabs';
-import Tooltip from '@mui/joy/Tooltip';
 import Typography from '@mui/joy/Typography';
 import { AgentModelName } from '@prisma/client';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext } from 'next/types';
 import { useSession } from 'next-auth/react';
 import { ReactElement } from 'react';
 import * as React from 'react';
@@ -33,9 +27,7 @@ import AgentForm from '@app/components/AgentForm';
 import HttpToolInput from '@app/components/AgentInputs/HttpToolInput';
 import AgentSettingsTab from '@app/components/AgentSettingsTab';
 import ChatSection from '@app/components/ChatSection';
-import ConversationList from '@app/components/ConversationList';
 import Layout from '@app/components/Layout';
-import LeadCaptureToolForm from '@app/components/LeadCaptureToolForm';
 import LeadCaptureToolFormInput from '@app/components/LeadCaptureToolForm/LeadCaptureToolFormInput';
 import UsageLimitModal from '@app/components/UsageLimitModal';
 import useModal from '@app/hooks/useModal';
@@ -44,8 +36,6 @@ import agentToolFormat, {
   agentToolConfig,
 } from '@chaindesk/lib/agent-tool-format';
 import { ModelConfig } from '@chaindesk/lib/config';
-import { RouteNames } from '@chaindesk/lib/types';
-import { withAuth } from '@chaindesk/lib/withAuth';
 import useAgent from '@chaindesk/ui/hooks/useAgent';
 import useChat from '@chaindesk/ui/hooks/useChat';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
@@ -75,6 +65,7 @@ export default function AgentPage() {
     handleEvalAnswer,
     handleAbort,
     refreshConversation,
+    isStreaming,
     conversationAttachments,
   } = useChat({
     channel: 'dashboard',
@@ -96,7 +87,9 @@ export default function AgentPage() {
     router.query.conversationId = conversationId || '';
     router.replace(router, undefined, { shallow: true });
   };
+
   const handleCreateNewChat = () => {
+    handleAbort?.();
     setConversationId('');
     router.query.conversationId = '';
     router.replace(router, undefined, {
@@ -118,20 +111,6 @@ export default function AgentPage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        px: {
-          xs: 2,
-          md: 6,
-        },
-        pt: {
-          // xs: `calc(${theme.spacing(2)} + var(--Header-height))`,
-          // sm: `calc(${theme.spacing(2)} + var(--Header-height))`,
-          // md: 3,
-        },
-        // pb: {
-        //   xs: 2,
-        //   sm: 2,
-        //   md: 3,
-        // },
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -140,45 +119,10 @@ export default function AgentPage() {
         maxHeight: '100%',
         overflow: 'hidden',
         width: '100%',
-        // ...(router.query.tab === 'chat'
-        //   ? {
-        //       height: '100%',
-        //     }
-        //   : {}),
         gap: 1,
       })}
     >
       <>
-        <Breadcrumbs
-          size="sm"
-          aria-label="breadcrumbs"
-          separator={<ChevronRightRoundedIcon />}
-          sx={{
-            '--Breadcrumbs-gap': '1rem',
-            '--Icon-fontSize': '16px',
-            fontWeight: 'lg',
-            color: 'neutral.400',
-            px: 0,
-          }}
-        >
-          <Link href={RouteNames.HOME}>
-            <HomeRoundedIcon />
-          </Link>
-          <Link href={RouteNames.AGENTS}>
-            <Typography
-              fontSize="inherit"
-              color="neutral"
-              className="hover:underline"
-            >
-              Agents
-            </Typography>
-          </Link>
-
-          <Typography fontSize="inherit" color="neutral">
-            {query?.data?.name}
-          </Typography>
-        </Breadcrumbs>
-
         <Box
           sx={{
             display: 'flex',
@@ -187,10 +131,6 @@ export default function AgentPage() {
             mb: 2,
             gap: 1,
             flexWrap: 'wrap',
-            // '& > *': {
-            //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
-            //   flexGrow: 1,
-            // },
           }}
         >
           <Stack
@@ -240,9 +180,6 @@ export default function AgentPage() {
                 value={(router.query.tab as string) || 'chat'}
                 size="md"
                 sx={{
-                  // borderRadius: 'lg',
-                  // display: 'inline-flex',
-                  //   mt: 4,
                   bgcolor: 'transparent',
                   width: '100%',
                 }}
@@ -252,21 +189,7 @@ export default function AgentPage() {
               >
                 <TabList
                   size="sm"
-                  // disableUnderline={true}
-                  // sx={{
-                  //   p: 0.5,
-                  //   gap: 0.5,
-                  //   borderRadius: 'xl',
-                  //   bgcolor: 'background.level1',
-                  //   [`& .${tabClasses.root}[aria-selected="true"]`]: {
-                  //     boxShadow: 'sm',
-                  //     bgcolor: 'background.surface',
-                  //   },
-                  // }}
-
                   sx={{
-                    // pt: 2,
-                    // justifyContent: 'center',
                     [`&& .${tabClasses.root}`]: {
                       flex: 'initial',
                       bgcolor: 'transparent',
@@ -349,6 +272,7 @@ export default function AgentPage() {
                 refreshConversation={refreshConversation}
                 withSources={!!query?.data?.includeSources}
                 autoFocus
+                isStreaming={isStreaming}
                 withFileUpload
                 conversationAttachments={conversationAttachments}
                 isAiEnabled
@@ -631,16 +555,13 @@ export default function AgentPage() {
                   maxHeight: '100%',
                   overflowY: 'hidden',
                   mt: -3,
-                  // overflowY: 'auto',
-                  // width: theme.breakpoints.values.md,
-                  mx: 'auto',
                 })}
               >
                 <Box
                   sx={{
                     height: '100%',
                     maxHeight: '100%',
-                    py: 4,
+                    py: 2,
                     overflowY: 'auto',
                   }}
                 >
@@ -687,11 +608,3 @@ export default function AgentPage() {
 AgentPage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
-
-// export const getServerSideProps = withAuth(
-//   async (ctx: GetServerSidePropsContext) => {
-//     return {
-//       props: {},
-//     };
-//   }
-// );

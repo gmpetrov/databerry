@@ -105,13 +105,11 @@ export default function ProfileSettingsPage() {
         height: '100%',
       }}
     >
-      {/* <OrganizationForm /> */}
-
       <SettingCard
         title="Profile Settings"
         description="Your personal information and settings."
         cardProps={{
-          sx: { maxWidth: 'md', mx: 'auto', width: '100%' },
+          sx: { maxWidth: '100%', mx: 'auto', width: '100%' },
         }}
         submitButtonProps={{
           loading: state.isUpdatingProfile,
@@ -164,11 +162,3 @@ export default function ProfileSettingsPage() {
 ProfileSettingsPage.getLayout = function getLayout(page: ReactElement) {
   return <SettingsLayout>{page}</SettingsLayout>;
 };
-
-// export const getServerSideProps = withAuth(
-//   async (ctx: GetServerSidePropsContext) => {
-//     return {
-//       props: {},
-//     };
-//   }
-// );

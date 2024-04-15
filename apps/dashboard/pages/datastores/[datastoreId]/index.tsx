@@ -88,15 +88,6 @@ export default function DatastorePage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        px: {
-          xs: 2,
-          md: 6,
-        },
-        pt: {
-          // xs: `calc(${theme.spacing(2)} + var(--Header-height))`,
-          // sm: `calc(${theme.spacing(2)} + var(--Header-height))`,
-          // md: 3,
-        },
         pb: {
           xs: 2,
           sm: 2,
@@ -112,62 +103,21 @@ export default function DatastorePage() {
       })}
     >
       <>
-        <Breadcrumbs
-          size="sm"
-          aria-label="breadcrumbs"
-          separator={<ChevronRightRoundedIcon />}
-          sx={{
-            '--Breadcrumbs-gap': '1rem',
-            '--Icon-fontSize': '16px',
-            fontWeight: 'lg',
-            color: 'neutral.400',
-            px: 0,
-          }}
-        >
-          <Link href={RouteNames.HOME}>
-            <HomeRoundedIcon />
-          </Link>
-          <Link href={RouteNames.DATASTORES}>
-            <Typography
-              fontSize="inherit"
-              color="neutral"
-              className="hover:underline"
-            >
-              Datastores
-            </Typography>
-          </Link>
-
-          <Typography fontSize="inherit" color="neutral">
-            {getDatastoreQuery?.data?.name}
-          </Typography>
-
-          {/* <JoyLink
-          underline="hover"
-          color="neutral"
-          fontSize="inherit"
-          href="#some-link"
-        >
-          Datastores
-        </JoyLink> */}
-          {/* <Typography fontSize="inherit" variant="soft" color="primary">
-          Orders
-        </Typography> */}
-        </Breadcrumbs>
-
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            mt: 1,
             gap: 1,
             flexWrap: 'wrap',
-            // '& > *': {
-            //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
-            //   flexGrow: 1,
-            // },
           }}
         >
-          <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+          <Box
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 2,
+            }}
+          >
             <Typography level="h1" fontSize="xl4">
               {getDatastoreQuery?.data?.name}
             </Typography>
@@ -277,25 +227,7 @@ export default function DatastorePage() {
               </Tab>
             </TabList>
           </Tabs>
-
-          {/* <Link href="#chatgpt-plugin"> */}
-          {/* <Button
-            onClick={() => {
-              handleChangeTab('settings');
-              setTimeout(() => {
-                window.location.hash = '#chatgpt-plugin';
-              }, 100);
-            }}
-            size="sm"
-            variant="plain"
-            startDecorator={<LinkRoundedIcon />}
-          >
-            ChatGPT Plugin
-          </Button> */}
-          {/* </Link> */}
         </Stack>
-
-        {/* <Divider sx={{ my: 4 }} /> */}
 
         {router.query.tab === 'datasources' && getDatastoreQuery?.data?.id && (
           <Datasources datastoreId={getDatastoreQuery?.data?.id} />

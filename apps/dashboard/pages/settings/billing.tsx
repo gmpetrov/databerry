@@ -67,15 +67,12 @@ export default function BillingSettingsPage() {
         gap={4}
         sx={(theme) => ({
           maxWidth: '100%',
-          width: theme.breakpoints.values.md,
+          width: '100%',
           mx: 'auto',
         })}
       >
         <FormControl id="plan" sx={{ gap: 1 }}>
           <FormLabel>Current Plan</FormLabel>
-          {/* <Typography level="body-xs">
-            Use the api key to access the Chaindesk API
-          </Typography> */}
 
           <Card variant="outlined">
             <Typography

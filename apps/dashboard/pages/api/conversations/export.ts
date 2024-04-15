@@ -10,10 +10,22 @@ import { generateExcelBuffer } from '@chaindesk/lib/export/excel-export';
 import { ConversationWithMessages } from '@chaindesk/lib/types/dtos';
 import { AppNextApiRequest } from '@chaindesk/lib/types/index';
 import validate from '@chaindesk/lib/validate';
-import { Message } from '@chaindesk/prisma';
+import {
+  ConversationChannel,
+  ConversationPriority,
+  Message,
+  MessageEval,
+} from '@chaindesk/prisma';
 import { prisma } from '@chaindesk/prisma/client';
-
 const handler = createAuthApiHandler();
+
+const bodySchema = z.object({
+  channel: z.nativeEnum(ConversationChannel).optional(),
+  priority: z.nativeEnum(ConversationPriority).optional(),
+  messageEval: z.nativeEnum(MessageEval).optional(),
+  agentId: z.string().optional(),
+  assigneeId: z.string().optional(),
+});
 
 async function exportConversations(
   req: AppNextApiRequest,
@@ -21,16 +33,21 @@ async function exportConversations(
 ) {
   const session = req.session;
 
-  const { conversations } = await prisma.organization.findUniqueOrThrow({
+  const { channel, priority, agentId, assigneeId, messageEval } =
+    bodySchema.parse(req.body);
+
+  const conversations = await prisma.conversation.findMany({
     where: {
-      id: session?.organization?.id,
+      organizationId: session?.organization?.id,
+      ...(channel ? { channel } : {}),
+      ...(priority ? { priority } : {}),
+      ...(agentId ? { agentId } : {}),
+      ...(assigneeId ? { assignees: { some: { id: assigneeId } } } : {}),
+      ...(messageEval ? { messages: { every: { eval: messageEval } } } : {}),
     },
     include: {
-      conversations: {
-        include: {
-          messages: true,
-        },
-      },
+      messages: true,
+      agent: true,
     },
   });
 
@@ -51,6 +68,7 @@ async function zipConversations(conversations: ConversationWithMessages[]) {
   const zip = new JSZip();
 
   const header = [
+    'agent_id',
     'conversation_id',
     'message_id',
     'text',
@@ -65,6 +83,7 @@ async function zipConversations(conversations: ConversationWithMessages[]) {
     let rows = [];
     for (const message of conversation.messages) {
       const messageDetails = [
+        conversation?.agentId,
         message.conversationId,
         message.id,
         message.text,

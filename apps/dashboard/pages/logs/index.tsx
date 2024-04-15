@@ -552,16 +552,11 @@ export default function LogsPage() {
   }
 
   return (
-    <Stack gap={1} sx={{ height: 'calc(100vh - 175px)' }}>
-      {/* <Alert
-        variant="soft"
-        color="neutral"
-        startDecorator={<InfoRoundedIcon />}
-      >
-        View all Agents conversations across all channels. Evaluate and improve
-        answers.
-      </Alert> */}
-
+    <Stack
+      gap={1}
+      sx={{ minHeight: 'calc(100vh - 210px)', height: 'calc(100vh - 210px)' }}
+    >
+      <Typography level="title-lg">Inbox</Typography>
       <JoyTabs
         aria-label="tabs"
         value={(router.query.tab as string) || Tabs.all}
@@ -846,10 +841,14 @@ export default function LogsPage() {
           </SelectQueryParamFilter>
         </Stack>
         <Stack direction="row" spacing={2}>
-          <ConversationExport />
+          <ConversationExport
+            channel={router.query.channel as ConversationChannel}
+            agentId={router.query.agentId as string}
+            priority={router.query.priority as ConversationPriority}
+            assigneeId={router.query.assigneeId as string}
+          />
         </Stack>
       </Stack>
-
       <Sheet
         variant="outlined"
         sx={(theme) => ({
@@ -1142,7 +1141,13 @@ export default function LogsPage() {
 
           <Divider orientation="vertical" />
           <Box
-            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 9 }}
+            sx={{
+              width: '100%',
+              minHeight: '100%',
+              height: '100%',
+              position: 'relative',
+              pb: 7,
+            }}
           >
             {getConversationQuery.data && (
               <>
@@ -1193,7 +1198,15 @@ export default function LogsPage() {
               </>
             )}
 
-            <Stack direction="row" sx={{ height: '100%', width: '100%' }}>
+            <Stack
+              direction="row"
+              sx={{
+                position: 'relative',
+                height: '100%',
+                minHeight: '100%',
+                width: '100%',
+              }}
+            >
               <ChatBox
                 messages={
                   getConversationQuery?.data?.messages?.map((each) => ({

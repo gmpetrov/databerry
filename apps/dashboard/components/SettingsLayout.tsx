@@ -26,17 +26,7 @@ function SettingsLayout(props: Props) {
       <Stack
         sx={{
           flex: 1,
-
-          px: {
-            xs: 2,
-            md: 6,
-          },
           pt: {},
-          pb: {
-            // xs: 2,
-            // sm: 2,
-            // md: 3,
-          },
           height: '100%',
           ...props.sxProps,
         }}
@@ -51,9 +41,7 @@ function SettingsLayout(props: Props) {
             flexWrap: 'wrap',
           }}
         >
-          <Typography level="h1" fontSize="xl4">
-            Settings
-          </Typography>
+          <Typography level="title-lg">Settings</Typography>
         </Box>
 
         <Stack

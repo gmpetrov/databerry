@@ -115,15 +115,6 @@ export default function FormsPage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        px: {
-          xs: 2,
-          md: 6,
-        },
-        pt: {
-          // xs: `calc(${theme.spacing(2)} + var(--Header-height))`,
-          // sm: `calc(${theme.spacing(2)} + var(--Header-height))`,
-          // md: 3,
-        },
         pb: {
           xs: 2,
           sm: 2,
@@ -133,31 +124,10 @@ export default function FormsPage() {
         display: 'flex',
         flexDirection: 'column',
         minWidth: 0,
-        // height: '100dvh',
         width: '100%',
         gap: 1,
       })}
     >
-      <Breadcrumbs
-        size="sm"
-        aria-label="breadcrumbs"
-        separator={<ChevronRightRoundedIcon />}
-        sx={{
-          '--Breadcrumbs-gap': '1rem',
-          '--Icon-fontSize': '16px',
-          fontWeight: 'lg',
-          color: 'neutral.400',
-          px: 0,
-        }}
-      >
-        <Link href={RouteNames.HOME}>
-          <HomeRoundedIcon />
-        </Link>
-        <Typography fontSize="inherit" color="primary">
-          Forms
-        </Typography>
-      </Breadcrumbs>
-
       <Box
         sx={{
           display: 'flex',
@@ -166,24 +136,10 @@ export default function FormsPage() {
           my: 1,
           gap: 1,
           flexWrap: 'wrap',
-          // '& > *': {
-          //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
-          //   flexGrow: 1,
-          // },
         }}
       >
-        <Typography level="h1" fontSize="xl4">
-          Forms
-        </Typography>
-        {/* <Box sx={{ flex: 999999 }} /> */}
+        <Typography level="title-lg">Forms</Typography>
         <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
-          {/* <Button
-            variant="outlined"
-            color="neutral"
-            startDecorator={<i data-feather="download-cloud" />}
-          >
-            Download PDF
-          </Button> */}
           <Button
             variant="solid"
             color="primary"

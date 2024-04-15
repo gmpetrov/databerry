@@ -243,6 +243,7 @@ const useChat = ({
       }
 
       const ctrl = new AbortController();
+
       const history = [
         ...state.history,
         {
