@@ -13,7 +13,7 @@ import { useSearchParam } from 'react-use';
 
 import Cta from '@chaindesk/ui/lp/cta';
 // import { Footer } from './Footer'
-import Footer from '@chaindesk/ui/lp/Footer';
+import Footer from '@chaindesk/ui/lp/footer';
 
 // import { GitHubShareButton } from './GitHubShareButton'
 import { Loading } from './Loading';
