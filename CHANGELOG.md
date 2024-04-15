@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.338"></a>
+## 0.1.338 (2024-04-15)
+
+### Fixed
+
+- 🐛 show form url only if published [[b3e3d07](https://github.com/gmpetrov/databerry/commit/b3e3d07fe521aeb25783385a14d6e511945c77a9)]
+
+
 <a name="0.1.337"></a>
 ## 0.1.337 (2024-04-15)
 
