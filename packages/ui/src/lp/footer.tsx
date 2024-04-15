@@ -250,6 +250,15 @@ export default function Footer() {
                 <li>
                   <a
                     className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
+                    href="https://www.chaindesk.ai/blog"
+                    target="_blank"
+                  >
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
                     href="https://docs.chaindesk.ai/privacy/gdpr"
                     target="_blank"
                   >

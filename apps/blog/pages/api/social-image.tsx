@@ -130,7 +130,7 @@ export default async function OGImage(req: NextRequest) {
           </div>
         </div>
 
-        {pageInfo.authorImage && (
+        {/* {pageInfo.authorImage && (
           <div
             style={{
               position: 'absolute',
@@ -153,7 +153,7 @@ export default async function OGImage(req: NextRequest) {
               }}
             />
           </div>
-        )}
+        )} */}
       </div>
     ),
     {
