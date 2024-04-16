@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.340"></a>
+## 0.1.340 (2024-04-16)
+
+### Fixed
+
+- 🐛 layout use fileupload [[1fbebaa](https://github.com/gmpetrov/databerry/commit/1fbebaa5246b3cdf2e6b3913ea7c56fec73d740e)]
+- ✏️ conversation file upload doc [[a4064e6](https://github.com/gmpetrov/databerry/commit/a4064e66ea728fc8df5abf863da593ee7c358f65)]
+
+
 <a name="0.1.339"></a>
 ## 0.1.339 (2024-04-16)
 
