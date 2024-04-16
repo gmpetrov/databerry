@@ -28,7 +28,7 @@ type Props = {
   changeCallback?: (files: File[]) => any;
 };
 
-function useFileUpload(props: Props) {
+function useFileUpload(props: Props = {}) {
   const [isUploading, setIsUploading] = React.useState(false);
   const [isDragOver, setDragOver] = useState(false);
   const [files, setFiles] = useState<File[]>([] as File[]);
