@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.339"></a>
+## 0.1.339 (2024-04-16)
+
+### Miscellaneous
+
+-  Feature/chat with converstaion attachments ([#378](https://github.com/gmpetrov/databerry/issues/378)) [[4fb88c2](https://github.com/gmpetrov/databerry/commit/4fb88c26a8878698201cc0adc62f0018de9d7820)]
+
+
 <a name="0.1.338"></a>
 ## 0.1.338 (2024-04-15)
 
