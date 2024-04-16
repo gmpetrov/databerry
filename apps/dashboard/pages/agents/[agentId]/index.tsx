@@ -75,6 +75,7 @@ export default function AgentPage() {
     handleEvalAnswer,
     handleAbort,
     refreshConversation,
+    conversationAttachments,
   } = useChat({
     channel: 'dashboard',
     endpoint: router.query?.agentId
@@ -348,6 +349,10 @@ export default function AgentPage() {
                 refreshConversation={refreshConversation}
                 withSources={!!query?.data?.includeSources}
                 autoFocus
+                withFileUpload
+                conversationAttachments={conversationAttachments}
+                isAiEnabled
+                fromDashboard
               />
 
               {(query?.data?.tools?.length || 0) > 0 && (

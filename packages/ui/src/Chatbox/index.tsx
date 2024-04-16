@@ -7,6 +7,7 @@ import StopRoundedIcon from '@mui/icons-material/StopRounded';
 
 import UnfoldLessOutlinedIcon from '@mui/icons-material/UnfoldLessOutlined';
 import UnfoldMoreOutlinedIcon from '@mui/icons-material/UnfoldMoreOutlined';
+import ArticleTwoToneIcon from '@mui/icons-material/ArticleTwoTone';
 import Alert from '@mui/joy/Alert';
 
 import Button from '@mui/joy/Button';
@@ -23,13 +24,9 @@ import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { z } from 'zod';
+import { zIndex } from '@chaindesk/ui/embeds/common/utils';
 
-import {
-  AcceptedAudioMimeTypes,
-  AcceptedDocumentMimeTypes,
-  AcceptedImageMimeTypes,
-  AcceptedVideoMimeTypes,
-} from '@chaindesk/lib/accepted-mime-types';
+import { AcceptedMimeTypes } from '@chaindesk/lib/accepted-mime-types';
 
 import { ChatMessage, MessageEvalUnion } from '@chaindesk/lib/types';
 import type { Source } from '@chaindesk/lib/types/document';
@@ -41,17 +38,18 @@ import PoweredBy from '@chaindesk/ui/PoweredBy';
 
 import FileUploader from '@chaindesk/ui/FileUploader';
 import TraditionalForm from '@chaindesk/ui/embeds/forms/traditional';
-
-export const acceptedMimeTypesStr = [
-  ...AcceptedImageMimeTypes,
-  ...AcceptedVideoMimeTypes,
-  ...AcceptedAudioMimeTypes,
-  ...AcceptedDocumentMimeTypes,
-].join(',');
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import type { Attachment } from '@chaindesk/prisma';
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
-  onSubmit: (message: string, attachments?: File[]) => Promise<any>;
+  onSubmit: (props: {
+    query: string;
+    files?: File[];
+    isDraft?: boolean;
+    attachmentsForAI?: string[];
+  }) => Promise<any>;
   messageTemplates?: string[];
   initialMessage?: string;
   initialMessages?: ChatMessage[];
@@ -84,6 +82,8 @@ export type ChatBoxProps = {
   autoFocus?: boolean;
   agentIconStyle?: React.CSSProperties;
   fromInbox?: boolean;
+  fromDashboard?: boolean;
+  conversationAttachments?: Attachment[];
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -120,6 +120,8 @@ function ChatBox({
   autoFocus,
   agentIconStyle,
   fromInbox,
+  conversationAttachments,
+  fromDashboard,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -129,6 +131,9 @@ function ChatBox({
   // const [ini, setFirstMsg] = useState<ChatMessage>();
   // const [firstMsg, setFirstMsg] = useState<ChatMessage>();
   const [files, setFiles] = useState<File[]>([] as File[]);
+  const [attachmentsForAI, setAttachmentsForAI] = useState<string[]>(
+    [] as string[]
+  );
   const [isTextAreaExpanded, setIsTextAreaExpended] = useState(false);
 
   const [hideTemplateMessages, setHideTemplateMessages] = useState(false);
@@ -157,7 +162,11 @@ function ChatBox({
       setHideTemplateMessages(true);
       setIsTextAreaExpended(false);
       methods.reset();
-      await onSubmit(query, files);
+      await onSubmit({
+        query,
+        files,
+        attachmentsForAI,
+      });
       setFiles([]);
     } catch (err) {
     } finally {
@@ -472,16 +481,60 @@ function ChatBox({
                     </Chip>
                   ))}
                 </Stack>
-                <Alert
-                  color="warning"
-                  size="sm"
-                  startDecorator={<ErrorRoundedIcon />}
-                >
-                  Currently, uploaded files are intended for human use and will
-                  not be processed by the AI Agent
-                </Alert>
+                <Stack gap={1}>
+                  <Alert
+                    color="warning"
+                    size="sm"
+                    startDecorator={<ErrorRoundedIcon />}
+                  >
+                    Image, audio and video files are not supported by the AI.
+                    Unsupported files will not be processed by the AI.
+                  </Alert>
+                  {fromDashboard && (
+                    <Alert
+                      color="primary"
+                      size="sm"
+                      startDecorator={<ErrorRoundedIcon />}
+                    >
+                      To support image processing, use a vision compatible LLM
+                      (GPT-4 Turbo, Claude 3)
+                    </Alert>
+                  )}
+                </Stack>
               </Stack>
             )}
+
+            {isAiEnabled &&
+              conversationAttachments &&
+              conversationAttachments?.length > 0 && (
+                <Select
+                  size="sm"
+                  slotProps={{
+                    listbox: {
+                      sx: {
+                        zIndex: zIndex + 1,
+                      },
+                    },
+                  }}
+                  sx={{ mr: 'auto' }}
+                  startDecorator={<ArticleTwoToneIcon />}
+                  placeholder="Use uploaded file"
+                  // variant="plain"
+                  className="max-w-full truncate"
+                  multiple
+                  color={attachmentsForAI?.length > 0 ? 'warning' : 'neutral'}
+                  variant={attachmentsForAI?.length > 0 ? 'soft' : 'plain'}
+                  onChange={(_, values) => {
+                    setAttachmentsForAI(values as string[]);
+                  }}
+                >
+                  {conversationAttachments.map((each) => (
+                    <Option key={each.id} value={each.id}>
+                      {each.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
 
             <Textarea
               // placeholder="Press Shift + Enter to move to the next line"
@@ -563,7 +616,15 @@ function ChatBox({
                     })}
 
                   {withFileUpload && (
-                    <FileUploader changeCallback={(f) => setFiles(f)} />
+                    <FileUploader
+                      accept={
+                        AcceptedMimeTypes
+                        // (isAiEnabled
+                        //   ? AcceptedAIEnabledMimeTypes
+                        //   : AcceptedAIDisabledMimeType) || []
+                      }
+                      changeCallback={(f) => setFiles(f)}
+                    />
                   )}
 
                   <Stack direction="row" sx={{ ml: 'auto' }}>

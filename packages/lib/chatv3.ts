@@ -86,6 +86,7 @@ export type ChatProps = ChatModelConfigSchema & {
   topK?: number;
   toolsConfig?: ChatRequest['toolsConfig'];
   conversationId?: ChatRequest['conversationId'];
+  images?: string[];
 
   // Behaviors
   useMarkdown?: boolean;
@@ -115,6 +116,7 @@ const chat = async ({
   useLanguageDetection,
   restrictKnowledge,
   channel,
+  images,
   ...otherProps
 }: ChatProps) => {
   // Tools
@@ -372,6 +374,12 @@ const chat = async ({
     ${nbDatastoreTools > 0 ? `Knowledge Base: ${retrievalData?.context}` : ``}
     `.trim();
 
+    const userMessage = promptInject({
+      template: userPrompt || '{query}',
+      query: query,
+      context: retrievalData?.context,
+    });
+
     const messages: ChatCompletionMessageParam[] = [
       ...(_systemPrompt
         ? [
@@ -398,11 +406,18 @@ const chat = async ({
       ...truncatedHistory,
       {
         role: 'user',
-        content: promptInject({
-          template: userPrompt || '{query}',
-          query: query,
-          context: retrievalData?.context,
-        }),
+        content:
+          ModelConfig[modelName]?.hasVision && !!images?.length
+            ? [
+                { type: 'text', text: userMessage },
+                ...(images?.map?.((url) => ({
+                  type: 'image_url',
+                  image_url: {
+                    url,
+                  },
+                })) as { type: 'image_url'; image_url: { url: string } }[]),
+              ]
+            : userMessage,
       },
     ];
 
@@ -479,6 +494,11 @@ const chat = async ({
         ? { tool_choice: 'auto', tools: openAiTools }
         : { tools: [] }),
     } as Parameters<typeof model.call>[0];
+
+    console.log(
+      'CALL PARAMS_----------------->',
+      JSON.stringify(callParams, null, 2)
+    );
 
     const output = await model.call(callParams);
 

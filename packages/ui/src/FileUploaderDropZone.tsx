@@ -9,8 +9,10 @@ import Stack from '@mui/joy/Stack';
 import Typography from '@mui/joy/Typography';
 import { useCallback, useRef, useState } from 'react';
 
-import { acceptedMimeTypesStr } from '@chaindesk/ui/Chatbox';
+import { AcceptedMimeTypes } from '@chaindesk/lib/accepted-mime-types';
 import VisuallyHiddenInput from '@chaindesk/ui/VisuallyHiddenInput';
+
+const AcceptedMimeTypesStr = AcceptedMimeTypes.join(',');
 
 export default function FileUploader({
   changeCallback,
@@ -109,7 +111,7 @@ export default function FileUploader({
               Browse files
               <VisuallyHiddenInput
                 ref={hiddenInputRef}
-                accept={acceptedMimeTypesStr}
+                accept={AcceptedMimeTypesStr}
                 type="file"
                 multiple
                 onChange={(e) => {

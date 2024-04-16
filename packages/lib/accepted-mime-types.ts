@@ -58,3 +58,37 @@ export const AcceptedDocumentMimeTypes = [
   'application/gzip',
   'application/zip',
 ] as const;
+
+export const AcceptedMimeTypes = [
+  ...AcceptedImageMimeTypes,
+  ...AcceptedVideoMimeTypes,
+  ...AcceptedAudioMimeTypes,
+  ...AcceptedDocumentMimeTypes,
+];
+
+export const AcceptedDatasourceFileMimeTypes = [
+  'text/csv',
+  'text/plain',
+  'text/markdown',
+  'application/pdf',
+  'application/json',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+];
+
+export const AcceptedAIDisabledMimeType = [
+  ...AcceptedImageMimeTypes,
+  ...AcceptedVideoMimeTypes,
+  ...AcceptedAudioMimeTypes,
+  ...AcceptedDocumentMimeTypes,
+];
+
+export const AcceptedAIEnabledMimeTypes = [
+  ...AcceptedDatasourceFileMimeTypes,
+  // Claude 3 + GPT-4-turbo vision commpatible with png, jpeg, gif, webp
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/webp',
+];

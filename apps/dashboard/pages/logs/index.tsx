@@ -1219,8 +1219,8 @@ export default function LogsPage() {
                   })) || []
                 }
                 isLoadingConversation={getConversationQuery?.isLoading}
-                onSubmit={(message, attachments) => {
-                  return handleOperatorChat(message, attachments);
+                onSubmit={({ query, files }) => {
+                  return handleOperatorChat(query, files);
                 }}
                 readOnly={!!state.isAiEnabled || !state.currentConversationId}
                 handleEvalAnswer={handleEvalAnswer}

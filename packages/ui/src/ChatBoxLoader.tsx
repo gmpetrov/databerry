@@ -58,6 +58,7 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
     isLoadingConversation,
     hasMoreMessages,
     handleAbort,
+    conversationAttachments,
     handleChatSubmit,
     handleLoadMoreMessages,
     handleEvalAnswer,
@@ -260,6 +261,7 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
           readOnly: leadToolConfig?.isRequired && !hasCapturedLead,
           hideInternalSources: true,
           withFileUpload: true,
+          conversationAttachments,
         },
       } as ChatBaseProps)}
     </ChatContext.Provider>

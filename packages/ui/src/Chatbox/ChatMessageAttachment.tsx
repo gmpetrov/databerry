@@ -11,7 +11,7 @@ import type { Attachment } from '@chaindesk/prisma';
 import { ImageZoom } from '@chaindesk/ui/ImageZoom';
 
 type Props = {
-  attachment: Prettify<Omit<Attachment, 'messageId' | 'id'>>;
+  attachment: Prettify<Omit<Attachment, 'messageId' | 'id' | 'conversationId'>>;
 };
 
 function download(url: string, filename: string) {
