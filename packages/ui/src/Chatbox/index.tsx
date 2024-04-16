@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import ImageRoundedIcon from '@mui/icons-material/ImageRounded';
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
@@ -41,6 +42,8 @@ import TraditionalForm from '@chaindesk/ui/embeds/forms/traditional';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 import type { Attachment } from '@chaindesk/prisma';
+import useFileUpload from '../hooks/useFileUpload';
+import Typography from '@mui/joy/Typography';
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
@@ -123,6 +126,7 @@ function ChatBox({
   conversationAttachments,
   fromDashboard,
 }: ChatBoxProps) {
+  const chatboxRef = React.useRef<HTMLDivElement>(null);
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -131,6 +135,10 @@ function ChatBox({
   // const [ini, setFirstMsg] = useState<ChatMessage>();
   // const [firstMsg, setFirstMsg] = useState<ChatMessage>();
   const [files, setFiles] = useState<File[]>([] as File[]);
+  const { isDragOver } = useFileUpload({
+    ref: chatboxRef,
+    changeCallback: setFiles,
+  });
   const [attachmentsForAI, setAttachmentsForAI] = useState<string[]>(
     [] as string[]
   );
@@ -223,6 +231,7 @@ function ChatBox({
 
   return (
     <Stack
+      ref={chatboxRef}
       className="chaindesk-chatbox"
       direction={'column'}
       gap={2}
@@ -240,6 +249,36 @@ function ChatBox({
         position: 'relative',
       }}
     >
+      {isDragOver && (
+        <Stack
+          sx={(t) => ({
+            position: 'absolute',
+            pointerEvents: 'none',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+            p: 2,
+          })}
+          className="bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-violet-500/80"
+        >
+          <Card color="primary">
+            <Stack
+              sx={{ justifyContent: 'center', alignItems: 'center' }}
+              gap={1}
+            >
+              <ImageRoundedIcon sx={{ opacity: 0.5, fontSize: 32 }} />
+
+              <Typography component="label" level="body-sm" color="neutral">
+                Drop files here
+              </Typography>
+            </Stack>
+          </Card>
+        </Stack>
+      )}
       {typeof isAiEnabled === 'boolean' &&
         !isAiEnabled &&
         messages?.length > 0 && (

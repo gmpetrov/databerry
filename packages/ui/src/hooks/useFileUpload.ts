@@ -1,6 +1,6 @@
 import axios from 'axios';
 import pMap from 'p-map';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import useSWRMutation from 'swr/mutation';
 
 import { generateActionFetcher, HTTP_METHOD } from '@chaindesk/lib/swr-fetcher';
@@ -23,8 +23,15 @@ export type FileToUpload = {
   conversationId?: string;
 };
 
-function useFileUpload() {
+type Props = {
+  ref?: React.RefObject<HTMLDivElement>;
+  changeCallback?: (files: File[]) => any;
+};
+
+function useFileUpload(props: Props) {
   const [isUploading, setIsUploading] = React.useState(false);
+  const [isDragOver, setDragOver] = useState(false);
+  const [files, setFiles] = useState<File[]>([] as File[]);
   const API_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL;
 
   const generateLinkMutation = useSWRMutation<
@@ -83,10 +90,89 @@ function useFileUpload() {
     [generateLinkMutation.trigger]
   );
 
+  const handleChange = useCallback(
+    async (
+      // e
+      _files: HTMLInputElement['files']
+    ) => {
+      const maxFileSize = 10000000; // 10MB
+
+      const filtered = Array.from(_files!).filter(
+        (one) => !files.find((existing) => existing.name === one.name)
+      );
+
+      const found = filtered.find((one) => one.size > maxFileSize);
+
+      if (found) {
+        // if (hiddenInputRef.current) {
+        //   hiddenInputRef.current.value = '';
+        // }
+        return alert('File size is limited to 10MB');
+      } else {
+        const f = [...files, ...filtered];
+        await props?.changeCallback?.(f);
+        setFiles(f);
+      }
+    },
+    [props?.changeCallback, files]
+  );
+
+  const handleDragOver = useCallback<React.DragEventHandler<HTMLDivElement>>(
+    (event) => {
+      event.preventDefault();
+      setDragOver(true);
+    },
+    []
+  );
+
+  const handleDragLeave = useCallback<React.DragEventHandler<HTMLDivElement>>(
+    (event) => {
+      event.preventDefault();
+      setDragOver(false);
+    },
+    []
+  );
+
+  const handleDrop = useCallback<React.DragEventHandler<HTMLDivElement>>(
+    (event) => {
+      event.preventDefault();
+      setDragOver(false);
+      if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+        handleChange(event.dataTransfer.files);
+        event.dataTransfer.clearData();
+      }
+    },
+    [handleChange]
+  );
+
+  useEffect(() => {
+    if (props?.ref?.current) {
+      props?.ref?.current.addEventListener('dragover', handleDragOver as any);
+      props?.ref?.current.addEventListener('dragleave', handleDragLeave as any);
+      props?.ref?.current.addEventListener('drop', handleDrop as any);
+    }
+
+    return () => {
+      if (props?.ref?.current) {
+        props?.ref?.current.removeEventListener(
+          'dragover',
+          handleDragOver as any
+        );
+        props?.ref?.current.removeEventListener(
+          'dragleave',
+          handleDragLeave as any
+        );
+        props?.ref?.current.removeEventListener('drop', handleDrop as any);
+      }
+    };
+  }),
+    [props?.ref?.current, handleDragOver, handleDragLeave, handleDrop];
+
   return {
     generateLinkMutation,
     upload,
     isUploading,
+    isDragOver,
   };
 }
 
