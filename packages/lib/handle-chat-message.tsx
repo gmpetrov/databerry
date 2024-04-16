@@ -6,6 +6,7 @@ import React from 'react';
 
 import { GenericTemplate, NewConversation, render } from '@chaindesk/emails';
 import guardAgentQueryUsage from '@chaindesk/lib/guard-agent-query-usage';
+import { sharp } from '@chaindesk/lib/image';
 import {
   ConversationChannel,
   ConversationStatus,
@@ -297,8 +298,32 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     ) || []),
   ];
 
+  const nonImageAttachmentsForAI = attachhmentsForAI.filter(
+    (each) => !each?.mimeType?.startsWith('image')
+  );
+  let _imageAttachmentsForAI = attachhmentsForAI
+    .filter((each) => each?.mimeType?.startsWith('image'))
+    .map((each) => each.url);
+
+  let imageAttachmentsForAI = [] as string[];
+
+  const encodeImageAsBase64 = async (url: string) => {
+    const image = await fetch(url);
+    const contentType = image.headers.get('Content-type');
+    const imageBuffer = await image.arrayBuffer();
+
+    return `data:${contentType};base64,${Buffer.from(
+      await sharp(imageBuffer).resize(50, 50).toBuffer()
+    ).toString('base64')}`;
+  };
+
+  for (const each of _imageAttachmentsForAI) {
+    const base64 = await encodeImageAsBase64(each);
+    imageAttachmentsForAI.push(base64);
+  }
+
   const attachmentsToText: string[] = [];
-  for (const attachment of attachhmentsForAI) {
+  for (const attachment of nonImageAttachmentsForAI) {
     const buffer = await axios
       .get(attachment.url, {
         responseType: 'arraybuffer',
@@ -331,6 +356,7 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
       filters: data.filters,
       toolsConfig: data.toolsConfig,
       retrievalQuery,
+      images: imageAttachmentsForAI,
     }),
     prisma.usage.update({
       where: {

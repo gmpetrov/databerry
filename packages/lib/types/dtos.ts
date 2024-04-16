@@ -256,6 +256,8 @@ export const ChatRequest = ChatModelConfigSchema.extend({
   contact: CreateContactSchema.optional(),
   attachmentsForAI: z.array(z.string().cuid()).optional(),
 
+  images: z.array(z.string().url()).optional(),
+
   //  DEPRECATED
   promptTemplate: z.string().optional(),
   promptType: z.nativeEnum(PromptType).optional(),

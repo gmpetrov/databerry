@@ -79,9 +79,9 @@ export const AcceptedAIDisabledMimeType = [
 
 export const AcceptedAIEnabledMimeTypes = [
   ...AcceptedDatasourceFileMimeTypes,
-  // Claude 3 vision commpatible with png, jpeg, gif, webp
-  // 'image/png',
-  // 'image/jpeg',
-  // 'image/gif',
-  // 'image/webp',
+  // Claude 3 + GPT-4-turbo vision commpatible with png, jpeg, gif, webp
+  'image/png',
+  'image/jpeg',
+  'image/gif',
+  'image/webp',
 ];

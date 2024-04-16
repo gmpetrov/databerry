@@ -460,70 +460,72 @@ function ChatBox({
           <Stack width="100%" gap={0.5}>
             {topSettings}
 
-            {files?.length > 0 && (
-              <Stack gap={1} sx={{ mb: 1 }}>
-                <Stack direction="row" sx={{ flexWrap: 'wrap' }} gap={1}>
-                  {files.map((each, index) => (
-                    <Chip
-                      size="lg"
-                      key={each.name}
-                      variant="soft"
-                      color="primary"
-                      endDecorator={
-                        <ChipDelete
-                          disabled={isLoading}
-                          onDelete={() =>
-                            setFiles(files.filter((_, i) => i !== index))
-                          }
-                        />
-                      }
-                    >
-                      {each.name}
-                    </Chip>
-                  ))}
-                </Stack>
-                <Alert
+            <Stack direction="row" gap={1} sx={{ alignItems: 'end' }}>
+              {files?.length > 0 && (
+                <Stack gap={1} sx={{ mb: 1 }}>
+                  <Stack direction="row" sx={{ flexWrap: 'wrap' }} gap={1}>
+                    {files.map((each, index) => (
+                      <Chip
+                        size="lg"
+                        key={each.name}
+                        variant="soft"
+                        color="primary"
+                        endDecorator={
+                          <ChipDelete
+                            disabled={isLoading}
+                            onDelete={() =>
+                              setFiles(files.filter((_, i) => i !== index))
+                            }
+                          />
+                        }
+                      >
+                        {each.name}
+                      </Chip>
+                    ))}
+                  </Stack>
+                  {/* <Alert
                   color="warning"
                   size="sm"
                   startDecorator={<ErrorRoundedIcon />}
                 >
                   Currently, uploaded files are intended for human use and will
                   not be processed by the AI Agent
-                </Alert>
-              </Stack>
-            )}
-
-            {isAiEnabled &&
-              conversationAttachments &&
-              conversationAttachments?.length > 0 && (
-                <Select
-                  size="sm"
-                  slotProps={{
-                    listbox: {
-                      sx: {
-                        zIndex: zIndex + 1,
-                      },
-                    },
-                  }}
-                  sx={{ mr: 'auto' }}
-                  startDecorator={<ArticleTwoToneIcon />}
-                  placeholder="Use file"
-                  // variant="plain"
-                  className="max-w-full truncate"
-                  multiple
-                  color={attachmentsForAI?.length > 0 ? 'warning' : 'neutral'}
-                  variant={attachmentsForAI?.length > 0 ? 'soft' : 'plain'}
-                  onChange={(_, values) => {
-                    setAttachmentsForAI(values as string[]);
-                  }}
-                >
-                  {conversationAttachments.map((each) => (
-                    <Option key={each.id} value={each.id}>
-                      {each.name}
-                    </Option>
-                  ))}
-                </Select>
+                </Alert> */}
+                </Stack>
               )}
+
+              {isAiEnabled &&
+                conversationAttachments &&
+                conversationAttachments?.length > 0 && (
+                  <Select
+                    size="sm"
+                    slotProps={{
+                      listbox: {
+                        sx: {
+                          zIndex: zIndex + 1,
+                        },
+                      },
+                    }}
+                    sx={{ ml: 'auto' }}
+                    startDecorator={<ArticleTwoToneIcon />}
+                    placeholder="Use uploaded file"
+                    // variant="plain"
+                    className="max-w-full truncate"
+                    multiple
+                    color={attachmentsForAI?.length > 0 ? 'warning' : 'neutral'}
+                    variant={attachmentsForAI?.length > 0 ? 'soft' : 'plain'}
+                    onChange={(_, values) => {
+                      setAttachmentsForAI(values as string[]);
+                    }}
+                  >
+                    {conversationAttachments.map((each) => (
+                      <Option key={each.id} value={each.id}>
+                        {each.name}
+                      </Option>
+                    ))}
+                  </Select>
+                )}
+            </Stack>
 
             <Textarea
               // placeholder="Press Shift + Enter to move to the next line"
