@@ -414,48 +414,81 @@ function ChatBox({
             methods.handleSubmit(submit)(e);
           }}
         >
-          {(messageTemplates?.length || 0) > 0 && (
-            <Stack
-              direction="row"
-              gap={1}
-              sx={{
-                // position: 'absolute',
-                // zIndex: 1,
-                // transform: 'translateY(-100%)',
-                // left: '0',
-                // mt: -1,
-                flexWrap: 'nowrap',
-                mb: 1,
-                overflowX: 'auto',
-                maxWidth: '100%',
-
-                scrollbarColor: 'rgba(0,0,0,.1) transparent',
-                '&::-webkit-scrollbar': {
-                  height: '0.4em',
-                },
-                '&::-webkit-scrollbar-track': {
-                  display: 'none',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: 'rgba(0,0,0,.0)',
-                  borderRadius: '20px',
-                },
-              }}
-            >
-              {messageTemplates?.map((each, idx) => (
-                <Button
-                  key={idx}
+          <Stack gap={1}>
+            {isAiEnabled &&
+              conversationAttachments &&
+              conversationAttachments?.length > 0 && (
+                <Select
                   size="sm"
-                  variant="soft"
-                  onClick={() => submit({ query: each })}
-                  sx={{ whiteSpace: 'nowrap' }}
+                  slotProps={{
+                    listbox: {
+                      sx: {
+                        zIndex: zIndex + 1,
+                      },
+                    },
+                  }}
+                  sx={{ mr: 'auto', mb: 0.5 }}
+                  startDecorator={<ArticleTwoToneIcon />}
+                  placeholder="Use uploaded file"
+                  // variant="plain"
+                  className="max-w-full truncate"
+                  multiple
+                  color={attachmentsForAI?.length > 0 ? 'warning' : 'neutral'}
+                  variant={attachmentsForAI?.length > 0 ? 'soft' : 'plain'}
+                  onChange={(_, values) => {
+                    setAttachmentsForAI(values as string[]);
+                  }}
                 >
-                  {each}
-                </Button>
-              ))}
-            </Stack>
-          )}
+                  {conversationAttachments.map((each) => (
+                    <Option key={each.id} value={each.id}>
+                      {each.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
 
+            {(messageTemplates?.length || 0) > 0 && files?.length <= 0 && (
+              <Stack
+                direction="row"
+                gap={1}
+                sx={{
+                  // position: 'absolute',
+                  // zIndex: 1,
+                  // transform: 'translateY(-100%)',
+                  // left: '0',
+                  // mt: -1,
+                  flexWrap: 'nowrap',
+                  mb: 1,
+                  overflowX: 'auto',
+                  maxWidth: '100%',
+
+                  scrollbarColor: 'rgba(0,0,0,.1) transparent',
+                  '&::-webkit-scrollbar': {
+                    height: '0.4em',
+                  },
+                  '&::-webkit-scrollbar-track': {
+                    display: 'none',
+                  },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: 'rgba(0,0,0,.0)',
+                    borderRadius: '20px',
+                  },
+                }}
+              >
+                {messageTemplates?.map((each, idx) => (
+                  <Button
+                    key={idx}
+                    size="sm"
+                    variant="soft"
+                    onClick={() => submit({ query: each })}
+                    sx={{ whiteSpace: 'nowrap' }}
+                  >
+                    {each}
+                  </Button>
+                ))}
+              </Stack>
+            )}
+          </Stack>
           <Stack width="100%" gap={0.5}>
             {topSettings}
 
@@ -503,38 +536,6 @@ function ChatBox({
                 </Stack>
               </Stack>
             )}
-
-            {isAiEnabled &&
-              conversationAttachments &&
-              conversationAttachments?.length > 0 && (
-                <Select
-                  size="sm"
-                  slotProps={{
-                    listbox: {
-                      sx: {
-                        zIndex: zIndex + 1,
-                      },
-                    },
-                  }}
-                  sx={{ mr: 'auto' }}
-                  startDecorator={<ArticleTwoToneIcon />}
-                  placeholder="Use uploaded file"
-                  // variant="plain"
-                  className="max-w-full truncate"
-                  multiple
-                  color={attachmentsForAI?.length > 0 ? 'warning' : 'neutral'}
-                  variant={attachmentsForAI?.length > 0 ? 'soft' : 'plain'}
-                  onChange={(_, values) => {
-                    setAttachmentsForAI(values as string[]);
-                  }}
-                >
-                  {conversationAttachments.map((each) => (
-                    <Option key={each.id} value={each.id}>
-                      {each.name}
-                    </Option>
-                  ))}
-                </Select>
-              )}
 
             <Textarea
               // placeholder="Press Shift + Enter to move to the next line"
