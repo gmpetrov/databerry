@@ -1,0 +1,29 @@
+Users are able to upload files during a conversation with an agent. This feature is useful when users need to share files with agents or with human operators.
+
+<Note>
+  Files uploaded during a conversation are not accessible to other
+  conversations. To extend the Agent's knowledge for all conversations, use a
+  [Datastore](/datastore) instead.
+</Note>
+
+![example 1](/images/conversation-file-upload/1.jpg)
+
+Agents are able to process the following file types:
+
+- text/csv
+- text/plain
+- text/markdown
+- application/pdf
+- application/json
+- application/vnd.openxmlformats-officedocument.presentationml.presentation
+- application/vnd.openxmlformats-officedocument.wordprocessingml.document
+- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+- image/png (Vision compatible model like GPT-4-Turbo or Claude 3 required)
+- image/jpeg (Vision compatible model like GPT-4-Turbo or Claude 3 required)
+- image/gif (Vision compatible model like GPT-4-Turbo or Claude 3 required)
+- image/webp (Vision compatible model like GPT-4-Turbo or Claude 3 required)
+
+<Warning>Unsupported file types will be ignored by the AI</Warning>
+
+To reuse an uploaded file use the conversation files dropdown
+![example 2](/images/conversation-file-upload/2.jpg)

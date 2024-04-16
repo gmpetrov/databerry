@@ -95,6 +95,7 @@
         },
         "agent/human-handoff",
         "agent/fine-tuning",
+        "agent/conversation-file-upload",
         "agent/answer-sources",
         "agent/message-suggestions",
         "agent/optimize-ai-answers",
