@@ -1,9 +1,16 @@
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SpokeRoundedIcon from '@mui/icons-material/SpokeRounded';
-import { Alert, CircularProgress, ColorPaletteProp } from '@mui/joy';
+import {
+  Alert,
+  Breadcrumbs,
+  CircularProgress,
+  ColorPaletteProp,
+} from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
@@ -36,6 +43,7 @@ import agentToolFormat, {
   agentToolConfig,
 } from '@chaindesk/lib/agent-tool-format';
 import { ModelConfig } from '@chaindesk/lib/config';
+import { RouteNames } from '@chaindesk/lib/types';
 import useAgent from '@chaindesk/ui/hooks/useAgent';
 import useChat from '@chaindesk/ui/hooks/useChat';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
@@ -127,7 +135,6 @@ export default function AgentPage() {
           sx={{
             display: 'flex',
             alignItems: 'center',
-            mt: 1,
             mb: 2,
             gap: 1,
             flexWrap: 'wrap',
@@ -139,10 +146,41 @@ export default function AgentPage() {
               width: '100%',
             }}
           >
-            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-              <Typography level="h1" fontSize="xl4">
-                {query?.data?.name}
-              </Typography>
+            <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+              <Breadcrumbs
+                size="sm"
+                aria-label="breadcrumbs"
+                separator={<ChevronRightRoundedIcon />}
+                sx={{
+                  '--Breadcrumbs-gap': '1rem',
+                  '--Icon-fontSize': '16px',
+                  fontWeight: 'lg',
+                  color: 'neutral.400',
+                  px: 0,
+                  mt: 1,
+                }}
+              >
+                <Link href={RouteNames.HOME}>
+                  <HomeRoundedIcon />
+                </Link>
+                <Link href={RouteNames.AGENTS}>
+                  <Typography
+                    fontSize="inherit"
+                    color="neutral"
+                    className="hover:underline"
+                  >
+                    Agents
+                  </Typography>
+                </Link>
+                <Typography
+                  fontSize="inherit"
+                  color="neutral"
+                  className="hover:underline"
+                >
+                  {query?.data?.name}
+                </Typography>
+              </Breadcrumbs>
+
               <Chip
                 size="sm"
                 variant="soft"

@@ -92,6 +92,48 @@ function FormDashboard(props: FormDashboardProps) {
       })}
     >
       <Stack gap={1} sx={{ height: '100%', width: '100%' }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon />}
+          sx={{
+            '--Breadcrumbs-gap': '1rem',
+            '--Icon-fontSize': '16px',
+            fontWeight: 'lg',
+            color: 'neutral.400',
+            px: 0,
+          }}
+        >
+          <Link href={RouteNames.HOME}>
+            <HomeRoundedIcon />
+          </Link>
+          <Link href={RouteNames.EMAIL_INBOXES}>
+            <Typography
+              fontSize="inherit"
+              color="neutral"
+              className="hover:underline"
+            >
+              Email Inboxes
+            </Typography>
+          </Link>
+
+          <Typography fontSize="inherit" color="primary">
+            {query?.data?.name}
+          </Typography>
+
+          {/* <JoyLink
+          underline="hover"
+          color="neutral"
+          fontSize="inherit"
+          href="#some-link"
+        >
+          Datastores
+        </JoyLink> */}
+          {/* <Typography fontSize="inherit" variant="soft" color="primary">
+          Orders
+        </Typography> */}
+        </Breadcrumbs>
+
         <Tabs
           aria-label="tabs"
           value={(router.query.tab as string) || 'editor'}

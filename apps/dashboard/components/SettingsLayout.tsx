@@ -1,6 +1,7 @@
-import Box from '@mui/joy/Box';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import { Breadcrumbs } from '@mui/joy';
 import Stack from '@mui/joy/Stack';
-import { Theme } from '@mui/joy/styles';
 import { SxProps } from '@mui/joy/styles/types';
 import Tab, { tabClasses } from '@mui/joy/Tab';
 import TabList from '@mui/joy/TabList';
@@ -9,6 +10,8 @@ import Typography from '@mui/joy/Typography';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
+
+import { RouteNames } from '@chaindesk/lib/types';
 
 import Layout from './Layout';
 
@@ -25,25 +28,41 @@ function SettingsLayout(props: Props) {
     <Layout mainSxProps={props.mainSxProps}>
       <Stack
         sx={{
+          px: {
+            xs: 2,
+            md: 6,
+          },
           flex: 1,
           pt: {},
           height: '100%',
           ...props.sxProps,
         }}
       >
-        <Box
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon />}
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            my: 1,
-            gap: 1,
-            flexWrap: 'wrap',
+            '--Breadcrumbs-gap': '1rem',
+            '--Icon-fontSize': '16px',
+            fontWeight: 'lg',
+            color: 'neutral.400',
+            px: 0,
           }}
         >
-          <Typography level="title-lg">Settings</Typography>
-        </Box>
-
+          <Link href={RouteNames.HOME}>
+            <HomeRoundedIcon />
+          </Link>
+          <Link href={RouteNames.SETTINGS}>
+            <Typography
+              fontSize="inherit"
+              color="neutral"
+              className="hover:underline"
+            >
+              Settings
+            </Typography>
+          </Link>
+        </Breadcrumbs>
         <Stack
           sx={{
             position: 'sticky',

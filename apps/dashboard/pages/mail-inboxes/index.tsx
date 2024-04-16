@@ -112,6 +112,26 @@ export default function FormsPage() {
         gap: 1,
       })}
     >
+      <Breadcrumbs
+        size="sm"
+        aria-label="breadcrumbs"
+        separator={<ChevronRightRoundedIcon />}
+        sx={{
+          '--Breadcrumbs-gap': '1rem',
+          '--Icon-fontSize': '16px',
+          fontWeight: 'lg',
+          color: 'neutral.400',
+          px: 0,
+        }}
+      >
+        <Link href={RouteNames.HOME}>
+          <HomeRoundedIcon />
+        </Link>
+        <Typography fontSize="inherit" color="primary">
+          Email Inboxes
+        </Typography>
+      </Breadcrumbs>
+
       <Box
         sx={{
           display: 'flex',
@@ -120,10 +140,24 @@ export default function FormsPage() {
           my: 1,
           gap: 1,
           flexWrap: 'wrap',
+          // '& > *': {
+          //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
+          //   flexGrow: 1,
+          // },
         }}
       >
-        <Typography level="title-lg">Email Inboxes</Typography>
+        <Typography level="h1" fontSize="xl4">
+          Email Inboxes
+        </Typography>
+        {/* <Box sx={{ flex: 999999 }} /> */}
         <Box sx={{ display: 'flex', gap: 1, '& > *': { flexGrow: 1 } }}>
+          {/* <Button
+            variant="outlined"
+            color="neutral"
+            startDecorator={<i data-feather="download-cloud" />}
+          >
+            Download PDF
+          </Button> */}
           <Button
             variant="solid"
             color="primary"

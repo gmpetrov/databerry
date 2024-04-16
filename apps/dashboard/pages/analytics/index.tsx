@@ -7,6 +7,7 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import {
   Alert,
   Box,
+  Breadcrumbs,
   Card,
   IconButton,
   Option,
@@ -160,7 +161,26 @@ export default function AnalyticsPage() {
         gap: 1,
       })}
     >
-      <Typography level="title-lg">Analytics</Typography>
+      <Breadcrumbs
+        size="sm"
+        aria-label="breadcrumbs"
+        separator={<ChevronRightRoundedIcon />}
+        sx={{
+          '--Breadcrumbs-gap': '1rem',
+          '--Icon-fontSize': '16px',
+          fontWeight: 'lg',
+          color: 'neutral.400',
+          px: 0,
+        }}
+      >
+        <Link href={RouteNames.HOME}>
+          <HomeRoundedIcon />
+        </Link>
+        <Typography fontSize="inherit" color="neutral">
+          Analytics
+        </Typography>
+      </Breadcrumbs>
+
       <Alert startDecorator={<InfoIcon />} color="primary" variant="soft">
         This view is refreshed every hour
       </Alert>

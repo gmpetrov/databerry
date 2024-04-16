@@ -26,7 +26,7 @@ import DarkModeToggle from '@chaindesk/ui/DarkModeToggle';
 import Logo from '../Logo';
 import SEO from '../SEO';
 
-import Header, { HEADER_HEIGHT } from './Header';
+import Header from './Header';
 import Main from './Main';
 import Navigation from './Navigation';
 import Root from './Root';
@@ -82,7 +82,7 @@ export default function Layout(props: Props) {
           onClose={() => setDrawerOpen(false)}
           className={mounted ? mode : ''}
         >
-          <Box sx={{ height: '100%', overflowY: 'scroll' }}>
+          <Box sx={{ height: '100%', overflowY: 'auto' }}>
             <Navigation />
           </Box>
         </SideDrawer>
@@ -151,88 +151,56 @@ export default function Layout(props: Props) {
           </Alert>
         </Stack>
       )}
-      <Header>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 1.5,
-          }}
-        >
-          <IconButton
-            variant="outlined"
-            size="sm"
-            onClick={() => setDrawerOpen(true)}
-            sx={{ display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Logo className="w-10" />
-          <Typography component="h1" fontWeight="xl">
-            Chaindesk
-          </Typography>
-        </Box>
-
-        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
-          {/* <Button variant="plain" onClick={shareFeedbackModal.open}>
-            👋 Share feedback
-          </Button> */}
-
-          <DarkModeToggle />
-        </Box>
-      </Header>
 
       <Root
         className={mounted ? mode : ''}
         sx={{
           ...(drawerOpen && {
-            height: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px)`,
+            height: `calc(100dvh - ${promoBannerHeight}px)`,
             overflow: 'hidden',
           }),
-          maxHeight: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px )`,
-          minHeight: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px)`,
+          maxHeight: `calc(100dvh - ${promoBannerHeight}px)`,
+          minHeight: `calc(100dvh - ${promoBannerHeight}px)`,
+          display: 'flex',
           overflow: 'hidden',
         }}
       >
-        <div className="flex">
-          <Navigation />
+        <Navigation />
 
-          <Main
+        <Main
+          sx={{
+            position: 'relative',
+            minHeight: `calc(100dvh - ${promoBannerHeight}px)`,
+            maxHeight: `calc(100dvh - ${promoBannerHeight}px)`,
+            height: '100dvh',
+            width: '100%',
+
+            ...props.mainSxProps,
+          }}
+        >
+          {props.children}
+        </Main>
+        <shareFeedbackModal.component
+          dialogProps={{
+            sx: {
+              height: '100%',
+              flex: 1,
+            },
+          }}
+        >
+          <Box
+            component={'iframe'}
+            src={'https://app.chaindesk.ai/forms/clqz46y9u003e8ipv0lvfcnsg'}
+            frameBorder="0"
             sx={{
-              maxHeight: `calc(100dvh - ${promoBannerHeight}px - ${HEADER_HEIGHT}px )`,
-              position: 'relative',
               width: '100%',
               maxWidth: '100%',
-              backgroundColor: '',
-              ...props.mainSxProps,
+              height: '100%',
+              borderRadius: 'xl',
+              overflow: 'hidden',
             }}
-          >
-            {props.children}
-          </Main>
-          <shareFeedbackModal.component
-            dialogProps={{
-              sx: {
-                height: '100%',
-                flex: 1,
-              },
-            }}
-          >
-            <Box
-              component={'iframe'}
-              src={'https://app.chaindesk.ai/forms/clqz46y9u003e8ipv0lvfcnsg'}
-              frameBorder="0"
-              sx={{
-                width: '100%',
-                maxWidth: '100%',
-                height: '100%',
-                borderRadius: 'xl',
-                overflow: 'hidden',
-              }}
-            ></Box>
-          </shareFeedbackModal.component>
-        </div>
+          ></Box>
+        </shareFeedbackModal.component>
       </Root>
     </>
   );

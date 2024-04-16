@@ -70,6 +70,15 @@ function FormDashboard(props: FormDashboardProps) {
       component="main"
       className="MainContent"
       sx={(theme) => ({
+        px: {
+          xs: 2,
+          md: 6,
+        },
+        pt: {
+          // xs: `calc(${theme.spacing(2)} + var(--Header-height))`,
+          // sm: `calc(${theme.spacing(2)} + var(--Header-height))`,
+          // md: 3,
+        },
         pb: {
           xs: 2,
           sm: 2,
@@ -85,6 +94,48 @@ function FormDashboard(props: FormDashboardProps) {
       })}
     >
       <Stack gap={1} sx={{ height: '100%', width: '100%' }}>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon />}
+          sx={{
+            '--Breadcrumbs-gap': '1rem',
+            '--Icon-fontSize': '16px',
+            fontWeight: 'lg',
+            color: 'neutral.400',
+            px: 0,
+          }}
+        >
+          <Link href={RouteNames.HOME}>
+            <HomeRoundedIcon />
+          </Link>
+          <Link href={RouteNames.FORMS}>
+            <Typography
+              fontSize="inherit"
+              color="neutral"
+              className="hover:underline"
+            >
+              Forms
+            </Typography>
+          </Link>
+
+          <Typography fontSize="inherit" color="primary">
+            {query?.data?.name}
+          </Typography>
+
+          {/* <JoyLink
+          underline="hover"
+          color="neutral"
+          fontSize="inherit"
+          href="#some-link"
+        >
+          Datastores
+        </JoyLink> */}
+          {/* <Typography fontSize="inherit" variant="soft" color="primary">
+          Orders
+        </Typography> */}
+        </Breadcrumbs>
+
         <Tabs
           aria-label="tabs"
           value={(router.query.tab as string) || 'editor'}
@@ -100,7 +151,42 @@ function FormDashboard(props: FormDashboardProps) {
         >
           <TabList
             size="sm"
+            // sx={{
+            //   [`&& .${tabClasses.root}`]: {
+            //     flex: 'initial',
+            //     bgcolor: 'transparent',
+            //     '&:hover': {
+            //       bgcolor: 'transparent',
+            //     },
+            // [`&.${tabClasses.selected}`]: {
+            //   color: 'primary.plainColor',
+            //   '&::after': {
+            //     height: '3px',
+            //     borderTopLeftRadius: '3px',
+            //     borderTopRightRadius: '3px',
+            //     bgcolor: 'primary.500',
+            //   },
+            // },
+            //   },
+            // }}
+
+            // sx={{
+            //   p: 0.7,
+            //   gap: 0.5,
+            //   borderRadius: 'xl',
+            //   bgcolor: 'background.level1',
+            //   [`& .${tabClasses.root}[aria-selected="true"]`]: {
+            //     boxShadow: 'sm',
+            //     bgcolor: 'background.surface',
+            //     '&::after': {
+            //       height: '0px',
+            //       width: '0px',
+            //     },
+            //   },
+            // }}
+
             sx={{
+              // pt: 2,
               justifyContent: 'start',
               [`&& .${tabClasses.root}`]: {
                 flex: 'initial',

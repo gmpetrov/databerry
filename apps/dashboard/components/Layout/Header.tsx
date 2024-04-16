@@ -1,7 +1,5 @@
 import { Box, BoxProps } from '@mui/joy';
 
-export const HEADER_HEIGHT = 50;
-
 export default function Header(props: BoxProps) {
   return (
     <Box
@@ -21,8 +19,6 @@ export default function Header(props: BoxProps) {
           borderBottom: '1px solid',
           borderColor: 'divider',
           position: 'relative',
-          height: HEADER_HEIGHT,
-          maxHeight: HEADER_HEIGHT,
           top: 0,
           zIndex: 1100,
         },

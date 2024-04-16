@@ -20,7 +20,6 @@ import * as React from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Layout from '@app/components/Layout';
-import { HEADER_HEIGHT } from '@app/components/Layout/Header';
 import { getDatasource } from '@app/pages/api/datasources/[id]';
 
 import { fetcher } from '@chaindesk/lib/swr-fetcher';
@@ -75,24 +74,93 @@ export default function DatasourcePage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        overflowY: 'scroll',
-        height: `calc(100dvh  - ${HEADER_HEIGHT}px - 50px)`,
-        maxHeight: `calc(100dvh  - ${HEADER_HEIGHT}px) - 50px`,
+        px: {
+          xs: 2,
+          md: 6,
+        },
+        pt: {
+          // xs: `calc(${theme.spacing(2)} + var(--Header-height))`,
+          // sm: `calc(${theme.spacing(2)} + var(--Header-height))`,
+          // md: 3,
+        },
+        pb: {
+          xs: 2,
+          sm: 2,
+          md: 3,
+        },
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         minWidth: 0,
+        // height: '100dvh',
         width: '100%',
         gap: 1,
       })}
     >
       <>
+        <Breadcrumbs
+          size="sm"
+          aria-label="breadcrumbs"
+          separator={<ChevronRightRoundedIcon />}
+          sx={{
+            '--Breadcrumbs-gap': '1rem',
+            '--Icon-fontSize': '16px',
+            fontWeight: 'lg',
+            color: 'neutral.400',
+            px: 0,
+          }}
+        >
+          <Link href={RouteNames.HOME}>
+            <HomeRoundedIcon />
+          </Link>
+          <Link href={RouteNames.DATASTORES}>
+            <Typography
+              fontSize="inherit"
+              color="neutral"
+              className="hover:underline"
+            >
+              Datastores
+            </Typography>
+          </Link>
+          <Link href={`${RouteNames.DATASTORES}/${router.query.datastoreId}`}>
+            <Typography
+              fontSize="inherit"
+              color="neutral"
+              className="hover:underline"
+            >
+              {getDatasourceQuery?.data?.datastore?.name}
+            </Typography>
+          </Link>
+
+          <Typography fontSize="inherit" color="neutral">
+            {getDatasourceQuery?.data?.name}
+          </Typography>
+
+          {/* <JoyLink
+          underline="hover"
+          color="neutral"
+          fontSize="inherit"
+          href="#some-link"
+        >
+          Datastores
+        </JoyLink> */}
+          {/* <Typography fontSize="inherit" variant="soft" color="primary">
+          Orders
+        </Typography> */}
+        </Breadcrumbs>
+
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
+            mt: 1,
+            mb: 2,
             gap: 1,
             flexWrap: 'wrap',
+            // '& > *': {
+            //   minWidth: 'clamp(0px, (500px - 100%) * 999, 100%)',
+            //   flexGrow: 1,
+            // },
           }}
         >
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
@@ -116,16 +184,33 @@ export default function DatasourcePage() {
               {getDatasourceQuery?.data?.status}
             </Chip>
           </Box>
+
+          {/* <Box
+            sx={{
+              display: 'flex',
+              ml: 'auto',
+              gap: 2,
+              '& > *': { flexGrow: 1 },
+            }}
+          >
+            <Button
+              variant="solid"
+              color="primary"
+              startDecorator={<AddIcon />}
+              onClick={() => setState({ isCreateDatasourceModalOpen: true })}
+            >
+              Create Datasource
+            </Button>
+          </Box> */}
         </Box>
 
-        <Divider />
+        <Divider sx={{ my: 4 }} />
 
         <Box
           sx={(theme) => ({
             maxWidth: '100%',
-            width: '100%',
+            width: theme.breakpoints.values.md,
             mx: 'auto',
-            mt: 4,
           })}
         >
           {getDatasourceQuery?.data?.type && (
@@ -164,6 +249,36 @@ export default function DatasourcePage() {
             </Button>
           </FormControl>
         </Box>
+
+        {/* {getDatastoreQuery?.data && router.query.tab === 'settings' && (
+          <Box
+            sx={(theme) => ({
+              maxWidth: '100%',
+              width: theme.breakpoints.values.md,
+              mx: 'auto',
+            })}
+          >
+            {React.createElement(
+              DatastoreFormsMap?.[getDatastoreQuery?.data?.type!],
+              {
+                onSubmitSuccess: () => {
+                  getDatastoreQuery.mutate();
+                },
+                defaultValues: {
+                  ...getDatastoreQuery?.data,
+                  isPublic:
+                    getDatastoreQuery?.data?.visibility ===
+                    DatastoreVisibility.public,
+                } as any,
+                submitButtonText: 'Update',
+                submitButtonProps: {
+                  // variant: 'contained',
+                  className: 'ml-auto',
+                },
+              }
+            )}
+          </Box>
+        )} */}
       </>
     </Box>
   );
@@ -172,3 +287,11 @@ export default function DatasourcePage() {
 DatasourcePage.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
+
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {},
+//     };
+//   }
+// );

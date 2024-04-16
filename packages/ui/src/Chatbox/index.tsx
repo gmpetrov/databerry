@@ -211,7 +211,17 @@ function ChatBox({
   }, [initialMessages, agentIconUrl]);
 
   React.useEffect(() => {
-    if (!scrollableRef.current) {
+    setState({ wordCount: 0 });
+    if (state.isLastMsgInView) {
+      scrollableRef.current?.scrollTo({
+        behavior: 'smooth',
+        top: scrollableRef.current?.scrollHeight + 100,
+      });
+    }
+  }, [isStreaming]);
+
+  React.useEffect(() => {
+    if (!scrollableRef.current || !state.isLastMsgInView) {
       return;
     }
 
@@ -226,14 +236,6 @@ function ChatBox({
       setState({ wordCount: currentWordCount });
     }
   }, [lastMessageLength, messages?.length]);
-
-  React.useEffect(() => {
-    setState({ wordCount: 0 });
-    scrollableRef.current?.scrollTo({
-      behavior: 'smooth',
-      top: scrollableRef.current?.scrollHeight + 100,
-    });
-  }, [isStreaming]);
 
   React.useEffect(() => {
     const t = setTimeout(() => {
@@ -317,7 +319,6 @@ function ChatBox({
         width: '100%',
         height: '100%',
         maxHeight: '100%',
-        minHeight: '100%',
         mx: 'auto',
         gap: 0,
         position: 'relative',
@@ -382,7 +383,6 @@ function ChatBox({
           width: '100%',
           mx: 'auto',
           flex: 1,
-
           maxHeight: '100%',
           overflowY: 'auto',
           pb: 4,
@@ -573,11 +573,6 @@ function ChatBox({
                   direction="row"
                   gap={1}
                   sx={{
-                    // position: 'absolute',
-                    // zIndex: 1,
-                    // transform: 'translateY(-100%)',
-                    // left: '0',
-                    // mt: -1,
                     flexWrap: 'nowrap',
                     mb: 1,
                     overflowX: 'auto',
@@ -660,20 +655,20 @@ function ChatBox({
             )}
 
             {!state.isLastMsgInView && (
-              <Button
-                variant="outlined"
+              <IconButton
+                variant="solid"
+                color="primary"
                 size="sm"
-                endDecorator={<KeyboardDoubleArrowDownIcon />}
-                className="absolute bottom-16 right-0  rounded-full z-99"
+                className="absolute bottom-14 right-0  rounded-full z-99"
                 onClick={() =>
                   scrollableRef.current?.scrollTo({
                     behavior: 'smooth',
-                    top: scrollableRef.current?.scrollHeight + 100,
+                    top: scrollableRef.current?.scrollHeight + 110,
                   })
                 }
               >
-                To Buttom
-              </Button>
+                <KeyboardDoubleArrowDownIcon />
+              </IconButton>
             )}
 
             <Textarea
@@ -701,7 +696,6 @@ function ChatBox({
                       zIndex: 1,
                     }
                   : {}),
-                transition: 'height 0.6s ease-out',
                 width: '100%',
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -738,8 +732,6 @@ function ChatBox({
                   </IconButton>
                 </Stack>
               }
-              // disabled={isLoading} // Disabled otherwise stop button is not clickable
-
               endDecorator={
                 <Stack
                   direction={'row'}

@@ -105,7 +105,7 @@ export default function ApiKeysPage() {
           title="API Keys"
           description="Use the api key to access the Chaindesk API"
           cardProps={{
-            sx: { maxWidth: '100%', mx: 'auto' },
+            sx: { maxWidth: 'md', mx: 'auto' },
           }}
           disableSubmitButton
         >
@@ -181,3 +181,11 @@ export default function ApiKeysPage() {
 ApiKeysPage.getLayout = function getLayout(page: ReactElement) {
   return <SettingsLayout>{page}</SettingsLayout>;
 };
+
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {},
+//     };
+//   }
+// );

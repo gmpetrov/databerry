@@ -17,7 +17,7 @@ export default function TeamSettingsPage() {
   }
 
   return (
-    <Stack sx={{ maxWidth: '100%', mx: 'auto', height: '100%' }}>
+    <Stack sx={{ maxWidth: 'md', mx: 'auto', height: '100%' }}>
       <OrganizationForm />
     </Stack>
   );
@@ -26,3 +26,11 @@ export default function TeamSettingsPage() {
 TeamSettingsPage.getLayout = function getLayout(page: ReactElement) {
   return <SettingsLayout>{page}</SettingsLayout>;
 };
+
+// export const getServerSideProps = withAuth(
+//   async (ctx: GetServerSidePropsContext) => {
+//     return {
+//       props: {},
+//     };
+//   }
+// );
