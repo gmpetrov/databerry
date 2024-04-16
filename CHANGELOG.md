@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.341"></a>
+## 0.1.341 (2024-04-16)
+
+### Miscellaneous
+
+- 🎸 handle chatbox drag&amp;drop files [[af5ab92](https://github.com/gmpetrov/databerry/commit/af5ab92e03de78677e0df47eb9370f8ec91e7e8c)]
+
+
 <a name="0.1.340"></a>
 ## 0.1.340 (2024-04-16)
 
