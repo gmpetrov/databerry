@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.342"></a>
+## 0.1.342 (2024-04-16)
+
+### Fixed
+
+- 🐛 optional props [[d913df7](https://github.com/gmpetrov/databerry/commit/d913df7bf8bdecb0d9deee3f3c0d55b1457e6558)]
+
+
 <a name="0.1.341"></a>
 ## 0.1.341 (2024-04-16)
 
