@@ -85,6 +85,7 @@ export type ChatBoxProps = {
   autoFocus?: boolean;
   agentIconStyle?: React.CSSProperties;
   fromInbox?: boolean;
+  fromDashboard?: boolean;
   conversationAttachments?: Attachment[];
 };
 
@@ -123,6 +124,7 @@ function ChatBox({
   agentIconStyle,
   fromInbox,
   conversationAttachments,
+  fromDashboard,
 }: ChatBoxProps) {
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -482,14 +484,26 @@ function ChatBox({
                     </Chip>
                   ))}
                 </Stack>
-                {/* <Alert
-                  color="warning"
-                  size="sm"
-                  startDecorator={<ErrorRoundedIcon />}
-                >
-                  Currently, uploaded files are intended for human use and will
-                  not be processed by the AI Agent
-                </Alert> */}
+                <Stack gap={1}>
+                  <Alert
+                    color="warning"
+                    size="sm"
+                    startDecorator={<ErrorRoundedIcon />}
+                  >
+                    Images are not supported by the AI. Uploaded images will not
+                    be processed by the AI.
+                  </Alert>
+                  {fromDashboard && (
+                    <Alert
+                      color="primary"
+                      size="sm"
+                      startDecorator={<ErrorRoundedIcon />}
+                    >
+                      To support image processing, use a vision compatible LLM
+                      (GPT-4 Turbo, Claude 3)
+                    </Alert>
+                  )}
+                </Stack>
               </Stack>
             )}
 

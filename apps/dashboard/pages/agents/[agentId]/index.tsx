@@ -352,6 +352,7 @@ export default function AgentPage() {
                 withFileUpload
                 conversationAttachments={conversationAttachments}
                 isAiEnabled
+                fromDashboard
               />
 
               {(query?.data?.tools?.length || 0) > 0 && (
