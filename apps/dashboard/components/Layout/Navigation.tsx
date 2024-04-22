@@ -437,10 +437,7 @@ export default function Navigation() {
     >
       {open && (
         <>
-          <Stack
-            className="overflow-y-auto px-4 pt-5"
-            bgcolor="background.surface"
-          >
+          <Stack className="overflow-y-auto px-4" bgcolor="background.surface">
             <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
               <Stack
                 direction="row"
@@ -448,24 +445,18 @@ export default function Navigation() {
                 gap={1}
                 justifyContent="space-between"
                 justifyItems="center"
+                paddingTop={1}
+                paddingBottom={1}
               >
-                <Stack
-                  direction="row"
-                  justifyItems="center"
-                  justifyContent="center"
-                  gap={1.5}
-                >
+                <Stack direction="row" alignItems="center" gap={1.5}>
                   <div className="relative w-5 h-5 mt-[0.5px] flex justify-center ">
                     <Image layout="fill" src="/logo.png" alt="Chaindesk" />
                   </div>
                   <Typography level="title-md">Chaindesk</Typography>
                 </Stack>
-                <DarkModeToggle
-                  variant="plain"
-                  color="neutral"
-                  sx={{ pb: 1 }}
-                />
+                <DarkModeToggle variant="plain" color="neutral" />
               </Stack>
+
               <Divider sx={{ mb: 1 }} />
 
               <ListItem nested>
@@ -719,30 +710,16 @@ export default function Navigation() {
       )}
 
       <Stack bgcolor="background.surface">
-        <IconButton
-          size={open ? 'sm' : 'lg'}
-          onClick={() => {
-            setOpen(!open);
-          }}
-          sx={{
-            right: open ? -35 : 0,
-            position: open ? 'absolute' : '',
-            zIndex: 99,
-            bgcolor: 'background.surface',
-          }}
-        >
-          {open ? (
-            <ArrowBackIosNewIcon fontSize="sm" />
-          ) : (
-            <ArrowForwardIosIcon fontSize="sm" />
-          )}
-        </IconButton>
         {!open && (
           <Stack
+            pt={1}
             alignItems="center"
             className="relative h-full"
             bgcolor="background.surface"
           >
+            <div className="relative w-6 h-6 ml-1">
+              <Image layout="fill" src="/logo.png" alt="Chaindesk" />
+            </div>
             {[...appLinks, ...settingLinks, ...docLinks].map((link, i) => (
               <Tooltip
                 key={link.route}
@@ -788,6 +765,59 @@ export default function Navigation() {
         )}
       </Stack>
       {!open && <Divider orientation="vertical" />}
+      <Tooltip
+        placement="right"
+        size="sm"
+        title={open ? 'Close Sidebar' : 'Open Sidebar'}
+      >
+        <Box
+          component="button"
+          className="group"
+          sx={{
+            position: 'absolute',
+            right: -30,
+            zIndex: 999,
+            bottom: '50%',
+            minWidth: '5px',
+            minHeight: '40px',
+            backgroundColor: 'transparent',
+            py: '20px',
+            pr: '20px',
+          }}
+          onClick={() => {
+            setOpen(!open);
+          }}
+        >
+          <Box
+            sx={{
+              minHeight: '20px',
+              maxHeight: '20px',
+              maxWidth: '5px',
+              minWidth: '5px',
+              backgroundColor: 'background.level2',
+              borderTopRightRadius: '5px',
+              borderTopLeftRadius: '5px',
+            }}
+            className={`group-hover:${
+              !open ? '-rotate-12' : 'rotate-12'
+            } group-hover:translate-y-[1.3px] duration-300 ease-in-out`}
+          ></Box>
+          <Box
+            sx={{
+              minHeight: '20px',
+              maxHeight: '20px',
+              maxWidth: '5px',
+              minWidth: '5px',
+              backgroundColor: 'background.level2',
+              borderBottomRightRadius: '5px',
+              borderBottomLeftRadius: '5px',
+            }}
+            className={`group-hover:${
+              !open ? 'rotate-12 ' : '-rotate-12'
+            } duration-300 ease-in-out`}
+          ></Box>
+        </Box>
+      </Tooltip>
     </Stack>
   );
 }
