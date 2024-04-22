@@ -5,7 +5,7 @@ import { CssVarsProvider } from '@mui/joy/styles';
 import React, { FunctionComponent, StrictMode, useState } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 
-import { CustomContact } from '@chaindesk/lib/types';
+import { ChatboxEvent, CustomContact } from '@chaindesk/lib/types';
 import { InitWidgetProps } from '@chaindesk/ui/embeds/types';
 import { createTheme, createThemeKeys } from '@chaindesk/ui/themes/base';
 
@@ -94,6 +94,15 @@ const createElement = ({ name, widget, type }: Props) =>
 
     toggle() {
       this.setIsOpen?.(!this.isOpen);
+    }
+
+    createNewConversation() {
+      this.dispatchEvent(
+        new Event(ChatboxEvent.CREATE_NEW_CONVERSATION, {
+          bubbles: true,
+          composed: true,
+        })
+      );
     }
 
     Component = (props: any) => {

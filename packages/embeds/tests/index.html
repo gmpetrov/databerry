@@ -14,7 +14,7 @@
       import Chatbox from './dist/chatbox/index.js';
       import Form from './dist/form/index.js';
 
-      const widget = await Chatbox.initBubble({
+      window.widget = await Chatbox.initBubble({
         agentId: 'clrz0tn6h000108kxfyomdzxg',
         // contact: {
         //   firstName: 'Georges',
@@ -42,6 +42,7 @@
 
       setTimeout(() => {
         // widget.open();
+        // widget.createNewConversation();
       }, 2000);
 
       Chatbox.initStandard({
@@ -102,10 +103,15 @@
   </head>
   <body style="background: rgba(255, 0, 0, 0.2)">
     <h1>WebChatbubble:</h1>
+
     <chaindesk-chatbox-standard
       id="4242"
       style="width: 100%; height: 650px"
     ></chaindesk-chatbox-standard>
+
+    <button onclick="window.widget.createNewConversation()">
+      New Conversation
+    </button>
 
     <chaindesk-form-standard
       style="width: 500px; margin: 25px auto"

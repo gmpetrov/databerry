@@ -247,3 +247,7 @@ export type CustomContact = Omit<
   NonNull<Partial<Contact>>,
   'updatedAt' | 'createdAt' | 'agentId' | 'organizationId'
 >;
+
+export enum ChatboxEvent {
+  'CREATE_NEW_CONVERSATION' = 'CREATE_NEW_CONVERSATION',
+}
