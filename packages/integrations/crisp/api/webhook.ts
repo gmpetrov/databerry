@@ -337,8 +337,23 @@ export const hook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         }
 
         break;
-      case 'message:received':
+      case 'message:received': {
+        // create message for crisp operator only.
+        if (body.data?.user?.user_id) {
+          const integration = await getIntegration(
+            body.website_id,
+            body.data.session_id
+          );
+          await prisma.message.create({
+            data: {
+              conversationId: integration?.conversations?.[0]?.id,
+              text: body.data.content,
+              from: 'agent',
+            },
+          });
+        }
         break;
+      }
       case 'message:updated':
         req.logger.info(body.data.content?.choices);
         const choices = body.data.content
