@@ -42,6 +42,7 @@ function ChatMessageComponent({
   onTextAnimationComplete,
   ...props
 }: Props) {
+  const direction = document.documentElement.dir || 'ltr';
   return (
     <Stack
       component={motion.div}
@@ -142,7 +143,7 @@ function ChatMessageComponent({
                   message?.from === 'agent' ? 'message-agent' : 'message-human'
                 )}
                 sx={{
-                  mr: 'auto',
+                  ...(direction === 'rtl' ? { ml: 'auto' } : { mr: 'auto' }),
                 }}
               >
                 {/* {message?.step?.type === 'tool_call' && (

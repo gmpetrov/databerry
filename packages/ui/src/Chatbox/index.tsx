@@ -229,6 +229,8 @@ function ChatBox({
     [methods.setValue]
   );
 
+  const direction = document.documentElement.dir || 'ltr';
+
   return (
     <Stack
       ref={chatboxRef}
@@ -673,7 +675,10 @@ function ChatBox({
                         size="sm"
                         type="submit"
                         disabled={isLoading || !methods.formState.isValid}
-                        sx={{ maxHeight: '100%' }}
+                        sx={{ 
+                          maxHeight: '100%' ,
+                          ...(direction === 'rtl' ? { rotate: '180deg' } : {})
+                        }}
                         color="primary"
                         variant="soft"
                       >
