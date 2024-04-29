@@ -17,6 +17,7 @@ const defaultChatBubbleConfig: AgentInterfaceConfig = {
   theme: 'light',
   primaryColor: '#000000',
   isBgTransparent: false,
+  position: 'right',
   // initialMessage: 'Hi, how can I help you?',
   // position: 'right',
   // messageTemplates: ["What's the pricing?"],

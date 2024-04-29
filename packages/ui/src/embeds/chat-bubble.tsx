@@ -45,6 +45,7 @@ const ChatBoxLayout = (props: {
   handleClose?: any;
   config?: AgentInterfaceConfig;
 }) => {
+  const direction = document.documentElement.dir || 'ltr';
   return (
     <Stack
       sx={{
@@ -102,7 +103,7 @@ const ChatBoxLayout = (props: {
           <Stack
             direction="row"
             sx={{
-              ml: 'auto',
+              ...(direction === 'rtl' ? { mr: 'auto' } : { ml: 'auto' }),
               alignItems: 'center',
             }}
           >
@@ -251,6 +252,8 @@ function ChatBubble({ ...props }: BubbleProps) {
     return null;
   }
 
+  const direction = document.documentElement.dir || 'ltr';
+
   return (
     <>
       {initMessages?.length > 0 &&
@@ -386,11 +389,17 @@ function ChatBubble({ ...props }: BubbleProps) {
                 opacity: 1,
                 zIndex: 1,
 
-                ...(config?.position === 'right'
-                  ? {
-                      transform: `translateX(${-500 + 50}px)`,
-                    }
-                  : {}),
+                ...(config?.position === 'right' && direction === 'ltr'
+                ? {
+                    transform: `translateX(${-500 + 50}px)`, // Moves left in LTR when on the right
+                  }
+                : {}),
+
+              ...(config?.position === 'left' && direction === 'rtl'
+                ? {
+                    transform: `translateX(${500 - 50}px)`, // Moves right in RTL when on the left
+                  }
+                : {}),
 
                 [theme.breakpoints.up('sm')]: {
                   width: '500px',
