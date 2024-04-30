@@ -45,6 +45,7 @@ import Option from '@mui/joy/Option';
 import type { Attachment } from '@chaindesk/prisma';
 import useFileUpload from '../hooks/useFileUpload';
 import Typography from '@mui/joy/Typography';
+import { Card } from '@mui/joy';
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
@@ -145,6 +146,10 @@ function ChatBox({
     wordCount: 0,
     attachmentsForAI: [] as string[],
   });
+
+  const setFiles = useCallback((files: File[]) => {
+    return setState({ files });
+  }, []);
 
   const { isDragOver } = useFileUpload({
     ref: chatboxRef,
@@ -656,10 +661,10 @@ function ChatBox({
 
             {!state.isLastMsgInView && (
               <IconButton
-                variant="solid"
-                color="primary"
+                variant="soft"
+                color="neutral"
                 size="sm"
-                className="absolute bottom-14 right-0  rounded-full z-99"
+                className="absolute right-0 rounded-full bottom-14 z-99"
                 onClick={() =>
                   scrollableRef.current?.scrollTo({
                     behavior: 'smooth',
