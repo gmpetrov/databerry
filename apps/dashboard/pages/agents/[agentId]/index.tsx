@@ -157,7 +157,6 @@ export default function AgentPage() {
                   fontWeight: 'lg',
                   color: 'neutral.400',
                   px: 0,
-                  mt: 1,
                 }}
               >
                 <Link href={RouteNames.HOME}>
