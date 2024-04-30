@@ -74,7 +74,7 @@ export default function Hero() {
                   // text="Custom GPT Agent For Your Startup"
                   text={[
                     'Your',
-                    'Suport',
+                    'Support',
                     'On',
                     // <em className="relative inline-flex items-center justify-center italic text-zinc-900">
                     //   {' '}
