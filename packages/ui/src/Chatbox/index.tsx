@@ -88,6 +88,7 @@ export type ChatBoxProps = {
   agentIconStyle?: React.CSSProperties;
   fromInbox?: boolean;
   isStreaming?: boolean;
+  isOpen?: boolean;
   fromDashboard?: boolean;
   conversationAttachments?: Attachment[];
 };
@@ -129,6 +130,7 @@ function ChatBox({
   isStreaming,
   conversationAttachments,
   fromDashboard,
+  isOpen,
 }: ChatBoxProps) {
   const chatboxRef = React.useRef<HTMLDivElement>(null);
   const scrollableRef = React.useRef<HTMLDivElement>(null);
@@ -226,6 +228,13 @@ function ChatBox({
   }, [isStreaming]);
 
   React.useEffect(() => {
+    scrollableRef.current?.scrollTo({
+      behavior: 'smooth',
+      top: scrollableRef.current?.scrollHeight + 100,
+    });
+  }, [isOpen, messages.length]);
+
+  React.useEffect(() => {
     if (!scrollableRef.current || !state.isLastMsgInView) {
       return;
     }
@@ -274,26 +283,10 @@ function ChatBox({
   );
 
   function isLastMessageInViewport() {
-    const lastMessage = document.getElementById(`msg${messages.length - 1}`);
+    const { scrollTop, scrollHeight, clientHeight } = scrollableRef.current!;
+    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
-    if (!lastMessage) {
-      return false;
-    }
-
-    const rect = lastMessage.getBoundingClientRect();
-
-    // used to add some space after the last message is out of visibility
-    const customOffset = 300;
-
-    const isLastMsgInView =
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) +
-          customOffset &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth);
-
-    setState({ isLastMsgInView });
+    setState({ isLastMsgInView: scrollPercentage > 85 ? true : false });
   }
 
   useEffect(() => {
@@ -308,7 +301,7 @@ function ChatBox({
         scrollableDiv.removeEventListener('scroll', isLastMessageInViewport);
       }
     };
-  }, [isStreaming]);
+  }, [scrollableRef.current?.ownerDocument]);
 
   return (
     <Stack
@@ -659,137 +652,141 @@ function ChatBox({
               </Stack>
             )}
 
-            {!state.isLastMsgInView && (
-              <IconButton
-                variant="soft"
-                color="neutral"
-                size="sm"
-                className="absolute right-0 rounded-full bottom-14 z-99"
-                onClick={() =>
-                  scrollableRef.current?.scrollTo({
-                    behavior: 'smooth',
-                    top: scrollableRef.current?.scrollHeight + 110,
-                  })
-                }
-              >
-                <KeyboardDoubleArrowDownIcon />
-              </IconButton>
-            )}
-
-            <Textarea
-              variant="outlined"
-              autoFocus={!!autoFocus}
-              slotProps={{
-                textarea: {
-                  id: 'chatbox-input',
-                  ref: textAreaRef,
-                },
-              }}
-              maxRows={24}
-              minRows={state.isTextAreaExpanded ? 18 : 1}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  methods.handleSubmit(submit)(e);
-                }
-              }}
-              sx={(t) => ({
-                ...(state.isTextAreaExpanded
-                  ? {
-                      position: 'absolute',
-                      bottom: 0,
-                      zIndex: 1,
-                    }
-                  : {}),
-                width: '100%',
-                flexDirection: 'row',
-                alignItems: 'center',
-                '.MuiTextarea-endDecorator': {
-                  marginBlock: 0,
-                  marginTop: 'auto',
-                },
-                '.MuiTextarea-startDecorator': {
-                  marginBlockEnd: 0,
-                  marginTop: 'auto',
-                },
-              })}
-              startDecorator={
-                <Stack
-                  direction={'row'}
-                  justifyContent={'space-between'}
-                  sx={{ width: '100%' }}
+            <Stack sx={{ position: 'relative' }}>
+              {!state.isLastMsgInView && (
+                <IconButton
+                  variant="soft"
+                  color="neutral"
+                  size="sm"
+                  className="absolute right-0 rounded-full -top-9 z-99"
+                  onClick={() =>
+                    scrollableRef.current?.scrollTo({
+                      behavior: 'smooth',
+                      top: scrollableRef.current?.scrollHeight + 110,
+                    })
+                  }
                 >
-                  <IconButton
-                    variant="plain"
-                    sx={{ maxHeight: '100%' }}
-                    size="sm"
-                    onClick={() =>
-                      setState({
-                        isTextAreaExpanded: !state.isTextAreaExpanded,
-                      })
-                    }
+                  <KeyboardDoubleArrowDownIcon />
+                </IconButton>
+              )}
+              <Textarea
+                variant="outlined"
+                autoFocus={!!autoFocus}
+                slotProps={{
+                  textarea: {
+                    id: 'chatbox-input',
+                    ref: textAreaRef,
+                  },
+                }}
+                maxRows={24}
+                minRows={state.isTextAreaExpanded ? 18 : 1}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    methods.handleSubmit(submit)(e);
+                  }
+                }}
+                sx={(t) => ({
+                  ...(state.isTextAreaExpanded
+                    ? {
+                        position: 'absolute',
+                        bottom: 0,
+                        zIndex: 1,
+                      }
+                    : {}),
+                  width: '100%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  '.MuiTextarea-endDecorator': {
+                    marginBlock: 0,
+                    marginTop: 'auto',
+                  },
+                  '.MuiTextarea-startDecorator': {
+                    marginBlockEnd: 0,
+                    marginTop: 'auto',
+                  },
+                })}
+                startDecorator={
+                  <Stack
+                    direction={'row'}
+                    justifyContent={'space-between'}
+                    sx={{ width: '100%' }}
                   >
-                    {state.isTextAreaExpanded ? (
-                      <UnfoldLessOutlinedIcon />
-                    ) : (
-                      <UnfoldMoreOutlinedIcon />
-                    )}
-                  </IconButton>
-                </Stack>
-              }
-              endDecorator={
-                <Stack
-                  direction={'row'}
-                  justifyContent={'space-between'}
-                  sx={{ width: '100%' }}
-                  spacing={1}
-                >
-                  {draftReplyInput &&
-                    React.cloneElement(draftReplyInput, {
-                      onReply: handleOnDraftReply,
-                      inputRef: textAreaRef,
-                    })}
-
-                  {withFileUpload && (
-                    <FileUploader
-                      changeCallback={(f) => setState({ files: f })}
-                      accept={AcceptedMimeTypes}
-                    />
-                  )}
-
-                  <Stack direction="row" sx={{ ml: 'auto' }}>
-                    {!state.isLoading && (
-                      <IconButton
-                        size="sm"
-                        type="submit"
-                        disabled={state.isLoading || !methods.formState.isValid}
-                        sx={{ maxHeight: '100%' }}
-                        color="primary"
-                        variant="soft"
-                      >
-                        <SendRoundedIcon />
-                      </IconButton>
-                    )}
-
-                    {state.isLoading && handleAbort && (
-                      <IconButton
-                        size="sm"
-                        color="danger"
-                        sx={{ maxHeight: '100%' }}
-                        variant={'soft'}
-                        onClick={() => {
-                          handleAbort?.();
-                        }}
-                      >
-                        <StopRoundedIcon />
-                      </IconButton>
-                    )}
+                    <IconButton
+                      variant="plain"
+                      sx={{ maxHeight: '100%' }}
+                      size="sm"
+                      onClick={() =>
+                        setState({
+                          isTextAreaExpanded: !state.isTextAreaExpanded,
+                        })
+                      }
+                    >
+                      {state.isTextAreaExpanded ? (
+                        <UnfoldLessOutlinedIcon />
+                      ) : (
+                        <UnfoldMoreOutlinedIcon />
+                      )}
+                    </IconButton>
                   </Stack>
-                </Stack>
-              }
-              {...methods.register('query')}
-              onBlur={(e) => {}} // // Otherwise got error when submiting with return key 🤷
-            />
+                }
+                endDecorator={
+                  <Stack
+                    direction={'row'}
+                    justifyContent={'space-between'}
+                    sx={{ width: '100%' }}
+                    spacing={1}
+                  >
+                    {draftReplyInput &&
+                      React.cloneElement(draftReplyInput, {
+                        onReply: handleOnDraftReply,
+                        inputRef: textAreaRef,
+                      })}
+
+                    {withFileUpload && (
+                      <FileUploader
+                        changeCallback={(f) => setState({ files: f })}
+                        accept={AcceptedMimeTypes}
+                      />
+                    )}
+
+                    <Stack direction="row" sx={{ ml: 'auto' }}>
+                      {!state.isLoading && (
+                        <IconButton
+                          size="sm"
+                          type="submit"
+                          disabled={
+                            state.isLoading || !methods.formState.isValid
+                          }
+                          sx={{ maxHeight: '100%' }}
+                          color="primary"
+                          variant="soft"
+                        >
+                          <SendRoundedIcon />
+                        </IconButton>
+                      )}
+
+                      {state.isLoading && handleAbort && (
+                        <IconButton
+                          size="sm"
+                          color="danger"
+                          sx={{ maxHeight: '100%' }}
+                          variant={'soft'}
+                          onClick={() => {
+                            handleAbort?.();
+                          }}
+                        >
+                          <StopRoundedIcon />
+                        </IconButton>
+                      )}
+                    </Stack>
+                  </Stack>
+                }
+                {...methods.register('query')}
+                onBlur={(e) => {}} // // Otherwise got error when submiting with return key 🤷
+              />
+            </Stack>
+
             <Stack>
               <Stack
                 direction="row"

@@ -798,9 +798,9 @@ export default function Navigation() {
               borderTopRightRadius: '5px',
               borderTopLeftRadius: '5px',
             }}
-            className={`group-hover:${
-              !open ? '-rotate-12' : 'rotate-12'
-            } group-hover:translate-y-[1.3px] duration-300 ease-in-out`}
+            className={`${
+              !open ? 'group-hover:-rotate-12' : 'group-hover:rotate-12'
+            }  group-hover:translate-y-[1.3px] duration-300 ease-in-out`}
           ></Box>
           <Box
             sx={{
@@ -812,8 +812,8 @@ export default function Navigation() {
               borderBottomRightRadius: '5px',
               borderBottomLeftRadius: '5px',
             }}
-            className={`group-hover:${
-              !open ? 'rotate-12 ' : '-rotate-12'
+            className={`${
+              !open ? 'group-hover:rotate-12' : 'group-hover:-rotate-12'
             } duration-300 ease-in-out`}
           ></Box>
         </Box>

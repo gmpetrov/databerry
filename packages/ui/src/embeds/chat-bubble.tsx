@@ -148,58 +148,10 @@ function ChatBubble({ ...props }: BubbleProps) {
     setState({ isOpen: !!props.isOpen });
   }, [props.isOpen]);
 
-  // const textColor = useMemo(() => {
-  //   return pickColorBasedOnBgColor(
-  //     config?.primaryColor || '#ffffff',
-  //     '#ffffff',
-  //     '#000000'
-  //   );
-  // }, [config?.primaryColor]);
-
-  // const isPremium = !!(state as any)?.agent?.organization?.subscriptions?.[0]
-  //   ?.id;
-
-  // const handleFetchAgent = async () => {
-  //   try {
-  //     const res = await fetch(`${API_URL}/api/agents/${props.agentId}`);
-  //     const data = (await res.json()) as Agent;
-  //     const agentConfig = data?.interfaceConfig as AgentInterfaceConfig;
-
-  //     setState({
-  //       agent: {
-  //         ...data,
-  //         iconUrl: config?.iconUrl || data?.iconUrl,
-  //       },
-  //       config: {
-  //         ...defaultChatBubbleConfig,
-  //         ...agentConfig,
-  //         ...props.initConfig,
-  //       },
-  //     });
-
-  //     props?.onAgentLoaded?.(data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   } finally {
-  //   }
-  // };
-
   const initMessages = useMemo(() => {
     let msgs = config.initialMessages || ([] as string[]);
-    // if (!!config?.initialMessages?.length) {
-    //   msgs = config.initialMessages;
-    // } else {
-    //   msgs = state?.config?.initialMessages || [];
-    // }
-
     return msgs.map((each) => each?.trim?.()).filter((each) => !!each);
   }, [config?.initialMessages]);
-
-  // useEffect(() => {
-  //   if (props.agentId) {
-  //     handleFetchAgent();
-  //   }
-  // }, [props.agentId]);
 
   useEffect(() => {
     let t: NodeJS.Timeout | null = null;
@@ -435,7 +387,12 @@ function ChatBubble({ ...props }: BubbleProps) {
                   overflowY: 'hidden',
                 })}
               >
-                <Base {...props} agentIconUrl={agentIconUrl} layout={Layout} />
+                <Base
+                  {...props}
+                  chatBoxProps={{ ...props.chatBoxProps, isOpen: state.isOpen }}
+                  agentIconUrl={agentIconUrl}
+                  layout={Layout}
+                />
                 {/* <ChatBoxLoader
                   agentId={props.agentId}
                   initConfig={config?}
