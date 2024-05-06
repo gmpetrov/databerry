@@ -20,7 +20,7 @@ import IconButton from '@mui/joy/IconButton';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { z } from 'zod';
@@ -144,7 +144,6 @@ function ChatBox({
     files: [] as File[],
     isTextAreaExpanded: false,
     hideTemplateMessages: false,
-    lastMessageLength: 0,
     wordCount: 0,
     attachmentsForAI: [] as string[],
   });
@@ -157,11 +156,6 @@ function ChatBox({
     ref: chatboxRef,
     changeCallback: setFiles,
   });
-  const lastMessageLength =
-    messages?.length > 0
-      ? messages?.[messages?.length - 1]?.message?.length +
-        (messages?.[messages?.length - 1]?.attachments || [])?.length
-      : 0;
 
   const methods = useForm<z.infer<typeof Schema>>({
     resolver: zodResolver(Schema),
@@ -217,39 +211,41 @@ function ChatBox({
     };
   }, [initialMessages, agentIconUrl]);
 
-  React.useEffect(() => {
-    setState({ wordCount: 0 });
-    if (state.isLastMsgInView) {
+  useEffect(() => {
+    if (
+      messages?.[messages?.length - 1]?.message?.length - state.wordCount >
+      45
+    ) {
       scrollableRef.current?.scrollTo({
         behavior: 'smooth',
         top: scrollableRef.current?.scrollHeight + 100,
       });
+      setState({
+        wordCount: messages?.[messages?.length - 1]?.message?.length,
+      });
     }
-  }, [isStreaming]);
+  }, [messages?.[messages?.length - 1]?.message?.length]);
 
-  React.useEffect(() => {
+  const conversationId = useMemo(
+    () => messages?.[0]?.conversationId || '',
+    [messages]
+  );
+
+  useEffect(() => {
     scrollableRef.current?.scrollTo({
       behavior: 'smooth',
       top: scrollableRef.current?.scrollHeight + 100,
     });
-  }, [isOpen, messages.length]);
+    setState({ wordCount: 0 });
+  }, [messages.length, isStreaming]);
 
-  React.useEffect(() => {
-    if (!scrollableRef.current || !state.isLastMsgInView) {
-      return;
-    }
+  useEffect(() => {
+    scrollableRef.current?.scrollTo({
+      top: scrollableRef.current?.scrollHeight + 100,
+    });
 
-    const currentWordCount =
-      messages?.[messages.length - 1]?.message?.split(' ')?.length || 0;
-
-    if (currentWordCount - state.wordCount > 10) {
-      scrollableRef.current?.scrollTo({
-        behavior: 'smooth',
-        top: scrollableRef.current?.scrollHeight + 100,
-      });
-      setState({ wordCount: currentWordCount });
-    }
-  }, [lastMessageLength, messages?.length]);
+    setState({ isLastMsgInView: true, wordCount: 0 });
+  }, [conversationId, isOpen]);
 
   React.useEffect(() => {
     const t = setTimeout(() => {
@@ -282,12 +278,18 @@ function ChatBox({
     [methods.setValue]
   );
 
-  function isLastMessageInViewport() {
+  const isLastMessageInViewport = useCallback(() => {
     const { scrollTop, scrollHeight, clientHeight } = scrollableRef.current!;
-    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
-    setState({ isLastMsgInView: scrollPercentage > 85 ? true : false });
-  }
+    if (scrollHeight === clientHeight) {
+      setState({ isLastMsgInView: true });
+    } else {
+      const scrollPercentage =
+        (scrollTop / (scrollHeight - clientHeight)) * 100;
+
+      setState({ isLastMsgInView: scrollPercentage > 85 ? true : false });
+    }
+  }, []);
 
   useEffect(() => {
     const scrollableDiv = scrollableRef.current;
@@ -317,6 +319,8 @@ function ChatBox({
         width: '100%',
         height: '100%',
         maxHeight: '100%',
+        paddingRight: '0.5rem',
+        paddingLeft: '0.5rem',
         mx: 'auto',
         gap: 0,
         position: 'relative',
@@ -452,7 +456,7 @@ function ChatBox({
 
             {(!isLoadingConversation || messages?.length > 0) &&
               messages.map((each, index) => (
-                <div key={index} id={`msg${index}`}>
+                <div key={index}>
                   {each.metadata?.shouldDisplayForm ? (
                     <Stack sx={{ zIndex: 0, px: 5 }}>
                       <TraditionalForm
@@ -486,22 +490,39 @@ function ChatBox({
                 </div>
               ))}
 
-            {state.isLoading && state.wordCount == 0 && (
-              <Message
-                message={{
-                  from: 'agent',
-                  message: '',
-                  component: <Bubbles />,
-                  approvals: [],
-                }}
-              />
-            )}
+            {state.isLoading &&
+              messages[messages.length - 1].from === 'human' && (
+                <Message
+                  message={{
+                    from: 'agent',
+                    message: '',
+                    component: <Bubbles />,
+                    approvals: [],
+                  }}
+                />
+              )}
           </Stack>
         </InfiniteScroll>
       </Stack>
 
       {renderAfterMessages}
 
+      {readOnly && !state.isLastMsgInView && (
+        <IconButton
+          variant="soft"
+          color="neutral"
+          size="sm"
+          className="absolute right-1 rounded-full bottom-2 z-99"
+          onClick={() =>
+            scrollableRef.current?.scrollTo({
+              behavior: 'smooth',
+              top: scrollableRef.current?.scrollHeight + 110,
+            })
+          }
+        >
+          <KeyboardDoubleArrowDownIcon />
+        </IconButton>
+      )}
       {!readOnly && (
         <form
           style={{

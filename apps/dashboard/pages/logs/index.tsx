@@ -1197,6 +1197,7 @@ export default function LogsPage() {
                     metadata: each.metadata as any,
                     createdAt: each.createdAt,
                     eval: each.eval,
+                    conversationId: each.conversationId || '',
                     approvals: each.approvals || [],
                     sources: (each.sources as any) || [],
                     attachments: each.attachments || [],
