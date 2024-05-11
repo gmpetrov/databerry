@@ -11,7 +11,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-  - url: https://app.chaindesk.ai
+  - url: https://app.chaindesk.ai/api
 tags:
   - name: agents
   - name: datastores
