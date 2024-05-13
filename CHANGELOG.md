@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.344"></a>
+## 0.1.344 (2024-05-13)
+
+### Miscellaneous
+
+- 🎸 gpt-4o [[ae7543b](https://github.com/gmpetrov/databerry/commit/ae7543b27facf05b4c570d185c53c675f70818ee)]
+-  fix pnpm version [[72b7b80](https://github.com/gmpetrov/databerry/commit/72b7b80410203e062b0a8572dd846b5de858a9f1)]
+
+
 <a name="0.1.343"></a>
 ## 0.1.343 (2024-05-13)
 
