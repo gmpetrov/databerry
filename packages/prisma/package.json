@@ -17,7 +17,7 @@
     "prisma": "dotenv -e ../../.env.local -- prisma"
   },
   "dependencies": {
-    "@prisma/client": "5.3.1"
+    "@prisma/client": "5.13.0"
   },
   "devDependencies": {
     "@chaindesk/tsconfig": "workspace:*",
@@ -25,7 +25,7 @@
     "@types/faker": "^6.6.9",
     "@types/node": "18.15.10",
     "dotenv-cli": "^7.1.0",
-    "prisma": "5.3.1",
+    "prisma": "5.13.0",
     "stripe": "^11.17.0",
     "typescript": "5.0.2"
   }
