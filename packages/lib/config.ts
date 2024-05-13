@@ -85,6 +85,16 @@ export const ModelConfig: Record<
     icon: '/shared/images/logos/openai.svg',
     hasVision: true,
   },
+  [AgentModelName.gpt_4o]: {
+    name: 'gpt-4o',
+    maxTokens: 128000,
+    cost: 10,
+    providerPriceByInputToken: 0.000005,
+    providerPricePriceByOutputToken: 0.000015,
+    isToolCallingSupported: true,
+    icon: '/shared/images/logos/openai.svg',
+    hasVision: true,
+  },
   [AgentModelName.claude_3_haiku]: {
     name: 'anthropic/claude-3-haiku:beta',
     baseUrl: 'https://openrouter.ai/api/v1',

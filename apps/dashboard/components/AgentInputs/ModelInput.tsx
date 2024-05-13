@@ -200,6 +200,18 @@ export default function ModelInput({}: Props) {
           </Option> */}
 
           <Option
+            value={AgentModelName.gpt_4o}
+            disabled={!session?.data?.organization?.isPremium}
+          >
+            <ProviderLogo src={ModelConfig[AgentModelName.gpt_4o].icon} />
+            <Chip size="sm" color="warning">
+              NEW
+            </Chip>{' '}
+            GPT-4o - 128k - {ModelConfig[AgentModelName.gpt_4o].cost}{' '}
+            credits/query (premium)
+          </Option>
+
+          <Option
             value={AgentModelName.gpt_4_turbo}
             disabled={!session?.data?.organization?.isPremium}
           >
