@@ -319,6 +319,8 @@ function ChatBox({
         width: '100%',
         height: '100%',
         maxHeight: '100%',
+        minHeight: '100%',
+
         paddingRight: '0.5rem',
         paddingLeft: '0.5rem',
         mx: 'auto',
@@ -679,7 +681,15 @@ function ChatBox({
                   variant="soft"
                   color="neutral"
                   size="sm"
-                  className="absolute right-0 rounded-full -top-9 z-99"
+                  sx={{
+                    position: 'absolute',
+                    right: 0,
+                    borderRadius: '50%',
+                    maxWidth: '12px',
+                    maxHeight: '12px',
+                    top: '-36px',
+                    zIndex: 99,
+                  }}
                   onClick={() =>
                     scrollableRef.current?.scrollTo({
                       behavior: 'smooth',

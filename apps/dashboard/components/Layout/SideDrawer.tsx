@@ -33,7 +33,6 @@ export default function SideDrawer({
           minWidth: 256,
           width: 'max-content',
           height: '100%',
-          p: 2,
           boxShadow: 'lg',
           bgcolor: 'common.surface',
         }}
