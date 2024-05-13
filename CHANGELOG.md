@@ -1,5 +1,22 @@
 # Changelog
 
+<a name="0.1.343"></a>
+## 0.1.343 (2024-05-13)
+
+### Fixed
+
+- 🐛 slow api/conversations query [[def4276](https://github.com/gmpetrov/databerry/commit/def4276ed9858be9c3bd6dc35bd346fd9dbbe7b0)]
+- 🐛 api url typo [[f065380](https://github.com/gmpetrov/databerry/commit/f065380822403b531c9f2ea2d161c5b6bbc147df)]
+- 🐛 crisp operator message ([#383](https://github.com/gmpetrov/databerry/issues/383)) [[fcb2b5d](https://github.com/gmpetrov/databerry/commit/fcb2b5df15e297ead8511c80ba64587d461d7711)]
+- 🐛 doc [[0f506d9](https://github.com/gmpetrov/databerry/commit/0f506d9a5ea376f6b81e5405f48338b4da636405)]
+
+### Miscellaneous
+
+-  typo [[c57d977](https://github.com/gmpetrov/databerry/commit/c57d97751f8ab2d5ee636520bce33055ccb5aa81)]
+- 🤖 add footer link [[f8f0b83](https://github.com/gmpetrov/databerry/commit/f8f0b83f6e6fc5467c48065f0ffaa474950e624e)]
+- 🎸 add createNewConversation method [[0f70ff8](https://github.com/gmpetrov/databerry/commit/0f70ff81c5d8eb11a6e9517aab92a6736d8848e3)]
+
+
 <a name="0.1.342"></a>
 ## 0.1.342 (2024-04-16)
 
