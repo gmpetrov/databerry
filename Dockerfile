@@ -3,7 +3,7 @@ ARG SCOPE
 ENV SCOPE=${SCOPE}
 
 
-RUN npm --global install pnpm
+RUN npm --global install pnpm@8.7.5
 
 
 FROM base AS pruner
