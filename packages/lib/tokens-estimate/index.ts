@@ -90,7 +90,8 @@ export function promptTokensEstimate({
       tool_choice === 'none'
         ? 1
         : stringTokens(
-            tool_choice?.function?.name || '',
+            (tool_choice as ChatCompletionNamedToolChoice)?.function?.name ||
+              '',
             useFastApproximation
           ) + 4;
   }
