@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.345"></a>
+## 0.1.345 (2024-05-15)
+
+### Miscellaneous
+
+- 🎸 new dashboard ui ([#379](https://github.com/gmpetrov/databerry/issues/379)) [[cc957e3](https://github.com/gmpetrov/databerry/commit/cc957e37b8c3595302364fee612df86633545bdf)]
+-  fix type [[1a060d6](https://github.com/gmpetrov/databerry/commit/1a060d6b122c265567081b466a6a6037133ce3d8)]
+
+
 <a name="0.1.344"></a>
 ## 0.1.344 (2024-05-13)
 
