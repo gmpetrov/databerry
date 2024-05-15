@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.346"></a>
+## 0.1.346 (2024-05-15)
+
+### Fixed
+
+- 🐛 layout issue [[687a26f](https://github.com/gmpetrov/databerry/commit/687a26fb7c3318d7363c305cf61195186c7de72a)]
+
+
 <a name="0.1.345"></a>
 ## 0.1.345 (2024-05-15)
 
