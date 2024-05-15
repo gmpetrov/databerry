@@ -95,7 +95,12 @@ export default function Navigation({
   }, [publicRuntimeConfig?.version, latestVersion]);
 
   return (
-    <Stack sx={{ borderRight: '1px solid', borderColor: 'divider' }}>
+    <Stack
+      sx={{
+        borderRight: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
       <Stack
         direction="row"
         minHeight="100%"
@@ -121,12 +126,12 @@ export default function Navigation({
           />
         )}
 
-        <Stack bgcolor="background.surface">
+        <Stack bgcolor="background.surface" sx={{ height: '100%' }}>
           {!open && (
             <Stack
               pt={1}
               alignItems="center"
-              className="relative h-full "
+              className="relative h-full"
               bgcolor="background.surface"
             >
               <div className="relative w-6 h-6">

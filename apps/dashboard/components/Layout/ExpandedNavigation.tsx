@@ -118,7 +118,10 @@ export default function ExpandedNavigation({
   });
   return (
     <>
-      <Stack className="overflow-y-auto px-4" bgcolor="background.surface">
+      <Stack
+        className="h-full px-4 overflow-y-auto"
+        bgcolor="background.surface"
+      >
         <List size="sm" sx={{ '--ListItem-radius': '8px' }}>
           <Stack
             direction="row"
