@@ -539,7 +539,7 @@ export default function Layout(props: Props) {
             <Stack
               sx={{
                 overflowY: 'auto',
-
+                height: '100%',
                 pt: 1,
                 px: 2,
               }}
