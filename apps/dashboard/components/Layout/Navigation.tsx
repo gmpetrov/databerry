@@ -95,7 +95,7 @@ export default function Navigation({
   }, [publicRuntimeConfig?.version, latestVersion]);
 
   return (
-    <Stack>
+    <Stack sx={{ borderRight: '1px solid', borderColor: 'divider' }}>
       <Stack
         direction="row"
         minHeight="100%"
@@ -129,7 +129,7 @@ export default function Navigation({
               className="relative h-full "
               bgcolor="background.surface"
             >
-              <div className="relative w-6 h-6 ml-1">
+              <div className="relative w-6 h-6">
                 <Image layout="fill" src="/logo.png" alt="Chaindesk" />
               </div>
               {[...appLinks, ...settingLinks, ...docLinks].map((link, i) => (
