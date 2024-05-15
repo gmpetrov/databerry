@@ -191,10 +191,16 @@ function ChatMessageComponent({
                   </Stack>
                 )}
               </ChatMessageCard>
-              <Stack>
-                <Stack gap={1} direction="row">
+              <Stack gap={1}>
+                <Stack
+                  gap={1}
+                  direction="row"
+                  sx={{
+                    pl: 1,
+                  }}
+                >
                   {message?.fromName && (
-                    <Typography level="body-xs" sx={{ opacity: '0.8', pl: 1 }}>
+                    <Typography level="body-xs" sx={{ opacity: '0.8' }}>
                       {message?.fromName}
                     </Typography>
                   )}
@@ -206,6 +212,41 @@ function ChatMessageComponent({
                       {`${dayjs((message as any)?.createdAt).fromNow()}`}
                     </Typography>
                   )}
+
+                  {message?.from === 'agent' &&
+                    message?.id &&
+                    !message?.disableActions &&
+                    !!message?.message && (
+                      <Stack
+                        direction="row"
+                        sx={{
+                          marginLeft: 'auto',
+                          mt: -0.5,
+                        }}
+                        // marginBottom={'auto'}
+                      >
+                        <CopyButton text={message?.message} />
+                        <EvalButton
+                          messageId={message?.id!}
+                          handleEvalAnswer={props.handleEvalAnswer}
+                          eval={message?.eval}
+                        />
+
+                        {props.handleImprove && (
+                          <Button
+                            size="sm"
+                            variant="plain"
+                            color="neutral"
+                            startDecorator={<SchoolTwoToneIcon />}
+                            onClick={() =>
+                              props.handleImprove?.(message, index)
+                            }
+                          >
+                            Improve
+                          </Button>
+                        )}
+                      </Stack>
+                    )}
                 </Stack>
               </Stack>
             </Stack>
@@ -218,38 +259,6 @@ function ChatMessageComponent({
               ))}
             </Stack>
           )}
-          {message?.from === 'agent' &&
-            message?.id &&
-            !message?.disableActions &&
-            !!message?.message && (
-              <Stack
-                direction="row"
-                sx={{
-                  marginLeft: 'auto',
-                  mt: -1,
-                }}
-                // marginBottom={'auto'}
-              >
-                <CopyButton text={message?.message} />
-                <EvalButton
-                  messageId={message?.id!}
-                  handleEvalAnswer={props.handleEvalAnswer}
-                  eval={message?.eval}
-                />
-
-                {props.handleImprove && (
-                  <Button
-                    size="sm"
-                    variant="plain"
-                    color="neutral"
-                    startDecorator={<SchoolTwoToneIcon />}
-                    onClick={() => props.handleImprove?.(message, index)}
-                  >
-                    Improve
-                  </Button>
-                )}
-              </Stack>
-            )}
         </Stack>
       </Stack>
     </Stack>
