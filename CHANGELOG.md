@@ -1,5 +1,17 @@
 # Changelog
 
+<a name="0.1.347"></a>
+## 0.1.347 (2024-05-15)
+
+### Fixed
+
+- 🐛 bubble top bar border [[8320ebc](https://github.com/gmpetrov/databerry/commit/8320ebc31f3f78ed6c8bc392f2f9817f2301305c)]
+
+### Miscellaneous
+
+-  bump [[08cbbef](https://github.com/gmpetrov/databerry/commit/08cbbefe9181c7a018b3b26390a7f5433ce943c0)]
+
+
 <a name="0.1.346"></a>
 ## 0.1.346 (2024-05-15)
 
