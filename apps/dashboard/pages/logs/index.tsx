@@ -2,20 +2,16 @@ import { CloseRounded } from '@mui/icons-material';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
 import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
-import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Notifications from '@mui/icons-material/Notifications';
-import QuickreplyIcon from '@mui/icons-material/Quickreply';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
 import {
-  Button,
-  ColorPaletteProp,
+  Breadcrumbs,
   Dropdown,
   IconButton,
-  Input,
   ListItemDecorator,
   Menu,
   MenuButton,
@@ -41,6 +37,7 @@ import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Tab, { tabClasses } from '@mui/joy/Tab';
 import Typography from '@mui/joy/Typography';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
@@ -66,6 +63,7 @@ import {
   generateActionFetcher,
   HTTP_METHOD,
 } from '@chaindesk/lib/swr-fetcher';
+import { RouteNames } from '@chaindesk/lib/types';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
 import {
   EvalSchema,
@@ -500,68 +498,43 @@ export default function LogsPage() {
             value={props.email}
           ></Input>
         )} */}
-
-        {/* {props.email && props.status === ConversationStatus.HUMAN_REQUESTED && (
-          <Button
-            size="sm"
-            color="neutral"
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href = `mailto:${props.email}`;
-            }}
-          >
-            Reply
-          </Button>
-        )} */}
-
-        {/* <Button
-          size="sm"
-          loading={isLoading}
-          color={
-            {
-              [ConversationStatus.RESOLVED]: 'danger',
-              [ConversationStatus.UNRESOLVED]: 'success',
-              [ConversationStatus.HUMAN_REQUESTED]: 'success',
-            }[props.status] as ColorPaletteProp
-          }
-          onClick={handleStatusChange}
-          endDecorator={
-            {
-              [ConversationStatus.RESOLVED]: (
-                <ArrowCircleRightRoundedIcon fontSize="sm" />
-              ),
-              [ConversationStatus.UNRESOLVED]: (
-                <CheckCircleRoundedIcon fontSize="sm" />
-              ),
-              [ConversationStatus.HUMAN_REQUESTED]: (
-                <CheckCircleRoundedIcon fontSize="sm" />
-              ),
-            }[props.status]
-          }
-        >
-          {
-            {
-              [ConversationStatus.RESOLVED]: 'Unresolve',
-              [ConversationStatus.UNRESOLVED]: 'Resolve',
-              [ConversationStatus.HUMAN_REQUESTED]: 'Resolve',
-            }[props.status]
-          }
-        </Button> */}
       </Stack>
     );
   }
 
   return (
-    <Stack gap={1} sx={{ height: 'calc(100vh - 175px)' }}>
-      {/* <Alert
-        variant="soft"
-        color="neutral"
-        startDecorator={<InfoRoundedIcon />}
+    <Stack
+      gap={1}
+      sx={{
+        position: 'relative',
+        maxHeight: 'calc(100dvh - 50px)',
+      }}
+    >
+      <Breadcrumbs
+        size="sm"
+        aria-label="breadcrumbs"
+        separator={<ChevronRightRoundedIcon />}
+        sx={{
+          '--Breadcrumbs-gap': '1rem',
+          '--Icon-fontSize': '16px',
+          fontWeight: 'lg',
+          color: 'neutral.400',
+          px: 0,
+        }}
       >
-        View all Agents conversations across all channels. Evaluate and improve
-        answers.
-      </Alert> */}
-
+        <Link href={RouteNames.HOME}>
+          <HomeRoundedIcon />
+        </Link>
+        <Link href={RouteNames.AGENTS}>
+          <Typography
+            fontSize="inherit"
+            color="neutral"
+            className="hover:underline"
+          >
+            Inbox
+          </Typography>
+        </Link>
+      </Breadcrumbs>
       <JoyTabs
         aria-label="tabs"
         value={(router.query.tab as string) || Tabs.all}
@@ -846,14 +819,21 @@ export default function LogsPage() {
           </SelectQueryParamFilter>
         </Stack>
         <Stack direction="row" spacing={2}>
-          <ConversationExport />
+          <ConversationExport
+            channel={router.query.channel as ConversationChannel}
+            agentId={router.query.agentId as string}
+            priority={router.query.priority as ConversationPriority}
+            assigneeId={router.query.assigneeId as string}
+          />
         </Stack>
       </Stack>
-
       <Sheet
         variant="outlined"
         sx={(theme) => ({
-          height: '100%',
+          position: 'relative',
+          height: 'calc(100dvh - 50px)',
+          maxHeight: 'calc(100dvh - 50px)',
+          overflow: 'hidden',
           borderRadius: 'sm',
           ml: 1,
         })}
@@ -1142,7 +1122,13 @@ export default function LogsPage() {
 
           <Divider orientation="vertical" />
           <Box
-            sx={{ width: '100%', height: '100%', overflow: 'hidden', pb: 9 }}
+            sx={{
+              width: '100%',
+              minHeight: '100%',
+              height: '100%',
+              position: 'relative',
+              pb: 7,
+            }}
           >
             {getConversationQuery.data && (
               <>
@@ -1193,7 +1179,15 @@ export default function LogsPage() {
               </>
             )}
 
-            <Stack direction="row" sx={{ height: '100%', width: '100%' }}>
+            <Stack
+              direction="row"
+              sx={{
+                position: 'relative',
+                height: '100%',
+                minHeight: '100%',
+                width: '100%',
+              }}
+            >
               <ChatBox
                 messages={
                   getConversationQuery?.data?.messages?.map((each) => ({
@@ -1203,6 +1197,7 @@ export default function LogsPage() {
                     metadata: each.metadata as any,
                     createdAt: each.createdAt,
                     eval: each.eval,
+                    conversationId: each.conversationId || '',
                     approvals: each.approvals || [],
                     sources: (each.sources as any) || [],
                     attachments: each.attachments || [],

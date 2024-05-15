@@ -65,7 +65,7 @@ export default function ChatPage() {
     handleLoadMoreMessages,
     setConversationId,
     conversationId: currentConversationId,
-    conversationStatus,
+    isStreaming,
     handleAbort,
     refreshConversation,
   } = useChat({
@@ -206,6 +206,7 @@ export default function ChatPage() {
   };
 
   const handleCreateNewChat = () => {
+    handleAbort();
     setConversationId('');
     setState({
       selectedKnowledgeOptions: [],
@@ -299,14 +300,6 @@ export default function ChatPage() {
       component="main"
       className="MainContent"
       sx={(theme) => ({
-        px: {
-          // xs: 2,
-        },
-        pb: {
-          // xs: 2,
-          // sm: 2,
-          // md: 3,
-        },
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
@@ -357,6 +350,7 @@ export default function ChatPage() {
               userImgUrl={session?.user?.image!}
               refreshConversation={refreshConversation}
               autoFocus
+              isStreaming={isStreaming}
             />
 
             {datasourceViewId && (
@@ -389,11 +383,3 @@ ChatPage.getLayout = function getLayout(page: ReactElement) {
     </Layout>
   );
 };
-
-// export const getServerSideProps = withAuth(
-//   async (ctx: GetServerSidePropsContext) => {
-//     return {
-//       props: {},
-//     };
-//   }
-// );

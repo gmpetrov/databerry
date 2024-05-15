@@ -122,7 +122,6 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
     visitorEmail,
     refreshConversation,
   } = methods;
-
   const hasCapturedLead =
     !!visitorEmail ||
     !!hasSubmittedForm ||
@@ -260,6 +259,7 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
         layoutClassName: props.className,
         containerSxProps: props.styles,
         chatBoxProps: {
+          isOpen: props.isOpen,
           messages: messages,
           onSubmit: handleChatSubmit,
           messageTemplates: config.messageTemplates,
@@ -275,7 +275,7 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
           withSources: !!agent?.includeSources,
           isAiEnabled: methods.isAiEnabled,
           disableWatermark: hideBranding,
-
+          isStreaming,
           readOnly: leadToolConfig?.isRequired && !hasCapturedLead,
           hideInternalSources: true,
           withFileUpload: true,

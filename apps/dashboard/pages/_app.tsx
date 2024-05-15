@@ -17,6 +17,7 @@ import { Toaster } from 'react-hot-toast';
 import Analytics from '@app/components/Analytics';
 import DefaultSEOTags from '@app/components/DefaultSEOTags';
 import SynchTailwindColorMode from '@app/components/SynchTailwindColorMode';
+import { NavbarProvider } from '@app/hooks/useNavbar';
 import {
   getProductFromHostname,
   ProductContext,
@@ -83,7 +84,9 @@ export default function App({
             <Toaster />
             <DefaultSEOTags />
             <SynchTailwindColorMode />
-            {getLayout(<Component {...pageProps} />)}
+            <NavbarProvider>
+              {getLayout(<Component {...pageProps} />)}
+            </NavbarProvider>
           </Analytics>
         </SessionProvider>
       </ThemeProvider>

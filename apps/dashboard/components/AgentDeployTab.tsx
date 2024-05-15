@@ -123,8 +123,7 @@ function AgentDeployTab(props: Props) {
         disableSubmitButton
         cardProps={{
           sx: {
-            maxWidth: 'md',
-            mx: 'auto',
+            maxWidth: '100%',
           },
         }}
       >

@@ -18,7 +18,7 @@ export default function Header(props: BoxProps) {
           gridColumn: '1 / -1',
           borderBottom: '1px solid',
           borderColor: 'divider',
-          position: 'sticky',
+          position: 'relative',
           top: 0,
           zIndex: 1100,
         },

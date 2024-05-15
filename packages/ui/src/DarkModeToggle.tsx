@@ -16,8 +16,8 @@ export default function DarkModeToggle(props: IconButtonProps) {
     <IconButton
       id="toggle-mode"
       size="sm"
-      variant="outlined"
-      color="primary"
+      variant="plain"
+      color="neutral"
       onClick={() => {
         if (mode === 'light') {
           setMode('dark');

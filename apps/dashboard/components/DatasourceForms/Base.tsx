@@ -76,7 +76,6 @@ const DatasourceText = (props: {
 
   return (
     <Textarea
-      // maxRows={21}
       minRows={4}
       disabled={props.disabled}
       {...methods.register('datasourceText')}
@@ -177,13 +176,6 @@ export default function BaseForm(props: Props) {
         }
       }
 
-      // const check = await axios.post('/api/datasources/check', payload);
-
-      // if (!check?.data?.valid) {
-      //   alert(check?.data?.message);
-      //   return;
-      // }
-
       const datasource = await upsertDatasourceMutation.trigger(payload as any);
 
       props?.onSubmitSuccess?.(datasource!);
@@ -234,13 +226,7 @@ export default function BaseForm(props: Props) {
 
         {props.children}
 
-        <details>
-          <summary>Advanced Settings</summary>
-
-          <Stack sx={{ pl: 2, pt: 2 }}>
-            <DatasourceTagsInput />
-          </Stack>
-        </details>
+        <DatasourceTagsInput />
 
         {!props.hideText && defaultValues?.datastoreId && defaultValues?.id && (
           <details>

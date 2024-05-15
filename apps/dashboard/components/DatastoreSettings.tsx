@@ -371,7 +371,8 @@ function DatastoreSettings() {
     <Box
       sx={(theme) => ({
         maxWidth: '100%',
-        width: theme.breakpoints.values.md,
+        width: '100%',
+        px: 4,
         mx: 'auto',
       })}
     >

@@ -28,16 +28,13 @@ function FormSettingsTab({ formId }: Props) {
         }
 
         return (
-          <Stack sx={{ width: '100%', maxWidth: 'md', mx: 'auto', gap: 2 }}>
+          <Stack sx={{ width: '100%', mx: 'auto', gap: 2 }}>
             <SettingCard
               title="General Settings"
-              // description="Deploy your agent with the following widgets or integrations"
               disableSubmitButton
               cardProps={{
                 sx: {
                   width: '100%',
-                  // maxWidth: 'md',
-                  // mx: 'auto',
                 },
               }}
             >

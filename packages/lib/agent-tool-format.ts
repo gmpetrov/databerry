@@ -62,7 +62,7 @@ export const agentToolConfig = {
   [ToolType.request_human]: {
     icon: '🙋‍♂️',
     title: '🙋‍♂️ Request Human',
-    description: `Agent can mark the conversation as resolved when relevant`,
+    description: `Agent can request a human intervention when user asks for it.`,
   },
   [ToolType.lead_capture]: {
     icon: '🎯',

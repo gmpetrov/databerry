@@ -32,7 +32,7 @@ function FormInstallTab({ formId }: Props) {
 `;
 
   return (
-    <Card sx={{ maxWidth: 'md', mx: 'auto' }}>
+    <Card sx={{ mx: 'auto' }}>
       <AccordionGroup size="lg">
         <Accordion defaultExpanded>
           <AccordionSummary>Web Component</AccordionSummary>

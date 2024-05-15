@@ -31,9 +31,8 @@ export default forwardRef(function SettingCard(props: Props, ref) {
         </CardOverflow>
       )}
       <Stack
-        spacing={2}
         {...props.stackProps}
-        sx={{ my: 1, height: '100%', width: '100%', ...props?.stackProps?.sx }}
+        sx={{ height: '100%', width: '100%', ...props?.stackProps?.sx }}
       >
         {props.children}
       </Stack>

@@ -8,7 +8,8 @@ export default function Main(props: BoxProps) {
       {...props}
       sx={[
         {
-          p: 2,
+          pt: 1,
+          px: 2,
         },
         ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
       ]}
