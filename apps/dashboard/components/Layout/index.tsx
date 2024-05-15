@@ -7,6 +7,7 @@ import FeedRoundedIcon from '@mui/icons-material/FeedRounded';
 import InboxRoundedIcon from '@mui/icons-material/InboxRounded';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import SmartToyRoundedIcon from '@mui/icons-material/SmartToyRounded';
@@ -45,6 +46,7 @@ import { fetcher } from '@chaindesk/lib/swr-fetcher';
 import { AppStatus, RouteNames } from '@chaindesk/lib/types';
 import { Prisma } from '@chaindesk/prisma';
 
+import Logo from '../Logo';
 import SEO from '../SEO';
 
 import ExpandedNavigation from './ExpandedNavigation';
@@ -449,8 +451,8 @@ export default function Layout(props: Props) {
           overflow: 'hidden',
         }}
       >
-        <IconButton
-          variant="outlined"
+        {/* <IconButton
+          variant="soft"
           size="sm"
           onClick={() => {
             setOpen(true);
@@ -459,13 +461,13 @@ export default function Layout(props: Props) {
           sx={{
             display: { sm: 'none' },
             marginTop: '0.6rem',
-            left: -10,
+            // left: -10,
             zIndex: 999,
             position: 'fixed',
           }}
         >
           <ArrowForwardIosIcon />
-        </IconButton>
+        </IconButton> */}
         <Navigation
           latestVersion={getStatusQuery?.data?.latestVersion}
           product={product}
@@ -487,9 +489,64 @@ export default function Layout(props: Props) {
             width: '100%',
 
             ...props.mainSxProps,
+            p: 0,
           }}
         >
-          {props.children}
+          <Stack sx={{ height: '100%' }}>
+            <Stack
+              direction={'row'}
+              sx={{
+                position: 'sticky',
+                width: '100%',
+
+                display: {
+                  sm: 'none',
+                  // borderBottom: '1px solid',
+                },
+                p: 1,
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                gap: 2,
+              }}
+            >
+              <IconButton
+                variant="outlined"
+                size="sm"
+                onClick={() => {
+                  setOpen(true);
+                  setDrawerOpen(true);
+                }}
+                sx={{}}
+              >
+                <MenuRoundedIcon />
+              </IconButton>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 1,
+                }}
+              >
+                <Logo className="w-10" />
+                <Typography component="h1" fontWeight="xl">
+                  Chaindesk
+                </Typography>
+              </Box>
+            </Stack>
+            <Stack
+              sx={{
+                overflowY: 'auto',
+
+                pt: 1,
+                px: 2,
+              }}
+            >
+              {props.children}
+            </Stack>
+          </Stack>
         </Main>
         <shareFeedbackModal.component
           dialogProps={{
