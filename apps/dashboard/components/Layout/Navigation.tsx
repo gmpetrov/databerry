@@ -148,7 +148,7 @@ export default function Navigation({
                       size="lg"
                       color={
                         (link as (typeof appLinks)[0])?.active
-                          ? 'success'
+                          ? 'primary'
                           : 'neutral'
                       }
                     >

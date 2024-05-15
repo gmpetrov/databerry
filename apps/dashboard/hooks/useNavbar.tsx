@@ -11,7 +11,7 @@ export const NavbarContext = createContext<NavbarContextValue>({
 });
 
 export const NavbarProvider = ({ children }: { children: ReactNode }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
 
   return (
     <NavbarContext.Provider value={{ open, setOpen }}>
