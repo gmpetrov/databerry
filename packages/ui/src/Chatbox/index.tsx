@@ -495,6 +495,13 @@ function ChatBox({
             {state.isLoading &&
               messages[messages.length - 1].from === 'human' && (
                 <Message
+                  cardProps={{
+                    variant: 'plain',
+                    sx: {
+                      background: 'none',
+                      p: 0,
+                    },
+                  }}
                   message={{
                     from: 'agent',
                     message: '',
@@ -514,7 +521,7 @@ function ChatBox({
           variant="soft"
           color="neutral"
           size="sm"
-          className="absolute right-1 rounded-full bottom-2 z-99"
+          className="absolute rounded-full right-1 bottom-2 z-99"
           onClick={() =>
             scrollableRef.current?.scrollTo({
               behavior: 'smooth',

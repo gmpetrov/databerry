@@ -1,49 +1,57 @@
-const Svg = () => (
-  <svg viewBox="0 0 32 24" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="0" cy="12" r="0" transform="translate(8 0)">
-      <animate
-        attributeName="r"
-        begin="0"
-        calcMode="spline"
-        dur="1.2s"
-        keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
-        keyTimes="0;0.2;0.7;1"
-        repeatCount="indefinite"
-        values="0; 4; 0; 0"
-      />
-    </circle>
-    <circle cx="0" cy="12" r="0" transform="translate(16 0)">
-      <animate
-        attributeName="r"
-        begin="0.3"
-        calcMode="spline"
-        dur="1.2s"
-        keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
-        keyTimes="0;0.2;0.7;1"
-        repeatCount="indefinite"
-        values="0; 4; 0; 0"
-      />
-    </circle>
-    <circle cx="0" cy="12" r="0" transform="translate(24 0)">
-      <animate
-        attributeName="r"
-        begin="0.6"
-        calcMode="spline"
-        dur="1.2s"
-        keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8"
-        keyTimes="0;0.2;0.7;1"
-        repeatCount="indefinite"
-        values="0; 4; 0; 0"
-      />
-    </circle>
-  </svg>
-);
+import { Box, Chip, Stack } from '@mui/joy';
+import React from 'react';
 
 const BubblesLoading = () => {
   return (
-    <div style={{ fill: 'ActiveBorder', height: 24, width: 32 }}>
-      <Svg />
-    </div>
+    <Chip
+      size="md"
+      sx={{ overflow: 'visible' }}
+      slotProps={{
+        label: {
+          sx: {
+            overflow: 'visible',
+          },
+        },
+      }}
+    >
+      <Stack
+        direction="row"
+        alignItems={'center'}
+        gap={0.5}
+        sx={{ overflow: 'visible' }}
+      >
+        <Box
+          className="animate-[bounce_1s_infinite]"
+          sx={(t) => ({
+            width: '9px',
+            height: '9px',
+            background: t.palette.neutral[400],
+            borderRadius: '100%',
+            opacity: 0.7,
+          })}
+        ></Box>
+        <Box
+          className="animate-[bounce_1s_infinite_-100ms]"
+          sx={(t) => ({
+            width: '9px',
+            height: '9px',
+            background: t.palette.neutral[400],
+            borderRadius: '100%',
+            opacity: 0.7,
+          })}
+        ></Box>
+        <Box
+          className="animate-[bounce_1s_infinite_-200ms]"
+          sx={(t) => ({
+            width: '9px',
+            height: '9px',
+            background: t.palette.neutral[400],
+            borderRadius: '100%',
+            opacity: 0.7,
+          })}
+        ></Box>
+      </Stack>
+    </Chip>
   );
 };
 

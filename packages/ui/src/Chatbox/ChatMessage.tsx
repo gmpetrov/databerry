@@ -18,6 +18,8 @@ import EvalButton from './EvalButton';
 import Button from '@mui/joy/Button';
 import Typography from '@mui/joy/Typography';
 import { motion } from 'framer-motion';
+import BubblesLoading from './Bubbles';
+import { CardProps } from '@mui/joy';
 
 type Props = {
   index?: number;
@@ -31,6 +33,7 @@ type Props = {
   organizationId?: string;
   withTextAnimation?: boolean;
   onTextAnimationComplete?: any;
+  cardProps?: CardProps;
 };
 
 function ChatMessageComponent({
@@ -40,6 +43,7 @@ function ChatMessageComponent({
   hideInternalSources,
   withTextAnimation,
   onTextAnimationComplete,
+  cardProps,
   ...props
 }: Props) {
   return (
@@ -70,57 +74,7 @@ function ChatMessageComponent({
         {/* )} */}
 
         <Stack gap={1} sx={{ maxWidth: '100%', overflow: 'hidden' }}>
-          {message?.step?.type === 'tool_call' && (
-            <Chip
-              size="md"
-              sx={{ overflow: 'visible' }}
-              slotProps={{
-                label: {
-                  sx: {
-                    overflow: 'visible',
-                  },
-                },
-              }}
-            >
-              <Stack
-                direction="row"
-                alignItems={'center'}
-                gap={0.5}
-                sx={{ overflow: 'visible' }}
-              >
-                <Box
-                  className="animate-[bounce_1s_infinite]"
-                  sx={(t) => ({
-                    width: '9px',
-                    height: '9px',
-                    background: t.palette.neutral[400],
-                    borderRadius: '100%',
-                    opacity: 0.7,
-                  })}
-                ></Box>
-                <Box
-                  className="animate-[bounce_1s_infinite_-100ms]"
-                  sx={(t) => ({
-                    width: '9px',
-                    height: '9px',
-                    background: t.palette.neutral[400],
-                    borderRadius: '100%',
-                    opacity: 0.7,
-                  })}
-                ></Box>
-                <Box
-                  className="animate-[bounce_1s_infinite_-200ms]"
-                  sx={(t) => ({
-                    width: '9px',
-                    height: '9px',
-                    background: t.palette.neutral[400],
-                    borderRadius: '100%',
-                    opacity: 0.7,
-                  })}
-                ></Box>
-              </Stack>
-            </Chip>
-          )}
+          {message?.step?.type === 'tool_call' && <BubblesLoading />}
 
           {message?.approvals?.length > 0 && (
             <Stack gap={1}>
@@ -143,7 +97,9 @@ function ChatMessageComponent({
                 )}
                 sx={{
                   mr: 'auto',
+                  ...cardProps?.sx,
                 }}
+                {...cardProps}
               >
                 {/* {message?.step?.type === 'tool_call' && (
 
