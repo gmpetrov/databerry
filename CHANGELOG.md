@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.348"></a>
+## 0.1.348 (2024-05-16)
+
+### Fixed
+
+- 🐛 chat message loading icon [[479450f](https://github.com/gmpetrov/databerry/commit/479450f806a29196e4541bf1413fdefc1aabe9ac)]
+
+
 <a name="0.1.347"></a>
 ## 0.1.347 (2024-05-15)
 
