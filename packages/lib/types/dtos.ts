@@ -212,6 +212,7 @@ export const CreateAttachmentSchema = z.object({
   size: z.number(),
   mimeType: z.string(),
 });
+
 export type CreateAttachmentSchema = z.infer<typeof CreateAttachmentSchema>;
 
 export const CreateContactSchema = z.object({

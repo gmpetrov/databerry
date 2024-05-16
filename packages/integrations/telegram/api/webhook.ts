@@ -5,13 +5,10 @@ import { NextApiResponse } from 'next';
 import ConversationManager from '@chaindesk/lib/conversation';
 import { ApiError, ApiErrorType } from '@chaindesk/lib/api-error';
 import prisma from '@chaindesk/prisma/client';
-import { ConversationChannel, MessageFrom } from '@chaindesk/prisma';
+import { ConversationChannel } from '@chaindesk/prisma';
 import { creatChatUploadKey } from '@chaindesk/lib/file-upload';
 import getFileExtFromMimeType from '@chaindesk/lib/get-file-ext-from-mime-type';
-import {
-  AddServiceProviderTelegramSchema,
-  CreateAttachmentSchema,
-} from '@chaindesk/lib/types/dtos';
+import { CreateAttachmentSchema } from '@chaindesk/lib/types/dtos';
 import handleChatMessage, {
   ChatAgentArgs,
   ChatConversationArgs,
@@ -24,69 +21,10 @@ import accountConfig from '@chaindesk/lib/account-config';
 
 const handler = createApiHandler();
 
-// Example body payload
-// const payload = {
-//   update_id: 881318137,
-//   message: {
-//     message_id: 16,
-//     from: {
-//       id: 6385627710,
-//       is_bot: false,
-//       first_name: 'Georges',
-//       last_name: 'PTRV',
-//       language_code: 'en',
-//     },
-//     chat: {
-//       id: 6385627710,
-//       first_name: 'Georges',
-//       last_name: 'PTRV',
-//       type: 'private',
-//     },
-//     date: 1712657283,
-//     document: {
-//       file_name: '1.jpg',
-//       mime_type: 'image/jpeg',
-//       thumbnail: {
-//         file_id:
-//           'AAMCBAADGQEAAxBmFROD5oENqy2GZKnsfX_cZspg9QACTRIAAmS_qFAvbgVh20e0eAEAB20AAzQE',
-//         file_unique_id: 'AQADTRIAAmS_qFBy',
-//         file_size: 12806,
-//         width: 320,
-//         height: 320,
-//       },
-//       thumb: {
-//         file_id:
-//           'AAMCBAADGQEAAxBmFROD5oENqy2GZKnsfX_cZspg9QACTRIAAmS_qFAvbgVh20e0eAEAB20AAzQE',
-//         file_unique_id: 'AQADTRIAAmS_qFBy',
-//         file_size: 12806,
-//         width: 320,
-//         height: 320,
-//       },
-//       file_id:
-//         'BQACAgQAAxkBAAMQZhUTg-aBDasthmSp7H1_3GbKYPUAAk0SAAJkv6hQL24FYdtHtHg0BA',
-//       file_unique_id: 'AgADTRIAAmS_qFA',
-//       file_size: 532335,
-//     },
-//     caption: 'test',
-//   },
-// };
-
-// Example header
-// const headers = {
-//   host: 'XXX',
-//   'content-length': '829',
-//   'accept-encoding': 'gzip, deflate',
-//   'content-type': 'application/json',
-//   'x-forwarded-for': 'XXX',
-//   'x-forwarded-host': 'XXX',
-//   'x-forwarded-proto': 'https',
-//   'x-telegram-bot-api-secret-token': 'XXX',
-//   'x-middleware-invoke': '',
-//   'x-invoke-path': '/api/integrations/telegram/webhook',
-//   'x-invoke-query': '%7B%7D',
-//   'x-invoke-output': '/api/integrations/[...args]',
-//   'x-forwarded-port': '3000',
-// };
+type ExtendedAttachmentSchema = CreateAttachmentSchema & {
+  messageId?: string;
+  conversationId?: string;
+};
 
 const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const [secret_key, externalId] = (
@@ -144,12 +82,66 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  const agent = provider!.agents[0];
-  const conversation = agent?.conversations?.[0];
-  const conversationId = conversation?.id || cuid();
-  let appContact = provider?.organization?.contacts?.[0];
+  let newContact = null;
+  if (message) {
+    const existingContact = await prisma.contact.findUnique({
+      where: {
+        unique_external_id_for_org: {
+          externalId: `${message?.from?.id}`,
+          organizationId: provider?.organizationId!,
+        },
+      },
+    });
 
-  const isPremium = provider?.organization?.subscriptions?.length;
+    if (!existingContact) {
+      newContact = await prisma.contact.create({
+        data: {
+          externalId: `${message?.from?.id}`,
+          firstName: message?.from?.first_name,
+          lastName: message?.from?.last_name,
+          organization: {
+            connect: {
+              id: provider?.organizationId!,
+            },
+          },
+        },
+      });
+    }
+  }
+
+  const agent = provider!.agents[0];
+
+  const chatId =
+    req?.body?.channel_post?.chat?.id ?? req?.body?.message?.chat?.id;
+
+  let conversation = await prisma.conversation.findUnique({
+    where: {
+      channelExternalId: `${chatId}`,
+    },
+  });
+
+  if (!conversation) {
+    conversation = await prisma.conversation.create({
+      data: {
+        channelExternalId: `${chatId}`,
+        organizationId: provider?.organizationId!,
+      },
+    });
+  }
+
+  const conversationManager = new ConversationManager({
+    channel: ConversationChannel.telegram,
+    conversationId: conversation.id,
+    organizationId: provider?.organizationId!,
+    channelCredentialsId: provider?.id,
+    channelExternalId: `${chatId}`,
+    metadata: {
+      message_id:
+        req?.body?.channel_post?.message_id ?? req.body?.message?.message_id,
+    },
+  });
+
+  const isPremium = (provider?.organization?.subscriptions?.length || 0) > 0;
 
   if (!isPremium) {
     throw new ApiError(ApiErrorType.PREMIUM_FEATURE);
@@ -194,7 +186,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     media = undefined;
   }
 
-  const attachments = [] as CreateAttachmentSchema[];
+  const attachments = [] as ExtendedAttachmentSchema[];
 
   // trick: use telegram storage for documents.
   if (document) {
@@ -215,6 +207,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       size: document?.file_size || 0,
       mimeType: document?.mime_type || 'unknown',
       url: fileResponse?.data?.responseUrl,
+      conversationId: conversation.id,
     });
   } else if (media) {
     const file_id = media?.file_id;
@@ -236,7 +229,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
     const fileKey = creatChatUploadKey({
       organizationId: agent?.organizationId!,
-      conversationId,
+      conversationId: conversation?.id,
       fileName,
     });
 
@@ -254,18 +247,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       size: media?.file_size || 0,
       mimeType,
       url,
-    });
-  }
-
-  if (!appContact) {
-    appContact = await prisma.contact.create({
-      data: {
-        externalId: `${message?.from?.id}`,
-        organizationId: provider?.organizationId!,
-        firstName: message?.from?.first_name,
-        lastName: message?.from?.last_name,
-        // metadata: getRequestLocation(req),
-      },
+      conversationId: conversation?.id,
     });
   }
 
@@ -273,59 +255,17 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     (req.body?.channel_post?.text || req?.body?.channel_post?.caption) ??
     (req.body?.message?.text || req.body?.message?.caption);
 
-  const chatId =
-    req?.body?.channel_post?.chat.id ?? // channel
-    req?.body?.message?.chat?.id; // direct message
-
   // consider AI enabled if conv is not found.
   const isAiEnabled = conversation?.isAiEnabled ?? true;
 
   // do not process a media-only message.
-  if (!query || !isAiEnabled) {
-    if (message?.media_group_id && attachments?.length > 0) {
-      const msg = await prisma.message.findFirst({
-        where: {
-          conversation: {
-            organizationId: provider?.organizationId!,
-          },
-          externalId: message?.media_group_id,
-        },
-      });
-
-      if (msg) {
-        await prisma.message.update({
-          where: {
-            id: msg.id,
-          },
-          data: {
-            attachments: {
-              createMany: {
-                data: attachments,
-              },
-            },
-          },
-        });
-      }
-    } else {
-      const conversationManager = new ConversationManager({
-        channelExternalId: `${chatId}`,
-        channel: ConversationChannel.telegram,
-        organizationId: provider?.organizationId!,
-        channelCredentialsId: provider?.id,
-        metadata: {
-          message_id:
-            req?.body?.channel_post?.message_id ??
-            req.body?.message?.message_id,
-        },
-      });
-
-      await conversationManager.createMessage({
-        attachments,
-        from: 'human',
-        text: query ?? '',
-        externalId: `${message?.media_group_id}`,
-      });
-    }
+  if (!isAiEnabled) {
+    await conversationManager.createMessage({
+      attacthments,
+      from: 'human',
+      text: query ?? '',
+      externalId,
+    });
 
     return { status: 200 };
   }
@@ -333,14 +273,12 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
   const chatResponse = await handleChatMessage({
     agent,
     channel: ConversationChannel.telegram,
+    conversation,
     channelExternalId: `${chatId}`,
     channelCredentialsId: provider?.id,
     attachments,
-    query,
-    contactId: appContact?.id,
-    externalMessageId: message?.media_group_id
-      ? `${message?.media_group_id}`
-      : undefined,
+    contactId: newContact?.id,
+    query: query ?? '',
   });
 
   const { answer, sources } = chatResponse?.agentResponse!;

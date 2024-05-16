@@ -163,7 +163,7 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
     method,
     loading: false,
     testResult: '',
-    responseStatus: '',
+    responseStatus: 200,
     isSnackBarOpen: false,
   });
 
@@ -244,12 +244,13 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
         body: state.body,
         headers: state.headers,
       });
+
       setState({
         responseStatus: response.data.status,
         testResult: '```\n' + JSON.stringify(response.data, null, 2) + '\n```',
       });
 
-      setToolValidState(response.data.status === 'OK' ? true : false);
+      setToolValidState(response.data.status === 200 ? true : false);
     } catch (e) {
       console.error(e);
     } finally {
@@ -336,7 +337,7 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
         <Stack sx={{ mt: 4 }} gap={1}>
           <Stack direction="row" gap={1} width="100%">
             <Typography level="body-sm">Test Result</Typography>
-            <Chip color={state.responseStatus === 'OK' ? 'success' : 'danger'}>
+            <Chip color={state.responseStatus === 200 ? 'success' : 'danger'}>
               {state.responseStatus}
             </Chip>
           </Stack>
@@ -349,13 +350,13 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={state.isSnackBarOpen}
         onClose={() => setState({ isSnackBarOpen: false })}
-        color={state.responseStatus === 'OK' ? 'success' : 'danger'}
+        color={state.responseStatus === 200 ? 'success' : 'danger'}
       >
-        {state.responseStatus === 'OK'
+        {state.responseStatus === 200
           ? 'Congratualations! yourt test succeeded, you can close this modal.'
           : 'Ouch! your test  failed :('}
 
-        {state.responseStatus === 'OK' && (
+        {state.responseStatus === 200 && (
           <Button
             size="sm"
             color="success"
