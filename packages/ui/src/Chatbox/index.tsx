@@ -20,7 +20,14 @@ import IconButton from '@mui/joy/IconButton';
 import Skeleton from '@mui/joy/Skeleton';
 import Stack from '@mui/joy/Stack';
 import Textarea from '@mui/joy/Textarea';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import InfiniteScroll from 'react-infinite-scroller';
 import { z } from 'zod';
@@ -213,7 +220,7 @@ function ChatBox({
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const t = setTimeout(() => {
       const msgs = (initialMessages || []).map(
         (each) =>
@@ -249,10 +256,7 @@ function ChatBox({
     }
   }, [messages?.[messages?.length - 1]?.message?.length]);
 
-  const conversationId = useMemo(
-    () => messages?.[0]?.conversationId || '',
-    [messages]
-  );
+  const conversationId = messages?.[0]?.conversationId;
 
   useEffect(() => {
     scrollableRef.current?.scrollTo({
@@ -270,7 +274,7 @@ function ChatBox({
     setState({ isLastMsgInView: true, wordCount: 0 });
   }, [conversationId, isOpen]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const t = setTimeout(() => {
       const msgs = (initialMessages || []).map(
         (each) =>
@@ -452,13 +456,10 @@ function ChatBox({
           }
         >
           <Stack gap={2}>
-            {messages?.length < 2 ? (
-              <AnimateMessagesOneByOne messages={state.firstMsgs} />
-            ) : (
-              state.firstMsgs?.map((each, index) => (
-                <Message key={index} message={each} />
-              ))
-            )}
+            <AnimateMessagesOneByOne
+              messages={state.firstMsgs}
+              shouldAnimate={messages.length < 2}
+            />
 
             {isLoadingConversation && messages?.length <= 0 && (
               <Stack gap={2}>
@@ -526,7 +527,7 @@ function ChatBox({
               !state.showAgentTyping && <Loader />}
 
             {state.showAgentTyping &&
-              messages[messages.length - 1]?.from === 'human' && (
+              messages?.[messages?.length - 1]?.from === 'human' && (
                 <Message
                   cardProps={{
                     variant: 'plain',
