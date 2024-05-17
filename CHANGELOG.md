@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.349"></a>
+## 0.1.349 (2024-05-17)
+
+### Fixed
+
+- 🐛 onCompositionStart [[bb1fc33](https://github.com/gmpetrov/databerry/commit/bb1fc33bd52e57fc7e4d95b0ab6e4488d0614236)]
+
+
 <a name="0.1.348"></a>
 ## 0.1.348 (2024-05-16)
 
