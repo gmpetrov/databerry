@@ -33,6 +33,7 @@ type Props = {
   organizationId?: string;
   withTextAnimation?: boolean;
   onTextAnimationComplete?: any;
+  shouldAnimate?: boolean;
   cardProps?: CardProps;
 };
 
@@ -43,6 +44,7 @@ function ChatMessageComponent({
   hideInternalSources,
   withTextAnimation,
   onTextAnimationComplete,
+  shouldAnimate = true,
   cardProps,
   ...props
 }: Props) {
@@ -55,8 +57,8 @@ function ChatMessageComponent({
         mr: message?.from === 'agent' ? 'auto' : 'none',
         ml: message?.from === 'human' ? 'auto' : 'none',
       }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={shouldAnimate ? { opacity: 0, y: 20 } : {}}
+      animate={shouldAnimate ? { opacity: 1, y: 0 } : {}}
     >
       <Stack
         sx={{
