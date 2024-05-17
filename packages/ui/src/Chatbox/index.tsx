@@ -30,6 +30,7 @@ import { AcceptedMimeTypes } from '@chaindesk/lib/accepted-mime-types';
 
 import { ChatMessage, MessageEvalUnion } from '@chaindesk/lib/types';
 import type { Source } from '@chaindesk/lib/types/document';
+import debounce from 'p-debounce';
 
 import AnimateMessagesOneByOne from '@chaindesk/ui/Chatbox/AnimateMessagesOneByOne';
 import Message from '@chaindesk/ui/Chatbox/ChatMessage';
@@ -136,6 +137,18 @@ function ChatBox({
   const scrollableRef = React.useRef<HTMLDivElement>(null);
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
+  const scrollToBottom = React.useCallback(
+    debounce(async () => {
+      requestAnimationFrame(() => {
+        scrollableRef?.current?.scrollTo({
+          top: scrollableRef?.current?.scrollHeight + 100,
+          behavior: 'smooth',
+        });
+      });
+    }, 50),
+    []
+  );
+
   const [state, setState] = useStateReducer({
     isLoading: false,
     isInKeyboadComposition: false,
@@ -146,6 +159,7 @@ function ChatBox({
     hideTemplateMessages: false,
     wordCount: 0,
     attachmentsForAI: [] as string[],
+    showAgentTyping: false,
   });
 
   const setFiles = useCallback((files: File[]) => {
@@ -177,6 +191,12 @@ function ChatBox({
         hideTemplateMessages: true,
         isTextAreaExpanded: false,
       });
+      setTimeout(() => {
+        setState({
+          showAgentTyping: true,
+        });
+        scrollToBottom();
+      }, 300);
       methods.reset();
       await onSubmit({
         query,
@@ -186,7 +206,7 @@ function ChatBox({
       setState({ files: [] });
     } catch (err) {
     } finally {
-      setState({ isLoading: false });
+      setState({ isLoading: false, showAgentTyping: false });
     }
   };
 
@@ -492,7 +512,7 @@ function ChatBox({
                 </div>
               ))}
 
-            {state.isLoading &&
+            {state.showAgentTyping &&
               messages[messages.length - 1].from === 'human' && (
                 <Message
                   cardProps={{
