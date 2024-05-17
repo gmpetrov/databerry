@@ -54,7 +54,6 @@ import DraftReplyInput from '@app/components/DarftReplyInput';
 import ImproveAnswerModal from '@app/components/ImproveAnswerModal';
 import InboxConversationSettings from '@app/components/InboxConversationSettings';
 import Layout from '@app/components/Layout';
-import { updateConversationStatus } from '@app/components/ResolveButton';
 
 // import { client as crispClient } from '@chaindesk/lib/crisp';
 import relativeDate from '@chaindesk/lib/relative-date';
@@ -79,6 +78,7 @@ import {
   Prisma,
 } from '@chaindesk/prisma';
 import ChatBox from '@chaindesk/ui/Chatbox';
+import { updateConversationStatus } from '@chaindesk/ui/Chatbox/Actions/ResolveButton';
 import { handleEvalAnswer } from '@chaindesk/ui/hooks/useChat';
 import useFileUpload from '@chaindesk/ui/hooks/useFileUpload';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
