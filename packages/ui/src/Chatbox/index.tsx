@@ -739,6 +739,9 @@ function ChatBox({
                   textarea: {
                     id: 'chatbox-input',
                     ref: textAreaRef,
+                    sx: {
+                      my: 'auto',
+                    },
                   },
                 }}
                 maxRows={24}
