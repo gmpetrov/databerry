@@ -177,6 +177,8 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
       each?.type === ToolType.request_human ||
       each?.type === ToolType.mark_as_resolved
     ) {
+      return false; // Disable for all channels as we swtiched back to UI buttons for now.
+
       // Disabled for the following channels
       if ([ConversationChannel.crisp].includes(channel as any)) {
         return false;

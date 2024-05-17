@@ -92,6 +92,7 @@ export type ChatBoxProps = {
   isOpen?: boolean;
   fromDashboard?: boolean;
   conversationAttachments?: Attachment[];
+  actions?: JSX.Element;
 };
 
 const Schema = z.object({ query: z.string().min(1) });
@@ -132,6 +133,7 @@ function ChatBox({
   conversationAttachments,
   fromDashboard,
   isOpen,
+  actions,
 }: ChatBoxProps) {
   const chatboxRef = React.useRef<HTMLDivElement>(null);
   const scrollableRef = React.useRef<HTMLDivElement>(null);
@@ -512,8 +514,12 @@ function ChatBox({
                 </div>
               ))}
 
+            {!isStreaming &&
+              messages[messages.length - 1]?.from === 'agent' &&
+              actions}
+
             {state.showAgentTyping &&
-              messages[messages.length - 1].from === 'human' && (
+              messages[messages.length - 1]?.from === 'human' && (
                 <Message
                   cardProps={{
                     variant: 'plain',
@@ -680,14 +686,6 @@ function ChatBox({
                   ))}
                 </Stack>
                 <Stack gap={1}>
-                  <Alert
-                    color="warning"
-                    size="sm"
-                    startDecorator={<ErrorRoundedIcon />}
-                  >
-                    Image, audio and video files are not supported by the AI.
-                    Unsupported files will not be processed by the AI.
-                  </Alert>
                   {fromDashboard && (
                     <Alert
                       color="primary"

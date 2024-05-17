@@ -2,14 +2,15 @@ import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Button, Chip, CircularProgress, ExtendButton } from '@mui/joy';
 import { SxProps } from '@mui/joy/styles/types';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import useConfetti from '@app/hooks/useConfetti';
+import useConfetti from '@chaindesk/ui/hooks/useConfetti';
 
 import i18n from '@chaindesk/lib/locales/i18next';
 import type { ConversationStatus } from '@chaindesk/prisma';
 import { API_URL } from '@chaindesk/ui/embeds/chat-bubble';
+import { ChatContext } from '@chaindesk/ui/hooks/useChat';
 
 export const updateConversationStatus = async (
   conversationId: string,
@@ -30,19 +31,14 @@ export const updateConversationStatus = async (
   return response;
 };
 
-const ResolveButton = ({
-  conversationId,
-  conversationStatus,
-  createNewConversation,
-  refreshConversation,
-  sx,
-}: {
-  conversationId: string;
-  conversationStatus: ConversationStatus;
-  createNewConversation(): void;
-  refreshConversation(): void;
-  sx?: SxProps;
-}) => {
+const ResolveButton = ({ sx }: { sx?: SxProps }) => {
+  const {
+    conversationId,
+    conversationStatus,
+    refreshConversation,
+    createNewConversation,
+  } = useContext(ChatContext);
+
   const [pending, setPending] = useState(false);
   const { t } = useTranslation('', { i18n });
   const triggerConfetti = useConfetti({
@@ -52,12 +48,13 @@ const ResolveButton = ({
     try {
       setPending(true);
       const response = await updateConversationStatus(conversationId, status);
+      await refreshConversation();
+
       if (response.ok) {
         if (status === 'RESOLVED') {
-          createNewConversation();
+          // createNewConversation();
           triggerConfetti();
         } else {
-          await refreshConversation();
         }
       }
     } catch (e) {
@@ -66,15 +63,17 @@ const ResolveButton = ({
     }
   };
 
-  return (
+  return conversationStatus !== 'RESOLVED' ? (
     <Button
       size="sm"
-      variant="plain"
+      variant="outlined"
+      // @ts-ignore
       color={conversationStatus === 'RESOLVED' ? 'danger' : 'success'}
       startDecorator={
         pending ? (
           <CircularProgress />
-        ) : conversationStatus !== 'RESOLVED' ? (
+        ) : // @ts-ignore
+        conversationStatus !== 'RESOLVED' ? (
           <CheckCircleIcon />
         ) : (
           <CancelRoundedIcon />
@@ -82,15 +81,18 @@ const ResolveButton = ({
       }
       sx={{ whiteSpace: 'nowrap', ...sx }}
       onClick={
+        // @ts-ignore
         conversationStatus !== 'RESOLVED'
           ? () => handleUpdateStatus('RESOLVED')
           : () => handleUpdateStatus('UNRESOLVED')
       }
     >
+      {/* @ts-ignore */}
       {conversationStatus === 'RESOLVED' && 'Mark as Unresolved'}
+      {/* @ts-ignore */}
       {conversationStatus !== 'RESOLVED' && t('chatbubble:actions:resolve')}
     </Button>
-  );
+  ) : null;
 };
 
 export default ResolveButton;

@@ -9,6 +9,7 @@ import { InitWidgetProps } from '@chaindesk/ui/embeds/types';
 import useAgent from '@chaindesk/ui/hooks/useAgent';
 import useChat, { ChatContext } from '@chaindesk/ui/hooks/useChat';
 import LeadForm from '@chaindesk/ui/LeadForm';
+import Actions from './Chatbox/Actions';
 
 const defaultAgentIconUrl = `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/images/chatbubble-default-icon-sm.gif`;
 
@@ -122,6 +123,21 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
     visitorEmail,
     refreshConversation,
   } = methods;
+  const hasMarkAsResolvedTool = useMemo(
+    () =>
+      !!((agent as any)?.tools as Tool[])?.find(
+        (one) => one?.type === 'mark_as_resolved'
+      ),
+    [agent]
+  );
+  const hasRequestHumanTool = useMemo(
+    () =>
+      !!((agent as any)?.tools as Tool[])?.find(
+        (one) => one?.type === 'request_human'
+      ),
+    [agent]
+  );
+
   const hasCapturedLead =
     !!visitorEmail ||
     !!hasSubmittedForm ||
@@ -280,6 +296,12 @@ function ChatBoxLoader(props: ChatBoxStandardProps) {
           hideInternalSources: true,
           withFileUpload: true,
           conversationAttachments,
+          actions: (
+            <Actions
+              withHumanRequested={hasRequestHumanTool}
+              withMarkAsResolved={hasMarkAsResolvedTool}
+            />
+          ),
         },
       } as ChatBaseProps)}
     </ChatContext.Provider>

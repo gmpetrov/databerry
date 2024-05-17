@@ -42,6 +42,7 @@
     "react": "18.2.0",
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
+    "react-frame-component": "^5.2.6",
     "react-hook-form": "^7.51.0",
     "react-hot-toast": "^2.4.1",
     "react-i18next": "^13.3.1",

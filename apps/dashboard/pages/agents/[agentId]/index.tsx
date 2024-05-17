@@ -44,8 +44,10 @@ import agentToolFormat, {
 } from '@chaindesk/lib/agent-tool-format';
 import { ModelConfig } from '@chaindesk/lib/config';
 import { RouteNames } from '@chaindesk/lib/types';
+import { Tool } from '@chaindesk/prisma';
+import Actions from '@chaindesk/ui/Chatbox/Actions';
 import useAgent from '@chaindesk/ui/hooks/useAgent';
-import useChat from '@chaindesk/ui/hooks/useChat';
+import useChat, { ChatContext } from '@chaindesk/ui/hooks/useChat';
 import useStateReducer from '@chaindesk/ui/hooks/useStateReducer';
 import Loader from '@chaindesk/ui/Loader';
 
@@ -62,6 +64,28 @@ export default function AgentPage() {
     id: router.query?.agentId as string,
   });
 
+  const methods = useChat({
+    channel: 'dashboard',
+    endpoint: router.query?.agentId
+      ? `/api/agents/${router.query?.agentId}/query`
+      : undefined,
+  });
+
+  const hasMarkAsResolvedTool = React.useMemo(
+    () =>
+      !!((query.data as any)?.tools as Tool[])?.find(
+        (one) => one?.type === 'mark_as_resolved'
+      ),
+    [query.data]
+  );
+  const hasRequestHumanTool = React.useMemo(
+    () =>
+      !!((query.data as any)?.tools as Tool[])?.find(
+        (one) => one?.type === 'request_human'
+      ),
+    [query.data]
+  );
+
   const {
     history,
     handleChatSubmit,
@@ -75,12 +99,7 @@ export default function AgentPage() {
     refreshConversation,
     isStreaming,
     conversationAttachments,
-  } = useChat({
-    channel: 'dashboard',
-    endpoint: router.query?.agentId
-      ? `/api/agents/${router.query?.agentId}/query`
-      : undefined,
-  });
+  } = methods;
 
   const handleChangeTab = (tab: string) => {
     router.query.tab = tab;
@@ -290,31 +309,39 @@ export default function AgentPage() {
               }}
               gap={1}
             >
-              <ChatSection
-                agentId={agentId}
-                organizationId={query?.data?.organizationId}
-                handleSelectConversation={handleSelectConversation}
-                currentConversationId={conversationId}
-                handleCreateNewChat={handleCreateNewChat}
-                disableWatermark
-                messages={history}
-                onSubmit={handleChatSubmit}
-                agentIconUrl={query?.data?.iconUrl!}
-                isLoadingConversation={isLoadingConversation}
-                hasMoreMessages={hasMoreMessages}
-                handleLoadMoreMessages={handleLoadMoreMessages}
-                handleEvalAnswer={handleEvalAnswer}
-                handleAbort={handleAbort}
-                userImgUrl={session?.user?.image!}
-                refreshConversation={refreshConversation}
-                withSources={!!query?.data?.includeSources}
-                autoFocus
-                isStreaming={isStreaming}
-                withFileUpload
-                conversationAttachments={conversationAttachments}
-                isAiEnabled
-                fromDashboard
-              />
+              <ChatContext.Provider value={methods}>
+                <ChatSection
+                  agentId={agentId}
+                  organizationId={query?.data?.organizationId}
+                  handleSelectConversation={handleSelectConversation}
+                  currentConversationId={conversationId}
+                  handleCreateNewChat={handleCreateNewChat}
+                  disableWatermark
+                  messages={history}
+                  onSubmit={handleChatSubmit}
+                  agentIconUrl={query?.data?.iconUrl!}
+                  isLoadingConversation={isLoadingConversation}
+                  hasMoreMessages={hasMoreMessages}
+                  handleLoadMoreMessages={handleLoadMoreMessages}
+                  handleEvalAnswer={handleEvalAnswer}
+                  handleAbort={handleAbort}
+                  userImgUrl={session?.user?.image!}
+                  refreshConversation={refreshConversation}
+                  withSources={!!query?.data?.includeSources}
+                  autoFocus
+                  isStreaming={isStreaming}
+                  withFileUpload
+                  conversationAttachments={conversationAttachments}
+                  isAiEnabled
+                  fromDashboard
+                  actions={
+                    <Actions
+                      withHumanRequested={hasRequestHumanTool}
+                      withMarkAsResolved={hasMarkAsResolvedTool}
+                    />
+                  }
+                />
+              </ChatContext.Provider>
 
               {(query?.data?.tools?.length || 0) > 0 && (
                 <Box

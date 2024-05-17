@@ -57,12 +57,14 @@ export const agentToolConfig = {
   [ToolType.mark_as_resolved]: {
     icon: '✅',
     title: '✅ Mark as Resolved',
-    description: `Agent can mark the conversation as resolved when relevant`,
+    // description: `Agent can mark the conversation as resolved when relevant`,
+    description: `User can mark the conversation as resolved `,
   },
   [ToolType.request_human]: {
     icon: '🙋‍♂️',
     title: '🙋‍♂️ Request Human',
-    description: `Agent can request a human intervention when user asks for it.`,
+    // description: `Agent can request a human intervention when user asks for it.`,
+    description: `User can request a human operator.`,
   },
   [ToolType.lead_capture]: {
     icon: '🎯',
