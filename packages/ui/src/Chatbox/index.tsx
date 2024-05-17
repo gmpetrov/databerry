@@ -164,7 +164,7 @@ function ChatBox({
 
   const toogleKeyboardComposition = useCallback(() => {
     setState({ isInKeyboadComposition: !state.isInKeyboadComposition });
-  }, []);
+  }, [state.isInKeyboadComposition]);
 
   const submit = async ({ query }: z.infer<typeof Schema>) => {
     if (state.isLoading || state.isInKeyboadComposition) {
