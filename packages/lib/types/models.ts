@@ -268,11 +268,11 @@ export const AgentInterfaceConfig = z.object({
   rateLimit: z
     .object({
       enabled: z.boolean().optional(),
-      maxQueries: z
+      maxQueries: z.coerce
         .number()
         .or(z.string().pipe(z.coerce.number().positive()))
         .optional(),
-      interval: z
+      interval: z.coerce
         .number()
         .or(z.string().pipe(z.coerce.number().positive()))
         .optional(),
