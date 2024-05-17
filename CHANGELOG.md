@@ -1,15 +1,17 @@
 # Changelog
 
-<a name="0.1.350"></a>
-## 0.1.350 (2024-05-17)
+<a name="0.1.351"></a>
+## 0.1.351 (2024-05-17)
 
 ### Fixed
 
+- 🐛 fix alignemnt text area [[9c4571d](https://github.com/gmpetrov/databerry/commit/9c4571dfd44cc96c6dcbf6db820ee3f0163da414)]
 - 🐛 rate limit input validation coerce [[78e3b16](https://github.com/gmpetrov/databerry/commit/78e3b162b7843c2cc370b11301e23f827f12d8c2)]
 - 🐛 vision [[073f8e5](https://github.com/gmpetrov/databerry/commit/073f8e5e5c44feafcfcb5539c4354ebf2dbdd400)]
 
 ### Miscellaneous
 
+-  Release 0.1.350 [[e4ab3e2](https://github.com/gmpetrov/databerry/commit/e4ab3e288c597356cdb3cf4d4cb405fb8cd75224)]
 -  bump [[8bc89cc](https://github.com/gmpetrov/databerry/commit/8bc89cc3ca4d84aceaa689d7ac38fa6add680557)]
 - 🎸 bring back ui button for request human + resolve [[2e6fcf8](https://github.com/gmpetrov/databerry/commit/2e6fcf820754679c77ff315035e86eda5450f9dc)]
 -  add delay to agent typing indicator [[b4398eb](https://github.com/gmpetrov/databerry/commit/b4398eb6ebf417996ea5b28f685cdc558dddbf39)]
