@@ -315,7 +315,12 @@ async function handleChatMessage({ agent, conversation, ...data }: Props) {
     const imageBuffer = await image.arrayBuffer();
 
     return `data:${contentType};base64,${Buffer.from(
-      await sharp(imageBuffer).resize(50, 50).toBuffer()
+      await sharp(imageBuffer)
+        .resize({
+          fit: sharp.fit.contain,
+          width: 100,
+        })
+        .toBuffer()
     ).toString('base64')}`;
   };
 

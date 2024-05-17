@@ -162,9 +162,8 @@ export default function ModelInput({}: Props) {
           sx={{ mb: 1 }}
           color="warning"
         >
-          For better results, consider using gpt-4-turbo as it gives more
-          accurate responses and adheres to prompt instructions more
-          effectively.
+          For better results, consider using gpt-4o as it gives more accurate
+          responses and adheres to prompt instructions more effectively.
         </Alert>
 
         <Select

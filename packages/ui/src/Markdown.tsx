@@ -33,7 +33,7 @@ function Markdown({
         {...otherProps}
         className={clsx(
           'prose-sm prose dark:prose-invert',
-          'text-sm break-words prose-p:leading-relaxed prose-pre:p-0 prose-code:before:hidden prose-code:after:hidden',
+          'text-sm break-words prose-p:leading-relaxed prose-pre:p-0 prose-code:before:hidden prose-code:after:hidden prose-hr:my-4',
           'max-w-full',
           className
         )}

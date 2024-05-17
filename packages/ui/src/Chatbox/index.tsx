@@ -47,6 +47,7 @@ import type { Attachment } from '@chaindesk/prisma';
 import useFileUpload from '../hooks/useFileUpload';
 import Typography from '@mui/joy/Typography';
 import { Card } from '@mui/joy';
+import Loader from '../Loader';
 
 export type ChatBoxProps = {
   messages: ChatMessage[];
@@ -239,7 +240,7 @@ function ChatBox({
       45
     ) {
       scrollableRef.current?.scrollTo({
-        behavior: 'smooth',
+        // behavior: 'smooth',
         top: scrollableRef.current?.scrollHeight + 100,
       });
       setState({
@@ -515,8 +516,14 @@ function ChatBox({
               ))}
 
             {!isStreaming &&
+              !state.isLoading &&
               messages[messages.length - 1]?.from === 'agent' &&
               actions}
+
+            {/* Show loader when file uploading (otherwise agent typing ) */}
+            {state.files?.length > 0 &&
+              state.isLoading &&
+              !state.showAgentTyping && <Loader />}
 
             {state.showAgentTyping &&
               messages[messages.length - 1]?.from === 'human' && (
@@ -685,7 +692,7 @@ function ChatBox({
                     </Chip>
                   ))}
                 </Stack>
-                <Stack gap={1}>
+                {/* <Stack gap={1}>
                   {fromDashboard && (
                     <Alert
                       color="primary"
@@ -696,7 +703,7 @@ function ChatBox({
                       (GPT-4 Turbo, Claude 3)
                     </Alert>
                   )}
-                </Stack>
+                </Stack> */}
               </Stack>
             )}
 
