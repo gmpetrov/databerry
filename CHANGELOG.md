@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="0.1.352"></a>
+## 0.1.352 (2024-05-20)
+
+### Fixed
+
+- 🐛 cusotm icon chatbuble header [[8b8769a](https://github.com/gmpetrov/databerry/commit/8b8769ad07b3accf70e928a4c2a01457278e9cbd)]
+
+### Miscellaneous
+
+-  bump [[3cb9504](https://github.com/gmpetrov/databerry/commit/3cb9504958ae3948eaec612d1befd26aa0c02af7)]
+-  fix: remove flickering [[c33eefa](https://github.com/gmpetrov/databerry/commit/c33eefaf9a9af654c61f60d1e5b4b82eaecbdc9d)]
+
+
 <a name="0.1.351"></a>
 ## 0.1.351 (2024-05-17)
 
