@@ -64,6 +64,7 @@ function Standard({
             className: cn(mode, layoutClassName),
             agentId: agentId,
             config: interfaceConfig,
+            agentIconUrl,
           }
         : {})}
     >
