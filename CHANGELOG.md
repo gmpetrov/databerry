@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.353"></a>
+## 0.1.353 (2024-05-24)
+
+### Fixed
+
+- 🐛 loading state signin button [[bc64603](https://github.com/gmpetrov/databerry/commit/bc646036293c83aa001b7a552cad95c523b77568)]
+
+
 <a name="0.1.352"></a>
 ## 0.1.352 (2024-05-20)
 
