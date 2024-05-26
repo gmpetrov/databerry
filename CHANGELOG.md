@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.354"></a>
+## 0.1.354 (2024-05-26)
+
+### Miscellaneous
+
+- 🤖 add min tls version for ses [[8272004](https://github.com/gmpetrov/databerry/commit/8272004db055f1107414e7abe3d736b08349b8c0)]
+
+
 <a name="0.1.353"></a>
 ## 0.1.353 (2024-05-24)
 
