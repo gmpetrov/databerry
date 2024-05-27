@@ -26,7 +26,7 @@ export type FormToolPayload = Record<string, unknown>;
 export const toJsonSchema = ((tool: FormToolSchema) => {
   const form = tool.form as Form;
   return {
-    name: `share-form-${slugify(form.name)}`,
+    name: `${slugify(form.name)}-form`,
     description: `${(tool.config as any)?.trigger}`,
   };
 }) as any;
