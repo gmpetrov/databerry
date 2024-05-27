@@ -27,9 +27,7 @@ export const toJsonSchema = ((tool: FormToolSchema) => {
   const form = tool.form as Form;
   return {
     name: `share-form-${slugify(form.name)}`,
-    description: `Generally, This is a tool that prompt the user with a form. ** Importantly **: ${
-      (tool.config as any)?.trigger
-    }`,
+    description: `${(tool.config as any)?.trigger}`,
   };
 }) as any;
 
