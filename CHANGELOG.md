@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.359"></a>
+## 0.1.359 (2024-05-27)
+
+### Miscellaneous
+
+- 🤖 update message tempaltes dashboad [[b45531a](https://github.com/gmpetrov/databerry/commit/b45531a51c149fc0175794711c4bd7952578569c)]
+
+
 <a name="0.1.358"></a>
 ## 0.1.358 (2024-05-27)
 
