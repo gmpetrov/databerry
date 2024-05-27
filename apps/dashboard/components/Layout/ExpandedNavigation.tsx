@@ -195,7 +195,7 @@ export default function ExpandedNavigation({
                   ],
                   messageTemplates: [
                     "🐛 Bug Report",
-                    "🤔 Missing Feature",
+                    "💬 Product Feedback",
                     "❤️ I Love Chaindesk",
                   ]
                 } 
