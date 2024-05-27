@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.355"></a>
+## 0.1.355 (2024-05-27)
+
+### Miscellaneous
+
+- 🤖 bump next-auth [[a54e5cc](https://github.com/gmpetrov/databerry/commit/a54e5cc563ac860aa7a72f2d3500909795773155)]
+
+
 <a name="0.1.354"></a>
 ## 0.1.354 (2024-05-26)
 
