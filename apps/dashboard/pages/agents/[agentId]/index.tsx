@@ -401,9 +401,9 @@ export default function AgentPage() {
                               case 'lead_capture':
                                 return 'warning';
                               case 'http':
-                              case 'mark_as_resolved':
+                              // case 'mark_as_resolved':
                               case 'form':
-                              case 'request_human':
+                                // case 'request_human':
                                 return ModelConfig[
                                   query?.data?.modelName as AgentModelName
                                 ].isToolCallingSupported
@@ -490,9 +490,9 @@ export default function AgentPage() {
 
                               {[
                                 'http',
-                                'mark_as_resolved',
+                                // 'mark_as_resolved',
                                 'form',
-                                'request_human',
+                                // 'request_human',
                               ].includes(tool.type) &&
                                 !ModelConfig[
                                   query?.data?.modelName as AgentModelName

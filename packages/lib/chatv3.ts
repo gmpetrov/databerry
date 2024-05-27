@@ -296,7 +296,7 @@ const chat = async ({
   const truncatedHistory = (
     await truncateChatMessages({
       messages: formatMessagesOpenAI(history || []).reverse(),
-      maxTokens: ModelConfig[modelName]?.maxTokens * 0.3, // 30% tokens limit for history
+      maxTokens: Math.min(ModelConfig[modelName]?.maxTokens * 0.3, 2000), // 30% tokens limit for history - max 2000 tokens
     })
   ).reverse();
 
@@ -360,7 +360,7 @@ const chat = async ({
     }
     ${
       useLanguageDetection
-        ? `Answer the users question in the same language as the user question. You can speak all languages.`
+        ? `You are allowed to speak all languages but answer the user's question in the same language it is asked.`
         : ``
     }
     ${
@@ -371,7 +371,6 @@ const chat = async ({
     }
     ${!!markAsResolvedTool ? markAsResolvedInstructions : ``}
     ${!!requestHumanTool ? requestHumanInstructions : ``}
-    ${nbDatastoreTools > 0 ? `Knowledge Base: ${retrievalData?.context}` : ``}
     `.trim();
 
     const userMessage = promptInject({
@@ -394,11 +393,11 @@ const chat = async ({
           ? ([
               {
                 role: 'user',
-                content: `Only use previous message to answer my questions. If information to answer my question is not relevant, politely say that you do not know using same the question is asked. I do not want to see misleading answers. Don't try to make up an answer.`,
+                content: `Only use informations from this conversation (and the previous message) to answer my questions. If you don't have enough information to answer my questions from this conversation (and the previous message), politely say that you do not know using same language the question is asked. I do not want to see misleading answers. Don't try to make up an answer.`,
               },
               {
                 role: 'assistant',
-                content: `Ok I will follow your instructions carefully. I will only use the knowledge base you provided to answer your questions. If informations to answer your questions can't be found in the knowledge base or if informations are not complete enough I will politely say that I do not know using the same language the question is asked. I will not generate misleading answers. I will not try to make up an answer.`,
+                content: `Ok I will follow your instructions carefully. I will only use the current conversation to answer your questions. If informations to answer your questions can't be found in conversation or if informations are not complete enough I will politely say that I do not know using the same language the question is asked. I will not generate misleading answers. I will not try to make up an answer.`,
               },
             ] as ChatCompletionMessageParam[])
           : ([] as ChatCompletionMessageParam[])
@@ -419,6 +418,15 @@ const chat = async ({
               ]
             : userMessage,
       },
+      ...(nbDatastoreTools > 0
+        ? [
+            {
+              role: 'function' as any,
+              name: 'queryKnowledgeBase',
+              content: `Knowledge Base: ${retrievalData?.context}`,
+            },
+          ]
+        : []),
     ];
 
     const openAiTools = [
