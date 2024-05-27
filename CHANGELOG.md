@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.358"></a>
+## 0.1.358 (2024-05-27)
+
+### Fixed
+
+- 🐛 form tool not working properly with RAG [[efb84f8](https://github.com/gmpetrov/databerry/commit/efb84f84a2b9eb24e6381ca1f80d0ab0c53a57b4)]
+
+
 <a name="0.1.357"></a>
 ## 0.1.357 (2024-05-27)
 
