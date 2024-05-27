@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.356"></a>
+## 0.1.356 (2024-05-27)
+
+### Fixed
+
+- 🐛 form tool broken [[ddc0a69](https://github.com/gmpetrov/databerry/commit/ddc0a69d7566f177ae1d31e4f8e33bdc4d3e1516)]
+
+
 <a name="0.1.355"></a>
 ## 0.1.355 (2024-05-27)
 
