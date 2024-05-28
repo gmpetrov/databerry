@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.360"></a>
+## 0.1.360 (2024-05-28)
+
+### Fixed
+
+- 🐛 broken email inbox after switching mail provider [[027e757](https://github.com/gmpetrov/databerry/commit/027e75728d3410dd5ad22744a3cf79b7cb265124)]
+
+
 <a name="0.1.359"></a>
 ## 0.1.359 (2024-05-27)
 
