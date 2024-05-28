@@ -6,4 +6,6 @@ const mailer = nodemailer.createTransport(process.env.EMAIL_SERVER, {
   },
 });
 
+export { nodemailer };
+
 export default mailer;

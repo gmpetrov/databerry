@@ -14,7 +14,7 @@ import {
   respond,
 } from '@chaindesk/lib/createa-api-handler';
 import { client as CrispClient } from '@chaindesk/lib/crisp';
-import mailer from '@chaindesk/lib/mailer';
+import { nodemailer } from '@chaindesk/lib/mailer';
 import cors from '@chaindesk/lib/middlewares/cors';
 import pipe from '@chaindesk/lib/middlewares/pipe';
 import { AIStatus } from '@chaindesk/lib/types/crisp';
@@ -34,6 +34,12 @@ const chatBodySchema = z.object({
   attachments: z.array(CreateAttachmentSchema).optional(),
   visitorId: z.union([z.string().cuid().nullish(), z.literal('')]),
   contactId: z.union([z.string().cuid().nullish(), z.literal('')]),
+});
+
+const mailer = nodemailer.createTransport(process.env.AWS_EMAIL_SERVER, {
+  tls: {
+    minVersion: 'TLSv1.2',
+  },
 });
 
 export const sendMessage = async (
