@@ -206,8 +206,8 @@ export default function ModelInput({}: Props) {
             <Chip size="sm" color="warning">
               NEW
             </Chip>{' '}
-            GPT-4o - 128k - {ModelConfig[AgentModelName.gpt_4o].cost}{' '}
-            credits/query (premium)
+            GPT-4o - 128k - 🔥 The most powerful -{' '}
+            {ModelConfig[AgentModelName.gpt_4o].cost} credits/query (premium)
           </Option>
 
           <Option
@@ -250,7 +250,7 @@ export default function ModelInput({}: Props) {
             <ProviderLogo
               src={ModelConfig[AgentModelName.claude_3_opus].icon}
             />
-            Claude 3 Opus - 200k - 🔥 The most powerful -{' '}
+            Claude 3 Opus - 200k -{' '}
             {ModelConfig[AgentModelName.claude_3_opus].cost} credits/query
             (premium)
           </Option>

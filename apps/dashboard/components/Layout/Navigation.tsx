@@ -99,6 +99,7 @@ export default function Navigation({
       sx={{
         borderRight: '1px solid',
         borderColor: 'divider',
+        maxWidth: '300px',
       }}
     >
       <Stack

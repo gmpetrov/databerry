@@ -360,7 +360,7 @@ const chat = async ({
     }
     ${
       useLanguageDetection
-        ? `You are allowed to speak all languages but answer the user's question in the same language it is asked.`
+        ? `Always answer in the same language as the user's question.`
         : ``
     }
     ${
