@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.361"></a>
+## 0.1.361 (2024-05-30)
+
+### Fixed
+
+- 🐛 use user language prompt with claude models [[270b6bf](https://github.com/gmpetrov/databerry/commit/270b6bf6be074bee0fbba1aff31ec5280fe8460a)]
+
+
 <a name="0.1.360"></a>
 ## 0.1.360 (2024-05-28)
 
