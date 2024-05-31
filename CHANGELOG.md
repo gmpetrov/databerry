@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.363"></a>
+## 0.1.363 (2024-05-31)
+
+### Fixed
+
+- 🐛 rag prompt structure [[8e93d53](https://github.com/gmpetrov/databerry/commit/8e93d535e530005983407ddab50b7ef7d43bcfe2)]
+
+
 <a name="0.1.362"></a>
 ## 0.1.362 (2024-05-31)
 
