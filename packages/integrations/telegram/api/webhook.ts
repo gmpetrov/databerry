@@ -154,6 +154,8 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
 
   const token = (provider?.config as any)?.http_token;
 
+  const media_group_id = (req.body?.message || req.body?.channel_post)
+    ?.media_group_id;
   const photo =
     req.body?.message?.photo?.[1] ?? req.body?.channel_post?.photo?.[1];
 
@@ -255,19 +257,55 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     (req.body?.channel_post?.text || req?.body?.channel_post?.caption) ??
     (req.body?.message?.text || req.body?.message?.caption);
 
+  // update message attachments if it's linked to a media group.
+  if (media_group_id && attachments?.length > 0) {
+    const msg = await prisma.message.findFirst({
+      where: {
+        conversation: {
+          organizationId: provider?.organizationId!,
+        },
+        externalId: media_group_id,
+      },
+    });
+
+    if (msg) {
+      await prisma.message.update({
+        where: {
+          id: msg.id,
+        },
+        data: {
+          attachments: {
+            createMany: {
+              data: attachments,
+            },
+          },
+        },
+      });
+      return { status: 200 };
+    }
+  }
+
   // consider AI enabled if conv is not found.
   const isAiEnabled = conversation?.isAiEnabled ?? true;
 
-  // do not process a media-only message.
   if (!isAiEnabled) {
-    await conversationManager.createMessage({
-      attacthments,
-      from: 'human',
-      text: query ?? '',
-      externalId,
+    const conversationManager = new ConversationManager({
+      channelExternalId: `${chatId}`,
+      channel: ConversationChannel.telegram,
+      organizationId: provider?.organizationId!,
+      channelCredentialsId: provider?.id,
+      metadata: {
+        message_id:
+          req?.body?.channel_post?.message_id ?? req.body?.message?.message_id,
+      },
     });
 
-    return { status: 200 };
+    await conversationManager.createMessage({
+      attachments,
+      from: 'human',
+      text: query ?? '',
+      externalId: media_group_id,
+    });
   }
 
   const chatResponse = await handleChatMessage({
@@ -277,6 +315,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     channelExternalId: `${chatId}`,
     channelCredentialsId: provider?.id,
     attachments,
+    externalMessageId: media_group_id,
     contactId: newContact?.id,
     query: query ?? '',
   });
