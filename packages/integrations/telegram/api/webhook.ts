@@ -118,6 +118,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     where: {
       channelExternalId: `${chatId}`,
     },
+    ...ChatConversationArgs,
   });
 
   if (!conversation) {
@@ -126,6 +127,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
         channelExternalId: `${chatId}`,
         organizationId: provider?.organizationId!,
       },
+      ...ChatConversationArgs,
     });
   }
 

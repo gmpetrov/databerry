@@ -47,7 +47,7 @@ const add = async (req: AppNextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  const alreadyInuse = existingProvider?.agents?.length > 0;
+  const alreadyInuse = (existingProvider?.agents?.length || 0) > 0;
 
   if (alreadyInuse) {
     return { status: 400, message: 'This http_token is alreay in use.' };
@@ -69,7 +69,7 @@ const add = async (req: AppNextApiRequest, res: NextApiResponse) => {
     return { status: 400, message: 'Unable to set webhook on the bot' };
   }
 
-  await prisma.ServiceProvider.upsert({
+  await prisma.serviceProvider.upsert({
     where: {
       unique_external_id: {
         type: 'telegram',
