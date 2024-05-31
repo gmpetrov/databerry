@@ -34,27 +34,27 @@ export const validateEndpoint = async (
     switch (requestBody.method) {
       case 'GET': {
         const response = await axios.get(url, requestPayload);
-        testResult = { status: response.statusText, data: response.data };
+        testResult = { status: response.status, data: response.data };
         break;
       }
       case 'DELETE': {
         const response = await axios.delete(url, requestPayload);
-        testResult = { status: response.statusText, data: response.data };
+        testResult = { status: response.status, data: response.data };
         break;
       }
       case 'PATCH': {
         const response = await axios.patch(url, requestPayload);
-        testResult = { status: response.statusText, data: response.data };
+        testResult = { status: response.status, data: response.data };
         break;
       }
       case 'POST': {
         const response = await axios.post(url, requestPayload);
-        testResult = { status: response.statusText, data: response.data };
+        testResult = { status: response.status, data: response.data };
         break;
       }
       case 'PUT': {
         const response = await axios.put(url, requestPayload);
-        testResult = { status: response.statusText, data: response.data };
+        testResult = { status: response.status, data: response.data };
         break;
       }
     }

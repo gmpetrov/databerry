@@ -35,16 +35,21 @@ const add = async (req: AppNextApiRequest, res: NextApiResponse) => {
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
-  const alreadyExists = await prisma.serviceProvider.findUnique({
+  const existingProvider = await prisma.serviceProvider.findUnique({
     where: {
       unique_external_id: {
         type: 'telegram',
         externalId: `${data.bot_id}`,
       },
     },
+    include: {
+      agents: true,
+    },
   });
 
-  if (alreadyExists) {
+  const alreadyInuse = existingProvider?.agents?.length > 0;
+
+  if (alreadyInuse) {
     return { status: 400, message: 'This http_token is alreay in use.' };
   }
 
@@ -56,8 +61,7 @@ const add = async (req: AppNextApiRequest, res: NextApiResponse) => {
       secret_token: `${data.secret_key}-${data.bot_id}`,
       allowed_updates: ['channel_post', 'message'], // only listens to direct/channel incoming messages
       max_connections: 40,
-      ip_address: '',
-      drop_pending_updates: true,
+      drop_pending_updates: false,
     }
   );
 
@@ -65,8 +69,14 @@ const add = async (req: AppNextApiRequest, res: NextApiResponse) => {
     return { status: 400, message: 'Unable to set webhook on the bot' };
   }
 
-  await prisma.serviceProvider.create({
-    data: {
+  await prisma.ServiceProvider.upsert({
+    where: {
+      unique_external_id: {
+        type: 'telegram',
+        externalId: `${data.bot_id}`,
+      },
+    },
+    create: {
       type: 'telegram',
       config: {
         http_token: data.http_token,
@@ -93,6 +103,13 @@ const add = async (req: AppNextApiRequest, res: NextApiResponse) => {
         },
       },
       externalId: `${data.bot_id}`,
+    },
+    update: {
+      agents: {
+        connect: {
+          id: data.agentId,
+        },
+      },
     },
   });
 
