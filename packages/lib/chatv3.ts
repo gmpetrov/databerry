@@ -360,13 +360,13 @@ const chat = async ({
     }
     ${
       useLanguageDetection
-        ? `Always answer in the same language as the user's question.`
+        ? `Always answer using same language as the user's last message.`
         : ``
     }
     ${
       // use useLanguageDetection for this too until we add a checkbox in the ui
       useLanguageDetection
-        ? `Never make up URLs, email addresses, or any other information that have not been provided during the conversation. Only use information provided by the user to fill forms.`
+        ? `Never make up URLs, email addresses, or any other information that have not been provided during the conversation.`
         : ``
     }
     ${!!markAsResolvedTool ? markAsResolvedInstructions : ``}
@@ -393,14 +393,24 @@ const chat = async ({
           ? ([
               {
                 role: 'user',
-                content: `Only use informations from this conversation (and the previous message) to answer my questions. If you don't have enough information to answer my questions from this conversation (and the previous message), politely say that you do not know using same language the question is asked. I do not want to see misleading answers. Don't try to make up an answer.`,
+                content: `Only use informations from the provided knowledge base. If you don't have enough information to answer my questions, politely say that you do not know. Do not mention the knowledge base, context, or any specific sources when information is not found. If the information is not available, simply state that you do not have enough information to answer the question and apologize for the inconvenience. For example, if a user asks about a topic for which there is no available information, respond with: "Unfortunately, I do not have enough information about [topic] to give you a detailed explanation. I apologize that I cannot provide a more informative response to your question.`,
               },
               {
                 role: 'assistant',
-                content: `Ok I will follow your instructions carefully. I will only use the current conversation to answer your questions. If informations to answer your questions can't be found in conversation or if informations are not complete enough I will politely say that I do not know using the same language the question is asked. I will not generate misleading answers. I will not try to make up an answer.`,
+                content: `Ok I will follow your instructions carefully.`,
               },
             ] as ChatCompletionMessageParam[])
           : ([] as ChatCompletionMessageParam[])
+        : []),
+
+      ...(nbDatastoreTools > 0
+        ? [
+            {
+              role: 'system' as any,
+              // name: 'queryKnowledgeBase',
+              content: `<knowledge-base>${retrievalData?.context}</knowledge-base>`,
+            },
+          ]
         : []),
       ...truncatedHistory,
       {
@@ -418,15 +428,6 @@ const chat = async ({
               ]
             : userMessage,
       },
-      ...(nbDatastoreTools > 0
-        ? [
-            {
-              role: 'function' as any,
-              name: 'queryKnowledgeBase',
-              content: `Knowledge Base: ${retrievalData?.context}`,
-            },
-          ]
-        : []),
     ];
 
     const openAiTools = [
