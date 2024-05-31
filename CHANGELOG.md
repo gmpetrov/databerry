@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.362"></a>
+## 0.1.362 (2024-05-31)
+
+### Miscellaneous
+
+-  fix types [[bd9148b](https://github.com/gmpetrov/databerry/commit/bd9148b6a67da1fb1c2031c27e34ed6b3959551b)]
+-  telegram connect attachement to conversation ([#386](https://github.com/gmpetrov/databerry/issues/386)) [[5a6e5e7](https://github.com/gmpetrov/databerry/commit/5a6e5e71340bb0c1ce481bc74fe274b20b7311c7)]
+
+
 <a name="0.1.361"></a>
 ## 0.1.361 (2024-05-30)
 
