@@ -28,7 +28,7 @@ const AutoSave = memo(({ defaultValues, onSubmit }: Props) => {
     if (methods.formState.isDirty) {
       debouncedSave();
     }
-  }, [watchedData]);
+  }, [watchedData, methods.formState.isDirty]);
 
   return null;
 });
