@@ -59,7 +59,18 @@ function BlablaFormForm(props: Props) {
 
   const methods = useForm<CreateFormSchema>({
     mode: 'onChange',
-    resolver: zodResolver(CreateFormSchema),
+    // resolver: zodResolver(CreateFormSchema),
+    resolver: async (data, context, options) => {
+      // you can debug your validation schema here
+      // console.log('formData', data);
+      const validation = await zodResolver(CreateFormSchema)(
+        data,
+        context,
+        options
+      );
+      console.log('validation result', validation);
+      return validation;
+    },
     defaultValues,
   });
 
