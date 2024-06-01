@@ -157,7 +157,11 @@ function ChatBubble({ ...props }: BubbleProps) {
   useEffect(() => {
     let t: NodeJS.Timeout | null = null;
 
-    if (initMessages?.length > 0 && !config?.isInitMessagePopupDisabled) {
+    if (
+      initMessages?.length > 0 &&
+      !config?.isInitMessagePopupDisabled &&
+      !mountingRef.current?.preventInitialMessage
+    ) {
       t = setTimeout(() => {
         setState({
           showInitialMessage: true,
@@ -171,6 +175,41 @@ function ChatBubble({ ...props }: BubbleProps) {
       }
     };
   }, [initMessages?.length, config?.isInitMessagePopupDisabled]);
+
+  const mountingRef = useRef<{ preventInitialMessage: boolean }>();
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const activeElement = document?.activeElement;
+      const currentHost = new URL(window.location.href).host;
+      let newStatus = 'false';
+
+      try {
+        if (activeElement?.tagName === 'A') {
+          const linkHost = new URL((activeElement as any).href).host;
+          newStatus = currentHost === linkHost ? 'true' : 'false';
+        }
+      } catch (e) {}
+
+      window.localStorage.setItem('chatbubble-initiated', newStatus);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    if (!mountingRef.current) {
+      const chatBubbleInitiated =
+        window.localStorage.getItem('chatbubble-initiated') === 'true';
+      mountingRef.current = { preventInitialMessage: chatBubbleInitiated };
+
+      if (!chatBubbleInitiated) {
+        window.localStorage.setItem('chatbubble-initiated', 'true');
+      }
+    }
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handleClose = useCallback(() => {
     setState({ isOpen: false });
