@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.364"></a>
+## 0.1.364 (2024-06-01)
+
+### Miscellaneous
+
+-  debug form validation [[5aab079](https://github.com/gmpetrov/databerry/commit/5aab07953d845f57dec1a195b2690c3c18a6a07a)]
+
+
 <a name="0.1.363"></a>
 ## 0.1.363 (2024-05-31)
 
