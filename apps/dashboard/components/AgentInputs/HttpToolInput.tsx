@@ -272,24 +272,52 @@ const KeyValueFieldArray = ({
                 {...methods.register(`${name}.${index}.value` as any)}
                 disabled={!!field.isUserProvided}
                 onChange={pDebounce((e) => {
-                  try {
-                    const Url = new URL(url);
-                    const searchParams = Url.search.replace('?', '').split('&');
-                    const [keyInUrl, valueInUrl] =
-                      searchParams[index].split('=');
+                  if (
+                    name.includes('queryParameters') ||
+                    name.includes('pathVariables')
+                  ) {
+                    try {
+                      const Url = new URL(url);
+                      const searchParams = Url.search
+                        .replace('?', '')
+                        .split('&');
+                      const [keyInUrl, valueInUrl] =
+                        searchParams[index].split('=');
 
-                    if (valueInUrl !== e.target.value) {
-                      searchParams[index] = `${keyInUrl}=${e.target.value}`;
+                      if (valueInUrl !== e.target.value) {
+                        searchParams[index] = `${keyInUrl}=${e.target.value}`;
+                      }
+
+                      Url.search = `?${searchParams.join('&')}`;
+
+                      methods.setValue(
+                        `${prefix}config.url`,
+                        decodeURI(Url.toString())
+                      );
+                    } catch (e) {
+                      console.log('error', e);
                     }
+                    try {
+                      const Url = new URL(url);
+                      const searchParams = Url.search
+                        .replace('?', '')
+                        .split('&');
+                      const [keyInUrl, valueInUrl] =
+                        searchParams[index].split('=');
 
-                    Url.search = `?${searchParams.join('&')}`;
+                      if (valueInUrl !== e.target.value) {
+                        searchParams[index] = `${keyInUrl}=${e.target.value}`;
+                      }
 
-                    methods.setValue(
-                      `${prefix}config.url`,
-                      decodeURI(Url.toString())
-                    );
-                  } catch (e) {
-                    console.log('error', e);
+                      Url.search = `?${searchParams.join('&')}`;
+
+                      methods.setValue(
+                        `${prefix}config.url`,
+                        decodeURI(Url.toString())
+                      );
+                    } catch (e) {
+                      console.log('error', e);
+                    }
                   }
                 }, 500)}
               />
