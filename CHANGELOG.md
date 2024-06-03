@@ -1,5 +1,14 @@
 # Changelog
 
+<a name="0.1.366"></a>
+## 0.1.366 (2024-06-03)
+
+### Miscellaneous
+
+-  update footer [[8d35abc](https://github.com/gmpetrov/databerry/commit/8d35abc7513e37150316062af091498cf8f1af33)]
+-  fix tracking header values [[80c1028](https://github.com/gmpetrov/databerry/commit/80c1028d1579e2f3da30d7d9883cccfcef378985)]
+
+
 <a name="0.1.365"></a>
 ## 0.1.365 (2024-06-01)
 
