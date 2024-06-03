@@ -46,6 +46,18 @@ export const getAgent = async (
     throw new ApiError(ApiErrorType.UNAUTHORIZED);
   }
 
+  if (
+    !session?.organization?.id ||
+    agent?.organizationId !== session?.organization?.id
+  ) {
+    // remove sentitive data from agent (http tool may store credentials)
+    agent?.tools?.forEach((tool) => {
+      if (tool.type === 'http') {
+        tool.config = {};
+      }
+    });
+  }
+
   return agent;
 };
 
