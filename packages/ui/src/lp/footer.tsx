@@ -229,6 +229,15 @@ export default function Footer() {
                     AI Tool Directory
                   </a>
                 </li>
+                <li>
+                  <a
+                    className="transition text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-400"
+                    href="https://www.funfun.ai/?via=chaindesk"
+                    target="_blank"
+                  >
+                    AI Characters
+                  </a>
+                </li>
               </ul>
             </div>
 
