@@ -6,13 +6,15 @@ import { SummaryPageProps } from '@chaindesk/lib/types';
 import Cta from '@chaindesk/ui/lp/cta';
 
 import PromoAlert from '@/components/promo-alert';
+import Body from '@/components/youtube-summarizer/home-body';
 import LatestVideoSummaries from '@/components/youtube-summarizer/latest-summaries';
 import YoutubeSummarizerForm from '@/components/youtube-summarizer/summarize-form';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_LANDING_PAGE_URL!),
-  title: 'Free AI Youtube Video Summarizer',
-  description: 'Generate YouTube video summaries instantly for free with AI',
+  title: 'Youtube Video Summarizer - Chaindesk',
+  description:
+    'Get a summary of any YouTube video with our free AI YouTube video summarizer powered by ChatGPT and Chaindesk. Summarize any video in seconds.',
   alternates: {
     canonical: '/tools/youtube-summarizer',
   },
@@ -50,6 +52,8 @@ export default async function YoutubeVideoSummarizer() {
               baseUrl="/tools/youtube-summarizer"
             />
           </div>
+
+          <Body />
         </div>
         <Cta />
       </section>

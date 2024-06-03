@@ -35,9 +35,9 @@ export default function Features02() {
         whileInView={'visible'}
         viewport={{ once: true, amount: 0.3 }}
       >
-        <div className="px-4 mx-auto max-w-6xl sm:px-6">
-          <div className="relative pb-12 mx-auto max-w-3xl text-center md:pb-20">
-            <motion.div
+        <div className="max-w-6xl px-4 mx-auto sm:px-6">
+          <div className="relative max-w-3xl pb-12 mx-auto text-center md:pb-20">
+            <motion.h2
               className="mb-4 text-3xl font-bold font-bricolage-grotesque md:text-4xl text-zinc-900"
               variants={childTextVariants}
             >
@@ -45,7 +45,7 @@ export default function Features02() {
                 text="Instantly Resolve 80% of Your Support Queries"
                 duration={0.5}
               ></TextGenerateEffect>
-            </motion.div>
+            </motion.h2>
             <motion.p
               className="text-lg text-zinc-500"
               variants={childTextVariants}
@@ -57,7 +57,7 @@ export default function Features02() {
             </motion.p>
           </div>
           <motion.div
-            className="grid gap-8 mx-auto max-w-xs sm:max-w-none sm:grid-cols-2 md:grid-cols-3 sm:gap-4 lg:gap-8"
+            className="grid max-w-xs gap-8 mx-auto sm:max-w-none sm:grid-cols-2 md:grid-cols-3 sm:gap-4 lg:gap-8"
             variants={makeVariants({
               ...defaultContainerVariants,
               visible: {
@@ -93,7 +93,7 @@ export default function Features02() {
                 </p>
               </div>
               <figure className="overflow-hidden">
-                <div className="overflow-hidden relative px-4 pt-6 pb-12 mx-4 -mb-12 bg-gradient-to-t from-purple-100 rounded-2xl border border-zinc-200">
+                <div className="relative px-4 pt-6 pb-12 mx-4 -mb-12 overflow-hidden border bg-gradient-to-t from-purple-100 rounded-2xl border-zinc-200">
                   <Image
                     className="object-cover object-left mx-auto sm:object-contain sm:h-auto w-[500px]"
                     src={FeatureChat}

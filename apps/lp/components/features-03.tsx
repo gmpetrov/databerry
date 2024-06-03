@@ -70,7 +70,7 @@ export default function Features03() {
         viewport={{ once: true, amount: 0.3 }}
       >
         {/* Carousel */}
-        <div className="px-4 mx-auto max-w-xl lg:max-w-6xl sm:px-6">
+        <div className="max-w-xl px-4 mx-auto lg:max-w-6xl sm:px-6">
           <div className="space-y-12 lg:flex lg:space-y-0 lg:space-x-12 xl:space-x-24">
             {/* Content */}
             <div className="lg:max-w-none lg:min-w-[524px]">
@@ -81,12 +81,12 @@ export default function Features03() {
                 >
                   Scale Your Team Without Hiring More
                 </motion.div>
-                <motion.h3
+                <motion.h2
                   className="mb-4 text-3xl font-bold font-bricolage-grotesque text-zinc-200"
                   variants={defaultChildVariants}
                 >
                   The only AI customer service solution you need
-                </motion.h3>
+                </motion.h2>
                 <motion.p
                   className="text-lg text-zinc-500"
                   variants={defaultChildVariants}
@@ -195,7 +195,7 @@ export default function Features03() {
               className="relative lg:max-w-none"
               variants={defaultChildVariants}
             >
-              <div className="flex relative flex-col" ref={tabs}>
+              <div className="relative flex flex-col" ref={tabs}>
                 {/* Item 1 */}
                 <Transition
                   show={tab === 1}
@@ -264,7 +264,7 @@ export default function Features03() {
                       alt="Carousel 03"
                     /> */}
                     <video
-                      className="mx-auto w-auto max-w-none h-full rounded-lg"
+                      className="w-auto h-full mx-auto rounded-lg max-w-none"
                       src={'/videos/demo-form.mp4'}
                       controls
                       autoPlay={tab === 3}
@@ -277,7 +277,7 @@ export default function Features03() {
               {/* Gear illustration */}
               {/* {tab !== 3 && (
                 <Image
-                  className="absolute bottom-0 left-0 mix-blend-exclusion -translate-x-1/2 translate-y-1/3 max-lg:w-32"
+                  className="absolute bottom-0 left-0 -translate-x-1/2 mix-blend-exclusion translate-y-1/3 max-lg:w-32"
                   src={FeatureIllustration}
                   alt="Features 02 illustration"
                   width={173}
@@ -291,7 +291,7 @@ export default function Features03() {
 
         {/* Features blocks */}
         <motion.div
-          className="px-4 mx-auto mt-24 max-w-6xl sm:px-6 lg:mt-32"
+          className="max-w-6xl px-4 mx-auto mt-24 sm:px-6 lg:mt-32"
           variants={defaultChildVariants}
         >
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">

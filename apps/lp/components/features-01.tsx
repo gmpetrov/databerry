@@ -51,14 +51,14 @@ export default function Features01() {
         whileInView={'visible'}
         viewport={{ once: true, amount: 0.3 }}
       >
-        <div className="px-4 mx-auto max-w-6xl sm:px-6">
-          <div className="pb-12 mx-auto max-w-3xl text-center">
-            <motion.span
+        <div className="max-w-6xl px-4 mx-auto sm:px-6">
+          <div className="max-w-3xl pb-12 mx-auto text-center">
+            <motion.h2
               className="text-3xl font-bold text-center text-pink-400 font-label"
               variants={defaultChildVariants}
             >
               How it works?
-            </motion.span>
+            </motion.h2>
             <motion.div
               key={0}
               className="mb-4 text-3xl font-bold font-bricolage-grotesque md:text-4xl text-zinc-900"
@@ -106,7 +106,7 @@ export default function Features01() {
                     setTab(1);
                   }}
                 >
-                  <div className="flex justify-between items-center mb-1">
+                  <div className="flex items-center justify-between mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
                       1. Import your Data
                     </div>
@@ -140,7 +140,7 @@ export default function Features01() {
                     setTab(2);
                   }}
                 >
-                  <div className="flex justify-between items-center mb-1">
+                  <div className="flex items-center justify-between mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
                       2. Customize
                     </div>
@@ -173,7 +173,7 @@ export default function Features01() {
                     setTab(3);
                   }}
                 >
-                  <div className="flex justify-between items-center mb-1">
+                  <div className="flex items-center justify-between mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
                       3. Deploy
                     </div>
@@ -206,7 +206,7 @@ export default function Features01() {
                     setTab(4);
                   }}
                 >
-                  <div className="flex justify-between items-center mb-1">
+                  <div className="flex items-center justify-between mb-1">
                     <div className="font-semibold font-bricolage-grotesque text-zinc-900">
                       4. Monitor
                     </div>
@@ -231,7 +231,7 @@ export default function Features01() {
             {/* Tabs items */}
             <div className="relative lg:max-w-none [mask-image:linear-gradient(white_0%,white_calc(100%-40px),_transparent_calc(100%-1px))] -mx-6">
               <div
-                className="flex relative flex-col pt-12 mx-6 md:pt-20"
+                className="relative flex flex-col pt-12 mx-6 md:pt-20"
                 ref={tabs}
               >
                 {/* Item 1 */}
@@ -247,7 +247,7 @@ export default function Features01() {
                   beforeEnter={() => heightFix()}
                   unmount={false}
                 >
-                  <div className="inline-flex relative align-top">
+                  <div className="relative inline-flex align-top">
                     {/* <Image
                       className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
                       src={FeatureImage01}
@@ -280,7 +280,7 @@ export default function Features01() {
                   beforeEnter={() => heightFix()}
                   unmount={false}
                 >
-                  <div className="inline-flex relative align-top">
+                  <div className="relative inline-flex align-top">
                     <Image
                       className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
                       src={FeatureImage02}
@@ -311,7 +311,7 @@ export default function Features01() {
                   beforeEnter={() => heightFix()}
                   unmount={false}
                 >
-                  <div className="inline-flex relative align-top">
+                  <div className="relative inline-flex align-top">
                     <Image
                       className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
                       src={FeatureDeploy}
@@ -342,7 +342,7 @@ export default function Features01() {
                   beforeEnter={() => heightFix()}
                   unmount={false}
                 >
-                  <div className="inline-flex relative align-top">
+                  <div className="relative inline-flex align-top">
                     <Image
                       // className="rounded-t-lg border border-transparent [background:linear-gradient(theme(colors.white),theme(colors.white))_padding-box,linear-gradient(120deg,theme(colors.zinc.300),theme(colors.zinc.100),theme(colors.zinc.300))_border-box] box-content shadow-2xl"
                       className="-mt-24"

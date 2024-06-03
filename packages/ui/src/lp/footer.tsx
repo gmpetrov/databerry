@@ -118,9 +118,9 @@ export default function Footer() {
           <div className="grid gap-8 sm:grid-cols-12 sm:col-span-10 md:col-span-10 lg:col-span-10">
             {/* 2nd block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Products
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 {products.map((product) => (
                   <li key={product?.slug}>
@@ -151,9 +151,9 @@ export default function Footer() {
               </ul>
             </div>
             {/* <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Use Cases
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
@@ -200,9 +200,9 @@ export default function Footer() {
 
             {/* 3rd block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Free Tools
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
@@ -243,9 +243,9 @@ export default function Footer() {
 
             {/* 4th block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Help & Support
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
@@ -305,9 +305,9 @@ export default function Footer() {
             </div>
             {/* 5th block */}
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Community
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a
@@ -340,9 +340,9 @@ export default function Footer() {
             </div>
 
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Add To
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 {integrations
                   .filter((each) => each.isChannel)
@@ -359,9 +359,9 @@ export default function Footer() {
               </ul>
             </div>
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Chat with
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 {integrations
                   .filter((each) => each.isDatasource)
@@ -378,9 +378,9 @@ export default function Footer() {
               </ul>
             </div>
             <div className="sm:col-span-6 md:col-span-3 lg:col-span-3">
-              <h6 className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-200">
                 Compare
-              </h6>
+              </p>
               <ul className="space-y-2 text-sm">
                 {competitors.map((name) => (
                   <li key={name}>

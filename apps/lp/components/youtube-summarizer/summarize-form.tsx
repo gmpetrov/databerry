@@ -172,7 +172,7 @@ function YoutubeSummarizerForm({}: Props) {
             </Stack>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="flex-wrap items-center space-y-2 min-w-full md:flex md:space-y-0 md:space-x-2"
+              className="flex-wrap items-center min-w-full space-y-2 md:flex md:space-y-0 md:space-x-2"
             >
               <Stack spacing={2} sx={{ width: '100%', alignItems: 'center' }}>
                 <Stack sx={{ width: '100%' }} spacing={1}>

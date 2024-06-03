@@ -179,7 +179,10 @@ function IntegrationBox(props: { icon: any; name: string }) {
         })}
       >
         {props.icon}
-        <Typography level="h3" sx={(t) => ({ fontWeight: 'bold' })}>
+        <Typography
+          level="title-lg"
+          sx={(t) => ({ fontWeight: 'bold', fontSize: 'xl2' })}
+        >
           {props.name}
         </Typography>
       </Stack>

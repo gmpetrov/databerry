@@ -26,7 +26,7 @@ export default function LatestSummaries({ summaries, baseUrl, label }: Props) {
     <>
       {(summaries.length || 0) > 0 && (
         <Stack sx={{ mt: 10, width: '100%' }} spacing={2}>
-          <Typography level="h4" sx={{ textAlign: 'center' }}>
+          <Typography level="h2" sx={{ textAlign: 'center' }}>
             {label || 'Latest Summaries'}
           </Typography>
           <Stack
@@ -74,7 +74,7 @@ export default function LatestSummaries({ summaries, baseUrl, label }: Props) {
                       </AspectRatio>
                     </CardOverflow>
                     <CardContent>
-                      <Typography level="h4" noWrap>
+                      <Typography level="h3" noWrap sx={{ fontSize: 'xl' }}>
                         {(each as SummaryPageProps)?.output?.metadata?.title}
                       </Typography>
                       <Typography level="body-md" noWrap>
