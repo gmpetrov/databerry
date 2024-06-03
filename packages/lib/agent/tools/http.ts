@@ -3,6 +3,9 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { ModelConfig } from '@chaindesk/lib/config';
 import { countTokensEstimation } from '@chaindesk/lib/count-tokens';
 import createToolParser from '@chaindesk/lib/create-tool-parser';
+import { RecordType } from '@chaindesk/lib/http_tool_helpers/constructKeysAndValues';
+import makeObjectFromKeys from '@chaindesk/lib/http_tool_helpers/makeObjectFromKeys';
+import MergeListOfObjects from '@chaindesk/lib/http_tool_helpers/MergeListOfObjects';
 import splitTextIntoChunks from '@chaindesk/lib/split-text-by-token';
 import { HttpToolSchema, ToolSchema } from '@chaindesk/lib/types/dtos';
 import { AgentModelName } from '@chaindesk/prisma';
@@ -68,7 +71,6 @@ export const createHandler =
     const inputUrl = new URL(config.url);
     const inputQUeryParams = new URLSearchParams(inputUrl.search);
 
-    // ?.filter((each) => !each.isUserProvided)
     config?.queryParameters?.forEach((each) => {
       if (each.value) {
         inputQUeryParams.set(each.key, each.value);
@@ -92,14 +94,21 @@ export const createHandler =
         .reduce((acc, curr) => ({ ...acc, [curr.key]: payload[curr.key] }), {}),
     };
 
-    const reqData: AxiosRequestConfig['data'] = {
-      ...config?.body
-        ?.filter((each) => !each.isUserProvided)
-        .reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {}),
-      ...config?.body
-        ?.filter((each) => !!each.isUserProvided)
-        .reduce((acc, curr) => ({ ...acc, [curr.key]: payload[curr.key] }), {}),
-    };
+    const nestedObjects = (config.body || [])?.reduce((acc, body) => {
+      if (body.key && body.value !== undefined) {
+        const keys = body?.key?.split('.');
+        acc.push(
+          makeObjectFromKeys(
+            keys,
+            body.isUserProvided ? payload[body.key] : body.value
+          ) as RecordType
+        );
+      }
+      return acc;
+    }, [] as RecordType[]);
+
+    const reqData: AxiosRequestConfig['data'] =
+      MergeListOfObjects(nestedObjects);
 
     const reqConfig: AxiosRequestConfig = {
       method: config?.method,

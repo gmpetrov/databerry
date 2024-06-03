@@ -5,6 +5,7 @@ import {
   Accordion,
   AccordionGroup,
   Alert,
+  Box,
   Button,
   Card,
   Checkbox,
@@ -17,6 +18,9 @@ import {
   Select,
   Sheet,
   Stack,
+  Tab,
+  TabList,
+  TabPanel,
   Typography,
 } from '@mui/joy';
 import AccordionDetails, {
@@ -25,7 +29,11 @@ import AccordionDetails, {
 import AccordionSummary, {
   accordionSummaryClasses,
 } from '@mui/joy/AccordionSummary';
+import Tabs from '@mui/joy/Tabs';
+import { keccak } from 'hash-wasm';
+import dynamic from 'next/dynamic';
 import pDebounce from 'p-debounce';
+import { config } from 'process';
 import React, {
   ElementRef,
   memo,
@@ -47,14 +55,24 @@ import {
 
 import useModal from '@app/hooks/useModal';
 
+import constructKeysAndValues, {
+  RecordType,
+} from '@chaindesk/lib/http_tool_helpers/constructKeysAndValues';
+import makeObjectFromKeys from '@chaindesk/lib/http_tool_helpers/makeObjectFromKeys';
+import MergeListOfObjects from '@chaindesk/lib/http_tool_helpers/MergeListOfObjects';
 import {
   CreateAgentSchema,
   HttpToolSchema,
   ToolSchema,
 } from '@chaindesk/lib/types/dtos';
+import Markdown from '@chaindesk/ui/Markdown';
 
 import { Choices } from '../BlablaFormEditor/FieldsInput';
 import Input from '../Input';
+
+const CodeEditor = dynamic(() => import('../CodeEditor'), {
+  ssr: false,
+});
 
 export type Fields =
   | {
@@ -63,18 +81,9 @@ export type Fields =
       isUserProvided?: boolean | undefined;
       description?: string;
       acceptedValues?: (string | undefined)[];
+      isRaw?: boolean | undefined;
     }[]
   | undefined;
-
-type KeyValueNames =
-  | 'config.queryParameters'
-  | 'config.pathVariables'
-  | 'config.body'
-  | 'config.headers'
-  | `tools.${number}.config.queryParameters`
-  | `tools.${number}.config.pathVariables`
-  | `tools.${number}.config.body`
-  | `tools.${number}.config.headers`;
 
 const KeyValueFieldArray = ({
   name,
@@ -462,6 +471,117 @@ const KeyValueFieldArray = ({
   );
 };
 
+function RawBodyBuilder({
+  name,
+}: {
+  name: `tools.${number}.config.body` | 'config.body';
+}) {
+  const methods = useFormContext<HttpToolSchema | CreateAgentSchema>();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const rawFields = (
+    methods.getValues(name) as {
+      key: string;
+      value: unknown;
+      isUserProvided: boolean;
+      isRaw: true;
+    }[]
+  )?.map((field, index) => {
+    if (field.isRaw) {
+      return {
+        key: field.key,
+        value: field.value,
+        isUserProvided: field.isUserProvided,
+        isRaw: true,
+        index,
+      };
+    }
+  });
+
+  // lazy load it.
+  const [body, setBody] = useState(() => {
+    const splittedObjects = rawFields?.map((field) => {
+      const splittedKeys = field!.key.split('.');
+
+      return makeObjectFromKeys(
+        splittedKeys,
+        field?.isUserProvided ? '#user' : field!.value
+      );
+    }) as RecordType[];
+
+    return JSON.stringify(MergeListOfObjects(splittedObjects), null, 2);
+  });
+
+  const parameters = useFieldArray({
+    control: methods.control as Control<HttpToolSchema>,
+    name,
+  });
+
+  return (
+    <Stack>
+      <Button
+        variant="plain"
+        size="sm"
+        sx={{
+          ml: 'auto',
+          mb: '0.2rem',
+        }}
+        onClick={() => {
+          try {
+            const pretty = JSON.stringify(JSON.parse(body), null, 2);
+            setBody(pretty);
+          } catch (e) {}
+        }}
+      >
+        Beautify
+      </Button>
+
+      <Box
+        component="div"
+        role="button"
+        onClick={() => textareaRef.current?.focus()}
+        className="relative flex"
+        sx={(theme) => ({
+          position: 'relative',
+          display: 'flex',
+          background: '#1E1E1E',
+          borderRadius: theme.radius.md,
+        })}
+      >
+        <textarea
+          className="absolute inset-0 p-2 font-mono text-transparent bg-transparent outline-none resize-none caret-white"
+          rows={4}
+          onChange={(e) => {
+            setBody(e.target.value);
+          }}
+          onBlur={(e) => {
+            try {
+              const payload = JSON.parse(e.target.value);
+              const formPayload = constructKeysAndValues(payload)?.map((o) => ({
+                ...o,
+                value: o.value === '#user' ? '' : o.value,
+                isUserProvided: o.value === '#user',
+                isRaw: true,
+              }));
+              parameters.append(formPayload);
+              parameters.remove(rawFields?.map((v) => v?.index) as number[]);
+            } catch (e) {}
+          }}
+          value={body}
+          ref={textareaRef}
+        />
+        <CodeEditor code={body || ''} language="json" />
+      </Box>
+      <Card variant="plain" size="sm" sx={{ mt: 1 }}>
+        <Typography> - use double quotes</Typography>
+        <Typography>
+          - mark a value as provided by the user with <b>#user</b>
+        </Typography>
+      </Card>
+    </Stack>
+  );
+}
+
 type Props = {
   name?: `tools.${number}`;
 };
@@ -473,7 +593,6 @@ function HttpToolInput({ name }: Props) {
   const [withApprovalChecked] = methods.watch([`${prefix}config.withApproval`]);
   const [methodValue] = methods.watch([`${prefix}config.method`]);
 
-  // Fallback request method to GET.
   useEffect(() => {
     const requestMethod = methods.getValues(`${prefix}config.method`);
     if (!requestMethod) {
@@ -569,11 +688,39 @@ function HttpToolInput({ name }: Props) {
         {!['GET', 'DELETE'].includes(
           methods.getValues(`${prefix}config.method`)
         ) && (
-          <KeyValueFieldArray
-            label="Body Parameters"
-            prefix={prefix}
-            name={`${prefix}config.body`}
-          />
+          <Tabs
+            aria-label="tabs"
+            size="md"
+            sx={{
+              bgcolor: 'transparent',
+              width: '100%',
+            }}
+          >
+            <Typography level="title-sm" marginBottom={0.5}>
+              Body Parameters
+            </Typography>
+            <TabList size="sm" defaultValue={0}>
+              <Tab indicatorInset variant="outlined">
+                from-data
+              </Tab>
+
+              <Tab indicatorInset variant="outlined">
+                Raw
+              </Tab>
+            </TabList>
+            <TabPanel value={0}>
+              <KeyValueFieldArray
+                label=""
+                prefix={prefix}
+                name={`${prefix}config.body`}
+              />
+            </TabPanel>
+            <TabPanel value={1}>
+              <RawBodyBuilder
+                name={`${prefix as `tools.${number}.`}config.body`}
+              />
+            </TabPanel>
+          </Tabs>
         )}
 
         <KeyValueFieldArray

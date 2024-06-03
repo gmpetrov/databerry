@@ -26,34 +26,40 @@ export const validateEndpoint = async (
     const requestBody = bodySchema.parse(req.body);
 
     const url = requestBody.url;
-    const requestPayload = {
-      headers: { ...requestBody.headers } as unknown as AxiosHeaders,
-      body: requestBody,
-    };
 
     switch (requestBody.method) {
       case 'GET': {
-        const response = await axios.get(url, requestPayload);
+        const response = await axios.get(url, {
+          headers: requestBody.headers,
+        });
         testResult = { status: response.status, data: response.data };
         break;
       }
       case 'DELETE': {
-        const response = await axios.delete(url, requestPayload);
+        const response = await axios.delete(url, {
+          headers: requestBody.headers,
+        });
         testResult = { status: response.status, data: response.data };
         break;
       }
       case 'PATCH': {
-        const response = await axios.patch(url, requestPayload);
+        const response = await axios.patch(url, requestBody.body, {
+          headers: requestBody.headers,
+        });
         testResult = { status: response.status, data: response.data };
         break;
       }
       case 'POST': {
-        const response = await axios.post(url, requestPayload);
+        const response = await axios.post(url, requestBody.body, {
+          headers: requestBody.headers,
+        });
         testResult = { status: response.status, data: response.data };
         break;
       }
       case 'PUT': {
-        const response = await axios.put(url, requestPayload);
+        const response = await axios.put(url, requestBody.body, {
+          headers: requestBody.headers,
+        });
         testResult = { status: response.status, data: response.data };
         break;
       }

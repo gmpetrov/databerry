@@ -131,6 +131,7 @@ const chat = async ({
     (each) => each.type === ToolType.http
   ) as HttpToolSchema[];
 
+  console.log('http toools ========>', httpTools);
   const formTools = (tools as ToolSchema[]).filter(
     (each) => each.type === ToolType.form
   ) as FormToolSchema[];

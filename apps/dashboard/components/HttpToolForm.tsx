@@ -18,6 +18,9 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 import useModal from '@app/hooks/useModal';
 
+import { RecordType } from '@chaindesk/lib/http_tool_helpers/constructKeysAndValues';
+import makeObjectFromKeys from '@chaindesk/lib/http_tool_helpers/makeObjectFromKeys';
+import MergeListOfObjects from '@chaindesk/lib/http_tool_helpers/MergeListOfObjects';
 import {
   CreateAgentSchema,
   HttpToolSchema,
@@ -147,12 +150,15 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
     return acc;
   }, {} as Record<string, unknown>);
 
-  const body = config.body?.reduce((acc, body) => {
-    if (body.key && body.value !== undefined) {
-      acc[body.key] = body.value;
+  const nestedObjects = (config.body || [])?.reduce((acc, body) => {
+    if (body.key && body.value !== undefined && !body.isUserProvided) {
+      const keys = body?.key?.split('.');
+      acc.push(makeObjectFromKeys(keys, body.value) as RecordType);
     }
     return acc;
-  }, {} as Record<string, unknown>);
+  }, [] as RecordType[]);
+
+  const body = MergeListOfObjects(nestedObjects);
 
   const [state, setState] = useStateReducer({
     url,
@@ -223,8 +229,10 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
 
           break;
         case 'bodyParameters':
-          const body = { ...state.body, ...{ [key]: value } };
-          setState({ body });
+          const keys = key?.split('.');
+          const newObject = makeObjectFromKeys(keys, value) as RecordType;
+          const newBody = MergeListOfObjects([state.body, newObject]);
+          setState({ body: newBody });
           break;
         case 'headerParameters':
           const headers = { ...state.headers, ...{ [key]: value } };
@@ -238,6 +246,7 @@ export function HttpToolTestForm<T extends HttpToolSchema | CreateAgentSchema>({
   const testEndpoint = async () => {
     try {
       setState({ loading: true });
+
       const response = await axios.post('/api/tools/http-tool/validator', {
         url: state.url,
         method: state.method,

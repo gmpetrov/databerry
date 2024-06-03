@@ -397,10 +397,11 @@ const ToolBaseSchema = z.object({
 const ToolKeyValueField = z
   .object({
     key: z.string().min(1),
-    value: z.string().optional(),
+    value: z.any().optional(),
     isUserProvided: z.boolean().optional(),
     description: z.string().optional(),
     acceptedValues: z.array(z.string().optional()).optional(),
+    isRaw: z.boolean().optional(),
   })
   .refine(
     (val) => {
