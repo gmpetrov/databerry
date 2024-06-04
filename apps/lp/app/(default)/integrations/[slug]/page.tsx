@@ -75,30 +75,30 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       {product?.features && (
         <div id="features" className="py-24">
           <div className="px-6 mx-auto max-w-7xl lg:px-8">
-            <div className="mx-auto max-w-2xl lg:text-center">
-              <h3
+            <div className="max-w-2xl mx-auto lg:text-center">
+              <p
                 className="text-2xl font-bold text-pink-400 font-caveat"
                 color="primary"
               >
                 {product?.features?.label || `No-Code Required`}
-              </h3>
-              <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl font-bricolage-grotesque">
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl font-bricolage-grotesque">
                 {product.features.title ||
                   `Training a Custom ChatGPT Chatbot made easy`}
-              </p>
+              </h2>
               <p className="mt-6 text-lg leading-8 text-zinc-500">
                 {product.features.description ||
                   `Chaindesk makes it very easy to train a chatbot on your company
                 data.`}
               </p>
             </div>
-            <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-              <dl className="grid grid-cols-1 gap-x-8 gap-y-10 max-w-xl lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+            <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">
+              <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
                 {product.features?.items?.map((feature, idx) => (
                   <div key={feature.name} className="relative pl-16">
                     <dt className="text-base font-bold leading-7 text-zinc-800 font-bricolage-grotesque">
                       <div
-                        className="flex absolute top-0 left-0 justify-center items-center w-10 h-10 text-2xl font-extrabold bg-pink-100 rounded-lg text-zinc-800 font-caveat"
+                        className="absolute top-0 left-0 flex items-center justify-center w-10 h-10 text-2xl font-extrabold bg-pink-100 rounded-lg text-zinc-800 font-caveat"
                         // sx={{ backgroundColor: 'primary.600' }}
                       >
                         {/* <feature.icon
@@ -108,7 +108,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                         {/* {feature.icon} */}
                         {idx + 1}
                       </div>
-                      {feature.name}
+                      <h3>{feature.name}</h3>
                     </dt>
                     <dd className="mt-2 text-base leading-7 whitespace-pre-wrap text-zinc-500">
                       {feature.description}

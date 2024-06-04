@@ -82,9 +82,9 @@ export default function IntegrationsPage({
         <span className="text-2xl font-bold text-center text-pink-400 font-caveat">
           {'Datasources Integrations'}
         </span>
-        <h1 className="pb-4 text-3xl font-extrabold text-transparent font-bricolage-grotesque md:text-5xl text-zinc-800">
+        <h2 className="pb-4 text-3xl font-extrabold text-transparent font-bricolage-grotesque md:text-5xl text-zinc-800">
           {`Train your AI with data from anywhere`}
-        </h1>
+        </h2>
         <p className="max-w-lg mx-auto mb-8 text-lg text-zinc-500 md:text-xl">
           {`Chaindesk makes it very easy to train your AI Agent with custom data from your existing tools and platforms.`}
         </p>
@@ -144,9 +144,9 @@ export default function IntegrationsPage({
         <span className="text-2xl font-bold text-center text-pink-400 font-caveat">
           {'Deploy Integrations'}
         </span>
-        <h1 className="pb-4 text-3xl font-extrabold text-transparent font-bricolage-grotesque md:text-5xl text-zinc-800">
+        <h2 className="pb-4 text-3xl font-extrabold text-transparent font-bricolage-grotesque md:text-5xl text-zinc-800">
           {`Deploy your AI Agent anywhere on the web`}
-        </h1>
+        </h2>
         <p className="max-w-lg mx-auto mb-8 text-lg text-zinc-500 md:text-xl">
           {`Deploy your AI Agent on your existing platforms in minutes.`}
         </p>
