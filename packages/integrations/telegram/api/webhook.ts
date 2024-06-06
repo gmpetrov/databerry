@@ -214,45 +214,58 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       conversationId: conversation.id,
     });
   } else if (media) {
-    const file_id = media?.file_id;
-    const mimeType =
-      sticker || photo ? 'image/jpeg' : (voice || video)?.mime_type;
+    try {
+      const file_id = media?.file_id;
+      const mimeType =
+        sticker || photo ? 'image/jpeg' : (voice || video)?.mime_type;
 
-    const { data: fileData } = await axios.get(
-      `https://api.telegram.org/bot${token}/getFile?file_id=${file_id}`
-    );
+      const { data: fileData } = await axios.get(
+        `https://api.telegram.org/bot${token}/getFile?file_id=${file_id}`
+      );
 
-    const fileUrl = `https://api.telegram.org/file/bot${token}/${fileData?.result?.file_path}`;
-    const fileResponse = await axios({
-      url: fileUrl,
-      method: 'GET',
-      responseType: 'stream',
-    });
+      const fileUrl = `https://api.telegram.org/file/bot${token}/${fileData?.result?.file_path}`;
+      const fileResponse = await axios({
+        url: fileUrl,
+        method: 'GET',
+        responseType: 'arraybuffer',
+      });
 
-    const fileName = `${cuid()}.${getFileExtFromMimeType(mimeType)}`;
+      const fileName = `${cuid()}.${getFileExtFromMimeType(mimeType)}`;
 
-    const fileKey = creatChatUploadKey({
-      organizationId: agent?.organizationId!,
-      conversationId: conversation?.id,
-      fileName,
-    });
+      const uploadPayload = [
+        {
+          case: 'chatUpload',
+          conversationId: conversation?.id,
+          agentId: agent.id,
+          fileName,
+          mimeType,
+        },
+      ];
 
-    const { Location: url } = await s3
-      .upload({
-        Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
-        Key: fileKey,
-        Body: fileResponse.data,
-        ContentType: mimeType,
-      })
-      .promise();
+      const LinkGenerationResponse = await axios.post(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_URL}/api/generate-upload-links`,
 
-    attachments.push({
-      name: media?.file_name || fileName,
-      size: media?.file_size || 0,
-      mimeType,
-      url,
-      conversationId: conversation?.id,
-    });
+        uploadPayload
+      );
+
+      const [upload] = LinkGenerationResponse.data;
+
+      await axios.put(upload?.signedUrl, fileResponse.data, {
+        headers: {
+          'Content-Type': mimeType,
+        },
+      });
+
+      attachments.push({
+        name: media?.file_name || fileName,
+        size: media?.file_size || 0,
+        mimeType,
+        url: upload?.fileUrl,
+        conversationId: conversation?.id,
+      });
+    } catch (e) {
+      console.error('media upload failure', e);
+    }
   }
 
   const query =
