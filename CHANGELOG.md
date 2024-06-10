@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.369"></a>
+## 0.1.369 (2024-06-10)
+
+### Fixed
+
+- 🐛 freeze turbo version [[944843b](https://github.com/gmpetrov/databerry/commit/944843b17bb87208222956350a8d53767faf0829)]
+
+
 <a name="0.1.368"></a>
 ## 0.1.368 (2024-06-10)
 
