@@ -96,6 +96,8 @@ export const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
     throw new ApiError(ApiErrorType.INVALID_REQUEST);
   }
 
+  res.status(200).send('Handling...');
+
   const field = payload.entry[0].changes[0].field;
 
   if (field === 'messages') {
