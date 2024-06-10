@@ -236,8 +236,9 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       conversationId: conversation?.id,
       fileName,
     });
+    const s3FileUrl = `${process.env.NEXT_PUBLIC_AWS_ENDPOINT!}/${fileKey}`;
 
-    const { Location: url } = await s3
+    await s3
       .upload({
         Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME!,
         Key: fileKey,
@@ -250,7 +251,7 @@ const webhook = async (req: AppNextApiRequest, res: NextApiResponse) => {
       name: media?.file_name || fileName,
       size: media?.file_size || 0,
       mimeType,
-      url,
+      url: s3FileUrl,
       conversationId: conversation?.id,
     });
   }
