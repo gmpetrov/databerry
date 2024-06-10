@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="0.1.367"></a>
+## 0.1.367 (2024-06-10)
+
+### Fixed
+
+- 🐛 whatsapp fast webhook response to prevent duplicate [[4579eff](https://github.com/gmpetrov/databerry/commit/4579eff63d29cbb1feb1c7a30cfa03faa1ea2a4c)]
+- 🐛 seo markup [[c69a088](https://github.com/gmpetrov/databerry/commit/c69a08844dc8305872ef4638453c168b9c1ed505)]
+- 🐛 remove http config from agent outside of dashboard [[347a279](https://github.com/gmpetrov/databerry/commit/347a2796f327a7d8b1e68c2ca669d7ef55c16adb)]
+
+### Miscellaneous
+
+- 🎸 add structured json metadata [[68609f7](https://github.com/gmpetrov/databerry/commit/68609f7e2bb21c9a2a59ed2d0d570c58a27af11a)]
+- 🎸 seo markup [[1d95ff9](https://github.com/gmpetrov/databerry/commit/1d95ff9918c7f07d343dec900655e4fa543803be)]
+
+
 <a name="0.1.366"></a>
 ## 0.1.366 (2024-06-03)
 
