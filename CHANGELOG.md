@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="0.1.368"></a>
+## 0.1.368 (2024-06-10)
+
+### Fixed
+
+- 🐛 wrong upload url telegram [[a8d9f2f](https://github.com/gmpetrov/databerry/commit/a8d9f2fd4d444e0c225f05810a1a9cccbf19152a)]
+
+
 <a name="0.1.367"></a>
 ## 0.1.367 (2024-06-10)
 
