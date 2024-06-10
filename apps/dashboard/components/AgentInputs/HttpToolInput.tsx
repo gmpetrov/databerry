@@ -505,7 +505,7 @@ function RawBodyBuilder({
 
       return makeObjectFromKeys(
         splittedKeys,
-        field?.isUserProvided ? '#user' : field!.value
+        field?.isUserProvided ? '{user}' : field!.value
       );
     }) as RecordType[];
 
@@ -559,8 +559,8 @@ function RawBodyBuilder({
               const payload = JSON.parse(e.target.value);
               const formPayload = constructKeysAndValues(payload)?.map((o) => ({
                 ...o,
-                value: o.value === '#user' ? '' : o.value,
-                isUserProvided: o.value === '#user',
+                value: o.value === '{user}' ? '' : o.value,
+                isUserProvided: o.value === '{user}',
                 isRaw: true,
               }));
               parameters.append(formPayload);
@@ -575,7 +575,7 @@ function RawBodyBuilder({
       <Card variant="plain" size="sm" sx={{ mt: 1 }}>
         <Typography> - use double quotes</Typography>
         <Typography>
-          - mark a value as provided by the user with <b>#user</b>
+          - mark a value as provided by the user with <b>{'{user}'}</b>
         </Typography>
       </Card>
     </Stack>

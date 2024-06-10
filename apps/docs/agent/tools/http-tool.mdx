@@ -23,6 +23,20 @@ It includes an option labeled “Provided By User,” which signals to the model
 
 ![Xnapper-2024-01-12-10.36.18.png](/images/http-tool/Xnapper-2024-01-12-10.36.18.png)
 
+#### Raw Builder For Body Parameters
+
+To speed up the configuration of http tools that perform POST requests with nested payloads, we offer a raw builder, let's take a look at this example:
+
+![Xnapper-2024-06-10-15.52.54.png](/images/http-tool/Xnapper-2024-06-10-15.52.54.png)
+
+We have two type of values, hardcoded values and “Provided By User” values:
+
+”via” is a hardcoded value (the http tool will always send a value of chaindesk).
+
+”name” and ”age” are provided by user, meaning the chatbot will gather this information from the user during the conversation.
+
+_TL;DR use **\{user\}** to mark a value as **“Provided By User”**_
+
 ### **Streamlined Approval Process**
 
 With the activation of the “Approval Required” feature, the AI Agent will await authorization from an administrator before proceeding with the request.

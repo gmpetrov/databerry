@@ -27,7 +27,7 @@ export default function constructKeysAndValues(
             constructKeysAndValues(item, `${newKey}.index_${index}`)
           );
         } else {
-          if (item === '#user') {
+          if (item === '{user}') {
             result.push({
               key: `${newKey}.index_${index}`,
               value: item,
@@ -49,7 +49,7 @@ export default function constructKeysAndValues(
         constructKeysAndValues(obj[key] as RecordType, newKey)
       );
     } else {
-      if (obj[key] === '#user') {
+      if (obj[key] === '{user}') {
         result.push({
           key: newKey,
           value: obj[key],
