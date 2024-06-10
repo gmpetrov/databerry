@@ -7,7 +7,7 @@ RUN npm --global install pnpm@8.7.5
 
 
 FROM base AS pruner
-RUN npm --global install turbo
+RUN npm --global install turbo@1.13.4
 WORKDIR /app
 COPY . .
 RUN turbo prune --scope=${SCOPE} --docker
